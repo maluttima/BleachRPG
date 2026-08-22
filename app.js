@@ -789,6 +789,7 @@ function App() {
   const [saveErr, setSaveErr] = useState("");
   const [cloudStatus, setCloudStatus] = useState("local"); // "local", "connected", "syncing", "error"
   const [showAdminLoginModal, setShowAdminLoginModal] = useState(false);
+  const [activeCloudUrl, setActiveCloudUrl] = useState("");
 
   // Sync with cloud on startup
   useEffect(() => {
@@ -801,9 +802,22 @@ function App() {
         }
       } catch (e) {}
 
-      // Check if data.json or Firebase is configured
-      const cloudUrl = initialData.firebaseUrl || localStorage.getItem("bleach_firebase_url");
+      // 1. Try to load config.json (central repo config)
+      let cloudUrl = "";
+      try {
+        const cfgRes = await fetch('config.json?t=' + Date.now());
+        if (cfgRes.ok) {
+          const cfg = await cfgRes.json();
+          if (cfg && cfg.firebaseUrl) {
+            cloudUrl = cfg.firebaseUrl.trim();
+          }
+        }
+      } catch (e) {}
+      if (!cloudUrl) {
+        cloudUrl = initialData.firebaseUrl || localStorage.getItem("bleach_firebase_url") || "";
+      }
       if (cloudUrl) {
+        setActiveCloudUrl(cloudUrl);
         try {
           setCloudStatus("syncing");
           const cleanUrl = cloudUrl.replace(/\/$/, "");
@@ -814,7 +828,8 @@ function App() {
             if (cloudData && typeof cloudData === 'object' && cloudData.personagens) {
               initialData = {
                 ...initialData,
-                ...cloudData
+                ...cloudData,
+                firebaseUrl: cloudUrl
               };
               localStorage.setItem("bleachDB", JSON.stringify(initialData));
               setCloudStatus("connected");
@@ -831,6 +846,28 @@ function App() {
     initDb();
   }, []);
 
+  // Periodic background cloud sync (every 10s if connected)
+  useEffect(() => {
+    if (!activeCloudUrl || cloudStatus !== "connected") return;
+    const interval = setInterval(async () => {
+      try {
+        const cleanUrl = activeCloudUrl.replace(/\/$/, "");
+        const endpoint = cleanUrl.endsWith('.json') ? cleanUrl : cleanUrl + '/bleachDB.json';
+        const res = await fetch(endpoint + '?t=' + Date.now());
+        if (res.ok) {
+          const cloudData = await res.json();
+          if (cloudData && typeof cloudData === 'object' && cloudData.personagens) {
+            setDb(prev => ({
+              ...prev,
+              ...cloudData
+            }));
+          }
+        }
+      } catch (e) {}
+    }, 10000);
+    return () => clearInterval(interval);
+  }, [activeCloudUrl, cloudStatus]);
+
   // Save DB to localStorage AND push to Cloud Firebase if configured
   async function saveDb(next) {
     setDb(next);
@@ -840,7 +877,7 @@ function App() {
     } catch (e) {
       setSaveErr("Não foi possível salvar os dados no navegador.");
     }
-    const cloudUrl = next.firebaseUrl || localStorage.getItem("bleach_firebase_url");
+    const cloudUrl = next.firebaseUrl || activeCloudUrl || localStorage.getItem("bleach_firebase_url");
     if (cloudUrl) {
       try {
         setCloudStatus("syncing");
@@ -854,6 +891,7 @@ function App() {
           body: JSON.stringify(next)
         });
         setCloudStatus("connected");
+        setActiveCloudUrl(cloudUrl);
       } catch (err) {
         console.warn("Cloud save error:", err);
         setCloudStatus("error");
@@ -921,6 +959,8 @@ function App() {
     myChar: myChar
   }), view === "ficha" && (!session ? /*#__PURE__*/React.createElement(LoginScreen, {
     db: db,
+    setDb: setDb,
+    activeCloudUrl: activeCloudUrl,
     onLogin: s => {
       setSession(s);
       setView("ficha");
@@ -1122,12 +1162,15 @@ function Badge({
 function LoginScreen({
   db,
   onLogin,
-  onOpenAdminModal
+  onOpenAdminModal,
+  activeCloudUrl,
+  setDb
 }) {
   const [identificador, setIdentificador] = useState("");
   const [codigo, setCodigo] = useState("");
   const [erro, setErro] = useState("");
-  function entrarJogador(e) {
+  const [carregando, setCarregando] = useState(false);
+  async function entrarJogador(e) {
     e.preventDefault();
     const termo = identificador.trim().toLowerCase();
     const cod = codigo.trim().toLowerCase();
@@ -1135,13 +1178,40 @@ function LoginScreen({
       setErro("Por favor, digite o Código de Acesso do seu personagem.");
       return;
     }
+    setCarregando(true);
+    setErro("");
+    let currentPersonagens = db.personagens || [];
+
+    // If cloud URL is configured, try a fresh live fetch to get latest characters
+    const cloudUrl = activeCloudUrl || db.firebaseUrl || localStorage.getItem("bleach_firebase_url");
+    if (cloudUrl) {
+      try {
+        const cleanUrl = cloudUrl.replace(/\/$/, "");
+        const endpoint = cleanUrl.endsWith('.json') ? cleanUrl : cleanUrl + '/bleachDB.json';
+        const res = await fetch(endpoint + '?t=' + Date.now());
+        if (res.ok) {
+          const freshData = await res.json();
+          if (freshData && freshData.personagens) {
+            currentPersonagens = freshData.personagens;
+            if (setDb) setDb(prev => ({
+              ...prev,
+              ...freshData
+            }));
+            localStorage.setItem("bleachDB", JSON.stringify(freshData));
+          }
+        }
+      } catch (err) {
+        console.warn("Direct cloud fetch failed, checking local data...", err);
+      }
+    }
     const digitsOnly = termo.replace(/\D/g, "");
-    const matchingChars = (db.personagens || []).filter(c => {
+    const matchingChars = currentPersonagens.filter(c => {
       const cCode = (c.codigo || "").trim().toLowerCase();
       return cCode === cod;
     });
     if (matchingChars.length === 0) {
-      setErro("Código de acesso incorreto ou personagem não encontrado. Verifique com a administração.");
+      setCarregando(false);
+      setErro("Código de acesso incorreto ou personagem não encontrado. Verifique se o ADM salvou a ficha e a Nuvem.");
       return;
     }
     let p = matchingChars[0];
@@ -1161,6 +1231,7 @@ function LoginScreen({
         p = foundSpecific;
       }
     }
+    setCarregando(false);
     onLogin({
       role: "jogador",
       charId: p.id
@@ -3069,8 +3140,22 @@ function AdminPanel({
       ...db,
       firebaseUrl: urlLimpa
     });
-    setMsgFirebase("Configuração da Nuvem salva! Sincronização em tempo real ativa.");
-    setTimeout(() => setMsgFirebase(""), 4000);
+    try {
+      const configData = JSON.stringify({
+        firebaseUrl: urlLimpa
+      }, null, 2);
+      const blob = new Blob([configData], {
+        type: "application/json"
+      });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = "config.json";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    } catch (e) {}
+    setMsgFirebase("Nuvem conectada! O arquivo 'config.json' foi baixado. Suba ele no seu repositório do GitHub para que todos os celulares conectem automaticamente.");
+    setTimeout(() => setMsgFirebase(""), 8000);
   }
   function baixarBackupJson() {
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db, null, 2));
