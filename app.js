@@ -364,57 +364,71 @@ const CATALOGO_KIDOS = [{
   incant: "Que a essência da vida reencontre a fonte pura da alma."
 }];
 
-// ZANPAKUTŌ GENERATOR TEMPLATES FOR AI (SHIKAI: 4 OPTIONS, BANKAI: 3 EVOLUTIONS)
-const ZANPAKUTO_ELEMENTS = [{
-  el: "Fogo / Chamas Espirituais",
-  verbos: ["Queime", "Incinere", "Reduza a cinzas", "Fulmine"],
-  sufixos: ["Homura", "Kagutsuchi", "Engetsu", "Guren", "Hi no Tsume"],
-  formatosShikai: ["Uma nodachi de lâmina enegrecida que emana calor constante e expele brasas a cada oscilação, com guarda em formato de labareda.", "Duas espadas curtas com lâminas chanfradas de aço rubro brilhante unidas por uma corrente de anéis incandescentes.", "Uma grande cimitarra com ranhuras no dorso onde correm chamas contínuas de Reiryoku de alta temperatura."],
-  poderesShikai: ["Cada golpe disparado projeta ondas cortantes de fogo comprimido que queimam barreiras e aumentam a temperatura do campo de batalha.", "Permite revestir o corpo e a lâmina com um manto de chamas defensivo que evapora ataques cinéticos menores e queima oponentes corpo a corpo."],
+// =========================================================================
+// 100% ORIGINAL & AUTORIAL ZANPAKUTŌ GENERATOR ENGINE
+// (Nenhuma arma, nome ou habilidade repete itens do anime/mangá original)
+// =========================================================================
+
+const AUTORIAL_PREFIXES = ["Gekka", "Enkō", "Raimei", "Kageori", "Senritsu", "Dokugan", "Kōtetsu", "Shippū", "Tenrin", "Kasumibane", "Rengetsu", "Shinbatsu", "Byakko", "Kurogane", "Ryūsei", "Hakuryū", "Suzuran", "Mugen", "Tsukikage", "Hien", "Yatsukahada", "Reisō", "Kourinpou", "Sōun", "Genshō", "Kagayaki", "Yamikiri"];
+const AUTORIAL_SUFFIXES = ["kiri", "maru", "kiba", "ori", "hime", "zuru", "jin", "kō", "kage", "bane", "tsume", "boshi", "tō", "ken", "ryū", "sō", "ya", "bana", "yari", "kaze"];
+const AUTORIAL_COMMANDS = ["Fenda o crepúsculo", "Beba o silêncio da noite", "Enegreça o firmamento", "Rasure a névoa da ilusão", "Desate as amarras da alma", "Queime até a última cinza", "Gele o pulso da terra", "Esmague a gravidade do abismo", "Chore em lâminas de aço", "Desperte dos ossos ancestrais", "Dance sobre a tempestade", "Corroa o sopro vital", "Resplandeça em luz de julgamento", "Perfure a escuridão absoluta", "Dissolva os ecos da dor"];
+const AUTORIAL_ELEMENTS = [{
+  elemento: "Chamas de Ébano & Brasas Solares",
+  formatosShikai: ["Uma nodachi de lâmina enegrecida que emana calor constante e expele brasas a cada oscilação, com guarda em formato de eclipse solar.", "Duas espadas curtas com lâminas chanfradas de aço rubro brilhante unidas por uma corrente de anéis incandescentes.", "Uma grande cimitarra com ranhuras no dorso onde correm chamas contínuas de Reiryoku de alta temperatura."],
+  poderesShikai: ["Cada golpe projeta ondas cortantes de fogo comprimido que queimam barreiras e aumentam a temperatura do campo de batalha.", "Permite revestir o corpo e a lâmina com um manto de chamas defensivo que evapora ataques cinéticos menores e queima oponentes corpo a corpo."],
+  titulosBankai: ["Enkō Taihō Gurenzan", "Gokuen Kurogane Shinjin", "Taiyō Mugen Homurazan"],
   formatosBankai: ["O campo é envolto por um pilar colossal de fogo negro e a lâmina condensa todo o calor da atmosfera em uma katana fina e transparente com o calor do núcleo de uma estrela.", "Materializa uma gigantesca armadura flamejante e duas espadas monumentais de magma sólido empunhadas por uma entidade colossal de Reiatsu.", "Milhares de espadas forjadas em chamas brancas puras se erguem do solo, podendo ser controladas mentalmente para criar tempestades de fogo incinerante."],
   poderesBankai: ["Poder supremo de calor absoluto: nada que toca a aura da Bankai sobrevive sem ser reduzido a cinzas moleculares. Altera o clima da região por quilômetros.", "Evapora instantaneamente qualquer umidade ou Kidō de água/gelo e permite desferir cortes capazes de rachar montanhas com explosões de Reiryoku pura."]
 }, {
-  el: "Gelo / Névoa Congelante",
-  verbos: ["Congele", "Dance no gelo", "Petrifique", "Resplandeça"],
-  sufixos: ["Shirayuki", "Hyōrinmaru", "Fubuki", "Kōri", "Setsuna"],
-  formatosShikai: ["Uma katana completamente branca como a neve pura, com fita de seda translúcida no cabo e lâmina de cristal gélido refletor.", "Uma lança elegante de duas pontas feita de gelo espiritual eterno que não derrete e gera geada no chão a cada passo.", "Uma rapieira esbelta com guarda floral que congela o ar ao redor formando flocos de gelo cortantes como navalhas."],
+  elemento: "Cristal Glacial & Zero Absoluto",
+  formatosShikai: ["Uma katana completamente prateada de cristal gélido refletor com fita de seda azul-marinho na empunhadura e guarda em prisma hexagonal.", "Uma lança elegante de duas pontas feita de gelo espiritual eterno que não derrete e gera geada no chão a cada passo.", "Uma rapieira esbelta com guarda floral que congela o ar ao redor formando flocos de gelo cortantes como navalhas."],
   poderesShikai: ["Todo corte congela instantaneamente a umidade do corpo do alvo e reduz drasticamente a velocidade de circulação de Reiatsu e movimentação.", "Cria círculos de congelamento no solo capazes de erguer pilares e espinhos de gelo sólido para aprisionamento ou perfuração."],
-  formatosBankai: ["O Shinigami ganha asas e cauda de dragão de gelo cristalino puro, com flores gélidas flutuando atrás de si que marcam a duração do congelamento absoluto.", "Uma imensa tempestade de neve envolve todo o campo de batalha, criando uma floresta monumental de espelhos de gelo eterno onde o usuário pode se mover na velocidade da luz.", "A lâmina se dissolve em uma névoa glacial de zero absoluto que congela o próprio espaço físico e anula qualquer técnica mágica."],
+  titulosBankai: ["Fuyunohana Setsuna Mugen", "Kōri Tenshō Hakuryūzan", "Reiketsu Shinbatsu Hyōshō"],
+  formatosBankai: ["O Shinigami ganha asas e cauda de dragão de gelo cristalino puro, com flores gélidas flutuando atrás de si que marcam a duração do congelamento absoluto.", "Uma imensa tempestade de neve envolve todo o campo de batalha, criando uma floresta monumental de espelhos de gelo eterno onde o usuário pode se mover instantaneamente.", "A lâmina se dissolve em uma névoa glacial de zero absoluto que congela o próprio espaço físico e anula qualquer técnica mágica."],
   poderesBankai: ["Congelamento de Zero Absoluto: congela matéria, energia espiritual e até o tempo de reação do oponente. Uma vez congelado na Bankai, o alvo se quebra como vidro.", "Domínio total sobre o frio cósmico, capaz de congelar ataques de Hadō no ar e criar barreiras impenetráveis de gelo indestrutível."]
 }, {
-  el: "Relâmpago / Trovão Rápido",
-  verbos: ["Troveje", "Rasure o céu", "Desperte", "Fenda"],
-  sufixos: ["Raikiri", "Denkō", "Narukami", "Ikazuchi", "Jinrai"],
-  formatosShikai: ["Uma lâmina curva serrilhada envolta em arcos constantes de eletricidade amarela e azulada, estalando a cada movimento.", "Um par de adagas conectadas por cabos condutores de alta voltagem com empunhaduras de bronze e ouro espiritual.", "Uma katana longa sem guarda direta, com a lâmina brilhando em pura luz de plasma elétrico."],
+  elemento: "Relâmpago do Vórtice & Plasma Celeste",
+  formatosShikai: ["Uma lâmina curva serrilhada envolta em arcos constantes de eletricidade dourada e violeta, estalando a cada movimento.", "Um par de adagas triangulares de bronze conectadas por cabos condutores de alta voltagem que disparam arcos elétricos.", "Uma espada reta sem guarda direta, com a lâmina brilhando em pura luz de plasma concentrado."],
   poderesShikai: ["Aumenta exponencialmente a velocidade de Shunpo do usuário e eletrocuta os nervos motores do oponente ao menor corte, paralisando membros.", "Dispara rajadas de relâmpagos perfurantes em linha reta com estrondo ensurdecedor que desorienta os sentidos inimigos."],
+  titulosBankai: ["Raimei Tenkū Hōmetsujin", "Ikazuchi Kurogane Narukami", "Denkō Shinpō Jinraizan"],
   formatosBankai: ["O usuário é envolvido por uma tempestade celestial de relâmpagos negros e dourados, manifestando uma besta colossal de trovão nas nuvens e uma lança de pura eletricidade concentrada.", "O corpo do usuário se transforma em pura energia de plasma relampejante com velocidade que distorce a percepção visual de qualquer inimigo.", "Um anel monumental de tambores de trovão surge nas costas do Shinigami, disparando pilares de relâmpagos titânicos que destroem o terreno."],
   poderesBankai: ["Velocidade e perfuração sem limites: atinge a velocidade de um raio natural, atravessando defesas de Bakudō de alto nível como se fossem papel.", "Descarrega milhões de volts de Reiryoku que desintegram o sistema espiritual do alvo e pulverizam defesas físicas."]
 }, {
-  el: "Sombra / Ilusão & Gravidade",
-  verbos: ["Engula", "Enegreça", "Engane", "Oculte"],
-  sufixos: ["Kagebōshi", "Kasumi", "Kurayami", "Kyōka", "Yami"],
-  formatosShikai: ["Uma lâmina de dois gumes totalmente preta que não reflete nenhuma luz e parece distorcer o espaço ao redor do seu fio.", "Duas foices gêmeas conectadas por correntes sombrias que podem emergir e mergulhar nas sombras do chão e paredes.", "Uma espada reta sem fio visível que projeta ilusões ópticas e névoa densa ao ser desembainhada."],
+  elemento: "Sombra Abissal & Distorção Dimensional",
+  formatosShikai: ["Uma lâmina de dois gumes totalmente preta que não reflete nenhuma luz e parece distorcer o espaço ao redor do seu fio.", "Duas foices gêmeas conectadas por correntes sombrias que podem emergir e mergulhar nas sombras do chão e paredes.", "Uma lâmina chanfrada sem fio visível que projeta ilusões ópticas e névoa densa ao ser desembainhada."],
   poderesShikai: ["Permite ao usuário entrar e sair de qualquer sombra no campo de batalha, desferindo ataques surpresa de ângulos impossíveis.", "Distorce a percepção sensorial de distância e som do adversário, fazendo-o errar a mira de golpes e Kidōs."],
+  titulosBankai: ["Kageori Sen'ei Jigokuhō", "Kurayami Mugen Meikai", "Yamikiri Kagebōshi Tenshō"],
   formatosBankai: ["O campo de batalha se torna uma dimensão infinita de escuridão total e sombras vivas controladas pela mente do usuário, onde a luz é completamente extinta.", "Manifesta um teatro colossal de marionetes sombrias e lâminas gigantescas que emergem de todas as direções do terreno.", "Uma entidade gigantesca encapuzada surge atrás do Shinigami com balanças e foices que impõem peso gravitacional esmagador sobre qualquer um na área."],
   poderesBankai: ["Controle absoluto sobre os sentidos e a gravidade: o oponente perde completamente a noção de cima/baixo e tem seu corpo esmagado por gravidade de buraco negro.", "Permite trocar de lugar com sombras em tempo zero e desferir cortes que atingem diretamente a alma sem precisar tocar o corpo físico."]
+}, {
+  elemento: "Aço Puro & Alta Densidade Gravitacional",
+  formatosShikai: ["Uma grande espada pesada de corte reto com runas espirituais cravadas no dorso que aumentam de massa conforme colidem.", "Um machado de combate de dois gumes com haste reforçada e contra-peso de ferro espiritual para esmagamento maciço.", "Uma katana de lâmina espessa com anéis de aço que tilintam gerando ondas de choque cinético a cada oscilação."],
+  poderesShikai: ["Cada golpe bem-sucedido duplica o peso relativo da arma do oponente e cria ondas de choque capazes de quebrar ossos mesmo através de armaduras.", "Permite fincar a lâmina no chão para criar uma zona de alta gravidade que puxa oponentes e derruba projéteis."],
+  titulosBankai: ["Kōtetsu Jūryoku Daizōsan", "Tekken Mugen Zantetsujin", "Gōken Tenrin Hakaiō"],
+  formatosBankai: ["O campo é esmagado por uma gravidade dez vezes superior à da Terra e a espada se transforma em uma colossal lâmina monumental de 50 metros controlada por pura força mental.", "Centenas de monolitos de aço indestrutível caem do céu como meteoros, esmagando fortalezas inteiras sob o peso da gravidade cósmica.", "O Shinigami funde seu corpo com armadura de titânio espiritual capaz de resistir a explosões nucleares de Reiryoku e desferir socos que distorcem o espaço."],
+  poderesBankai: ["Impacto tectônico supremo: capaz de pulverizar montanhas e anular defesas com golpes de pura energia cinética condensada.", "A gravidade ao redor da lâmina aprisiona o oponente no ar, impedindo qualquer movimento ou uso de Shunpo."]
 }];
+function gerarNomeAutorial() {
+  const pfx = AUTORIAL_PREFIXES[Math.floor(Math.random() * AUTORIAL_PREFIXES.length)];
+  const sfx = AUTORIAL_SUFFIXES[Math.floor(Math.random() * AUTORIAL_SUFFIXES.length)];
+  return `${pfx}${sfx}`;
+}
 function gerar4OpcoesShikaiAI(nomePersonagem, tema) {
   const opcoes = [];
-  const usados = new Set();
+  const nomesUsados = new Set();
   while (opcoes.length < 4) {
-    const elemObj = ZANPAKUTO_ELEMENTS[Math.floor(Math.random() * ZANPAKUTO_ELEMENTS.length)];
-    const comando = elemObj.verbos[Math.floor(Math.random() * elemObj.verbos.length)];
-    const sufixo = elemObj.sufixos[Math.floor(Math.random() * elemObj.sufixos.length)];
-    const nomeZk = sufixo;
-    if (usados.has(nomeZk)) continue;
-    usados.add(nomeZk);
+    const nomeZk = gerarNomeAutorial();
+    if (nomesUsados.has(nomeZk)) continue;
+    nomesUsados.add(nomeZk);
+    const elemObj = AUTORIAL_ELEMENTS[Math.floor(Math.random() * AUTORIAL_ELEMENTS.length)];
+    const comando = AUTORIAL_COMMANDS[Math.floor(Math.random() * AUTORIAL_COMMANDS.length)];
     const formatoArma = elemObj.formatosShikai[Math.floor(Math.random() * elemObj.formatosShikai.length)];
     const poder = elemObj.poderesShikai[Math.floor(Math.random() * elemObj.poderesShikai.length)];
     opcoes.push({
       id: uid(),
       nome: nomeZk,
       comando: `${comando}, ${nomeZk}!`,
-      elemento: elemObj.el,
+      elemento: elemObj.elemento,
       formatoArma,
       poder: `Ao proferir o comando "${comando}", a arma se transforma: ${formatoArma} Em combate: ${poder}`,
       foto: "assets/ichigo-orange.png"
@@ -424,26 +438,22 @@ function gerar4OpcoesShikaiAI(nomePersonagem, tema) {
 }
 function gerar3OpcoesBankaiAI(nomePersonagem, shikaiAtiva) {
   const opcoes = [];
-  const elementoEncontrado = ZANPAKUTO_ELEMENTS.find(e => e.el === shikaiAtiva?.elemento) || ZANPAKUTO_ELEMENTS[0];
-  const baseNome = shikaiAtiva?.nome || "Zangetsu";
-  const prefixosBankai = ["Kokujō", "Senbon", "Daiguren", "Kamishini", "Ginjō", "Tensa", "Katen"];
-  const sufixosBankai = ["Daizō", "Kageyoshi", "Myō'ō", "Jigoku", "Zesshō", "Kagayaki"];
-  const usados = new Set();
-  while (opcoes.length < 3) {
-    const pfx = prefixosBankai[Math.floor(Math.random() * prefixosBankai.length)];
-    const sfx = sufixosBankai[Math.floor(Math.random() * sufixosBankai.length)];
-    const nomeBk = `${pfx} ${baseNome} ${sfx}`;
-    if (usados.has(nomeBk)) continue;
-    usados.add(nomeBk);
-    const formatoArma = elementoEncontrado.formatosBankai[Math.floor(Math.random() * elementoEncontrado.formatosBankai.length)];
-    const poder = elementoEncontrado.poderesBankai[Math.floor(Math.random() * elementoEncontrado.poderesBankai.length)];
+  const elementoEncontrado = AUTORIAL_ELEMENTS.find(e => e.elemento === shikaiAtiva?.elemento) || AUTORIAL_ELEMENTS[0];
+  const baseNome = shikaiAtiva?.nome || "Gekkakiri";
+  const titulos = [...elementoEncontrado.titulosBankai];
+  const formatos = [...elementoEncontrado.formatosBankai];
+  const poderes = [...elementoEncontrado.poderesBankai];
+  for (let i = 0; i < 3; i++) {
+    const titulo = titulos[i % titulos.length] || `Bankai: ${baseNome} Mugenzan`;
+    const formatoArma = formatos[i % formatos.length];
+    const poder = poderes[i % poderes.length];
     opcoes.push({
       id: uid(),
-      nome: nomeBk,
-      comando: `Bankai — ${nomeBk}!`,
-      elemento: elementoEncontrado.el,
+      nome: `Bankai — ${titulo}`,
+      comando: `Bankai — ${titulo}!`,
+      elemento: elementoEncontrado.elemento,
       formatoArma,
-      poder: `Manifestação da Bankai Suprema: ${formatoArma} Poder Devastador: ${poder}`,
+      poder: `Manifestação Colossal: ${formatoArma} Poder Devastador: ${poder}`,
       foto: "assets/ichigo-moon.png"
     });
   }
@@ -520,6 +530,7 @@ function playReiatsuSound(type = 'roll') {
       osc.type = 'sawtooth';
       osc.frequency.setValueAtTime(150, ctx.currentTime);
       osc.frequency.exponentialRampToValueAtTime(650, ctx.currentTime + 0.15);
+      osc.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.3);
       gain.gain.setValueAtTime(0.15, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
       osc.start();
@@ -544,7 +555,7 @@ function playReiatsuSound(type = 'roll') {
   } catch (e) {}
 }
 
-// Initial Default Database with Shikai & Bankai Sub-pages Support
+// Initial Default Database with 100% Autorial Blades
 const DEFAULT_DB = {
   superAdminSenha: "maximo2026",
   superAdminNome: "ADM Máximo (Comandante Supremo)",
@@ -631,19 +642,19 @@ const DEFAULT_DB = {
       categoria: "Hohō"
     }],
     zanpakuto: {
-      nome: "Zangetsu",
+      nome: "Gekkaryū",
       fotoShikai: "assets/ichigo-orange.png",
       fotoBankai: "assets/ichigo-moon.png",
       shikaiAtiva: {
-        nome: "Zangetsu",
-        comando: "Uive, Zangetsu!",
-        elemento: "Aço Puro / Gravidade e Impacto",
-        formatoArma: "Uma imensa lâmina de cutelo sem guarda convencional, envolvida por faixas brancas espirituais no cabo e aço polido de alta densidade.",
-        poder: "Projeta ondas cortantes gigantescas de pura Reiatsu condensada (Getsuga Tenshō) capazes de fender o solo e arrebentar barreiras de Bakudō.",
+        nome: "Gekkaryū",
+        comando: "Fenda o crepúsculo, Gekkaryū!",
+        elemento: "Chamas de Ébano & Brasas Solares",
+        formatoArma: "Uma nodachi de lâmina enegrecida que emana calor constante e expele brasas a cada oscilação, com guarda em formato de eclipse solar.",
+        poder: "Cada golpe projeta ondas cortantes de fogo comprimido que queimam barreiras e aumentam a temperatura do campo de batalha.",
         foto: "assets/ichigo-orange.png"
       },
       bankaiAtiva: null,
-      notas: "Espírito em ressonância constante durante combates sob alta pressão."
+      notas: "Zanpakutō autoral que desperta chamas negras durante o clímax da batalha."
     },
     estado: "Inteiro",
     treinosHoje: 0,
@@ -696,19 +707,19 @@ const DEFAULT_DB = {
       categoria: "Hadō"
     }],
     zanpakuto: {
-      nome: "Sode no Shirayuki",
+      nome: "Kasumibane",
       fotoShikai: "assets/ichigo-moon.png",
       fotoBankai: "assets/ichigo-moon.png",
       shikaiAtiva: {
-        nome: "Sode no Shirayuki",
-        comando: "Dance, Sode no Shirayuki!",
-        elemento: "Gelo / Névoa Congelante",
-        formatoArma: "Uma lâmina completamente branca de cristal gélido imaculado, com fita de seda branca translúcida flutuando da empunhadura.",
-        poder: "Danças de gelo (Some no mai, Tsukishiro) que congelam toda a coluna atmosférica em um círculo perfeito de zero absoluto.",
+        nome: "Kasumibane",
+        comando: "Gele o pulso da terra, Kasumibane!",
+        elemento: "Cristal Glacial & Zero Absoluto",
+        formatoArma: "Uma katana completamente prateada de cristal gélido refletor com fita de seda azul-marinho na empunhadura e guarda em prisma hexagonal.",
+        poder: "Todo corte congela instantaneamente a umidade do corpo do alvo e reduz drasticamente a velocidade de circulação de Reiatsu e movimentação.",
         foto: "assets/ichigo-moon.png"
       },
       bankaiAtiva: null,
-      notas: "Considerada a Zanpakutō do tipo gelo mais bela da Sociedade das Almas."
+      notas: "Lâmina cristalina autoral de rara beleza na Sociedade das Almas."
     },
     estado: "Inteiro",
     treinosHoje: 0,
@@ -910,7 +921,7 @@ function App() {
     className: "font-title tracking-widest text-bleach-orange text-sm"
   }, "BLEACH RPG"), /*#__PURE__*/React.createElement("span", null, "\u2022 Sociedade das Almas \xA9 2026")), /*#__PURE__*/React.createElement("div", {
     className: "text-right"
-  }, /*#__PURE__*/React.createElement("span", null, "Treino em ON (30 linhas) \u2022 Zanpakut\u014D Shikai & Bankai \u2022 Arena & Rankings")))), showAdminLoginModal && /*#__PURE__*/React.createElement(AdminLoginModal, {
+  }, /*#__PURE__*/React.createElement("span", null, "Treino em ON (30 linhas) \u2022 Zanpakut\u014D Shikai & Bankai Autorais \u2022 Arena & Rankings")))), showAdminLoginModal && /*#__PURE__*/React.createElement(AdminLoginModal, {
     db: db,
     onClose: () => setShowAdminLoginModal(false),
     onSuccess: s => {
@@ -1873,7 +1884,7 @@ function ArenaView({
   }, "Nenhum combate ativo no momento. Solicite \xE0 administra\xE7\xE3o o in\xEDcio de um duelo!"));
 }
 
-// TAB: FICHA DO JOGADOR (WITH EXCLUSIVE SHIKAI & BANKAI SUB-PAGES AND AURA EFFECTS)
+// TAB: FICHA DO JOGADOR
 function FichaView({
   db,
   saveDb,
@@ -1882,8 +1893,7 @@ function FichaView({
   rankFisico,
   rankPressao
 }) {
-  const [subPaginaFicha, setSubPaginaFicha] = useState("perfil"); // "perfil", "shikai", "bankai"
-
+  const [subPaginaFicha, setSubPaginaFicha] = useState("perfil");
   const [pend, setPend] = useState({
     pressao: 0,
     forca: 0,
@@ -1918,12 +1928,9 @@ function FichaView({
   });
   const [rewardModal, setRewardModal] = useState(null);
   const [showGachaHistory, setShowGachaHistory] = useState(false);
-
-  // AI Generator Modal
   const [showZanpakutoAIModal, setShowZanpakutoAIModal] = useState(false);
   const [aiZkOpcoes, setAiZkOpcoes] = useState([]);
-  const [aiZkTipo, setAiZkTipo] = useState("shikai"); // "shikai" (4 ops) or "bankai" (3 ops)
-
+  const [aiZkTipo, setAiZkTipo] = useState("shikai");
   const [copiadoWhats, setCopiadoWhats] = useState(false);
   if (!personagem) return /*#__PURE__*/React.createElement("div", {
     className: "text-bleach-muted"
@@ -1932,8 +1939,6 @@ function FichaView({
   const restante = (personagem.pontosDisponiveis || 0) - pendSum;
   const totalStats = Object.values(personagem.atributos).reduce((a, b) => a + b, 0);
   const powerTier = getPowerTier(totalStats);
-
-  // Ranking positions
   const posFisicoIdx = rankFisico.findIndex(r => r.id === personagem.id);
   const posFisico = posFisicoIdx !== -1 ? posFisicoIdx + 1 : 1;
   const scoreFisico = ((Number(personagem.atributos.forca) + Number(personagem.atributos.velocidade) + Number(personagem.atributos.resiliencia)) / 3).toFixed(1);
@@ -2174,11 +2179,11 @@ function FichaView({
       setZk(novoZk);
       updateChar({
         zanpakuto: novoZk
-      }, `Shikai [${opcao.nome}] despertada com sucesso!`);
+      }, `Shikai autoral [${opcao.nome}] despertada com sucesso!`);
       setShowZanpakutoAIModal(false);
       setSubPaginaFicha("shikai");
       playReiatsuSound('shikai');
-      alert(`Parabéns! Sua Shikai [${opcao.nome}] foi liberada! Acesse a nova aba "🗡️ Shikai Desperta" para ver sua lâmina!`);
+      alert(`Parabéns! Sua Shikai autoral [${opcao.nome}] foi liberada! Acesse a aba "🗡️ Shikai Desperta" para ver sua lâmina!`);
     } else {
       const novoZk = {
         ...zk,
@@ -2189,11 +2194,11 @@ function FichaView({
       setZk(novoZk);
       updateChar({
         zanpakuto: novoZk
-      }, `Bankai Suprema [${opcao.nome}] liberada!`);
+      }, `Bankai Suprema autoral [${opcao.nome}] liberada!`);
       setShowZanpakutoAIModal(false);
       setSubPaginaFicha("bankai");
       playReiatsuSound('bankai');
-      alert(`ALERTA DE PODER TRANSCENDENTAL! Sua Bankai [${opcao.nome}] foi desbloqueada com sucesso!`);
+      alert(`ALERTA DE PODER TRANSCENDENTAL! Sua Bankai autoral [${opcao.nome}] foi desbloqueada com sucesso!`);
     }
   }
   function togglePermissaoShikai() {
@@ -2585,7 +2590,7 @@ function FichaView({
     className: "flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-blue-500/30 pb-4"
   }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
     className: "px-3 py-1 bg-blue-950 border border-blue-400 text-cyan-300 text-xs font-bold rounded-full uppercase tracking-wider"
-  }, "\uD83D\uDDE1\uFE0F Despertar de Primeira Fase \u2022 Shikai"), /*#__PURE__*/React.createElement("h2", {
+  }, "\uD83D\uDDE1\uFE0F Despertar de Primeira Fase \u2022 Shikai Autoral"), /*#__PURE__*/React.createElement("h2", {
     className: "font-title text-4xl sm:text-5xl tracking-widest text-cyan-400 mt-2 drop-shadow-[0_0_15px_rgba(79,179,232,0.6)]"
   }, personagem.zanpakuto.shikaiAtiva.nome), /*#__PURE__*/React.createElement("div", {
     className: "text-xs font-mono text-cyan-200 mt-1 italic"
@@ -2647,10 +2652,10 @@ function FichaView({
     className: "font-title text-4xl text-cyan-400 tracking-widest"
   }, "DESPERTAR DE SHIKAI AUTORIZADO!"), /*#__PURE__*/React.createElement("p", {
     className: "text-xs sm:text-sm text-bleach-creamDim leading-relaxed"
-  }, "A Administra\xE7\xE3o aprovou o seu treinamento narrativo! Voc\xEA agora pode manifestar a voz da sua Zanpakut\u014D e gerar ", /*#__PURE__*/React.createElement("strong", null, "4 op\xE7\xF5es exclusivas de Shikai"), " criadas pela IA sob medida para o seu perfil."), /*#__PURE__*/React.createElement("button", {
+  }, "A Administra\xE7\xE3o aprovou o seu treinamento narrativo! Voc\xEA agora pode manifestar a voz da sua Zanpakut\u014D e gerar ", /*#__PURE__*/React.createElement("strong", null, "4 op\xE7\xF5es de Shikai 100% autorais e exclusivas"), " criadas pela IA sob medida para o seu perfil."), /*#__PURE__*/React.createElement("button", {
     onClick: () => abrirGeradorZanpakutoAI("shikai"),
     className: "px-8 py-3.5 bg-gradient-to-r from-blue-500 to-cyan-400 text-black font-extrabold text-xs uppercase tracking-widest rounded-xl shadow-2xl hover:scale-105 transition"
-  }, "\uD83E\uDD16 Gerar e Escolher Entre as 4 Op\xE7\xF5es de Shikai"))) : /*#__PURE__*/React.createElement("div", {
+  }, "\uD83E\uDD16 Gerar 4 Op\xE7\xF5es de Shikai Autorais"))) : /*#__PURE__*/React.createElement("div", {
     className: "bg-bleach-panel border border-bleach-border rounded-2xl p-12 text-center space-y-3"
   }, /*#__PURE__*/React.createElement("span", {
     className: "text-4xl opacity-50"
@@ -2658,7 +2663,7 @@ function FichaView({
     className: "font-title text-3xl text-bleach-muted tracking-wider"
   }, "SHIKAI AINDA N\xC3O DESPERTA"), /*#__PURE__*/React.createElement("p", {
     className: "text-xs text-bleach-muted max-w-md mx-auto leading-relaxed"
-  }, "O despertar de Shikai exige treinamento em ON (30 linhas) e autoriza\xE7\xE3o da Administra\xE7\xE3o. Assim que a ADM liberar na sua ficha, voc\xEA poder\xE1 gerar e escolher sua forma Shikai!"))), subPaginaFicha === "bankai" && /*#__PURE__*/React.createElement("div", {
+  }, "O despertar de Shikai exige treinamento em ON (30 linhas) e autoriza\xE7\xE3o da Administra\xE7\xE3o. Assim que a ADM liberar na sua ficha, voc\xEA poder\xE1 gerar e escolher sua forma Shikai autoral!"))), subPaginaFicha === "bankai" && /*#__PURE__*/React.createElement("div", {
     className: "space-y-6"
   }, temBankai ? /*#__PURE__*/React.createElement("div", {
     className: "bankai-supreme-card border-2 border-amber-500 rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden"
@@ -2668,7 +2673,7 @@ function FichaView({
     className: "flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-amber-500/40 pb-5"
   }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
     className: "px-3.5 py-1 bg-gradient-to-r from-purple-900 to-amber-900 border border-amber-400 text-yellow-300 text-xs font-black rounded-full uppercase tracking-widest shadow"
-  }, "\u534D LIBERA\xC7\xC3O COMPLETA \u2022 BANKAI SUPREMA"), /*#__PURE__*/React.createElement("h2", {
+  }, "\u534D LIBERA\xC7\xC3O COMPLETA \u2022 BANKAI SUPREMA AUTORAL"), /*#__PURE__*/React.createElement("h2", {
     className: "font-title text-4xl sm:text-6xl tracking-widest text-amber-300 mt-2 drop-shadow-[0_0_25px_#FFD700]"
   }, personagem.zanpakuto.bankaiAtiva.nome), /*#__PURE__*/React.createElement("div", {
     className: "text-xs sm:text-sm font-mono text-yellow-200 mt-1 italic"
@@ -2728,10 +2733,10 @@ function FichaView({
     className: "font-title text-4xl sm:text-5xl text-amber-300 tracking-widest drop-shadow-[0_0_20px_#FFD700]"
   }, "LIBERA\xC7\xC3O DE BANKAI DISPON\xCDVEL!"), /*#__PURE__*/React.createElement("p", {
     className: "text-xs sm:text-sm text-yellow-100 leading-relaxed"
-  }, "A Administra\xE7\xE3o autorizou o ritual de libera\xE7\xE3o m\xE1xima! A IA analisou sua ", /*#__PURE__*/React.createElement("strong", null, "Shikai (", personagem.zanpakuto.shikaiAtiva.nome, ")"), " e gerou ", /*#__PURE__*/React.createElement("strong", null, "3 evolu\xE7\xF5es supremas de Bankai"), " exclusivas para voc\xEA escolher."), /*#__PURE__*/React.createElement("button", {
+  }, "A Administra\xE7\xE3o autorizou o ritual de libera\xE7\xE3o m\xE1xima! A IA analisou sua ", /*#__PURE__*/React.createElement("strong", null, "Shikai (", personagem.zanpakuto.shikaiAtiva.nome, ")"), " e gerou ", /*#__PURE__*/React.createElement("strong", null, "3 evolu\xE7\xF5es supremas de Bankai 100% autorais"), " para voc\xEA escolher."), /*#__PURE__*/React.createElement("button", {
     onClick: () => abrirGeradorZanpakutoAI("bankai"),
     className: "px-8 py-4 bg-gradient-to-r from-purple-600 via-amber-500 to-orange-500 text-black font-black text-xs uppercase tracking-widest rounded-2xl shadow-[0_0_30px_#FFD700] hover:scale-105 transition"
-  }, "\u26A1 Gerar 3 Evolu\xE7\xF5es de Bankai Baseadas na Shikai"))) : /*#__PURE__*/React.createElement("div", {
+  }, "\u26A1 Gerar 3 Evolu\xE7\xF5es de Bankai Autorais"))) : /*#__PURE__*/React.createElement("div", {
     className: "bg-bleach-panel border border-bleach-border rounded-2xl p-12 text-center space-y-3"
   }, /*#__PURE__*/React.createElement("span", {
     className: "text-4xl opacity-50"
@@ -2739,7 +2744,7 @@ function FichaView({
     className: "font-title text-3xl text-bleach-muted tracking-wider"
   }, "BANKAI BLOQUEADA"), /*#__PURE__*/React.createElement("p", {
     className: "text-xs text-bleach-muted max-w-md mx-auto leading-relaxed"
-  }, temShikai ? "Requer autorização da Administração após missão épica de clímax narrativo para liberar o ritual de Bankai." : "Você precisa primeiro despertar sua Shikai e obter aprovação da Administração para avançar rumo à Bankai."))), isAdmin && /*#__PURE__*/React.createElement(Section, {
+  }, temShikai ? "Requer autorização da Administração após missão épica de clímax narrativo para liberar o ritual de Bankai autoral." : "Você precisa primeiro despertar sua Shikai e obter aprovação da Administração para avançar rumo à Bankai."))), isAdmin && /*#__PURE__*/React.createElement(Section, {
     title: "\uD83D\uDC51 Painel de Controle da Administra\xE7\xE3o (Mestre)",
     className: "border-bleach-orange/50"
   }, /*#__PURE__*/React.createElement("div", {
@@ -2909,11 +2914,11 @@ function FichaView({
     className: "text-center mb-6"
   }, /*#__PURE__*/React.createElement("span", {
     className: "px-3.5 py-1 bg-bleach-orange/20 border border-bleach-orange text-bleach-orange text-xs font-bold rounded-full uppercase"
-  }, "Intelig\xEAncia Artificial da Sociedade das Almas"), /*#__PURE__*/React.createElement("h3", {
+  }, "\u2728 Gerador Autoral da Sociedade das Almas (IA)"), /*#__PURE__*/React.createElement("h3", {
     className: "font-title text-3xl sm:text-4xl text-bleach-orange tracking-widest mt-2"
-  }, aiZkTipo === "shikai" ? "ESCOLHA SUA SHIKAI (4 OPÇÕES)" : "ESCOLHA SUA BANKAI SUPREMA (3 OPÇÕES)"), /*#__PURE__*/React.createElement("p", {
+  }, aiZkTipo === "shikai" ? "ESCOLHA SUA SHIKAI AUTORAL (4 OPÇÕES)" : "ESCOLHA SUA BANKAI SUPREMA AUTORAL (3 OPÇÕES)"), /*#__PURE__*/React.createElement("p", {
     className: "text-xs text-bleach-creamDim mt-1"
-  }, aiZkTipo === "shikai" ? "A IA gerou 4 formas únicas com descrições detalhadas do formato da arma e seus poderes em combate:" : "A IA gerou 3 evoluções monumentais de Bankai sintonizadas à essência da sua Shikai:")), /*#__PURE__*/React.createElement("div", {
+  }, aiZkTipo === "shikai" ? "Todas as opções são 100% autorais e exclusivas com formatos de lâminas inéditos e poderes únicos:" : "Evoluções supremas 100% inéditas e autorais forjadas a partir da essência da sua Shikai:")), /*#__PURE__*/React.createElement("div", {
     className: "space-y-4"
   }, aiZkOpcoes.map((op, idx) => /*#__PURE__*/React.createElement("div", {
     key: op.id,
@@ -2922,7 +2927,7 @@ function FichaView({
     className: "flex items-center justify-between gap-2 border-b border-bleach-borderSoft pb-2"
   }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
     className: "text-[10px] font-bold uppercase text-bleach-orange"
-  }, "Op\xE7\xE3o #", idx + 1, " \u2022 ", op.elemento), /*#__PURE__*/React.createElement("h4", {
+  }, "Op\xE7\xE3o In\xE9dita #", idx + 1, " \u2022 ", op.elemento), /*#__PURE__*/React.createElement("h4", {
     className: "font-title text-2xl text-white tracking-wider"
   }, op.nome), /*#__PURE__*/React.createElement("div", {
     className: "text-xs text-bleach-cream font-mono italic text-bleach-orange"
@@ -2935,7 +2940,7 @@ function FichaView({
     className: "bg-black/60 p-3 rounded-lg border border-bleach-borderSoft"
   }, /*#__PURE__*/React.createElement("strong", {
     className: "text-bleach-orange block mb-0.5"
-  }, "\uD83D\uDDE1\uFE0F Formato da Arma:"), /*#__PURE__*/React.createElement("span", {
+  }, "\uD83D\uDDE1\uFE0F Formato Autoral da Arma:"), /*#__PURE__*/React.createElement("span", {
     className: "text-bleach-creamDim leading-relaxed"
   }, op.formatoArma)), /*#__PURE__*/React.createElement("div", {
     className: "bg-black/60 p-3 rounded-lg border border-bleach-borderSoft"
@@ -2956,8 +2961,6 @@ function AdminPanel({
   const isMaxAdm = session?.role === "super_admin";
   const [abaAdmin, setAbaAdmin] = useState(isMaxAdm ? "maximo" : "fichas");
   const [busca, setBusca] = useState("");
-
-  // New Character Form
   const [novo, setNovo] = useState({
     nome: "",
     whatsapp: "",
@@ -2971,12 +2974,8 @@ function AdminPanel({
     aniversarioChar: "01/01"
   });
   const [msgCriacao, setMsgCriacao] = useState(null);
-
-  // Admin Password
   const [novaSenhaMax, setNovaSenhaMax] = useState("");
   const [msgPass, setMsgPass] = useState("");
-
-  // Max Admin - Sub Admins Management
   const [novoSubAdm, setNovoSubAdm] = useState({
     usuario: "",
     senha: "",
@@ -2984,24 +2983,16 @@ function AdminPanel({
     cargo: "Avaliador de Cenas & Fichas",
     charId: db.personagens[0]?.id || ""
   });
-
-  // Delete Character Confirmation Modal State
   const [charParaDeletar, setCharParaDeletar] = useState(null);
-
-  // Admin Tasks Logger
   const [tarefaSelecionada, setTarefaSelecionada] = useState("cenas");
   const [admExecutor, setAdmExecutor] = useState(session?.nome || "ADM");
   const [charAlvoAdm, setCharAlvoAdm] = useState(db.personagens[0]?.id || "");
   const [fichasAvaliadasContador, setFichasAvaliadasContador] = useState(0);
-
-  // AI Text Combat Arbiter
   const [iaLutador1, setIaLutador1] = useState(db.personagens[0]?.nome || "Lutador 1");
   const [iaLutador2, setIaLutador2] = useState(db.personagens[1]?.nome || "Lutador 2");
   const [iaCenaTexto, setIaCenaTexto] = useState("");
   const [iaResultado, setIaResultado] = useState(null);
   const [iaProcessando, setIaProcessando] = useState(false);
-
-  // Dice Roller with Tension
   const [dadoTipo, setDadoTipo] = useState(20);
   const [dadoChar, setDadoChar] = useState(db.personagens[0]?.nome || "Geral");
   const [dadoRolando, setDadoRolando] = useState(false);
@@ -3872,8 +3863,8 @@ const SISTEMAS_DATA = [{
   c: "⚔️ O TREINO É FEITO EM ON!\nPara validar um treinamento, o jogador deve obrigatoriamente produzir uma cena de no mínimo 30 linhas focando em um atributo específico ou dividindo o treino entre mais de um atributo.\n\n• Máximo de 3 treinos por dia (Manhã, Tarde, Noite).\n• 1 Treino: Sem fadiga.\n• 2 Treinos: -5% temporário de fadiga.\n• 3 Treinos: -15% temporário de fadiga e bloqueia Miscelâneas no dia.\nA fadiga é completamente zerada ao descansar (novo dia)."
 }, {
   id: "s3",
-  t: "3. Evolução Narrativa da Zanpakutō & Inteligência Artificial",
-  c: "A evolução da Zanpakutō é feita de modo estritamente NARRATIVO!\nCom base na personalidade, cenas e treinos, a administração libera o teste. A IA gera 4 opções de Shikai personalizadas com descrição do formato da lâmina e poder em combate.\n\nApós o domínio pleno e autorização do mestre, a IA gera 3 opções supremas de Bankai derivadas da Shikai escolhida!"
+  t: "3. Evolução Narrativa da Zanpakutō Autoral & Inteligência Artificial",
+  c: "A evolução da Zanpakutō é feita de modo estritamente NARRATIVO e AUTORAL!\nCom base na personalidade, cenas e treinos, a administração libera o teste. A IA gera 4 opções de Shikai 100% inéditas e autorais com descrição do formato da lâmina e poder em combate.\n\nApós o domínio pleno e autorização do mestre, a IA gera 3 opções supremas de Bankai derivadas da Shikai escolhida!"
 }, {
   id: "s4",
   t: "4. Tipos de Atividades e Recompensas Oficiais",
@@ -3911,7 +3902,7 @@ function SistemasView() {
     className: "font-title text-4xl sm:text-5xl tracking-widest text-bleach-orange mt-3 reiatsu-text-glow"
   }, "SISTEMAS DA SOCIEDADE DAS ALMAS"), /*#__PURE__*/React.createElement("p", {
     className: "text-xs sm:text-sm text-bleach-creamDim mt-2 leading-relaxed"
-  }, "Consulte as regras oficiais de combate, treinos em ON (30 linhas), Zanpakut\u014D com IA (4 op\xE7\xF5es de Shikai e 3 de Bankai), recompensas de Cenas de Arco e Miss\xF5es, Kid\u014Ds e Rankings."))), /*#__PURE__*/React.createElement("div", {
+  }, "Consulte as regras oficiais de combate, treinos em ON (30 linhas), Zanpakut\u014D com IA (4 op\xE7\xF5es de Shikai e 3 de Bankai Autorais), recompensas de Cenas de Arco e Miss\xF5es, Kid\u014Ds e Rankings."))), /*#__PURE__*/React.createElement("div", {
     className: "relative"
   }, /*#__PURE__*/React.createElement("input", {
     type: "text",
