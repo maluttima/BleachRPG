@@ -827,9 +827,9 @@ function App() {
   }
   const myChar = useMemo(() => {
     if (!db || !session) return null;
-    if (session.role === "jogador") return db.personagens.find(p => p.id === session.charId) || null;
+    if (session.role === "jogador") return (db.personagens || []).find(p => p.id === session.charId) || null;
     if ((session.role === "super_admin" || session.role === "sub_admin") && adminCharId) {
-      return db.personagens.find(p => p.id === adminCharId) || null;
+      return (db.personagens || []).find(p => p.id === adminCharId) || null;
     }
     return null;
   }, [db, session, adminCharId]);
@@ -1071,7 +1071,7 @@ function Badge({
   }, children);
 }
 
-// PLAYER LOGIN SCREEN (FIXED & HIGHLY FORGIVING)
+// PLAYER LOGIN SCREEN (CLEAN, SECURE, ACCEPTS CODE + WHATSAPP/NAME OR CODE ONLY)
 function LoginScreen({
   db,
   onLogin,
@@ -1080,48 +1080,48 @@ function LoginScreen({
   const [identificador, setIdentificador] = useState("");
   const [codigo, setCodigo] = useState("");
   const [erro, setErro] = useState("");
-  const [showAjuda, setShowAjuda] = useState(false);
   function entrarJogador(e) {
     e.preventDefault();
     const termo = identificador.trim().toLowerCase();
     const cod = codigo.trim().toLowerCase();
-    if (!termo || !cod) {
-      setErro("Por favor, preencha o WhatsApp (ou Nome do Personagem) e o Código de Acesso.");
+    if (!cod) {
+      setErro("Por favor, digite o Código de Acesso do seu personagem.");
       return;
     }
     const digitsOnly = termo.replace(/\D/g, "");
-    const p = (db.personagens || []).find(c => {
-      const cCode = (c.codigo || "").trim().toLowerCase();
-      if (cCode !== cod) return false;
-      const cPhone = (c.whatsapp || "").replace(/\D/g, "");
-      const cName = (c.nome || "").toLowerCase();
 
-      // Check phone match
-      if (digitsOnly.length >= 4) {
-        if (cPhone === digitsOnly || cPhone.endsWith(digitsOnly) || digitsOnly.endsWith(cPhone.slice(-8))) {
+    // Find all matching characters by code (case-insensitive)
+    const matchingChars = (db.personagens || []).filter(c => {
+      const cCode = (c.codigo || "").trim().toLowerCase();
+      return cCode === cod;
+    });
+    if (matchingChars.length === 0) {
+      setErro("Código de acesso incorreto ou personagem não encontrado. Verifique com a administração.");
+      return;
+    }
+    let p = matchingChars[0];
+
+    // If WhatsApp/Name was also typed, match against specific character if multiple exist
+    if (termo) {
+      const foundSpecific = matchingChars.find(c => {
+        const cPhone = (c.whatsapp || "").replace(/\D/g, "");
+        const cName = (c.nome || "").toLowerCase();
+        if (digitsOnly.length >= 4 && (cPhone.includes(digitsOnly) || digitsOnly.includes(cPhone.slice(-8)))) {
           return true;
         }
+        if (cName.includes(termo) || termo.includes(cName)) {
+          return true;
+        }
+        return false;
+      });
+      if (foundSpecific) {
+        p = foundSpecific;
       }
-
-      // Check name match
-      if (termo.length >= 2 && cName.includes(termo)) {
-        return true;
-      }
-      return false;
-    });
-    if (!p) {
-      setErro("Personagem não encontrado com esse número/nome e código de acesso. Verifique se o código está correto (Ex: REN-8921 ou RUK-3312) ou abra a lista de ajuda abaixo.");
-      return;
     }
     onLogin({
       role: "jogador",
       charId: p.id
     });
-  }
-  function preencherExemplo(char) {
-    setIdentificador(char.whatsapp);
-    setCodigo(char.codigo);
-    setErro("");
   }
   return /*#__PURE__*/React.createElement("div", {
     className: "max-w-md mx-auto py-6"
@@ -1133,12 +1133,12 @@ function LoginScreen({
     className: "font-title text-4xl tracking-widest text-bleach-orange reiatsu-text-glow"
   }, "FICHA DO JOGADOR"), /*#__PURE__*/React.createElement("p", {
     className: "text-xs text-bleach-creamDim mt-1"
-  }, "Insira o seu WhatsApp (ou Nome) e seu C\xF3digo de Acesso para entrar na sua ficha"), /*#__PURE__*/React.createElement(ChainDivider, null)), /*#__PURE__*/React.createElement("form", {
+  }, "Insira o seu C\xF3digo de Acesso fornecido pela ADM para entrar na sua ficha"), /*#__PURE__*/React.createElement(ChainDivider, null)), /*#__PURE__*/React.createElement("form", {
     onSubmit: entrarJogador,
     className: "space-y-4"
   }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", {
     className: "block text-xs font-semibold text-bleach-creamDim uppercase tracking-wider mb-1.5"
-  }, "WhatsApp ou Nome do Personagem"), /*#__PURE__*/React.createElement("input", {
+  }, "WhatsApp ou Nome do Personagem (Opcional)"), /*#__PURE__*/React.createElement("input", {
     type: "text",
     placeholder: "Ex: 11999998888 ou Kurosaki Ren",
     value: identificador,
@@ -1146,9 +1146,9 @@ function LoginScreen({
     className: "w-full bg-bleach-panel2 border border-bleach-border rounded-lg px-4 py-3 text-white placeholder-bleach-muted text-sm focus:outline-none focus:border-bleach-orange focus:ring-1 focus:ring-bleach-orange transition"
   })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", {
     className: "block text-xs font-semibold text-bleach-creamDim uppercase tracking-wider mb-1.5"
-  }, "C\xF3digo de Acesso (Senha do Player)"), /*#__PURE__*/React.createElement("input", {
+  }, "C\xF3digo de Acesso (Senha do Player) *"), /*#__PURE__*/React.createElement("input", {
     type: "password",
-    placeholder: "Ex: REN-8921 ou RUK-3312",
+    placeholder: "Ex: REN-8921 ou seu c\xF3digo",
     value: codigo,
     onChange: e => setCodigo(e.target.value),
     className: "w-full bg-bleach-panel2 border border-bleach-border rounded-lg px-4 py-3 text-white placeholder-bleach-muted text-sm focus:outline-none focus:border-bleach-orange focus:ring-1 focus:ring-bleach-orange transition font-mono"
@@ -1158,25 +1158,8 @@ function LoginScreen({
     type: "submit",
     className: "w-full py-3.5 bg-gradient-to-r from-bleach-orange to-bleach-orangeDeep text-black font-extrabold text-sm uppercase tracking-widest rounded-lg shadow-lg hover:brightness-110 active:scale-[0.99] transition"
   }, "Entrar na Ficha")), /*#__PURE__*/React.createElement("div", {
-    className: "mt-4 pt-4 border-t border-bleach-borderSoft text-center"
-  }, /*#__PURE__*/React.createElement("button", {
-    onClick: () => setShowAjuda(!showAjuda),
-    className: "text-xs text-bleach-orange hover:underline font-semibold"
-  }, showAjuda ? "▲ Ocultar Fichas de Exemplo" : "💡 Ver Fichas Ativas Cadastradas"), showAjuda && /*#__PURE__*/React.createElement("div", {
-    className: "mt-3 space-y-2 text-left bg-black/60 p-3 rounded-xl border border-bleach-borderSoft text-xs"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "text-[11px] text-bleach-muted uppercase font-bold mb-1"
-  }, "Clique para preencher:"), (db.personagens || []).map(p => /*#__PURE__*/React.createElement("div", {
-    key: p.id,
-    onClick: () => preencherExemplo(p),
-    className: "p-2 bg-bleach-panel2 border border-bleach-border hover:border-bleach-orange rounded-lg cursor-pointer flex justify-between items-center transition"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "font-bold text-bleach-cream"
-  }, p.nome), /*#__PURE__*/React.createElement("span", {
-    className: "font-mono text-[11px] text-bleach-orange"
-  }, p.codigo))))), /*#__PURE__*/React.createElement("div", {
-    className: "mt-4 pt-3 border-t border-bleach-borderSoft flex flex-col gap-2 text-center text-xs text-bleach-muted"
-  }, /*#__PURE__*/React.createElement("p", null, "N\xE3o possui um c\xF3digo? Solicite com a administra\xE7\xE3o no WhatsApp do RPG."), /*#__PURE__*/React.createElement("button", {
+    className: "mt-6 pt-5 border-t border-bleach-borderSoft flex flex-col gap-2 text-center text-xs text-bleach-muted"
+  }, /*#__PURE__*/React.createElement("p", null, "N\xE3o possui um c\xF3digo de acesso? Solicite com a administra\xE7\xE3o no WhatsApp do RPG."), /*#__PURE__*/React.createElement("button", {
     onClick: onOpenAdminModal,
     className: "text-bleach-orange hover:underline font-semibold mt-1"
   }, "\uD83D\uDD10 Sou Administrador (Entrar no Painel ADM)"))));
@@ -1187,7 +1170,7 @@ function AdminLoginScreen({
   db,
   onLoginAdmin
 }) {
-  const [tipoLogin, setTipoLogin] = useState("maximo"); // "maximo" ou "sub"
+  const [tipoLogin, setTipoLogin] = useState("maximo");
   const [senhaMax, setSenhaMax] = useState("");
   const [subUser, setSubUser] = useState("");
   const [subPass, setSubPass] = useState("");
@@ -1488,7 +1471,7 @@ function RankingsView({
   }))));
 }
 
-// TAB: KIDŌS CATALOG & ZANPAKUTŌ SWORD VISUALIZER (NEW SWORD DESIGN!)
+// TAB: KIDŌS CATALOG & ZANPAKUTŌ SWORD VISUALIZER
 function KidosView({
   personagem
 }) {
@@ -1679,8 +1662,8 @@ function ArenaView({
   const [desafiadoId, setDesafiadoId] = useState(db.personagens[1]?.id || "");
   const [showNovoDuelo, setShowNovoDuelo] = useState(false);
   const combateAtivo = db.combatesArena?.[0] || null;
-  const p1 = db.personagens.find(p => p.id === combateAtivo?.p1Id);
-  const p2 = db.personagens.find(p => p.id === combateAtivo?.p2Id);
+  const p1 = (db.personagens || []).find(p => p.id === combateAtivo?.p1Id);
+  const p2 = (db.personagens || []).find(p => p.id === combateAtivo?.p2Id);
   const [juizTexto, setJuizTexto] = useState(combateAtivo?.juizLog || "");
   const [turnoAtual, setTurnoAtual] = useState(combateAtivo?.turno || "Turno 1");
   const isAdm = session?.role === "super_admin" || session?.role === "sub_admin";
@@ -1776,7 +1759,7 @@ function ArenaView({
     value: desafianteId,
     onChange: e => setDesafianteId(e.target.value),
     className: "w-full bg-black border border-bleach-border rounded-lg p-2.5 text-xs text-white"
-  }, db.personagens.map(p => /*#__PURE__*/React.createElement("option", {
+  }, (db.personagens || []).map(p => /*#__PURE__*/React.createElement("option", {
     key: p.id,
     value: p.id
   }, p.nome)))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", {
@@ -1785,7 +1768,7 @@ function ArenaView({
     value: desafiadoId,
     onChange: e => setDesafiadoId(e.target.value),
     className: "w-full bg-black border border-bleach-border rounded-lg p-2.5 text-xs text-white"
-  }, db.personagens.map(p => /*#__PURE__*/React.createElement("option", {
+  }, (db.personagens || []).map(p => /*#__PURE__*/React.createElement("option", {
     key: p.id,
     value: p.id
   }, p.nome))))), /*#__PURE__*/React.createElement("button", {
@@ -1985,7 +1968,7 @@ function FichaView({
   const topPressaoScore = rankPressao[0]?.score || scorePressao;
   const pctBarPressao = Math.min(100, Math.round(scorePressao / Math.max(1, topPressaoScore) * 100));
   function updateChar(patch, historicoTexto) {
-    const personagens = db.personagens.map(p => p.id === personagem.id ? {
+    const personagens = (db.personagens || []).map(p => p.id === personagem.id ? {
       ...p,
       ...patch,
       historico: historicoTexto ? [{
@@ -2801,7 +2784,7 @@ function FichaView({
   }, op.habilidade)))))));
 }
 
-// TAB: ADMIN CONTROL PANEL (WITH MAX ADM PRIVILEGES & SUB ADMS RESTRICTIONS + DELETE CHAR BUTTON)
+// TAB: ADMIN CONTROL PANEL (WITH CREATION & INSTANT LOGIN DETAILS COPIER)
 function AdminPanel({
   db,
   saveDb,
@@ -2825,6 +2808,7 @@ function AdminPanel({
     idadeChar: "18",
     aniversarioChar: "01/01"
   });
+  const [msgCriacao, setMsgCriacao] = useState(null);
 
   // Admin Password
   const [novaSenhaMax, setNovaSenhaMax] = useState("");
@@ -2861,15 +2845,28 @@ function AdminPanel({
   const [dadoRolando, setDadoRolando] = useState(false);
   const [dadoResultado, setDadoResultado] = useState(null);
   const [dadoAnimVal, setDadoAnimVal] = useState(1);
+  function gerarCodigoAuto() {
+    const prefix = novo.nome.trim() ? novo.nome.trim().slice(0, 3).toUpperCase() : "SHIN";
+    const randNum = Math.floor(1000 + Math.random() * 9000);
+    setNovo({
+      ...novo,
+      codigo: `${prefix}-${randNum}`
+    });
+  }
   function criarPersonagem(e) {
     e.preventDefault();
-    if (!novo.nome.trim() || !novo.whatsapp.trim() || !novo.codigo.trim()) return;
+    if (!novo.nome.trim() || !novo.codigo.trim()) {
+      alert("Por favor, preencha pelo menos o Nome do Personagem e o Código de Acesso!");
+      return;
+    }
+    const codFinal = novo.codigo.trim();
+    const whatsFinal = novo.whatsapp.trim() || "00000000000";
     const p = {
       id: uid(),
       nome: novo.nome.trim(),
       foto: "assets/ichigo-orange.png",
-      whatsapp: novo.whatsapp.trim(),
-      codigo: novo.codigo.trim(),
+      whatsapp: whatsFinal,
+      codigo: codFinal,
       raca: novo.raca,
       esquadrao: novo.esquadrao,
       faceclaim: novo.faceclaim.trim() || novo.nome.trim(),
@@ -2925,7 +2922,12 @@ function AdminPanel({
     };
     saveDb({
       ...db,
-      personagens: [...db.personagens, p]
+      personagens: [...(db.personagens || []), p]
+    });
+    setMsgCriacao({
+      nome: p.nome,
+      codigo: p.codigo,
+      whatsapp: p.whatsapp
     });
     setNovo({
       nome: "",
@@ -2939,7 +2941,11 @@ function AdminPanel({
       idadeChar: "18",
       aniversarioChar: "01/01"
     });
-    alert("Ficha criada com sucesso!");
+  }
+  function copiarLoginMsg(char) {
+    const msg = `⚔️ *SOCIEDADE DAS ALMAS — SEU LOGIN NO SITE* ⚔️\n\n👤 *Personagem:* ${char.nome}\n🔑 *Código de Acesso:* ${char.codigo}\n📱 *WhatsApp Cadastrado:* ${char.whatsapp || "—"}\n\n🌐 *Acesse o site:* https://maluttima.github.io/Site-Bleach-RPG/\n*(Vá na aba "Minha Ficha" e digite seu código para acessar seus atributos e rankings!)*`;
+    navigator.clipboard.writeText(msg);
+    alert(`Dados de login de ${char.nome} copiados para a área de transferência!`);
   }
 
   // DELETE CHARACTER (EXCLUSIVE TO MAX ADM)
@@ -3015,7 +3021,7 @@ function AdminPanel({
       pontosGanhos,
       data: nowStr()
     };
-    const personagens = db.personagens.map(p => {
+    const personagens = (db.personagens || []).map(p => {
       if (p.id === charAlvoAdm) {
         return {
           ...p,
@@ -3281,38 +3287,54 @@ function AdminPanel({
     className: "space-y-6"
   }, /*#__PURE__*/React.createElement(Section, {
     title: "Criar Novo Personagem no Site",
-    subtitle: "Cadastre a ficha oficial com login para o jogador"
+    subtitle: "Cadastre a ficha oficial e gere o login para o jogador"
   }, /*#__PURE__*/React.createElement("form", {
     onSubmit: criarPersonagem,
-    className: "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3"
-  }, /*#__PURE__*/React.createElement("input", {
+    className: "space-y-3"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", {
+    className: "block text-[11px] text-bleach-creamDim mb-1 font-bold"
+  }, "Nome do Personagem *"), /*#__PURE__*/React.createElement("input", {
     type: "text",
-    placeholder: "Nome do Personagem",
+    placeholder: "Ex: Kurosaki Ren",
     value: novo.nome,
     onChange: e => setNovo({
       ...novo,
       nome: e.target.value
     }),
-    className: "bg-bleach-panel2 border border-bleach-border rounded-lg px-3 py-2 text-xs text-white"
-  }), /*#__PURE__*/React.createElement("input", {
+    className: "w-full bg-bleach-panel2 border border-bleach-border rounded-lg px-3 py-2 text-xs text-white"
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", {
+    className: "block text-[11px] text-bleach-creamDim mb-1 font-bold"
+  }, "WhatsApp do Jogador"), /*#__PURE__*/React.createElement("input", {
     type: "text",
-    placeholder: "WhatsApp (Ex: 11999998888)",
+    placeholder: "Ex: 11999998888",
     value: novo.whatsapp,
     onChange: e => setNovo({
       ...novo,
       whatsapp: e.target.value
     }),
-    className: "bg-bleach-panel2 border border-bleach-border rounded-lg px-3 py-2 text-xs text-white"
-  }), /*#__PURE__*/React.createElement("input", {
+    className: "w-full bg-bleach-panel2 border border-bleach-border rounded-lg px-3 py-2 text-xs text-white"
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "flex justify-between items-center mb-1"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "text-[11px] text-bleach-creamDim font-bold"
+  }, "C\xF3digo de Acesso (Senha) *"), /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    onClick: gerarCodigoAuto,
+    className: "text-[10px] text-bleach-orange hover:underline font-bold"
+  }, "\uD83C\uDFB2 Gerar C\xF3digo")), /*#__PURE__*/React.createElement("input", {
     type: "text",
-    placeholder: "C\xF3digo de Acesso (Ex: REN-123)",
+    placeholder: "Ex: REN-8921",
     value: novo.codigo,
     onChange: e => setNovo({
       ...novo,
       codigo: e.target.value
     }),
-    className: "bg-bleach-panel2 border border-bleach-border rounded-lg px-3 py-2 text-xs font-mono text-white"
-  }), /*#__PURE__*/React.createElement("input", {
+    className: "w-full bg-bleach-panel2 border border-bleach-border rounded-lg px-3 py-2 text-xs font-mono text-white"
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3"
+  }, /*#__PURE__*/React.createElement("input", {
     type: "text",
     placeholder: "Faceclaim (Ex: Freya Mavor)",
     value: novo.faceclaim,
@@ -3332,7 +3354,7 @@ function AdminPanel({
     className: "bg-bleach-panel2 border border-bleach-border rounded-lg px-3 py-2 text-xs text-white"
   }), /*#__PURE__*/React.createElement("input", {
     type: "text",
-    placeholder: "Anivers\xE1rio Personagem (dd/mm)",
+    placeholder: "Anivers\xE1rio (dd/mm)",
     value: novo.aniversarioChar,
     onChange: e => setNovo({
       ...novo,
@@ -3350,12 +3372,23 @@ function AdminPanel({
     value: "Shinigami"
   }, "Shinigami"), /*#__PURE__*/React.createElement("option", {
     value: "Shinigami Ex-Humano"
-  }, "Shinigami Ex-Humano")), /*#__PURE__*/React.createElement("button", {
+  }, "Shinigami Ex-Humano"))), /*#__PURE__*/React.createElement("button", {
     type: "submit",
-    className: "bg-gradient-to-r from-bleach-orange to-bleach-orangeDeep text-black font-extrabold text-xs uppercase tracking-wider rounded-lg py-2 hover:brightness-110"
-  }, "+ Criar Ficha com Login"))), /*#__PURE__*/React.createElement(Section, {
+    className: "w-full bg-gradient-to-r from-bleach-orange to-bleach-orangeDeep text-black font-extrabold text-xs uppercase tracking-wider rounded-lg py-2.5 hover:brightness-110 shadow"
+  }, "+ Criar Ficha & Gerar Login do Jogador")), msgCriacao && /*#__PURE__*/React.createElement("div", {
+    className: "mt-4 p-4 bg-green-950/80 border border-green-500 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3 text-xs"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+    className: "font-bold text-green-300"
+  }, "\u2713 Ficha criada com sucesso!"), /*#__PURE__*/React.createElement("div", {
+    className: "text-white mt-0.5"
+  }, "Personagem: ", /*#__PURE__*/React.createElement("strong", null, msgCriacao.nome), " \u2022 C\xF3digo: ", /*#__PURE__*/React.createElement("strong", {
+    className: "font-mono text-bleach-orange"
+  }, msgCriacao.codigo))), /*#__PURE__*/React.createElement("button", {
+    onClick: () => copiarLoginMsg(msgCriacao),
+    className: "px-4 py-2 bg-green-600 hover:bg-green-500 text-white font-bold rounded-lg shadow uppercase text-xs whitespace-nowrap"
+  }, "\uD83D\uDCCB Copiar Mensagem de Login para WhatsApp"))), /*#__PURE__*/React.createElement(Section, {
     title: `Fichas Registradas (${(db.personagens || []).length})`,
-    subtitle: "Selecione um jogador para gerenciar ou apagar"
+    subtitle: "Selecione um jogador para gerenciar ou copiar dados de acesso"
   }, /*#__PURE__*/React.createElement("div", {
     className: "mb-4"
   }, /*#__PURE__*/React.createElement("input", {
@@ -3400,17 +3433,15 @@ function AdminPanel({
     }, p.sorteiosComunsRestantes || 0, " comuns"), " \u2022 ", /*#__PURE__*/React.createElement("strong", {
       className: "text-purple-400"
     }, p.sorteiosEspeciaisRestantes || 0, " esp"))))), /*#__PURE__*/React.createElement("div", {
-      className: "flex items-center gap-3 border-t sm:border-t-0 pt-2 sm:pt-0 border-bleach-borderSoft"
-    }, /*#__PURE__*/React.createElement("div", {
-      className: "text-right mr-2"
-    }, /*#__PURE__*/React.createElement("div", {
-      className: "text-[10px] text-bleach-muted uppercase"
-    }, "Pontos Livres"), /*#__PURE__*/React.createElement("div", {
-      className: "text-lg font-bold text-bleach-orange font-mono"
-    }, p.pontosDisponiveis || 0)), /*#__PURE__*/React.createElement("button", {
+      className: "flex flex-wrap items-center gap-2 border-t sm:border-t-0 pt-2 sm:pt-0 border-bleach-borderSoft"
+    }, /*#__PURE__*/React.createElement("button", {
+      onClick: () => copiarLoginMsg(p),
+      className: "px-3 py-2 bg-bleach-panel border border-bleach-border hover:border-bleach-orange text-bleach-cream font-bold text-xs uppercase rounded-lg transition",
+      title: "Copiar dados de login para mandar no WhatsApp"
+    }, "\uD83D\uDCCB Copiar Login"), /*#__PURE__*/React.createElement("button", {
       onClick: () => onAbrirFicha(p.id),
       className: "px-4 py-2 bg-bleach-orange text-black font-extrabold text-xs uppercase tracking-wider rounded-lg shadow hover:bg-orange-400 transition"
-    }, "Gerenciar Ficha \u2192"), isMaxAdm && /*#__PURE__*/React.createElement("button", {
+    }, "Gerenciar \u2192"), isMaxAdm && /*#__PURE__*/React.createElement("button", {
       onClick: () => setCharParaDeletar(p),
       className: "px-3 py-2 bg-red-950/60 border border-red-500/50 hover:bg-red-800 text-red-200 font-bold text-xs uppercase rounded-lg transition",
       title: "Apagar Perfil de Jogador"
