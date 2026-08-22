@@ -81,6 +81,32 @@
       border-color: rgba(139, 111, 214, 0.7);
     }
 
+    /* Shikai White Smoke Loop Animation */
+    @keyframes smokeFlow {
+      0% { transform: translateY(0) scale(1) rotate(0deg); opacity: 0.35; filter: blur(10px); }
+      50% { transform: translateY(-12px) scale(1.06) rotate(2deg); opacity: 0.65; filter: blur(6px); }
+      100% { transform: translateY(0) scale(1) rotate(0deg); opacity: 0.35; filter: blur(10px); }
+    }
+    .shikai-smoke-overlay {
+      position: absolute;
+      inset: -15px;
+      background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.25) 0%, rgba(180, 220, 255, 0.15) 45%, transparent 75%);
+      animation: smokeFlow 4.5s infinite ease-in-out;
+      pointer-events: none;
+      border-radius: 1.5rem;
+    }
+
+    /* Bankai Supreme Transcendental Aura */
+    @keyframes bankaiPulse {
+      0% { box-shadow: 0 0 25px rgba(255, 106, 19, 0.5), 0 0 50px rgba(139, 111, 214, 0.4), inset 0 0 25px rgba(255, 215, 0, 0.2); border-color: #FFD700; }
+      50% { box-shadow: 0 0 50px rgba(255, 106, 19, 0.8), 0 0 90px rgba(139, 111, 214, 0.7), inset 0 0 45px rgba(255, 215, 0, 0.4); border-color: #FFA500; }
+      100% { box-shadow: 0 0 25px rgba(255, 106, 19, 0.5), 0 0 50px rgba(139, 111, 214, 0.4), inset 0 0 25px rgba(255, 215, 0, 0.2); border-color: #FFD700; }
+    }
+    .bankai-supreme-card {
+      animation: bankaiPulse 3.5s infinite ease-in-out;
+      background: radial-gradient(circle at 50% 0%, rgba(139, 111, 214, 0.25) 0%, rgba(22, 19, 15, 0.95) 70%);
+    }
+
     /* Custom Scrollbar */
     ::-webkit-scrollbar {
       width: 7px;

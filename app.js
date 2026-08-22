@@ -146,9 +146,7 @@ const RECOMPENSAS_ESPECIAIS = [{
 }];
 
 // Official Kidō Catalog
-const CATALOGO_KIDOS = [
-// HADŌ (Ataque/Destruição)
-{
+const CATALOGO_KIDOS = [{
   id: "h1",
   numero: 1,
   nome: "Shō",
@@ -238,9 +236,7 @@ const CATALOGO_KIDOS = [
   nivel: "Classe Especial",
   desc: "Cria uma caixa cúbica de gravidade negra ao redor do alvo perfurando-o com incontáveis lanças espirituais.",
   incant: "Transborde, recipiente do caos! Cão louco e insolente, perca a razão..."
-},
-// BAKUDŌ (Aprisionamento/Restrição/Defesa)
-{
+}, {
   id: "b1",
   numero: 1,
   nome: "Sai",
@@ -330,9 +326,7 @@ const CATALOGO_KIDOS = [
   nivel: "Classe Especial",
   desc: "O selamento supremo da Sociedade das Almas em três fases: ataduras, estacas e bloco monumental.",
   incant: "Primeira Canção: Shiryū! Segunda Canção: Hyakurenzan! Canção Final: Bankin Taihō!"
-},
-// KAIDŌ (Cura/Restauração)
-{
+}, {
   id: "k1",
   numero: 1,
   nome: "Kaidō — Tratamento de Tecidos",
@@ -370,62 +364,88 @@ const CATALOGO_KIDOS = [
   incant: "Que a essência da vida reencontre a fonte pura da alma."
 }];
 
-// Shikai / Bankai Generator Templates for AI
+// ZANPAKUTŌ GENERATOR TEMPLATES FOR AI (SHIKAI: 4 OPTIONS, BANKAI: 3 EVOLUTIONS)
 const ZANPAKUTO_ELEMENTS = [{
   el: "Fogo / Chamas Espirituais",
   verbos: ["Queime", "Incinere", "Reduza a cinzas", "Fulmine"],
-  sufixos: ["Homura", "Kagutsuchi", "Engetsu", "Guren", "Hi no Tsume"]
+  sufixos: ["Homura", "Kagutsuchi", "Engetsu", "Guren", "Hi no Tsume"],
+  formatosShikai: ["Uma nodachi de lâmina enegrecida que emana calor constante e expele brasas a cada oscilação, com guarda em formato de labareda.", "Duas espadas curtas com lâminas chanfradas de aço rubro brilhante unidas por uma corrente de anéis incandescentes.", "Uma grande cimitarra com ranhuras no dorso onde correm chamas contínuas de Reiryoku de alta temperatura."],
+  poderesShikai: ["Cada golpe disparado projeta ondas cortantes de fogo comprimido que queimam barreiras e aumentam a temperatura do campo de batalha.", "Permite revestir o corpo e a lâmina com um manto de chamas defensivo que evapora ataques cinéticos menores e queima oponentes corpo a corpo."],
+  formatosBankai: ["O campo é envolto por um pilar colossal de fogo negro e a lâmina condensa todo o calor da atmosfera em uma katana fina e transparente com o calor do núcleo de uma estrela.", "Materializa uma gigantesca armadura flamejante e duas espadas monumentais de magma sólido empunhadas por uma entidade colossal de Reiatsu.", "Milhares de espadas forjadas em chamas brancas puras se erguem do solo, podendo ser controladas mentalmente para criar tempestades de fogo incinerante."],
+  poderesBankai: ["Poder supremo de calor absoluto: nada que toca a aura da Bankai sobrevive sem ser reduzido a cinzas moleculares. Altera o clima da região por quilômetros.", "Evapora instantaneamente qualquer umidade ou Kidō de água/gelo e permite desferir cortes capazes de rachar montanhas com explosões de Reiryoku pura."]
 }, {
-  el: "Gelo / Vento Congelante",
+  el: "Gelo / Névoa Congelante",
   verbos: ["Congele", "Dance no gelo", "Petrifique", "Resplandeça"],
-  sufixos: ["Shirayuki", "Hyōrinmaru", "Fubuki", "Kōri", "Setsuna"]
+  sufixos: ["Shirayuki", "Hyōrinmaru", "Fubuki", "Kōri", "Setsuna"],
+  formatosShikai: ["Uma katana completamente branca como a neve pura, com fita de seda translúcida no cabo e lâmina de cristal gélido refletor.", "Uma lança elegante de duas pontas feita de gelo espiritual eterno que não derrete e gera geada no chão a cada passo.", "Uma rapieira esbelta com guarda floral que congela o ar ao redor formando flocos de gelo cortantes como navalhas."],
+  poderesShikai: ["Todo corte congela instantaneamente a umidade do corpo do alvo e reduz drasticamente a velocidade de circulação de Reiatsu e movimentação.", "Cria círculos de congelamento no solo capazes de erguer pilares e espinhos de gelo sólido para aprisionamento ou perfuração."],
+  formatosBankai: ["O Shinigami ganha asas e cauda de dragão de gelo cristalino puro, com flores gélidas flutuando atrás de si que marcam a duração do congelamento absoluto.", "Uma imensa tempestade de neve envolve todo o campo de batalha, criando uma floresta monumental de espelhos de gelo eterno onde o usuário pode se mover na velocidade da luz.", "A lâmina se dissolve em uma névoa glacial de zero absoluto que congela o próprio espaço físico e anula qualquer técnica mágica."],
+  poderesBankai: ["Congelamento de Zero Absoluto: congela matéria, energia espiritual e até o tempo de reação do oponente. Uma vez congelado na Bankai, o alvo se quebra como vidro.", "Domínio total sobre o frio cósmico, capaz de congelar ataques de Hadō no ar e criar barreiras impenetráveis de gelo indestrutível."]
 }, {
   el: "Relâmpago / Trovão Rápido",
   verbos: ["Troveje", "Rasure o céu", "Desperte", "Fenda"],
-  sufixos: ["Raikiri", "Denkō", "Narukami", "Ikazuchi", "Jinrai"]
+  sufixos: ["Raikiri", "Denkō", "Narukami", "Ikazuchi", "Jinrai"],
+  formatosShikai: ["Uma lâmina curva serrilhada envolta em arcos constantes de eletricidade amarela e azulada, estalando a cada movimento.", "Um par de adagas conectadas por cabos condutores de alta voltagem com empunhaduras de bronze e ouro espiritual.", "Uma katana longa sem guarda direta, com a lâmina brilhando em pura luz de plasma elétrico."],
+  poderesShikai: ["Aumenta exponencialmente a velocidade de Shunpo do usuário e eletrocuta os nervos motores do oponente ao menor corte, paralisando membros.", "Dispara rajadas de relâmpagos perfurantes em linha reta com estrondo ensurdecedor que desorienta os sentidos inimigos."],
+  formatosBankai: ["O usuário é envolvido por uma tempestade celestial de relâmpagos negros e dourados, manifestando uma besta colossal de trovão nas nuvens e uma lança de pura eletricidade concentrada.", "O corpo do usuário se transforma em pura energia de plasma relampejante com velocidade que distorce a percepção visual de qualquer inimigo.", "Um anel monumental de tambores de trovão surge nas costas do Shinigami, disparando pilares de relâmpagos titânicos que destroem o terreno."],
+  poderesBankai: ["Velocidade e perfuração sem limites: atinge a velocidade de um raio natural, atravessando defesas de Bakudō de alto nível como se fossem papel.", "Descarrega milhões de volts de Reiryoku que desintegram o sistema espiritual do alvo e pulverizam defesas físicas."]
 }, {
-  el: "Sombra / Ilusão e Névoa",
+  el: "Sombra / Ilusão & Gravidade",
   verbos: ["Engula", "Enegreça", "Engane", "Oculte"],
-  sufixos: ["Kagebōshi", "Kasumi", "Kurayami", "Kyōka", "Yami"]
-}, {
-  el: "Aço Puro / Gravidade e Impacto",
-  verbos: ["Esmague", "Destroce", "Pese", "Corte"],
-  sufixos: ["Zangetsu", "Wabisuke", "Tekken", "Gōken", "Zantetsu"]
-}, {
-  el: "Veneno / Corrosão Espiritual",
-  verbos: ["Corroa", "Pique", "Dissolva", "Sussurre"],
-  sufixos: ["Ashisogi", "Suzumebachi", "Dokugan", "Kyodai", "Jakuhō"]
+  sufixos: ["Kagebōshi", "Kasumi", "Kurayami", "Kyōka", "Yami"],
+  formatosShikai: ["Uma lâmina de dois gumes totalmente preta que não reflete nenhuma luz e parece distorcer o espaço ao redor do seu fio.", "Duas foices gêmeas conectadas por correntes sombrias que podem emergir e mergulhar nas sombras do chão e paredes.", "Uma espada reta sem fio visível que projeta ilusões ópticas e névoa densa ao ser desembainhada."],
+  poderesShikai: ["Permite ao usuário entrar e sair de qualquer sombra no campo de batalha, desferindo ataques surpresa de ângulos impossíveis.", "Distorce a percepção sensorial de distância e som do adversário, fazendo-o errar a mira de golpes e Kidōs."],
+  formatosBankai: ["O campo de batalha se torna uma dimensão infinita de escuridão total e sombras vivas controladas pela mente do usuário, onde a luz é completamente extinta.", "Manifesta um teatro colossal de marionetes sombrias e lâminas gigantescas que emergem de todas as direções do terreno.", "Uma entidade gigantesca encapuzada surge atrás do Shinigami com balanças e foices que impõem peso gravitacional esmagador sobre qualquer um na área."],
+  poderesBankai: ["Controle absoluto sobre os sentidos e a gravidade: o oponente perde completamente a noção de cima/baixo e tem seu corpo esmagado por gravidade de buraco negro.", "Permite trocar de lugar com sombras em tempo zero e desferir cortes que atingem diretamente a alma sem precisar tocar o corpo físico."]
 }];
-function gerarOpcoesZanpakutoAI(nomePersonagem, tema, tipo = "shikai") {
+function gerar4OpcoesShikaiAI(nomePersonagem, tema) {
   const opcoes = [];
   const usados = new Set();
   while (opcoes.length < 4) {
     const elemObj = ZANPAKUTO_ELEMENTS[Math.floor(Math.random() * ZANPAKUTO_ELEMENTS.length)];
     const comando = elemObj.verbos[Math.floor(Math.random() * elemObj.verbos.length)];
     const sufixo = elemObj.sufixos[Math.floor(Math.random() * elemObj.sufixos.length)];
-    const nomeZk = `${sufixo}`;
+    const nomeZk = sufixo;
     if (usados.has(nomeZk)) continue;
     usados.add(nomeZk);
-    if (tipo === "shikai") {
-      opcoes.push({
-        id: uid(),
-        nome: nomeZk,
-        comando: `${comando}, ${nomeZk}!`,
-        elemento: elemObj.el,
-        habilidade: `Ao liberar a Shikai com o comando "${comando}", a lâmina manifesta o poder de ${elemObj.el.toLowerCase()}. Aumenta o alcance dos golpes e adiciona efeitos temáticos de impacto espiritual durante as trocas de combate.`,
-        detalheEstetico: `A forma da espada se transforma em uma lâmina de fio estilizado com padrões gravados brilhando em tonalidade temática.`
-      });
-    } else {
-      const nomeBankai = `Bankai: Kokujō ${nomeZk} Daizō`;
-      opcoes.push({
-        id: uid(),
-        nome: nomeBankai,
-        comando: `Bankai — ${nomeBankai}!`,
-        elemento: elemObj.el,
-        habilidade: `A liberação completa materializa uma entidade colossal ou expansão de domínio no campo de batalha. O poder destrutivo de ${elemObj.el.toLowerCase()} escala a níveis capazes de alterar o clima e a pressão atmosférica do local.`,
-        detalheEstetico: `O Shinigami é envolvido por vestes e armaduras de pura Reiatsu enquanto o terreno é completamente transformado.`
-      });
-    }
+    const formatoArma = elemObj.formatosShikai[Math.floor(Math.random() * elemObj.formatosShikai.length)];
+    const poder = elemObj.poderesShikai[Math.floor(Math.random() * elemObj.poderesShikai.length)];
+    opcoes.push({
+      id: uid(),
+      nome: nomeZk,
+      comando: `${comando}, ${nomeZk}!`,
+      elemento: elemObj.el,
+      formatoArma,
+      poder: `Ao proferir o comando "${comando}", a arma se transforma: ${formatoArma} Em combate: ${poder}`,
+      foto: "assets/ichigo-orange.png"
+    });
+  }
+  return opcoes;
+}
+function gerar3OpcoesBankaiAI(nomePersonagem, shikaiAtiva) {
+  const opcoes = [];
+  const elementoEncontrado = ZANPAKUTO_ELEMENTS.find(e => e.el === shikaiAtiva?.elemento) || ZANPAKUTO_ELEMENTS[0];
+  const baseNome = shikaiAtiva?.nome || "Zangetsu";
+  const prefixosBankai = ["Kokujō", "Senbon", "Daiguren", "Kamishini", "Ginjō", "Tensa", "Katen"];
+  const sufixosBankai = ["Daizō", "Kageyoshi", "Myō'ō", "Jigoku", "Zesshō", "Kagayaki"];
+  const usados = new Set();
+  while (opcoes.length < 3) {
+    const pfx = prefixosBankai[Math.floor(Math.random() * prefixosBankai.length)];
+    const sfx = sufixosBankai[Math.floor(Math.random() * sufixosBankai.length)];
+    const nomeBk = `${pfx} ${baseNome} ${sfx}`;
+    if (usados.has(nomeBk)) continue;
+    usados.add(nomeBk);
+    const formatoArma = elementoEncontrado.formatosBankai[Math.floor(Math.random() * elementoEncontrado.formatosBankai.length)];
+    const poder = elementoEncontrado.poderesBankai[Math.floor(Math.random() * elementoEncontrado.poderesBankai.length)];
+    opcoes.push({
+      id: uid(),
+      nome: nomeBk,
+      comando: `Bankai — ${nomeBk}!`,
+      elemento: elementoEncontrado.el,
+      formatoArma,
+      poder: `Manifestação da Bankai Suprema: ${formatoArma} Poder Devastador: ${poder}`,
+      foto: "assets/ichigo-moon.png"
+    });
   }
   return opcoes;
 }
@@ -500,32 +520,31 @@ function playReiatsuSound(type = 'roll') {
       osc.type = 'sawtooth';
       osc.frequency.setValueAtTime(150, ctx.currentTime);
       osc.frequency.exponentialRampToValueAtTime(650, ctx.currentTime + 0.15);
-      osc.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.3);
       gain.gain.setValueAtTime(0.15, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
       osc.start();
       osc.stop(ctx.currentTime + 0.35);
-    } else if (type === 'win') {
+    } else if (type === 'win' || type === 'bankai') {
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(440, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.4);
-      gain.gain.setValueAtTime(0.2, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.45);
-      osc.start();
-      osc.stop(ctx.currentTime + 0.45);
-    } else if (type === 'kido') {
-      osc.type = 'triangle';
       osc.frequency.setValueAtTime(300, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.25);
-      gain.gain.setValueAtTime(0.18, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+      osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.5);
+      gain.gain.setValueAtTime(0.25, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
       osc.start();
-      osc.stop(ctx.currentTime + 0.3);
+      osc.stop(ctx.currentTime + 0.6);
+    } else if (type === 'kido' || type === 'shikai') {
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(250, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.3);
+      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.35);
     }
   } catch (e) {}
 }
 
-// Initial Default Database
+// Initial Default Database with Shikai & Bankai Sub-pages Support
 const DEFAULT_DB = {
   superAdminSenha: "maximo2026",
   superAdminNome: "ADM Máximo (Comandante Supremo)",
@@ -543,12 +562,6 @@ const DEFAULT_DB = {
     tarefa: "Avaliação de Cenas de Arco (+8 pontos)",
     pontosGanhos: 8,
     data: "21/08/2026 às 14:00"
-  }, {
-    id: "t2",
-    admNome: "Mestre Kisuke",
-    tarefa: "Avaliação de 7 Fichas (+3 pontos)",
-    pontosGanhos: 3,
-    data: "20/08/2026 às 18:30"
   }],
   combatesArena: [{
     id: "arena-1",
@@ -562,23 +575,8 @@ const DEFAULT_DB = {
     juizLog: "Ren abriu com Hadō #4 Byakurai; Rukia esquivou com Hohō e contra-atacou com Bakudō #61.",
     status: "Em Andamento"
   }],
-  iaJulgamentos: [{
-    id: "ia-1",
-    data: "21/08/2026 às 19:40",
-    lutador1: "Kurosaki Ren (Velocidade 48, Força 28)",
-    lutador2: "Kuchiki Rukia (Pressão 45, Velocidade 42)",
-    cenaDesc: "Ren tentou golpear direto com Zanjutsu rápido enquanto Rukia conjurava Rikujō Kōrō.",
-    veredito: "Veredito da IA: Devido à diferença de +6 em Velocidade de Ren, seu golpe inicial atinge antes da conjuração completa sem encantamento, porém a alta Pressão Espiritual de Rukia (45 vs 37) reduz o dano total com barreira instintiva de Reiatsu. Ambos sofrem desgaste moderado."
-  }],
-  rolagensDadosPublicas: [{
-    id: "r1",
-    autor: "Mestre Kisuke",
-    personagem: "Kurosaki Ren",
-    dado: "d20",
-    resultado: 18,
-    categoria: "Positivo (Sucesso Limpo)",
-    data: "22/08/2026 às 09:30"
-  }],
+  iaJulgamentos: [],
+  rolagensDadosPublicas: [],
   personagens: [{
     id: "ren-001",
     nome: "Kurosaki Ren",
@@ -595,12 +593,11 @@ const DEFAULT_DB = {
     pontosDisponiveis: 7,
     sorteiosComunsRestantes: 2,
     sorteiosEspeciaisRestantes: 1,
-    sorteiosDrops: [{
-      id: "dr1",
-      data: "21/08/2026 às 10:15",
-      nome: "Gacha Comum: +5 Pontos Disponíveis",
-      cor: C.blue
-    }],
+    sorteiosDrops: [],
+    permissoes: {
+      shikaiLiberada: true,
+      bankaiLiberada: false
+    },
     atributos: {
       pressao: 37,
       forca: 28,
@@ -619,12 +616,6 @@ const DEFAULT_DB = {
       nome: "Sai",
       cat: "Bakudō",
       custoReiatsu: 2
-    }, {
-      id: "k1",
-      numero: 1,
-      nome: "Kaidō — Tratamento de Tecidos",
-      cat: "Kaidō",
-      custoReiatsu: 4
     }],
     tecnicas: [{
       id: "t1",
@@ -635,22 +626,27 @@ const DEFAULT_DB = {
       nome: "Bakudō #1 — Sai",
       categoria: "Bakudō"
     }, {
-      id: "t3",
-      nome: "Kaidō — Tratamento Básico",
-      categoria: "Kaidō"
-    }, {
       id: "t4",
       nome: "Shunpo — Passo Relâmpago",
       categoria: "Hohō"
     }],
     zanpakuto: {
-      nome: "Zangetsu (Espírito em despertar)",
-      shikai: true,
-      bankai: false,
-      notas: "Sente a ressonância do espírito durante combates sob pressão. Shikai despertado em treino de arco."
+      nome: "Zangetsu",
+      fotoShikai: "assets/ichigo-orange.png",
+      fotoBankai: "assets/ichigo-moon.png",
+      shikaiAtiva: {
+        nome: "Zangetsu",
+        comando: "Uive, Zangetsu!",
+        elemento: "Aço Puro / Gravidade e Impacto",
+        formatoArma: "Uma imensa lâmina de cutelo sem guarda convencional, envolvida por faixas brancas espirituais no cabo e aço polido de alta densidade.",
+        poder: "Projeta ondas cortantes gigantescas de pura Reiatsu condensada (Getsuga Tenshō) capazes de fender o solo e arrebentar barreiras de Bakudō.",
+        foto: "assets/ichigo-orange.png"
+      },
+      bankaiAtiva: null,
+      notas: "Espírito em ressonância constante durante combates sob alta pressão."
     },
     estado: "Inteiro",
-    treinosHoje: 1,
+    treinosHoje: 0,
     historico: [{
       id: "h1",
       data: "21/08/2026 às 10:30",
@@ -659,14 +655,6 @@ const DEFAULT_DB = {
       id: "h2",
       data: "20/08/2026 às 16:45",
       texto: "Missão Principal: +15 Pontos concedidos + 4 Giros Comuns + 1 Especial"
-    }, {
-      id: "h3",
-      data: "19/08/2026 às 14:10",
-      texto: "Combate em ON aprovado: +2 Pressão Espiritual"
-    }, {
-      id: "h4",
-      data: "18/08/2026 às 09:00",
-      texto: "Ficha inicial criada na Sociedade das Almas"
     }]
   }, {
     id: "rukia-002",
@@ -685,6 +673,10 @@ const DEFAULT_DB = {
     sorteiosComunsRestantes: 1,
     sorteiosEspeciaisRestantes: 0,
     sorteiosDrops: [],
+    permissoes: {
+      shikaiLiberada: true,
+      bankaiLiberada: false
+    },
     atributos: {
       pressao: 45,
       forca: 18,
@@ -697,37 +689,26 @@ const DEFAULT_DB = {
       nome: "Sōkatsui",
       cat: "Hadō",
       custoReiatsu: 7
-    }, {
-      id: "b61",
-      numero: 61,
-      nome: "Rikujō Kōrō",
-      cat: "Bakudō",
-      custoReiatsu: 12
-    }, {
-      id: "k2",
-      numero: 2,
-      nome: "Kaidō — Revitalização de Reiatsu",
-      cat: "Kaidō",
-      custoReiatsu: 7
     }],
     tecnicas: [{
       id: "t5",
       nome: "Hadō #33 — Sōkatsui",
       categoria: "Hadō"
-    }, {
-      id: "t6",
-      nome: "Bakudō #61 — Rikujō Kōrō",
-      categoria: "Bakudō"
-    }, {
-      id: "t7",
-      nome: "Kaidō — Restauração de Reiatsu",
-      categoria: "Kaidō"
     }],
     zanpakuto: {
       nome: "Sode no Shirayuki",
-      shikai: true,
-      bankai: false,
-      notas: "Zanpakutō do tipo gelo mais bela da Sociedade das Almas."
+      fotoShikai: "assets/ichigo-moon.png",
+      fotoBankai: "assets/ichigo-moon.png",
+      shikaiAtiva: {
+        nome: "Sode no Shirayuki",
+        comando: "Dance, Sode no Shirayuki!",
+        elemento: "Gelo / Névoa Congelante",
+        formatoArma: "Uma lâmina completamente branca de cristal gélido imaculado, com fita de seda branca translúcida flutuando da empunhadura.",
+        poder: "Danças de gelo (Some no mai, Tsukishiro) que congelam toda a coluna atmosférica em um círculo perfeito de zero absoluto.",
+        foto: "assets/ichigo-moon.png"
+      },
+      bankaiAtiva: null,
+      notas: "Considerada a Zanpakutō do tipo gelo mais bela da Sociedade das Almas."
     },
     estado: "Inteiro",
     treinosHoje: 0,
@@ -735,10 +716,6 @@ const DEFAULT_DB = {
       id: "h5",
       data: "21/08/2026 às 11:15",
       texto: "Recompensa de Missão: +15 Pontos disponíveis"
-    }, {
-      id: "h6",
-      data: "19/08/2026 às 15:30",
-      texto: "Ficha registrada com sucesso"
     }]
   }]
 };
@@ -797,8 +774,6 @@ function App() {
         if (!parsed.subAdms) parsed.subAdms = DEFAULT_DB.subAdms;
         if (!parsed.registrosTarefasAdm) parsed.registrosTarefasAdm = DEFAULT_DB.registrosTarefasAdm;
         if (!parsed.combatesArena) parsed.combatesArena = DEFAULT_DB.combatesArena;
-        if (!parsed.iaJulgamentos) parsed.iaJulgamentos = DEFAULT_DB.iaJulgamentos;
-        if (!parsed.rolagensDadosPublicas) parsed.rolagensDadosPublicas = DEFAULT_DB.rolagensDadosPublicas;
         if (!parsed.personagens || parsed.personagens.length === 0) parsed.personagens = DEFAULT_DB.personagens;
         setDb(parsed);
       } else {
@@ -935,7 +910,7 @@ function App() {
     className: "font-title tracking-widest text-bleach-orange text-sm"
   }, "BLEACH RPG"), /*#__PURE__*/React.createElement("span", null, "\u2022 Sociedade das Almas \xA9 2026")), /*#__PURE__*/React.createElement("div", {
     className: "text-right"
-  }, /*#__PURE__*/React.createElement("span", null, "Treino em ON (30 linhas) \u2022 Zanpakut\u014D Narrativa & IA \u2022 Arena & Rankings")))), showAdminLoginModal && /*#__PURE__*/React.createElement(AdminLoginModal, {
+  }, /*#__PURE__*/React.createElement("span", null, "Treino em ON (30 linhas) \u2022 Zanpakut\u014D Shikai & Bankai \u2022 Arena & Rankings")))), showAdminLoginModal && /*#__PURE__*/React.createElement(AdminLoginModal, {
     db: db,
     onClose: () => setShowAdminLoginModal(false),
     onSuccess: s => {
@@ -1071,7 +1046,7 @@ function Badge({
   }, children);
 }
 
-// PLAYER LOGIN SCREEN (CLEAN, SECURE, ACCEPTS CODE + WHATSAPP/NAME OR CODE ONLY)
+// PLAYER LOGIN SCREEN
 function LoginScreen({
   db,
   onLogin,
@@ -1089,8 +1064,6 @@ function LoginScreen({
       return;
     }
     const digitsOnly = termo.replace(/\D/g, "");
-
-    // Find all matching characters by code (case-insensitive)
     const matchingChars = (db.personagens || []).filter(c => {
       const cCode = (c.codigo || "").trim().toLowerCase();
       return cCode === cod;
@@ -1100,8 +1073,6 @@ function LoginScreen({
       return;
     }
     let p = matchingChars[0];
-
-    // If WhatsApp/Name was also typed, match against specific character if multiple exist
     if (termo) {
       const foundSpecific = matchingChars.find(c => {
         const cPhone = (c.whatsapp || "").replace(/\D/g, "");
@@ -1165,7 +1136,7 @@ function LoginScreen({
   }, "\uD83D\uDD10 Sou Administrador (Entrar no Painel ADM)"))));
 }
 
-// ADMIN LOGIN SCREEN & MODAL (SUPPORTING MAX ADM & SUB ADMS)
+// ADMIN LOGIN SCREEN & MODAL
 function AdminLoginScreen({
   db,
   onLoginAdmin
@@ -1902,7 +1873,7 @@ function ArenaView({
   }, "Nenhum combate ativo no momento. Solicite \xE0 administra\xE7\xE3o o in\xEDcio de um duelo!"));
 }
 
-// TAB: FICHA DO JOGADOR
+// TAB: FICHA DO JOGADOR (WITH EXCLUSIVE SHIKAI & BANKAI SUB-PAGES AND AURA EFFECTS)
 function FichaView({
   db,
   saveDb,
@@ -1911,6 +1882,8 @@ function FichaView({
   rankFisico,
   rankPressao
 }) {
+  const [subPaginaFicha, setSubPaginaFicha] = useState("perfil"); // "perfil", "shikai", "bankai"
+
   const [pend, setPend] = useState({
     pressao: 0,
     forca: 0,
@@ -1926,6 +1899,8 @@ function FichaView({
     motivo: ""
   });
   const [editFoto, setEditFoto] = useState(personagem?.foto || "assets/ichigo-orange.png");
+  const [editFotoShikai, setEditFotoShikai] = useState(personagem?.zanpakuto?.fotoShikai || "assets/ichigo-orange.png");
+  const [editFotoBankai, setEditFotoBankai] = useState(personagem?.zanpakuto?.fotoBankai || "assets/ichigo-moon.png");
   const [editNome, setEditNome] = useState(personagem?.nome || "");
   const [editWhats, setEditWhats] = useState(personagem?.whatsapp || "");
   const [editCodigo, setEditCodigo] = useState(personagem?.codigo || "");
@@ -1937,22 +1912,24 @@ function FichaView({
   const [editEsquadrao, setEditEsquadrao] = useState(personagem?.esquadrao || "11º Esquadrão");
   const [zk, setZk] = useState(personagem?.zanpakuto || {
     nome: "",
-    shikai: false,
-    bankai: false,
+    shikaiAtiva: null,
+    bankaiAtiva: null,
     notas: ""
   });
   const [rewardModal, setRewardModal] = useState(null);
   const [showGachaHistory, setShowGachaHistory] = useState(false);
+
+  // AI Generator Modal
   const [showZanpakutoAIModal, setShowZanpakutoAIModal] = useState(false);
   const [aiZkOpcoes, setAiZkOpcoes] = useState([]);
-  const [aiZkTipo, setAiZkTipo] = useState("shikai");
+  const [aiZkTipo, setAiZkTipo] = useState("shikai"); // "shikai" (4 ops) or "bankai" (3 ops)
+
   const [copiadoWhats, setCopiadoWhats] = useState(false);
   if (!personagem) return /*#__PURE__*/React.createElement("div", {
     className: "text-bleach-muted"
   }, "Ficha n\xE3o encontrada.");
   const pendSum = Object.values(pend).reduce((a, b) => a + b, 0);
   const restante = (personagem.pontosDisponiveis || 0) - pendSum;
-  const fadigaPct = (personagem.treinosHoje || 0) >= 3 ? 15 : (personagem.treinosHoje || 0) >= 2 ? 5 : 0;
   const totalStats = Object.values(personagem.atributos).reduce((a, b) => a + b, 0);
   const powerTier = getPowerTier(totalStats);
 
@@ -1967,6 +1944,10 @@ function FichaView({
   const scorePressao = Number(personagem.atributos.pressao);
   const topPressaoScore = rankPressao[0]?.score || scorePressao;
   const pctBarPressao = Math.min(100, Math.round(scorePressao / Math.max(1, topPressaoScore) * 100));
+  const temShikai = !!personagem?.zanpakuto?.shikaiAtiva;
+  const temBankai = !!personagem?.zanpakuto?.bankaiAtiva;
+  const podeGerarShikai = !!personagem?.permissoes?.shikaiLiberada;
+  const podeGerarBankai = !!personagem?.permissoes?.bankaiLiberada && temShikai;
   function updateChar(patch, historicoTexto) {
     const personagens = (db.personagens || []).map(p => p.id === personagem.id ? {
       ...p,
@@ -2047,11 +2028,9 @@ function FichaView({
       motivo: ""
     });
   }
-
-  // Player Gacha Rolls
   function girarGachaComum() {
     if ((personagem.sorteiosComunsRestantes || 0) <= 0) {
-      alert("Você não possui giros de Sorteio Comum disponíveis no momento. Conclua Treinos, Missões ou Cenas de Arco para ser liberado pela ADM!");
+      alert("Você não possui giros de Sorteio Comum disponíveis no momento.");
       return;
     }
     const total = RARIDADES_COMUNS.reduce((a, r) => a + r.peso, 0);
@@ -2087,7 +2066,7 @@ function FichaView({
   }
   function girarSorteioEspecial() {
     if ((personagem.sorteiosEspeciaisRestantes || 0) <= 0) {
-      alert("Você não possui giros de Sorteio Especial disponíveis. Sorteios especiais são garantidos em Cenas de Arco (90 linhas) e Missões Principais!");
+      alert("Você não possui giros de Sorteio Especial disponíveis.");
       return;
     }
     const escolhida = RECOMPENSAS_ESPECIAIS[Math.floor(Math.random() * RECOMPENSAS_ESPECIAIS.length)];
@@ -2115,15 +2094,46 @@ function FichaView({
     });
     playReiatsuSound('win');
   }
-  function handleFotoUpload(e) {
+  function handleFotoUpload(e, tipo = "perfil") {
     const file = e.target.files[0];
     if (!file) return;
     const reader = new FileReader();
     reader.onload = evt => {
-      setEditFoto(evt.target.result);
-      updateChar({
-        foto: evt.target.result
-      }, "Foto de perfil do personagem atualizada");
+      const dataUrl = evt.target.result;
+      if (tipo === "perfil") {
+        setEditFoto(dataUrl);
+        updateChar({
+          foto: dataUrl
+        }, "Foto de perfil do personagem atualizada");
+      } else if (tipo === "shikai") {
+        setEditFotoShikai(dataUrl);
+        const novoZk = {
+          ...zk,
+          fotoShikai: dataUrl,
+          shikaiAtiva: zk.shikaiAtiva ? {
+            ...zk.shikaiAtiva,
+            foto: dataUrl
+          } : null
+        };
+        setZk(novoZk);
+        updateChar({
+          zanpakuto: novoZk
+        }, "Imagem da arma Shikai atualizada");
+      } else if (tipo === "bankai") {
+        setEditFotoBankai(dataUrl);
+        const novoZk = {
+          ...zk,
+          fotoBankai: dataUrl,
+          bankaiAtiva: zk.bankaiAtiva ? {
+            ...zk.bankaiAtiva,
+            foto: dataUrl
+          } : null
+        };
+        setZk(novoZk);
+        updateChar({
+          zanpakuto: novoZk
+        }, "Imagem monumental da Bankai atualizada");
+      }
     };
     reader.readAsDataURL(file);
   }
@@ -2141,35 +2151,71 @@ function FichaView({
     }, "Dados cadastrais e narrativos atualizados");
     alert("Dados salvos com sucesso!");
   }
-  function salvarZanpakuto() {
-    updateChar({
-      zanpakuto: zk
-    }, "Zanpakutō atualizada");
-  }
   function abrirGeradorZanpakutoAI(tipo) {
     setAiZkTipo(tipo);
-    const ops = gerarOpcoesZanpakutoAI(personagem.nome, zk.notas, tipo);
-    setAiZkOpcoes(ops);
+    if (tipo === "shikai") {
+      const ops = gerar4OpcoesShikaiAI(personagem.nome, zk.notas);
+      setAiZkOpcoes(ops);
+    } else {
+      const ops = gerar3OpcoesBankaiAI(personagem.nome, zk.shikaiAtiva);
+      setAiZkOpcoes(ops);
+    }
     setShowZanpakutoAIModal(true);
   }
   function escolherOpcaoAI(opcao) {
-    const novoZk = {
-      ...zk,
-      nome: zk.nome || opcao.nome,
-      [aiZkTipo]: true,
-      notas: (zk.notas ? zk.notas + "\n\n" : "") + `[${aiZkTipo.toUpperCase()} ESCOLHIDA]: ${opcao.comando}\nElemento: ${opcao.elemento}\nEfeito: ${opcao.habilidade}`
-    };
-    setZk(novoZk);
-    updateChar({
-      zanpakuto: novoZk
-    }, `Evolução de Zanpakutō (${aiZkTipo.toUpperCase()}) selecionada via IA`);
-    setShowZanpakutoAIModal(false);
-    alert(`Parabéns! Sua ${aiZkTipo.toUpperCase()} foi registrada na sua ficha com sucesso!`);
+    if (aiZkTipo === "shikai") {
+      const novoZk = {
+        ...zk,
+        nome: opcao.nome,
+        fotoShikai: editFotoShikai || opcao.foto,
+        shikaiAtiva: opcao,
+        notas: (zk.notas ? zk.notas + "\n\n" : "") + `[SHIKAI DESPERTA]: ${opcao.comando}\nElemento: ${opcao.elemento}\nFormato: ${opcao.formatoArma}\nPoder: ${opcao.poder}`
+      };
+      setZk(novoZk);
+      updateChar({
+        zanpakuto: novoZk
+      }, `Shikai [${opcao.nome}] despertada com sucesso!`);
+      setShowZanpakutoAIModal(false);
+      setSubPaginaFicha("shikai");
+      playReiatsuSound('shikai');
+      alert(`Parabéns! Sua Shikai [${opcao.nome}] foi liberada! Acesse a nova aba "🗡️ Shikai Desperta" para ver sua lâmina!`);
+    } else {
+      const novoZk = {
+        ...zk,
+        fotoBankai: editFotoBankai || opcao.foto,
+        bankaiAtiva: opcao,
+        notas: (zk.notas ? zk.notas + "\n\n" : "") + `[BANKAI SUPREMA]: ${opcao.comando}\nElemento: ${opcao.elemento}\nFormato: ${opcao.formatoArma}\nPoder: ${opcao.poder}`
+      };
+      setZk(novoZk);
+      updateChar({
+        zanpakuto: novoZk
+      }, `Bankai Suprema [${opcao.nome}] liberada!`);
+      setShowZanpakutoAIModal(false);
+      setSubPaginaFicha("bankai");
+      playReiatsuSound('bankai');
+      alert(`ALERTA DE PODER TRANSCENDENTAL! Sua Bankai [${opcao.nome}] foi desbloqueada com sucesso!`);
+    }
   }
-
-  // Generate WhatsApp Sheet (Backticks escaped properly)
+  function togglePermissaoShikai() {
+    const atual = !!personagem?.permissoes?.shikaiLiberada;
+    updateChar({
+      permissoes: {
+        ...(personagem.permissoes || {}),
+        shikaiLiberada: !atual
+      }
+    }, `Permissão de Despertar de Shikai ${!atual ? "LIBERADA" : "BLOQUEADA"} pela ADM`);
+  }
+  function togglePermissaoBankai() {
+    const atual = !!personagem?.permissoes?.bankaiLiberada;
+    updateChar({
+      permissoes: {
+        ...(personagem.permissoes || {}),
+        bankaiLiberada: !atual
+      }
+    }, `Permissão de Despertar de Bankai ${!atual ? "LIBERADA" : "BLOQUEADA"} pela ADM`);
+  }
   function gerarFichaWhatsApp() {
-    const totalKidos = (personagem.kidosConhecidos || []).length || (personagem.tecnicas || []).filter(t => ["Hadō", "Bakudō", "Kaidō"].includes(t.categoria)).length || 3;
+    const totalKidos = (personagem.kidosConhecidos || []).length || 3;
     return `࣭    ㅤ
                 ⚯͛
                      ᩠      ⊹                ᩠          . 
@@ -2181,7 +2227,7 @@ function FichaView({
                       ︶ ͝     ︶꒷꒦︶                        
      
               ⊹    /   𝙫ocê é um shinigɑmi
-            toɾne-se   𝓛𝐞𝐧𝐝𝐚́𝐫𝐢𝐨  ・・・
+            toɾne-se   𝓛𝐞𝐧𝐝ɑ́ɾio  ・・・
                                      ﹀                                   
         ͛  𝒇𝒊𝒄𝒉𝒂 𝒅𝒆   :   𝕻𝗘𝗥𝗦𝗢𝗡𝗔𝗚𝗘𝗠  „                        
   ɑpɾesentɑmos ɑ fichɑ que dɑɾɑ́ vidɑ 
@@ -2211,7 +2257,7 @@ function FichaView({
        ⎯  ${personagem.raca || "Shinigami"}
        ✶  „  zɑnpɑkutō .ᐟ
        ⎯ nome: ${personagem.zanpakuto?.nome || "Em despertar"}
-       ⎯ stɑtus: ${personagem.zanpakuto?.bankai ? "Bankai Desperta" : personagem.zanpakuto?.shikai ? "Shikai Desperta" : "Lâmina Selada"}
+       ⎯ stɑtus: ${personagem.zanpakuto?.bankaiAtiva ? "Bankai Desperta" : personagem.zanpakuto?.shikaiAtiva ? "Shikai Desperta" : "Lâmina Selada"}
        ✶  „  quɑntidɑde de kidōs .ᐟ
        ⎯   ${totalKidos}
 
@@ -2243,6 +2289,23 @@ function FichaView({
   return /*#__PURE__*/React.createElement("div", {
     className: "space-y-6"
   }, /*#__PURE__*/React.createElement("div", {
+    className: "flex gap-2 border-b border-bleach-border pb-3 overflow-x-auto"
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: () => setSubPaginaFicha("perfil"),
+    className: `px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition flex items-center gap-2 ${subPaginaFicha === "perfil" ? "bg-bleach-orange text-black font-extrabold shadow-lg" : "bg-bleach-panel border border-bleach-border text-bleach-creamDim hover:text-white"}`
+  }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDC64"), /*#__PURE__*/React.createElement("span", null, "Ficha Geral")), /*#__PURE__*/React.createElement("button", {
+    onClick: () => setSubPaginaFicha("shikai"),
+    className: `px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition flex items-center gap-2 relative ${subPaginaFicha === "shikai" ? "bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-extrabold shadow-lg" : temShikai || podeGerarShikai ? "bg-bleach-panel border border-blue-500/50 text-blue-300 hover:text-white shadow" : "bg-bleach-panel border border-bleach-border text-bleach-muted opacity-70"}`
+  }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDDE1\uFE0F"), /*#__PURE__*/React.createElement("span", null, temShikai ? `Shikai: ${personagem.zanpakuto.shikaiAtiva.nome}` : "Shikai (Despertar)"), podeGerarShikai && !temShikai && /*#__PURE__*/React.createElement("span", {
+    className: "w-2 h-2 rounded-full bg-cyan-400 animate-ping absolute top-1 right-1"
+  })), /*#__PURE__*/React.createElement("button", {
+    onClick: () => setSubPaginaFicha("bankai"),
+    className: `px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition flex items-center gap-2 relative ${subPaginaFicha === "bankai" ? "bg-gradient-to-r from-purple-600 via-amber-500 to-orange-500 text-white font-extrabold shadow-[0_0_20px_#FFD700]" : temBankai || podeGerarBankai ? "bg-purple-950/60 border-2 border-purple-500 text-yellow-400 font-bold hover:brightness-125" : "bg-bleach-panel border border-bleach-border text-bleach-muted opacity-60"}`
+  }, /*#__PURE__*/React.createElement("span", null, "\u534D"), /*#__PURE__*/React.createElement("span", null, temBankai ? `Bankai: ${personagem.zanpakuto.bankaiAtiva.nome}` : "Bankai Suprema"), podeGerarBankai && !temBankai && /*#__PURE__*/React.createElement("span", {
+    className: "w-2.5 h-2.5 rounded-full bg-yellow-400 animate-ping absolute top-1 right-1"
+  }))), subPaginaFicha === "perfil" && /*#__PURE__*/React.createElement("div", {
+    className: "space-y-6"
+  }, /*#__PURE__*/React.createElement("div", {
     className: "bg-bleach-panel border border-bleach-border rounded-2xl p-6 shadow-2xl relative overflow-hidden"
   }, /*#__PURE__*/React.createElement("div", {
     className: "flex flex-col md:flex-row items-center md:items-start gap-6"
@@ -2262,14 +2325,14 @@ function FichaView({
   }, "\uD83D\uDCF7 Alterar Foto", /*#__PURE__*/React.createElement("input", {
     type: "file",
     accept: "image/*",
-    onChange: handleFotoUpload,
+    onChange: e => handleFotoUpload(e, "perfil"),
     className: "hidden"
   }))), /*#__PURE__*/React.createElement("label", {
     className: "mt-2.5 px-3 py-1 bg-bleach-panel2 border border-bleach-border hover:border-bleach-orange text-[11px] text-bleach-creamDim rounded-lg cursor-pointer transition"
   }, "Subir Imagem", /*#__PURE__*/React.createElement("input", {
     type: "file",
     accept: "image/*",
-    onChange: handleFotoUpload,
+    onChange: e => handleFotoUpload(e, "perfil"),
     className: "hidden"
   }))), /*#__PURE__*/React.createElement("div", {
     className: "flex-1 text-center md:text-left space-y-2"
@@ -2388,7 +2451,7 @@ function FichaView({
     className: "text-xs text-bleach-creamDim"
   }, "Voc\xEA possui ", /*#__PURE__*/React.createElement("strong", {
     className: "text-bleach-orange"
-  }, personagem.pontosDisponiveis), " pontos concedidos pelo mestre/sorteios. Escolha onde investir.")), /*#__PURE__*/React.createElement("div", {
+  }, personagem.pontosDisponiveis), " pontos concedidos pelo mestre/sorteios.")), /*#__PURE__*/React.createElement("div", {
     className: "text-right"
   }, /*#__PURE__*/React.createElement("span", {
     className: "text-xs text-bleach-creamDim"
@@ -2461,83 +2524,6 @@ function FichaView({
       backgroundColor: a.color
     }
   })))))), /*#__PURE__*/React.createElement(Section, {
-    title: "Zanpakut\u014D & Despertar Espiritual (IA)",
-    subtitle: "Evolu\xE7\xE3o estritamente narrativa baseada na personalidade, cenas e treinos",
-    right: /*#__PURE__*/React.createElement("div", {
-      className: "flex gap-2"
-    }, /*#__PURE__*/React.createElement("button", {
-      onClick: () => abrirGeradorZanpakutoAI("shikai"),
-      className: "px-3 py-1.5 bg-bleach-orange/20 border border-bleach-orange text-bleach-orange text-xs font-bold rounded-lg hover:bg-bleach-orange hover:text-black transition"
-    }, "\uD83E\uDD16 Gerar 4 Op\xE7\xF5es Shikai (IA)"), /*#__PURE__*/React.createElement("button", {
-      onClick: () => abrirGeradorZanpakutoAI("bankai"),
-      className: "px-3 py-1.5 bg-purple-950 border border-purple-500 text-purple-300 text-xs font-bold rounded-lg hover:bg-purple-600 hover:text-white transition"
-    }, "\u26A1 Gerar 4 Op\xE7\xF5es Bankai (IA)"))
-  }, isAdmin ? /*#__PURE__*/React.createElement("div", {
-    className: "space-y-4"
-  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", {
-    className: "block text-xs text-bleach-creamDim mb-1"
-  }, "Nome da Zanpakut\u014D"), /*#__PURE__*/React.createElement("input", {
-    type: "text",
-    value: zk.nome || "",
-    onChange: e => setZk({
-      ...zk,
-      nome: e.target.value
-    }),
-    placeholder: "Ex: Zangetsu",
-    className: "w-full bg-bleach-panel2 border border-bleach-border rounded-lg px-3 py-2 text-xs text-white"
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "flex gap-6"
-  }, /*#__PURE__*/React.createElement("label", {
-    className: "flex items-center gap-2 text-xs text-bleach-cream flex-1 bg-bleach-panel2 p-3 border border-bleach-borderSoft rounded-lg cursor-pointer"
-  }, /*#__PURE__*/React.createElement("input", {
-    type: "checkbox",
-    checked: !!zk.shikai,
-    onChange: e => setZk({
-      ...zk,
-      shikai: e.target.checked
-    }),
-    className: "accent-bleach-orange"
-  }), /*#__PURE__*/React.createElement("span", null, "Shikai Desbloqueado")), /*#__PURE__*/React.createElement("label", {
-    className: "flex items-center gap-2 text-xs text-bleach-cream flex-1 bg-bleach-panel2 p-3 border border-bleach-borderSoft rounded-lg cursor-pointer"
-  }, /*#__PURE__*/React.createElement("input", {
-    type: "checkbox",
-    checked: !!zk.bankai,
-    onChange: e => setZk({
-      ...zk,
-      bankai: e.target.checked
-    }),
-    className: "accent-bleach-orange"
-  }), /*#__PURE__*/React.createElement("span", null, "Bankai Desbloqueado"))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", {
-    className: "block text-xs text-bleach-creamDim mb-1"
-  }, "Notas Narrativas / Propriedades"), /*#__PURE__*/React.createElement("textarea", {
-    rows: 3,
-    value: zk.notas || "",
-    onChange: e => setZk({
-      ...zk,
-      notas: e.target.value
-    }),
-    placeholder: "Descreva o elemento, comando de libera\xE7\xE3o ou conquistas narrativas...",
-    className: "w-full bg-bleach-panel2 border border-bleach-border rounded-lg px-3 py-2 text-xs text-white"
-  })), /*#__PURE__*/React.createElement("button", {
-    onClick: salvarZanpakuto,
-    className: "px-4 py-2 bg-bleach-orange text-black font-bold text-xs uppercase rounded-lg hover:bg-orange-400"
-  }, "Salvar Zanpakut\u014D")) : /*#__PURE__*/React.createElement("div", {
-    className: "space-y-3"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "flex items-center justify-between bg-bleach-panel2 border border-bleach-borderSoft p-3.5 rounded-lg"
-  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    className: "text-xs text-bleach-muted uppercase"
-  }, "Nome Revelado"), /*#__PURE__*/React.createElement("div", {
-    className: "text-lg font-bold text-bleach-cream font-cinzel"
-  }, personagem.zanpakuto?.nome || "??? (Ainda não revelado)")), /*#__PURE__*/React.createElement("div", {
-    className: "flex gap-2"
-  }, /*#__PURE__*/React.createElement(Badge, {
-    color: personagem.zanpakuto?.shikai ? C.green : C.muted
-  }, "Shikai: ", personagem.zanpakuto?.shikai ? "Desbloqueado" : "Bloqueado"), /*#__PURE__*/React.createElement(Badge, {
-    color: personagem.zanpakuto?.bankai ? C.purple : C.muted
-  }, "Bankai: ", personagem.zanpakuto?.bankai ? "Desbloqueado" : "Bloqueado"))), personagem.zanpakuto?.notas && /*#__PURE__*/React.createElement("div", {
-    className: "p-3 bg-black/40 border border-bleach-borderSoft rounded-lg text-xs text-bleach-creamDim leading-relaxed whitespace-pre-line"
-  }, "\uD83D\uDCDC ", personagem.zanpakuto.notas))), /*#__PURE__*/React.createElement(Section, {
     title: "Kid\u014D e T\xE9cnicas Aprendidas",
     subtitle: "Feiti\xE7os dominados pelo Shinigami"
   }, (personagem.tecnicas || []).length === 0 ? /*#__PURE__*/React.createElement("p", {
@@ -2573,12 +2559,216 @@ function FichaView({
   }), /*#__PURE__*/React.createElement("button", {
     onClick: addTecnica,
     className: "px-4 py-2 bg-bleach-panel border border-bleach-border text-bleach-cream hover:border-bleach-orange rounded-lg text-xs font-bold uppercase"
-  }, "+ Adicionar"))), isAdmin && /*#__PURE__*/React.createElement(Section, {
+  }, "+ Adicionar"))), /*#__PURE__*/React.createElement(Section, {
+    title: "Hist\xF3rico de Registros",
+    subtitle: "Linha do tempo de treinos, miss\xF5es e recompensas"
+  }, (personagem.historico || []).length === 0 ? /*#__PURE__*/React.createElement("p", {
+    className: "text-xs text-bleach-muted"
+  }, "Nenhum registro ainda.") : /*#__PURE__*/React.createElement("div", {
+    className: "space-y-3"
+  }, personagem.historico.slice(0, 20).map(h => /*#__PURE__*/React.createElement("div", {
+    key: h.id,
+    className: "border-l-2 border-bleach-orange pl-3 py-1"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "text-[10px] text-bleach-muted font-mono"
+  }, h.data), /*#__PURE__*/React.createElement("div", {
+    className: "text-xs text-bleach-creamDim mt-0.5"
+  }, h.texto)))))), subPaginaFicha === "shikai" && /*#__PURE__*/React.createElement("div", {
+    className: "space-y-6"
+  }, temShikai ? /*#__PURE__*/React.createElement("div", {
+    className: "bg-bleach-panel border-2 border-blue-500/50 rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "shikai-smoke-overlay"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "relative z-10 space-y-6"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-blue-500/30 pb-4"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+    className: "px-3 py-1 bg-blue-950 border border-blue-400 text-cyan-300 text-xs font-bold rounded-full uppercase tracking-wider"
+  }, "\uD83D\uDDE1\uFE0F Despertar de Primeira Fase \u2022 Shikai"), /*#__PURE__*/React.createElement("h2", {
+    className: "font-title text-4xl sm:text-5xl tracking-widest text-cyan-400 mt-2 drop-shadow-[0_0_15px_rgba(79,179,232,0.6)]"
+  }, personagem.zanpakuto.shikaiAtiva.nome), /*#__PURE__*/React.createElement("div", {
+    className: "text-xs font-mono text-cyan-200 mt-1 italic"
+  }, "Comando de Libera\xE7\xE3o: \"", personagem.zanpakuto.shikaiAtiva.comando, "\"")), /*#__PURE__*/React.createElement(Badge, {
+    color: C.blue,
+    className: "text-xs py-1.5 px-3"
+  }, "Elemento: ", personagem.zanpakuto.shikaiAtiva.elemento)), /*#__PURE__*/React.createElement("div", {
+    className: "grid grid-cols-1 lg:grid-cols-3 gap-6 items-center"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "lg:col-span-1 flex flex-col items-center"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "w-full max-w-[280px] h-80 rounded-2xl border-4 border-cyan-400/70 bg-black/90 relative overflow-hidden shadow-[0_0_30px_rgba(79,179,232,0.4)] group"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: editFotoShikai || personagem.zanpakuto.fotoShikai || 'assets/ichigo-orange.png',
+    alt: "Forma Shikai",
+    className: "w-full h-full object-cover group-hover:scale-105 transition duration-700",
+    onError: e => {
+      e.target.src = 'assets/ichigo-orange.png';
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "absolute inset-0 bg-gradient-to-t from-black via-transparent to-white/10 pointer-events-none"
+  }), /*#__PURE__*/React.createElement("label", {
+    className: "absolute inset-0 bg-black/70 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer transition text-xs text-cyan-300 font-bold text-center p-3"
+  }, "\uD83D\uDCF7 Alterar Imagem da Shikai", /*#__PURE__*/React.createElement("input", {
+    type: "file",
+    accept: "image/*",
+    onChange: e => handleFotoUpload(e, "shikai"),
+    className: "hidden"
+  }))), /*#__PURE__*/React.createElement("label", {
+    className: "mt-3 px-4 py-1.5 bg-blue-950 border border-blue-500 hover:border-cyan-400 text-xs text-cyan-200 rounded-lg cursor-pointer transition shadow"
+  }, "Subir Foto da L\xE2mina Shikai", /*#__PURE__*/React.createElement("input", {
+    type: "file",
+    accept: "image/*",
+    onChange: e => handleFotoUpload(e, "shikai"),
+    className: "hidden"
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "lg:col-span-2 space-y-4"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "bg-black/60 border border-blue-500/40 rounded-xl p-5 shadow-inner"
+  }, /*#__PURE__*/React.createElement("h4", {
+    className: "text-xs font-bold uppercase tracking-wider text-cyan-400 mb-1 flex items-center gap-2"
+  }, /*#__PURE__*/React.createElement("span", null, "\u2694\uFE0F"), " Formato & Transforma\xE7\xE3o da L\xE2mina Shikai"), /*#__PURE__*/React.createElement("p", {
+    className: "text-xs sm:text-sm text-bleach-cream leading-relaxed whitespace-pre-line"
+  }, personagem.zanpakuto.shikaiAtiva.formatoArma)), /*#__PURE__*/React.createElement("div", {
+    className: "bg-black/60 border border-blue-500/40 rounded-xl p-5 shadow-inner"
+  }, /*#__PURE__*/React.createElement("h4", {
+    className: "text-xs font-bold uppercase tracking-wider text-cyan-400 mb-1 flex items-center gap-2"
+  }, /*#__PURE__*/React.createElement("span", null, "\u26A1"), " Poder & Habilidades Especiais em Combate"), /*#__PURE__*/React.createElement("p", {
+    className: "text-xs sm:text-sm text-bleach-cream leading-relaxed whitespace-pre-line"
+  }, personagem.zanpakuto.shikaiAtiva.poder)))))) : podeGerarShikai ? /*#__PURE__*/React.createElement("div", {
+    className: "bg-bleach-panel border-2 border-cyan-400 rounded-2xl p-8 text-center space-y-4 shadow-2xl relative overflow-hidden"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "shikai-smoke-overlay"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "relative z-10 max-w-xl mx-auto space-y-4"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "text-4xl"
+  }, "\u2728"), /*#__PURE__*/React.createElement("h3", {
+    className: "font-title text-4xl text-cyan-400 tracking-widest"
+  }, "DESPERTAR DE SHIKAI AUTORIZADO!"), /*#__PURE__*/React.createElement("p", {
+    className: "text-xs sm:text-sm text-bleach-creamDim leading-relaxed"
+  }, "A Administra\xE7\xE3o aprovou o seu treinamento narrativo! Voc\xEA agora pode manifestar a voz da sua Zanpakut\u014D e gerar ", /*#__PURE__*/React.createElement("strong", null, "4 op\xE7\xF5es exclusivas de Shikai"), " criadas pela IA sob medida para o seu perfil."), /*#__PURE__*/React.createElement("button", {
+    onClick: () => abrirGeradorZanpakutoAI("shikai"),
+    className: "px-8 py-3.5 bg-gradient-to-r from-blue-500 to-cyan-400 text-black font-extrabold text-xs uppercase tracking-widest rounded-xl shadow-2xl hover:scale-105 transition"
+  }, "\uD83E\uDD16 Gerar e Escolher Entre as 4 Op\xE7\xF5es de Shikai"))) : /*#__PURE__*/React.createElement("div", {
+    className: "bg-bleach-panel border border-bleach-border rounded-2xl p-12 text-center space-y-3"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "text-4xl opacity-50"
+  }, "\uD83D\uDD12"), /*#__PURE__*/React.createElement("h3", {
+    className: "font-title text-3xl text-bleach-muted tracking-wider"
+  }, "SHIKAI AINDA N\xC3O DESPERTA"), /*#__PURE__*/React.createElement("p", {
+    className: "text-xs text-bleach-muted max-w-md mx-auto leading-relaxed"
+  }, "O despertar de Shikai exige treinamento em ON (30 linhas) e autoriza\xE7\xE3o da Administra\xE7\xE3o. Assim que a ADM liberar na sua ficha, voc\xEA poder\xE1 gerar e escolher sua forma Shikai!"))), subPaginaFicha === "bankai" && /*#__PURE__*/React.createElement("div", {
+    className: "space-y-6"
+  }, temBankai ? /*#__PURE__*/React.createElement("div", {
+    className: "bankai-supreme-card border-2 border-amber-500 rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "relative z-10 space-y-6"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-amber-500/40 pb-5"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+    className: "px-3.5 py-1 bg-gradient-to-r from-purple-900 to-amber-900 border border-amber-400 text-yellow-300 text-xs font-black rounded-full uppercase tracking-widest shadow"
+  }, "\u534D LIBERA\xC7\xC3O COMPLETA \u2022 BANKAI SUPREMA"), /*#__PURE__*/React.createElement("h2", {
+    className: "font-title text-4xl sm:text-6xl tracking-widest text-amber-300 mt-2 drop-shadow-[0_0_25px_#FFD700]"
+  }, personagem.zanpakuto.bankaiAtiva.nome), /*#__PURE__*/React.createElement("div", {
+    className: "text-xs sm:text-sm font-mono text-yellow-200 mt-1 italic"
+  }, "Comando Supremo: \"", personagem.zanpakuto.bankaiAtiva.comando, "\"")), /*#__PURE__*/React.createElement(Badge, {
+    color: C.yellow,
+    className: "text-xs py-2 px-4 shadow-[0_0_15px_#FFD700]"
+  }, "Poder Transcendente")), /*#__PURE__*/React.createElement("div", {
+    className: "grid grid-cols-1 lg:grid-cols-3 gap-6 items-center"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "lg:col-span-1 flex flex-col items-center"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "w-full max-w-[300px] h-96 rounded-3xl border-4 border-amber-400 bg-black relative overflow-hidden shadow-[0_0_40px_rgba(255,215,0,0.5)] group"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: editFotoBankai || personagem.zanpakuto.fotoBankai || 'assets/ichigo-moon.png',
+    alt: "Forma Bankai",
+    className: "w-full h-full object-cover group-hover:scale-110 transition duration-1000",
+    onError: e => {
+      e.target.src = 'assets/ichigo-moon.png';
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "absolute inset-0 bg-gradient-to-t from-black via-transparent to-amber-400/20 pointer-events-none"
+  }), /*#__PURE__*/React.createElement("label", {
+    className: "absolute inset-0 bg-black/75 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer transition text-xs text-yellow-300 font-black text-center p-4"
+  }, "\uD83D\uDC51 Alterar Imagem Monumental da Bankai", /*#__PURE__*/React.createElement("input", {
+    type: "file",
+    accept: "image/*",
+    onChange: e => handleFotoUpload(e, "bankai"),
+    className: "hidden"
+  }))), /*#__PURE__*/React.createElement("label", {
+    className: "mt-3 px-4 py-2 bg-gradient-to-r from-purple-900 to-amber-900 border border-amber-400 hover:brightness-125 text-xs text-yellow-300 font-bold rounded-xl cursor-pointer transition shadow"
+  }, "Subir Foto da Bankai Suprema", /*#__PURE__*/React.createElement("input", {
+    type: "file",
+    accept: "image/*",
+    onChange: e => handleFotoUpload(e, "bankai"),
+    className: "hidden"
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "lg:col-span-2 space-y-4"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "bg-black/70 border-2 border-purple-500/60 rounded-2xl p-6 shadow-[0_0_20px_rgba(139,111,214,0.3)]"
+  }, /*#__PURE__*/React.createElement("h4", {
+    className: "text-xs font-black uppercase tracking-widest text-amber-400 mb-2 flex items-center gap-2"
+  }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDC51"), " Manifesta\xE7\xE3o Colossal & Transforma\xE7\xE3o da Bankai"), /*#__PURE__*/React.createElement("p", {
+    className: "text-xs sm:text-sm text-yellow-100 leading-relaxed whitespace-pre-line"
+  }, personagem.zanpakuto.bankaiAtiva.formatoArma)), /*#__PURE__*/React.createElement("div", {
+    className: "bg-black/70 border-2 border-amber-500/60 rounded-2xl p-6 shadow-[0_0_20px_rgba(255,215,0,0.3)]"
+  }, /*#__PURE__*/React.createElement("h4", {
+    className: "text-xs font-black uppercase tracking-widest text-amber-400 mb-2 flex items-center gap-2"
+  }, /*#__PURE__*/React.createElement("span", null, "\u26A1"), " Poder Supremo & Efeito Devastador de Batalha"), /*#__PURE__*/React.createElement("p", {
+    className: "text-xs sm:text-sm text-yellow-100 leading-relaxed whitespace-pre-line"
+  }, personagem.zanpakuto.bankaiAtiva.poder)))))) : podeGerarBankai ? /*#__PURE__*/React.createElement("div", {
+    className: "bankai-supreme-card border-2 border-amber-400 rounded-3xl p-8 sm:p-12 text-center space-y-4 shadow-2xl relative overflow-hidden"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "relative z-10 max-w-xl mx-auto space-y-4"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "text-5xl animate-bounce"
+  }, "\uD83D\uDC51"), /*#__PURE__*/React.createElement("h3", {
+    className: "font-title text-4xl sm:text-5xl text-amber-300 tracking-widest drop-shadow-[0_0_20px_#FFD700]"
+  }, "LIBERA\xC7\xC3O DE BANKAI DISPON\xCDVEL!"), /*#__PURE__*/React.createElement("p", {
+    className: "text-xs sm:text-sm text-yellow-100 leading-relaxed"
+  }, "A Administra\xE7\xE3o autorizou o ritual de libera\xE7\xE3o m\xE1xima! A IA analisou sua ", /*#__PURE__*/React.createElement("strong", null, "Shikai (", personagem.zanpakuto.shikaiAtiva.nome, ")"), " e gerou ", /*#__PURE__*/React.createElement("strong", null, "3 evolu\xE7\xF5es supremas de Bankai"), " exclusivas para voc\xEA escolher."), /*#__PURE__*/React.createElement("button", {
+    onClick: () => abrirGeradorZanpakutoAI("bankai"),
+    className: "px-8 py-4 bg-gradient-to-r from-purple-600 via-amber-500 to-orange-500 text-black font-black text-xs uppercase tracking-widest rounded-2xl shadow-[0_0_30px_#FFD700] hover:scale-105 transition"
+  }, "\u26A1 Gerar 3 Evolu\xE7\xF5es de Bankai Baseadas na Shikai"))) : /*#__PURE__*/React.createElement("div", {
+    className: "bg-bleach-panel border border-bleach-border rounded-2xl p-12 text-center space-y-3"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "text-4xl opacity-50"
+  }, "\uD83D\uDD12"), /*#__PURE__*/React.createElement("h3", {
+    className: "font-title text-3xl text-bleach-muted tracking-wider"
+  }, "BANKAI BLOQUEADA"), /*#__PURE__*/React.createElement("p", {
+    className: "text-xs text-bleach-muted max-w-md mx-auto leading-relaxed"
+  }, temShikai ? "Requer autorização da Administração após missão épica de clímax narrativo para liberar o ritual de Bankai." : "Você precisa primeiro despertar sua Shikai e obter aprovação da Administração para avançar rumo à Bankai."))), isAdmin && /*#__PURE__*/React.createElement(Section, {
     title: "\uD83D\uDC51 Painel de Controle da Administra\xE7\xE3o (Mestre)",
     className: "border-bleach-orange/50"
   }, /*#__PURE__*/React.createElement("div", {
     className: "space-y-5"
   }, /*#__PURE__*/React.createElement("div", {
+    className: "bg-bleach-panel2 border-2 border-bleach-orange/60 p-4 rounded-xl space-y-3"
+  }, /*#__PURE__*/React.createElement("h4", {
+    className: "text-xs font-bold uppercase tracking-wider text-bleach-orange flex items-center gap-2"
+  }, /*#__PURE__*/React.createElement("span", null, "\u2694\uFE0F"), " Controle de Libera\xE7\xE3o de Shikai & Bankai"), /*#__PURE__*/React.createElement("p", {
+    className: "text-xs text-bleach-creamDim"
+  }, "Controle quando este jogador ter\xE1 o direito de gerar e manifestar sua Shikai (4 op\xE7\xF5es) ou Bankai (3 op\xE7\xF5es de evolu\xE7\xE3o)."), /*#__PURE__*/React.createElement("div", {
+    className: "grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1"
+  }, /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    onClick: togglePermissaoShikai,
+    className: `p-3 rounded-xl border text-xs font-bold flex items-center justify-between transition ${personagem?.permissoes?.shikaiLiberada ? "bg-blue-950/80 border-cyan-400 text-cyan-300 shadow" : "bg-black/60 border-bleach-border text-bleach-muted"}`
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "flex items-center gap-2"
+  }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDDE1\uFE0F"), /*#__PURE__*/React.createElement("span", null, "Despertar de Shikai: ", /*#__PURE__*/React.createElement("strong", null, personagem?.permissoes?.shikaiLiberada ? "LIBERADO" : "BLOQUEADO"))), /*#__PURE__*/React.createElement("span", {
+    className: "text-[11px] underline"
+  }, personagem?.permissoes?.shikaiLiberada ? "Bloquear" : "Liberar")), /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    onClick: togglePermissaoBankai,
+    className: `p-3 rounded-xl border text-xs font-bold flex items-center justify-between transition ${personagem?.permissoes?.bankaiLiberada ? "bg-purple-950/80 border-amber-400 text-yellow-300 shadow-[0_0_15px_#FFD700]" : "bg-black/60 border-bleach-border text-bleach-muted"}`
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "flex items-center gap-2"
+  }, /*#__PURE__*/React.createElement("span", null, "\u534D"), /*#__PURE__*/React.createElement("span", null, "Libera\xE7\xE3o de Bankai: ", /*#__PURE__*/React.createElement("strong", null, personagem?.permissoes?.bankaiLiberada ? "LIBERADO" : "BLOQUEADO"))), /*#__PURE__*/React.createElement("span", {
+    className: "text-[11px] underline"
+  }, personagem?.permissoes?.bankaiLiberada ? "Bloquear" : "Liberar")))), /*#__PURE__*/React.createElement("div", {
     className: "bg-bleach-panel2 border border-bleach-border p-4 rounded-xl space-y-3"
   }, /*#__PURE__*/React.createElement("h4", {
     className: "text-xs font-bold uppercase tracking-wider text-bleach-orange"
@@ -2680,52 +2870,12 @@ function FichaView({
     type: "text",
     value: editFaceclaim,
     onChange: e => setEditFaceclaim(e.target.value),
-    placeholder: "Faceclaim / Reivindica\xE7\xE3o Facial",
-    className: "bg-black border border-bleach-border rounded p-2 text-xs text-white"
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3"
-  }, /*#__PURE__*/React.createElement("input", {
-    type: "text",
-    value: editEsquadrao,
-    onChange: e => setEditEsquadrao(e.target.value),
-    placeholder: "Esquadr\xE3o",
-    className: "bg-black border border-bleach-border rounded p-2 text-xs text-white"
-  }), /*#__PURE__*/React.createElement("input", {
-    type: "text",
-    value: editIdadePlayer,
-    onChange: e => setEditIdadePlayer(e.target.value),
-    placeholder: "Idade do Player",
-    className: "bg-black border border-bleach-border rounded p-2 text-xs text-white"
-  }), /*#__PURE__*/React.createElement("input", {
-    type: "text",
-    value: editAnivPlayer,
-    onChange: e => setEditAnivPlayer(e.target.value),
-    placeholder: "Anivers\xE1rio Player (dd/mm)",
-    className: "bg-black border border-bleach-border rounded p-2 text-xs text-white"
-  }), /*#__PURE__*/React.createElement("input", {
-    type: "text",
-    value: editIdadeChar,
-    onChange: e => setEditIdadeChar(e.target.value),
-    placeholder: "Idade do Personagem",
+    placeholder: "Faceclaim",
     className: "bg-black border border-bleach-border rounded p-2 text-xs text-white"
   })), /*#__PURE__*/React.createElement("button", {
     onClick: salvarDadosCompletos,
     className: "w-full py-2 bg-bleach-panel border border-bleach-border text-xs text-bleach-cream hover:border-bleach-orange rounded font-bold uppercase"
-  }, "Salvar Dados Cadastrais")))), /*#__PURE__*/React.createElement(Section, {
-    title: "Hist\xF3rico de Registros",
-    subtitle: "Linha do tempo de treinos, miss\xF5es e recompensas"
-  }, (personagem.historico || []).length === 0 ? /*#__PURE__*/React.createElement("p", {
-    className: "text-xs text-bleach-muted"
-  }, "Nenhum registro ainda.") : /*#__PURE__*/React.createElement("div", {
-    className: "space-y-3"
-  }, personagem.historico.slice(0, 20).map(h => /*#__PURE__*/React.createElement("div", {
-    key: h.id,
-    className: "border-l-2 border-bleach-orange pl-3 py-1"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "text-[10px] text-bleach-muted font-mono"
-  }, h.data), /*#__PURE__*/React.createElement("div", {
-    className: "text-xs text-bleach-creamDim mt-0.5"
-  }, h.texto))))), rewardModal && /*#__PURE__*/React.createElement("div", {
+  }, "Salvar Dados Cadastrais")))), rewardModal && /*#__PURE__*/React.createElement("div", {
     className: "fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4"
   }, /*#__PURE__*/React.createElement("div", {
     className: "bg-bleach-panel border-2 border-bleach-orange rounded-2xl p-6 max-w-sm w-full text-center shadow-2xl reiatsu-glow relative animate-bounce-short"
@@ -2749,42 +2899,54 @@ function FichaView({
     onClick: () => setRewardModal(null),
     className: "px-6 py-2.5 bg-bleach-orange text-black font-extrabold text-xs uppercase rounded-lg shadow hover:bg-orange-400"
   }, "Resgatar Recompensa"))), showZanpakutoAIModal && /*#__PURE__*/React.createElement("div", {
-    className: "fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4"
+    className: "fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "bg-bleach-panel border-2 border-bleach-orange rounded-2xl p-6 max-w-2xl w-full shadow-2xl relative max-h-[90vh] overflow-y-auto"
+    className: "bg-bleach-panel border-2 border-bleach-orange rounded-3xl p-6 max-w-2xl w-full shadow-2xl relative max-h-[90vh] overflow-y-auto"
   }, /*#__PURE__*/React.createElement("button", {
     onClick: () => setShowZanpakutoAIModal(false),
     className: "absolute top-4 right-4 text-bleach-muted hover:text-white text-lg font-bold"
   }, "\u2715"), /*#__PURE__*/React.createElement("div", {
     className: "text-center mb-6"
   }, /*#__PURE__*/React.createElement("span", {
-    className: "px-3 py-1 bg-bleach-orange/20 border border-bleach-orange text-bleach-orange text-xs font-bold rounded-full uppercase"
+    className: "px-3.5 py-1 bg-bleach-orange/20 border border-bleach-orange text-bleach-orange text-xs font-bold rounded-full uppercase"
   }, "Intelig\xEAncia Artificial da Sociedade das Almas"), /*#__PURE__*/React.createElement("h3", {
-    className: "font-title text-3xl text-bleach-orange tracking-widest mt-2"
-  }, "ESCOLHA SUA ", aiZkTipo.toUpperCase()), /*#__PURE__*/React.createElement("p", {
+    className: "font-title text-3xl sm:text-4xl text-bleach-orange tracking-widest mt-2"
+  }, aiZkTipo === "shikai" ? "ESCOLHA SUA SHIKAI (4 OPÇÕES)" : "ESCOLHA SUA BANKAI SUPREMA (3 OPÇÕES)"), /*#__PURE__*/React.createElement("p", {
     className: "text-xs text-bleach-creamDim mt-1"
-  }, "A IA analisou sua ficha e gerou ", /*#__PURE__*/React.createElement("strong", null, "4 op\xE7\xF5es exclusivas"), " adaptadas ao seu perfil. Escolha a sua favorita:")), /*#__PURE__*/React.createElement("div", {
+  }, aiZkTipo === "shikai" ? "A IA gerou 4 formas únicas com descrições detalhadas do formato da arma e seus poderes em combate:" : "A IA gerou 3 evoluções monumentais de Bankai sintonizadas à essência da sua Shikai:")), /*#__PURE__*/React.createElement("div", {
     className: "space-y-4"
   }, aiZkOpcoes.map((op, idx) => /*#__PURE__*/React.createElement("div", {
     key: op.id,
-    className: "bg-bleach-panel2 border border-bleach-border hover:border-bleach-orange p-4 rounded-xl transition"
+    className: "bg-bleach-panel2 border border-bleach-border hover:border-bleach-orange p-5 rounded-2xl transition space-y-3"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "flex items-center justify-between gap-2 mb-2"
+    className: "flex items-center justify-between gap-2 border-b border-bleach-borderSoft pb-2"
   }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
     className: "text-[10px] font-bold uppercase text-bleach-orange"
   }, "Op\xE7\xE3o #", idx + 1, " \u2022 ", op.elemento), /*#__PURE__*/React.createElement("h4", {
-    className: "font-title text-xl text-white tracking-wider"
-  }, op.nome)), /*#__PURE__*/React.createElement("button", {
+    className: "font-title text-2xl text-white tracking-wider"
+  }, op.nome), /*#__PURE__*/React.createElement("div", {
+    className: "text-xs text-bleach-cream font-mono italic text-bleach-orange"
+  }, "Comando: \"", op.comando, "\"")), /*#__PURE__*/React.createElement("button", {
     onClick: () => escolherOpcaoAI(op),
-    className: "px-4 py-1.5 bg-bleach-orange text-black font-extrabold text-xs uppercase rounded-lg hover:bg-orange-400 shadow transition"
+    className: "px-4 py-2 bg-gradient-to-r from-bleach-orange to-bleach-orangeDeep text-black font-extrabold text-xs uppercase rounded-xl hover:brightness-110 shadow transition"
   }, "\u2713 Escolher Esta ", aiZkTipo.toUpperCase())), /*#__PURE__*/React.createElement("div", {
-    className: "text-xs text-bleach-cream font-mono italic mb-1.5 text-bleach-orange"
-  }, "Comando: \"", op.comando, "\""), /*#__PURE__*/React.createElement("p", {
-    className: "text-xs text-bleach-creamDim leading-relaxed"
-  }, op.habilidade)))))));
+    className: "space-y-2 text-xs"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "bg-black/60 p-3 rounded-lg border border-bleach-borderSoft"
+  }, /*#__PURE__*/React.createElement("strong", {
+    className: "text-bleach-orange block mb-0.5"
+  }, "\uD83D\uDDE1\uFE0F Formato da Arma:"), /*#__PURE__*/React.createElement("span", {
+    className: "text-bleach-creamDim leading-relaxed"
+  }, op.formatoArma)), /*#__PURE__*/React.createElement("div", {
+    className: "bg-black/60 p-3 rounded-lg border border-bleach-borderSoft"
+  }, /*#__PURE__*/React.createElement("strong", {
+    className: "text-bleach-orange block mb-0.5"
+  }, "\u26A1 Poder & Propriedades:"), /*#__PURE__*/React.createElement("span", {
+    className: "text-bleach-creamDim leading-relaxed"
+  }, op.poder)))))))));
 }
 
-// TAB: ADMIN CONTROL PANEL (WITH CREATION & INSTANT LOGIN DETAILS COPIER)
+// TAB: ADMIN CONTROL PANEL
 function AdminPanel({
   db,
   saveDb,
@@ -2878,6 +3040,10 @@ function AdminPanel({
       sorteiosComunsRestantes: 2,
       sorteiosEspeciaisRestantes: 0,
       sorteiosDrops: [],
+      permissoes: {
+        shikaiLiberada: false,
+        bankaiLiberada: false
+      },
       atributos: {
         pressao: 10,
         forca: 10,
@@ -2908,8 +3074,10 @@ function AdminPanel({
       }],
       zanpakuto: {
         nome: "",
-        shikai: false,
-        bankai: false,
+        fotoShikai: "",
+        fotoBankai: "",
+        shikaiAtiva: null,
+        bankaiAtiva: null,
         notas: ""
       },
       estado: "Inteiro",
@@ -2947,8 +3115,6 @@ function AdminPanel({
     navigator.clipboard.writeText(msg);
     alert(`Dados de login de ${char.nome} copiados para a área de transferência!`);
   }
-
-  // DELETE CHARACTER (EXCLUSIVE TO MAX ADM)
   function confirmarExclusaoChar() {
     if (!charParaDeletar) return;
     const novosChars = (db.personagens || []).filter(p => p.id !== charParaDeletar.id);
@@ -3070,7 +3236,7 @@ function AdminPanel({
         lutador1: `${p1Obj.nome} (Vel: ${p1Obj.atributos.velocidade}, Pressão: ${p1Obj.atributos.pressao}, Força: ${p1Obj.atributos.forca})`,
         lutador2: `${p2Obj.nome} (Vel: ${p2Obj.atributos.velocidade}, Pressão: ${p2Obj.atributos.pressao}, Força: ${p2Obj.atributos.forca})`,
         cenaDesc: iaCenaTexto.slice(0, 150) + "...",
-        veredito: `⚖️ Veredito Oficial da IA:\n\n1. ANÁLISE DE ATRIBUTOS: ${conclusao}\n\n2. DECISÃO NARRATIVA: Levando em conta o texto da cena e a lógica do sistema de Bleach, ${p1Obj.nome} e ${p2Obj.nome} devem atualizar seus estados conforme o impacto de impacto e custo de Reiatsu gasto na ação.`
+        veredito: `⚖️ Veredito Oficial da IA:\n\n1. ANÁLISE DE ATRIBUTOS: ${conclusao}\n\n2. DECISÃO NARRATIVA: Levando em conta o texto da cena e a lógica do sistema de Bleach, ${p1Obj.nome} e ${p2Obj.nome} devem atualizar seus estados conforme o impacto e custo de Reiatsu gasto na ação.`
       };
       saveDb({
         ...db,
@@ -3428,11 +3594,11 @@ function AdminPanel({
       className: "text-xs text-bleach-creamDim flex flex-wrap gap-x-4 gap-y-1 mt-0.5"
     }, /*#__PURE__*/React.createElement("span", null, "WhatsApp: ", /*#__PURE__*/React.createElement("strong", null, maskWhats(p.whatsapp))), /*#__PURE__*/React.createElement("span", null, "C\xF3digo: ", /*#__PURE__*/React.createElement("strong", {
       className: "font-mono text-bleach-orange"
-    }, p.codigo)), /*#__PURE__*/React.createElement("span", null, "Giros: ", /*#__PURE__*/React.createElement("strong", {
-      className: "text-bleach-orange"
-    }, p.sorteiosComunsRestantes || 0, " comuns"), " \u2022 ", /*#__PURE__*/React.createElement("strong", {
-      className: "text-purple-400"
-    }, p.sorteiosEspeciaisRestantes || 0, " esp"))))), /*#__PURE__*/React.createElement("div", {
+    }, p.codigo)), /*#__PURE__*/React.createElement("span", null, "Shikai: ", /*#__PURE__*/React.createElement("strong", {
+      className: p.zanpakuto?.shikaiAtiva ? "text-cyan-400" : "text-bleach-muted"
+    }, p.zanpakuto?.shikaiAtiva ? "✓ Desperta" : p.permissoes?.shikaiLiberada ? "🔓 Liberada p/ Escolha" : "🔒 Bloqueada")), /*#__PURE__*/React.createElement("span", null, "Bankai: ", /*#__PURE__*/React.createElement("strong", {
+      className: p.zanpakuto?.bankaiAtiva ? "text-yellow-400" : "text-bleach-muted"
+    }, p.zanpakuto?.bankaiAtiva ? "✓ Desperta" : p.permissoes?.bankaiLiberada ? "🔓 Liberada p/ Escolha" : "🔒 Bloqueada"))))), /*#__PURE__*/React.createElement("div", {
       className: "flex flex-wrap items-center gap-2 border-t sm:border-t-0 pt-2 sm:pt-0 border-bleach-borderSoft"
     }, /*#__PURE__*/React.createElement("button", {
       onClick: () => copiarLoginMsg(p),
@@ -3614,7 +3780,7 @@ function AdminPanel({
     rows: 5,
     value: iaCenaTexto,
     onChange: e => setIaCenaTexto(e.target.value),
-    placeholder: "Ex: Jogador 1 declarou que usou Shunpo direto pelas costas para desferir um corte, enquanto o Jogador 2 declarou que estava de costas mas j\xE1 canalizava um Bakud\u014D #61 para prender quem se aproximasse...",
+    placeholder: "Ex: Jogador 1 declarou que usou Shunpo direto pelas costas...",
     className: "w-full bg-black border border-bleach-border rounded-lg p-3 text-xs text-white focus:outline-none focus:border-bleach-orange"
   })), /*#__PURE__*/React.createElement("button", {
     onClick: julgarCombateComIA,
@@ -3707,7 +3873,7 @@ const SISTEMAS_DATA = [{
 }, {
   id: "s3",
   t: "3. Evolução Narrativa da Zanpakutō & Inteligência Artificial",
-  c: "A evolução da Zanpakutō é feita de modo estritamente NARRATIVO!\nCom base na personalidade, demonstrações de cenas, treinamentos, interações sociais e história base, o perfil do personagem é enviado para a nossa IA que irá gerar 4 opções de Shikai e, posteriormente, 4 opções de Bankai personalizadas.\n\nVocê terá essas 4 opções adaptadas ao seu perfil para escolher a que melhor representa sua alma!"
+  c: "A evolução da Zanpakutō é feita de modo estritamente NARRATIVO!\nCom base na personalidade, cenas e treinos, a administração libera o teste. A IA gera 4 opções de Shikai personalizadas com descrição do formato da lâmina e poder em combate.\n\nApós o domínio pleno e autorização do mestre, a IA gera 3 opções supremas de Bankai derivadas da Shikai escolhida!"
 }, {
   id: "s4",
   t: "4. Tipos de Atividades e Recompensas Oficiais",
@@ -3745,7 +3911,7 @@ function SistemasView() {
     className: "font-title text-4xl sm:text-5xl tracking-widest text-bleach-orange mt-3 reiatsu-text-glow"
   }, "SISTEMAS DA SOCIEDADE DAS ALMAS"), /*#__PURE__*/React.createElement("p", {
     className: "text-xs sm:text-sm text-bleach-creamDim mt-2 leading-relaxed"
-  }, "Consulte as regras oficiais de combate, treinos em ON (30 linhas), Zanpakut\u014D com IA (4 op\xE7\xF5es de Shikai e Bankai), recompensas de Cenas de Arco e Miss\xF5es, Kid\u014Ds e Rankings."))), /*#__PURE__*/React.createElement("div", {
+  }, "Consulte as regras oficiais de combate, treinos em ON (30 linhas), Zanpakut\u014D com IA (4 op\xE7\xF5es de Shikai e 3 de Bankai), recompensas de Cenas de Arco e Miss\xF5es, Kid\u014Ds e Rankings."))), /*#__PURE__*/React.createElement("div", {
     className: "relative"
   }, /*#__PURE__*/React.createElement("input", {
     type: "text",
