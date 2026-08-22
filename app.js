@@ -366,8 +366,6 @@ const CATALOGO_KIDOS = [{
 
 // =========================================================================
 // 100% ORIGINAL & AUTORIAL UNIQUE ZANPAKUTŌ ENGINE
-// Garantia de Exclusividade: Cada Shikai e Bankai é individual no RPG!
-// Se um player reivindicar, ela NUNCA mais é gerada para outro jogador.
 // =========================================================================
 
 const AUTORIAL_PREFIXES = ["Gekka", "Enkō", "Raimei", "Kageori", "Senritsu", "Dokugan", "Kōtetsu", "Shippū", "Tenrin", "Kasumibane", "Rengetsu", "Shinbatsu", "Byakko", "Kurogane", "Ryūsei", "Hakuryū", "Suzuran", "Mugen", "Tsukikage", "Hien", "Yatsukahada", "Reisō", "Kourinpou", "Sōun", "Genshō", "Kagayaki", "Yamikiri", "Seiryuu", "Rindō", "Gurenkō", "Kurokaze", "Hōōmaru", "Chirin", "Suikazan"];
@@ -376,8 +374,6 @@ const AUTORIAL_COMMANDS = ["Fenda o crepúsculo", "Beba o silêncio da noite", "
 const WEAPON_TYPES = ["Uma nodachi de lâmina enegrecida com fio duplo chanfrado e ranhuras que canalizam Reiryoku pura", "Duas adagas triangulares de aço gravado unidas por uma corrente de elos flutuantes de pura energia", "Uma elegante rapieira de cristal fosco com guarda em prisma triplo que refrata a luz em navalhas", "Uma foice de combate com dorso serrilhado e três sinos espirituais que ressoam frequências desestabilizadoras", "Um cutelo colossal de aço polido reforçado com faixas de seda branca na empunhadura para absorção de impacto", "Uma lança articulada em três segmentos de aço flexível que chicoteia no ar com lâminas retráteis", "Um machado leve de guerra de dois gumes com núcleo oco por onde pulsam arcos de pressão espiritual", "Duas cimitarras curvas de aço rubro brilhante com guarda em formato de meia-lua entrelaçada"];
 const PRIMARY_EFFECTS = ["projeta ondas cortantes de alta densidade capazes de fender barreiras espirituais e terra firme", "congela a circulação de Reiryoku do oponente ao menor corte, reduzindo reflexos e velocidade", "descarrega arcos voltaicos perfurantes que eletrocutam nervos motores causando paralisia instantânea", "permite ao Shinigami deslizar instantaneamente entre as sombras do terreno em ângulos impossíveis", "duplica a massa gravitacional da arma a cada colisão bem-sucedida, quebrando defesas de impacto", "expele uma névoa corrosiva que consome projéteis mágicos de Kidō antes que atinjam o portador", "cria círculos de ressonância no solo que aprisionam o peso corporal do inimigo em alta gravidade", "multiplica a velocidade do Shunpo do usuário gerando clones residuais táteis de pura pressão"];
 const SECONDARY_EFFECTS = ["Além disso, reveste o corpo com um manto defensivo que dissipa feitiços de dano cinético.", "Além disso, cada ataque bem-sucedido recupera uma fração da reserva de Reiatsu da lâmina.", "Além disso, permite disparar feitiços de Hadō canalizados diretamente através do fio da espada.", "Além disso, emite um zumbido subsônico que desorienta a percepção sensorial e equilíbrio do alvo."];
-
-// Helper to check if a name or weapon is already claimed by ANY player in the DB
 function getClaimedZanpakutos(personagens = []) {
   const claimedNames = new Set();
   const claimedPowers = new Set();
@@ -407,7 +403,6 @@ function gerarNomeAutorialUnico(claimedNames, usadosNoMomento) {
     }
     tentativas++;
   }
-  // Fallback unique with hash
   nome = `${AUTORIAL_PREFIXES[0]}${AUTORIAL_SUFFIXES[0]} ${uid().toUpperCase()}`;
   usadosNoMomento.add(nome.toLowerCase());
   return nome;
@@ -455,11 +450,10 @@ function gerar3OpcoesBankaiAI(nomePersonagem, shikaiAtiva, dbPersonagens = []) {
   const poderesBankai = ["Poder devastador cósmico: nada que toca a aura da Bankai sobrevive sem ser reduzido a cinzas moleculares. Altera o clima da região por quilômetros.", "Congelamento de Zero Absoluto: congela matéria, energia espiritual e reflexos. Uma vez atingido, o oponente tem seus feitiços e movimentos paralisados no tempo.", "Velocidade e perfuração transcendentais: atinge velocidade de relâmpago puro, atravessando qualquer Bakudō de nível supremo como se fosse papel.", "Controle absoluto da gravidade: o oponente é esmagado por peso gravitacional cósmico impedindo qualquer uso de Shunpo ou fuga do campo de batalha."];
   while (opcoes.length < 3) {
     const rawTitulo = titulosGrandiosos[opcoes.length % titulosGrandiosos.length];
-    const nomeBankai = `Bankai — ${rawTitulo}`;
+    let nomeBankai = `Bankai — ${rawTitulo}`;
     const lower = nomeBankai.toLowerCase();
     if (claimedNames.has(lower) || usadosNoMomento.has(lower)) {
-      const altNome = `Bankai — ${rawTitulo} ${uid().toUpperCase()}`;
-      nomeBankai = altNome;
+      nomeBankai = `Bankai — ${rawTitulo} ${uid().toUpperCase()}`;
     }
     usadosNoMomento.add(nomeBankai.toLowerCase());
     const formatoArma = formatosBankai[opcoes.length % formatosBankai.length];
@@ -571,10 +565,12 @@ function playReiatsuSound(type = 'roll') {
   } catch (e) {}
 }
 
-// Initial Default Database with 100% Unique & Autorial Blades
+// Initial Default Database
 const DEFAULT_DB = {
   superAdminSenha: "maximo2026",
   superAdminNome: "ADM Máximo (Comandante Supremo)",
+  firebaseUrl: "",
+  // URL opcional do Firebase Realtime DB para sync multi-dispositivos
   subAdms: [{
     id: "adm-kisuke",
     usuario: "kisuke",
@@ -791,35 +787,77 @@ function App() {
   const [view, setView] = useState("sistemas");
   const [adminCharId, setAdminCharId] = useState(null);
   const [saveErr, setSaveErr] = useState("");
+  const [cloudStatus, setCloudStatus] = useState("local"); // "local", "connected", "syncing", "error"
   const [showAdminLoginModal, setShowAdminLoginModal] = useState(false);
+
+  // Sync with cloud on startup
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem("bleachDB");
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (!parsed.superAdminSenha) parsed.superAdminSenha = DEFAULT_DB.superAdminSenha;
-        if (!parsed.subAdms) parsed.subAdms = DEFAULT_DB.subAdms;
-        if (!parsed.registrosTarefasAdm) parsed.registrosTarefasAdm = DEFAULT_DB.registrosTarefasAdm;
-        if (!parsed.combatesArena) parsed.combatesArena = DEFAULT_DB.combatesArena;
-        if (!parsed.personagens || parsed.personagens.length === 0) parsed.personagens = DEFAULT_DB.personagens;
-        setDb(parsed);
-      } else {
-        setDb(DEFAULT_DB);
-        localStorage.setItem("bleachDB", JSON.stringify(DEFAULT_DB));
+    async function initDb() {
+      let initialData = DEFAULT_DB;
+      try {
+        const stored = localStorage.getItem("bleachDB");
+        if (stored) {
+          initialData = JSON.parse(stored);
+        }
+      } catch (e) {}
+
+      // Check if data.json or Firebase is configured
+      const cloudUrl = initialData.firebaseUrl || localStorage.getItem("bleach_firebase_url");
+      if (cloudUrl) {
+        try {
+          setCloudStatus("syncing");
+          const cleanUrl = cloudUrl.replace(/\/$/, "");
+          const endpoint = cleanUrl.endsWith('.json') ? cleanUrl : cleanUrl + '/bleachDB.json';
+          const res = await fetch(endpoint + '?t=' + Date.now());
+          if (res.ok) {
+            const cloudData = await res.json();
+            if (cloudData && typeof cloudData === 'object' && cloudData.personagens) {
+              initialData = {
+                ...initialData,
+                ...cloudData
+              };
+              localStorage.setItem("bleachDB", JSON.stringify(initialData));
+              setCloudStatus("connected");
+            }
+          }
+        } catch (err) {
+          console.warn("Could not sync with cloud on startup, using local data", err);
+          setCloudStatus("error");
+        }
       }
-    } catch (e) {
-      setDb(DEFAULT_DB);
-    } finally {
+      setDb(initialData);
       setReady(true);
     }
+    initDb();
   }, []);
-  function saveDb(next) {
+
+  // Save DB to localStorage AND push to Cloud Firebase if configured
+  async function saveDb(next) {
     setDb(next);
     try {
       localStorage.setItem("bleachDB", JSON.stringify(next));
       setSaveErr("");
     } catch (e) {
       setSaveErr("Não foi possível salvar os dados no navegador.");
+    }
+    const cloudUrl = next.firebaseUrl || localStorage.getItem("bleach_firebase_url");
+    if (cloudUrl) {
+      try {
+        setCloudStatus("syncing");
+        const cleanUrl = cloudUrl.replace(/\/$/, "");
+        const endpoint = cleanUrl.endsWith('.json') ? cleanUrl : cleanUrl + '/bleachDB.json';
+        await fetch(endpoint, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(next)
+        });
+        setCloudStatus("connected");
+      } catch (err) {
+        console.warn("Cloud save error:", err);
+        setCloudStatus("error");
+      }
     }
   }
   function logout() {
@@ -858,7 +896,8 @@ function App() {
     view: view,
     setView: setView,
     nome: session?.role === "super_admin" ? "ADM Máximo" : session?.role === "sub_admin" ? session.nome : myChar?.nome,
-    onOpenAdminLogin: () => setShowAdminLoginModal(true)
+    onOpenAdminLogin: () => setShowAdminLoginModal(true),
+    cloudStatus: cloudStatus
   }), saveErr && /*#__PURE__*/React.createElement("div", {
     className: "max-w-6xl mx-auto mt-4 px-4"
   }, /*#__PURE__*/React.createElement("div", {
@@ -911,6 +950,7 @@ function App() {
     db: db,
     saveDb: saveDb,
     session: session,
+    cloudStatus: cloudStatus,
     onAbrirFicha: id => {
       setAdminCharId(id);
       setView("admin-ficha");
@@ -955,7 +995,8 @@ function TopBar({
   view,
   setView,
   nome,
-  onOpenAdminLogin
+  onOpenAdminLogin,
+  cloudStatus
 }) {
   return /*#__PURE__*/React.createElement("header", {
     className: "border-b border-bleach-border bg-bleach-bg2/95 backdrop-blur sticky top-0 z-40 shadow-xl"
@@ -971,8 +1012,12 @@ function TopBar({
   }, /*#__PURE__*/React.createElement("div", {
     className: "font-title text-2xl tracking-widest text-bleach-orange leading-none group-hover:text-orange-400 transition"
   }, "BLEACH RPG"), /*#__PURE__*/React.createElement("div", {
-    className: "text-[10px] font-sans tracking-wider text-bleach-creamDim uppercase"
-  }, "Sociedade das Almas"))), /*#__PURE__*/React.createElement("nav", {
+    className: "text-[10px] font-sans tracking-wider text-bleach-creamDim uppercase flex items-center gap-1.5"
+  }, /*#__PURE__*/React.createElement("span", null, "Sociedade das Almas"), cloudStatus === "connected" && /*#__PURE__*/React.createElement("span", {
+    className: "text-green-400 font-bold"
+  }, "\u2022 \u2601\uFE0F Nuvem Ativa"), cloudStatus === "syncing" && /*#__PURE__*/React.createElement("span", {
+    className: "text-yellow-400 font-bold"
+  }, "\u2022 \u23F3 Sincronizando")))), /*#__PURE__*/React.createElement("nav", {
     className: "flex items-center gap-1 sm:gap-1.5 overflow-x-auto py-1"
   }, /*#__PURE__*/React.createElement("button", {
     onClick: () => setView("sistemas"),
@@ -2972,7 +3017,8 @@ function AdminPanel({
   db,
   saveDb,
   session,
-  onAbrirFicha
+  onAbrirFicha,
+  cloudStatus
 }) {
   const isMaxAdm = session?.role === "super_admin";
   const [abaAdmin, setAbaAdmin] = useState(isMaxAdm ? "maximo" : "fichas");
@@ -2992,6 +3038,8 @@ function AdminPanel({
   const [msgCriacao, setMsgCriacao] = useState(null);
   const [novaSenhaMax, setNovaSenhaMax] = useState("");
   const [msgPass, setMsgPass] = useState("");
+  const [urlFirebaseInput, setUrlFirebaseInput] = useState(db.firebaseUrl || localStorage.getItem("bleach_firebase_url") || "");
+  const [msgFirebase, setMsgFirebase] = useState("");
   const [novoSubAdm, setNovoSubAdm] = useState({
     usuario: "",
     senha: "",
@@ -3014,6 +3062,44 @@ function AdminPanel({
   const [dadoRolando, setDadoRolando] = useState(false);
   const [dadoResultado, setDadoResultado] = useState(null);
   const [dadoAnimVal, setDadoAnimVal] = useState(1);
+  function salvarConfigFirebase() {
+    const urlLimpa = urlFirebaseInput.trim();
+    localStorage.setItem("bleach_firebase_url", urlLimpa);
+    saveDb({
+      ...db,
+      firebaseUrl: urlLimpa
+    });
+    setMsgFirebase("Configuração da Nuvem salva! Sincronização em tempo real ativa.");
+    setTimeout(() => setMsgFirebase(""), 4000);
+  }
+  function baixarBackupJson() {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db, null, 2));
+    const a = document.createElement('a');
+    a.setAttribute("href", dataStr);
+    a.setAttribute("download", `bleach_rpg_backup_${Date.now()}.json`);
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+  function importarBackupJson(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = evt => {
+      try {
+        const parsed = JSON.parse(evt.target.result);
+        if (parsed && parsed.personagens) {
+          saveDb(parsed);
+          alert("Banco de dados restaurado com sucesso do arquivo JSON!");
+        } else {
+          alert("Arquivo JSON inválido.");
+        }
+      } catch (err) {
+        alert("Erro ao ler arquivo JSON.");
+      }
+    };
+    reader.readAsText(file);
+  }
   function gerarCodigoAuto() {
     const prefix = novo.nome.trim() ? novo.nome.trim().slice(0, 3).toUpperCase() : "SHIN";
     const randNum = Math.floor(1000 + Math.random() * 9000);
@@ -3325,13 +3411,13 @@ function AdminPanel({
     className: "space-y-6"
   }, /*#__PURE__*/React.createElement(Section, {
     title: isMaxAdm ? "Painel do ADM Máximo (Comandante Supremo)" : `Painel Administrativo (${session?.nome || "Sub-ADM"})`,
-    subtitle: isMaxAdm ? "Acesso total irrestrito: gestão de outros ADMs, exclusão de perfis e regras" : `Cargo: ${session?.cargo || "Administrador"}`
+    subtitle: isMaxAdm ? "Acesso total irrestrito: gestão de outros ADMs, banco em nuvem, exclusão de perfis e regras" : `Cargo: ${session?.cargo || "Administrador"}`
   }, /*#__PURE__*/React.createElement("div", {
     className: "flex flex-wrap gap-2 border-b border-bleach-borderSoft pb-3 mb-4"
   }, isMaxAdm && /*#__PURE__*/React.createElement("button", {
     onClick: () => setAbaAdmin("maximo"),
     className: `px-3.5 py-1.5 rounded-lg text-xs font-bold transition ${abaAdmin === "maximo" ? "bg-yellow-500 text-black font-extrabold shadow" : "bg-bleach-panel2 border border-bleach-border text-yellow-400 hover:text-white"}`
-  }, "\uD83D\uDC51 ADM M\xE1ximo & Gest\xE3o"), [{
+  }, "\uD83D\uDC51 ADM M\xE1ximo & Nuvem"), [{
     id: "fichas",
     label: "👥 Fichas dos Players"
   }, {
@@ -3350,6 +3436,49 @@ function AdminPanel({
   }, t.label)))), isMaxAdm && abaAdmin === "maximo" && /*#__PURE__*/React.createElement("div", {
     className: "space-y-6"
   }, /*#__PURE__*/React.createElement(Section, {
+    title: "\u2601\uFE0F Banco de Dados em Nuvem Gratuito (Multi-Dispositivos / Celular)",
+    subtitle: "Conecte seu banco de dados em tempo real para que os jogadores consigam logar de qualquer celular ou computador",
+    className: "border-2 border-bleach-blue/60 shadow-2xl blue-reiatsu-glow"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "space-y-4"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "p-4 bg-black/60 border border-bleach-borderSoft rounded-xl text-xs text-bleach-creamDim leading-relaxed space-y-2"
+  }, /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("strong", {
+    className: "text-bleach-orange"
+  }, "Como funciona:"), " Ao conectar sua URL do ", /*#__PURE__*/React.createElement("strong", null, "Google Firebase Realtime Database (100% Gratuito)"), ", qualquer ficha criada ou editada pelo ADM \xE9 sincronizada instantaneamente em todos os celulares dos jogadores no mundo inteiro!")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", {
+    className: "block text-xs font-bold text-bleach-cream mb-1"
+  }, "URL do seu Firebase Realtime Database (REST API)"), /*#__PURE__*/React.createElement("div", {
+    className: "flex gap-2"
+  }, /*#__PURE__*/React.createElement("input", {
+    type: "text",
+    placeholder: "Ex: https://bleach-rpg-seuprojeto-default-rtdb.firebaseio.com",
+    value: urlFirebaseInput,
+    onChange: e => setUrlFirebaseInput(e.target.value),
+    className: "flex-1 bg-bleach-panel2 border border-bleach-border rounded-lg px-4 py-2.5 text-xs text-white placeholder-bleach-muted focus:outline-none focus:border-bleach-blue font-mono"
+  }), /*#__PURE__*/React.createElement("button", {
+    onClick: salvarConfigFirebase,
+    className: "px-5 py-2.5 bg-bleach-blue text-black font-extrabold text-xs uppercase rounded-lg shadow hover:bg-cyan-400"
+  }, "Salvar Nuvem")), msgFirebase && /*#__PURE__*/React.createElement("div", {
+    className: "text-green-400 text-xs font-bold mt-1.5"
+  }, msgFirebase)), /*#__PURE__*/React.createElement("div", {
+    className: "flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-bleach-borderSoft"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "text-xs text-bleach-muted"
+  }, "Status Atual: ", /*#__PURE__*/React.createElement("span", {
+    className: cloudStatus === "connected" ? "text-green-400 font-bold" : "text-yellow-400 font-bold"
+  }, cloudStatus === "connected" ? "🟢 Conectado à Nuvem em Tempo Real" : "🟡 Modo Local / Aguardando URL")), /*#__PURE__*/React.createElement("div", {
+    className: "flex gap-2"
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: baixarBackupJson,
+    className: "px-3.5 py-1.5 bg-bleach-panel2 border border-bleach-border hover:border-bleach-orange text-xs text-bleach-cream font-bold rounded-lg"
+  }, "\uD83D\uDCBE Baixar Backup (JSON)"), /*#__PURE__*/React.createElement("label", {
+    className: "px-3.5 py-1.5 bg-bleach-panel2 border border-bleach-border hover:border-bleach-orange text-xs text-bleach-cream font-bold rounded-lg cursor-pointer"
+  }, "\uD83D\uDCC2 Restaurar Backup (JSON)", /*#__PURE__*/React.createElement("input", {
+    type: "file",
+    accept: ".json",
+    onChange: importarBackupJson,
+    className: "hidden"
+  })))))), /*#__PURE__*/React.createElement(Section, {
     title: "\uD83D\uDC51 Gest\xE3o de Administradores & Acesso M\xE1ximo",
     subtitle: "Adicione novos Sub-ADMs com login e senha individuais, e gerencie as permiss\xF5es do RPG"
   }, /*#__PURE__*/React.createElement("div", {
