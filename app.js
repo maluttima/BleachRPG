@@ -569,8 +569,8 @@ function playReiatsuSound(type = 'roll') {
 const DEFAULT_DB = {
   superAdminSenha: "maximo2026",
   superAdminNome: "ADM Máximo (Comandante Supremo)",
-  firebaseUrl: "",
-  // URL opcional do Firebase Realtime DB para sync multi-dispositivos
+  firebaseUrl: "https://bleach-rpg-6894c-default-rtdb.firebaseio.com/",
+  // URL oficial do Firebase Realtime DB para sync multi-dispositivos
   subAdms: [{
     id: "adm-kisuke",
     usuario: "kisuke",
