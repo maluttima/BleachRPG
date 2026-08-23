@@ -2882,7 +2882,6 @@ function CenaDespertarModal({
     const handler = onSubmit || onSubmitScene;
     if (handler) handler(texto.trim());
   }
-  const AwakeningSceneModal = CenaDespertarModal;
   return /*#__PURE__*/React.createElement("div", {
     className: "fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4"
   }, /*#__PURE__*/React.createElement("div", {
@@ -2921,6 +2920,11 @@ function CenaDespertarModal({
     type: "submit",
     className: "px-6 py-2 bg-gradient-to-r from-bleach-orange to-bleach-orangeDeep text-black font-extrabold text-xs uppercase tracking-wider rounded-lg shadow hover:brightness-110 transition"
   }, "\u2728 Analisar Alma & Gerar 4 Caminhos com IA \u2794"))))));
+}
+const AwakeningSceneModal = CenaDespertarModal;
+if (typeof window !== 'undefined') {
+  window.CenaDespertarModal = CenaDespertarModal;
+  window.AwakeningSceneModal = CenaDespertarModal;
 }
 
 // 3. 4 SPIRITUAL PATHS SELECTION MODAL (COM IA / CHATGPT & PERSONALIZAÇÃO COMPLETA)
@@ -5217,7 +5221,18 @@ function FichaView({
     isBankai: false,
     foto: personagem.zanpakuto.fotoShikai,
     onUpload: e => handleFotoUpload(e, "shikai")
-  })), temBankai ? /*#__PURE__*/React.createElement("div", {
+  }), personagem.cenaDespertarShikai && /*#__PURE__*/React.createElement("div", {
+    className: "p-3.5 bg-black/60 border border-cyan-500/30 rounded-xl space-y-1 mt-3"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flex items-center justify-between"
+  }, /*#__PURE__*/React.createElement("strong", {
+    className: "text-cyan-300 text-xs uppercase tracking-wider"
+  }, "\uD83D\uDCDC Cena de Despertar da Shikai:"), /*#__PURE__*/React.createElement("button", {
+    onClick: () => abrirFluxoDespertar("shikai"),
+    className: "text-[11px] text-bleach-orange hover:underline font-bold"
+  }, "\u270F\uFE0F Reescrever Cena & Re-gerar com IA")), /*#__PURE__*/React.createElement("p", {
+    className: "text-xs text-bleach-creamDim italic leading-relaxed"
+  }, "\"", personagem.cenaDespertarShikai, "\""))), temBankai ? /*#__PURE__*/React.createElement("div", {
     className: "p-5 rounded-2xl bg-black/80 border-2 border-yellow-500/80 bankai-supreme-card shadow-2xl space-y-3"
   }, /*#__PURE__*/React.createElement("span", {
     className: "text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded bg-amber-950 text-yellow-300 border border-yellow-400"
@@ -5233,7 +5248,18 @@ function FichaView({
     isBankai: true,
     foto: personagem.zanpakuto.fotoBankai,
     onUpload: e => handleFotoUpload(e, "bankai")
-  })) : /*#__PURE__*/React.createElement("div", {
+  }), personagem.cenaDespertarBankai && /*#__PURE__*/React.createElement("div", {
+    className: "p-3.5 bg-black/60 border border-yellow-500/30 rounded-xl space-y-1 mt-3"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flex items-center justify-between"
+  }, /*#__PURE__*/React.createElement("strong", {
+    className: "text-yellow-400 text-xs uppercase tracking-wider"
+  }, "\uD83D\uDCDC Cena de Despertar da Bankai:"), /*#__PURE__*/React.createElement("button", {
+    onClick: () => abrirFluxoDespertar("bankai"),
+    className: "text-[11px] text-yellow-300 hover:underline font-bold"
+  }, "\u270F\uFE0F Reescrever Cena & Re-gerar com IA")), /*#__PURE__*/React.createElement("p", {
+    className: "text-xs text-bleach-creamDim italic leading-relaxed"
+  }, "\"", personagem.cenaDespertarBankai, "\""))) : /*#__PURE__*/React.createElement("div", {
     className: "p-4 bg-bleach-panel2 rounded-xl border border-yellow-500/30 flex items-center justify-between"
   }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h4", {
     className: "font-title text-lg text-yellow-400"
