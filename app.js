@@ -7078,3 +7078,10 @@ function App() {
     }
   }));
 }
+
+// MOUNT REACT ROOT
+const container = document.getElementById('root');
+if (container) {
+  const root = ReactDOM.createRoot(container);
+  root.render( /*#__PURE__*/React.createElement(App, null));
+}
