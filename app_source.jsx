@@ -3423,7 +3423,8 @@ function playReiatsuSound(type = 'roll') {
 }
 
 const DEFAULT_DB = {
-  superAdminSenha: "maximo2026",
+  superAdminUsuario: "Malu123",
+  superAdminSenha: "Sociedade2026",
   superAdminNome: "ADM Máximo (Comandante Supremo)",
   firebaseUrl: "https://bleach-rpg-6894c-default-rtdb.firebaseio.com/",
   subAdms: [
@@ -4303,7 +4304,7 @@ function LoginScreen({ db, onLogin, onOpenAdminModal, activeCloudUrl, setDb }) {
           if (freshData && freshData.personagens) {
             currentPersonagens = freshData.personagens;
             if (setDb) setDb(prev => ({ ...prev, ...freshData }));
-            localStorage.setItem("bleachDB", JSON.stringify(freshData));
+            try { localStorage.setItem("bleachDB", JSON.stringify(freshData)); } catch(e) {}
           }
         }
       } catch (err) {
@@ -4327,7 +4328,6 @@ function LoginScreen({ db, onLogin, onOpenAdminModal, activeCloudUrl, setDb }) {
 
     let p = null;
     if (termo) {
-      // Must match identifier explicitly if supplied
       p = matchingChars.find((c) => {
         const cPhone = (c.whatsapp || "").replace(/\D/g, "");
         const cName = (c.nome || "").toLowerCase();
@@ -4423,7 +4423,7 @@ function LoginScreen({ db, onLogin, onOpenAdminModal, activeCloudUrl, setDb }) {
   );
 }
 
-// ADMIN LOGIN SCREEN & MODAL
+// ADMIN LOGIN SCREEN & MODAL (SUPPORTS Malu123 & Sociedade2026)
 function AdminLoginScreen({ db, onLoginAdmin }) {
   const [usuario, setUsuario] = useState("");
   const [senha, setSenha] = useState("");
@@ -4434,9 +4434,15 @@ function AdminLoginScreen({ db, onLoginAdmin }) {
     const u = usuario.trim().toLowerCase();
     const s = senha.trim();
 
-    if (u === "admin" && s === (db.superAdminSenha || "maximo2026")) {
+    const superUser = (db.superAdminUsuario || "Malu123").toLowerCase().trim();
+    const superPass = (db.superAdminSenha || "Sociedade2026").trim();
+
+    const isUserOk = u === superUser || u === "malu123" || u === "admin";
+    const isPassOk = s === superPass || s === "Sociedade2026" || s.toLowerCase() === "sociedade2026";
+
+    if (isUserOk && isPassOk) {
       playReiatsuSound('win');
-      onLoginAdmin("super_admin", { nome: db.superAdminNome || "Comandante Supremo" });
+      onLoginAdmin("super_admin", { nome: db.superAdminNome || "ADM Máximo (Comandante Supremo)" });
       return;
     }
 
@@ -4462,7 +4468,7 @@ function AdminLoginScreen({ db, onLoginAdmin }) {
             <label className="block text-xs font-bold text-yellow-400 mb-1 uppercase">Usuário ADM</label>
             <input
               type="text"
-              placeholder="Ex: admin ou kisuke"
+              placeholder="Ex: Malu123 ou kisuke"
               value={usuario}
               onChange={(e) => setUsuario(e.target.value)}
               className="w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-3 text-xs text-white font-mono"
@@ -4504,9 +4510,15 @@ function AdminLoginModal({ db, onClose, onSuccess }) {
     const u = usuario.trim().toLowerCase();
     const s = senha.trim();
 
-    if (u === "admin" && s === (db.superAdminSenha || "maximo2026")) {
+    const superUser = (db.superAdminUsuario || "Malu123").toLowerCase().trim();
+    const superPass = (db.superAdminSenha || "Sociedade2026").trim();
+
+    const isUserOk = u === superUser || u === "malu123" || u === "admin";
+    const isPassOk = s === superPass || s === "Sociedade2026" || s.toLowerCase() === "sociedade2026";
+
+    if (isUserOk && isPassOk) {
       playReiatsuSound('win');
-      onSuccess("super_admin", { nome: db.superAdminNome || "Comandante Supremo" });
+      onSuccess("super_admin", { nome: db.superAdminNome || "ADM Máximo (Comandante Supremo)" });
       return;
     }
 
@@ -4533,6 +4545,7 @@ function AdminLoginModal({ db, onClose, onSuccess }) {
             <label className="block text-bleach-creamDim mb-1 font-bold">Usuário</label>
             <input
               type="text"
+              placeholder="Ex: Malu123"
               value={usuario}
               onChange={(e) => setUsuario(e.target.value)}
               className="w-full bg-bleach-panel2 border border-bleach-border rounded p-2 text-white font-mono"
@@ -4542,6 +4555,7 @@ function AdminLoginModal({ db, onClose, onSuccess }) {
             <label className="block text-bleach-creamDim mb-1 font-bold">Senha</label>
             <input
               type="password"
+              placeholder="••••••••"
               value={senha}
               onChange={(e) => setSenha(e.target.value)}
               className="w-full bg-bleach-panel2 border border-bleach-border rounded p-2 text-white font-mono"
@@ -4656,24 +4670,190 @@ function RankingsView({ rankFisico, rankPressao, myCharId }) {
   );
 }
 
-// KIDOS VIEW
+// RESTORED FULL INTERACTIVE KIDŌS CATALOG & REIATSU SWORD METER
 function KidosView({ personagem, isAdmin }) {
-  const [filtroCat, setFiltroCat] = useState("Todos");
+  const [categoriaAtiva, setCategoriaAtiva] = useState("Todos");
   const [busca, setBusca] = useState("");
+  
+  const pressaoBase = Number(personagem?.atributos?.pressao || 30);
+  const maxKidosCena = Math.max(3, Math.floor(pressaoBase / 7) + 1);
+  const [kidosUsados, setKidosUsados] = useState(0);
+  const [relatoCena, setRelatoCena] = useState("");
+  const [registroConjuracoes, setRegistroConjuracoes] = useState([]);
 
-  const filtrados = CATALOGO_KIDOS.filter(k => {
-    const matchCat = filtroCat === "Todos" || k.cat === filtroCat;
-    const matchBusca = k.nome.toLowerCase().includes(busca.toLowerCase()) || (k.incant || "").toLowerCase().includes(busca.toLowerCase());
-    return matchCat && matchBusca;
+  const restantes = Math.max(0, maxKidosCena - kidosUsados);
+  const pctRestante = Math.round((restantes / maxKidosCena) * 100);
+
+  function conjurarKido(kido) {
+    if (restantes <= 0) {
+      alert("Limite de Kidōs atingido para esta cena! Sua Reiatsu precisa se estabilizar.");
+      return;
+    }
+    playReiatsuSound('kido');
+    setKidosUsados(prev => prev + 1);
+    setRegistroConjuracoes(prev => [
+      { id: uid(), nome: kido.nome, cat: kido.cat, custo: kido.custoReiatsu, hora: new Date().toLocaleTimeString("pt-BR") },
+      ...prev
+    ]);
+  }
+
+  function resetarReiatsu() {
+    setKidosUsados(0);
+    setRegistroConjuracoes([]);
+  }
+
+  const kidosFiltrados = CATALOGO_KIDOS.filter(k => {
+    const matchesCat = categoriaAtiva === "Todos" || k.cat === categoriaAtiva;
+    const matchesBusca = (k.nome || "").toLowerCase().includes(busca.toLowerCase()) || 
+                         (k.desc || "").toLowerCase().includes(busca.toLowerCase()) ||
+                         (k.incant || "").toLowerCase().includes(busca.toLowerCase()) ||
+                         (k.cat || "").toLowerCase().includes(busca.toLowerCase());
+    return matchesCat && matchesBusca;
   });
 
   return (
     <div className="space-y-6">
-      <Section title="Grimório Oficial de Kidō" subtitle="Catálogo milenar de Hadō, Bakudō e Kaidō">
+      <div className="bg-banner-overlay border border-bleach-border rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+        <div className="relative z-10 max-w-3xl">
+          <span className="px-3 py-1 bg-bleach-blue/20 border border-bleach-blue text-bleach-blue text-xs font-bold rounded-full uppercase tracking-wider">
+            Grimório Completo da Sociedade das Almas • 75+ Feitiços Oficiais & Autorais
+          </span>
+          <h2 className="font-title text-4xl sm:text-5xl tracking-widest text-bleach-orange mt-3 reiatsu-text-glow">
+            COMPÊNDIO SUPREMO DE KIDŌS
+          </h2>
+          <p className="text-xs sm:text-sm text-bleach-creamDim mt-2 leading-relaxed">
+            Explore o compêndio oficial de <strong>Hadō (Destruição)</strong>, <strong>Bakudō (Aprisionamento & Defesa)</strong> e <strong>Kaidō (Cura & Suporte)</strong>. Gerencie a energia espiritual liberada na sua lâmina através do medidor de Reiatsu interativo abaixo!
+          </p>
+        </div>
+      </div>
+
+      {/* LÂMINA ESPIRITUAL INTERATIVA DE REIATSU */}
+      <Section 
+        title="⚔️ Lâmina Espiritual da Zanpakutō & Gerenciador de Reiatsu" 
+        subtitle="Acompanhe a energia espiritual que percorre sua lâmina conforme você conjura feitiços na cena"
+      >
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
+          <div className="bg-black/60 border border-bleach-border rounded-2xl p-5 flex flex-col items-center justify-center relative overflow-hidden shadow-inner">
+            <div className="text-xs uppercase font-bold tracking-widest text-bleach-orange mb-3 flex items-center gap-1.5">
+              <span>🗡️</span> Lâmina da Zanpakutō
+            </div>
+
+            <div className="flex flex-col items-center">
+              <div className="w-8 h-14 bg-gradient-to-b from-[#111] via-[#222] to-[#111] border-2 border-[#C94E0A] rounded-t-lg relative flex flex-col items-center justify-center shadow-lg">
+                <div className="w-full h-1 bg-amber-500/80 my-0.5"></div>
+                <div className="w-full h-1 bg-amber-500/80 my-0.5"></div>
+                <div className="w-full h-1 bg-amber-500/80 my-0.5"></div>
+                <div className="text-[10px] font-black text-amber-400 font-cinzel">卍</div>
+              </div>
+
+              <div className="w-20 h-4 bg-gradient-to-r from-[#C94E0A] via-[#FF6A13] to-[#C94E0A] rounded-full border border-black shadow-[0_0_12px_#FF6A13] z-20 -my-0.5 flex items-center justify-center">
+                <div className="w-16 h-1 bg-black/60 rounded-full"></div>
+              </div>
+
+              <div className="w-12 h-64 border-x-2 border-b-2 border-bleach-blue/70 bg-black/90 relative overflow-hidden flex flex-col justify-end shadow-[0_0_20px_rgba(79,179,232,0.3)]"
+                style={{ clipPath: 'polygon(0% 0%, 100% 0%, 100% 88%, 50% 100%, 0% 88%)' }}
+              >
+                <div className="absolute inset-y-0 left-1/2 w-0.5 bg-white/20 -translate-x-1/2 pointer-events-none z-20"></div>
+
+                <div className="absolute inset-0 flex flex-col justify-between py-3 px-1 pointer-events-none z-20 text-[8px] font-mono text-white/50 text-center">
+                  <span>100% 卍</span>
+                  <span>75%</span>
+                  <span>50%</span>
+                  <span>25%</span>
+                  <span>0%</span>
+                </div>
+
+                <div 
+                  className="w-full transition-all duration-700 relative overflow-hidden flex items-center justify-center"
+                  style={{
+                    height: `${pctRestante}%`,
+                    background: pctRestante > 50 
+                      ? 'linear-gradient(180deg, #4FB3E8 0%, #1E4C63 80%, #0A2233 100%)' 
+                      : pctRestante > 20 
+                      ? 'linear-gradient(180deg, #FF6A13 0%, #C94E0A 80%, #4A1A02 100%)'
+                      : 'linear-gradient(180deg, #D6483F 0%, #7A1711 80%, #300502 100%)',
+                    boxShadow: '0 0 25px rgba(79, 179, 232, 0.8)'
+                  }}
+                >
+                  <div className="text-white font-title text-2xl font-black drop-shadow z-10">
+                    {pctRestante}%
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-4 text-center">
+              <div className="text-xs text-bleach-muted">Feitiços Restantes na Lâmina:</div>
+              <div className="text-2xl font-mono font-bold text-bleach-orange mt-0.5">
+                {restantes} / {maxKidosCena}
+              </div>
+              <button
+                onClick={resetarReiatsu}
+                className="mt-3 px-4 py-1.5 bg-bleach-panel border border-bleach-border text-xs text-bleach-cream rounded-lg hover:border-bleach-orange transition"
+              >
+                🔄 Restaurar Reiatsu da Lâmina
+              </button>
+            </div>
+          </div>
+
+          <div className="lg:col-span-2 space-y-4">
+            <div className="bg-bleach-panel2 border border-bleach-border rounded-xl p-4">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-bleach-orange mb-2">
+                ✍️ Rascunho de Narrativa da Cena (WhatsApp)
+              </h4>
+              <p className="text-xs text-bleach-creamDim mb-2">
+                Espaço livre para rascunhar como utilizou seus Kidōs na sua narração antes de enviar no grupo:
+              </p>
+              <textarea
+                rows={4}
+                value={relatoCena}
+                onChange={(e) => setRelatoCena(e.target.value)}
+                placeholder="Ex: Concentrei minha Reiatsu ao longo do fio da Zanpakutō liberando Hadō #4 Byakurai em linha reta..."
+                className="w-full bg-black/60 border border-bleach-border rounded-xl p-3 text-xs text-white placeholder-bleach-muted/50 focus:border-bleach-orange outline-none resize-none font-sans"
+              />
+              <div className="flex justify-between items-center mt-2">
+                <span className="text-[11px] text-bleach-muted">
+                  {relatoCena.length} caracteres
+                </span>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(relatoCena);
+                    alert("Texto da cena copiado para a área de transferência!");
+                  }}
+                  className="px-3 py-1 bg-bleach-panel border border-bleach-border text-xs text-bleach-cream rounded-lg hover:border-bleach-orange transition"
+                >
+                  📋 Copiar Rascunho
+                </button>
+              </div>
+            </div>
+
+            <div className="bg-bleach-panel2 border border-bleach-border rounded-xl p-4">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-bleach-cream mb-2">
+                📜 Feitiços Conjurados Nesta Cena ({registroConjuracoes.length})
+              </h4>
+              {registroConjuracoes.length === 0 ? (
+                <p className="text-xs text-bleach-muted">Nenhum Kidō conjurado na cena atual.</p>
+              ) : (
+                <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
+                  {registroConjuracoes.map((c) => (
+                    <div key={c.id} className="p-2 bg-black/50 border border-white/5 rounded-lg text-xs flex justify-between items-center">
+                      <span className="font-semibold text-cyan-300">⚡ {c.nome}</span>
+                      <span className="text-[10px] text-bleach-muted font-mono">{c.hora}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </Section>
+
+      {/* CATALOG FILTERS & SPELLS GRID */}
+      <Section title="Grimório de Feitiços de Seireitei" subtitle="Filtre e conjure qualquer magia do catálogo">
         <div className="flex flex-col sm:flex-row gap-3 mb-6">
           <input
             type="text"
-            placeholder="🔍 Buscar feitiço por nome ou encantamento..."
+            placeholder="🔍 Buscar feitiço por nome, número, encantamento ou efeito..."
             value={busca}
             onChange={(e) => setBusca(e.target.value)}
             className="flex-1 bg-bleach-panel2 border border-bleach-border rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-bleach-orange"
@@ -4682,9 +4862,9 @@ function KidosView({ personagem, isAdmin }) {
             {["Todos", "Hadō", "Bakudō", "Kaidō"].map(cat => (
               <button
                 key={cat}
-                onClick={() => setFiltroCat(cat)}
+                onClick={() => setCategoriaAtiva(cat)}
                 className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition whitespace-nowrap ${
-                  filtroCat === cat ? "bg-bleach-orange text-black font-extrabold" : "bg-bleach-panel2 border border-bleach-border text-bleach-creamDim"
+                  categoriaAtiva === cat ? "bg-bleach-orange text-black font-extrabold" : "bg-bleach-panel2 border border-bleach-border text-bleach-creamDim"
                 }`}
               >
                 {cat}
@@ -4693,27 +4873,68 @@ function KidosView({ personagem, isAdmin }) {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {filtrados.map(k => (
-            <div key={k.id} className="p-4 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-2">
-              <div className="flex items-center justify-between">
-                <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded border ${
-                  k.cat === "Hadō" ? "bg-red-950 text-red-300 border-red-500" :
-                  k.cat === "Bakudō" ? "bg-blue-950 text-cyan-300 border-cyan-500" : "bg-emerald-950 text-emerald-300 border-emerald-500"
-                }`}>
-                  {k.cat} #{k.numero}
-                </span>
-                <span className="text-xs font-mono text-bleach-muted">Custo: <strong className="text-bleach-orange">{k.custoReiatsu} Reiatsu</strong></span>
-              </div>
-              <h4 className="font-bold text-white text-base">{k.nome}</h4>
-              <p className="text-xs text-bleach-creamDim leading-relaxed">{k.desc}</p>
-              {k.incant && k.incant !== "—" && (
-                <div className="p-2 bg-black/60 rounded border border-white/5 text-[11px] text-bleach-muted italic">
-                  "{k.incant}"
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {kidosFiltrados.map((k) => {
+            const isHado = k.cat === "Hadō";
+            const isBakudo = k.cat === "Bakudō";
+
+            return (
+              <div 
+                key={k.id}
+                className={`bg-bleach-panel2 border rounded-xl p-4 flex flex-col justify-between transition-all duration-300 hover:scale-[1.01] ${
+                  isHado 
+                    ? "border-red-500/40 hover:border-red-400 hover:shadow-[0_0_20px_rgba(239,68,68,0.2)]" 
+                    : isBakudo 
+                    ? "border-blue-500/40 hover:border-blue-400 hover:shadow-[0_0_20px_rgba(59,130,246,0.2)]" 
+                    : "border-emerald-500/40 hover:border-emerald-400 hover:shadow-[0_0_20px_rgba(16,185,129,0.2)]"
+                }`}
+              >
+                <div className="space-y-3 mb-4">
+                  <div className="flex justify-between items-start gap-2">
+                    <span 
+                      className={`px-2 py-0.5 rounded text-[10px] font-extrabold uppercase border ${
+                        isHado ? "bg-red-950 text-red-300 border-red-500" 
+                        : isBakudo ? "bg-blue-950 text-cyan-300 border-cyan-500" 
+                        : "bg-emerald-950 text-emerald-300 border-emerald-500"
+                      }`}
+                    >
+                      {k.cat} #{k.numero}
+                    </span>
+
+                    <span className="text-[11px] font-mono text-bleach-muted">
+                      Custo: <strong className="text-bleach-orange">{k.custoReiatsu}</strong>
+                    </span>
+                  </div>
+
+                  <h4 className="font-bold text-white text-base leading-snug">
+                    {k.nome}
+                  </h4>
+
+                  {k.incant && k.incant !== "—" && (
+                    <div className="p-2.5 bg-black/60 rounded-lg border border-white/5 text-[11px] text-cyan-200/80 italic leading-relaxed">
+                      "{k.incant}"
+                    </div>
+                  )}
+
+                  <p className="text-xs text-bleach-creamDim leading-relaxed">
+                    {k.desc}
+                  </p>
                 </div>
-              )}
-            </div>
-          ))}
+
+                <button
+                  onClick={() => conjurarKido(k)}
+                  disabled={restantes <= 0}
+                  className={`w-full py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition disabled:opacity-40 disabled:cursor-not-allowed ${
+                    isHado ? "bg-gradient-to-r from-red-600 to-orange-600 text-white hover:brightness-110" 
+                    : isBakudo ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:brightness-110" 
+                    : "bg-gradient-to-r from-emerald-600 to-teal-600 text-white hover:brightness-110"
+                  }`}
+                >
+                  ⚡ Conjurar em Cena
+                </button>
+              </div>
+            );
+          })}
         </div>
       </Section>
     </div>
@@ -4832,8 +5053,9 @@ function BleachSwordArt({ arma, nomeZk, isBankai, foto, onUpload }) {
   );
 }
 
+
 // =========================================================================
-// VIEWS PART 2: FICHAVIEW, ADMINPANEL & SISTEMASVIEW
+// VIEWS PART 2: FICHAVIEW WITH COMPLETE REWARD CONCESSION & DEEP RESET
 // =========================================================================
 
 // TAB: FICHA DO JOGADOR
@@ -4844,6 +5066,8 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
   const [passoDistribuicao, setPassoDistribuicao] = useState(1);
   const [novaTecCat, setNovaTecCat] = useState("Hadō");
   const [novaTecNome, setNovaTecNome] = useState("");
+  
+  // Recompensa Form (ADM)
   const [rec, setRec] = useState({ tipo: "Treino em ON (30 linhas)", pontos: 1, atributo: "", motivo: "" });
   
   const [editFoto, setEditFoto] = useState(personagem?.foto || "assets/ichigo-orange.png");
@@ -4872,13 +5096,11 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
 
   // Modais de Sorteio, Cena e Shikai/Bankai
   const [gachaModal, setGachaModal] = useState(null);
-  const [showGachaHistory, setShowGachaHistory] = useState(false);
   const [showCenaModal, setShowCenaModal] = useState(null); // "shikai" | "bankai"
   const [showZanpakutoAIModal, setShowZanpakutoAIModal] = useState(false);
   const [aiZkOpcoes, setAiZkOpcoes] = useState([]);
   const [aiZkTipo, setAiZkTipo] = useState("shikai");
   const [showResetModal, setShowResetModal] = useState(false);
-  const [copiadoWhats, setCopiadoWhats] = useState(false);
   const gachaIntervalRef = useRef(null);
 
   useEffect(() => {
@@ -4911,13 +5133,13 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
       setPersMedos(personagem.personalidade?.medos || "");
       setPersEstilo(personagem.personalidade?.estiloCombate || "");
     }
-  }, [personagem?.id]);
+  }, [personagem?.id, personagem?.zanpakuto?.shikaiAtiva, personagem?.zanpakuto?.bankaiAtiva]);
 
   if (!personagem) return <div className="text-bleach-muted">Ficha não encontrada.</div>;
 
   const pendSum = Object.values(pend).reduce((a, b) => a + b, 0);
   const restante = (personagem.pontosDisponiveis || 0) - pendSum;
-  const totalStats = Object.values(personagem.atributos).reduce((a, b) => a + b, 0);
+  const totalStats = Object.values(personagem.atributos || { pressao: 10, forca: 10, velocidade: 10, resiliencia: 10 }).reduce((a, b) => a + b, 0);
   const powerTier = getPowerTier(totalStats);
 
   const temShikai = !!personagem?.zanpakuto?.shikaiAtiva;
@@ -4947,7 +5169,7 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
       alert("Por favor, preencha a descrição da sua personalidade e virtudes antes de selar!");
       return;
     }
-    const confirma = confirm("⚠️ ATENÇÃO: Uma vez selada, a sua personalidade espiritual será gravada no DNA da sua alma e NÃO poderá mais ser alterada por você (apenas o ADM poderá reabrir caso necessário).\\n\\nTem certeza que deseja confirmar e selar sua personalidade agora?");
+    const confirma = confirm("⚠️ ATENÇÃO: Uma vez selada, a sua personalidade espiritual será gravada no DNA da sua alma e NÃO poderá mais ser alterada por você (apenas o ADM poderá reabrir caso necessário).\n\nTem certeza que deseja confirmar e selar sua personalidade agora?");
     if (!confirma) return;
 
     const novaPersonalidade = {
@@ -4998,7 +5220,6 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
     } else {
       updateChar({ cenaDespertarBankai: cenaTexto }, "📜 Cena de despertar de Bankai registrada na ficha");
       const opcoesBankai = gerar3OpcoesBankaiAI(personagem, personagem.zanpakuto?.shikaiAtiva, db.personagens, db.zanpakutosVinculadas, cenaTexto);
-      // Format as paths for modal
       const caminhosBankai = opcoesBankai.map((bk, idx) => ({
         caminhoNumero: idx + 1,
         tipoCaminho: bk.tipoEvolucao,
@@ -5109,7 +5330,6 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
       desc: escolhida.desc
     };
 
-    // Suspense Trigger (~28% de chance de demorar ~7s a mais)
     const isSuspense = Math.random() < 0.28;
     iniciarAnimacaoBau("comum", drop, isSuspense);
   }
@@ -5164,8 +5384,6 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
     playReiatsuSound(isSuspense ? 'gacha_box_suspense' : 'gacha_box_charge');
 
     let currentProgress = 0;
-    // Standard takes ~2.2s (step 3 every 45ms = ~48 ticks).
-    // Suspense takes ~8.8s (step 1 every 90ms = ~100 ticks).
     const step = isSuspense ? 1 : 2.5;
     const intervalMs = isSuspense ? 85 : 45;
 
@@ -5222,9 +5440,11 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
     playReiatsuSound('win');
   }
 
-  // 4. RESET TOTAL DA FICHA PELO ADM
+  // 4. RESET TOTAL DA FICHA PELO ADM (DEEP PURGE OF SHIKAI, BANKAI & STATS)
   function confirmarResetFicha() {
     setShowResetModal(false);
+
+    // Deep clean character
     const resetChar = {
       ...personagem,
       atributos: { pressao: 10, forca: 10, velocidade: 10, resiliencia: 10 },
@@ -5245,18 +5465,43 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
       personalidadeTravada: false,
       cenaDespertarShikai: "",
       cenaDespertarBankai: "",
-      zanpakuto: { nome: "Em despertar", fotoShikai: "assets/ichigo-orange.png", fotoBankai: "assets/ichigo-moon.png", shikaiAtiva: null, bankaiAtiva: null, notas: "" },
+      zanpakuto: {
+        nome: "Em despertar",
+        fotoShikai: "assets/ichigo-orange.png",
+        fotoBankai: "assets/ichigo-moon.png",
+        shikaiAtiva: null,
+        bankaiAtiva: null,
+        bankaiPadrao: null,
+        shikaiEscolhida: false,
+        bankaiEscolhida: false,
+        assinaturaEspiritual: "",
+        dnaEspiritual: null,
+        notas: ""
+      },
       estado: "Inteiro",
       treinosHoje: 0,
-      historico: [{ id: uid(), data: nowStr(), texto: "⚠️ Ficha resetada para o estado inicial pela Administração." }]
+      historico: [{ id: uid(), data: nowStr(), texto: "⚠️ Ficha resetada integralmente para o estado inicial pela Administração." }]
     };
 
-    // Remove claimed signature
-    const novasVinculadas = (db.zanpakutosVinculadas || []).filter(z => z.charId !== personagem.id);
+    // Reset local view states
+    setEditZkNome("Em despertar");
+    setEditFotoShikai("assets/ichigo-orange.png");
+    setEditFotoBankai("assets/ichigo-moon.png");
+    setPersTexto("");
+    setPersVirtudes("");
+    setPersDefeitos("");
+    setPersDesejos("");
+    setPersMedos("");
+    setPersEstilo("");
+    setPend({ pressao: 0, forca: 0, velocidade: 0, resiliencia: 0 });
+
+    // Remove claimed signatures completely
+    const novasVinculadas = (db.zanpakutosVinculadas || []).filter(z => z.charId !== personagem.id && z.charNome !== personagem.nome);
     const personagens = (db.personagens || []).map(p => p.id === personagem.id ? resetChar : p);
 
     saveDb({ ...db, personagens, zanpakutosVinculadas: novasVinculadas });
-    alert(`A ficha de ${personagem.nome} foi resetada para os valores iniciais com sucesso!`);
+    setSubPaginaFicha("perfil");
+    alert(`A ficha de ${personagem.nome} foi resetada integralmente para os valores iniciais com sucesso! Shikai e Bankai foram desvinculadas.`);
     playReiatsuSound('shatter');
   }
 
@@ -5267,10 +5512,10 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
       return;
     }
     const novosAtributos = {
-      pressao: personagem.atributos.pressao + pend.pressao,
-      forca: personagem.atributos.forca + pend.forca,
-      velocidade: personagem.atributos.velocidade + pend.velocidade,
-      resiliencia: personagem.atributos.resiliencia + pend.resiliencia,
+      pressao: Number(personagem.atributos?.pressao || 10) + pend.pressao,
+      forca: Number(personagem.atributos?.forca || 10) + pend.forca,
+      velocidade: Number(personagem.atributos?.velocidade || 10) + pend.velocidade,
+      resiliencia: Number(personagem.atributos?.resiliencia || 10) + pend.resiliencia,
     };
     const novoDisponivel = (personagem.pontosDisponiveis || 0) - pendSum;
     updateChar({
@@ -5303,25 +5548,40 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
     updateChar({ permissoes: { ...(personagem.permissoes || {}), bankaiLiberada: !atual } }, `Permissão de Bankai ${!atual ? "LIBERADA" : "BLOQUEADA"} pelo ADM`);
   }
 
+  // CONCESSÃO DE RECOMPENSA COMPLETA PELO ADM
   function concederRecompensa() {
     const pontos = Number(rec.pontos) || 0;
-    if (pontos <= 0 && rec.tipo !== "Treino em ON (30 linhas)") return;
+    if (pontos <= 0 && rec.tipo !== "Treino em ON (30 linhas)") {
+      alert("Informe uma quantidade válida de pontos.");
+      return;
+    }
+
     let patch = {};
     let texto = `[${rec.tipo}]`;
-    if (rec.atributo) {
-      patch.atributos = { ...personagem.atributos, [rec.atributo]: (personagem.atributos[rec.atributo] || 0) + pontos };
+
+    if (rec.atributo && rec.atributo !== "pontosDisponiveis") {
+      const valorAtual = Number(personagem.atributos?.[rec.atributo] || 10);
+      patch.atributos = {
+        ...(personagem.atributos || { pressao: 10, forca: 10, velocidade: 10, resiliencia: 10 }),
+        [rec.atributo]: valorAtual + pontos
+      };
       texto += ` +${pontos} em ${rec.atributo.toUpperCase()}`;
     } else {
       patch.pontosDisponiveis = (personagem.pontosDisponiveis || 0) + pontos;
-      texto += ` +${pontos} pontos livres concedidos`;
+      texto += ` +${pontos} pontos livres concedidos para distribuição`;
     }
+
     if (rec.tipo === "Treino em ON (30 linhas)") {
       patch.sorteiosComunsRestantes = (personagem.sorteiosComunsRestantes || 0) + 4;
       patch.sorteiosEspeciaisRestantes = (personagem.sorteiosEspeciaisRestantes || 0) + 1;
-      texto += ` (+4 Giros Comuns e +1 Especial concedidos)`;
+      texto += ` (+4 Giros Comuns e +1 Especial liberados)`;
     }
+
     if (rec.motivo.trim()) texto += ` — ${rec.motivo.trim()}`;
+
     updateChar(patch, texto);
+    playReiatsuSound('win');
+    alert(`Recompensa concedida com sucesso para ${personagem.nome}!`);
     setRec({ tipo: "Treino em ON (30 linhas)", pontos: 1, atributo: "", motivo: "" });
   }
 
@@ -5723,6 +5983,7 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
                 {ATTRS.map((a) => {
+                  const valAtual = Number(personagem.atributos?.[a.key] || 10);
                   const decStep = Math.min(passoDistribuicao, pend[a.key]);
                   const incStep = Math.min(passoDistribuicao, restante);
                   return (
@@ -5732,8 +5993,8 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
                           {a.label}
                         </span>
                         <span className="text-[11px] text-bleach-muted">
-                          Atual: <strong className="text-white">{personagem.atributos[a.key]}</strong>
-                          {pend[a.key] > 0 && <span className="text-bleach-orange font-mono ml-1 font-bold">→ {personagem.atributos[a.key] + pend[a.key]}</span>}
+                          Atual: <strong className="text-white">{valAtual}</strong>
+                          {pend[a.key] > 0 && <span className="text-bleach-orange font-mono ml-1 font-bold">→ {valAtual + pend[a.key]}</span>}
                         </span>
                       </div>
 
@@ -5777,20 +6038,23 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
           {/* ATTR CARDS */}
           <Section title="Atributos Espirituais" subtitle="O valor puro do seu poder na Sociedade das Almas">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {ATTRS.map((a) => (
-                <div key={a.key} className="bg-bleach-panel2 border border-bleach-borderSoft rounded-xl p-4 flex flex-col justify-between">
-                  <div className="flex items-start justify-between mb-2">
-                    <div>
-                      <h4 className="text-xs font-bold uppercase tracking-wider" style={{ color: a.color }}>{a.label}</h4>
-                      <p className="text-[11px] text-bleach-muted">{a.desc}</p>
+              {ATTRS.map((a) => {
+                const val = Number(personagem.atributos?.[a.key] || 10);
+                return (
+                  <div key={a.key} className="bg-bleach-panel2 border border-bleach-borderSoft rounded-xl p-4 flex flex-col justify-between">
+                    <div className="flex items-start justify-between mb-2">
+                      <div>
+                        <h4 className="text-xs font-bold uppercase tracking-wider" style={{ color: a.color }}>{a.label}</h4>
+                        <p className="text-[11px] text-bleach-muted">{a.desc}</p>
+                      </div>
+                      <span className="text-3xl font-extrabold font-mono" style={{ color: a.color }}>{val}</span>
                     </div>
-                    <span className="text-3xl font-extrabold font-mono" style={{ color: a.color }}>{personagem.atributos[a.key]}</span>
+                    <div className="w-full bg-black/50 h-2 rounded-full overflow-hidden border border-white/5">
+                      <div className="h-full rounded-full transition-all duration-500" style={{ width: `${Math.min(100, (val / 200) * 100)}%`, backgroundColor: a.color }}></div>
+                    </div>
                   </div>
-                  <div className="w-full bg-black/50 h-2 rounded-full overflow-hidden border border-white/5">
-                    <div className="h-full rounded-full transition-all duration-500" style={{ width: `${Math.min(100, (personagem.atributos[a.key] / 200) * 100)}%`, backgroundColor: a.color }}></div>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </Section>
         </div>
@@ -5900,15 +6164,98 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
         </div>
       )}
 
-      {/* ADMIN ACTION PANEL (EXCLUSIVE CONTROLS) */}
+      {/* ADMIN ACTION PANEL (EXCLUSIVE CONTROLS & REWARD DISTRIBUTOR) */}
       {isAdmin && (
-        <Section title="Painel de Gestão da Ficha (ADM)" subtitle="Atribuição de treinos, giros rápidos, permissões e reset">
-          <div className="space-y-4">
+        <Section title="Painel de Gestão da Ficha (ADM)" subtitle="Atribuição direta de treinos, distribuição de atributos, giros rápidos e reset">
+          <div className="space-y-5">
             
+            {/* DISTRIBUIDOR DE RECOMPENSAS DE ATRIBUTOS (RESTORED FULL POWER) */}
+            <div className="p-4 bg-gradient-to-r from-black via-bleach-panel2 to-black border-2 border-yellow-500/50 rounded-2xl space-y-3 shadow-xl">
+              <div className="flex items-center gap-2 border-b border-yellow-500/30 pb-2">
+                <span className="text-lg">✨</span>
+                <div>
+                  <h4 className="font-title text-base text-yellow-400">DISTRIBUIDOR OFICIAL DE RECOMPENSAS & ATRIBUTOS</h4>
+                  <p className="text-[11px] text-bleach-muted">Conceda pontos diretamente em um atributo específico ou para o saldo livre do jogador</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                <div>
+                  <label className="block text-bleach-creamDim font-bold mb-1 uppercase">Tipo de Atividade / Recompensa</label>
+                  <select
+                    value={rec.tipo}
+                    onChange={(e) => setRec({ ...rec, tipo: e.target.value })}
+                    className="w-full bg-black border border-bleach-border rounded-lg p-2 text-white"
+                  >
+                    {TIPOS_RECOMPENSA.map(t => <option key={t} value={t}>{t}</option>)}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-bleach-creamDim font-bold mb-1 uppercase">Destino da Recompensa</label>
+                  <select
+                    value={rec.atributo}
+                    onChange={(e) => setRec({ ...rec, atributo: e.target.value })}
+                    className="w-full bg-black border border-bleach-border rounded-lg p-2 text-white"
+                  >
+                    <option value="">✨ Pontos Livres (Distribuição do Jogador)</option>
+                    <option value="pressao">🌀 Pressão Espiritual (Reiatsu)</option>
+                    <option value="forca">⚔️ Força (Zanjutsu & Dano)</option>
+                    <option value="velocidade">⚡ Velocidade (Shunpo & Hohō)</option>
+                    <option value="resiliencia">🛡️ Resiliência (Vitalidade & Defesa)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-bleach-creamDim font-bold mb-1 uppercase">Quantidade de Pontos</label>
+                  <div className="flex gap-1.5">
+                    <input
+                      type="number"
+                      min="1"
+                      value={rec.pontos}
+                      onChange={(e) => setRec({ ...rec, pontos: e.target.value })}
+                      className="w-20 bg-black border border-bleach-border rounded-lg p-2 text-white font-mono font-bold"
+                    />
+                    {[1, 2, 5, 10, 15].map(pts => (
+                      <button
+                        key={pts}
+                        type="button"
+                        onClick={() => setRec({ ...rec, pontos: pts })}
+                        className="px-2 py-1 bg-bleach-panel border border-bleach-border hover:border-yellow-400 text-bleach-creamDim hover:text-white rounded text-xs font-mono"
+                      >
+                        +{pts}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-bleach-creamDim font-bold mb-1 uppercase text-xs">Motivo / Justificativa (Opcional)</label>
+                <input
+                  type="text"
+                  placeholder="Ex: Treino em Karakura com 35 linhas de boa qualidade / Missão no Hueco Mundo"
+                  value={rec.motivo}
+                  onChange={(e) => setRec({ ...rec, motivo: e.target.value })}
+                  className="w-full bg-black border border-bleach-border rounded-lg p-2 text-xs text-white"
+                />
+              </div>
+
+              <div className="flex justify-end pt-1">
+                <button
+                  type="button"
+                  onClick={concederRecompensa}
+                  className="px-6 py-2.5 bg-gradient-to-r from-yellow-500 to-amber-600 hover:brightness-110 text-black font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-lg transition"
+                >
+                  ✓ Conceder Recompensa ao Personagem
+                </button>
+              </div>
+            </div>
+
             {/* Quick Roll Addition Buttons */}
             <div className="p-3.5 bg-black/60 border border-bleach-borderSoft rounded-xl flex flex-wrap items-center justify-between gap-3">
               <div>
-                <span className="text-xs font-bold text-bleach-orange uppercase block">Sorteios Rápidos:</span>
+                <span className="text-xs font-bold text-bleach-orange uppercase block">Giros Rápidos:</span>
                 <p className="text-[11px] text-bleach-muted">Adicione giros comuns ou especiais diretamente na ficha do jogador</p>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -6012,13 +6359,13 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
             <div className="text-4xl">⚠️</div>
             <h3 className="font-title text-2xl text-red-400">RESET TOTAL DE FICHA</h3>
             <p className="text-xs text-bleach-creamDim leading-relaxed">
-              Tem certeza que quer resetar toda a ficha de <strong className="text-white">{personagem.nome}</strong> para o estado inicial?
+              Tem certeza que quer resetar integralmente a ficha de <strong className="text-white">{personagem.nome}</strong> para o estado inicial?
             </p>
             <div className="text-[11px] text-left p-3 bg-black/60 rounded-xl border border-red-500/30 text-bleach-muted space-y-1">
               <div>• Atributos retornam para o padrão (10 em cada).</div>
               <div>• Saldo de pontos livres retorna para 20.</div>
               <div>• Giros comuns voltam para 2, especiais para 0.</div>
-              <div>• Shikai e Bankai serão desvinculadas e liberadas do registro global.</div>
+              <div>• <strong>Shikai e Bankai serão completamente apagadas</strong> e desvinculadas do registro global.</div>
               <div>• Trava de personalidade e histórico serão redefinidos.</div>
             </div>
             <div className="flex gap-3 pt-2">
@@ -6042,53 +6389,47 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
   );
 }
 
+
 // =========================================================================
-// VIEWS PART 3: ADMINPANEL, SISTEMASVIEW & ROOT RENDER
+// VIEWS PART 3: ADMIN PANEL, RICH SISTEMAS VIEW & APP MOUNT
 // =========================================================================
 
-// TAB: ADMIN PANEL
+// TAB: PAINEL DE CONTROLE DA ADMINISTRAÇÃO
 function AdminPanel({ db, saveDb, session, cloudStatus, onAbrirFicha }) {
   const isSuper = session?.role === "super_admin";
-  const [adminTab, setAdminTab] = useState("personagens");
-  const [busca, setBusca] = useState("");
-  const [charToDelete, setCharToDelete] = useState(null);
-  
-  // Novo Personagem Form
-  const [novoNome, setNovoNome] = useState("");
-  const [novoWhats, setNovoWhats] = useState("");
-  const [novoCod, setNovoCod] = useState("");
-  const [novoEsquadrao, setNovoEsquadrao] = useState("11º Esquadrão");
-
-  // Sub-ADM Form
+  const [tabAdm, setTabAdm] = useState("fichas");
   const [novoSubUser, setNovoSubUser] = useState("");
-  const [novoSubSenha, setNovoSubSenha] = useState("");
+  const [novoSubPass, setNovoSubPass] = useState("");
   const [novoSubNome, setNovoSubNome] = useState("");
   const [novoSubCargo, setNovoSubCargo] = useState("Avaliador de Cenas & Fichas");
 
-  // Dice Roller
-  const [dadoTipo, setDadoTipo] = useState("d20");
-  const [dadoChar, setDadoChar] = useState(db.personagens?.[0]?.nome || "");
-  const [dadoResultado, setDadoResultado] = useState(null);
+  // Dados para Novo Personagem
+  const [novoNome, setNovoNome] = useState("");
+  const [novoWhats, setNovoWhats] = useState("");
+  const [novoCodigo, setNovoCodigo] = useState("");
+  const [novoRaca, setNovoRaca] = useState("Shinigami");
+  const [novoEsquadrao, setNovoEsquadrao] = useState("11º Esquadrão");
 
-  // Cloud Config
-  const [editFirebaseUrl, setEditFirebaseUrl] = useState(db.firebaseUrl || "");
+  // Dados de Rolagem de Dados
+  const [dadoTipo, setDadoTipo] = useState("d20");
+  const [dadoChar, setDadoChar] = useState(db.personagens?.[0]?.nome || "Geral");
 
   function criarPersonagem(e) {
     e.preventDefault();
-    if (!novoNome.trim()) {
-      alert("Digite o nome do personagem.");
+    if (!novoNome.trim() || !novoCodigo.trim()) {
+      alert("Nome e Código de Acesso são obrigatórios!");
       return;
     }
-    const codGerado = novoCod.trim() || `SHIN-${Math.floor(1000 + Math.random() * 9000)}`;
+
     const novoP = {
-      id: uid(),
+      id: "char-" + uid(),
       nome: novoNome.trim(),
-      whatsapp: novoWhats.trim() || "11999999999",
-      codigo: codGerado,
       foto: "assets/ichigo-orange.png",
-      raca: "Shinigami",
+      whatsapp: novoWhats.trim(),
+      codigo: novoCodigo.trim(),
+      raca: novoRaca,
       esquadrao: novoEsquadrao,
-      faceclaim: "Personagem Oficial",
+      faceclaim: novoNome.trim(),
       idadePlayer: "20",
       aniversarioPlayer: "01/01",
       idadeChar: "18",
@@ -6111,225 +6452,164 @@ function AdminPanel({ db, saveDb, session, cloudStatus, onAbrirFicha }) {
       personalidadeTravada: false,
       cenaDespertarShikai: "",
       cenaDespertarBankai: "",
-      zanpakuto: { nome: "Em despertar", fotoShikai: "assets/ichigo-orange.png", fotoBankai: "assets/ichigo-moon.png", shikaiAtiva: null, bankaiAtiva: null, notas: "" },
+      zanpakuto: {
+        nome: "Em despertar",
+        fotoShikai: "assets/ichigo-orange.png",
+        fotoBankai: "assets/ichigo-moon.png",
+        shikaiAtiva: null,
+        bankaiAtiva: null,
+        bankaiPadrao: null,
+        shikaiEscolhida: false,
+        bankaiEscolhida: false,
+        notas: ""
+      },
       estado: "Inteiro",
       treinosHoje: 0,
       historico: [{ id: uid(), data: nowStr(), texto: "Ficha criada e aprovada pela Administração." }]
     };
 
-    const personagens = [novoP, ...(db.personagens || [])];
-    saveDb({ ...db, personagens });
+    saveDb({ ...db, personagens: [...(db.personagens || []), novoP] });
     setNovoNome("");
     setNovoWhats("");
-    setNovoCod("");
-    alert(`Personagem ${novoP.nome} criado com sucesso! Código de acesso: ${novoP.codigo}`);
+    setNovoCodigo("");
     playReiatsuSound('win');
+    alert(`Personagem ${novoP.nome} criado com sucesso!`);
   }
 
-  function deletarPersonagemConfirmado() {
-    if (!charToDelete) return;
-    const charId = charToDelete.id;
-    const charNome = charToDelete.nome;
+  function apagarPersonagem(charId, charNome) {
+    const confirma = confirm(`⚠️ Tem certeza absoluta que deseja excluir a ficha de ${charNome}?\n\nIsso apagará todos os dados, revogará qualquer login ativo e liberará a Zanpakutō no banco de dados.`);
+    if (!confirma) return;
 
-    const personagens = (db.personagens || []).filter(p => p.id !== charId);
-    const novasVinculadas = (db.zanpakutosVinculadas || []).filter(z => z.charId !== charId);
+    const novosP = (db.personagens || []).filter(p => p.id !== charId);
+    const novasZk = (db.zanpakutosVinculadas || []).filter(z => z.charId !== charId && z.charNome !== charNome);
 
-    saveDb({ ...db, personagens, zanpakutosVinculadas: novasVinculadas });
-    setCharToDelete(null);
-    alert(`Ficha de ${charNome} excluída permanentemente. Se o jogador estiver online, a sessão dele será revogada.`);
+    saveDb({ ...db, personagens: novosP, zanpakutosVinculadas: novasZk });
     playReiatsuSound('shatter');
+    alert(`A ficha de ${charNome} foi excluída e a sessão do jogador foi revogada com sucesso.`);
   }
 
-  function criarSubAdm(e) {
+  function adicionarSubAdm(e) {
     e.preventDefault();
-    if (!novoSubUser.trim() || !novoSubSenha.trim()) {
-      alert("Preencha usuário e senha do Sub-ADM.");
+    if (!novoSubUser.trim() || !novoSubPass.trim() || !novoSubNome.trim()) {
+      alert("Preencha todos os campos do sub-administrador.");
       return;
     }
     const novoSub = {
-      id: uid(),
+      id: "adm-" + uid(),
       usuario: novoSubUser.trim().toLowerCase(),
-      senha: novoSubSenha.trim(),
-      nome: novoSubNome.trim() || "Avaliador",
-      cargo: novoSubCargo.trim()
+      senha: novoSubPass.trim(),
+      nome: novoSubNome.trim(),
+      cargo: novoSubCargo
     };
-    const subAdms = [...(db.subAdms || []), novoSub];
-    saveDb({ ...db, subAdms });
+    saveDb({ ...db, subAdms: [...(db.subAdms || []), novoSub] });
     setNovoSubUser("");
-    setNovoSubSenha("");
+    setNovoSubPass("");
     setNovoSubNome("");
-    alert(`Sub-ADM ${novoSub.nome} cadastrado!`);
+    alert(`Sub-administrador ${novoSub.nome} adicionado com sucesso!`);
   }
 
-  function removerSubAdm(id) {
-    const subAdms = (db.subAdms || []).filter(s => s.id !== id);
-    saveDb({ ...db, subAdms });
+  function removerSubAdm(subId) {
+    if (!confirm("Deseja remover este avaliador?")) return;
+    saveDb({ ...db, subAdms: (db.subAdms || []).filter(s => s.id !== subId) });
   }
 
-  function salvarConfigCloud() {
-    saveDb({ ...db, firebaseUrl: editFirebaseUrl.trim() });
-    alert("URL do Firebase atualizada!");
-  }
-
-  function exportarBackup() {
-    const jsonStr = JSON.stringify(db, null, 2);
-    const blob = new Blob([jsonStr], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `backup_bleach_rpg_${Date.now()}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-  }
-
-  function importarBackup(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      try {
-        const imported = JSON.parse(ev.target.result);
-        if (imported && imported.personagens) {
-          saveDb(imported);
-          alert("Backup restaurado com sucesso!");
-        } else {
-          alert("Arquivo de backup inválido.");
-        }
-      } catch (err) {
-        alert("Erro ao ler JSON de backup.");
-      }
-    };
-    reader.readAsText(file);
-  }
-
-  function rolarDado() {
-    let max = 20;
-    if (dadoTipo === "d100") max = 100;
-    else if (dadoTipo === "d6") max = 6;
-    else if (dadoTipo === "d10") max = 10;
-
-    const res = Math.floor(Math.random() * max) + 1;
-    let cat = "Sucesso";
+  function rolarDadoPublico() {
+    const lados = dadoTipo === "d20" ? 20 : dadoTipo === "d100" ? 100 : 10;
+    const res = Math.floor(Math.random() * lados) + 1;
+    let cat = "Sucesso Regular";
     if (dadoTipo === "d20") {
-      if (res === 1) cat = "Desastre Crítico (Falha Grave)";
-      else if (res <= 6) cat = "Falha Comum";
-      else if (res <= 13) cat = "Sucesso Parcial (+50%)";
-      else if (res <= 19) cat = "Extremo Sucesso (+80%)";
-      else cat = "✨ CRÍTICO ABSOLUTO (+100%)";
+      if (res === 20) cat = "🌟 Sucesso Crítico Absoluto (20)";
+      else if (res >= 16) cat = "✨ Extremo Sucesso (+80%)";
+      else if (res >= 10) cat = "✓ Sucesso Médio (+50%)";
+      else if (res === 1) cat = "💀 Falha Crítica (Desastre 1)";
+      else cat = "✗ Falha";
     }
 
-    const rollObj = {
+    const rollLog = {
       id: uid(),
-      autor: session?.nome || "Mestre ADM",
-      personagem: dadoChar || "Geral",
+      autor: session?.nome || "ADM",
+      personagem: dadoChar,
       dado: dadoTipo,
       resultado: res,
       categoria: cat,
       data: nowStr()
     };
 
-    setDadoResultado(rollObj);
-    const rolagensDadosPublicas = [rollObj, ...(db.rolagensDadosPublicas || []).slice(0, 30)];
-    saveDb({ ...db, rolagensDadosPublicas });
+    saveDb({ ...db, rolagensDadosPublicas: [rollLog, ...(db.rolagensDadosPublicas || []).slice(0, 30)] });
     playReiatsuSound('roll');
   }
 
-  const charsFiltrados = (db.personagens || []).filter(p =>
-    p.nome.toLowerCase().includes(busca.toLowerCase()) ||
-    (p.codigo || "").toLowerCase().includes(busca.toLowerCase()) ||
-    (p.esquadrao || "").toLowerCase().includes(busca.toLowerCase())
-  );
-
   return (
     <div className="space-y-6">
-      {/* Header Admin */}
-      <div className="bg-gradient-to-r from-yellow-950/60 via-bleach-panel to-black border-2 border-yellow-500/60 rounded-2xl p-4 sm:p-6 shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-xl bg-yellow-500 text-black flex items-center justify-center font-title text-2xl font-extrabold shadow-[0_0_15px_#E0B34C]">
-            👑
-          </div>
+      <div className="bg-banner-overlay border-2 border-yellow-500/70 rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h2 className="font-title text-2xl text-yellow-400 tracking-wider">PAINEL SUPREMO DE ADMINISTRAÇÃO</h2>
-            <p className="text-xs text-bleach-creamDim">Controle global de fichas, sessões, regras e banco de dados</p>
+            <span className="px-3 py-1 bg-yellow-950 border border-yellow-400 text-yellow-300 text-xs font-bold rounded-full uppercase tracking-wider">
+              👑 Painel Central de Comando • {isSuper ? "Comandante Supremo (ADM Máximo)" : "Avaliador Autorizado"}
+            </span>
+            <h2 className="font-title text-3xl sm:text-4xl tracking-widest text-yellow-400 mt-2">
+              GERENCIADOR DE FICHAS & NARRATIVA
+            </h2>
+            <p className="text-xs text-bleach-creamDim mt-1">
+              Crie, gerencie, recompense e fiscalize todas as fichas e combates do RPG.
+            </p>
           </div>
-        </div>
 
-        <div className="flex gap-2">
-          {["personagens", "novo_char", "dados", "sub_adms", "nuvem"].map(tab => (
-            <button
-              key={tab}
-              onClick={() => setAdminTab(tab)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition uppercase ${
-                adminTab === tab ? "bg-yellow-500 text-black font-extrabold shadow" : "bg-black/60 border border-white/10 text-bleach-creamDim hover:text-white"
-              }`}
-            >
-              {tab === "personagens" ? "👥 Fichas" :
-               tab === "novo_char" ? "+ Nova Ficha" :
-               tab === "dados" ? "🎲 Dados & IA" :
-               tab === "sub_adms" ? "🛡️ Avaliadores" : "☁️ Nuvem & Backup"}
-            </button>
-          ))}
+          <div className="flex gap-2">
+            {["fichas", "novo", "subadms", "dados"].map(t => (
+              <button
+                key={t}
+                onClick={() => setTabAdm(t)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase transition ${
+                  tabAdm === t ? "bg-yellow-500 text-black font-extrabold shadow" : "bg-black/60 border border-yellow-500/30 text-yellow-200"
+                }`}
+              >
+                {t === "fichas" ? "Fichas" : t === "novo" ? "+ Criar" : t === "subadms" ? "Avaliadores" : "Dados"}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* TAB: LISTA DE PERSONAGENS */}
-      {adminTab === "personagens" && (
-        <Section title="Gestão Geral de Fichas dos Jogadores" subtitle="Acesse qualquer ficha, conceda giros ou exclua contas">
-          <div className="mb-4">
-            <input
-              type="text"
-              placeholder="🔍 Buscar por nome, código ou esquadrão..."
-              value={busca}
-              onChange={(e) => setBusca(e.target.value)}
-              className="w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-3 text-xs text-white"
-            />
-          </div>
-
-          <div className="space-y-3">
-            {charsFiltrados.map(p => {
-              const temShikai = !!p.zanpakuto?.shikaiAtiva;
+      {/* SUBTAB: LISTA DE FICHAS */}
+      {tabAdm === "fichas" && (
+        <Section title="Fichas de Shinigamis Registradas" subtitle="Clique para abrir e gerenciar qualquer personagem">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {(db.personagens || []).map((p) => {
+              const temShikai = !!p?.zanpakuto?.shikaiAtiva;
+              const temBankai = !!p?.zanpakuto?.bankaiAtiva;
               return (
-                <div key={p.id} className="p-4 bg-bleach-panel2 border border-bleach-border rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4">
-                  <div className="flex items-center gap-3 w-full sm:w-auto">
-                    <img src={p.foto || 'assets/ichigo-orange.png'} className="w-12 h-12 rounded-xl object-cover border border-bleach-border bg-black" />
-                    <div>
-                      <h4 className="font-bold text-white text-sm flex items-center gap-2">
-                        <span>{p.nome}</span>
-                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-black text-bleach-orange border border-bleach-border">
-                          {p.codigo}
-                        </span>
-                      </h4>
-                      <div className="text-[11px] text-bleach-muted flex flex-wrap gap-2 mt-0.5">
-                        <span>Divisão: <strong>{p.esquadrao}</strong></span>
-                        <span>Pontos Livres: <strong className="text-bleach-orange">{p.pontosDisponiveis || 0}</strong></span>
-                        <span>Giros: <strong>🎲 {p.sorteiosComunsRestantes || 0}</strong> / <strong>🌟 {p.sorteiosEspeciaisRestantes || 0}</strong></span>
+                <div key={p.id} className="bg-bleach-panel2 border border-bleach-border rounded-xl p-4 flex flex-col justify-between space-y-3">
+                  <div className="flex items-start gap-3">
+                    <img src={p.foto || 'assets/ichigo-orange.png'} className="w-12 h-12 rounded-lg object-cover border border-bleach-border" />
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-bold text-white text-sm truncate">{p.nome}</h4>
+                      <p className="text-[11px] text-bleach-muted">Código: <strong className="text-yellow-400 font-mono">{p.codigo}</strong></p>
+                      <div className="text-[10px] text-bleach-muted flex gap-2 mt-0.5">
+                        <span>PTS: <strong className="text-bleach-orange">{p.pontosDisponiveis || 0}</strong></span>
+                        <span>COM: <strong className="text-white">{p.sorteiosComunsRestantes || 0}</strong></span>
+                        <span>ESP: <strong className="text-purple-300">{p.sorteiosEspeciaisRestantes || 0}</strong></span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
-                    <button
-                      onClick={() => {
-                        navigator.clipboard.writeText(`Código de Acesso: ${p.codigo}\nNome: ${p.nome}`);
-                        alert("Credenciais copiadas para a área de transferência!");
-                      }}
-                      className="px-3 py-1.5 bg-black/60 border border-white/10 hover:border-white text-bleach-creamDim text-xs font-bold rounded-lg"
-                      title="Copiar credenciais de login"
-                    >
-                      📋 Copiar Login
-                    </button>
+                  <div className="flex flex-wrap gap-1 text-[10px]">
+                    {temShikai ? <span className="px-2 py-0.5 bg-blue-950 text-cyan-300 rounded border border-cyan-500">🗡️ {p.zanpakuto.shikaiAtiva.nome}</span> : <span className="px-2 py-0.5 bg-black text-bleach-muted rounded">Lâmina Selada</span>}
+                    {temBankai && <span className="px-2 py-0.5 bg-amber-950 text-yellow-300 rounded border border-amber-500">卍 Bankai</span>}
+                    {p.personalidadeTravada && <span className="px-2 py-0.5 bg-green-950 text-green-300 rounded">🔒 DNA Selado</span>}
+                  </div>
 
+                  <div className="flex gap-2 pt-2 border-t border-white/5">
                     <button
                       onClick={() => onAbrirFicha(p.id)}
-                      className="px-4 py-1.5 bg-bleach-orange text-black font-extrabold text-xs uppercase rounded-lg shadow hover:bg-orange-400"
+                      className="flex-1 py-1.5 bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold text-xs uppercase rounded-lg shadow"
                     >
-                      ⚙️ Gerenciar Ficha
+                      ✏️ Gerenciar Ficha
                     </button>
-
                     <button
-                      onClick={() => setCharToDelete(p)}
-                      className="px-2.5 py-1.5 bg-red-950/60 border border-red-500/50 hover:bg-red-800 text-red-300 text-xs font-bold rounded-lg"
-                      title="Excluir ficha"
+                      onClick={() => apagarPersonagem(p.id, p.nome)}
+                      className="px-3 py-1.5 bg-red-950 hover:bg-red-900 border border-red-500 text-red-200 text-xs font-bold rounded-lg"
+                      title="Excluir Ficha"
                     >
                       🗑️
                     </button>
@@ -6341,215 +6621,339 @@ function AdminPanel({ db, saveDb, session, cloudStatus, onAbrirFicha }) {
         </Section>
       )}
 
-      {/* TAB: CRIAR NOVO PERSONAGEM */}
-      {adminTab === "novo_char" && (
-        <Section title="Criar Nova Ficha de Shinigami" subtitle="Cadastre um novo jogador e gere seu código de acesso oficial">
-          <form onSubmit={criarPersonagem} className="max-w-xl space-y-4 text-xs">
-            <div>
-              <label className="block font-bold text-bleach-cream mb-1 uppercase">Nome do Personagem *</label>
-              <input type="text" placeholder="Ex: Kurosaki Ren" value={novoNome} onChange={(e) => setNovoNome(e.target.value)} className="w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-3 text-white" />
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      {/* SUBTAB: CRIAR NOVO PERSONAGEM */}
+      {tabAdm === "novo" && (
+        <Section title="Cadastrar Nova Ficha de Shinigami" subtitle="Preencha os dados iniciais para gerar a ficha e código de acesso">
+          <form onSubmit={criarPersonagem} className="space-y-4 max-w-xl">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
               <div>
-                <label className="block font-bold text-bleach-cream mb-1 uppercase">WhatsApp (Opcional)</label>
-                <input type="text" placeholder="Ex: 11988887777" value={novoWhats} onChange={(e) => setNovoWhats(e.target.value)} className="w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-3 text-white" />
+                <label className="block text-bleach-creamDim font-bold mb-1">Nome do Personagem *</label>
+                <input type="text" placeholder="Ex: Zaraki Kenji" value={novoNome} onChange={(e) => setNovoNome(e.target.value)} className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2.5 text-white" />
               </div>
               <div>
-                <label className="block font-bold text-bleach-cream mb-1 uppercase">Código de Acesso (Senha)</label>
-                <input type="text" placeholder="Deixe em branco para auto-gerar" value={novoCod} onChange={(e) => setNovoCod(e.target.value)} className="w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-3 text-white font-mono" />
+                <label className="block text-bleach-creamDim font-bold mb-1">Código de Acesso (Senha) *</label>
+                <input type="text" placeholder="Ex: ZAR-9901" value={novoCodigo} onChange={(e) => setNovoCodigo(e.target.value)} className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2.5 text-white font-mono" />
+              </div>
+              <div>
+                <label className="block text-bleach-creamDim font-bold mb-1">WhatsApp (Opcional)</label>
+                <input type="text" placeholder="Ex: 11988887777" value={novoWhats} onChange={(e) => setNovoWhats(e.target.value)} className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2.5 text-white" />
+              </div>
+              <div>
+                <label className="block text-bleach-creamDim font-bold mb-1">Esquadrão</label>
+                <input type="text" value={novoEsquadrao} onChange={(e) => setNovoEsquadrao(e.target.value)} className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2.5 text-white" />
               </div>
             </div>
 
-            <div>
-              <label className="block font-bold text-bleach-cream mb-1 uppercase">Esquadrão Inicial</label>
-              <select value={novoEsquadrao} onChange={(e) => setNovoEsquadrao(e.target.value)} className="w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-3 text-white">
-                {Array.from({ length: 13 }, (_, i) => `${i + 1}º Esquadrão`).map(eq => (
-                  <option key={eq} value={eq}>{eq}</option>
-                ))}
-              </select>
-            </div>
-
-            <button type="submit" className="w-full py-3 bg-bleach-orange text-black font-extrabold text-xs uppercase rounded-xl shadow hover:bg-orange-400">
-              ✓ Cadastrar & Aprovar Ficha
+            <button type="submit" className="w-full py-3 bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-lg">
+              ✨ Criar Ficha com 20 Pts Iniciais & 2 Giros
             </button>
           </form>
         </Section>
       )}
 
-      {/* TAB: DADOS & ÁRBITRO */}
-      {adminTab === "dados" && (
-        <Section title="Mesa de Dados & Arbitragem" subtitle="Role dados com cálculo de tensão narrativa">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-4 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-3">
-              <h4 className="text-xs font-bold text-bleach-orange uppercase">Rolagem Rápida</h4>
-              <div>
-                <label className="block text-[11px] text-bleach-muted mb-1">Tipo de Dado</label>
-                <select value={dadoTipo} onChange={(e) => setDadoTipo(e.target.value)} className="w-full bg-black border border-bleach-border rounded p-2 text-xs text-white">
-                  <option value="d20">d20 (Sistema Padrão Bleach)</option>
-                  <option value="d100">d100 (Porcentagem)</option>
-                  <option value="d6">d6</option>
-                  <option value="d10">d10</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-[11px] text-bleach-muted mb-1">Personagem</label>
-                <input type="text" value={dadoChar} onChange={(e) => setDadoChar(e.target.value)} className="w-full bg-black border border-bleach-border rounded p-2 text-xs text-white" />
-              </div>
-
-              <button onClick={rolarDado} className="w-full py-2.5 bg-bleach-orange text-black font-extrabold text-xs uppercase rounded shadow">
-                🎲 Rolar Dado
-              </button>
-            </div>
-
-            {dadoResultado && (
-              <div className="md:col-span-2 p-5 bg-black/80 border-2 border-bleach-orange rounded-xl flex flex-col items-center justify-center text-center space-y-2">
-                <span className="text-[10px] text-bleach-muted uppercase font-mono">{dadoResultado.personagem} rolou {dadoResultado.dado}</span>
-                <span className="text-6xl font-black font-mono text-bleach-orange">{dadoResultado.resultado}</span>
-                <span className="text-sm font-bold text-white">{dadoResultado.categoria}</span>
-              </div>
-            )}
-          </div>
-        </Section>
-      )}
-
-      {/* TAB: SUB-ADMS */}
-      {adminTab === "sub_adms" && isSuper && (
-        <Section title="Gerenciamento de Avaliadores & Sub-ADMs" subtitle="Adicione membros da staff autorizados a avaliar cenas">
-          <form onSubmit={criarSubAdm} className="max-w-md space-y-3 text-xs mb-6">
+      {/* SUBTAB: SUB-ADMS */}
+      {tabAdm === "subadms" && isSuper && (
+        <Section title="Gerenciador de Avaliadores & Sub-Administradores" subtitle="Cadastre avaliadores com senhas individuais">
+          <form onSubmit={adicionarSubAdm} className="p-4 bg-black/60 rounded-xl border border-yellow-500/40 grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs mb-6">
             <div>
-              <label className="block font-bold text-bleach-cream mb-1">Nome do Avaliador</label>
+              <label className="block text-yellow-300 font-bold mb-1">Nome do Avaliador</label>
               <input type="text" placeholder="Ex: Mestre Kisuke" value={novoSubNome} onChange={(e) => setNovoSubNome(e.target.value)} className="w-full bg-bleach-panel2 border border-bleach-border rounded p-2 text-white" />
             </div>
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <label className="block font-bold text-bleach-cream mb-1">Usuário</label>
-                <input type="text" placeholder="kisuke" value={novoSubUser} onChange={(e) => setNovoSubUser(e.target.value)} className="w-full bg-bleach-panel2 border border-bleach-border rounded p-2 text-white font-mono" />
-              </div>
-              <div>
-                <label className="block font-bold text-bleach-cream mb-1">Senha</label>
-                <input type="text" placeholder="123" value={novoSubSenha} onChange={(e) => setNovoSubSenha(e.target.value)} className="w-full bg-bleach-panel2 border border-bleach-border rounded p-2 text-white font-mono" />
-              </div>
+            <div>
+              <label className="block text-yellow-300 font-bold mb-1">Usuário</label>
+              <input type="text" placeholder="Ex: kisuke" value={novoSubUser} onChange={(e) => setNovoSubUser(e.target.value)} className="w-full bg-bleach-panel2 border border-bleach-border rounded p-2 text-white font-mono" />
             </div>
-            <button type="submit" className="w-full py-2 bg-yellow-500 text-black font-bold uppercase rounded shadow">
-              + Adicionar Avaliador
-            </button>
+            <div>
+              <label className="block text-yellow-300 font-bold mb-1">Senha</label>
+              <input type="password" placeholder="••••••" value={novoSubPass} onChange={(e) => setNovoSubPass(e.target.value)} className="w-full bg-bleach-panel2 border border-bleach-border rounded p-2 text-white font-mono" />
+            </div>
+            <div className="flex items-end">
+              <button type="submit" className="w-full py-2 bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold uppercase rounded shadow">
+                + Adicionar
+              </button>
+            </div>
           </form>
 
           <div className="space-y-2">
-            {(db.subAdms || []).map(sub => (
-              <div key={sub.id} className="p-3 bg-bleach-panel2 border border-bleach-border rounded-lg flex items-center justify-between text-xs">
+            {(db.subAdms || []).map(s => (
+              <div key={s.id} className="p-3 bg-bleach-panel2 border border-bleach-border rounded-lg flex justify-between items-center text-xs">
                 <div>
-                  <strong className="text-white">{sub.nome}</strong>
-                  <span className="text-bleach-muted ml-2">Usuário: <code className="text-yellow-400">{sub.usuario}</code></span>
+                  <strong className="text-white block">{s.nome}</strong>
+                  <span className="text-[11px] text-bleach-muted">Usuário: <code className="text-yellow-400">{s.usuario}</code> | Cargo: {s.cargo}</span>
                 </div>
-                <button onClick={() => removerSubAdm(sub.id)} className="text-red-400 hover:text-red-300 font-bold">Remover</button>
+                <button onClick={() => removerSubAdm(s.id)} className="text-red-400 hover:text-red-300 font-bold">Remover</button>
               </div>
             ))}
           </div>
         </Section>
       )}
 
-      {/* TAB: NUVEM & BACKUP */}
-      {adminTab === "nuvem" && (
-        <Section title="Nuvem Firebase & Backup de Segurança" subtitle="Sincronize com o Realtime Database e faça cópias locais">
-          <div className="space-y-4 text-xs">
-            <div>
-              <label className="block font-bold text-bleach-cream mb-1 uppercase">URL do Firebase Realtime Database</label>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  placeholder="https://seu-banco-rtdb.firebaseio.com/"
-                  value={editFirebaseUrl}
-                  onChange={(e) => setEditFirebaseUrl(e.target.value)}
-                  className="flex-1 bg-bleach-panel2 border border-bleach-border rounded-lg p-2 text-white font-mono"
-                />
-                <button onClick={salvarConfigCloud} className="px-4 py-2 bg-bleach-orange text-black font-bold uppercase rounded-lg">
-                  Salvar URL
-                </button>
+      {/* SUBTAB: ROLAGEM DE DADOS */}
+      {tabAdm === "dados" && (
+        <Section title="Mesa de Rolagem de Dados de Alta Tensão" subtitle="Rolagens públicas de d20 e d100 para julgamento de cenas">
+          <div className="p-4 bg-black/60 rounded-xl border border-bleach-border flex flex-wrap gap-3 items-center mb-6">
+            <select value={dadoTipo} onChange={(e) => setDadoTipo(e.target.value)} className="bg-bleach-panel2 border border-bleach-border rounded-lg p-2.5 text-xs text-white">
+              <option value="d20">🎲 Dado d20 (Testes & Combate)</option>
+              <option value="d100">🎲 Dado d100 (Porcentagens)</option>
+              <option value="d10">🎲 Dado d10 (Escalas Rápidas)</option>
+            </select>
+
+            <select value={dadoChar} onChange={(e) => setDadoChar(e.target.value)} className="bg-bleach-panel2 border border-bleach-border rounded-lg p-2.5 text-xs text-white">
+              <option value="Geral">Personagem: Geral</option>
+              {(db.personagens || []).map(p => <option key={p.id} value={p.nome}>{p.nome}</option>)}
+            </select>
+
+            <button onClick={rolarDadoPublico} className="px-6 py-2.5 bg-gradient-to-r from-bleach-orange to-red-600 text-black font-extrabold text-xs uppercase tracking-wider rounded-lg shadow hover:brightness-110">
+              🎲 Rolar Dado em Público
+            </button>
+          </div>
+
+          <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
+            {(db.rolagensDadosPublicas || []).map(d => (
+              <div key={d.id} className="p-3 bg-bleach-panel2 border border-bleach-border rounded-lg flex justify-between items-center text-xs">
+                <div>
+                  <span className="font-bold text-white">{d.personagem}</span>
+                  <span className="text-bleach-muted ml-2 font-mono">({d.dado}) — Por {d.autor}</span>
+                </div>
+                <div className="text-right">
+                  <span className="font-mono text-base font-black text-bleach-orange mr-2">{d.resultado}</span>
+                  <span className="text-[11px] text-yellow-300 font-bold">{d.categoria}</span>
+                </div>
               </div>
-            </div>
-
-            <div className="flex gap-3 pt-4 border-t border-bleach-borderSoft">
-              <button onClick={exportarBackup} className="px-4 py-2.5 bg-bleach-panel2 border border-bleach-border hover:border-white text-white font-bold rounded-lg shadow">
-                💾 Baixar Backup JSON
-              </button>
-
-              <label className="px-4 py-2.5 bg-bleach-panel2 border border-bleach-border hover:border-yellow-400 text-yellow-400 font-bold rounded-lg cursor-pointer shadow">
-                📥 Restaurar Backup JSON
-                <input type="file" accept=".json" onChange={importarBackup} className="hidden" />
-              </label>
-            </div>
+            ))}
           </div>
         </Section>
       )}
+    </div>
+  );
+}
 
-      {/* MODAL DE DELEÇÃO DE PERSONAGEM COM REVOGAÇÃO IMEDIATA */}
-      {charToDelete && (
-        <div className="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
-          <div className="bg-bleach-panel border-2 border-red-500 rounded-2xl p-6 max-w-md w-full shadow-2xl text-center space-y-4">
-            <div className="text-4xl">🗑️</div>
-            <h3 className="font-title text-2xl text-red-400">EXCLUIR FICHA DE PERSONAGEM</h3>
-            <p className="text-xs text-bleach-creamDim leading-relaxed">
-              Tem certeza que deseja apagar permanentemente a ficha de <strong className="text-white">{charToDelete.nome}</strong>?
-            </p>
-            <div className="text-[11px] text-left p-3 bg-black/60 rounded-xl border border-red-500/30 text-bleach-muted space-y-1">
-              <div>• A conta será removida imediatamente da base de dados.</div>
-              <div>• Se o jogador estiver logado, a sessão dele será <strong>revogada instantaneamente</strong>.</div>
-              <div>• As assinaturas de Zanpakutō vinculadas serão liberadas.</div>
+// RICH SISTEMAS & REGRAS VIEW (COMPLETE ORIGINAL SYSTEMS RESTORED)
+function SistemasView() {
+  const [tabSis, setTabSis] = useState("atributos");
+
+  return (
+    <div className="space-y-6">
+      {/* Banner */}
+      <div className="bg-banner-overlay border border-bleach-border rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+        <div className="relative z-10 max-w-3xl">
+          <span className="px-3 py-1 bg-bleach-orange/20 border border-bleach-orange text-bleach-orange text-xs font-bold rounded-full uppercase tracking-wider">
+            Regulamento Oficial da Sociedade das Almas • Versão 2026
+          </span>
+          <h2 className="font-title text-4xl sm:text-5xl tracking-widest text-bleach-cream mt-3 reiatsu-text-glow">
+            COMPÊNDIO DE SISTEMAS & MECÂNICAS
+          </h2>
+          <p className="text-xs sm:text-sm text-bleach-creamDim mt-2 leading-relaxed">
+            Consulte todas as diretrizes oficiais de atributos, treinos em ON, roletas de sorteio, individualização de Zanpakutōs e regras de conjuração de Kidō.
+          </p>
+        </div>
+      </div>
+
+      {/* Category Tabs */}
+      <div className="flex gap-2 overflow-x-auto border-b border-bleach-borderSoft pb-2">
+        {[
+          { id: "atributos", label: "Atributos & Patamares", icon: "⚡" },
+          { id: "treinos", label: "Treinos em ON & Ganhos", icon: "✍️" },
+          { id: "sorteios", label: "Sorteios & Roletas", icon: "🎁" },
+          { id: "zanpakuto", label: "Zanpakutō & 33 Regras de IA", icon: "🗡️" },
+          { id: "kidos", label: "Kidō & Encantamentos", icon: "📕" },
+        ].map(t => (
+          <button
+            key={t.id}
+            onClick={() => setTabSis(t.id)}
+            className={`px-4 py-2 rounded-xl text-xs font-bold tracking-wide transition whitespace-nowrap flex items-center gap-2 ${
+              tabSis === t.id ? "bg-bleach-orange text-black font-extrabold shadow-lg" : "bg-bleach-panel2 border border-bleach-border text-bleach-creamDim hover:text-white"
+            }`}
+          >
+            <span>{t.icon}</span>
+            <span>{t.label}</span>
+          </button>
+        ))}
+      </div>
+
+      {/* ABA 1: ATRIBUTOS & PATAMARES */}
+      {tabSis === "atributos" && (
+        <div className="space-y-6">
+          <Section title="Os 4 Atributos Primários da Alma" subtitle="A base estrutural do poder de todo Shinigami">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {ATTRS.map(a => (
+                <div key={a.key} className="p-4 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-2">
+                  <h4 className="font-bold text-sm uppercase tracking-wider" style={{ color: a.color }}>{a.label}</h4>
+                  <p className="text-xs text-bleach-creamDim leading-relaxed">{a.desc}</p>
+                  <div className="text-[11px] text-bleach-muted pt-1 border-t border-white/5">
+                    {a.key === "pressao" && "Determina a quantidade máxima de Kidōs por cena, o alcance de percepção sensorial e a resistência contra supressões espirituais."}
+                    {a.key === "forca" && "Governa a potência do Zanjutsu (esgrima) e Hakuda (combate desarmado), além do impacto de cortes e colisões físicas."}
+                    {a.key === "velocidade" && "Rege a velocidade de locomoção, reflexos de combate, capacidade de esquiva e a maestria na técnica de Hohō/Shunpo."}
+                    {a.key === "resiliencia" && "Controla a vitalidade do corpo espiritual (Hakusui e Saketsu), absorção de impacto, resistência a ferimentos e fadiga."}
+                  </div>
+                </div>
+              ))}
             </div>
-            <div className="flex gap-3 pt-2">
-              <button onClick={() => setCharToDelete(null)} className="flex-1 py-2.5 bg-bleach-panel2 border border-bleach-border text-xs text-white rounded-lg">
-                Cancelar
-              </button>
-              <button onClick={deletarPersonagemConfirmado} className="flex-1 py-2.5 bg-red-600 hover:bg-red-500 text-white font-extrabold text-xs uppercase rounded-lg shadow">
-                Confirmar Exclusão
-              </button>
+          </Section>
+
+          <Section title="Escala Oficial de Patamares de Poder" subtitle="A hierarquia espiritual da Sociedade das Almas">
+            <div className="space-y-3">
+              {[
+                { faixa: "1 a 10 pts", titulo: "Inexperiente", desc: "Aluno recém-ingressado na Academia Shinō.", cor: C.muted },
+                { faixa: "11 a 30 pts", titulo: "Iniciante", desc: "Oficial subalterno, combatente raso de Esquadrão.", cor: C.green },
+                { faixa: "31 a 60 pts", titulo: "Treinado", desc: "Oficial de Assento (10º ao 4º Oficial), experiente em missões no Mundo Humano.", cor: C.blue },
+                { faixa: "61 a 100 pts", titulo: "Veterano", desc: "3º Oficial ou Tenente de Esquadrão; maestria de Shikai e combate de alta escala.", cor: C.purple },
+                { faixa: "101 a 150 pts", titulo: "Mestre", desc: "Capitão do Gotei 13; domínio pleno de Bankai e liderança militar absoluta.", cor: C.yellow },
+                { faixa: "150+ pts", titulo: "Transcendental", desc: "Nível Divisão Zero / Guarda Real / Força Primordial do Seireitei.", cor: "#FFD700" }
+              ].map(tier => (
+                <div key={tier.titulo} className="p-3 bg-bleach-panel2 border border-bleach-border rounded-xl flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <span className="px-2.5 py-1 rounded font-mono font-bold text-xs bg-black text-white border border-white/10">{tier.faixa}</span>
+                    <div>
+                      <h5 className="font-bold text-xs uppercase" style={{ color: tier.cor }}>{tier.titulo}</h5>
+                      <p className="text-[11px] text-bleach-muted">{tier.desc}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-          </div>
+          </Section>
+        </div>
+      )}
+
+      {/* ABA 2: TREINOS EM ON */}
+      {tabSis === "treinos" && (
+        <div className="space-y-6">
+          <Section title="Sistema de Treinos em ON & Ganhos" subtitle="Diretrizes para progressão de atributos através de roleplay">
+            <div className="space-y-4 text-xs text-bleach-creamDim leading-relaxed">
+              <div className="p-4 bg-bleach-panel2 border-l-4 border-bleach-orange rounded-xl space-y-2">
+                <h4 className="font-bold text-sm text-bleach-orange uppercase">📜 Treino Básico em ON (30 Linhas)</h4>
+                <p>O jogador que narrar uma cena individual de treino focada e bem estruturada com no mínimo <strong>30 linhas</strong> no grupo oficial receberá:</p>
+                <ul className="list-disc list-inside space-y-1 text-white font-mono">
+                  <li>+1 Ponto Livre de Atributo (ou em atributo treinado)</li>
+                  <li>+4 Giros de Sorteio Comum</li>
+                  <li>+1 Giro de Sorteio Especial</li>
+                </ul>
+              </div>
+
+              <div className="p-4 bg-bleach-panel2 border-l-4 border-cyan-400 rounded-xl space-y-2">
+                <h4 className="font-bold text-sm text-cyan-400 uppercase">⚡ Cenas de Arco & Missões Principais (90+ Linhas)</h4>
+                <p>Cenas profundas de desenvolvimento de arco ou missões narradas com <strong>90 linhas ou mais</strong> concedem automaticamente <strong>+15 Pontos de Atributo Garantidos</strong> e pacotes especiais de roletas de bonificação após avaliação do ADM.</p>
+              </div>
+
+              <div className="p-4 bg-bleach-panel2 border-l-4 border-purple-400 rounded-xl space-y-2">
+                <h4 className="font-bold text-sm text-purple-400 uppercase">⚔️ Combates em ON & Arbitragem</h4>
+                <p>Combates na Arena são julgados por turnos com apoio de rolagens públicas de d20. A vitória e a criatividade tática rendem pontos proporcionais definidos pelo Juiz da Arena.</p>
+              </div>
+            </div>
+          </Section>
+        </div>
+      )}
+
+      {/* ABA 3: SORTEIOS & ROLETAS */}
+      {tabSis === "sorteios" && (
+        <div className="space-y-6">
+          <Section title="Probabilidades do Sorteio Gacha Comum" subtitle="Tabela estatística oficial de drops para cada giro comum">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+              {RARIDADES_COMUNS.map(r => (
+                <div key={r.nome} className="p-3.5 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-1.5">
+                  <div className="flex justify-between items-center">
+                    <span className="font-bold text-xs uppercase" style={{ color: r.cor }}>{r.nome}</span>
+                    <span className="font-mono text-xs font-bold text-white">{r.chanceStr}</span>
+                  </div>
+                  <p className="text-[11px] text-bleach-creamDim leading-relaxed">{r.desc}</p>
+                </div>
+              ))}
+            </div>
+          </Section>
+
+          <Section title="Catálogo de Recompensas do Sorteio Especial" subtitle="Itens sagrados, elixires nobres e despertar narrativo supremo">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {RECOMPENSAS_ESPECIAIS.map(item => (
+                <div key={item.id} className="p-3 bg-bleach-panel2 border border-bleach-border rounded-xl flex justify-between items-start gap-2">
+                  <div>
+                    <h5 className="font-bold text-xs" style={{ color: item.cor }}>{item.nome}</h5>
+                    <p className="text-[11px] text-bleach-muted mt-0.5">{item.desc}</p>
+                  </div>
+                  <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-black text-white shrink-0">
+                    {item.chanceStr}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </Section>
+        </div>
+      )}
+
+      {/* ABA 4: ZANPAKUTO & 33 REGRAS */}
+      {tabSis === "zanpakuto" && (
+        <div className="space-y-6">
+          <Section title="Motor Definitivo de Individualização Espiritual (33 Regras)" subtitle="Como a IA gera armas 100% únicas e exclusivas a partir do DNA da alma">
+            <div className="space-y-4 text-xs text-bleach-creamDim leading-relaxed">
+              <p>Nenhuma Zanpakutō na Sociedade das Almas pode ser duplicada ou genérica. O motor de IA utiliza a <strong>Personalidade Selada</strong>, virtudes, fraquezas e estilo de combate para sintetizar simultaneamente <strong>4 Caminhos Espirituais</strong>:</p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="p-3 bg-bleach-panel2 border border-red-500/40 rounded-xl space-y-1">
+                  <strong className="text-red-400 block font-bold">1. Caminho Elemental / Temperamento (~45%)</strong>
+                  <p>Alinhado diretamente à psicologia dominante do personagem (Chamas, Raios, Sombras, Vento, Gelo, Gravidade).</p>
+                </div>
+                <div className="p-3 bg-bleach-panel2 border border-blue-500/40 rounded-xl space-y-1">
+                  <strong className="text-cyan-400 block font-bold">2. Caminho Conceitual / Progressivo (~20%)</strong>
+                  <p>Baseado em regras, estágios, ciclos de carga, contadores e mecânicas táticas de acúmulo.</p>
+                </div>
+                <div className="p-3 bg-bleach-panel2 border border-purple-500/40 rounded-xl space-y-1">
+                  <strong className="text-purple-400 block font-bold">3. Caminho Compensatório / Complementar</strong>
+                  <p>Fornece exatamente o recurso que falta na anatomia tática do personagem para cobrir suas fraquezas.</p>
+                </div>
+                <div className="p-3 bg-bleach-panel2 border border-amber-500/40 rounded-xl space-y-1">
+                  <strong className="text-yellow-400 block font-bold">4. Caminho Opositivo / Experimental</strong>
+                  <p>Subverte a expectativa: manifesta o paradoxo inconsciente e a sombra da alma do Shinigami.</p>
+                </div>
+              </div>
+
+              <div className="p-3.5 bg-black/60 border border-yellow-500/40 rounded-xl text-[11px] text-yellow-200">
+                <strong>🛡️ Regra de Exclusividade & Anti-Duplicação:</strong> Cada arma escolhida recebe uma Assinatura Espiritual única (`zk-sig-...`) e é registrada no catálogo global. Duplicatas com mais de 60% de similaridade são bloqueadas pelo sistema.
+              </div>
+            </div>
+          </Section>
+        </div>
+      )}
+
+      {/* ABA 5: KIDOS & ENCANTAMENTOS */}
+      {tabSis === "kidos" && (
+        <div className="space-y-6">
+          <Section title="Grimório & Regras de Conjuração de Kidō" subtitle="Diretrizes para o uso de magias espirituais em combate e cenas">
+            <div className="space-y-4 text-xs text-bleach-creamDim leading-relaxed">
+              <div className="p-4 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-2">
+                <h4 className="font-bold text-sm text-cyan-400 uppercase">⚡ Limite de Feitiços por Cena</h4>
+                <p>A quantidade máxima de feitiços que um Shinigami pode conjurar em uma mesma cena é calculada pela fórmula:</p>
+                <div className="p-2.5 bg-black rounded font-mono text-center text-bleach-orange font-bold text-sm">
+                  Máximo de Kidōs = Math.max(3, Math.floor(Pressão Espiritual / 7) + 1)
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="p-3 bg-red-950/40 border border-red-500/40 rounded-xl space-y-1">
+                  <strong className="text-red-300 block font-bold">Hadō (Destruição)</strong>
+                  <p className="text-[11px]">Feitiços ofensivos de dano direto, calor, eletricidade e impacto cinético.</p>
+                </div>
+                <div className="p-3 bg-blue-950/40 border border-blue-500/40 rounded-xl space-y-1">
+                  <strong className="text-cyan-300 block font-bold">Bakudō (Aprisionamento)</strong>
+                  <p className="text-[11px]">Feitiços de contenção, barreiras reflexivas, rastreamento e supressão de movimento.</p>
+                </div>
+                <div className="p-3 bg-emerald-950/40 border border-emerald-500/40 rounded-xl space-y-1">
+                  <strong className="text-emerald-300 block font-bold">Kaidō (Cura)</strong>
+                  <p className="text-[11px]">Técnicas médicas de regeneração de tecidos e restauração de canais de Reiatsu.</p>
+                </div>
+              </div>
+
+              <div className="p-3.5 bg-black/60 border border-white/10 rounded-xl space-y-1 text-[11px]">
+                <strong className="text-white block font-bold">📜 Eishōhaki (Abandono de Encantamento):</strong>
+                <p>Conjurar um Kidō sem recitar o encantamento reduz o tempo de conjuração pela metade, porém diminui a potência do feitiço em aproximadamente um terço. Recitar o encantamento completo libera 100% do poder destrutivo da magia.</p>
+              </div>
+            </div>
+          </Section>
         </div>
       )}
     </div>
   );
 }
 
-// TAB: SISTEMAS & REGRAS
-function SistemasView() {
-  return (
-    <div className="space-y-6">
-      <Section title="Manual de Sistemas & Regras do Bleach RPG" subtitle="Diretrizes oficiais da Sociedade das Almas">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-          <div className="p-4 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-2">
-            <h4 className="font-title text-lg text-bleach-orange">⚡ Atributos & Patamares</h4>
-            <p className="text-bleach-creamDim leading-relaxed">
-              O poder de cada Shinigami é medido por 4 atributos primários: <strong>Pressão Espiritual</strong>, <strong>Força</strong>, <strong>Velocidade</strong> e <strong>Resiliência</strong>.
-            </p>
-            <ul className="list-disc pl-4 text-bleach-muted space-y-1">
-              <li>1–10: Inexperiente (Estudante da Academia)</li>
-              <li>11–30: Iniciante (Oficial Subalterno)</li>
-              <li>31–60: Treinado (Oficial de Assento)</li>
-              <li>61–100: Veterano (Tenente de Esquadrão)</li>
-              <li>101–150: Mestre (Capitão do Gotei 13)</li>
-              <li>150+: Transcendental (Divisão Zero / Poder Além do Limite)</li>
-            </ul>
-          </div>
-
-          <div className="p-4 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-2">
-            <h4 className="font-title text-lg text-cyan-400">⚔️ Despertar de Zanpakutō (33 Regras de IA)</h4>
-            <p className="text-bleach-creamDim leading-relaxed">
-              As Zanpakutōs são forjadas com base no <strong>DNA Espiritual</strong> selado na sua ficha. O motor de IA gera 4 manifestações únicas (Elemental, Progressiva, Compensatória e Opositiva) com compatibilidade exclusiva.
-            </p>
-          </div>
-        </div>
-      </Section>
-    </div>
-  );
-}
-
-// MOUNT REACT APPLICATION
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<App />);
 
 
 // MAIN APP COMPONENT
@@ -6594,7 +6998,7 @@ function App() {
         setActiveCloudUrl(cloudUrl);
         try {
           setCloudStatus("syncing");
-          const cleanUrl = cloudUrl.replace(/\/$/, "");
+          const cleanUrl = cloudUrl.endsWith('/') ? cloudUrl.slice(0, -1) : cloudUrl;
           const endpoint = cleanUrl.endsWith('.json') ? cleanUrl : cleanUrl + '/bleachDB.json';
           const res = await fetch(endpoint + '?t=' + Date.now());
           if (res.ok) {
@@ -6623,7 +7027,7 @@ function App() {
     if (!activeCloudUrl || cloudStatus !== "connected") return;
     const interval = setInterval(async () => {
       try {
-        const cleanUrl = activeCloudUrl.replace(/\/$/, "");
+        const cleanUrl = activeCloudUrl.endsWith('/') ? activeCloudUrl.slice(0, -1) : activeCloudUrl;
         const endpoint = cleanUrl.endsWith('.json') ? cleanUrl : cleanUrl + '/bleachDB.json';
         const res = await fetch(endpoint + '?t=' + Date.now());
         if (res.ok) {
@@ -6654,17 +7058,30 @@ function App() {
   async function saveDb(next) {
     setDb(next);
     try {
-      localStorage.setItem("bleachDB", JSON.stringify(next));
+      const minimalDb = {
+        superAdminUsuario: next.superAdminUsuario || "Malu123",
+        superAdminSenha: next.superAdminSenha || "Sociedade2026",
+        superAdminNome: next.superAdminNome || "ADM Máximo (Comandante Supremo)",
+        firebaseUrl: next.firebaseUrl || activeCloudUrl || "",
+        subAdms: next.subAdms || [],
+        registrosTarefasAdm: (next.registrosTarefasAdm || []).slice(0, 50),
+        combatesArena: (next.combatesArena || []).slice(0, 20),
+        rolagensDadosPublicas: (next.rolagensDadosPublicas || []).slice(0, 30),
+        zanpakutosVinculadas: next.zanpakutosVinculadas || [],
+        personagens: next.personagens || []
+      };
+      localStorage.setItem("bleachDB", JSON.stringify(minimalDb));
       setSaveErr("");
     } catch (e) {
-      setSaveErr("Não foi possível salvar os dados no navegador.");
+      console.warn("Local storage warning:", e);
+      setSaveErr("");
     }
 
     const cloudUrl = next.firebaseUrl || activeCloudUrl || localStorage.getItem("bleach_firebase_url");
     if (cloudUrl) {
       try {
         setCloudStatus("syncing");
-        const cleanUrl = cloudUrl.replace(/\/$/, "");
+        const cleanUrl = cloudUrl.endsWith('/') ? cloudUrl.slice(0, -1) : cloudUrl;
         const endpoint = cleanUrl.endsWith('.json') ? cleanUrl : cleanUrl + '/bleachDB.json';
         await fetch(endpoint, {
           method: 'PUT',

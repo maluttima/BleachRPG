@@ -1,5 +1,5 @@
 // =========================================================================
-// VIEWS PART 2: FICHAVIEW, ADMINPANEL & SISTEMASVIEW
+// VIEWS PART 2: FICHAVIEW WITH COMPLETE REWARD CONCESSION & DEEP RESET
 // =========================================================================
 
 // TAB: FICHA DO JOGADOR
@@ -10,6 +10,8 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
   const [passoDistribuicao, setPassoDistribuicao] = useState(1);
   const [novaTecCat, setNovaTecCat] = useState("Hadō");
   const [novaTecNome, setNovaTecNome] = useState("");
+  
+  // Recompensa Form (ADM)
   const [rec, setRec] = useState({ tipo: "Treino em ON (30 linhas)", pontos: 1, atributo: "", motivo: "" });
   
   const [editFoto, setEditFoto] = useState(personagem?.foto || "assets/ichigo-orange.png");
@@ -38,13 +40,11 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
 
   // Modais de Sorteio, Cena e Shikai/Bankai
   const [gachaModal, setGachaModal] = useState(null);
-  const [showGachaHistory, setShowGachaHistory] = useState(false);
   const [showCenaModal, setShowCenaModal] = useState(null); // "shikai" | "bankai"
   const [showZanpakutoAIModal, setShowZanpakutoAIModal] = useState(false);
   const [aiZkOpcoes, setAiZkOpcoes] = useState([]);
   const [aiZkTipo, setAiZkTipo] = useState("shikai");
   const [showResetModal, setShowResetModal] = useState(false);
-  const [copiadoWhats, setCopiadoWhats] = useState(false);
   const gachaIntervalRef = useRef(null);
 
   useEffect(() => {
@@ -77,13 +77,13 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
       setPersMedos(personagem.personalidade?.medos || "");
       setPersEstilo(personagem.personalidade?.estiloCombate || "");
     }
-  }, [personagem?.id]);
+  }, [personagem?.id, personagem?.zanpakuto?.shikaiAtiva, personagem?.zanpakuto?.bankaiAtiva]);
 
   if (!personagem) return <div className="text-bleach-muted">Ficha não encontrada.</div>;
 
   const pendSum = Object.values(pend).reduce((a, b) => a + b, 0);
   const restante = (personagem.pontosDisponiveis || 0) - pendSum;
-  const totalStats = Object.values(personagem.atributos).reduce((a, b) => a + b, 0);
+  const totalStats = Object.values(personagem.atributos || { pressao: 10, forca: 10, velocidade: 10, resiliencia: 10 }).reduce((a, b) => a + b, 0);
   const powerTier = getPowerTier(totalStats);
 
   const temShikai = !!personagem?.zanpakuto?.shikaiAtiva;
@@ -113,7 +113,7 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
       alert("Por favor, preencha a descrição da sua personalidade e virtudes antes de selar!");
       return;
     }
-    const confirma = confirm("⚠️ ATENÇÃO: Uma vez selada, a sua personalidade espiritual será gravada no DNA da sua alma e NÃO poderá mais ser alterada por você (apenas o ADM poderá reabrir caso necessário).\\n\\nTem certeza que deseja confirmar e selar sua personalidade agora?");
+    const confirma = confirm("⚠️ ATENÇÃO: Uma vez selada, a sua personalidade espiritual será gravada no DNA da sua alma e NÃO poderá mais ser alterada por você (apenas o ADM poderá reabrir caso necessário).\n\nTem certeza que deseja confirmar e selar sua personalidade agora?");
     if (!confirma) return;
 
     const novaPersonalidade = {
@@ -164,7 +164,6 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
     } else {
       updateChar({ cenaDespertarBankai: cenaTexto }, "📜 Cena de despertar de Bankai registrada na ficha");
       const opcoesBankai = gerar3OpcoesBankaiAI(personagem, personagem.zanpakuto?.shikaiAtiva, db.personagens, db.zanpakutosVinculadas, cenaTexto);
-      // Format as paths for modal
       const caminhosBankai = opcoesBankai.map((bk, idx) => ({
         caminhoNumero: idx + 1,
         tipoCaminho: bk.tipoEvolucao,
@@ -275,7 +274,6 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
       desc: escolhida.desc
     };
 
-    // Suspense Trigger (~28% de chance de demorar ~7s a mais)
     const isSuspense = Math.random() < 0.28;
     iniciarAnimacaoBau("comum", drop, isSuspense);
   }
@@ -330,8 +328,6 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
     playReiatsuSound(isSuspense ? 'gacha_box_suspense' : 'gacha_box_charge');
 
     let currentProgress = 0;
-    // Standard takes ~2.2s (step 3 every 45ms = ~48 ticks).
-    // Suspense takes ~8.8s (step 1 every 90ms = ~100 ticks).
     const step = isSuspense ? 1 : 2.5;
     const intervalMs = isSuspense ? 85 : 45;
 
@@ -388,9 +384,11 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
     playReiatsuSound('win');
   }
 
-  // 4. RESET TOTAL DA FICHA PELO ADM
+  // 4. RESET TOTAL DA FICHA PELO ADM (DEEP PURGE OF SHIKAI, BANKAI & STATS)
   function confirmarResetFicha() {
     setShowResetModal(false);
+
+    // Deep clean character
     const resetChar = {
       ...personagem,
       atributos: { pressao: 10, forca: 10, velocidade: 10, resiliencia: 10 },
@@ -411,18 +409,43 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
       personalidadeTravada: false,
       cenaDespertarShikai: "",
       cenaDespertarBankai: "",
-      zanpakuto: { nome: "Em despertar", fotoShikai: "assets/ichigo-orange.png", fotoBankai: "assets/ichigo-moon.png", shikaiAtiva: null, bankaiAtiva: null, notas: "" },
+      zanpakuto: {
+        nome: "Em despertar",
+        fotoShikai: "assets/ichigo-orange.png",
+        fotoBankai: "assets/ichigo-moon.png",
+        shikaiAtiva: null,
+        bankaiAtiva: null,
+        bankaiPadrao: null,
+        shikaiEscolhida: false,
+        bankaiEscolhida: false,
+        assinaturaEspiritual: "",
+        dnaEspiritual: null,
+        notas: ""
+      },
       estado: "Inteiro",
       treinosHoje: 0,
-      historico: [{ id: uid(), data: nowStr(), texto: "⚠️ Ficha resetada para o estado inicial pela Administração." }]
+      historico: [{ id: uid(), data: nowStr(), texto: "⚠️ Ficha resetada integralmente para o estado inicial pela Administração." }]
     };
 
-    // Remove claimed signature
-    const novasVinculadas = (db.zanpakutosVinculadas || []).filter(z => z.charId !== personagem.id);
+    // Reset local view states
+    setEditZkNome("Em despertar");
+    setEditFotoShikai("assets/ichigo-orange.png");
+    setEditFotoBankai("assets/ichigo-moon.png");
+    setPersTexto("");
+    setPersVirtudes("");
+    setPersDefeitos("");
+    setPersDesejos("");
+    setPersMedos("");
+    setPersEstilo("");
+    setPend({ pressao: 0, forca: 0, velocidade: 0, resiliencia: 0 });
+
+    // Remove claimed signatures completely
+    const novasVinculadas = (db.zanpakutosVinculadas || []).filter(z => z.charId !== personagem.id && z.charNome !== personagem.nome);
     const personagens = (db.personagens || []).map(p => p.id === personagem.id ? resetChar : p);
 
     saveDb({ ...db, personagens, zanpakutosVinculadas: novasVinculadas });
-    alert(`A ficha de ${personagem.nome} foi resetada para os valores iniciais com sucesso!`);
+    setSubPaginaFicha("perfil");
+    alert(`A ficha de ${personagem.nome} foi resetada integralmente para os valores iniciais com sucesso! Shikai e Bankai foram desvinculadas.`);
     playReiatsuSound('shatter');
   }
 
@@ -433,10 +456,10 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
       return;
     }
     const novosAtributos = {
-      pressao: personagem.atributos.pressao + pend.pressao,
-      forca: personagem.atributos.forca + pend.forca,
-      velocidade: personagem.atributos.velocidade + pend.velocidade,
-      resiliencia: personagem.atributos.resiliencia + pend.resiliencia,
+      pressao: Number(personagem.atributos?.pressao || 10) + pend.pressao,
+      forca: Number(personagem.atributos?.forca || 10) + pend.forca,
+      velocidade: Number(personagem.atributos?.velocidade || 10) + pend.velocidade,
+      resiliencia: Number(personagem.atributos?.resiliencia || 10) + pend.resiliencia,
     };
     const novoDisponivel = (personagem.pontosDisponiveis || 0) - pendSum;
     updateChar({
@@ -469,25 +492,40 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
     updateChar({ permissoes: { ...(personagem.permissoes || {}), bankaiLiberada: !atual } }, `Permissão de Bankai ${!atual ? "LIBERADA" : "BLOQUEADA"} pelo ADM`);
   }
 
+  // CONCESSÃO DE RECOMPENSA COMPLETA PELO ADM
   function concederRecompensa() {
     const pontos = Number(rec.pontos) || 0;
-    if (pontos <= 0 && rec.tipo !== "Treino em ON (30 linhas)") return;
+    if (pontos <= 0 && rec.tipo !== "Treino em ON (30 linhas)") {
+      alert("Informe uma quantidade válida de pontos.");
+      return;
+    }
+
     let patch = {};
     let texto = `[${rec.tipo}]`;
-    if (rec.atributo) {
-      patch.atributos = { ...personagem.atributos, [rec.atributo]: (personagem.atributos[rec.atributo] || 0) + pontos };
+
+    if (rec.atributo && rec.atributo !== "pontosDisponiveis") {
+      const valorAtual = Number(personagem.atributos?.[rec.atributo] || 10);
+      patch.atributos = {
+        ...(personagem.atributos || { pressao: 10, forca: 10, velocidade: 10, resiliencia: 10 }),
+        [rec.atributo]: valorAtual + pontos
+      };
       texto += ` +${pontos} em ${rec.atributo.toUpperCase()}`;
     } else {
       patch.pontosDisponiveis = (personagem.pontosDisponiveis || 0) + pontos;
-      texto += ` +${pontos} pontos livres concedidos`;
+      texto += ` +${pontos} pontos livres concedidos para distribuição`;
     }
+
     if (rec.tipo === "Treino em ON (30 linhas)") {
       patch.sorteiosComunsRestantes = (personagem.sorteiosComunsRestantes || 0) + 4;
       patch.sorteiosEspeciaisRestantes = (personagem.sorteiosEspeciaisRestantes || 0) + 1;
-      texto += ` (+4 Giros Comuns e +1 Especial concedidos)`;
+      texto += ` (+4 Giros Comuns e +1 Especial liberados)`;
     }
+
     if (rec.motivo.trim()) texto += ` — ${rec.motivo.trim()}`;
+
     updateChar(patch, texto);
+    playReiatsuSound('win');
+    alert(`Recompensa concedida com sucesso para ${personagem.nome}!`);
     setRec({ tipo: "Treino em ON (30 linhas)", pontos: 1, atributo: "", motivo: "" });
   }
 
@@ -889,6 +927,7 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
                 {ATTRS.map((a) => {
+                  const valAtual = Number(personagem.atributos?.[a.key] || 10);
                   const decStep = Math.min(passoDistribuicao, pend[a.key]);
                   const incStep = Math.min(passoDistribuicao, restante);
                   return (
@@ -898,8 +937,8 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
                           {a.label}
                         </span>
                         <span className="text-[11px] text-bleach-muted">
-                          Atual: <strong className="text-white">{personagem.atributos[a.key]}</strong>
-                          {pend[a.key] > 0 && <span className="text-bleach-orange font-mono ml-1 font-bold">→ {personagem.atributos[a.key] + pend[a.key]}</span>}
+                          Atual: <strong className="text-white">{valAtual}</strong>
+                          {pend[a.key] > 0 && <span className="text-bleach-orange font-mono ml-1 font-bold">→ {valAtual + pend[a.key]}</span>}
                         </span>
                       </div>
 
@@ -943,20 +982,23 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
           {/* ATTR CARDS */}
           <Section title="Atributos Espirituais" subtitle="O valor puro do seu poder na Sociedade das Almas">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {ATTRS.map((a) => (
-                <div key={a.key} className="bg-bleach-panel2 border border-bleach-borderSoft rounded-xl p-4 flex flex-col justify-between">
-                  <div className="flex items-start justify-between mb-2">
-                    <div>
-                      <h4 className="text-xs font-bold uppercase tracking-wider" style={{ color: a.color }}>{a.label}</h4>
-                      <p className="text-[11px] text-bleach-muted">{a.desc}</p>
+              {ATTRS.map((a) => {
+                const val = Number(personagem.atributos?.[a.key] || 10);
+                return (
+                  <div key={a.key} className="bg-bleach-panel2 border border-bleach-borderSoft rounded-xl p-4 flex flex-col justify-between">
+                    <div className="flex items-start justify-between mb-2">
+                      <div>
+                        <h4 className="text-xs font-bold uppercase tracking-wider" style={{ color: a.color }}>{a.label}</h4>
+                        <p className="text-[11px] text-bleach-muted">{a.desc}</p>
+                      </div>
+                      <span className="text-3xl font-extrabold font-mono" style={{ color: a.color }}>{val}</span>
                     </div>
-                    <span className="text-3xl font-extrabold font-mono" style={{ color: a.color }}>{personagem.atributos[a.key]}</span>
+                    <div className="w-full bg-black/50 h-2 rounded-full overflow-hidden border border-white/5">
+                      <div className="h-full rounded-full transition-all duration-500" style={{ width: `${Math.min(100, (val / 200) * 100)}%`, backgroundColor: a.color }}></div>
+                    </div>
                   </div>
-                  <div className="w-full bg-black/50 h-2 rounded-full overflow-hidden border border-white/5">
-                    <div className="h-full rounded-full transition-all duration-500" style={{ width: `${Math.min(100, (personagem.atributos[a.key] / 200) * 100)}%`, backgroundColor: a.color }}></div>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </Section>
         </div>
@@ -1066,15 +1108,98 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
         </div>
       )}
 
-      {/* ADMIN ACTION PANEL (EXCLUSIVE CONTROLS) */}
+      {/* ADMIN ACTION PANEL (EXCLUSIVE CONTROLS & REWARD DISTRIBUTOR) */}
       {isAdmin && (
-        <Section title="Painel de Gestão da Ficha (ADM)" subtitle="Atribuição de treinos, giros rápidos, permissões e reset">
-          <div className="space-y-4">
+        <Section title="Painel de Gestão da Ficha (ADM)" subtitle="Atribuição direta de treinos, distribuição de atributos, giros rápidos e reset">
+          <div className="space-y-5">
             
+            {/* DISTRIBUIDOR DE RECOMPENSAS DE ATRIBUTOS (RESTORED FULL POWER) */}
+            <div className="p-4 bg-gradient-to-r from-black via-bleach-panel2 to-black border-2 border-yellow-500/50 rounded-2xl space-y-3 shadow-xl">
+              <div className="flex items-center gap-2 border-b border-yellow-500/30 pb-2">
+                <span className="text-lg">✨</span>
+                <div>
+                  <h4 className="font-title text-base text-yellow-400">DISTRIBUIDOR OFICIAL DE RECOMPENSAS & ATRIBUTOS</h4>
+                  <p className="text-[11px] text-bleach-muted">Conceda pontos diretamente em um atributo específico ou para o saldo livre do jogador</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                <div>
+                  <label className="block text-bleach-creamDim font-bold mb-1 uppercase">Tipo de Atividade / Recompensa</label>
+                  <select
+                    value={rec.tipo}
+                    onChange={(e) => setRec({ ...rec, tipo: e.target.value })}
+                    className="w-full bg-black border border-bleach-border rounded-lg p-2 text-white"
+                  >
+                    {TIPOS_RECOMPENSA.map(t => <option key={t} value={t}>{t}</option>)}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-bleach-creamDim font-bold mb-1 uppercase">Destino da Recompensa</label>
+                  <select
+                    value={rec.atributo}
+                    onChange={(e) => setRec({ ...rec, atributo: e.target.value })}
+                    className="w-full bg-black border border-bleach-border rounded-lg p-2 text-white"
+                  >
+                    <option value="">✨ Pontos Livres (Distribuição do Jogador)</option>
+                    <option value="pressao">🌀 Pressão Espiritual (Reiatsu)</option>
+                    <option value="forca">⚔️ Força (Zanjutsu & Dano)</option>
+                    <option value="velocidade">⚡ Velocidade (Shunpo & Hohō)</option>
+                    <option value="resiliencia">🛡️ Resiliência (Vitalidade & Defesa)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-bleach-creamDim font-bold mb-1 uppercase">Quantidade de Pontos</label>
+                  <div className="flex gap-1.5">
+                    <input
+                      type="number"
+                      min="1"
+                      value={rec.pontos}
+                      onChange={(e) => setRec({ ...rec, pontos: e.target.value })}
+                      className="w-20 bg-black border border-bleach-border rounded-lg p-2 text-white font-mono font-bold"
+                    />
+                    {[1, 2, 5, 10, 15].map(pts => (
+                      <button
+                        key={pts}
+                        type="button"
+                        onClick={() => setRec({ ...rec, pontos: pts })}
+                        className="px-2 py-1 bg-bleach-panel border border-bleach-border hover:border-yellow-400 text-bleach-creamDim hover:text-white rounded text-xs font-mono"
+                      >
+                        +{pts}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-bleach-creamDim font-bold mb-1 uppercase text-xs">Motivo / Justificativa (Opcional)</label>
+                <input
+                  type="text"
+                  placeholder="Ex: Treino em Karakura com 35 linhas de boa qualidade / Missão no Hueco Mundo"
+                  value={rec.motivo}
+                  onChange={(e) => setRec({ ...rec, motivo: e.target.value })}
+                  className="w-full bg-black border border-bleach-border rounded-lg p-2 text-xs text-white"
+                />
+              </div>
+
+              <div className="flex justify-end pt-1">
+                <button
+                  type="button"
+                  onClick={concederRecompensa}
+                  className="px-6 py-2.5 bg-gradient-to-r from-yellow-500 to-amber-600 hover:brightness-110 text-black font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-lg transition"
+                >
+                  ✓ Conceder Recompensa ao Personagem
+                </button>
+              </div>
+            </div>
+
             {/* Quick Roll Addition Buttons */}
             <div className="p-3.5 bg-black/60 border border-bleach-borderSoft rounded-xl flex flex-wrap items-center justify-between gap-3">
               <div>
-                <span className="text-xs font-bold text-bleach-orange uppercase block">Sorteios Rápidos:</span>
+                <span className="text-xs font-bold text-bleach-orange uppercase block">Giros Rápidos:</span>
                 <p className="text-[11px] text-bleach-muted">Adicione giros comuns ou especiais diretamente na ficha do jogador</p>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -1178,13 +1303,13 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
             <div className="text-4xl">⚠️</div>
             <h3 className="font-title text-2xl text-red-400">RESET TOTAL DE FICHA</h3>
             <p className="text-xs text-bleach-creamDim leading-relaxed">
-              Tem certeza que quer resetar toda a ficha de <strong className="text-white">{personagem.nome}</strong> para o estado inicial?
+              Tem certeza que quer resetar integralmente a ficha de <strong className="text-white">{personagem.nome}</strong> para o estado inicial?
             </p>
             <div className="text-[11px] text-left p-3 bg-black/60 rounded-xl border border-red-500/30 text-bleach-muted space-y-1">
               <div>• Atributos retornam para o padrão (10 em cada).</div>
               <div>• Saldo de pontos livres retorna para 20.</div>
               <div>• Giros comuns voltam para 2, especiais para 0.</div>
-              <div>• Shikai e Bankai serão desvinculadas e liberadas do registro global.</div>
+              <div>• <strong>Shikai e Bankai serão completamente apagadas</strong> e desvinculadas do registro global.</div>
               <div>• Trava de personalidade e histórico serão redefinidos.</div>
             </div>
             <div className="flex gap-3 pt-2">
@@ -1207,7 +1332,3 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
     </div>
   );
 }
-`;
-
-fs.writeFileSync('templates/views_part2.jsx', CodeContent);
-console.log("Written templates/views_part2.jsx!");

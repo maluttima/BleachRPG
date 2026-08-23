@@ -378,7 +378,8 @@ function playReiatsuSound(type = 'roll') {
 }
 
 const DEFAULT_DB = {
-  superAdminSenha: "maximo2026",
+  superAdminUsuario: "Malu123",
+  superAdminSenha: "Sociedade2026",
   superAdminNome: "ADM Máximo (Comandante Supremo)",
   firebaseUrl: "https://bleach-rpg-6894c-default-rtdb.firebaseio.com/",
   subAdms: [
@@ -522,7 +523,7 @@ function App() {
         setActiveCloudUrl(cloudUrl);
         try {
           setCloudStatus("syncing");
-          const cleanUrl = cloudUrl.replace(/\\/$/, "");
+          const cleanUrl = cloudUrl.endsWith('/') ? cloudUrl.slice(0, -1) : cloudUrl;
           const endpoint = cleanUrl.endsWith('.json') ? cleanUrl : cleanUrl + '/bleachDB.json';
           const res = await fetch(endpoint + '?t=' + Date.now());
           if (res.ok) {
@@ -551,7 +552,7 @@ function App() {
     if (!activeCloudUrl || cloudStatus !== "connected") return;
     const interval = setInterval(async () => {
       try {
-        const cleanUrl = activeCloudUrl.replace(/\\/$/, "");
+        const cleanUrl = activeCloudUrl.endsWith('/') ? activeCloudUrl.slice(0, -1) : activeCloudUrl;
         const endpoint = cleanUrl.endsWith('.json') ? cleanUrl : cleanUrl + '/bleachDB.json';
         const res = await fetch(endpoint + '?t=' + Date.now());
         if (res.ok) {
@@ -582,17 +583,30 @@ function App() {
   async function saveDb(next) {
     setDb(next);
     try {
-      localStorage.setItem("bleachDB", JSON.stringify(next));
+      const minimalDb = {
+        superAdminUsuario: next.superAdminUsuario || "Malu123",
+        superAdminSenha: next.superAdminSenha || "Sociedade2026",
+        superAdminNome: next.superAdminNome || "ADM Máximo (Comandante Supremo)",
+        firebaseUrl: next.firebaseUrl || activeCloudUrl || "",
+        subAdms: next.subAdms || [],
+        registrosTarefasAdm: (next.registrosTarefasAdm || []).slice(0, 50),
+        combatesArena: (next.combatesArena || []).slice(0, 20),
+        rolagensDadosPublicas: (next.rolagensDadosPublicas || []).slice(0, 30),
+        zanpakutosVinculadas: next.zanpakutosVinculadas || [],
+        personagens: next.personagens || []
+      };
+      localStorage.setItem("bleachDB", JSON.stringify(minimalDb));
       setSaveErr("");
     } catch (e) {
-      setSaveErr("Não foi possível salvar os dados no navegador.");
+      console.warn("Local storage warning:", e);
+      setSaveErr("");
     }
 
     const cloudUrl = next.firebaseUrl || activeCloudUrl || localStorage.getItem("bleach_firebase_url");
     if (cloudUrl) {
       try {
         setCloudStatus("syncing");
-        const cleanUrl = cloudUrl.replace(/\\/$/, "");
+        const cleanUrl = cloudUrl.endsWith('/') ? cloudUrl.slice(0, -1) : cloudUrl;
         const endpoint = cleanUrl.endsWith('.json') ? cleanUrl : cleanUrl + '/bleachDB.json';
         await fetch(endpoint, {
           method: 'PUT',
