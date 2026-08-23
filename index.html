@@ -162,21 +162,147 @@
       animation: tenseDice 0.7s infinite linear;
     }
 
-    /* VS Energy Slash */
-    .vs-slash {
-      text-shadow: 0 0 20px #FF6A13, 0 0 40px #D6483F, 0 0 60px #FFA500;
-      position: relative;
+    /* Air Vibration / Reiatsu Heat Distortion Effect on Hover/Hold */
+    @keyframes reiatsuAirVibrate {
+      0% {
+        transform: scale(1.02) translate(0px, 0px) skew(0deg);
+        filter: blur(4px) brightness(1.15) contrast(1.1) drop-shadow(0 0 15px rgba(79, 179, 232, 0.7));
+      }
+      20% {
+        transform: scale(1.025) translate(-2px, 1.5px) skew(-0.8deg, 0.4deg);
+        filter: blur(3.5px) brightness(1.3) contrast(1.15) drop-shadow(0 0 25px rgba(255, 106, 19, 0.8));
+      }
+      40% {
+        transform: scale(1.03) translate(2px, -1.8px) skew(0.7deg, -0.5deg);
+        filter: blur(5px) brightness(1.35) contrast(1.2) drop-shadow(0 0 35px rgba(79, 179, 232, 0.9));
+      }
+      60% {
+        transform: scale(1.025) translate(-1.5px, -1.2px) skew(-0.5deg, 0.6deg);
+        filter: blur(3.8px) brightness(1.25) contrast(1.1) drop-shadow(0 0 25px rgba(139, 111, 214, 0.8));
+      }
+      80% {
+        transform: scale(1.03) translate(1.8px, 1.2px) skew(0.6deg, -0.4deg);
+        filter: blur(4.5px) brightness(1.4) contrast(1.25) drop-shadow(0 0 40px rgba(255, 106, 19, 0.9));
+      }
+      100% {
+        transform: scale(1.02) translate(0px, 0px) skew(0deg);
+        filter: blur(4px) brightness(1.15) contrast(1.1) drop-shadow(0 0 15px rgba(79, 179, 232, 0.7));
+      }
     }
-    .vs-slash::before {
-      content: '';
+
+    @keyframes reiatsuAirVibrateBankai {
+      0% {
+        transform: scale(1.02) translate(0px, 0px) skew(0deg);
+        filter: blur(4px) brightness(1.2) drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
+      }
+      25% {
+        transform: scale(1.03) translate(-2.5px, 2px) skew(-1deg, 0.6deg);
+        filter: blur(5px) brightness(1.45) drop-shadow(0 0 35px rgba(139, 111, 214, 0.9));
+      }
+      50% {
+        transform: scale(1.025) translate(2px, -2px) skew(0.8deg, -0.7deg);
+        filter: blur(3.5px) brightness(1.5) drop-shadow(0 0 45px rgba(255, 106, 19, 1));
+      }
+      75% {
+        transform: scale(1.035) translate(-1.5px, -1.5px) skew(-0.6deg, 0.8deg);
+        filter: blur(4.8px) brightness(1.4) drop-shadow(0 0 35px rgba(255, 215, 0, 0.9));
+      }
+      100% {
+        transform: scale(1.02) translate(0px, 0px) skew(0deg);
+        filter: blur(4px) brightness(1.2) drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
+      }
+    }
+
+    .air-vibrating-card {
+      animation: reiatsuAirVibrate 0.18s infinite ease-in-out;
+      cursor: pointer;
+      box-shadow: 0 0 35px rgba(79, 179, 232, 0.6), inset 0 0 25px rgba(255, 106, 19, 0.3);
+      border-color: #4FB3E8 !important;
+    }
+
+    .air-vibrating-card-bankai {
+      animation: reiatsuAirVibrateBankai 0.16s infinite ease-in-out;
+      cursor: pointer;
+      box-shadow: 0 0 45px rgba(255, 215, 0, 0.8), inset 0 0 30px rgba(139, 111, 214, 0.5);
+      border-color: #FFD700 !important;
+    }
+
+    /* Heat Wave Shimmer Overlay */
+    @keyframes heatHazeWaves {
+      0% { background-position: 0% 0%; opacity: 0.3; }
+      50% { background-position: 100% 100%; opacity: 0.7; }
+      100% { background-position: 0% 0%; opacity: 0.3; }
+    }
+    .heat-haze-overlay {
       position: absolute;
-      top: 50%;
-      left: -20px;
-      right: -20px;
-      height: 3px;
-      background: linear-gradient(90deg, transparent, #FF6A13, #FFFFFF, #FF6A13, transparent);
-      transform: translateY(-50%) rotate(-15deg);
-      box-shadow: 0 0 12px #FF6A13;
+      inset: 0;
+      background: radial-gradient(circle at 50% 50%, rgba(255, 106, 19, 0.15), transparent 70%),
+                  repeating-linear-gradient(0deg, transparent, rgba(255,255,255,0.05) 2px, transparent 4px);
+      background-size: 200% 200%;
+      animation: heatHazeWaves 1.5s infinite linear;
+      pointer-events: none;
+      border-radius: inherit;
+    }
+
+    /* Screen shake when charging reaches climax */
+    @keyframes reiatsuScreenShake {
+      0% { transform: translate(0, 0); }
+      15% { transform: translate(-3px, 2px); }
+      30% { transform: translate(3px, -2px); }
+      45% { transform: translate(-2px, -3px); }
+      60% { transform: translate(3px, 2px); }
+      75% { transform: translate(-3px, 1px); }
+      90% { transform: translate(2px, -1px); }
+      100% { transform: translate(0, 0); }
+    }
+    .reiatsu-screen-shake {
+      animation: reiatsuScreenShake 0.12s infinite;
+    }
+
+    /* Radial rotating runic circle for loading */
+    @keyframes runeRotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes runeRotateRev {
+      0% { transform: rotate(360deg); }
+      100% { transform: rotate(0deg); }
+    }
+    .spin-runes {
+      animation: runeRotate 8s infinite linear;
+    }
+    .spin-runes-fast {
+      animation: runeRotateRev 3.5s infinite linear;
+    }
+
+    /* Mystic Kanji Glow */
+    @keyframes kanjiPulse {
+      0% { transform: scale(1); opacity: 0.7; text-shadow: 0 0 10px rgba(79,179,232,0.5); }
+      50% { transform: scale(1.08); opacity: 1; text-shadow: 0 0 30px rgba(79,179,232,0.9), 0 0 50px rgba(255,106,19,0.7); }
+      100% { transform: scale(1); opacity: 0.7; text-shadow: 0 0 10px rgba(79,179,232,0.5); }
+    }
+    .kanji-pulse-glow {
+      animation: kanjiPulse 2s infinite ease-in-out;
+    }
+
+    /* Seal Shatter Flash */
+    @keyframes sealFlash {
+      0% { opacity: 0; transform: scale(0.9); }
+      40% { opacity: 1; transform: scale(1.05); }
+      100% { opacity: 0; transform: scale(1.2); }
+    }
+    .seal-flash-anim {
+      animation: sealFlash 0.6s ease-out forwards;
+    }
+
+    /* Card Pop Reveal */
+    @keyframes cardPopReveal {
+      0% { opacity: 0; transform: scale(0.85) translateY(20px); }
+      60% { opacity: 1; transform: scale(1.03) translateY(-4px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .card-pop-reveal {
+      animation: cardPopReveal 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
   </style>
 

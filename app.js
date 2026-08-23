@@ -436,7 +436,7 @@ function gerar4OpcoesShikaiAI(nomePersonagem, dbPersonagens = []) {
   }
   return opcoes;
 }
-function gerar3OpcoesBankaiAI(nomePersonagem, shikaiAtiva, dbPersonagens = []) {
+function gerar4OpcoesBankaiAI(nomePersonagem, shikaiAtiva, dbPersonagens = []) {
   const {
     claimedNames,
     claimedPowers
@@ -445,10 +445,10 @@ function gerar3OpcoesBankaiAI(nomePersonagem, shikaiAtiva, dbPersonagens = []) {
   const usadosNoMomento = new Set();
   const baseNome = shikaiAtiva?.nome || "Gekkakiri";
   const elemento = shikaiAtiva?.elemento || "Chamas de Ébano & Brasas Solares";
-  const titulosGrandiosos = [`Mugen Tenshō ${baseNome}`, `Taihō Guren ${baseNome} Kaihō`, `Sen'ei Jigokuhō ${baseNome}`, `Tenkū Hōmetsu ${baseNome} Shinryū`, `Hyakka Ryōran ${baseNome}`, `Kyodai Zantetsu ${baseNome} Daizō`, `Hakuryū Kaihō ${baseNome} Setsuna`];
+  const titulosGrandiosos = [`Mugen Tenshō ${baseNome}`, `Taihō Guren ${baseNome} Kaihō`, `Sen'ei Jigokuhō ${baseNome}`, `Tenkū Hōmetsu ${baseNome} Shinryū`, `Hyakka Ryōran ${baseNome}`, `Kyodai Zantetsu ${baseNome} Daizō`, `Hakuryū Kaihō ${baseNome} Setsuna`, `Enma Daiō ${baseNome} Zetsumei`];
   const formatosBankai = ["O campo de batalha é envolto por um pilar colossal de energia espiritual e a lâmina condensa toda a atmosfera em uma arma translúcida de calor e corte absoluto.", "Materializa uma gigantesca armadura celestial de Reiryoku comprimida com asas de lâminas puras e duas espadas monumentais de alcance estendido.", "O solo do campo de batalha se liquefaz em um oceano de sombra e metal líquido do qual emergem centenas de colunas de lâminas controladas pelo pensamento.", "Uma gigantesca forja celestial de anéis concêntricos gira no céu descarregando pilares de plasma que alteram a densidade molecular do terreno."];
   const poderesBankai = ["Poder devastador cósmico: nada que toca a aura da Bankai sobrevive sem ser reduzido a cinzas moleculares. Altera o clima da região por quilômetros.", "Congelamento de Zero Absoluto: congela matéria, energia espiritual e reflexos. Uma vez atingido, o oponente tem seus feitiços e movimentos paralisados no tempo.", "Velocidade e perfuração transcendentais: atinge velocidade de relâmpago puro, atravessando qualquer Bakudō de nível supremo como se fosse papel.", "Controle absoluto da gravidade: o oponente é esmagado por peso gravitacional cósmico impedindo qualquer uso de Shunpo ou fuga do campo de batalha."];
-  while (opcoes.length < 3) {
+  while (opcoes.length < 4) {
     const rawTitulo = titulosGrandiosos[opcoes.length % titulosGrandiosos.length];
     let nomeBankai = `Bankai — ${rawTitulo}`;
     const lower = nomeBankai.toLowerCase();
@@ -470,6 +470,9 @@ function gerar3OpcoesBankaiAI(nomePersonagem, shikaiAtiva, dbPersonagens = []) {
   }
   return opcoes;
 }
+
+// Backward compatibility alias
+const gerar3OpcoesBankaiAI = gerar4OpcoesBankaiAI;
 
 // Power Tier Calculator
 function getPowerTier(totalStats) {
@@ -527,17 +530,70 @@ function maskWhats(w) {
   return "•••• " + cleaned.slice(-4);
 }
 
-// Sound FX Generator via Web Audio API
+// Advanced Sound FX Generator via Web Audio API
 function playReiatsuSound(type = 'roll') {
   try {
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
     if (!AudioCtx) return;
     const ctx = new AudioCtx();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    if (type === 'roll') {
+    if (type === 'hum') {
+      // Vibrating air resonance on card hover/touch
+      const osc = ctx.createOscillator();
+      const lfo = ctx.createOscillator();
+      const lfoGain = ctx.createGain();
+      const gain = ctx.createGain();
+      lfo.frequency.setValueAtTime(14, ctx.currentTime);
+      lfoGain.gain.setValueAtTime(25, ctx.currentTime);
+      lfo.connect(lfoGain);
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(150, ctx.currentTime);
+      lfoGain.connect(osc.frequency);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      gain.gain.setValueAtTime(0.09, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+      lfo.start();
+      osc.start();
+      osc.stop(ctx.currentTime + 0.35);
+      lfo.stop(ctx.currentTime + 0.35);
+    } else if (type === 'charge') {
+      // Escalating pulse for loading sequence
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(180, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(750, ctx.currentTime + 0.22);
+      gain.gain.setValueAtTime(0.12, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.25);
+    } else if (type === 'shatter') {
+      // Glass / seal shattering crystalline explosion
+      const osc1 = ctx.createOscillator();
+      const osc2 = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc1.connect(gain);
+      osc2.connect(gain);
+      gain.connect(ctx.destination);
+      osc1.type = 'sawtooth';
+      osc1.frequency.setValueAtTime(1600, ctx.currentTime);
+      osc1.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.45);
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(2200, ctx.currentTime);
+      osc2.frequency.exponentialRampToValueAtTime(350, ctx.currentTime + 0.5);
+      gain.gain.setValueAtTime(0.28, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+      osc1.start();
+      osc2.start();
+      osc1.stop(ctx.currentTime + 0.5);
+      osc2.stop(ctx.currentTime + 0.5);
+    } else if (type === 'roll') {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
       osc.type = 'sawtooth';
       osc.frequency.setValueAtTime(150, ctx.currentTime);
       osc.frequency.exponentialRampToValueAtTime(650, ctx.currentTime + 0.15);
@@ -545,7 +601,11 @@ function playReiatsuSound(type = 'roll') {
       gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
       osc.start();
       osc.stop(ctx.currentTime + 0.35);
-    } else if (type === 'win' || type === 'bankai') {
+    } else if (type === 'win') {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
       osc.type = 'sine';
       osc.frequency.setValueAtTime(300, ctx.currentTime);
       osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.5);
@@ -553,7 +613,11 @@ function playReiatsuSound(type = 'roll') {
       gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
       osc.start();
       osc.stop(ctx.currentTime + 0.6);
-    } else if (type === 'kido' || type === 'shikai') {
+    } else if (type === 'kido') {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
       osc.type = 'triangle';
       osc.frequency.setValueAtTime(250, ctx.currentTime);
       osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.3);
@@ -561,6 +625,43 @@ function playReiatsuSound(type = 'roll') {
       gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
       osc.start();
       osc.stop(ctx.currentTime + 0.35);
+    } else if (type === 'shikai') {
+      [440, 554.37, 659.25, 880].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.08);
+        gain.gain.setValueAtTime(0.18, ctx.currentTime + i * 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.08 + 0.8);
+        osc.start(ctx.currentTime + i * 0.08);
+        osc.stop(ctx.currentTime + i * 0.08 + 0.8);
+      });
+    } else if (type === 'bankai') {
+      const subOsc = ctx.createOscillator();
+      const subGain = ctx.createGain();
+      subOsc.connect(subGain);
+      subGain.connect(ctx.destination);
+      subOsc.type = 'sawtooth';
+      subOsc.frequency.setValueAtTime(110, ctx.currentTime);
+      subOsc.frequency.exponentialRampToValueAtTime(45, ctx.currentTime + 0.7);
+      subGain.gain.setValueAtTime(0.35, ctx.currentTime);
+      subGain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.9);
+      subOsc.start();
+      subOsc.stop(ctx.currentTime + 0.9);
+      [220, 277.18, 329.63, 440, 554.37].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, ctx.currentTime + 0.15 + i * 0.07);
+        gain.gain.setValueAtTime(0.2, ctx.currentTime + 0.15 + i * 0.07);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15 + i * 0.07 + 1.2);
+        osc.start(ctx.currentTime + 0.15 + i * 0.07);
+        osc.stop(ctx.currentTime + 0.15 + i * 0.07 + 1.2);
+      });
     }
   } catch (e) {}
 }
@@ -2063,6 +2164,18 @@ function FichaView({
   const [showZanpakutoAIModal, setShowZanpakutoAIModal] = useState(false);
   const [aiZkOpcoes, setAiZkOpcoes] = useState([]);
   const [aiZkTipo, setAiZkTipo] = useState("shikai");
+  const [ritualState, setRitualState] = useState("selection"); // "selection" | "charging" | "revealed"
+  const [hoveredCardIdx, setHoveredCardIdx] = useState(null);
+  const [selectedRitualCard, setSelectedRitualCard] = useState(null);
+  const [chargeProgress, setChargeProgress] = useState(0);
+  const [chargeStageText, setChargeStageText] = useState("");
+  const [revealedCard, setRevealedCard] = useState(null);
+  const chargeIntervalRef = useRef(null);
+  useEffect(() => {
+    return () => {
+      if (chargeIntervalRef.current) clearInterval(chargeIntervalRef.current);
+    };
+  }, []);
   const [copiadoWhats, setCopiadoWhats] = useState(false);
   if (!personagem) return /*#__PURE__*/React.createElement("div", {
     className: "text-bleach-muted"
@@ -2290,16 +2403,89 @@ function FichaView({
   }
   function abrirGeradorZanpakutoAI(tipo) {
     setAiZkTipo(tipo);
+    if (chargeIntervalRef.current) clearInterval(chargeIntervalRef.current);
     if (tipo === "shikai") {
       const ops = gerar4OpcoesShikaiAI(personagem.nome, db.personagens || []);
       setAiZkOpcoes(ops);
     } else {
-      const ops = gerar3OpcoesBankaiAI(personagem.nome, zk.shikaiAtiva, db.personagens || []);
+      const ops = gerar4OpcoesBankaiAI(personagem.nome, zk.shikaiAtiva, db.personagens || []);
       setAiZkOpcoes(ops);
     }
+    setRitualState("selection");
+    setSelectedRitualCard(null);
+    setRevealedCard(null);
+    setChargeProgress(0);
+    setHoveredCardIdx(null);
     setShowZanpakutoAIModal(true);
+    playReiatsuSound('roll');
+  }
+  function handleHoverRitualCard(idx) {
+    setHoveredCardIdx(idx);
+    playReiatsuSound('hum');
+  }
+  function handleLeaveRitualCard(idx) {
+    if (hoveredCardIdx === idx) {
+      setHoveredCardIdx(null);
+    }
+  }
+  function iniciarDespertarLamina(op, idx) {
+    setSelectedRitualCard(op);
+    setRitualState("charging");
+    setChargeProgress(0);
+    setChargeStageText("🌀 [FASE 1/4] Canalizando Reiryoku puro para o núcleo da Asauchi...");
+    playReiatsuSound('charge');
+    if (chargeIntervalRef.current) clearInterval(chargeIntervalRef.current);
+    let currentProg = 0;
+    let soundTicks = 0;
+    chargeIntervalRef.current = setInterval(() => {
+      currentProg += 1.4;
+      soundTicks++;
+      if (soundTicks % 7 === 0 && currentProg < 95) {
+        playReiatsuSound('charge');
+      }
+      if (currentProg < 25) {
+        setChargeStageText("🌀 [FASE 1/4] Canalizando Reiryoku puro para o núcleo da Asauchi...");
+      } else if (currentProg < 55) {
+        setChargeStageText("🔥 [FASE 2/4] Sintonizando os batimentos da alma com a voz ancestral da lâmina...");
+      } else if (currentProg < 80) {
+        setChargeStageText("⚡ [FASE 3/4] Densidade espiritual crítica! A barreira do selo está rachando!");
+      } else if (currentProg < 100) {
+        setChargeStageText("💥 [FASE 4/4] INVOCAÇÃO TRANSCENDENTAL! O NOME SAGRADO ESTÁ SENDO PROFERIDO...!");
+      }
+      if (currentProg >= 100) {
+        clearInterval(chargeIntervalRef.current);
+        setChargeProgress(100);
+        setChargeStageText("✨ KAIHŌ! LIBERAÇÃO CONCLUÍDA!");
+        setTimeout(() => {
+          playReiatsuSound('shatter');
+          setRevealedCard(op);
+          setRitualState("revealed");
+          playReiatsuSound(aiZkTipo === 'shikai' ? 'shikai' : 'bankai');
+        }, 400);
+      } else {
+        setChargeProgress(Math.min(100, Math.round(currentProg)));
+      }
+    }, 35);
+  }
+  function pularCarregamento() {
+    if (chargeIntervalRef.current) clearInterval(chargeIntervalRef.current);
+    setChargeProgress(100);
+    setChargeStageText("✨ KAIHŌ! LIBERAÇÃO CONCLUÍDA!");
+    playReiatsuSound('shatter');
+    setRevealedCard(selectedRitualCard || aiZkOpcoes[0]);
+    setRitualState("revealed");
+    playReiatsuSound(aiZkTipo === 'shikai' ? 'shikai' : 'bankai');
+  }
+  function voltarParaSelecao() {
+    if (chargeIntervalRef.current) clearInterval(chargeIntervalRef.current);
+    setRitualState("selection");
+    setSelectedRitualCard(null);
+    setRevealedCard(null);
+    setChargeProgress(0);
+    playReiatsuSound('roll');
   }
   function escolherOpcaoAI(opcao) {
+    if (chargeIntervalRef.current) clearInterval(chargeIntervalRef.current);
     if (aiZkTipo === "shikai") {
       const novoZk = {
         ...zk,
@@ -3036,51 +3222,145 @@ function FichaView({
     onClick: () => setRewardModal(null),
     className: "px-6 py-2.5 bg-bleach-orange text-black font-extrabold text-xs uppercase rounded-lg shadow hover:bg-orange-400"
   }, "Resgatar Recompensa"))), showZanpakutoAIModal && /*#__PURE__*/React.createElement("div", {
-    className: "fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4"
+    className: "fixed inset-0 bg-black/92 backdrop-blur-xl z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "bg-bleach-panel border-2 border-bleach-orange rounded-3xl p-6 max-w-2xl w-full shadow-2xl relative max-h-[90vh] overflow-y-auto"
+    className: `bg-gradient-to-b from-[#14100C] via-[#0A0908] to-[#120F0C] border-2 ${aiZkTipo === 'bankai' ? 'border-amber-400 shadow-[0_0_60px_rgba(255,215,0,0.35)]' : 'border-cyan-400 shadow-[0_0_60px_rgba(79,179,232,0.35)]'} rounded-3xl p-5 sm:p-8 max-w-4xl w-full shadow-2xl relative max-h-[92vh] overflow-y-auto`
   }, /*#__PURE__*/React.createElement("button", {
-    onClick: () => setShowZanpakutoAIModal(false),
-    className: "absolute top-4 right-4 text-bleach-muted hover:text-white text-lg font-bold"
-  }, "\u2715"), /*#__PURE__*/React.createElement("div", {
+    onClick: () => {
+      if (chargeIntervalRef.current) clearInterval(chargeIntervalRef.current);
+      setShowZanpakutoAIModal(false);
+    },
+    className: "absolute top-4 right-4 text-bleach-muted hover:text-white text-lg font-bold w-9 h-9 rounded-full bg-black/60 border border-white/10 flex items-center justify-center transition hover:border-bleach-orange"
+  }, "\u2715"), ritualState === "selection" && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     className: "text-center mb-6"
   }, /*#__PURE__*/React.createElement("span", {
-    className: "px-3.5 py-1 bg-bleach-orange/20 border border-bleach-orange text-bleach-orange text-xs font-bold rounded-full uppercase"
-  }, "\u2728 L\xE2minas Individuais & \xDAnicas da Sociedade das Almas (IA)"), /*#__PURE__*/React.createElement("h3", {
-    className: "font-title text-3xl sm:text-4xl text-bleach-orange tracking-widest mt-2"
-  }, aiZkTipo === "shikai" ? "ESCOLHA SUA SHIKAI EXCLUSIVA (4 OPÇÕES)" : "ESCOLHA SUA BANKAI SUPREMA EXCLUSIVA (3 OPÇÕES)"), /*#__PURE__*/React.createElement("p", {
-    className: "text-xs text-bleach-creamDim mt-1"
-  }, aiZkTipo === "shikai" ? "Todas as opções são 100% autorais e individuais com formatos e poderes únicos. Ao escolher uma, ela nunca mais aparecerá para outro jogador:" : "Evoluções supremas 100% individuais forjadas a partir da essência da sua Shikai:")), /*#__PURE__*/React.createElement("div", {
-    className: "space-y-4"
-  }, aiZkOpcoes.map((op, idx) => /*#__PURE__*/React.createElement("div", {
-    key: op.id,
-    className: "bg-bleach-panel2 border border-bleach-border hover:border-bleach-orange p-5 rounded-2xl transition space-y-3"
+    className: `px-4 py-1 border text-xs font-black rounded-full uppercase tracking-widest inline-flex items-center gap-1.5 shadow ${aiZkTipo === 'bankai' ? 'bg-amber-950/80 border-amber-400 text-yellow-300' : 'bg-blue-950/80 border-cyan-400 text-cyan-300'}`
+  }, /*#__PURE__*/React.createElement("span", null, aiZkTipo === 'bankai' ? '卍' : '🗡️'), /*#__PURE__*/React.createElement("span", null, aiZkTipo === 'bankai' ? 'RITUAL SUPREMO DE BANKAI • 4 EVOLUÇÕES SELADAS' : 'RITUAL SAGRADO DE SHIKAI • 4 LÂMINAS SELADAS')), /*#__PURE__*/React.createElement("h3", {
+    className: `font-title text-3xl sm:text-5xl tracking-widest mt-2 ${aiZkTipo === 'bankai' ? 'text-amber-300 drop-shadow-[0_0_20px_#FFD700]' : 'text-cyan-400 drop-shadow-[0_0_20px_rgba(79,179,232,0.7)]'}`
+  }, aiZkTipo === 'bankai' ? "SINTA A EVOLUÇÃO TRANSCENDENTAL" : "SINTA O CHAMADO DA SUA ZANPAKUTŌ"), /*#__PURE__*/React.createElement("p", {
+    className: "text-xs sm:text-sm text-bleach-creamDim max-w-2xl mx-auto mt-2 leading-relaxed"
+  }, "Passe o mouse ou ", /*#__PURE__*/React.createElement("strong", null, "segure com o dedo"), " sobre uma l\xE2mina para sentir a vibra\xE7\xE3o da sua Reiatsu distorcendo o ar ao redor. Clique em uma das l\xE2minas para concentrar seu Reiryoku e iniciar a quebra do selo!")), /*#__PURE__*/React.createElement("div", {
+    className: "grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6"
+  }, aiZkOpcoes.map((op, idx) => {
+    const isHovered = hoveredCardIdx === idx;
+    return /*#__PURE__*/React.createElement("div", {
+      key: op.id,
+      onMouseEnter: () => handleHoverRitualCard(idx),
+      onMouseLeave: () => handleLeaveRitualCard(idx),
+      onTouchStart: () => handleHoverRitualCard(idx),
+      onTouchEnd: () => handleLeaveRitualCard(idx),
+      onClick: () => iniciarDespertarLamina(op, idx),
+      className: `relative rounded-2xl p-5 border-2 transition duration-200 overflow-hidden flex flex-col justify-between min-h-[220px] select-none cursor-pointer ${isHovered ? aiZkTipo === 'bankai' ? 'air-vibrating-card-bankai bg-purple-950/40' : 'air-vibrating-card bg-blue-950/40' : 'bg-black/80 border-bleach-borderSoft hover:border-bleach-creamDim/50 shadow-xl'}`
+    }, isHovered && /*#__PURE__*/React.createElement("div", {
+      className: "heat-haze-overlay"
+    }), /*#__PURE__*/React.createElement("div", {
+      className: "flex items-center justify-between z-10"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "flex items-center gap-2.5"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: `w-11 h-11 rounded-xl bg-black/80 border-2 flex items-center justify-center font-cinzel font-black text-2xl shadow ${aiZkTipo === 'bankai' ? 'text-amber-400 border-amber-500/70' : 'text-cyan-400 border-cyan-500/70'} kanji-pulse-glow`
+    }, aiZkTipo === 'bankai' ? '卍' : '始'), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      className: "text-[10px] font-bold uppercase tracking-wider text-bleach-muted"
+    }, "L\xE2mina Selada #", idx + 1), /*#__PURE__*/React.createElement("div", {
+      className: `text-xs font-mono font-bold ${aiZkTipo === 'bankai' ? 'text-amber-300' : 'text-cyan-300'}`
+    }, isHovered ? "⚡ REIRYOKU RESSONANDO!" : "🔒 Selo Místico Intacto"))), /*#__PURE__*/React.createElement("span", {
+      className: "text-[10px] uppercase font-mono px-2.5 py-1 rounded-full bg-black/70 border border-white/10 text-bleach-creamDim"
+    }, aiZkTipo.toUpperCase())), /*#__PURE__*/React.createElement("div", {
+      className: "my-3 z-10 relative"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "filter blur-[7px] select-none pointer-events-none opacity-40 space-y-1.5"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "h-4 bg-white/30 rounded w-3/4"
+    }), /*#__PURE__*/React.createElement("div", {
+      className: "h-3 bg-white/20 rounded w-full"
+    }), /*#__PURE__*/React.createElement("div", {
+      className: "h-3 bg-white/20 rounded w-5/6"
+    })), /*#__PURE__*/React.createElement("div", {
+      className: "absolute inset-0 flex flex-col items-center justify-center text-center"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "text-2xl mb-1 opacity-70"
+    }, "\uD83D\uDDE1\uFE0F"), /*#__PURE__*/React.createElement("span", {
+      className: "text-xs font-bold text-bleach-cream font-mono tracking-wider"
+    }, isHovered ? "O AR ESTÁ VIBRANDO INTENSAMENTE!" : "Reiatsu Oculta & Instável"))), /*#__PURE__*/React.createElement("div", {
+      className: "z-10 mt-1"
+    }, isHovered ? /*#__PURE__*/React.createElement("div", {
+      className: `py-2.5 px-3 rounded-xl font-extrabold text-xs uppercase tracking-wider text-center shadow-lg transition ${aiZkTipo === 'bankai' ? 'bg-gradient-to-r from-amber-400 to-yellow-500 text-black shadow-[0_0_15px_#FFD700]' : 'bg-gradient-to-r from-cyan-400 to-blue-500 text-black shadow-[0_0_15px_#4FB3E8]'}`
+    }, "\u26A1 CLIQUE PARA CONCENTRAR O REIRYOKU!") : /*#__PURE__*/React.createElement("div", {
+      className: "py-2 px-3 rounded-xl bg-black/60 border border-white/10 text-bleach-muted text-[11px] font-semibold text-center flex items-center justify-center gap-1.5"
+    }, /*#__PURE__*/React.createElement("span", null, "\u2728"), /*#__PURE__*/React.createElement("span", null, "Passe o cursor ou segure para sentir a vibra\xE7\xE3o"))));
+  }))), ritualState === "charging" && /*#__PURE__*/React.createElement("div", {
+    className: "py-8 px-4 text-center space-y-6 select-none"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "flex items-center justify-between gap-2 border-b border-bleach-borderSoft pb-2"
-  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
-    className: "text-[10px] font-bold uppercase text-bleach-orange"
-  }, "Op\xE7\xE3o \xDAnica #", idx + 1, " \u2022 ", op.elemento), /*#__PURE__*/React.createElement("h4", {
-    className: "font-title text-2xl text-white tracking-wider"
-  }, op.nome), /*#__PURE__*/React.createElement("div", {
-    className: "text-xs text-bleach-cream font-mono italic text-bleach-orange"
-  }, "Comando: \"", op.comando, "\"")), /*#__PURE__*/React.createElement("button", {
-    onClick: () => escolherOpcaoAI(op),
-    className: "px-4 py-2 bg-gradient-to-r from-bleach-orange to-bleach-orangeDeep text-black font-extrabold text-xs uppercase rounded-xl hover:brightness-110 shadow transition"
-  }, "\u2713 Reivindicar Esta ", aiZkTipo.toUpperCase())), /*#__PURE__*/React.createElement("div", {
-    className: "space-y-2 text-xs"
+    className: "relative w-48 h-48 sm:w-60 sm:h-60 mx-auto flex items-center justify-center"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "bg-black/60 p-3 rounded-lg border border-bleach-borderSoft"
-  }, /*#__PURE__*/React.createElement("strong", {
-    className: "text-bleach-orange block mb-0.5"
-  }, "\uD83D\uDDE1\uFE0F Formato Exclusivo da Arma:"), /*#__PURE__*/React.createElement("span", {
-    className: "text-bleach-creamDim leading-relaxed"
-  }, op.formatoArma)), /*#__PURE__*/React.createElement("div", {
-    className: "bg-black/60 p-3 rounded-lg border border-bleach-borderSoft"
-  }, /*#__PURE__*/React.createElement("strong", {
-    className: "text-bleach-orange block mb-0.5"
-  }, "\u26A1 Poder & Propriedades \xDAnicas:"), /*#__PURE__*/React.createElement("span", {
-    className: "text-bleach-creamDim leading-relaxed"
-  }, op.poder)))))))));
+    className: `absolute inset-0 rounded-full border-2 border-dashed ${aiZkTipo === 'bankai' ? 'border-amber-400/60' : 'border-cyan-400/60'} spin-runes`
+  }), /*#__PURE__*/React.createElement("div", {
+    className: `absolute inset-3 rounded-full border-2 border-dotted ${aiZkTipo === 'bankai' ? 'border-purple-500/60' : 'border-blue-500/60'} spin-runes-fast`
+  }), /*#__PURE__*/React.createElement("div", {
+    className: `w-36 h-36 sm:w-44 sm:h-44 rounded-full bg-black/90 border-4 flex flex-col items-center justify-center p-3 z-10 shadow-2xl transition ${aiZkTipo === 'bankai' ? 'border-amber-400 shadow-[0_0_40px_rgba(255,215,0,0.6)]' : 'border-cyan-400 shadow-[0_0_40px_rgba(79,179,232,0.6)]'} ${chargeProgress > 65 ? 'reiatsu-screen-shake' : ''}`
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "text-xl sm:text-2xl"
+  }, aiZkTipo === 'bankai' ? '卍' : '🗡️'), /*#__PURE__*/React.createElement("span", {
+    className: `font-title text-4xl sm:text-5xl font-black mt-0.5 ${aiZkTipo === 'bankai' ? 'text-amber-300 drop-shadow-[0_0_15px_#FFD700]' : 'text-cyan-300 drop-shadow-[0_0_15px_#4FB3E8]'}`
+  }, chargeProgress, "%"), /*#__PURE__*/React.createElement("span", {
+    className: "text-[9px] sm:text-[10px] uppercase font-mono tracking-widest text-bleach-muted"
+  }, "Densidade Reiryoku"))), /*#__PURE__*/React.createElement("div", {
+    className: "max-w-md mx-auto space-y-2"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "w-full bg-bleach-panel2 h-3.5 rounded-full overflow-hidden border border-white/10 p-0.5"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: `h-full rounded-full transition-all duration-75 shadow-lg ${aiZkTipo === 'bankai' ? 'bg-gradient-to-r from-purple-600 via-amber-400 to-yellow-300 shadow-[0_0_15px_#FFD700]' : 'bg-gradient-to-r from-blue-600 via-cyan-400 to-emerald-300 shadow-[0_0_15px_#4FB3E8]'}`,
+    style: {
+      width: `${chargeProgress}%`
+    }
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: `max-w-lg mx-auto p-4 rounded-2xl bg-black/80 border text-center text-xs sm:text-sm font-bold leading-relaxed shadow-inner ${aiZkTipo === 'bankai' ? 'border-amber-500/50 text-yellow-200' : 'border-cyan-500/50 text-cyan-200'}`
+  }, chargeStageText), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
+    onClick: pularCarregamento,
+    className: "px-4 py-1.5 bg-black/60 border border-bleach-border hover:border-bleach-orange text-bleach-creamDim hover:text-white text-xs font-bold rounded-xl transition"
+  }, "\u23E9 Pular Anima\xE7\xE3o de Despertar"))), ritualState === "revealed" && revealedCard && /*#__PURE__*/React.createElement("div", {
+    className: "space-y-6 card-pop-reveal"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "text-center border-b border-bleach-borderSoft pb-4"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: `px-4 py-1 border text-xs font-black rounded-full uppercase tracking-widest inline-flex items-center gap-1.5 shadow ${aiZkTipo === 'bankai' ? 'bg-gradient-to-r from-purple-900 to-amber-900 border-amber-400 text-yellow-300 shadow-[0_0_20px_#FFD700]' : 'bg-gradient-to-r from-blue-950 to-cyan-950 border-cyan-400 text-cyan-300 shadow-[0_0_20px_rgba(79,179,232,0.6)]'}`
+  }, /*#__PURE__*/React.createElement("span", null, aiZkTipo === 'bankai' ? '卍' : '🗡️'), /*#__PURE__*/React.createElement("span", null, aiZkTipo === 'bankai' ? 'BANKAI SUPREMA TRANSCENDENTAL DESBLOQUEADA!' : 'SHIKAI ÚNICA & AUTORAL DESPERTA!')), /*#__PURE__*/React.createElement("h2", {
+    className: `font-title text-4xl sm:text-6xl tracking-widest mt-3 ${aiZkTipo === 'bankai' ? 'text-amber-300 drop-shadow-[0_0_30px_#FFD700]' : 'text-cyan-400 drop-shadow-[0_0_30px_rgba(79,179,232,0.8)]'}`
+  }, revealedCard.nome), /*#__PURE__*/React.createElement("div", {
+    className: "mt-3 p-3.5 bg-black/80 border border-white/10 rounded-2xl max-w-xl mx-auto"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "text-[10px] text-bleach-muted uppercase tracking-wider font-bold"
+  }, "Comando de Libera\xE7\xE3o Sagrado"), /*#__PURE__*/React.createElement("div", {
+    className: `font-mono text-sm sm:text-base italic font-bold mt-0.5 ${aiZkTipo === 'bankai' ? 'text-yellow-200' : 'text-cyan-200'}`
+  }, "\"", revealedCard.comando, "\""))), /*#__PURE__*/React.createElement("div", {
+    className: "grid grid-cols-1 md:grid-cols-2 gap-4"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "bg-black/70 border border-bleach-border p-4 rounded-2xl space-y-1.5 shadow-inner"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flex items-center justify-between mb-1"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "text-xs font-bold uppercase tracking-wider text-bleach-orange flex items-center gap-1.5"
+  }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDDE1\uFE0F"), " Formato da L\xE2mina"), /*#__PURE__*/React.createElement("span", {
+    className: "px-2.5 py-0.5 bg-bleach-panel2 border border-bleach-border text-[10px] font-bold text-bleach-creamDim rounded-full"
+  }, revealedCard.elemento)), /*#__PURE__*/React.createElement("p", {
+    className: "text-xs sm:text-sm text-bleach-cream leading-relaxed"
+  }, revealedCard.formatoArma)), /*#__PURE__*/React.createElement("div", {
+    className: "bg-black/70 border border-bleach-border p-4 rounded-2xl space-y-1.5 shadow-inner"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "text-xs font-bold uppercase tracking-wider text-bleach-orange flex items-center gap-1.5 mb-1"
+  }, /*#__PURE__*/React.createElement("span", null, "\u26A1"), " Poder & Efeito Devastador"), /*#__PURE__*/React.createElement("p", {
+    className: "text-xs sm:text-sm text-bleach-cream leading-relaxed"
+  }, revealedCard.poder))), /*#__PURE__*/React.createElement("div", {
+    className: "p-3 bg-green-950/40 border border-green-500/40 rounded-xl text-center text-xs text-green-300 font-semibold flex items-center justify-center gap-2"
+  }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDD12"), /*#__PURE__*/React.createElement("span", null, "L\xE2mina 100% Autoral: Ao selar, esta arma ser\xE1 sua com exclusividade absoluta no RPG! Ningu\xE9m mais ter\xE1 esse nome ou poder.")), /*#__PURE__*/React.createElement("div", {
+    className: "flex flex-col sm:flex-row items-center justify-between gap-3 pt-2"
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: voltarParaSelecao,
+    className: "w-full sm:w-auto px-5 py-3 bg-bleach-panel border border-bleach-border hover:border-bleach-orange text-bleach-cream text-xs font-bold uppercase rounded-xl transition flex items-center justify-center gap-2"
+  }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDC41\uFE0F"), /*#__PURE__*/React.createElement("span", null, "Explorar Outras L\xE2minas Seladas")), /*#__PURE__*/React.createElement("button", {
+    onClick: () => escolherOpcaoAI(revealedCard),
+    className: `w-full sm:w-auto px-8 py-3.5 text-black font-extrabold text-xs uppercase tracking-widest rounded-xl shadow-2xl hover:scale-105 transition active:scale-95 flex items-center justify-center gap-2 ${aiZkTipo === 'bankai' ? 'bg-gradient-to-r from-purple-600 via-amber-400 to-yellow-400 shadow-[0_0_25px_#FFD700]' : 'bg-gradient-to-r from-blue-500 via-cyan-400 to-emerald-400 shadow-[0_0_25px_#4FB3E8]'}`
+  }, /*#__PURE__*/React.createElement("span", null, "\u2694\uFE0F"), /*#__PURE__*/React.createElement("span", null, "Reivindicar & Selar Esta ", aiZkTipo.toUpperCase(), " na Minha Ficha")))))));
 }
 
 // TAB: ADMIN CONTROL PANEL
