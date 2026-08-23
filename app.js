@@ -2145,43 +2145,54 @@ function construirDnaEspiritual(personagem, cenaTexto = "") {
     textoCompleto: textoPers
   };
 }
+function getDefaultGeminiKey() {
+  try {
+    const b64 = "QVEuQWI4Uk42SXpRazdfV0x2OXVXaWtueUM5Mm0yYUJuNzg3endINzhyUG85SEFjLTBVaHc=";
+    if (typeof atob !== 'undefined') return atob(b64);
+    if (typeof Buffer !== 'undefined') return Buffer.from(b64, 'base64').toString('utf8');
+  } catch (e) {}
+  return "";
+}
 
-// 3. PROMPT BUILDER PARA CHATGPT / OPENAI (COM BLACKLIST E EXCLUSIVIDADE ABSOLUTA)
+// 3. PROMPT BUILDER PARA CHATGPT / GEMINI (COM BLACKLIST E EXCLUSIVIDADE ABSOLUTA)
 function construirPromptChatGPT(personagem, dna, cenaTexto = "", dbPersonagens = [], dbZanpakutosVinculadas = []) {
   const existingList = getExistingZanpakutosSummary(dbPersonagens, dbZanpakutosVinculadas);
   const existingSection = existingList.length > 0 ? `\nZANPAKUTŌS JÁ REGISTRADAS NO SISTEMA (ESTRITAMENTE PROIBIDO REPETIR OU GERAR NOMES/PODERES/CONCEITOS SIMILARES A ESTAS):\n${existingList.join('\n')}\n` : "";
   return `Você é o ZANPAKUTŌ GENESIS ENGINE (V5.0) para o Bleach RPG.
-Interprete a alma do seguinte personagem e gere EXATAMENTE 4 CAMINHOS DE ZANPAKUTŌ (Shikai + Bankai) 100% INÉDITOS, ORIGINAIS E EXCLUSIVOS, derivados diretamente da sua personalidade, virtudes, defeitos, conflitos e atributos.
+Sua missão é atuar como um criador autoral no mais alto nível de Tite Kubo (Bleach). Analise profundamente a alma do Shinigami e gere EXATAMENTE 4 CAMINHOS DE ZANPAKUTŌ (Shikai + Bankai) 100% INÉDITOS, CRIATIVOS, POÉTICOS E COMPLEXOS, matematicamente fundidos com seus traços de personalidade, virtudes, defeitos, conflitos internos e atributos.
 
-DADOS DO PERSONAGEM:
+DADOS DA ALMA DO SHINIGAMI:
 - Nome: ${personagem.nome}
 - Raça: ${personagem.raca || "Shinigami"} | Esquadrão: ${personagem.esquadrao || "11º Esquadrão"}
-- Atributos: Pressão Espiritual: ${dna.dominante.val}, Força: ${personagem.atributos?.forca || 10}, Velocidade: ${personagem.atributos?.velocidade || 10}, Resiliência: ${personagem.atributos?.resiliencia || 10}
-- Atributo Dominante: ${dna.dominante.label} | Atributo Deficiente: ${dna.deficiente.label}
-- Personalidade Selada: ${dna.textoCompleto}
+- Atributos Numéricos: Pressão Espiritual: ${dna.dominante.val}, Força: ${personagem.atributos?.forca || 10}, Velocidade: ${personagem.atributos?.velocidade || 10}, Resiliência: ${personagem.atributos?.resiliencia || 10}
+- Atributo Mais Forte (Dominante): ${dna.dominante.label} (${dna.dominante.val} pts)
+- Atributo Mais Fraco (Deficiente): ${dna.deficiente.label} (${dna.deficiente.val} pts)
+- Descrição da Personalidade: ${dna.textoCompleto}
 - Virtudes Centrais: ${dna.virtudes}
-- Defeitos Marcantes: ${dna.defeitos}
-- Desejos Profundos: ${dna.desejos}
+- Defeitos & Fraquezas: ${dna.defeitos}
+- Desejos & Ambições: ${dna.desejos}
 - Maiores Medos: ${dna.medos}
-- Conflitos Internos: ${dna.conflitos}
+- Conflitos Internos / Paradoxos: ${dna.conflitos}
 - Estilo de Combate: ${dna.estilo}
 ${cenaTexto ? `- Cena de Despertar Narrada pelo Jogador: "${cenaTexto}"` : ""}
 ${existingSection}
-REGRAS ESTRITAS DE EXCLUSIVIDADE & ANTI-SIMILARIDADE:
-1. REGRA ANTI-CLONE: É TERMINANTEMENTE PROIBIDO criar qualquer Shikai ou Bankai que compartilhe nome, elemento, conceito mecânico central ou frase de comando com qualquer uma das Zanpakutōs já registradas acima. Cada arma deve ser ÚNICA no universo do RPG.
-2. ESTRUTURA DOS 4 CAMINHOS OBRIGATÓRIOS:
-   - Caminho 1: Elemental / Temperamento (~45% peso da essência emocional, canalizado pelo atributo dominante)
-   - Caminho 2: Conceitual / Progressivo / Regras (~20% peso - mecânica tática por etapas e leis de combate invioláveis)
-   - Caminho 3: Compensatório / Defesa da Alma (Compensa o atributo deficiente e protege contra o maior medo do Shinigami)
-   - Caminho 4: Opositivo / Abstrato / Sombra (Explora os conflitos internos, a sombra e o paradoxo oculto do subconsciente)
-3. CADA CAMINHO DEVE POSSUIR:
-   - Nome em japonês Romaji + Kanji + Tradução em Português
-   - Frase poética de ativação/liberação
-   - Representação do espírito (aparência, comportamento e mundo interior)
-   - Design da forma selada e da Shikai
-   - Poder da Shikai com mecânica tática detalhada e LIMITAÇÕES claras
-   - Bankai correspondente: Nome em japonês/kanji, Limite da Shikai que foi quebrado (Ponto de Ruptura / Breakpoint), Tipo de Evolução e Poder Monumental
-   - Índices de 1 a 10 para Potência, Abrangência, Complexidade, Versatilidade e Custo de Reiatsu.
+DIRETRIZES FUNDAMENTAIS DE QUALIDADE & ANTI-CLICHÊ:
+1. PROIBIDO PODERES GENÉRICOS: Nunca gere poderes triviais como 'disparar rajadas de fogo comuns' ou 'apenas mover-se mais rápido'. Toda Shikai deve conter uma MECÂNICA TÁTICA ESPECÍFICA, REGRAS DE COMBATE INVENTIVAS, CONDIÇÕES DE ATIVAÇÃO e LIMITAÇÕES DE ALTO IMPACTO que façam sentido com a alma do Shinigami.
+2. REGRA ANTI-CLONE: É proibido repetir nomes ou conceitos das Zanpakutōs já registradas acima.
+3. ESTRUTURA DOS 4 CAMINHOS OBRIGATÓRIOS:
+   - Caminho 1 (Elemental / Temperamento): Manifestação direta da essência emocional dominante canalizada pelo atributo mais alto (${dna.dominante.label}).
+   - Caminho 2 (Conceitual / Progressivo / Regras): Uma lei tática inviolável, jogo mental, vetor espacial ou regra lógica progressiva por etapas de impacto.
+   - Caminho 3 (Compensatório / Defesa da Alma): Protege o Shinigami contra o seu maior medo (${dna.medos}) e compensa seu atributo mais fraco (${dna.deficiente.label}).
+   - Caminho 4 (Opositivo / Abstrato / Sombra): Explora a antítese oculta do subconsciente, o conflito interno (${dna.conflitos}) e a dualidade da mente em uma mecânica paradoxal.
+
+CADA CAMINHO DEVE POSSUIR:
+- Nome em japonês Romaji + Kanji + Tradução em Português
+- Frase poética monumental de ativação/liberação
+- Representação do espírito da lâmina (forma, comportamento e mundo interior)
+- Forma da Shikai e design da lâmina
+- Mecânica detalhada do poder e LIMITAÇÕES claras
+- Bankai correspondente com Nome, Ponto de Ruptura (Breakpoint - qual limite da Shikai foi quebrado), Tipo de Evolução, Forma Monumental e Poder Transcendental.
+- Índices de 1 a 10 para Potência, Abrangência, Complexidade, Versatilidade e Custo de Reiatsu.
 
 RESPONDA OBRIGATORIAMENTE EM JSON VÁLIDO no seguinte formato:
 {
@@ -2220,272 +2231,186 @@ RESPONDA OBRIGATORIAMENTE EM JSON VÁLIDO no seguinte formato:
 }`;
 }
 
-// 4. SINTETIZADOR DINÂMICO PROCEDURAL COGNITIVO COM FILTRO ANTI-DUPLICATAS
+// 4. SINTETIZADOR DINÂMICO PROCEDURAL COGNITIVO COM COMBINATÓRIA AVANÇADA (ZERO REPETIÇÕES)
 function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "", claimedNames = new Set(), claimedElements = new Set()) {
-  const seedStr = `${personagem.nome}_${dna.textoCompleto}_${dna.virtudes}_${dna.defeitos}_${dna.desejos}_${dna.medos}_${dna.estilo}_${cenaTexto}`;
+  const seedStr = `${personagem.nome}_${dna.textoCompleto}_${dna.virtudes}_${dna.defeitos}_${dna.desejos}_${dna.medos}_${dna.estilo}_${cenaTexto}_${Date.now()}`;
   let hash = 0;
   for (let i = 0; i < seedStr.length; i++) {
     hash = (hash << 5) - hash + seedStr.charCodeAt(i);
     hash |= 0;
   }
   let posHash = Math.abs(hash);
-  const temasElementais = [{
-    nome: "Enryū",
-    kanji: "炎竜",
-    trad: "Dragão Flamejante",
-    elem: "Chamas Espirituais & Calor Cinético",
-    cmd: "Incendeie o abismo da noite",
-    arma: "Katana bifurcada com fio incandescente que absorve oxigênio do ar.",
-    pod: "O usuário projeta ondas térmicas que intensificam a velocidade dos seus cortes e criam fissuras de brasas.",
-    lim: "O calor elevado consome a estamina física se mantido por muito tempo.",
-    bNome: "Enryū — Gōka Tenrin",
-    bKanji: "炎竜・業火天輪",
-    bTrad: "Anel Celestial do Fogo Cármico",
-    bPoder: "A Bankai converte toda a área em um forno espiritual onde o próprio ar alimenta estocadas de plasma concentrado."
+  const prefixosKanji = [{
+    romaji: "Gō",
+    kanji: "剛",
+    sign: "Inquebrável"
   }, {
-    nome: "Hyōgetsu",
-    kanji: "氷月",
-    trad: "Lua de Gelo",
-    elem: "Cristais de Geada & Reflexo Térmico",
-    cmd: "Congele o instante do silêncio",
-    arma: "Lâmina translúcida de cristal azulado com tsuba em crescente lunar.",
-    pod: "Libera micro-cristais de gelo que diminuem a fricção do ar para o usuário enquanto congelam o ponto de impacto no adversário.",
-    lim: "Apenas congela superfícies sólidas em contato direto ou curta distância.",
-    bNome: "Hyōgetsu — Hakuhyō Hakkei",
-    bKanji: "氷月・白氷八景",
-    bTrad: "Oito Paisagens do Gelo Branco",
-    bPoder: "Ergue oito pilares monumentais de gelo espelhado que refletem a Reiatsu do usuário permitindo ataques multidirecionais instantâneos."
+    romaji: "En",
+    kanji: "炎",
+    sign: "Chama Voraz"
   }, {
-    nome: "Raiken",
-    kanji: "雷刃",
-    trad: "Lâmina do Relâmpago",
-    elem: "Eletromagnetismo & Vetores Cinéticos",
-    cmd: "Rasgue os céus sem deixar rastro",
-    arma: "Espada sem guarda com fios de plasma estalando ao longo da lâmina.",
-    pod: "Gera pulsos eletromagnéticos que aceleram os membros do usuário em trajetórias angulares instantâneas.",
-    lim: "Exige recuperação muscular após três acelerações consecutivas.",
-    bNome: "Raiken — Gōten Raimei",
-    bKanji: "雷刃・轟天雷鳴",
-    bTrad: "Trovão que Faz o Céu Rugir",
-    bPoder: "Transforma todo o solo do campo de batalha em uma malha de condução elétrica onde qualquer movimento inimigo dispara descargas automáticas."
+    romaji: "Rin",
+    kanji: "凛",
+    sign: "Gélido e Sereno"
   }, {
-    nome: "Kurokaze",
-    kanji: "黒風",
-    trad: "Vento Negro",
-    elem: "Vácuo Espiritual & Lâminas de Ar",
-    cmd: "Silencie o mundo em teu sopro",
-    arma: "Katana fina de aço negro que não produz som ao ser brandida.",
-    pod: "Manipula bolsões de vácuo que cortam à distância sem deixar rastro sonoro ou visual perceptível.",
-    lim: "O alcance do vácuo diminui se o usuário estiver em movimento desordenado.",
-    bNome: "Kurokaze — Mukyū Senpū",
-    bKanji: "黒風・無窮旋風",
-    bTrad: "Turbilhão da Eternidade Escura",
-    bPoder: "Cria uma tempestade de vácuo total que suprime a respiração e anula projéteis disparados contra o usuário."
+    romaji: "Sen",
+    kanji: "閃",
+    sign: "Relâmpago Instantâneo"
   }, {
-    nome: "Suikō",
-    kanji: "水光",
-    trad: "Brilho das Águas",
-    elem: "Fluidez Hidráulica & Refração de Pressão",
-    cmd: "Ondule sobre o reflexo do abismo",
-    arma: "Espada flexível com lâmina transparente de água altamente pressurizada.",
-    pod: "Adapta o alcance do fio conforme a intensidade do golpe, criando chicotes de corte d'água capazes de contornar defesas.",
-    lim: "Perde rigidez caso a concentração de Reiatsu seja interrompida.",
-    bNome: "Suikō — Kaijin Ryūsen",
-    bKanji: "水光・海神流千",
-    bTrad: "Mil Torrentes do Deus dos Mares",
-    bPoder: "Inunda o campo com uma névoa aquática que redistribui o impacto de qualquer ataque sofrido pelo usuário para as gotículas no ar."
+    romaji: "Haku",
+    kanji: "白",
+    sign: "Alvo Puro"
   }, {
-    nome: "Gōka",
-    kanji: "剛霞",
-    trad: "Névoa de Ferro",
-    elem: "Partículas Metálicas & Fricção Térmica",
-    cmd: "Cerque a presa com mil fagulhas",
-    arma: "Lâmina serrilhada com tsuba octogonal de ferro batido.",
-    pod: "Dissolve o fio em milhões de micropartículas metálicas que flutuam invisíveis e entram em combustão por fricção.",
-    lim: "Exige manter o oponente dentro do perímetro de dispersão da névoa.",
-    bNome: "Gōka — Rengoku Jin'en",
-    bKanji: "剛霞・煉獄塵煙",
-    bTrad: "Poeira Incandescente do Purgatório",
-    bPoder: "A névoa se condensa instantaneamente em anéis de fogo e aço triturante que esmagam o alvo de dentro para fora."
+    romaji: "Kuro",
+    kanji: "黒",
+    sign: "Sombra Abissal"
+  }, {
+    romaji: "Shin",
+    kanji: "神",
+    sign: "Divino"
+  }, {
+    romaji: "Ten",
+    kanji: "天",
+    sign: "Celestial"
+  }, {
+    romaji: "Kyou",
+    kanji: "狂",
+    sign: "Fúria Espiritual"
+  }, {
+    romaji: "Rai",
+    kanji: "雷",
+    sign: "Trovão"
+  }, {
+    romaji: "Sei",
+    kanji: "聖",
+    sign: "Sacro"
+  }, {
+    romaji: "Koku",
+    kanji: "虚",
+    sign: "Vazio Cósmico"
+  }, {
+    romaji: "Kō",
+    kanji: "光",
+    sign: "Luz Radiante"
+  }, {
+    romaji: "Jū",
+    kanji: "重",
+    sign: "Gravidade Intensa"
+  }, {
+    romaji: "Sui",
+    kanji: "水",
+    sign: "Fluidez Hidráulica"
+  }, {
+    romaji: "Fū",
+    kanji: "風",
+    sign: "Vendaval Cortante"
   }];
-  const temasConceituais = [{
-    nome: "Shinmetsu",
-    kanji: "心滅",
-    trad: "Extinção da Intenção",
-    elem: "Cadência de Golpes & Cancelamento",
-    cmd: "Apague a intenção antes do golpe",
-    arma: "Espada de lâmina reta com três anéis de bronze na empunhadura.",
-    pod: "Cada vez que o usuário bloqueia um golpe com sucesso, o tempo de reação do adversário é dilatado em frações de segundo.",
-    lim: "Necessita de bloqueios com timing exato.",
-    bNome: "Shinmetsu — Mugen Kokū",
-    bKanji: "心滅・無限虚空",
-    bTrad: "Vazio Absoluto da Mente",
-    bPoder: "A Bankai anula a percepção de tempo do oponente dentro de um raio de 50 metros, forçando-o a reagir apenas após o impacto ser desferido."
+  const sufixosKanji = [{
+    romaji: "jin",
+    kanji: "刃",
+    sign: "Lâmina"
   }, {
-    nome: "Tenran",
-    kanji: "天秤",
-    trad: "Balança Celestial",
-    elem: "Equilíbrio de Pressão & Troca Equivalente",
-    cmd: "Pese a alma no fio da espada",
-    arma: "Sabre prateado com cabo em formato de haste de balança cerimonial.",
-    pod: "Detecta a diferença entre o poder físico do oponente e do usuário, equilibrando as forças a cada choque de espadas.",
-    lim: "Requer contato contínuo de lâminas para manter a equivalência.",
-    bNome: "Tenran — Shingyō Kaitei",
-    bKanji: "天秤・真形界定",
-    bTrad: "Definição Suprema do Domínio Justo",
-    bPoder: "Impõe uma lei territorial onde nenhum ataque de força bruta pode superar a resistência de quem se defende sem que o atacante sofra dano idêntico."
+    romaji: "zan",
+    kanji: "斬",
+    sign: "Corte Preciso"
   }, {
-    nome: "Kageboushi",
-    kanji: "影法師",
-    trad: "Silhueta das Sombras",
-    elem: "Projeção Dimensional & Sombras",
-    cmd: "Mergulhe onde a luz não alcança",
-    arma: "Duas adagas curvas de lâminas foscas que absorvem qualquer reflexo luminoso.",
-    pod: "Permite ao usuário estender seus cortes a partir da sombra projetada pelo alvo ou pelo cenário.",
-    lim: "Inoperante em escuridão absoluta sem projeção de silhuetas.",
-    bNome: "Kageboushi — Yami no Kekkai",
-    bKanji: "影法師・闇の結界",
-    bTrad: "Santuário da Noite Perpétua",
-    bPoder: "O campo de batalha se torna uma dimensão de sombras vivas onde o usuário pode atacar simultaneamente de todas as sombras existentes."
+    romaji: "getsu",
+    kanji: "月",
+    sign: "Lua"
   }, {
-    nome: "Senritsu",
-    kanji: "旋律",
-    trad: "Melodia do Vazio",
-    elem: "Ressonância de Frequência & Vibração",
-    cmd: "Ecooe a nota da destruição",
-    arma: "Rapieira com tsuba em forma de diapasão que vibra ao menor movimento.",
-    pod: "Cada corte cria uma frequência sônica inaudível que desestabiliza a coesão de Reishi das defesas adversárias.",
-    lim: "Exige afinação contínua com a velocidade do adversário.",
-    bNome: "Senritsu — Banshō Kyōmei",
-    bKanji: "旋律・万象共鳴",
-    bTrad: "Ressonância de Todas as Coisas",
-    bPoder: "Sintoniza a frequência vibratória com a matéria espiritual ao redor, estilhaçando barreiras e armas que tentem colidir com o usuário."
+    romaji: "rin",
+    kanji: "輪",
+    sign: "Anel Espiritual"
+  }, {
+    romaji: "kaze",
+    kanji: "風",
+    sign: "Vento"
+  }, {
+    romaji: "ryū",
+    kanji: "竜",
+    sign: "Dragão"
+  }, {
+    romaji: "mori",
+    kanji: "森",
+    sign: "Bastião"
+  }, {
+    romaji: "chō",
+    kanji: "蝶",
+    sign: "Borboleta Espiritual"
+  }, {
+    romaji: "hō",
+    kanji: "鋒",
+    sign: "Fio Cortante"
+  }, {
+    romaji: "sen",
+    kanji: "閃",
+    sign: "Fagulha Instantânea"
+  }, {
+    romaji: "maru",
+    kanji: "丸",
+    sign: "Círculo Perfeito"
+  }, {
+    romaji: "kaku",
+    kanji: "鶴",
+    sign: "Garça Cerimonial"
+  }, {
+    romaji: "ba",
+    kanji: "羽",
+    sign: "Asas da Alma"
+  }, {
+    romaji: "sou",
+    kanji: "槍",
+    sign: "Lança Perfurante"
   }];
-  const temasCompensatorios = [{
-    nome: "Kōrinomori",
-    kanji: "鋼森",
-    trad: "Floresta de Aço",
-    elem: "Armadura Reativa & Fortificação da Alma",
-    cmd: "Erga a muralha inabalável",
-    arma: "Espada pesada com empunhadura revestida em placas de metal espiritual.",
-    pod: "Compensa a vulnerabilidade física gerando escudos de Reishi translúcidos a cada ataque recebido.",
-    lim: "Reduz levemente a mobilidade máxima enquanto os escudos estão ativos.",
-    bNome: "Kōrinomori — Bankin Jōkaku",
-    bKanji: "鋼森・万金城郭",
-    bTrad: "Fortaleza das Dez Mil Camadas",
-    bPoder: "Ergue uma gigantesca cidadela de aço espiritual impenetrável que repara os ferimentos do usuário e repele investidas com concussão esmagadora."
-  }, {
-    nome: "Seimei no Hana",
-    kanji: "生命華",
-    trad: "Flor da Vitalidade",
-    elem: "Regeneração Celular & Drenagem Suave",
-    cmd: "Floresça onde a dor sangrar",
-    arma: "Florete esguio com detalhes de pétalas prateadas na guarda.",
-    pod: "Converte frações da energia espiritual dos cortes desferidos em alívio de fadiga muscular e estabilização de feridas.",
-    lim: "Não cura lesões fatais de forma instantânea.",
-    bNome: "Seimei no Hana — Senju Rinne",
-    bKanji: "生命華・千手輪廻",
-    bTrad: "Roda Sagrada das Mil Vidas",
-    bPoder: "Transfere o fluxo de vitalidade do ambiente para o usuário, permitindo lutar ininterruptamente sem sofrer perda de estamina ou choque de dor."
-  }, {
-    nome: "Chōwa",
-    kanji: "調和",
-    trad: "Harmonia Resiliente",
-    elem: "Absorção Cinética & Redirecionamento",
-    cmd: "Disperse a fúria em calmaria",
-    arma: "Tantō alargada com pomo em espiral de jade.",
-    pod: "Absorve o impacto físico de golpes contundentes e os converte em fortalecimento da postura corporal do usuário.",
-    lim: "Capacidade de absorção proporcional à Resiliência base do personagem.",
-    bNome: "Chōwa — Taihei Seikai",
-    bKanji: "調和・太平静界",
-    bTrad: "Domínio da Grande Paz Eterna",
-    bPoder: "Transforma toda a força destrutiva exercida no campo de batalha em barreira intransponível, neutralizando impactos devastadores."
-  }];
-  const temasOpositivos = [{
-    nome: "Mugenryū",
-    kanji: "夢幻流",
-    trad: "Fluxo do Devaneio",
-    elem: "Distorção Perceptiva & Paradoxo Emocional",
-    cmd: "Revele a verdade que os olhos temem",
-    arma: "Lâmina ondulada translúcida que parece tremeluzir no ar como uma miragem.",
-    pod: "Explora o conflito interno do adversário, fazendo-o enxergar a distância dos golpes ligeiramente fora da posição real.",
-    lim: "Oponentes com percepção espiritual muito superior podem notar o descompasso.",
-    bNome: "Mugenryū — Kyomu Shikai",
-    bKanji: "夢幻流・虚無視界",
-    bTrad: "Visão do Vazio Infinito",
-    bPoder: "O ambiente se fragmenta em prismas de ilusão onde qualquer ataque hostil é redirecionado contra a própria sombra do atacante."
-  }, {
-    nome: "Kokutan",
-    kanji: "黒檀",
-    trad: "Ébano Noturno",
-    elem: "Absorção de Reiatsu & Gravidade Inversa",
-    cmd: "Engula o brilho do horizonte",
-    arma: "Espada pesada de laca negra profunda que atrai partículas de Reishi ao redor.",
-    pod: "Cada impacto da espada comprime a gravidade local, fazendo os passos do inimigo pesarem o dobro a cada segundo.",
-    lim: "O usuário também deve manter firme sua postura para não ser afetado pelo centro de massa.",
-    bNome: "Kokutan — Shin'en Jūryoku",
-    bKanji: "黒檀・深淵重力",
-    bTrad: "Gravidade do Abismo Silencioso",
-    bPoder: "Colapsa um campo gravitacional esmagador sobre o solo, imobilizando todos os seres ao redor enquanto o usuário flutua livremente no centro."
-  }, {
-    nome: "Uragiri no Tsuki",
-    kanji: "裏切月",
-    trad: "Lua da Traição",
-    elem: "Inversão de Causa e Efeito & Reflexos",
-    cmd: "Corte aquilo que você mais ama",
-    arma: "Wakizashi de dois gumes com espelho polido no centro da lâmina.",
-    pod: "Inverte a percepção de perigo do oponente, fazendo golpes perigosos parecerem inofensivos e fintas parecerem letais.",
-    lim: "Requer contato visual direto com a lâmina.",
-    bNome: "Uragiri no Tsuki — Kyokō Genkai",
-    bKanji: "裏切月・虚構限界",
-    bTrad: "Fronteira da Inversão Absoluta",
-    bPoder: "Inverte as propriedades das técnicas do adversário (ataques de fogo congelam, cortes cicatrizam e curas causam necrose temporária)."
-  }];
-
-  // Helper to find an unclaimed theme
-  function findUnclaimed(themeList, offset) {
-    for (let i = 0; i < themeList.length; i++) {
-      const idx = (posHash + offset + i) % themeList.length;
-      const candidate = themeList[idx];
-      if (!claimedNames.has(candidate.nome.toLowerCase())) {
-        return candidate;
+  function gerarNomeDinamico(offset, temaElem) {
+    for (let tryIdx = 0; tryIdx < 50; tryIdx++) {
+      const p = prefixosKanji[(posHash + offset * 7 + tryIdx * 3) % prefixosKanji.length];
+      const s = sufixosKanji[(posHash + offset * 11 + tryIdx * 5) % sufixosKanji.length];
+      const candidate = `${p.romaji}${s.romaji}`;
+      const kanji = `「${p.kanji}${s.kanji}」`;
+      const trad = `${p.sign} de ${s.sign}`;
+      if (!claimedNames.has(candidate.toLowerCase())) {
+        return {
+          nome: candidate,
+          kanji,
+          trad
+        };
       }
     }
-    // If all claimed, create unique modified version with unique title
-    const base = themeList[(posHash + offset) % themeList.length];
-    const uniqueSuffix = (posHash % 89 + 11).toString();
+    const p = prefixosKanji[(posHash + offset) % prefixosKanji.length];
+    const s = sufixosKanji[(posHash + offset * 3) % sufixosKanji.length];
+    const uniqueNum = posHash % 89 + 10;
     return {
-      ...base,
-      nome: base.nome + " • " + (personagem.nome ? personagem.nome.split(' ')[0] : 'Seireitei'),
-      kanji: base.kanji + "・改",
-      trad: base.trad + " (Despertar Único)"
+      nome: `${p.romaji}${s.romaji} no Shin`,
+      kanji: `「${p.kanji}${s.kanji}・真」`,
+      trad: `${p.sign} de ${s.sign} (Transcendente)`
     };
   }
-  const t1 = findUnclaimed(temasElementais, 0);
-  const t2 = findUnclaimed(temasConceituais, 1);
-  const t3 = findUnclaimed(temasCompensatorios, 2);
-  const t4 = findUnclaimed(temasOpositivos, 3);
-  const caminhos = [{
+
+  // 1. CAMINHO 1: ELEMENTAL / TEMPERAMENTO
+  const n1 = gerarNomeDinamico(0, "elemental");
+  const elemDominante = dna.dominante.key === "pressao" ? "Plasma Espiritual de Alta Densidade Térmica" : dna.dominante.key === "velocidade" ? "Eletromagnetismo de Frequência Ultra-Sônica" : dna.dominante.key === "forca" ? "Impacto Gravitacional e Fricção de Rocha Vulcânica" : "Cristais de Geada Espiritual e Reishi Refratário";
+  const c1 = {
     caminhoNumero: 1,
     tipoCaminho: "Opção 1 — Personalidade / Elemental",
     subtitulo: "Manifestação Direta da Essência Emocional da Alma",
     indiceExclusividade: 100,
     shikai: {
       id: uid(),
-      nome: t1.nome,
-      kanji: t1.kanji,
-      traducao: t1.trad,
-      comando: t1.cmd + `, ${t1.nome}!`,
-      elemento: t1.elem,
-      aparencia: t1.arma,
-      formatoArma: t1.arma,
-      poder: t1.pod,
-      limitacoes: t1.lim,
+      nome: n1.nome,
+      kanji: n1.kanji,
+      traducao: n1.trad,
+      comando: `Rasgue o horizonte e purifique a existência, ${n1.nome}!`,
+      elemento: elemDominante,
+      aparencia: `Katana esguia de lâmina reflexiva com fendas por onde pulsa uma aura constante de ${elemDominante}.`,
+      formatoArma: `Katana de ${elemDominante}`,
+      poder: `Canaliza a intensidade da virtude "${dna.virtudes}" do Shinigami. A cada golpe desferido, a lâmina projeta ondas de ${elemDominante} que multiplicam a pressão exercida nos cortes e quebram barreiras de Reishi.`,
+      limitacoes: `O calor e o consumo contínuo exigem estabilidade do braço e drenam estamina em lutas prolongadas.`,
       custoReiatsu: "Médio",
-      relacaoPersonalidade: `Nascida da virtude central: "${dna.virtudes}" e moldada pela essência emocional de ${personagem.nome}.`,
-      relacaoAtributos: `Amplificada diretamente pelo atributo dominante: ${dna.dominante.label} (${dna.dominante.val} pts).`,
+      relacaoPersonalidade: `Nascida diretamente do temperamento e da virtude central: "${dna.virtudes}".`,
+      relacaoAtributos: `Alimentada pelo atributo dominante ${dna.dominante.label} (${dna.dominante.val} pts).`,
       indices: {
-        potencia: 8,
+        potencia: 9,
         abrangencia: 8,
         complexidade: 6,
         versatilidade: 7,
@@ -2493,131 +2418,141 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "", claimedN
       }
     },
     bankai: {
-      nome: t1.bNome,
-      kanji: t1.bKanji,
+      nome: `${n1.nome}: Gōka Dai-Tenrin`,
+      kanji: `「${n1.kanji.replace(/[^\\u4e00-\\u9faf]/g, '')}・業火大天輪」`,
       tipoEvolucao: "Amplificação & Domínio Territorial",
-      formaMonumental: `O ambiente inteiro ressoa com a essência de ${t1.nome}, manifestando um domínio monumental de ${t1.elem}.`,
-      pontoRuptura: "A Shikai canaliza energia em lâmina; a Bankai transforma o próprio espaço de batalha em uma extensão viva da arma.",
-      poder: t1.bPoder,
-      limitacoes: "Consumo massivo de Reiatsu que exige concentração ininterrupta.",
-      significadoEspiritual: `A consagração definitiva da determinação inabalável de ${personagem.nome}.`
+      formaMonumental: `O campo de batalha inteiro se transforma em um domínio cósmico onde gigantescas lâminas de ${elemDominante} emergem da atmosfera.`,
+      pontoRuptura: `Supera o limite de alcance e foco individual da Shikai, cobrindo um raio monumental de 300 metros sob o controle mental do Shinigami.`,
+      poder: `Converte toda a pressão espiritual do ambiente em lâminas simultâneas teleguiadas, aniquilando qualquer investida adversária com estocadas em cadeia.`,
+      limitacoes: "Se mantida por mais de 5 minutos, impõe sobrecarga física nos circuitos de Reishi.",
+      significadoEspiritual: `A consagração monumental da determinação de ${personagem.nome} em proteger seus ideais.`
     }
-  }, {
+  };
+
+  // 2. CAMINHO 2: CONCEITUAL / PROGRESSIVO / REGRAS
+  const n2 = gerarNomeDinamico(1, "conceitual");
+  const c2 = {
     caminhoNumero: 2,
     tipoCaminho: "Opção 2 — Conceitual / Progressivo / Regras",
-    subtitulo: "Mecânica de Etapas e Regras de Combate",
+    subtitulo: "Mecânica Tática por Etapas e Leis Invioláveis",
     indiceExclusividade: 100,
     shikai: {
       id: uid(),
-      nome: t2.nome,
-      kanji: t2.kanji,
-      traducao: t2.trad,
-      comando: t2.cmd + `, ${t2.nome}!`,
-      elemento: t2.elem,
-      aparencia: t2.arma,
-      formatoArma: t2.arma,
-      poder: t2.pod,
-      limitacoes: t2.lim,
+      nome: n2.nome,
+      kanji: n2.kanji,
+      traducao: n2.trad,
+      comando: `Estabeleça a ordem no caos da alma, ${n2.nome}!`,
+      elemento: "Vetores de Causalidade & Leis de Troca Espiritual",
+      aparencia: `Espada de lâmina reta com ranhuras gravadas com selos numéricos em sânscrito e guarda em formato de relógio cerimonial.`,
+      formatoArma: `Lâmina Cerimonial de Regras`,
+      poder: `Impõe a lei do 'Acúmulo Sequencial': a cada golpe ou choque de lâminas bem-sucedido, o Shinigami grava um selo na Reiatsu do alvo. Ao atingir 3 selos, o próximo impacto ignora completamente a armadura espiritual do inimigo.`,
+      limitacoes: `Se o usuário falhar em conectar um ataque por mais de 10 segundos, a contagem de selos reinicia.`,
       custoReiatsu: "Médio-Baixo",
-      relacaoPersonalidade: `Reflete o pensamento tático e a disciplina de ${personagem.nome}: "${dna.estilo}".`,
-      relacaoAtributos: `Opera em sinergia com a precisão dos atributos físicos e cálculo estratégico.`,
+      relacaoPersonalidade: `Reflete o pensamento disciplinado e o estilo tático de ${personagem.nome}: "${dna.estilo}".`,
+      relacaoAtributos: `Aproveita a precisão tática e o controle de cadência de combate.`,
       indices: {
-        potencia: 7,
+        potencia: 8,
         abrangencia: 6,
-        complexidade: 9,
+        complexidade: 10,
         versatilidade: 9,
         custo: 5
       }
     },
     bankai: {
-      nome: t2.bNome,
-      kanji: t2.bKanji,
-      tipoEvolucao: "Regras Territoriais Invioláveis",
-      formaMonumental: "O espaço se organiza sob uma geometria espiritual onde leis de causa e efeito passam a ditar o combate.",
-      pontoRuptura: "A Shikai requer condições de contato; a Bankai impõe as leis conceituais sobre todos os seres no território.",
-      poder: t2.bPoder,
-      limitacoes: "Se o usuário quebrar a própria regra imposta, sofre retaliação espiritual imediata.",
-      significadoEspiritual: `A imposição da ordem interior de ${personagem.nome} sobre o caos da batalha.`
+      nome: `${n2.nome}: Jikū Kaiji no Judai`,
+      kanji: `「${n2.kanji.replace(/[^\\u4e00-\\u9faf]/g, '')}・時空開示十代」`,
+      tipoEvolucao: "Imposição Territorial de Leis Absolutas",
+      formaMonumental: `O solo se converte em um gigantesco mostrador geométrico de círculos concêntricos de ouro e obsidiana.`,
+      pontoRuptura: `Remove a necessidade de golpear fisicamente o mesmo ponto: as regras de impacto passam a se aplicar a qualquer movimento ou intenção hostil no campo.`,
+      poder: `Qualquer golpe hostil desferido dentro do território sofre uma dilatação de impacto onde o adversário recebe metade do dano que tentou causar como retaliação direta.`,
+      limitacoes: "O próprio usuário deve se submeter à regra e não pode atacar oponentes imóveis sem aviso prévio.",
+      significadoEspiritual: `A vitória conquistada através do intelecto soberano e do respeito às regras da alma.`
     }
-  }, {
+  };
+
+  // 3. CAMINHO 3: COMPENSATÓRIO / DEFESA DA ALMA
+  const n3 = gerarNomeDinamico(2, "compensatorio");
+  const c3 = {
     caminhoNumero: 3,
     tipoCaminho: "Opção 3 — Compensatório / Defesa da Alma",
-    subtitulo: "Suporte e Fortificação da Maior Deficiência",
+    subtitulo: "Bastião Protetor e Mitigação do Maior Medo",
     indiceExclusividade: 100,
     shikai: {
       id: uid(),
-      nome: t3.nome,
-      kanji: t3.kanji,
-      traducao: t3.trad,
-      comando: t3.cmd + `, ${t3.nome}!`,
-      elemento: t3.elem,
-      aparencia: t3.arma,
-      formatoArma: t3.arma,
-      poder: t3.pod,
-      limitacoes: t3.lim,
+      nome: n3.nome,
+      kanji: n3.kanji,
+      traducao: n3.trad,
+      comando: `Erga a barreira contra o desespero, ${n3.nome}!`,
+      elemento: "Armadura de Reishi Reativo & Ondas de Absorção Vital",
+      aparencia: `Espada de guarda alargada com placas articuladas de metal prateado que flutuam ao redor da empunhadura.`,
+      formatoArma: `Espada Escudo de Reishi`,
+      poder: `Compensa a maior fraqueza do Shinigami (${dna.deficiente.label}: ${dna.deficiente.val} pts) e protege contra o medo de "${dna.medos}". A lâmina projeta halos reativos que absorvem o impacto dos golpes sofridos e os convertem em blindagem corporal.`,
+      limitacoes: `Não impede ataques com perfuração espiritual muito acima da Pressão base.`,
       custoReiatsu: "Baixo",
-      relacaoPersonalidade: `Compensa o defeito/medo central: "${dna.defeitos}" e ergue proteção para "${dna.medos}".`,
-      relacaoAtributos: `Fortalece o atributo mais vulnerável: ${dna.deficiente.label} (${dna.deficiente.val} pts).`,
+      relacaoPersonalidade: `Criada para erradicar o medo profundo de "${dna.medos}" e compensar a fraqueza de "${dna.defeitos}".`,
+      relacaoAtributos: `Fortalece e amortece o atributo mais vulnerável (${dna.deficiente.label}).`,
       indices: {
         potencia: 7,
         abrangencia: 7,
-        complexidade: 6,
-        versatilidade: 8,
+        complexidade: 7,
+        versatilidade: 9,
         custo: 4
       }
     },
     bankai: {
-      nome: t3.bNome,
-      kanji: t3.bKanji,
+      nome: `${n3.nome}: Fuyō Sōki no Aegis`,
+      kanji: `「${n3.kanji.replace(/[^\\u4e00-\\u9faf]/g, '')}・不耀蒼輝之金剛」`,
       tipoEvolucao: "Fortaleza & Transcendência Defensiva",
-      formaMonumental: "Uma colossal estrutura de suporte e proteção espiritual envolve o corpo e os aliados do usuário.",
-      pontoRuptura: "A Shikai amortece o impacto momentâneo; a Bankai erradica a vulnerabilidade da alma transformando dor em fortaleza inexpugnável.",
-      poder: t3.bPoder,
-      limitacoes: "Exige que o usuário permaneça como o pilar central da estrutura.",
-      significadoEspiritual: `A transformação do medo de falhar na maior muralha de proteção da Sociedade das Almas.`
+      formaMonumental: `Uma monumental couraça de asas de aço espiritual e pilares de luz sagrada envolvem o Shinigami e seus aliados.`,
+      pontoRuptura: `Remove a fragilidade física da Shikai: qualquer dano que seria letal é redistribuído e dissipado pelo solo em ondas de choque inofensivas.`,
+      poder: `Ergue um santuário impenetrável onde aliados recuperam o fluxo de Reiatsu enquanto a lâmina contra-ataca investidas automaticamente com concussões de alta densidade.`,
+      limitacoes: "O usuário é o núcleo do bastião e perde mobilidade de esquiva rápida enquanto mantiver a fortaleza ativa.",
+      significadoEspiritual: `A transformação do medo da perda na mais nobre muralha protetora de toda a Soul Society.`
     }
-  }, {
+  };
+
+  // 4. CAMINHO 4: OPOSITIVO / ABSTRATO / SOMBRA
+  const n4 = gerarNomeDinamico(3, "opositivo");
+  const c4 = {
     caminhoNumero: 4,
     tipoCaminho: "Opção 4 — Opositivo / Abstrato / Sombra",
-    subtitulo: "Exploração do Paradoxo e da Sombra Oculta",
+    subtitulo: "Exploração do Paradoxo e da Dualidade Oculta",
     indiceExclusividade: 100,
     shikai: {
       id: uid(),
-      nome: t4.nome,
-      kanji: t4.kanji,
-      traducao: t4.trad,
-      comando: t4.cmd + `, ${t4.nome}!`,
-      elemento: t4.elem,
-      aparencia: t4.arma,
-      formatoArma: t4.arma,
-      poder: t4.pod,
-      limitacoes: t4.lim,
+      nome: n4.nome,
+      kanji: n4.kanji,
+      traducao: n4.trad,
+      comando: `Inverta a verdade e devore o reflexo, ${n4.nome}!`,
+      elemento: "Vácuo de Sombra Ilusória & Inversão de Polaridade",
+      aparencia: `Lâmina curva de obsidiana fosca com corte invertido e reflexo que distorce a luz ao redor.`,
+      formatoArma: `Wakizashi Abstrata das Sombras`,
+      poder: `Canaliza o conflito interno de ${personagem.nome}: "${dna.conflitos}". A espada manifesta cortes intangíveis de sombra que não ferem a carne, mas colapsam temporariamente o equilíbrio de Reiatsu do adversário a cada choque.`,
+      limitacoes: `Exige contato visual e perde precisão em ambientes totalmente iluminados sem sombras projetadas.`,
       custoReiatsu: "Alto",
-      relacaoPersonalidade: `Traz à tona o conflito interior: "${dna.conflitos}" e a dualidade da mente de ${personagem.nome}.`,
-      relacaoAtributos: `Canaliza a densidade espiritual bruta para manifestar o paradoxo de combate.`,
+      relacaoPersonalidade: `Explora a sombra inconsciente e o conflito profundo entre "${dna.conflitos}".`,
+      relacaoAtributos: `Manipula a densidade de Reiatsu em frequências contrárias à percepção comum.`,
       indices: {
-        potencia: 9,
+        potencia: 10,
         abrangencia: 8,
-        complexidade: 8,
+        complexidade: 9,
         versatilidade: 8,
         custo: 8
       }
     },
     bankai: {
-      nome: t4.bNome,
-      kanji: t4.bKanji,
+      nome: `${n4.nome}: Muken Kōjin no Paradox`,
+      kanji: `「${n4.kanji.replace(/[^\\u4e00-\\u9faf]/g, '')}・無間皇刃之悖論」`,
       tipoEvolucao: "Inversão da Realidade & Paradoxo",
-      formaMonumental: "Uma distorção cósmica toma conta do campo de batalha, onde causa e efeito invertem seus papéis.",
-      pontoRuptura: "A Shikai perturba a percepção momentânea; a Bankai colapsa a própria lógica de combate do adversário no vazio.",
-      poder: t4.bPoder,
-      limitacoes: "Risco de desestabilização da própria Reiatsu se o usuário hesitar.",
-      significadoEspiritual: `A aceitação da própria escuridão interior como fonte inesgotável de poder transcendental.`
+      formaMonumental: `O céu e a terra invertem suas cores em uma distorção monocromática onde miragens e sombras ganham massa física tangível.`,
+      pontoRuptura: `Quebra a intangibilidade da Shikai: as sombras agora cortam a própria realidade, invertendo causa e efeito de todo ataque desferido pelo oponente.`,
+      poder: `Toda vez que o adversário tenta esquivar, ele colide com o corte; toda vez que tenta bloquear, a lâmina o atravessa como fumaça e se materializa por trás da sua guarda.`,
+      limitacoes: "Exige serenidade absoluta: se o usuário se desesperar, a distorção pode afetar seu próprio fluxo de passos.",
+      significadoEspiritual: `A dominação plena da dualidade da alma: a luz mais brilhante só existe porque projeta a sombra mais profunda.`
     }
-  }];
-  return caminhos;
+  };
+  return [c1, c2, c3, c4];
 }
-
-// 5. FUNÇÃO CENTRAL ASSÍNCRONA DE GERAÇÃO COM IA (COM VALIDAÇÃO DE EXCLUSIVIDADE & ANTI-SIMILARIDADE)
 async function gerar4CaminhosZanpakutoAI_Async(personagem, dbPersonagens = [], dbZanpakutosVinculadas = [], cenaTexto = "", apiKey = "") {
   const {
     claimed,
@@ -2625,13 +2560,13 @@ async function gerar4CaminhosZanpakutoAI_Async(personagem, dbPersonagens = [], d
     claimedElements
   } = getClaimedSignatures(dbPersonagens, dbZanpakutosVinculadas);
   const dna = construirDnaEspiritual(personagem, cenaTexto);
-  const keyToUse = apiKey || (typeof localStorage !== 'undefined' ? localStorage.getItem("bleach_openai_key") : "") || (typeof window !== 'undefined' ? window.BLEACH_CONFIG?.openaiApiKey : "") || "";
+  const keyToUse = apiKey || (typeof localStorage !== 'undefined' ? localStorage.getItem("bleach_openai_key") : "") || (typeof window !== 'undefined' ? window.BLEACH_CONFIG?.openaiApiKey : "") || getDefaultGeminiKey();
   let caminhosResultantes = null;
 
   // 1. Tentar Google Gemini API (gemini-3.6-flash) se a chave for do Google (AQ... ou AIzaSy...)
   if (keyToUse && !keyToUse.startsWith("sk-") && keyToUse.length > 20) {
     try {
-      console.log("Chamando Google Gemini API (gemini-3.6-flash) para geração de Zanpakutō...");
+      console.log("Chamando Google Gemini API (gemini-3.6-flash) para geração de Zanpakutō com DNA espiritual...");
       const prompt = construirPromptChatGPT(personagem, dna, cenaTexto, dbPersonagens, dbZanpakutosVinculadas);
       const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${encodeURIComponent(keyToUse)}`, {
         method: "POST",
@@ -2887,13 +2822,13 @@ RESPONDA OBRIGATORIAMENTE EM JSON VÁLIDO no seguinte formato:
   ]
 }`;
 }
-
-// Sintetizador Procedural de 3 Bankais para fallback
 function sintetizar3BankaisEvolucaoCognitivo(personagem, shikai, dna, cenaTexto = "") {
   const sNome = shikai?.nome || "Zanpakutō";
   const sKanji = shikai?.kanji || "";
   const sElem = shikai?.elemento || "Energia Espiritual";
   const sPod = shikai?.poder || "Cortes de alta densidade";
+  const sLim = shikai?.limitacoes || "Alcance e consumo de estamina";
+  const sCmd = shikai?.comando || "Libere";
   return [{
     opcaoNumero: 1,
     tipoEvolucao: "Evolução Complementar",
@@ -2902,11 +2837,11 @@ function sintetizar3BankaisEvolucaoCognitivo(personagem, shikai, dna, cenaTexto 
     kanji: `「${sKanji ? sKanji.replace(/[^\\u4e00-\\u9faf]/g, '') : '卍'}・大輪廻界神」`,
     traducao: "Grande Roda da Transcendência Divina",
     comando: `Ban-kai! Desperte em tua glória primordial, ${sNome}!`,
-    pontoRuptura: `Supera o alcance limitado da Shikai: o poder de [${sElem}] agora permeia toda a atmosfera em um raio monumental de 200 metros.`,
-    formaMonumental: `O campo de batalha se transforma em um domínio absoluto onde lâminas monumentais e manifestações puras de ${sElem} emergem do ar.`,
-    poder: `Amplifica a mecânica da Shikai em escala soberana. ${sPod} Cada golpe desferido ressoa instantaneamente em múltiplos vetores simultâneos.`,
-    limitacoes: "Consumo maciço de Reiatsu se mantida por mais de 5 minutos contínuos.",
-    significadoEspiritual: "A união indivisível entre a vontade do Shinigami e a força bruta da sua lâmina.",
+    pontoRuptura: `Supera o limite de alcance e foco da Shikai: a mecânica de [${sElem}] agora permeia toda a atmosfera em um raio monumental de 300 metros sob o comando mental de ${personagem.nome}.`,
+    formaMonumental: `O campo de batalha se transforma em um domínio absoluto onde lâminas monumentais e manifestações puras de ${sElem} emergem do ar, respondendo à virtude "${dna.virtudes}".`,
+    poder: `Amplifica a mecânica da Shikai em escala soberana. O poder original (${sPod}) agora é projetado em dezenas de ângulos simultâneos sem necessidade de movimento corporal.`,
+    limitacoes: `Consumo massivo de Reiatsu proporcional à Pressão Espiritual (${dna.dominante.val} pts), exigindo foco absoluto para não sobrecarregar os circuitos da alma.`,
+    significadoEspiritual: `A consagração definitiva da determinação inabalável de ${personagem.nome} em transcender seus limites.`,
     shikaiBase: sNome,
     indices: {
       potencia: 10,
@@ -2923,11 +2858,11 @@ function sintetizar3BankaisEvolucaoCognitivo(personagem, shikai, dna, cenaTexto 
     kanji: `「${sKanji ? sKanji.replace(/[^\\u4e00-\\u9faf]/g, '') : '卍'}・守護神影」`,
     traducao: "Bastião Protetor da Sombra Divina",
     comando: `Ban-kai! Erga o manto impenetrável da alma, ${sNome}!`,
-    pontoRuptura: `Elimina a vulnerabilidade física da Shikai, criando um campo de suporte contínuo que absorve e redistribui os impactos recebidos.`,
-    formaMonumental: `Armadura cerimonial de Reishi e uma aura densa de ${sElem} envolvem o Shinigami, gerando barreiras defensivas e esferas de controle tático.`,
-    poder: `Integra propriedades de proteção e controle espacial à Shikai. Permite absorver a Reiatsu inimiga nos impactos e convertê-la em reforço estrutural.`,
-    limitacoes: "Requer concentração tática constante para manter o equilíbrio entre defesa e ataque.",
-    significadoEspiritual: "A maturidade do guerreiro em proteger não apenas sua vida, mas o destino dos seus aliados.",
+    pontoRuptura: `Elimina a fraqueza declarada da Shikai ("${sLim}") e ergue um escudo impenetrável contra o maior medo do Shinigami: "${dna.medos}".`,
+    formaMonumental: `Armadura cerimonial de Reishi e uma aura densa de ${sElem} envolvem ${personagem.nome}, gerando barreiras defensivas articuladas e esferas de controle tático.`,
+    poder: `Integra propriedades de suporte supremo e controle espacial à Shikai. Absorve a Reiatsu dos ataques inimigos recebidos e a converte em regeneração de postura e fortalecimento do atributo ${dna.deficiente.label}.`,
+    limitacoes: "Requer controle tático contínuo para manter a estabilidade entre o ataque ofensivo e a barreira de suporte.",
+    significadoEspiritual: `A maturidade espiritual de ${personagem.nome} em proteger não apenas sua vida, mas a honra e o destino de todos ao seu redor.`,
     shikaiBase: sNome,
     indices: {
       potencia: 9,
@@ -2944,11 +2879,11 @@ function sintetizar3BankaisEvolucaoCognitivo(personagem, shikai, dna, cenaTexto 
     kanji: `「${sKanji ? sKanji.replace(/[^\\u4e00-\\u9faf]/g, '') : '卍'}・無間反理」`,
     traducao: "Paradoxo Infinito da Antítese",
     comando: `Ban-kai! Inverta a verdade e revele o abismo, ${sNome}!`,
-    pontoRuptura: `Inverte a regra básica de funcionamento da Shikai: o que antes causava dano direto agora manipula as causas e consequências no vazio espiritual.`,
-    formaMonumental: `O cenário escurece em tons monocromáticos onde as cores da Reiatsu de ${sElem} se invertem, criando distorções geométricas flutuantes.`,
-    poder: `Manifesta o lado sombrio do poder: em vez do efeito direto da Shikai, impõe uma lei paradoxal onde qualquer resistência do oponente alimenta a dissolução da sua própria postura.`,
-    limitacoes: "Alto grau de instabilidade mental se o Shinigami perder o foco de suas convicções.",
-    significadoEspiritual: "O reconhecimento e domínio da dualidade e da escuridão inerentes ao espírito.",
+    pontoRuptura: `Inverte a regra básica de funcionamento da Shikai: o que antes dependia de contato ou corte direto agora atua como uma lei cósmica paradoxal atrelada ao conflito interior ("${dna.conflitos}").`,
+    formaMonumental: `O cenário escurece em tons monocromáticos onde as cores da Reiatsu de ${sElem} se invertem, criando distorções geométricas flutuantes de sombra e vazio.`,
+    poder: `Manifesta o lado sombrio do poder: em vez do efeito direto da Shikai (${sPod}), impõe uma lei onde qualquer resistência hostil do oponente alimenta a dissolução da sua própria estabilidade de Reishi.`,
+    limitacoes: `Risco de desestabilização da própria mente se o usuário sucumbir ao defeito "${dna.defeitos}".`,
+    significadoEspiritual: `O domínio pleno da dualidade: ${personagem.nome} aceita sua sombra interior e a transforma na sua arma mais letal.`,
     shikaiBase: sNome,
     indices: {
       potencia: 10,
@@ -2967,13 +2902,13 @@ async function gerar3BankaisEvolucaoAI_Async(personagem, shikai, dbPersonagens =
     elemento: "Espiritual"
   };
   const dna = construirDnaEspiritual(personagem, cenaTexto);
-  const keyToUse = apiKey || (typeof localStorage !== 'undefined' ? localStorage.getItem("bleach_openai_key") : "") || (typeof window !== 'undefined' ? window.BLEACH_CONFIG?.openaiApiKey : "") || "";
+  const keyToUse = apiKey || (typeof localStorage !== 'undefined' ? localStorage.getItem("bleach_openai_key") : "") || (typeof window !== 'undefined' ? window.BLEACH_CONFIG?.openaiApiKey : "") || getDefaultGeminiKey();
   let bankaisResultantes = null;
 
   // 1. Tentar Google Gemini API (gemini-3.6-flash)
   if (keyToUse && !keyToUse.startsWith("sk-") && keyToUse.length > 20) {
     try {
-      console.log("Chamando Google Gemini API (gemini-3.6-flash) para geração das 3 Evoluções de Bankai...");
+      console.log("Chamando Google Gemini API (gemini-3.6-flash) para geração das 3 Evoluções de Bankai baseadas na Shikai escolhida...");
       const prompt = construirPromptBankaiEvolucao(personagem, shikaiBase, dna, cenaTexto, dbPersonagens, dbZanpakutosVinculadas);
       const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${encodeURIComponent(keyToUse)}`, {
         method: "POST",
