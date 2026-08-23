@@ -3,13 +3,22 @@
 // =========================================================================
 
 // TAB: PAINEL DE CONTROLE DA ADMINISTRAÇÃO
-function AdminPanel({ db, saveDb, session, cloudStatus, onAbrirFicha }) {
+function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCloudUrl, setActiveCloudUrl, onAbrirFicha }) {
   const isSuper = session?.role === "super_admin";
   const [tabAdm, setTabAdm] = useState("fichas");
   const [novoSubUser, setNovoSubUser] = useState("");
   const [novoSubPass, setNovoSubPass] = useState("");
   const [novoSubNome, setNovoSubNome] = useState("");
   const [novoSubCargo, setNovoSubCargo] = useState("Avaliador de Cenas & Fichas");
+
+  // OpenAI ChatGPT Key State
+  const [openAiKey, setOpenAiKey] = useState(() => (typeof localStorage !== 'undefined' ? localStorage.getItem("bleach_openai_key") || "" : ""));
+  const [keyStatusMsg, setKeyStatusMsg] = useState("");
+
+  // Firebase Realtime Database State
+  const [urlNuvemInput, setUrlNuvemInput] = useState(() => activeCloudUrl || db?.firebaseUrl || (typeof localStorage !== 'undefined' ? localStorage.getItem("bleach_firebase_url") || "" : "https://bleach-rpg-6894c-default-rtdb.firebaseio.com/"));
+  const [msgNuvem, setMsgNuvem] = useState("");
+  const [loadingNuvem, setLoadingNuvem] = useState(false);
 
   // Dados para Novo Personagem
   const [novoNome, setNovoNome] = useState("");
@@ -149,6 +158,135 @@ function AdminPanel({ db, saveDb, session, cloudStatus, onAbrirFicha }) {
     playReiatsuSound('roll');
   }
 
+  async function salvarUrlFirebase() {
+    const url = urlNuvemInput.trim();
+    if (!url) {
+      if (confirm("Deseja desconectar a nuvem e operar apenas em modo local?")) {
+        try { localStorage.removeItem("bleach_firebase_url"); } catch(e) {}
+        if (setActiveCloudUrl) setActiveCloudUrl("");
+        if (setCloudStatus) setCloudStatus("local");
+        saveDb({ ...db, firebaseUrl: "" });
+        setMsgNuvem("✓ Desconectado da nuvem. Operando em modo local.");
+        setTimeout(() => setMsgNuvem(""), 4000);
+      }
+      return;
+    }
+
+    setLoadingNuvem(true);
+    try {
+      const cleanUrl = url.endsWith('/') ? url.slice(0, -1) : url;
+      const endpoint = cleanUrl.endsWith('.json') ? cleanUrl : cleanUrl + '/bleachDB.json';
+      const testRes = await fetch(endpoint + '?t=' + Date.now());
+      if (testRes.ok) {
+        try { localStorage.setItem("bleach_firebase_url", url); } catch(e) {}
+        if (setActiveCloudUrl) setActiveCloudUrl(url);
+        if (setCloudStatus) setCloudStatus("connected");
+        saveDb({ ...db, firebaseUrl: url });
+        setMsgNuvem("✓ Conectado com sucesso ao Firebase Realtime Database!");
+        playReiatsuSound('win');
+      } else {
+        setMsgNuvem("⚠️ Não foi possível comunicar com o Firebase (Status: " + testRes.status + "). Verifique as regras no Firebase Console.");
+      }
+    } catch (err) {
+      setMsgNuvem("❌ Erro ao conectar ao Firebase: " + err.message);
+    } finally {
+      setLoadingNuvem(false);
+      setTimeout(() => setMsgNuvem(""), 6000);
+    }
+  }
+
+  async function forcarUploadNuvem() {
+    const url = urlNuvemInput.trim() || activeCloudUrl || db?.firebaseUrl;
+    if (!url) {
+      alert("Insira a URL do Firebase primeiro!");
+      return;
+    }
+    setLoadingNuvem(true);
+    try {
+      const cleanUrl = url.endsWith('/') ? url.slice(0, -1) : url;
+      const endpoint = cleanUrl.endsWith('.json') ? cleanUrl : cleanUrl + '/bleachDB.json';
+      const res = await fetch(endpoint, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(db)
+      });
+      if (res.ok) {
+        setMsgNuvem("✓ Todos os dados locais foram enviados com sucesso para o Firebase!");
+        playReiatsuSound('win');
+      } else {
+        setMsgNuvem("⚠️ Falha no envio (Status: " + res.status + ").");
+      }
+    } catch (err) {
+      setMsgNuvem("❌ Erro ao enviar: " + err.message);
+    } finally {
+      setLoadingNuvem(false);
+      setTimeout(() => setMsgNuvem(""), 5000);
+    }
+  }
+
+  async function puxarDadosNuvem() {
+    const url = urlNuvemInput.trim() || activeCloudUrl || db?.firebaseUrl;
+    if (!url) {
+      alert("Insira a URL do Firebase primeiro!");
+      return;
+    }
+    setLoadingNuvem(true);
+    try {
+      const cleanUrl = url.endsWith('/') ? url.slice(0, -1) : url;
+      const endpoint = cleanUrl.endsWith('.json') ? cleanUrl : cleanUrl + '/bleachDB.json';
+      const res = await fetch(endpoint + '?t=' + Date.now());
+      if (res.ok) {
+        const data = await res.json();
+        if (data && typeof data === 'object' && Array.isArray(data.personagens)) {
+          saveDb(data);
+          setMsgNuvem("✓ Dados da nuvem sincronizados e aplicados com sucesso!");
+          playReiatsuSound('win');
+        } else {
+          setMsgNuvem("⚠️ Nenhum dado encontrado na nuvem para este banco.");
+        }
+      } else {
+        setMsgNuvem("⚠️ Falha ao baixar dados (Status: " + res.status + ").");
+      }
+    } catch (err) {
+      setMsgNuvem("❌ Erro ao sincronizar: " + err.message);
+    } finally {
+      setLoadingNuvem(false);
+      setTimeout(() => setMsgNuvem(""), 5000);
+    }
+  }
+
+  function baixarBackupJson() {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db, null, 2));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute("download", `bleach_rpg_backup_${Date.now()}.json`);
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+    playReiatsuSound('roll');
+  }
+
+  function importarBackupJson(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const parsed = JSON.parse(event.target.result);
+        if (parsed && typeof parsed === 'object' && Array.isArray(parsed.personagens)) {
+          saveDb(parsed);
+          alert("✓ Backup restaurado com sucesso!");
+          playReiatsuSound('win');
+        } else {
+          alert("⚠️ Arquivo JSON inválido para a estrutura do Bleach RPG.");
+        }
+      } catch (err) {
+        alert("❌ Erro ao ler arquivo JSON: " + err.message);
+      }
+    };
+    reader.readAsText(file);
+  }
+
   return (
     <div className="space-y-6">
       <div className="bg-banner-overlay border-2 border-yellow-500/70 rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
@@ -165,8 +303,8 @@ function AdminPanel({ db, saveDb, session, cloudStatus, onAbrirFicha }) {
             </p>
           </div>
 
-          <div className="flex gap-2">
-            {["fichas", "novo", "subadms", "dados"].map(t => (
+          <div className="flex flex-wrap gap-2">
+            {["fichas", "novo", "subadms", "dados", "nuvem", "ia"].map(t => (
               <button
                 key={t}
                 onClick={() => setTabAdm(t)}
@@ -174,7 +312,7 @@ function AdminPanel({ db, saveDb, session, cloudStatus, onAbrirFicha }) {
                   tabAdm === t ? "bg-yellow-500 text-black font-extrabold shadow" : "bg-black/60 border border-yellow-500/30 text-yellow-200"
                 }`}
               >
-                {t === "fichas" ? "Fichas" : t === "novo" ? "+ Criar" : t === "subadms" ? "Avaliadores" : "Dados"}
+                {t === "fichas" ? "Fichas" : t === "novo" ? "+ Criar" : t === "subadms" ? "Avaliadores" : t === "dados" ? "Dados" : t === "nuvem" ? "☁️ Firebase" : "🤖 IA & ChatGPT"}
               </button>
             ))}
           </div>
@@ -331,6 +469,250 @@ function AdminPanel({ db, saveDb, session, cloudStatus, onAbrirFicha }) {
                 </div>
               </div>
             ))}
+          </div>
+        </Section>
+      )}
+
+      {/* SUBTAB: CONEXÃO FIREBASE & SINCRONIZAÇÃO EM TEMPO REAL */}
+      {tabAdm === "nuvem" && (
+        <Section title="Sincronização em Nuvem — Firebase Realtime Database" subtitle="Configuração de persistência global e sincronização instantânea de fichas">
+          <div className="space-y-6">
+            <div className="p-5 bg-black/60 border-2 border-yellow-500/50 rounded-2xl space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-yellow-950 border border-yellow-500 flex items-center justify-center text-xl">
+                    ☁️
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-white text-base">Banco de Dados Firebase em Tempo Real</h4>
+                    <p className="text-xs text-bleach-muted">Permite que todos os jogadores e mestres vejam alterações em tempo real</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <span className={`text-[11px] font-bold px-3 py-1 rounded-full border ${
+                    cloudStatus === "connected"
+                      ? "bg-green-950/80 border-green-500 text-green-300"
+                      : cloudStatus === "error"
+                      ? "bg-red-950/80 border-red-500 text-red-300"
+                      : cloudStatus === "syncing"
+                      ? "bg-yellow-950/80 border-yellow-500 text-yellow-300"
+                      : "bg-blue-950/80 border-blue-500 text-blue-300"
+                  }`}>
+                    {cloudStatus === "connected"
+                      ? "🟢 Conectado em Tempo Real"
+                      : cloudStatus === "error"
+                      ? "🔴 Erro de Conexão"
+                      : cloudStatus === "syncing"
+                      ? "🟡 Sincronizando..."
+                      : "⚪ Modo Local (Offline)"}
+                  </span>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-xs font-bold text-yellow-300 uppercase">
+                  URL do Firebase Realtime Database:
+                </label>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <input
+                    type="text"
+                    placeholder="https://seu-projeto-default-rtdb.firebaseio.com/"
+                    value={urlNuvemInput}
+                    onChange={(e) => setUrlNuvemInput(e.target.value)}
+                    className="flex-1 bg-bleach-panel2 border border-bleach-border rounded-xl p-3 text-xs text-white font-mono"
+                  />
+                  <button
+                    type="button"
+                    disabled={loadingNuvem}
+                    onClick={salvarUrlFirebase}
+                    className="px-5 py-2.5 bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold text-xs uppercase tracking-wider rounded-xl transition shadow disabled:opacity-50"
+                  >
+                    {loadingNuvem ? "Conectando..." : "Salvar & Conectar"}
+                  </button>
+                </div>
+                {msgNuvem && (
+                  <p className="text-xs font-bold mt-1 text-yellow-400">{msgNuvem}</p>
+                )}
+              </div>
+
+              {/* Botões de Ação de Sincronização */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-white/10">
+                <button
+                  type="button"
+                  disabled={loadingNuvem}
+                  onClick={forcarUploadNuvem}
+                  className="p-3 bg-gradient-to-r from-yellow-600 to-yellow-500 hover:brightness-110 text-black font-extrabold text-xs uppercase tracking-wider rounded-xl shadow flex items-center justify-center gap-2"
+                >
+                  <span>⬆️</span> Forçar Upload para Nuvem (Salvar Tudo)
+                </button>
+                <button
+                  type="button"
+                  disabled={loadingNuvem}
+                  onClick={puxarDadosNuvem}
+                  className="p-3 bg-bleach-panel2 hover:bg-white/10 border border-yellow-500/40 text-yellow-300 font-bold text-xs uppercase tracking-wider rounded-xl transition flex items-center justify-center gap-2"
+                >
+                  <span>⬇️</span> Puxar Dados da Nuvem (Atualizar Fichas)
+                </button>
+              </div>
+            </div>
+
+            {/* Backup & Restauração Manual */}
+            <div className="p-5 bg-bleach-panel2 border border-bleach-border rounded-2xl space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-black border border-bleach-border flex items-center justify-center text-lg">
+                  💾
+                </div>
+                <div>
+                  <h4 className="font-bold text-white text-sm">Backup Local & Restauração de Segurança (JSON)</h4>
+                  <p className="text-xs text-bleach-muted">Exporte ou restaure todo o estado do RPG a qualquer momento em arquivo</p>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-3">
+                <button
+                  type="button"
+                  onClick={baixarBackupJson}
+                  className="px-5 py-2.5 bg-black/80 hover:bg-black border border-bleach-orange text-bleach-orange font-bold text-xs rounded-xl transition flex items-center gap-2"
+                >
+                  <span>📦</span> Baixar Arquivo de Backup (JSON)
+                </button>
+
+                <label className="px-5 py-2.5 bg-bleach-panel hover:bg-white/10 border border-bleach-border text-white font-bold text-xs rounded-xl transition cursor-pointer flex items-center gap-2">
+                  <span>📂</span> Restaurar Backup de Arquivo JSON
+                  <input
+                    type="file"
+                    accept=".json"
+                    onChange={importarBackupJson}
+                    className="hidden"
+                  />
+                </label>
+              </div>
+            </div>
+          </div>
+        </Section>
+      )}
+
+      {/* SUBTAB: CONFIGURAÇÃO IA (GOOGLE GEMINI / CHATGPT) */}
+      {tabAdm === "ia" && (
+        <Section title="Motor de Inteligência Artificial — Google Gemini, ChatGPT & Motor Cognitivo" subtitle="Conecte a API gratuita do Google Gemini, OpenAI ou utilize o Motor Cognitivo autoral">
+          <div className="space-y-6">
+            <div className="p-5 bg-black/60 border-2 border-yellow-500/50 rounded-2xl space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-yellow-950 border border-yellow-500 flex items-center justify-center text-xl">
+                    🤖
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-white text-base">Geração de Zanpakutō com Inteligência Artificial</h4>
+                    <p className="text-xs text-bleach-muted">Compatível com Google Gemini (Gratuito), OpenAI ChatGPT e Motor Cognitivo Local</p>
+                  </div>
+                </div>
+                <span className={`text-[11px] font-bold px-3 py-1 rounded-full border ${
+                  openAiKey && (openAiKey.startsWith("AIza") || openAiKey.startsWith("aiza"))
+                    ? "bg-green-950/80 border-green-500 text-green-300"
+                    : openAiKey && openAiKey.startsWith("sk-") 
+                    ? "bg-green-950/80 border-green-500 text-green-300" 
+                    : "bg-blue-950/80 border-cyan-500 text-cyan-300"
+                }`}>
+                  {openAiKey && (openAiKey.startsWith("AIza") || openAiKey.startsWith("aiza"))
+                    ? "🟢 Google Gemini 2.0 Flash Online (Google AI)"
+                    : openAiKey && openAiKey.startsWith("sk-")
+                    ? "🟢 OpenAI ChatGPT Online (GPT-4o-mini)"
+                    : "🔵 Motor Cognitivo ZGE v5.0 Nativo Ativo"}
+                </span>
+              </div>
+
+              <p className="text-xs text-bleach-creamDim leading-relaxed">
+                O sistema analisa automaticamente os <strong>atributos</strong> (dominante e deficiente), <strong>personalidade selada</strong> (virtudes, defeitos, desejos, medos, conflitos e estilo de combate) e a <strong>cena de despertar narrada</strong>.
+              </p>
+
+              <div className="space-y-2">
+                <label className="block text-xs font-bold text-yellow-300 uppercase">
+                  Chave de API (Google Gemini ou OpenAI):
+                </label>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <input
+                    type="password"
+                    placeholder="Chave Google Gemini (AIzaSy...) ou OpenAI (sk-...)"
+                    value={openAiKey}
+                    onChange={(e) => setOpenAiKey(e.target.value)}
+                    className="flex-1 bg-bleach-panel2 border border-bleach-border rounded-xl p-3 text-xs text-white font-mono"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      try {
+                        localStorage.setItem("bleach_openai_key", openAiKey.trim());
+                        setKeyStatusMsg("✓ Chave de API salva com sucesso!");
+                        setTimeout(() => setKeyStatusMsg(""), 4000);
+                      } catch(e) {}
+                    }}
+                    className="px-5 py-2.5 bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold text-xs uppercase tracking-wider rounded-xl transition shadow"
+                  >
+                    Salvar Chave
+                  </button>
+                  {openAiKey && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        try {
+                          localStorage.removeItem("bleach_openai_key");
+                          setOpenAiKey("");
+                          setKeyStatusMsg("✓ Chave removida. Usando Motor Cognitivo Nativo.");
+                          setTimeout(() => setKeyStatusMsg(""), 4000);
+                        } catch(e) {}
+                      }}
+                      className="px-4 py-2.5 bg-red-950/80 hover:bg-red-900 border border-red-500 text-red-200 text-xs font-bold rounded-xl transition"
+                    >
+                      Remover
+                    </button>
+                  )}
+                </div>
+                {keyStatusMsg && (
+                  <p className="text-xs text-green-400 font-bold mt-1">{keyStatusMsg}</p>
+                )}
+              </div>
+            </div>
+
+            {/* Como Funciona a Estrutura dos 4 Caminhos */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+              <div className="p-4 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-2">
+                <div className="flex items-center gap-2 text-bleach-orange font-bold">
+                  <span>🔥</span> Opção 1: Elemental / Temperamento (~45% Peso)
+                </div>
+                <p className="text-bleach-creamDim leading-relaxed">
+                  Manifestação da emoção central e virtudes da alma. Escala com o <strong>Atributo Dominante</strong> do personagem (Pressão, Força, Velocidade ou Resiliência).
+                </p>
+              </div>
+
+              <div className="p-4 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-2">
+                <div className="flex items-center gap-2 text-cyan-400 font-bold">
+                  <span>⚖️</span> Opção 2: Conceitual / Regras / Progressivo (~20% Peso)
+                </div>
+                <p className="text-bleach-creamDim leading-relaxed">
+                  Mecânica tática por etapas e imposição de leis invioláveis no campo de batalha, refletindo a disciplina e o raciocínio tático.
+                </p>
+              </div>
+
+              <div className="p-4 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-2">
+                <div className="flex items-center gap-2 text-green-400 font-bold">
+                  <span>🛡️</span> Opção 3: Compensatório / Defesa da Alma
+                </div>
+                <p className="text-bleach-creamDim leading-relaxed">
+                  Compensa o <strong>Atributo Deficiente</strong> e ergue uma muralha protetora contra o <strong>maior medo</strong> do Shinigami.
+                </p>
+              </div>
+
+              <div className="p-4 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-2">
+                <div className="flex items-center gap-2 text-purple-400 font-bold">
+                  <span>🌑</span> Opção 4: Opositivo / Abstrato / Sombra
+                </div>
+                <p className="text-bleach-creamDim leading-relaxed">
+                  Explora a dualidade, conflitos internos e o paradoxo oculto do subconsciente, invertendo regras e percepções de combate.
+                </p>
+              </div>
+            </div>
           </div>
         </Section>
       )}

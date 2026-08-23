@@ -24,9 +24,9 @@ const { CATALOGO_KIDOS } = require('./kido_catalog.js');
 const { PATCH_NOTES_HISTORY } = require('./patchnotes_data.js');
 
 let spiritualEngineCode = fs.readFileSync('spiritual_engine.js', 'utf8')
-  .replace(/module\.exports\s*=[\s\S]*$/, '')
+  .replace(/if\s*\(typeof module\s*!==\s*'undefined'[\s\S]*$/, '')
   .replace(/const\s*\{\s*MASTER_ZANPAKUTO_CATALOG\s*\}\s*=\s*require\([^)]+\);?/g, '')
-  .replace(/function\s+uid\(\)\s*\{[\s\S]*?\}/, ''); // remove the first uid() in engine since we declare it globally
+  .replace(/function\s+uid\(\)\s*\{[\s\S]*?\}/, ''); // remove local uid() since declared in header
 
 const headerCode = `
 const { useState, useEffect, useMemo, useRef } = React;
@@ -109,6 +109,40 @@ const RECOMPENSAS_ESPECIAIS = [
 const MASTER_ZANPAKUTO_CATALOG = ${JSON.stringify(MASTER_ZANPAKUTO_CATALOG, null, 2)};
 const CATALOGO_KIDOS = ${JSON.stringify(CATALOGO_KIDOS, null, 2)};
 const PATCH_NOTES_HISTORY = ${JSON.stringify(PATCH_NOTES_HISTORY, null, 2)};
+
+// =========================================================================
+// GLOBAL CORE UTILITY FUNCTIONS (PERMANENT SYSTEM FIX)
+// =========================================================================
+
+function uid() {
+  return "zk-" + Math.random().toString(36).slice(2, 9) + "-" + Date.now().toString(36);
+}
+
+function nowStr() {
+  const d = new Date();
+  return d.getDate().toString().padStart(2, '0') + '/' + 
+         (d.getMonth() + 1).toString().padStart(2, '0') + '/' + 
+         d.getFullYear() + ' às ' + 
+         d.getHours().toString().padStart(2, '0') + ':' + 
+         d.getMinutes().toString().padStart(2, '0');
+}
+
+function maskWhats(w) {
+  if (!w) return "—";
+  const cleaned = String(w).replace(/\\D/g, "");
+  if (cleaned.length < 4) return cleaned;
+  return "•••• " + cleaned.slice(-4);
+}
+
+function getPowerTier(statVal) {
+  const val = Number(statVal) > 150 ? Math.round(Number(statVal) / 4) : Number(statVal || 0);
+  if (val <= 10) return { title: "Inexperiente", patamar: "1–10", color: C.muted };
+  if (val <= 30) return { title: "Iniciante", patamar: "11–30", color: C.green };
+  if (val <= 60) return { title: "Treinado", patamar: "31–60", color: C.blue };
+  if (val <= 100) return { title: "Veterano", patamar: "61–100", color: C.purple };
+  if (val <= 150) return { title: "Mestre", patamar: "101–150", color: C.yellow };
+  return { title: "Transcendental", patamar: "150+", color: "#FFD700" };
+}
 
 // Web Audio API Synthesizer
 let audioCtx = null;
@@ -362,6 +396,73 @@ function playReiatsuSound(type = 'hum') {
   } catch (e) {}
 }
 
+// GLOBAL REACT ERROR BOUNDARY COMPONENT
+class ErrorBoundary extends (React.Component || class {}) {
+  constructor(props) {
+    super(props);
+    this.props = props || {};
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("Critical React Error Caught by ErrorBoundary:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state && this.state.hasError) {
+      return (
+        <div className="min-h-screen bg-[#0A0908] text-[#F3EEE3] flex items-center justify-center p-4">
+          <div className="max-w-xl w-full bg-[#16130F] border-2 border-red-500/80 rounded-2xl p-6 sm:p-8 shadow-[0_0_50px_rgba(214,72,63,0.4)] text-center space-y-6">
+            <div className="w-16 h-16 mx-auto rounded-full bg-red-950/80 border border-red-500 flex items-center justify-center text-3xl">
+              ⚠️
+            </div>
+            <div>
+              <span className="text-[11px] font-extrabold uppercase px-3 py-1 rounded-full bg-red-900/60 border border-red-500 text-red-300 tracking-widest">
+                Distorção Espiritual Detectada
+              </span>
+              <h2 className="font-title text-3xl text-white mt-3 tracking-wider">
+                Ruptura de Reiatsu no Sistema
+              </h2>
+              <p className="text-sm text-[#C9C1AF] mt-2 leading-relaxed">
+                Ocorreu uma anomalia no carregamento dos dados espirituais. Você pode recarregar a página ou restaurar os dados locais para recuperar o fluxo de Reishi.
+              </p>
+            </div>
+
+            <div className="p-3 bg-black/60 rounded-xl border border-red-900/50 text-left font-mono text-xs text-red-400 overflow-x-auto max-h-36">
+              {this.state.error?.toString() || "Erro desconhecido"}
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
+              <button
+                onClick={() => window.location.reload()}
+                className="px-5 py-2.5 rounded-xl bg-[#FF6A13] hover:bg-[#C94E0A] text-black font-extrabold text-sm transition shadow-[0_0_15px_rgba(255,106,19,0.4)]"
+              >
+                🔄 Recarregar Página
+              </button>
+              <button
+                onClick={() => {
+                  try {
+                    localStorage.clear();
+                  } catch (e) {}
+                  window.location.reload();
+                }}
+                className="px-5 py-2.5 rounded-xl bg-black/80 hover:bg-black border border-red-500/50 hover:border-red-500 text-red-300 text-sm font-bold transition"
+              >
+                🧹 Limpar Cache & Restaurar
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    return this.props?.children || null;
+  }
+}
+
 const DEFAULT_DB = {
   superAdminUsuario: "Malu123",
   superAdminSenha: "Sociedade2026",
@@ -456,8 +557,9 @@ const DEFAULT_DB = {
   ]
 };
 
-function calculateRankings(personagens) {
-  const rankFisico = [...personagens].map(p => {
+function calculateRankings(personagens = []) {
+  const list = Array.isArray(personagens) ? personagens : [];
+  const rankFisico = [...list].map(p => {
     const f = Number(p.atributos?.forca || 0);
     const v = Number(p.atributos?.velocidade || 0);
     const r = Number(p.atributos?.resiliencia || 0);
@@ -465,7 +567,7 @@ function calculateRankings(personagens) {
     return { id: p.id, nome: p.nome, foto: p.foto, score, forca: f, vel: v, res: r };
   }).sort((a, b) => b.score - a.score);
 
-  const rankPressao = [...personagens].map(p => {
+  const rankPressao = [...list].map(p => {
     const score = Number(p.atributos?.pressao || 0);
     return { id: p.id, nome: p.nome, foto: p.foto, score };
   }).sort((a, b) => b.score - a.score);
@@ -487,24 +589,102 @@ function App() {
   const [showAdminLoginModal, setShowAdminLoginModal] = useState(false);
   const [activeCloudUrl, setActiveCloudUrl] = useState("");
 
+  // Helper to sanitize character data
+  function sanitizeChar(p) {
+    if (!p || typeof p !== 'object') return null;
+    return {
+      id: p.id || ('char-' + uid()),
+      nome: p.nome || "Shinigami",
+      foto: p.foto || "assets/ichigo-orange.png",
+      whatsapp: p.whatsapp || "",
+      codigo: p.codigo || "",
+      raca: p.raca || "Shinigami",
+      esquadrao: p.esquadrao || "11º Esquadrão",
+      faceclaim: p.faceclaim || p.nome || "",
+      idadePlayer: p.idadePlayer || "20",
+      aniversarioPlayer: p.aniversarioPlayer || "01/01",
+      idadeChar: p.idadeChar || "18",
+      aniversarioChar: p.aniversarioChar || "15/07",
+      pontosDisponiveis: Number(p.pontosDisponiveis || 0),
+      sorteiosComunsRestantes: Number(p.sorteiosComunsRestantes || 0),
+      sorteiosEspeciaisRestantes: Number(p.sorteiosEspeciaisRestantes || 0),
+      sorteiosDrops: Array.isArray(p.sorteiosDrops) ? p.sorteiosDrops : [],
+      permissoes: {
+        shikaiLiberada: !!p.permissoes?.shikaiLiberada,
+        bankaiLiberada: !!p.permissoes?.bankaiLiberada,
+      },
+      atributos: {
+        pressao: Number(p.atributos?.pressao || 10),
+        forca: Number(p.atributos?.forca || 10),
+        velocidade: Number(p.atributos?.velocidade || 10),
+        resiliencia: Number(p.atributos?.resiliencia || 10),
+      },
+      kidosConhecidos: Array.isArray(p.kidosConhecidos) ? p.kidosConhecidos : [],
+      tecnicas: Array.isArray(p.tecnicas) ? p.tecnicas : [],
+      personalidade: p.personalidade || {
+        texto: "", virtudes: "", defeitos: "", desejos: "", medos: "", conflitos: "", estiloCombate: ""
+      },
+      personalidadeTravada: !!p.personalidadeTravada,
+      cenaDespertarShikai: p.cenaDespertarShikai || "",
+      cenaDespertarBankai: p.cenaDespertarBankai || "",
+      zanpakuto: p.zanpakuto || {
+        nome: "Em despertar",
+        fotoShikai: "assets/ichigo-orange.png",
+        fotoBankai: "assets/ichigo-moon.png",
+        shikaiAtiva: null,
+        bankaiAtiva: null,
+        notas: ""
+      },
+      estado: p.estado || "Inteiro",
+      treinosHoje: Number(p.treinosHoje || 0),
+      historico: Array.isArray(p.historico) ? p.historico : []
+    };
+  }
+
   // Sync with cloud on startup
   useEffect(() => {
     async function initDb() {
-      let initialData = DEFAULT_DB;
+      let initialData = { ...DEFAULT_DB };
       try {
         const stored = localStorage.getItem("bleachDB");
         if (stored) {
-          initialData = JSON.parse(stored);
+          const parsed = JSON.parse(stored);
+          if (parsed && typeof parsed === 'object') {
+            initialData = {
+              ...DEFAULT_DB,
+              ...parsed,
+              personagens: Array.isArray(parsed.personagens) && parsed.personagens.length > 0 ? parsed.personagens : DEFAULT_DB.personagens,
+              combatesArena: Array.isArray(parsed.combatesArena) ? parsed.combatesArena : DEFAULT_DB.combatesArena,
+              rolagensDadosPublicas: Array.isArray(parsed.rolagensDadosPublicas) ? parsed.rolagensDadosPublicas : DEFAULT_DB.rolagensDadosPublicas,
+              mensagensChat: Array.isArray(parsed.mensagensChat) ? parsed.mensagensChat : DEFAULT_DB.mensagensChat,
+              subAdms: Array.isArray(parsed.subAdms) ? parsed.subAdms : DEFAULT_DB.subAdms,
+              registrosTarefasAdm: Array.isArray(parsed.registrosTarefasAdm) ? parsed.registrosTarefasAdm : DEFAULT_DB.registrosTarefasAdm,
+              zanpakutosVinculadas: Array.isArray(parsed.zanpakutosVinculadas) ? parsed.zanpakutosVinculadas : DEFAULT_DB.zanpakutosVinculadas,
+            };
+          }
         }
-      } catch (e) {}
+      } catch (e) {
+        console.warn("Storage parse error, using default DB:", e);
+      }
+
+      // Sanitize characters
+      if (Array.isArray(initialData.personagens)) {
+        initialData.personagens = initialData.personagens.map(sanitizeChar).filter(Boolean);
+      }
 
       let cloudUrl = "";
       try {
         const cfgRes = await fetch('config.json?t=' + Date.now());
         if (cfgRes.ok) {
           const cfg = await cfgRes.json();
+          if (typeof window !== 'undefined') {
+            window.BLEACH_CONFIG = cfg;
+          }
           if (cfg && cfg.firebaseUrl) {
             cloudUrl = cfg.firebaseUrl.trim();
+          }
+          if (cfg && cfg.openaiApiKey) {
+            try { localStorage.setItem("bleach_openai_key", cfg.openaiApiKey.trim()); } catch(e) {}
           }
         }
       } catch (e) {}
@@ -522,8 +702,13 @@ function App() {
           const res = await fetch(endpoint + '?t=' + Date.now());
           if (res.ok) {
             const cloudData = await res.json();
-            if (cloudData && typeof cloudData === 'object' && cloudData.personagens) {
-              initialData = { ...initialData, ...cloudData, firebaseUrl: cloudUrl };
+            if (cloudData && typeof cloudData === 'object' && Array.isArray(cloudData.personagens)) {
+              initialData = {
+                ...initialData,
+                ...cloudData,
+                personagens: cloudData.personagens.map(sanitizeChar).filter(Boolean),
+                firebaseUrl: cloudUrl
+              };
               localStorage.setItem("bleachDB", JSON.stringify(initialData));
               setCloudStatus("connected");
             }
@@ -551,8 +736,12 @@ function App() {
         const res = await fetch(endpoint + '?t=' + Date.now());
         if (res.ok) {
           const cloudData = await res.json();
-          if (cloudData && typeof cloudData === 'object' && cloudData.personagens) {
-            setDb(prev => ({ ...prev, ...cloudData }));
+          if (cloudData && typeof cloudData === 'object' && Array.isArray(cloudData.personagens)) {
+            setDb(prev => ({
+              ...prev,
+              ...cloudData,
+              personagens: cloudData.personagens.map(sanitizeChar).filter(Boolean)
+            }));
           }
         }
       } catch (e) {}
@@ -774,6 +963,9 @@ function App() {
               saveDb={saveDb}
               session={session}
               cloudStatus={cloudStatus}
+              setCloudStatus={setCloudStatus}
+              activeCloudUrl={activeCloudUrl}
+              setActiveCloudUrl={setActiveCloudUrl}
               onAbrirFicha={(charId) => {
                 setAdminCharId(charId);
                 setView("ficha");
@@ -810,7 +1002,11 @@ function App() {
 const container = document.getElementById('root');
 if (container) {
   const root = ReactDOM.createRoot(container);
-  root.render(<App />);
+  root.render(
+    <ErrorBoundary>
+      <App />
+    </ErrorBoundary>
+  );
 }
 `;
 

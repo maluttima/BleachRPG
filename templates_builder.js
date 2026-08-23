@@ -1,5 +1,5 @@
 // =========================================================================
-// MODAL COMPONENTS: GACHA CHEST, AWAKENING SCENE & 4 SPIRITUAL PATHS
+// MODAL COMPONENTS: GACHA CHEST, AWAKENING SCENE & 4 SPIRITUAL PATHS (WITH CHATGPT & DYNAMIC SOUL AI)
 // =========================================================================
 
 // 1. GACHA CHEST OPENING MODAL (COM MECÂNICA DE SUSPENSE ~7S)
@@ -100,142 +100,106 @@ function SpiritualChestModal({ modal, onClose, onColetar }) {
             </div>
           </div>
         ) : (
-          /* REVEALED REWARD CARD */
+          /* Revealed Stage */
           <div className="relative z-10 py-4 space-y-4 card-pop-reveal">
-            <div 
-              style={{ borderColor: modal.resultado.cor || (isEspecial ? C.purple : C.orange) }}
-              className="p-5 rounded-xl bg-black/80 border-2 shadow-2xl space-y-3"
-            >
-              <div className="flex items-center justify-between">
-                <span 
-                  style={{ color: modal.resultado.cor || C.cream, borderColor: modal.resultado.cor }}
-                  className="text-[11px] font-extrabold uppercase px-2.5 py-0.5 rounded-full border bg-black"
-                >
-                  {modal.resultado.raridade || (isEspecial ? "🌟 Especial" : "🎲 Comum")}
-                </span>
-                {modal.resultado.chance && (
-                  <span className="text-[10px] text-bleach-muted font-mono">
-                    Chance: <strong>{modal.resultado.chance}</strong>
-                  </span>
-                )}
-              </div>
+            <div className="p-6 rounded-2xl bg-black/80 border border-white/10 space-y-3">
+              <span 
+                className="text-xs font-black uppercase px-3 py-1 rounded-full border inline-block tracking-widest"
+                style={{ color: modal.resultado.cor, borderColor: modal.resultado.cor, backgroundColor: `${modal.resultado.cor}20` }}
+              >
+                {modal.resultado.raridade || modal.resultado.nome}
+              </span>
 
-              <div className="text-4xl my-1">
-                {modal.resultado.tipo === 'missao_despertar' ? '👑' : isEspecial ? '✨' : '⚡'}
-              </div>
+              <h2 className="font-title text-3xl sm:text-4xl text-white tracking-wider">
+                {modal.resultado.nome}
+              </h2>
 
-              <h4 className="font-title text-2xl text-white tracking-wider">
-                {modal.resultado.nomeItem || modal.resultado.nome || "Recompensa Conquistada"}
-              </h4>
+              <p className="text-xs sm:text-sm text-bleach-creamDim leading-relaxed max-w-md mx-auto">
+                {modal.resultado.desc}
+              </p>
 
-              {modal.resultado.pontos > 0 && (
-                <div className="text-3xl font-extrabold font-mono text-bleach-orange">
-                  +{modal.resultado.pontos} PONTOS LIVRES
+              {modal.resultado.tipo === "pontos" && modal.resultado.valorGanho && (
+                <div className="p-3 bg-gradient-to-r from-orange-950/60 to-black rounded-xl border border-bleach-orange/40 text-sm font-mono text-bleach-orange font-bold">
+                  +{modal.resultado.valorGanho} Pontos adicionados aos seus Pontos Livres!
                 </div>
               )}
-
-              <p className="text-xs text-bleach-creamDim leading-relaxed">
-                {modal.resultado.desc || "Os pontos foram depositados automaticamente no saldo da sua ficha para distribuição livre!"}
-              </p>
             </div>
 
             <button
-              onClick={onColetar}
-              className={`w-full py-3 text-black font-extrabold text-xs uppercase tracking-widest rounded-xl shadow-lg hover:brightness-110 transition ${
-                isEspecial 
-                  ? "bg-gradient-to-r from-purple-500 via-indigo-400 to-cyan-300" 
-                  : "bg-gradient-to-r from-bleach-orange to-bleach-orangeDeep"
-              }`}
+              onClick={() => onColetar(modal.resultado)}
+              className="w-full py-3 bg-gradient-to-r from-bleach-orange to-bleach-orangeDeep text-black font-extrabold text-xs uppercase tracking-widest rounded-xl shadow-lg hover:brightness-110 transition"
             >
-              ✓ Coletar Recompensa & Voltar para a Ficha
+              ✓ Resgatar Recompensa & Salvar na Ficha
             </button>
           </div>
         )}
+
       </div>
     </div>
   );
 }
 
 // 2. AWAKENING SCENE SUBMISSION MODAL
-function AwakeningSceneModal({ open, tipo = "shikai", personagem, onClose, onSubmitScene }) {
-  if (!open) return null;
-  const [textoCena, setTextoCena] = useState("");
+function CenaDespertarModal({ tipo, onClose, onSubmit }) {
+  const [texto, setTexto] = useState("");
   const isBankai = tipo === "bankai";
 
-  function enviar(e) {
+  function handleSubmeter(e) {
     e.preventDefault();
-    if (!textoCena.trim()) {
-      alert("Por favor, cole o texto da cena em que o seu personagem despertou sua lâmina!");
+    if (!texto.trim()) {
+      alert("Por favor, descreva a cena ou momento em que seu personagem despertou sua lâmina!");
       return;
     }
-    onSubmitScene(textoCena.trim());
+    onSubmit(texto.trim());
   }
 
   return (
-    <div className="fixed inset-0 bg-black/90 backdrop-blur-lg z-50 flex items-center justify-center p-4">
-      <div className={`relative w-full max-w-xl bg-bleach-panel border-2 rounded-2xl p-6 shadow-2xl text-left overflow-hidden ${
-        isBankai ? "border-yellow-500/80 bankai-supreme-card" : "border-cyan-500/80 blue-reiatsu-glow"
+    <div className="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
+      <div className={`relative w-full max-w-2xl bg-bleach-panel border-2 rounded-2xl p-6 shadow-2xl text-left ${
+        isBankai ? "border-yellow-500/80" : "border-bleach-orange/80"
       }`}>
-        <div className="flex items-center justify-between mb-4 border-b border-bleach-borderSoft pb-3">
+        <div className="flex items-center justify-between border-b border-bleach-borderSoft pb-3 mb-4">
           <div>
-            <span className={`text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full border ${
-              isBankai ? "bg-amber-950 border-yellow-400 text-yellow-300" : "bg-blue-950 border-cyan-400 text-cyan-300"
-            }`}>
-              {isBankai ? "卍 RITUAL DE BANKAI (LIBERAÇÃO TOTAL)" : "始解 RITUAL DE SHIKAI (DESPERTAR INICIAL)"}
+            <span className="text-[10px] font-bold uppercase tracking-widest text-bleach-orange">
+              {isBankai ? "卍 RITUAL DA LIBERAÇÃO FINAL" : "始解 RITUAL DE DESPERTAR DA SHIKAI"}
             </span>
-            <h3 className="font-title text-2xl text-white tracking-wider mt-1">
+            <h3 className="font-title text-2xl text-white tracking-wider mt-0.5">
               {isBankai ? "CENA DE DESPERTAR DA BANKAI" : "CENA DE DESPERTAR DA SHIKAI"}
             </h3>
           </div>
-          <button 
-            onClick={onClose}
-            className="text-bleach-muted hover:text-white text-lg font-bold px-2 py-1"
-          >
-            ✕
-          </button>
+          <button onClick={onClose} className="text-bleach-muted hover:text-white font-bold">✕</button>
         </div>
 
-        <form onSubmit={enviar} className="space-y-4">
-          <div className="p-3.5 bg-black/60 border border-white/10 rounded-xl text-xs text-bleach-creamDim leading-relaxed space-y-1.5">
-            <p>
-              <strong className={isBankai ? "text-yellow-400" : "text-cyan-400"}>Instruções do Mestre:</strong> Cole abaixo a narração / cena de roleplay oficial em que o ADM aprovou o despertar espiritual de <strong>{personagem.nome}</strong>.
-            </p>
-            <p className="text-[11px] text-bleach-muted">
-              * A essência da sua cena será integrada ao ritual, enquanto o motor de IA avaliará sua <strong>Personalidade Selada</strong> e <strong>Atributos</strong> para gerar os 4 Caminhos Espirituais exclusivos.
-            </p>
-          </div>
+        <form onSubmit={handleSubmeter} className="space-y-4">
+          <p className="text-xs text-bleach-creamDim leading-relaxed">
+            Descreva como foi o momento em que você ouviu a voz do seu espírito pela primeira vez ou como a lâmina se manifestou na sua história (ou cole sua cena de treino/arco):
+          </p>
 
-          <div>
-            <label className="block text-xs font-bold text-bleach-cream mb-1">
-              Texto da Cena Aprovada (Narração em ON) *
-            </label>
-            <textarea
-              rows={6}
-              placeholder="Cole aqui o texto da cena de despertar do seu personagem..."
-              value={textoCena}
-              onChange={(e) => setTextoCena(e.target.value)}
-              className="w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-3.5 text-xs text-white placeholder-bleach-muted focus:outline-none focus:border-bleach-orange font-sans leading-relaxed"
-            ></textarea>
-          </div>
+          <textarea
+            rows={6}
+            value={texto}
+            onChange={(e) => setTexto(e.target.value)}
+            placeholder="Ex: Em meio à tempestade de Karakura, quando as lâminas se cruzaram e o silêncio tomou conta da minha mente, escutei uma voz grave ecoando em meu mundo interior..."
+            className="w-full bg-black/80 border border-bleach-border focus:border-bleach-orange rounded-xl p-4 text-xs text-white placeholder-bleach-muted focus:outline-none leading-relaxed resize-none"
+          />
 
-          <div className="flex justify-end gap-3 pt-2">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 rounded-lg bg-bleach-panel2 border border-bleach-border text-xs text-bleach-creamDim hover:text-white"
-            >
-              Cancelar
-            </button>
-            <button
-              type="submit"
-              className={`px-6 py-2.5 rounded-lg text-black font-extrabold text-xs uppercase tracking-wider shadow hover:brightness-110 transition ${
-                isBankai 
-                  ? "bg-gradient-to-r from-yellow-400 to-amber-500" 
-                  : "bg-gradient-to-r from-cyan-400 to-blue-500"
-              }`}
-            >
-              ✨ Concluir Cena & Gerar 4 Manifestações Espirituais
-            </button>
+          <div className="flex justify-between items-center pt-2">
+            <span className="text-[11px] text-bleach-muted font-mono">{texto.length} caracteres</span>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-4 py-2 bg-bleach-panel2 border border-bleach-border text-xs text-bleach-cream rounded-lg hover:border-white"
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                className="px-6 py-2 bg-gradient-to-r from-bleach-orange to-bleach-orangeDeep text-black font-extrabold text-xs uppercase tracking-wider rounded-lg shadow hover:brightness-110 transition"
+              >
+                ✨ Analisar Alma & Gerar 4 Caminhos com IA ➔
+              </button>
+            </div>
           </div>
         </form>
       </div>
@@ -243,25 +207,25 @@ function AwakeningSceneModal({ open, tipo = "shikai", personagem, onClose, onSub
   );
 }
 
-// 3. ZANPAKUTŌ 4 PATHS GENERATOR & RITUAL MODAL
-function Zanpakuto4PathsModal({
-  open,
-  tipo = "shikai",
-  caminhos = [],
-  personagem,
-  onEscolherCaminho,
-  onClose
-}) {
+// 3. 4 SPIRITUAL PATHS SELECTION MODAL (COM IA / CHATGPT & PERSONALIZAÇÃO COMPLETA)
+function Zanpakuto4PathsModal({ open, caminhos, personagem, isBankai, onClose, onEscolherCaminho, onRegenerar }) {
   if (!open || !caminhos || caminhos.length === 0) return null;
 
   const [caminhoAtivoIdx, setCaminhoAtivoIdx] = useState(0);
-  const [ritualState, setRitualState] = useState("selection"); // "selection", "charging", "revealed"
+  const [ritualState, setRitualState] = useState("selection"); // "selection" | "charging" | "revealed"
+  const [caminhoSelecionado, setCaminhoSelecionado] = useState(caminhos[0]);
   const [chargeProgress, setChargeProgress] = useState(0);
-  const [chargeStageText, setChargeStageText] = useState("");
+  const [chargeStageText, setChargeStageText] = useState("Canalizando Reiryoku no Mundo Interior...");
+  const [showConfigApiKey, setShowConfigApiKey] = useState(false);
+  const [apiKeyInput, setApiKeyInput] = useState(localStorage.getItem("bleach_openai_key") || "");
+  const [salvoKey, setSalvoKey] = useState(false);
   const chargeIntervalRef = useRef(null);
 
-  const caminhoSelecionado = caminhos[caminhoAtivoIdx] || caminhos[0];
-  const isBankai = tipo === "bankai";
+  useEffect(() => {
+    if (caminhos && caminhos.length > 0) {
+      setCaminhoSelecionado(caminhos[caminhoAtivoIdx] || caminhos[0]);
+    }
+  }, [caminhos, caminhoAtivoIdx]);
 
   useEffect(() => {
     return () => {
@@ -269,13 +233,18 @@ function Zanpakuto4PathsModal({
     };
   }, []);
 
+  function salvarApiKey(e) {
+    e.preventDefault();
+    localStorage.setItem("bleach_openai_key", apiKeyInput.trim());
+    setSalvoKey(true);
+    setTimeout(() => setSalvoKey(false), 3000);
+  }
+
   function iniciarRitual(caminho) {
+    setCaminhoSelecionado(caminho);
     setRitualState("charging");
     setChargeProgress(0);
-    setChargeStageText("Ressonando frequência com a essência da alma...");
     playReiatsuSound(isBankai ? 'bankai_charge' : 'shikai_charge');
-
-    if (chargeIntervalRef.current) clearInterval(chargeIntervalRef.current);
 
     let p = 0;
     chargeIntervalRef.current = setInterval(() => {
@@ -317,26 +286,65 @@ function Zanpakuto4PathsModal({
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-bleach-borderSoft pb-4 mb-4">
           <div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <span className={`text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full border ${
                 isBankai ? "bg-amber-950 border-yellow-400 text-yellow-300" : "bg-orange-950 border-bleach-orange text-bleach-orange"
               }`}>
-                MOTOR DE INDIVIDUALIZAÇÃO ESPIRITUAL — 4 CAMINHOS
+                ✨ ZGE V5.0 • IA DE GÊNESE ESPIRITUAL
               </span>
-              <span className="text-xs text-bleach-muted">Personagem: <strong className="text-white">{personagem.nome}</strong></span>
+              <span className="text-xs text-bleach-muted">Alma: <strong className="text-white">{personagem.nome}</strong></span>
+              <span className="text-[10px] bg-green-950 text-green-300 border border-green-500/40 px-2 py-0.5 rounded-full">
+                ✓ Personalidade Analisada
+              </span>
             </div>
             <h2 className="font-title text-2xl sm:text-3xl text-white tracking-wider mt-1">
-              {isBankai ? "卍 ESCOLHA DO CAMINHO DE BANKAI" : "始解 RITUAL DAS 4 MANIFESTAÇÕES DE SHIKAI"}
+              {isBankai ? "卍 ESCOLHA DO CAMINHO DE BANKAI" : "始解 4 MANIFESTAÇÕES ÚNICAS DA ALMA (SHIKAI)"}
             </h2>
           </div>
 
-          <button
-            onClick={onClose}
-            className="self-end sm:self-auto px-3 py-1 bg-bleach-panel2 border border-bleach-border hover:border-white text-bleach-creamDim hover:text-white rounded-lg text-xs font-bold"
-          >
-            ✕ Fechar
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowConfigApiKey(!showConfigApiKey)}
+              className="px-3 py-1.5 bg-black/60 border border-white/10 hover:border-yellow-400 text-yellow-300 rounded-lg text-xs font-mono transition"
+              title="Configurar Chave ChatGPT (OpenAI)"
+            >
+              ⚙️ ChatGPT API
+            </button>
+            {onRegenerar && (
+              <button
+                onClick={onRegenerar}
+                className="px-3 py-1.5 bg-bleach-panel2 border border-bleach-border hover:border-bleach-orange text-bleach-orange rounded-lg text-xs font-bold transition"
+                title="Gerar 4 novas variações com a IA"
+              >
+                🔄 Novas Variações
+              </button>
+            )}
+            <button
+              onClick={onClose}
+              className="px-3 py-1.5 bg-bleach-panel2 border border-bleach-border hover:border-white text-bleach-creamDim hover:text-white rounded-lg text-xs font-bold"
+            >
+              ✕ Fechar
+            </button>
+          </div>
         </div>
+
+        {/* API Key Modal / Form Bar */}
+        {showConfigApiKey && (
+          <form onSubmit={salvarApiKey} className="p-3.5 bg-black/80 border border-yellow-500/40 rounded-xl mb-4 flex flex-wrap gap-2 items-center text-xs">
+            <span className="text-yellow-300 font-bold">Chave OpenAI (ChatGPT):</span>
+            <input
+              type="password"
+              placeholder="sk-proj-... (Opcional - caso queira usar sua cota do ChatGPT)"
+              value={apiKeyInput}
+              onChange={(e) => setApiKeyInput(e.target.value)}
+              className="flex-1 min-w-[200px] bg-bleach-panel2 border border-bleach-border rounded p-2 text-white font-mono"
+            />
+            <button type="submit" className="px-4 py-2 bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold uppercase rounded shadow">
+              Salvar Chave
+            </button>
+            {salvoKey && <span className="text-green-400 font-bold">✓ Salvo!</span>}
+          </form>
+        )}
 
         {/* 4 Path Selector Tabs */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
@@ -383,14 +391,22 @@ function Zanpakuto4PathsModal({
                     <h3 className="font-title text-2xl sm:text-3xl text-white tracking-wider flex items-center gap-2">
                       <span>{caminhoSelecionado.shikai.nome}</span>
                       <span className="text-sm font-cinzel text-bleach-orange font-normal">{caminhoSelecionado.shikai.kanji}</span>
+                      <span className="text-xs text-bleach-creamDim font-sans">({caminhoSelecionado.shikai.traducao})</span>
                     </h3>
                     <p className="text-xs text-bleach-creamDim italic mt-0.5">
                       "{caminhoSelecionado.shikai.comando}"
                     </p>
                   </div>
-                  <Badge color={C.blue}>
-                    {caminhoSelecionado.shikai.elemento}
-                  </Badge>
+                  <div className="flex flex-wrap items-center gap-2">
+                    {caminhoSelecionado.indiceExclusividade && (
+                      <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-green-950/80 border border-green-500 text-green-300 tracking-wider">
+                        ✦ {caminhoSelecionado.indiceExclusividade}% Exclusiva no RPG
+                      </span>
+                    )}
+                    <Badge color={C.blue}>
+                      {caminhoSelecionado.shikai.elemento}
+                    </Badge>
+                  </div>
                 </div>
 
                 {/* Shikai Details */}
@@ -574,7 +590,3 @@ function Zanpakuto4PathsModal({
     </div>
   );
 }
-`;
-
-fs.writeFileSync('templates/modal_components.jsx', CodeContent);
-console.log("Written templates/modal_components.jsx!");

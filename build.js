@@ -5,29 +5,25 @@ const vm = require('vm');
 console.log("Running generate_app.js...");
 require('./generate_app.js');
 
+const BABEL_CACHE_FILE = 'babel.min.js';
 const url = "https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js";
 
-console.log("Fetching Babel standalone from CDN to compile app_source.jsx...");
-https.get(url, (res) => {
-  let data = '';
-  res.on('data', (chunk) => data += chunk);
-  res.on('end', () => {
-    console.log("Babel downloaded! Size:", data.length);
-    const sandbox = { window: {}, console: console };
-    vm.createContext(sandbox);
-    vm.runInContext(data, sandbox);
+function compileWithBabel(babelCode) {
+  const sandbox = { window: {}, console: console };
+  vm.createContext(sandbox);
+  vm.runInContext(babelCode, sandbox);
+  
+  const Babel = sandbox.Babel || sandbox.window.Babel;
+  const jsxCode = fs.readFileSync('app_source.jsx', 'utf8');
+  
+  try {
+    const result = Babel.transform(jsxCode, { presets: ['react'] });
+    console.log("SUCCESS! Transformed code size:", result.code.length);
+    fs.writeFileSync('app.js', result.code);
+    console.log("Written app.js!");
     
-    const Babel = sandbox.Babel || sandbox.window.Babel;
-    const jsxCode = fs.readFileSync('app_source.jsx', 'utf8');
-    
-    try {
-      const result = Babel.transform(jsxCode, { presets: ['react'] });
-      console.log("SUCCESS! Transformed code size:", result.code.length);
-      fs.writeFileSync('app.js', result.code);
-      console.log("Written app.js!");
-      
-      // Update index.html with smoke & bankai styles
-      const html = `<!DOCTYPE html>
+    // Update index.html with smoke & bankai styles and error recovery safeguards
+    const html = `<!DOCTYPE html>
 <html lang="pt-BR" class="dark">
 <head>
   <meta charset="UTF-8" />
@@ -191,55 +187,22 @@ https.get(url, (res) => {
       animation: tenseDice 0.7s infinite linear;
     }
 
-    /* Air Vibration / Reiatsu Heat Distortion Effect on Hover/Hold */
+    /* Air Vibration / Reiatsu Heat Distortion Effect */
     @keyframes reiatsuAirVibrate {
-      0% {
-        transform: scale(1.02) translate(0px, 0px) skew(0deg);
-        filter: blur(4px) brightness(1.15) contrast(1.1) drop-shadow(0 0 15px rgba(79, 179, 232, 0.7));
-      }
-      20% {
-        transform: scale(1.025) translate(-2px, 1.5px) skew(-0.8deg, 0.4deg);
-        filter: blur(3.5px) brightness(1.3) contrast(1.15) drop-shadow(0 0 25px rgba(255, 106, 19, 0.8));
-      }
-      40% {
-        transform: scale(1.03) translate(2px, -1.8px) skew(0.7deg, -0.5deg);
-        filter: blur(5px) brightness(1.35) contrast(1.2) drop-shadow(0 0 35px rgba(79, 179, 232, 0.9));
-      }
-      60% {
-        transform: scale(1.025) translate(-1.5px, -1.2px) skew(-0.5deg, 0.6deg);
-        filter: blur(3.8px) brightness(1.25) contrast(1.1) drop-shadow(0 0 25px rgba(139, 111, 214, 0.8));
-      }
-      80% {
-        transform: scale(1.03) translate(1.8px, 1.2px) skew(0.6deg, -0.4deg);
-        filter: blur(4.5px) brightness(1.4) contrast(1.25) drop-shadow(0 0 40px rgba(255, 106, 19, 0.9));
-      }
-      100% {
-        transform: scale(1.02) translate(0px, 0px) skew(0deg);
-        filter: blur(4px) brightness(1.15) contrast(1.1) drop-shadow(0 0 15px rgba(79, 179, 232, 0.7));
-      }
+      0% { transform: scale(1.02) translate(0px, 0px) skew(0deg); filter: blur(4px) brightness(1.15) contrast(1.1) drop-shadow(0 0 15px rgba(79, 179, 232, 0.7)); }
+      20% { transform: scale(1.025) translate(-2px, 1.5px) skew(-0.8deg, 0.4deg); filter: blur(3.5px) brightness(1.3) contrast(1.15) drop-shadow(0 0 25px rgba(255, 106, 19, 0.8)); }
+      40% { transform: scale(1.03) translate(2px, -1.8px) skew(0.7deg, -0.5deg); filter: blur(5px) brightness(1.35) contrast(1.2) drop-shadow(0 0 35px rgba(79, 179, 232, 0.9)); }
+      60% { transform: scale(1.025) translate(-1.5px, -1.2px) skew(-0.5deg, 0.6deg); filter: blur(3.8px) brightness(1.25) contrast(1.1) drop-shadow(0 0 25px rgba(139, 111, 214, 0.8)); }
+      80% { transform: scale(1.03) translate(1.8px, 1.2px) skew(0.6deg, -0.4deg); filter: blur(4.5px) brightness(1.4) contrast(1.25) drop-shadow(0 0 40px rgba(255, 106, 19, 0.9)); }
+      100% { transform: scale(1.02) translate(0px, 0px) skew(0deg); filter: blur(4px) brightness(1.15) contrast(1.1) drop-shadow(0 0 15px rgba(79, 179, 232, 0.7)); }
     }
 
     @keyframes reiatsuAirVibrateBankai {
-      0% {
-        transform: scale(1.02) translate(0px, 0px) skew(0deg);
-        filter: blur(4px) brightness(1.2) drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
-      }
-      25% {
-        transform: scale(1.03) translate(-2.5px, 2px) skew(-1deg, 0.6deg);
-        filter: blur(5px) brightness(1.45) drop-shadow(0 0 35px rgba(139, 111, 214, 0.9));
-      }
-      50% {
-        transform: scale(1.025) translate(2px, -2px) skew(0.8deg, -0.7deg);
-        filter: blur(3.5px) brightness(1.5) drop-shadow(0 0 45px rgba(255, 106, 19, 1));
-      }
-      75% {
-        transform: scale(1.035) translate(-1.5px, -1.5px) skew(-0.6deg, 0.8deg);
-        filter: blur(4.8px) brightness(1.4) drop-shadow(0 0 35px rgba(255, 215, 0, 0.9));
-      }
-      100% {
-        transform: scale(1.02) translate(0px, 0px) skew(0deg);
-        filter: blur(4px) brightness(1.2) drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
-      }
+      0% { transform: scale(1.02) translate(0px, 0px) skew(0deg); filter: blur(4px) brightness(1.2) drop-shadow(0 0 20px rgba(255, 215, 0, 0.8)); }
+      25% { transform: scale(1.03) translate(-2.5px, 2px) skew(-1deg, 0.6deg); filter: blur(5px) brightness(1.45) drop-shadow(0 0 35px rgba(139, 111, 214, 0.9)); }
+      50% { transform: scale(1.025) translate(2px, -2px) skew(0.8deg, -0.7deg); filter: blur(3.5px) brightness(1.5) drop-shadow(0 0 45px rgba(255, 106, 19, 1)); }
+      75% { transform: scale(1.035) translate(-1.5px, -1.5px) skew(-0.6deg, 0.8deg); filter: blur(4.8px) brightness(1.4) drop-shadow(0 0 35px rgba(255, 215, 0, 0.9)); }
+      100% { transform: scale(1.02) translate(0px, 0px) skew(0deg); filter: blur(4px) brightness(1.2) drop-shadow(0 0 20px rgba(255, 215, 0, 0.8)); }
     }
 
     .air-vibrating-card {
@@ -273,7 +236,7 @@ https.get(url, (res) => {
       border-radius: inherit;
     }
 
-    /* Screen shake when charging reaches climax */
+    /* Screen shake */
     @keyframes reiatsuScreenShake {
       0% { transform: translate(0, 0); }
       15% { transform: translate(-3px, 2px); }
@@ -288,21 +251,11 @@ https.get(url, (res) => {
       animation: reiatsuScreenShake 0.12s infinite;
     }
 
-    /* Radial rotating runic circle for loading */
-    @keyframes runeRotate {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    @keyframes runeRotateRev {
-      0% { transform: rotate(360deg); }
-      100% { transform: rotate(0deg); }
-    }
-    .spin-runes {
-      animation: runeRotate 8s infinite linear;
-    }
-    .spin-runes-fast {
-      animation: runeRotateRev 3.5s infinite linear;
-    }
+    /* Spin runes */
+    @keyframes runeRotate { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    @keyframes runeRotateRev { 0% { transform: rotate(360deg); } 100% { transform: rotate(0deg); } }
+    .spin-runes { animation: runeRotate 8s infinite linear; }
+    .spin-runes-fast { animation: runeRotateRev 3.5s infinite linear; }
 
     /* Mystic Kanji Glow */
     @keyframes kanjiPulse {
@@ -310,9 +263,7 @@ https.get(url, (res) => {
       50% { transform: scale(1.08); opacity: 1; text-shadow: 0 0 30px rgba(79,179,232,0.9), 0 0 50px rgba(255,106,19,0.7); }
       100% { transform: scale(1); opacity: 0.7; text-shadow: 0 0 10px rgba(79,179,232,0.5); }
     }
-    .kanji-pulse-glow {
-      animation: kanjiPulse 2s infinite ease-in-out;
-    }
+    .kanji-pulse-glow { animation: kanjiPulse 2s infinite ease-in-out; }
 
     /* Seal Shatter Flash */
     @keyframes sealFlash {
@@ -320,9 +271,7 @@ https.get(url, (res) => {
       40% { opacity: 1; transform: scale(1.05); }
       100% { opacity: 0; transform: scale(1.2); }
     }
-    .seal-flash-anim {
-      animation: sealFlash 0.6s ease-out forwards;
-    }
+    .seal-flash-anim { animation: sealFlash 0.6s ease-out forwards; }
 
     /* Card Pop Reveal */
     @keyframes cardPopReveal {
@@ -330,27 +279,77 @@ https.get(url, (res) => {
       60% { opacity: 1; transform: scale(1.03) translateY(-4px); }
       100% { opacity: 1; transform: scale(1) translateY(0); }
     }
-    .card-pop-reveal {
-      animation: cardPopReveal 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    .card-pop-reveal { animation: cardPopReveal 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+
+    @keyframes pulseSpinner {
+      0%, 100% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.1); opacity: 1; }
     }
   </style>
 
   <!-- React 18, ReactDOM 18 -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
+
+  <!-- Global Pre-React Error Recovery Script (Definitive Black Screen Protection) -->
+  <script>
+    window.addEventListener('error', function(e) {
+      console.error("CRITICAL WINDOW ERROR DETECTED:", e.error || e.message);
+      var loader = document.getElementById('initial-loader');
+      if (loader) {
+        loader.innerHTML = '<div style="max-width: 520px; padding: 28px; background: #16130F; border: 2px solid #D6483F; border-radius: 20px; text-align: center; box-shadow: 0 0 50px rgba(214,72,63,0.4);"><div style="font-size: 48px; margin-bottom: 12px;">⚠️</div><div style="font-family: \'Bebas Neue\', Impact, sans-serif; font-size: 28px; color: #fff; letter-spacing: 1px;">ANOMALIA ESPIRITUAL DETECTADA</div><p style="font-size: 13px; color: #C9C1AF; margin: 12px 0 16px 0; line-height: 1.5;">Ocorreu uma instabilidade na inicialização do sistema. Você pode recarregar ou limpar o cache local para restabelecer a conexão.</p><div style="font-family: monospace; font-size: 11px; color: #D6483F; background: #000; padding: 10px; border-radius: 10px; margin-bottom: 20px; max-height: 90px; overflow: auto; text-align: left;">' + (e.message || 'Erro inesperado') + '</div><div style="display: flex; gap: 12px; justify-content: center;"><button onclick="window.location.reload()" style="padding: 10px 20px; background: #FF6A13; color: #000; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 13px; box-shadow: 0 0 15px rgba(255,106,19,0.4);">🔄 Recarregar</button><button onclick="try{localStorage.clear();}catch(x){} window.location.reload();" style="padding: 10px 20px; background: #0A0908; color: #D6483F; border: 1px solid #D6483F; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 13px;">🧹 Limpar Cache</button></div></div>';
+      }
+    });
+  </script>
 </head>
 <body class="bg-[#0A0908] text-[#F3EEE3] antialiased">
-  <div id="root"></div>
+  <div id="root">
+    <!-- Initial Loading State while Scripts Settle -->
+    <div id="initial-loader" style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #0A0908; color: #F3EEE3; font-family: 'Outfit', sans-serif;">
+      <div style="width: 54px; height: 54px; border: 3px solid rgba(255,106,19,0.2); border-top-color: #FF6A13; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 20px;"></div>
+      <div style="font-family: 'Bebas Neue', Impact, sans-serif; font-size: 32px; letter-spacing: 2px; color: #FF6A13; text-shadow: 0 0 20px rgba(255,106,19,0.5);">BLEACH RPG</div>
+      <div style="font-size: 11px; color: #8C8375; margin-top: 6px; letter-spacing: 2px; font-weight: 600;">SINTONIZANDO REIATSU COM A SOCIEDADE DAS ALMAS...</div>
+    </div>
+  </div>
+
+  <style>
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  </style>
 
   <!-- Ultra-fast native JS with instant loading -->
   <script src="app.js"></script>
 </body>
 </html>
 `;
-      fs.writeFileSync('index.html', html);
-      console.log("Written index.html!");
-    } catch (err) {
-      console.error("BABEL COMPILE ERROR:", err.message);
+    fs.writeFileSync('index.html', html);
+    console.log("Written index.html!");
+  } catch (err) {
+    console.error("BABEL COMPILE ERROR:", err.message);
+    if (err.loc) {
+      console.error("Location: line " + err.loc.line + ", col " + err.loc.column);
+      const lines = jsxCode.split('\n');
+      for (let l = Math.max(0, err.loc.line - 4); l <= Math.min(lines.length - 1, err.loc.line + 4); l++) {
+        console.error((l + 1) + ": " + lines[l]);
+      }
     }
+  }
+}
+
+if (fs.existsSync(BABEL_CACHE_FILE)) {
+  console.log("Using cached babel.min.js...");
+  const babelCode = fs.readFileSync(BABEL_CACHE_FILE, 'utf8');
+  compileWithBabel(babelCode);
+} else {
+  console.log("Fetching Babel standalone from CDN to compile app_source.jsx...");
+  https.get(url, (res) => {
+    let data = '';
+    res.on('data', (chunk) => data += chunk);
+    res.on('end', () => {
+      console.log("Babel downloaded! Size:", data.length);
+      fs.writeFileSync(BABEL_CACHE_FILE, data);
+      compileWithBabel(data);
+    });
+  }).on('error', (e) => {
+    console.error("Failed to download Babel:", e);
   });
-});
+}

@@ -12,7 +12,7 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
   const [novaTecNome, setNovaTecNome] = useState("");
   
   // Recompensa Form (ADM)
-  const [rec, setRec] = useState({ tipo: "Treino em ON (30 linhas)", pontos: 1, atributo: "", motivo: "" });
+  const [rec, setRec] = useState({ tipo: "Recompensa de Atributos", pontos: 1, atributo: "", motivo: "" });
   
   const [editFoto, setEditFoto] = useState(personagem?.foto || "assets/ichigo-orange.png");
   const [editFotoShikai, setEditFotoShikai] = useState(personagem?.zanpakuto?.fotoShikai || "assets/ichigo-orange.png");
@@ -150,40 +150,32 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
     setShowCenaModal(tipo);
   }
 
-  function submeterCenaDespertar(cenaTexto) {
+  async function submeterCenaDespertar(cenaTexto) {
     const tipo = showCenaModal || "shikai";
     setShowCenaModal(null);
 
     if (tipo === "shikai") {
       updateChar({ cenaDespertarShikai: cenaTexto }, "📜 Cena de despertar de Shikai registrada na ficha");
-      const caminhos = gerar4CaminhosZanpakutoAI(personagem, db.personagens, db.zanpakutosVinculadas, cenaTexto);
+      playReiatsuSound('shikai_charge');
+      const caminhos = await gerar4CaminhosZanpakutoAI_Async(personagem, db.personagens, db.zanpakutosVinculadas, cenaTexto);
       setAiZkOpcoes(caminhos);
       setAiZkTipo("shikai");
       setShowZanpakutoAIModal(true);
-      playReiatsuSound('shikai_charge');
     } else {
       updateChar({ cenaDespertarBankai: cenaTexto }, "📜 Cena de despertar de Bankai registrada na ficha");
-      const opcoesBankai = gerar3OpcoesBankaiAI(personagem, personagem.zanpakuto?.shikaiAtiva, db.personagens, db.zanpakutosVinculadas, cenaTexto);
-      const caminhosBankai = opcoesBankai.map((bk, idx) => ({
-        caminhoNumero: idx + 1,
-        tipoCaminho: bk.tipoEvolucao,
-        subtitulo: bk.traducao,
-        shikai: personagem.zanpakuto.shikaiAtiva,
-        bankai: bk,
-        avaliacao: {
-          personalidadeCompatibilidade: "99%",
-          atributosSinergia: "98%",
-          originalidade: "Suprema",
-          coerencia: "Transcendência Completa",
-          potencialNarrativo: "Clímax da Alma",
-          exclusividadeStatus: "Vinculada à Shikai"
-        }
-      }));
-      setAiZkOpcoes(caminhosBankai);
+      playReiatsuSound('bankai_charge');
+      const caminhos = await gerar4CaminhosZanpakutoAI_Async(personagem, db.personagens, db.zanpakutosVinculadas, cenaTexto);
+      setAiZkOpcoes(caminhos);
       setAiZkTipo("bankai");
       setShowZanpakutoAIModal(true);
-      playReiatsuSound('bankai_charge');
     }
+  }
+
+  async function regenerarCaminhosComIA() {
+    const cenaTexto = aiZkTipo === "shikai" ? (personagem.cenaDespertarShikai || "") : (personagem.cenaDespertarBankai || "");
+    playReiatsuSound('roll');
+    const novosCaminhos = await gerar4CaminhosZanpakutoAI_Async(personagem, db.personagens, db.zanpakutosVinculadas, cenaTexto + " variação " + Date.now());
+    setAiZkOpcoes(novosCaminhos);
   }
 
   function escolherCaminhoEspiritual(caminhoEscolhido) {
@@ -492,10 +484,10 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
     updateChar({ permissoes: { ...(personagem.permissoes || {}), bankaiLiberada: !atual } }, `Permissão de Bankai ${!atual ? "LIBERADA" : "BLOQUEADA"} pelo ADM`);
   }
 
-  // CONCESSÃO DE RECOMPENSA COMPLETA PELO ADM
+  // CONCESSÃO DE RECOMPENSA DE ATRIBUTOS PELO ADM (SOMENTE ATRIBUTOS)
   function concederRecompensa() {
     const pontos = Number(rec.pontos) || 0;
-    if (pontos <= 0 && rec.tipo !== "Treino em ON (30 linhas)") {
+    if (pontos <= 0) {
       alert("Informe uma quantidade válida de pontos.");
       return;
     }
@@ -515,18 +507,12 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
       texto += ` +${pontos} pontos livres concedidos para distribuição`;
     }
 
-    if (rec.tipo === "Treino em ON (30 linhas)") {
-      patch.sorteiosComunsRestantes = (personagem.sorteiosComunsRestantes || 0) + 4;
-      patch.sorteiosEspeciaisRestantes = (personagem.sorteiosEspeciaisRestantes || 0) + 1;
-      texto += ` (+4 Giros Comuns e +1 Especial liberados)`;
-    }
-
     if (rec.motivo.trim()) texto += ` — ${rec.motivo.trim()}`;
 
     updateChar(patch, texto);
     playReiatsuSound('win');
-    alert(`Recompensa concedida com sucesso para ${personagem.nome}!`);
-    setRec({ tipo: "Treino em ON (30 linhas)", pontos: 1, atributo: "", motivo: "" });
+    alert(`Recompensa de +${pontos} ponto(s) de atributo concedida com sucesso para ${personagem.nome}!`);
+    setRec({ tipo: "Recompensa de Atributos", pontos: 1, atributo: "", motivo: "" });
   }
 
   function handleFotoUpload(e, tipo = "perfil") {
@@ -1289,9 +1275,11 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
         <Zanpakuto4PathsModal
           open={showZanpakutoAIModal}
           tipo={aiZkTipo}
+          isBankai={aiZkTipo === "bankai"}
           caminhos={aiZkOpcoes}
           personagem={personagem}
           onEscolherCaminho={escolherCaminhoEspiritual}
+          onRegenerar={regenerarCaminhosComIA}
           onClose={() => setShowZanpakutoAIModal(false)}
         />
       )}

@@ -148,11 +148,6 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
       patch.pontosDisponiveis = (personagem.pontosDisponiveis || 0) + pontos;
       texto += ` +${pontos} pontos livres concedidos para distribuição`;
     }
-    if (rec.tipo === "Treino em ON (30 linhas)") {
-      patch.sorteiosComunsRestantes = (personagem.sorteiosComunsRestantes || 0) + 4;
-      patch.sorteiosEspeciaisRestantes = (personagem.sorteiosEspeciaisRestantes || 0) + 1;
-      texto += ` (+4 Giros Comuns e +1 Especial liberados)`;
-    }
     if (rec.motivo.trim()) texto += ` — ${rec.motivo.trim()}`;
     updateChar(patch, texto);
     setRec({ tipo: "Treino em ON (30 linhas)", pontos: 1, atributo: "", motivo: "" });

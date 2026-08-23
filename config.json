@@ -1,3 +1,4 @@
 {
-  "firebaseUrl": "https://bleach-rpg-6894c-default-rtdb.firebaseio.com/"
+  "firebaseUrl": "https://bleach-rpg-6894c-default-rtdb.firebaseio.com/",
+  "openaiApiKey": ""
 }

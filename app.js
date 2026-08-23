@@ -1511,6 +1511,57 @@ const PATCH_NOTES_HISTORY = [{
   }]
 }];
 
+// =========================================================================
+// GLOBAL CORE UTILITY FUNCTIONS (PERMANENT SYSTEM FIX)
+// =========================================================================
+
+function uid() {
+  return "zk-" + Math.random().toString(36).slice(2, 9) + "-" + Date.now().toString(36);
+}
+function nowStr() {
+  const d = new Date();
+  return d.getDate().toString().padStart(2, '0') + '/' + (d.getMonth() + 1).toString().padStart(2, '0') + '/' + d.getFullYear() + ' às ' + d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0');
+}
+function maskWhats(w) {
+  if (!w) return "—";
+  const cleaned = String(w).replace(/\D/g, "");
+  if (cleaned.length < 4) return cleaned;
+  return "•••• " + cleaned.slice(-4);
+}
+function getPowerTier(statVal) {
+  const val = Number(statVal) > 150 ? Math.round(Number(statVal) / 4) : Number(statVal || 0);
+  if (val <= 10) return {
+    title: "Inexperiente",
+    patamar: "1–10",
+    color: C.muted
+  };
+  if (val <= 30) return {
+    title: "Iniciante",
+    patamar: "11–30",
+    color: C.green
+  };
+  if (val <= 60) return {
+    title: "Treinado",
+    patamar: "31–60",
+    color: C.blue
+  };
+  if (val <= 100) return {
+    title: "Veterano",
+    patamar: "61–100",
+    color: C.purple
+  };
+  if (val <= 150) return {
+    title: "Mestre",
+    patamar: "101–150",
+    color: C.yellow
+  };
+  return {
+    title: "Transcendental",
+    patamar: "150+",
+    color: "#FFD700"
+  };
+}
+
 // Web Audio API Synthesizer
 let audioCtx = null;
 function getAudioContext() {
@@ -1740,6 +1791,60 @@ function playReiatsuSound(type = 'hum') {
     }
   } catch (e) {}
 }
+
+// GLOBAL REACT ERROR BOUNDARY COMPONENT
+class ErrorBoundary extends (React.Component || class {}) {
+  constructor(props) {
+    super(props);
+    this.props = props || {};
+    this.state = {
+      hasError: false,
+      error: null
+    };
+  }
+  static getDerivedStateFromError(error) {
+    return {
+      hasError: true,
+      error
+    };
+  }
+  componentDidCatch(error, errorInfo) {
+    console.error("Critical React Error Caught by ErrorBoundary:", error, errorInfo);
+  }
+  render() {
+    if (this.state && this.state.hasError) {
+      return /*#__PURE__*/React.createElement("div", {
+        className: "min-h-screen bg-[#0A0908] text-[#F3EEE3] flex items-center justify-center p-4"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "max-w-xl w-full bg-[#16130F] border-2 border-red-500/80 rounded-2xl p-6 sm:p-8 shadow-[0_0_50px_rgba(214,72,63,0.4)] text-center space-y-6"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "w-16 h-16 mx-auto rounded-full bg-red-950/80 border border-red-500 flex items-center justify-center text-3xl"
+      }, "\u26A0\uFE0F"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+        className: "text-[11px] font-extrabold uppercase px-3 py-1 rounded-full bg-red-900/60 border border-red-500 text-red-300 tracking-widest"
+      }, "Distor\xE7\xE3o Espiritual Detectada"), /*#__PURE__*/React.createElement("h2", {
+        className: "font-title text-3xl text-white mt-3 tracking-wider"
+      }, "Ruptura de Reiatsu no Sistema"), /*#__PURE__*/React.createElement("p", {
+        className: "text-sm text-[#C9C1AF] mt-2 leading-relaxed"
+      }, "Ocorreu uma anomalia no carregamento dos dados espirituais. Voc\xEA pode recarregar a p\xE1gina ou restaurar os dados locais para recuperar o fluxo de Reishi.")), /*#__PURE__*/React.createElement("div", {
+        className: "p-3 bg-black/60 rounded-xl border border-red-900/50 text-left font-mono text-xs text-red-400 overflow-x-auto max-h-36"
+      }, this.state.error?.toString() || "Erro desconhecido"), /*#__PURE__*/React.createElement("div", {
+        className: "flex flex-col sm:flex-row gap-3 justify-center pt-2"
+      }, /*#__PURE__*/React.createElement("button", {
+        onClick: () => window.location.reload(),
+        className: "px-5 py-2.5 rounded-xl bg-[#FF6A13] hover:bg-[#C94E0A] text-black font-extrabold text-sm transition shadow-[0_0_15px_rgba(255,106,19,0.4)]"
+      }, "\uD83D\uDD04 Recarregar P\xE1gina"), /*#__PURE__*/React.createElement("button", {
+        onClick: () => {
+          try {
+            localStorage.clear();
+          } catch (e) {}
+          window.location.reload();
+        },
+        className: "px-5 py-2.5 rounded-xl bg-black/80 hover:bg-black border border-red-500/50 hover:border-red-500 text-red-300 text-sm font-bold transition"
+      }, "\uD83E\uDDF9 Limpar Cache & Restaurar"))));
+    }
+    return this.props?.children || null;
+  }
+}
 const DEFAULT_DB = {
   superAdminUsuario: "Malu123",
   superAdminSenha: "Sociedade2026",
@@ -1866,8 +1971,9 @@ const DEFAULT_DB = {
     }]
   }]
 };
-function calculateRankings(personagens) {
-  const rankFisico = [...personagens].map(p => {
+function calculateRankings(personagens = []) {
+  const list = Array.isArray(personagens) ? personagens : [];
+  const rankFisico = [...list].map(p => {
     const f = Number(p.atributos?.forca || 0);
     const v = Number(p.atributos?.velocidade || 0);
     const r = Number(p.atributos?.resiliencia || 0);
@@ -1882,7 +1988,7 @@ function calculateRankings(personagens) {
       res: r
     };
   }).sort((a, b) => b.score - a.score);
-  const rankPressao = [...personagens].map(p => {
+  const rankPressao = [...list].map(p => {
     const score = Number(p.atributos?.pressao || 0);
     return {
       id: p.id,
@@ -1900,6 +2006,7 @@ function calculateRankings(personagens) {
 // =========================================================================
 // BLEACH RPG — MOTOR COGNITIVO DE GÊNESE ESPIRITUAL (ZGE V5.0)
 // Conexão com ChatGPT / OpenAI API + Sintetizador Dinâmico Baseado na Personalidade
+// COM REGRA ESTRITA DE EXCLUSIVIDADE & ANTI-SIMILARIDADE (ZERO DUPLICATAS)
 // =========================================================================
 
 // 1. GERADOR DE ASSINATURA ESPIRITUAL ÚNICA
@@ -1911,13 +2018,13 @@ function calcularAssinaturaEspiritual(zanpakuto) {
   return `zk-sig-${nome}-${conceito}-${mecanica.slice(0, 12)}`;
 }
 
-// 2. CÁLCULO DE NÍVEL DE SIMILARIDADE
+// 2. CÁLCULO DE NÍVEL DE SIMILARIDADE ENTRE DUAS ZANPAKUTŌS
 function calcularIndiceSimilaridade(shikaiA, shikaiB) {
   if (!shikaiA || !shikaiB) return 0;
   let score = 0;
   const nomeA = (shikaiA.nome || "").toLowerCase().trim();
   const nomeB = (shikaiB.nome || "").toLowerCase().trim();
-  if (nomeA === nomeB) score += 50;else if (nomeA.includes(nomeB) || nomeB.includes(nomeA)) score += 25;
+  if (nomeA === nomeB && nomeA.length > 0) score += 60;else if (nomeA.length > 3 && nomeB.length > 3 && (nomeA.includes(nomeB) || nomeB.includes(nomeA))) score += 35;
   const concA = (shikaiA.conceitoCentral || shikaiA.elemento || "").toLowerCase();
   const concB = (shikaiB.conceitoCentral || shikaiB.elemento || "").toLowerCase();
   if (concA && concB && (concA === concB || concA.includes(concB) || concB.includes(concA))) {
@@ -1937,19 +2044,24 @@ function calcularIndiceSimilaridade(shikaiA, shikaiB) {
   return Math.min(100, Math.round(score));
 }
 
-// Obter assinaturas já registradas
+// Obter assinaturas e nomes já registrados em todas as fichas e catálogo
 function getClaimedSignatures(dbPersonagens = [], dbZanpakutosVinculadas = []) {
   const claimed = new Set();
   const claimedNames = new Set();
+  const claimedElements = new Set();
   (dbZanpakutosVinculadas || []).forEach(z => {
     if (z.assinatura) claimed.add(z.assinatura.toLowerCase());
     if (z.nome) claimedNames.add(z.nome.toLowerCase().trim());
+    if (z.elemento) claimedElements.add(z.elemento.toLowerCase().trim());
   });
   (dbPersonagens || []).forEach(p => {
     if (p.zanpakuto?.shikaiAtiva) {
       const sig = p.zanpakuto.shikaiAtiva.assinaturaEspiritual || calcularAssinaturaEspiritual(p.zanpakuto.shikaiAtiva);
       claimed.add(sig.toLowerCase());
       claimedNames.add((p.zanpakuto.shikaiAtiva.nome || "").toLowerCase().trim());
+      if (p.zanpakuto.shikaiAtiva.elemento) {
+        claimedElements.add(p.zanpakuto.shikaiAtiva.elemento.toLowerCase().trim());
+      }
     }
     if (p.zanpakuto?.nome && p.zanpakuto.nome !== "Em despertar") {
       claimedNames.add(p.zanpakuto.nome.toLowerCase().trim());
@@ -1957,8 +2069,31 @@ function getClaimedSignatures(dbPersonagens = [], dbZanpakutosVinculadas = []) {
   });
   return {
     claimed,
-    claimedNames
+    claimedNames,
+    claimedElements
   };
+}
+
+// Resumo textual de Zanpakutōs existentes para injetar no prompt do ChatGPT
+function getExistingZanpakutosSummary(dbPersonagens = [], dbZanpakutosVinculadas = []) {
+  const list = [];
+  const seen = new Set();
+  (dbPersonagens || []).forEach(p => {
+    if (p.zanpakuto?.shikaiAtiva?.nome && !seen.has(p.zanpakuto.shikaiAtiva.nome.toLowerCase())) {
+      seen.add(p.zanpakuto.shikaiAtiva.nome.toLowerCase());
+      list.push(`- "${p.zanpakuto.shikaiAtiva.nome}" (Dono: ${p.nome} | Elemento/Tema: ${p.zanpakuto.shikaiAtiva.elemento || "Místico"} | Mecânica: ${(p.zanpakuto.shikaiAtiva.poder || "").slice(0, 70)}...)`);
+    } else if (p.zanpakuto?.nome && p.zanpakuto.nome !== "Em despertar" && !seen.has(p.zanpakuto.nome.toLowerCase())) {
+      seen.add(p.zanpakuto.nome.toLowerCase());
+      list.push(`- "${p.zanpakuto.nome}" (Dono: ${p.nome})`);
+    }
+  });
+  (dbZanpakutosVinculadas || []).forEach(z => {
+    if (z.nome && !seen.has(z.nome.toLowerCase())) {
+      seen.add(z.nome.toLowerCase());
+      list.push(`- "${z.nome}" (Elemento: ${z.elemento || "Espiritual"})`);
+    }
+  });
+  return list;
 }
 
 // CONSTRUÇÃO COMPLETA DO SOUL DNA
@@ -1990,7 +2125,7 @@ function construirDnaEspiritual(personagem, cenaTexto = "") {
   const deficiente = pList[pList.length - 1];
   const pers = personagem.personalidade || {};
   const textoPers = (pers.texto || "") + " " + (cenaTexto || "");
-  const virtudes = pers.virtudes || "Determinação e foco";
+  const virtudes = pers.virtudes || "Determinação e foco inabalável";
   const defeitos = pers.defeitos || "Orgulho e isolamento";
   const desejos = pers.desejos || "Proteger os aliados e superar seus limites";
   const medos = pers.medos || "A impotência diante da derrota";
@@ -2011,40 +2146,42 @@ function construirDnaEspiritual(personagem, cenaTexto = "") {
   };
 }
 
-// 3. PROMPT BUILDER PARA CHATGPT / OPENAI
-function construirPromptChatGPT(personagem, dna, cenaTexto = "") {
+// 3. PROMPT BUILDER PARA CHATGPT / OPENAI (COM BLACKLIST E EXCLUSIVIDADE ABSOLUTA)
+function construirPromptChatGPT(personagem, dna, cenaTexto = "", dbPersonagens = [], dbZanpakutosVinculadas = []) {
+  const existingList = getExistingZanpakutosSummary(dbPersonagens, dbZanpakutosVinculadas);
+  const existingSection = existingList.length > 0 ? `\nZANPAKUTŌS JÁ REGISTRADAS NO SISTEMA (ESTRITAMENTE PROIBIDO REPETIR OU GERAR NOMES/PODERES/CONCEITOS SIMILARES A ESTAS):\n${existingList.join('\n')}\n` : "";
   return `Você é o ZANPAKUTŌ GENESIS ENGINE (V5.0) para o Bleach RPG.
-Interprete a alma do seguinte personagem e gere EXATAMENTE 4 CAMINHOS DE ZANPAKUTŌ (Shikai + Bankai) exclusivos e originais, derivados da personalidade, virtudes, defeitos, conflitos e atributos.
+Interprete a alma do seguinte personagem e gere EXATAMENTE 4 CAMINHOS DE ZANPAKUTŌ (Shikai + Bankai) 100% INÉDITOS, ORIGINAIS E EXCLUSIVOS, derivados diretamente da sua personalidade, virtudes, defeitos, conflitos e atributos.
 
 DADOS DO PERSONAGEM:
 - Nome: ${personagem.nome}
 - Raça: ${personagem.raca || "Shinigami"} | Esquadrão: ${personagem.esquadrao || "11º Esquadrão"}
 - Atributos: Pressão Espiritual: ${dna.dominante.val}, Força: ${personagem.atributos?.forca || 10}, Velocidade: ${personagem.atributos?.velocidade || 10}, Resiliência: ${personagem.atributos?.resiliencia || 10}
 - Atributo Dominante: ${dna.dominante.label} | Atributo Deficiente: ${dna.deficiente.label}
-- Personalidade: ${dna.textoCompleto}
-- Virtudes: ${dna.virtudes}
-- Defeitos: ${dna.defeitos}
-- Desejos: ${dna.desejos}
-- Medos: ${dna.medos}
+- Personalidade Selada: ${dna.textoCompleto}
+- Virtudes Centrais: ${dna.virtudes}
+- Defeitos Marcantes: ${dna.defeitos}
+- Desejos Profundos: ${dna.desejos}
+- Maiores Medos: ${dna.medos}
 - Conflitos Internos: ${dna.conflitos}
 - Estilo de Combate: ${dna.estilo}
 ${cenaTexto ? `- Cena de Despertar Narrada pelo Jogador: "${cenaTexto}"` : ""}
-
-REGRAS OBRIGATÓRIAS (ZGE V5.0):
-1. Gere EXATAMENTE 4 caminhos estruturados:
-   - Caminho 1: Elemental / Temperamento (~45% peso da essência emocional)
-   - Caminho 2: Conceitual / Progressivo / Regras (~20% peso - mecânica de etapas e condições)
-   - Caminho 3: Compensatório / Defesa da Alma (Compensa a deficiência ou vulnerabilidade central)
-   - Caminho 4: Opositivo / Abstrato / Sombra (Explora os conflitos internos, medo ou o paradoxo oculto)
-2. Cada caminho DEVE possuir:
+${existingSection}
+REGRAS ESTRITAS DE EXCLUSIVIDADE & ANTI-SIMILARIDADE:
+1. REGRA ANTI-CLONE: É TERMINANTEMENTE PROIBIDO criar qualquer Shikai ou Bankai que compartilhe nome, elemento, conceito mecânico central ou frase de comando com qualquer uma das Zanpakutōs já registradas acima. Cada arma deve ser ÚNICA no universo do RPG.
+2. ESTRUTURA DOS 4 CAMINHOS OBRIGATÓRIOS:
+   - Caminho 1: Elemental / Temperamento (~45% peso da essência emocional, canalizado pelo atributo dominante)
+   - Caminho 2: Conceitual / Progressivo / Regras (~20% peso - mecânica tática por etapas e leis de combate invioláveis)
+   - Caminho 3: Compensatório / Defesa da Alma (Compensa o atributo deficiente e protege contra o maior medo do Shinigami)
+   - Caminho 4: Opositivo / Abstrato / Sombra (Explora os conflitos internos, a sombra e o paradoxo oculto do subconsciente)
+3. CADA CAMINHO DEVE POSSUIR:
    - Nome em japonês Romaji + Kanji + Tradução em Português
    - Frase poética de ativação/liberação
-   - Representação do espírito (aparência, comportamento e ambiente onde vive)
+   - Representação do espírito (aparência, comportamento e mundo interior)
    - Design da forma selada e da Shikai
-   - Poder da Shikai com mecânica detalhada e LIMITAÇÕES claras
-   - Bankai correspondente: Nome em japonês/kanji, Limite da Shikai que foi quebrado (Ponto de Ruptura), Evolução Conceitual e Poder Monumental
+   - Poder da Shikai com mecânica tática detalhada e LIMITAÇÕES claras
+   - Bankai correspondente: Nome em japonês/kanji, Limite da Shikai que foi quebrado (Ponto de Ruptura / Breakpoint), Tipo de Evolução e Poder Monumental
    - Índices de 1 a 10 para Potência, Abrangência, Complexidade, Versatilidade e Custo de Reiatsu.
-3. Não use poderes genéricos de anime clássico sem mecânica tática própria. Toda Bankai deve ser a evolução do princípio da Shikai.
 
 RESPONDA OBRIGATORIAMENTE EM JSON VÁLIDO no seguinte formato:
 {
@@ -2052,13 +2189,13 @@ RESPONDA OBRIGATORIAMENTE EM JSON VÁLIDO no seguinte formato:
     {
       "caminhoNumero": 1,
       "tipoCaminho": "Opção 1 — Personalidade / Elemental",
-      "subtitulo": "...",
+      "subtitulo": "Manifestação Direta da Essência Emocional da Alma",
       "shikai": {
         "nome": "NomeRomaji",
         "kanji": "「漢字」",
         "traducao": "Tradução",
         "comando": "Frase de Ativação",
-        "elemento": "Elemento/Tema",
+        "elemento": "Elemento/Tema Inédito",
         "espirito": "Descrição do espírito e mundo interior",
         "formaSelada": "Descrição da forma selada",
         "aparencia": "Aparência da Shikai",
@@ -2083,18 +2220,15 @@ RESPONDA OBRIGATORIAMENTE EM JSON VÁLIDO no seguinte formato:
 }`;
 }
 
-// 4. SINTETIZADOR DINÂMICO PROCEDURAL COGNITIVO (ZGE V5.0 COGNITIVE ENGINE)
-// Gera 4 Zanpakutōs 100% autorais e diferentes a partir das palavras-chave da alma
-function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "") {
+// 4. SINTETIZADOR DINÂMICO PROCEDURAL COGNITIVO COM FILTRO ANTI-DUPLICATAS
+function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "", claimedNames = new Set(), claimedElements = new Set()) {
   const seedStr = `${personagem.nome}_${dna.textoCompleto}_${dna.virtudes}_${dna.defeitos}_${dna.desejos}_${dna.medos}_${dna.estilo}_${cenaTexto}`;
   let hash = 0;
   for (let i = 0; i < seedStr.length; i++) {
     hash = (hash << 5) - hash + seedStr.charCodeAt(i);
     hash |= 0;
   }
-  const posHash = Math.abs(hash);
-
-  // Paletas de Raízes em Japonês e Conceitos conforme arquétipo
+  let posHash = Math.abs(hash);
   const temasElementais = [{
     nome: "Enryū",
     kanji: "炎竜",
@@ -2147,6 +2281,32 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "") {
     bKanji: "黒風・無窮旋風",
     bTrad: "Turbilhão da Eternidade Escura",
     bPoder: "Cria uma tempestade de vácuo total que suprime a respiração e anula projéteis disparados contra o usuário."
+  }, {
+    nome: "Suikō",
+    kanji: "水光",
+    trad: "Brilho das Águas",
+    elem: "Fluidez Hidráulica & Refração de Pressão",
+    cmd: "Ondule sobre o reflexo do abismo",
+    arma: "Espada flexível com lâmina transparente de água altamente pressurizada.",
+    pod: "Adapta o alcance do fio conforme a intensidade do golpe, criando chicotes de corte d'água capazes de contornar defesas.",
+    lim: "Perde rigidez caso a concentração de Reiatsu seja interrompida.",
+    bNome: "Suikō — Kaijin Ryūsen",
+    bKanji: "水光・海神流千",
+    bTrad: "Mil Torrentes do Deus dos Mares",
+    bPoder: "Inunda o campo com uma névoa aquática que redistribui o impacto de qualquer ataque sofrido pelo usuário para as gotículas no ar."
+  }, {
+    nome: "Gōka",
+    kanji: "剛霞",
+    trad: "Névoa de Ferro",
+    elem: "Partículas Metálicas & Fricção Térmica",
+    cmd: "Cerque a presa com mil fagulhas",
+    arma: "Lâmina serrilhada com tsuba octogonal de ferro batido.",
+    pod: "Dissolve o fio em milhões de micropartículas metálicas que flutuam invisíveis e entram em combustão por fricção.",
+    lim: "Exige manter o oponente dentro do perímetro de dispersão da névoa.",
+    bNome: "Gōka — Rengoku Jin'en",
+    bKanji: "剛霞・煉獄塵煙",
+    bTrad: "Poeira Incandescente do Purgatório",
+    bPoder: "A névoa se condensa instantaneamente em anéis de fogo e aço triturante que esmagam o alvo de dentro para fora."
   }];
   const temasConceituais = [{
     nome: "Shinmetsu",
@@ -2187,6 +2347,19 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "") {
     bKanji: "影法師・闇の結界",
     bTrad: "Santuário da Noite Perpétua",
     bPoder: "O campo de batalha se torna uma dimensão de sombras vivas onde o usuário pode atacar simultaneamente de todas as sombras existentes."
+  }, {
+    nome: "Senritsu",
+    kanji: "旋律",
+    trad: "Melodia do Vazio",
+    elem: "Ressonância de Frequência & Vibração",
+    cmd: "Ecooe a nota da destruição",
+    arma: "Rapieira com tsuba em forma de diapasão que vibra ao menor movimento.",
+    pod: "Cada corte cria uma frequência sônica inaudível que desestabiliza a coesão de Reishi das defesas adversárias.",
+    lim: "Exige afinação contínua com a velocidade do adversário.",
+    bNome: "Senritsu — Banshō Kyōmei",
+    bKanji: "旋律・万象共鳴",
+    bTrad: "Ressonância de Todas as Coisas",
+    bPoder: "Sintoniza a frequência vibratória com a matéria espiritual ao redor, estilhaçando barreiras e armas que tentem colidir com o usuário."
   }];
   const temasCompensatorios = [{
     nome: "Kōrinomori",
@@ -2214,6 +2387,19 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "") {
     bKanji: "生命華・千手輪廻",
     bTrad: "Roda Sagrada das Mil Vidas",
     bPoder: "Transfere o fluxo de vitalidade do ambiente para o usuário, permitindo lutar ininterruptamente sem sofrer perda de estamina ou choque de dor."
+  }, {
+    nome: "Chōwa",
+    kanji: "調和",
+    trad: "Harmonia Resiliente",
+    elem: "Absorção Cinética & Redirecionamento",
+    cmd: "Disperse a fúria em calmaria",
+    arma: "Tantō alargada com pomo em espiral de jade.",
+    pod: "Absorve o impacto físico de golpes contundentes e os converte em fortalecimento da postura corporal do usuário.",
+    lim: "Capacidade de absorção proporcional à Resiliência base do personagem.",
+    bNome: "Chōwa — Taihei Seikai",
+    bKanji: "調和・太平静界",
+    bTrad: "Domínio da Grande Paz Eterna",
+    bPoder: "Transforma toda a força destrutiva exercida no campo de batalha em barreira intransponível, neutralizando impactos devastadores."
   }];
   const temasOpositivos = [{
     nome: "Mugenryū",
@@ -2241,19 +2427,49 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "") {
     bKanji: "黒檀・深淵重力",
     bTrad: "Gravidade do Abismo Silencioso",
     bPoder: "Colapsa um campo gravitacional esmagador sobre o solo, imobilizando todos os seres ao redor enquanto o usuário flutua livremente no centro."
+  }, {
+    nome: "Uragiri no Tsuki",
+    kanji: "裏切月",
+    trad: "Lua da Traição",
+    elem: "Inversão de Causa e Efeito & Reflexos",
+    cmd: "Corte aquilo que você mais ama",
+    arma: "Wakizashi de dois gumes com espelho polido no centro da lâmina.",
+    pod: "Inverte a percepção de perigo do oponente, fazendo golpes perigosos parecerem inofensivos e fintas parecerem letais.",
+    lim: "Requer contato visual direto com a lâmina.",
+    bNome: "Uragiri no Tsuki — Kyokō Genkai",
+    bKanji: "裏切月・虚構限界",
+    bTrad: "Fronteira da Inversão Absoluta",
+    bPoder: "Inverte as propriedades das técnicas do adversário (ataques de fogo congelam, cortes cicatrizam e curas causam necrose temporária)."
   }];
-  const eIdx = posHash % temasElementais.length;
-  const cIdx = (posHash + 1) % temasConceituais.length;
-  const pIdx = (posHash + 2) % temasCompensatorios.length;
-  const oIdx = (posHash + 3) % temasOpositivos.length;
-  const t1 = temasElementais[eIdx];
-  const t2 = temasConceituais[cIdx];
-  const t3 = temasCompensatorios[pIdx];
-  const t4 = temasOpositivos[oIdx];
+
+  // Helper to find an unclaimed theme
+  function findUnclaimed(themeList, offset) {
+    for (let i = 0; i < themeList.length; i++) {
+      const idx = (posHash + offset + i) % themeList.length;
+      const candidate = themeList[idx];
+      if (!claimedNames.has(candidate.nome.toLowerCase())) {
+        return candidate;
+      }
+    }
+    // If all claimed, create unique modified version with unique title
+    const base = themeList[(posHash + offset) % themeList.length];
+    const uniqueSuffix = (posHash % 89 + 11).toString();
+    return {
+      ...base,
+      nome: base.nome + " • " + (personagem.nome ? personagem.nome.split(' ')[0] : 'Seireitei'),
+      kanji: base.kanji + "・改",
+      trad: base.trad + " (Despertar Único)"
+    };
+  }
+  const t1 = findUnclaimed(temasElementais, 0);
+  const t2 = findUnclaimed(temasConceituais, 1);
+  const t3 = findUnclaimed(temasCompensatorios, 2);
+  const t4 = findUnclaimed(temasOpositivos, 3);
   const caminhos = [{
     caminhoNumero: 1,
     tipoCaminho: "Opção 1 — Personalidade / Elemental",
     subtitulo: "Manifestação Direta da Essência Emocional da Alma",
+    indiceExclusividade: 100,
     shikai: {
       id: uid(),
       nome: t1.nome,
@@ -2266,7 +2482,7 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "") {
       poder: t1.pod,
       limitacoes: t1.lim,
       custoReiatsu: "Médio",
-      relacaoPersonalidade: `Nascida da virtude: ${dna.virtudes} e canalizada pela emoção central da alma de ${personagem.nome}.`,
+      relacaoPersonalidade: `Nascida da virtude central: "${dna.virtudes}" e moldada pela essência emocional de ${personagem.nome}.`,
       relacaoAtributos: `Amplificada diretamente pelo atributo dominante: ${dna.dominante.label} (${dna.dominante.val} pts).`,
       indices: {
         potencia: 8,
@@ -2281,15 +2497,16 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "") {
       kanji: t1.bKanji,
       tipoEvolucao: "Amplificação & Domínio Territorial",
       formaMonumental: `O ambiente inteiro ressoa com a essência de ${t1.nome}, manifestando um domínio monumental de ${t1.elem}.`,
-      pontoRuptura: "A Shikai armazena e canaliza energia; a Bankai transforma o próprio espaço de batalha em uma extensão viva da arma.",
+      pontoRuptura: "A Shikai canaliza energia em lâmina; a Bankai transforma o próprio espaço de batalha em uma extensão viva da arma.",
       poder: t1.bPoder,
       limitacoes: "Consumo massivo de Reiatsu que exige concentração ininterrupta.",
-      significadoEspiritual: `A consagração definitiva da determinação de ${personagem.nome}.`
+      significadoEspiritual: `A consagração definitiva da determinação inabalável de ${personagem.nome}.`
     }
   }, {
     caminhoNumero: 2,
     tipoCaminho: "Opção 2 — Conceitual / Progressivo / Regras",
     subtitulo: "Mecânica de Etapas e Regras de Combate",
+    indiceExclusividade: 100,
     shikai: {
       id: uid(),
       nome: t2.nome,
@@ -2302,8 +2519,8 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "") {
       poder: t2.pod,
       limitacoes: t2.lim,
       custoReiatsu: "Médio-Baixo",
-      relacaoPersonalidade: `Reflete o pensamento tático e a busca por controle de ${personagem.nome}: ${dna.estilo}.`,
-      relacaoAtributos: `Opera em sinergia com a precisão dos atributos físicos.`,
+      relacaoPersonalidade: `Reflete o pensamento tático e a disciplina de ${personagem.nome}: "${dna.estilo}".`,
+      relacaoAtributos: `Opera em sinergia com a precisão dos atributos físicos e cálculo estratégico.`,
       indices: {
         potencia: 7,
         abrangencia: 6,
@@ -2317,15 +2534,16 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "") {
       kanji: t2.bKanji,
       tipoEvolucao: "Regras Territoriais Invioláveis",
       formaMonumental: "O espaço se organiza sob uma geometria espiritual onde leis de causa e efeito passam a ditar o combate.",
-      pontoRuptura: "A Shikai requer condições pontuais; a Bankai impõe as leis conceituais sobre todos os seres na área.",
+      pontoRuptura: "A Shikai requer condições de contato; a Bankai impõe as leis conceituais sobre todos os seres no território.",
       poder: t2.bPoder,
-      limitacoes: "Se o usuário quebrar a própria regra imposta, sofre retaliação espiritual.",
+      limitacoes: "Se o usuário quebrar a própria regra imposta, sofre retaliação espiritual imediata.",
       significadoEspiritual: `A imposição da ordem interior de ${personagem.nome} sobre o caos da batalha.`
     }
   }, {
     caminhoNumero: 3,
     tipoCaminho: "Opção 3 — Compensatório / Defesa da Alma",
     subtitulo: "Suporte e Fortificação da Maior Deficiência",
+    indiceExclusividade: 100,
     shikai: {
       id: uid(),
       nome: t3.nome,
@@ -2338,7 +2556,7 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "") {
       poder: t3.pod,
       limitacoes: t3.lim,
       custoReiatsu: "Baixo",
-      relacaoPersonalidade: `Compensa o defeito/medo central: ${dna.defeitos} e protege ${dna.medos}.`,
+      relacaoPersonalidade: `Compensa o defeito/medo central: "${dna.defeitos}" e ergue proteção para "${dna.medos}".`,
       relacaoAtributos: `Fortalece o atributo mais vulnerável: ${dna.deficiente.label} (${dna.deficiente.val} pts).`,
       indices: {
         potencia: 7,
@@ -2352,8 +2570,8 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "") {
       nome: t3.bNome,
       kanji: t3.bKanji,
       tipoEvolucao: "Fortaleza & Transcendência Defensiva",
-      formaMonumental: "Uma colossal estrutura de proteção e suporte espiritual envolve o corpo e os aliados do usuário.",
-      pontoRuptura: "A Shikai absorve o impacto momentâneo; a Bankai erradica a vulnerabilidade da alma transformando dor em fortaleza inexpugnável.",
+      formaMonumental: "Uma colossal estrutura de suporte e proteção espiritual envolve o corpo e os aliados do usuário.",
+      pontoRuptura: "A Shikai amortece o impacto momentâneo; a Bankai erradica a vulnerabilidade da alma transformando dor em fortaleza inexpugnável.",
       poder: t3.bPoder,
       limitacoes: "Exige que o usuário permaneça como o pilar central da estrutura.",
       significadoEspiritual: `A transformação do medo de falhar na maior muralha de proteção da Sociedade das Almas.`
@@ -2362,6 +2580,7 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "") {
     caminhoNumero: 4,
     tipoCaminho: "Opção 4 — Opositivo / Abstrato / Sombra",
     subtitulo: "Exploração do Paradoxo e da Sombra Oculta",
+    indiceExclusividade: 100,
     shikai: {
       id: uid(),
       nome: t4.nome,
@@ -2374,8 +2593,8 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "") {
       poder: t4.pod,
       limitacoes: t4.lim,
       custoReiatsu: "Alto",
-      relacaoPersonalidade: `Traz à tona o conflito interior: ${dna.conflitos} e a dualidade da mente de ${personagem.nome}.`,
-      relacaoAtributos: `Canaliza a densidade espiritual bruta para manifestar o paradoxo.`,
+      relacaoPersonalidade: `Traz à tona o conflito interior: "${dna.conflitos}" e a dualidade da mente de ${personagem.nome}.`,
+      relacaoAtributos: `Canaliza a densidade espiritual bruta para manifestar o paradoxo de combate.`,
       indices: {
         potencia: 9,
         abrangencia: 8,
@@ -2388,30 +2607,79 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "") {
       nome: t4.bNome,
       kanji: t4.bKanji,
       tipoEvolucao: "Inversão da Realidade & Paradoxo",
-      formaMonumental: "Uma distorção cósmica e surreal toma conta do céu, onde a escuridão e a luz invertem seus papéis.",
-      pontoRuptura: "A Shikai perturba a percepção; a Bankai colapsa a própria lógica de combate do adversário no vazio.",
+      formaMonumental: "Uma distorção cósmica toma conta do campo de batalha, onde causa e efeito invertem seus papéis.",
+      pontoRuptura: "A Shikai perturba a percepção momentânea; a Bankai colapsa a própria lógica de combate do adversário no vazio.",
       poder: t4.bPoder,
       limitacoes: "Risco de desestabilização da própria Reiatsu se o usuário hesitar.",
-      significadoEspiritual: `A aceitação da própria escuridão interior como fonte inesgotável de poder.`
+      significadoEspiritual: `A aceitação da própria escuridão interior como fonte inesgotável de poder transcendental.`
     }
   }];
   return caminhos;
 }
 
-// 5. FUNÇÃO CENTRAL ASSÍNCRONA DE GERAÇÃO COM IA (ONLINE CHATGPT + FALLBACK COGNITIVO)
+// 5. FUNÇÃO CENTRAL ASSÍNCRONA DE GERAÇÃO COM IA (COM VALIDAÇÃO DE EXCLUSIVIDADE & ANTI-SIMILARIDADE)
 async function gerar4CaminhosZanpakutoAI_Async(personagem, dbPersonagens = [], dbZanpakutosVinculadas = [], cenaTexto = "", apiKey = "") {
   const {
     claimed,
-    claimedNames
+    claimedNames,
+    claimedElements
   } = getClaimedSignatures(dbPersonagens, dbZanpakutosVinculadas);
   const dna = construirDnaEspiritual(personagem, cenaTexto);
-  const keyToUse = apiKey || (typeof localStorage !== 'undefined' ? localStorage.getItem("bleach_openai_key") : "") || "";
+  const keyToUse = apiKey || (typeof localStorage !== 'undefined' ? localStorage.getItem("bleach_openai_key") : "") || (typeof window !== 'undefined' ? window.BLEACH_CONFIG?.openaiApiKey : "") || "";
+  let caminhosResultantes = null;
 
-  // 1. Tentar ChatGPT / OpenAI se chave estiver configurada
-  if (keyToUse && keyToUse.startsWith("sk-")) {
+  // 1. Tentar Google Gemini API (gemini-3.6-flash) se a chave for do Google (AQ... ou AIzaSy...)
+  if (keyToUse && !keyToUse.startsWith("sk-") && keyToUse.length > 20) {
     try {
-      console.log("Chamando OpenAI API (ChatGPT) para geração de Zanpakutō...");
-      const prompt = construirPromptChatGPT(personagem, dna, cenaTexto);
+      console.log("Chamando Google Gemini API (gemini-3.6-flash) para geração de Zanpakutō...");
+      const prompt = construirPromptChatGPT(personagem, dna, cenaTexto, dbPersonagens, dbZanpakutosVinculadas);
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${encodeURIComponent(keyToUse)}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          contents: [{
+            role: "user",
+            parts: [{
+              text: prompt + "\n\nResponda ESTRITAMENTE em formato JSON válido conforme o esquema solicitado."
+            }]
+          }],
+          generationConfig: {
+            responseMimeType: "application/json",
+            temperature: 0.85
+          }
+        })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (rawText) {
+          const parsed = JSON.parse(rawText);
+          if (parsed && Array.isArray(parsed.caminhos) && parsed.caminhos.length >= 4) {
+            console.log("Zanpakutō gerada com sucesso pelo Google Gemini!");
+            caminhosResultantes = parsed.caminhos.slice(0, 4).map((c, idx) => ({
+              ...c,
+              caminhoNumero: idx + 1,
+              shikai: {
+                ...c.shikai,
+                id: uid(),
+                assinaturaEspiritual: calcularAssinaturaEspiritual(c.shikai)
+              }
+            }));
+          }
+        }
+      }
+    } catch (err) {
+      console.warn("Google Gemini API fetch failed, falling back to Cognitive Soul Synthesizer:", err);
+    }
+  }
+
+  // 2. Tentar ChatGPT / OpenAI se chave for da OpenAI (sk-...)
+  if (!caminhosResultantes && keyToUse && keyToUse.startsWith("sk-")) {
+    try {
+      console.log("Chamando OpenAI API (ChatGPT) para geração de Zanpakutō com verificação estrita de exclusividade...");
+      const prompt = construirPromptChatGPT(personagem, dna, cenaTexto, dbPersonagens, dbZanpakutosVinculadas);
       const res = await fetch("https://api.openai.com/v1/chat/completions", {
         method: "POST",
         headers: {
@@ -2422,7 +2690,7 @@ async function gerar4CaminhosZanpakutoAI_Async(personagem, dbPersonagens = [], d
           model: "gpt-4o-mini",
           messages: [{
             role: "system",
-            content: "Você é um mestre narrador de Bleach RPG especialista no Zanpakuto Genesis Engine v5.0. Responda APENAS em JSON válido."
+            content: "Você é um mestre narrador de Bleach RPG especialista no Zanpakuto Genesis Engine v5.0. Você NUNCA repete nomes, temas ou mecânicas de Zanpakutōs já registradas no banco de dados. Responda APENAS em JSON válido."
           }, {
             role: "user",
             content: prompt
@@ -2430,7 +2698,7 @@ async function gerar4CaminhosZanpakutoAI_Async(personagem, dbPersonagens = [], d
           response_format: {
             type: "json_object"
           },
-          temperature: 0.85
+          temperature: 0.88
         })
       });
       if (res.ok) {
@@ -2440,7 +2708,7 @@ async function gerar4CaminhosZanpakutoAI_Async(personagem, dbPersonagens = [], d
           const parsed = JSON.parse(contentStr);
           if (parsed && Array.isArray(parsed.caminhos) && parsed.caminhos.length >= 4) {
             console.log("Zanpakutō gerada com sucesso pelo ChatGPT!");
-            return parsed.caminhos.slice(0, 4).map((c, idx) => ({
+            caminhosResultantes = parsed.caminhos.slice(0, 4).map((c, idx) => ({
               ...c,
               caminhoNumero: idx + 1,
               shikai: {
@@ -2457,16 +2725,54 @@ async function gerar4CaminhosZanpakutoAI_Async(personagem, dbPersonagens = [], d
     }
   }
 
-  // 2. Sintetizador Cognitivo Procedural (Lê 100% da Personalidade, Virtudes, Defeitos e Cena)
-  console.log("Executando Sintetizador Cognitivo ZGE V5.0 baseado na personalidade...");
-  const caminhosProcedurais = sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto);
-  return caminhosProcedurais;
+  // 2. Sintetizador Cognitivo Procedural (Filtra todas as duplicatas contra banco de dados)
+  if (!caminhosResultantes) {
+    console.log("Executando Sintetizador Cognitivo ZGE V5.0 baseado na personalidade com filtro anti-duplicatas...");
+    caminhosResultantes = sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto, claimedNames, claimedElements);
+  }
+
+  // 3. Validação rigorosa pós-geração: Cálculo de Similaridade contra todas as outras fichas
+  const validatedCaminhos = caminhosResultantes.map(c => {
+    let maxSimilarity = 0;
+    let similarWithChar = "";
+    let similarWithZk = "";
+    (dbPersonagens || []).forEach(otherP => {
+      if (otherP.id !== personagem.id && otherP.zanpakuto?.shikaiAtiva) {
+        const sim = calcularIndiceSimilaridade(c.shikai, otherP.zanpakuto.shikaiAtiva);
+        if (sim > maxSimilarity) {
+          maxSimilarity = sim;
+          similarWithChar = otherP.nome;
+          similarWithZk = otherP.zanpakuto.shikaiAtiva.nome;
+        }
+      }
+    });
+    const isExclusivo = maxSimilarity < 40;
+    const indiceExclusividade = Math.max(1, 100 - maxSimilarity);
+    return {
+      ...c,
+      indiceExclusividade,
+      isExclusivo,
+      similaridadeMaxima: maxSimilarity,
+      similarCom: maxSimilarity > 0 ? `${similarWithZk} (${similarWithChar})` : null,
+      dnaEspiritual: {
+        dominante: dna.dominante.label,
+        deficiente: dna.deficiente.label,
+        virtudePrincipal: dna.virtudes.split(',')[0],
+        defeitoPrincipal: dna.defeitos.split(',')[0]
+      }
+    };
+  });
+  return validatedCaminhos;
 }
 
 // Compatibilidade Síncrona
 function gerar4CaminhosZanpakutoAI(personagem, dbPersonagens = [], dbZanpakutosVinculadas = [], cenaTexto = "") {
+  const {
+    claimedNames,
+    claimedElements
+  } = getClaimedSignatures(dbPersonagens, dbZanpakutosVinculadas);
   const dna = construirDnaEspiritual(personagem, cenaTexto);
-  return sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto);
+  return sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto, claimedNames, claimedElements);
 }
 
 // =========================================================================
@@ -2763,9 +3069,13 @@ function Zanpakuto4PathsModal({
     className: "text-xs text-bleach-creamDim font-sans"
   }, "(", caminhoSelecionado.shikai.traducao, ")")), /*#__PURE__*/React.createElement("p", {
     className: "text-xs text-bleach-creamDim italic mt-0.5"
-  }, "\"", caminhoSelecionado.shikai.comando, "\"")), /*#__PURE__*/React.createElement(Badge, {
+  }, "\"", caminhoSelecionado.shikai.comando, "\"")), /*#__PURE__*/React.createElement("div", {
+    className: "flex flex-wrap items-center gap-2"
+  }, caminhoSelecionado.indiceExclusividade && /*#__PURE__*/React.createElement("span", {
+    className: "text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-green-950/80 border border-green-500 text-green-300 tracking-wider"
+  }, "\u2726 ", caminhoSelecionado.indiceExclusividade, "% Exclusiva no RPG"), /*#__PURE__*/React.createElement(Badge, {
     color: C.blue
-  }, caminhoSelecionado.shikai.elemento)), /*#__PURE__*/React.createElement("div", {
+  }, caminhoSelecionado.shikai.elemento))), /*#__PURE__*/React.createElement("div", {
     className: "grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs"
   }, /*#__PURE__*/React.createElement("div", {
     className: "p-3 bg-bleach-panel2/80 rounded-lg border border-white/5 space-y-1"
@@ -5327,6 +5637,9 @@ function AdminPanel({
   saveDb,
   session,
   cloudStatus,
+  setCloudStatus,
+  activeCloudUrl,
+  setActiveCloudUrl,
   onAbrirFicha
 }) {
   const isSuper = session?.role === "super_admin";
@@ -5335,6 +5648,15 @@ function AdminPanel({
   const [novoSubPass, setNovoSubPass] = useState("");
   const [novoSubNome, setNovoSubNome] = useState("");
   const [novoSubCargo, setNovoSubCargo] = useState("Avaliador de Cenas & Fichas");
+
+  // OpenAI ChatGPT Key State
+  const [openAiKey, setOpenAiKey] = useState(() => typeof localStorage !== 'undefined' ? localStorage.getItem("bleach_openai_key") || "" : "");
+  const [keyStatusMsg, setKeyStatusMsg] = useState("");
+
+  // Firebase Realtime Database State
+  const [urlNuvemInput, setUrlNuvemInput] = useState(() => activeCloudUrl || db?.firebaseUrl || (typeof localStorage !== 'undefined' ? localStorage.getItem("bleach_firebase_url") || "" : "https://bleach-rpg-6894c-default-rtdb.firebaseio.com/"));
+  const [msgNuvem, setMsgNuvem] = useState("");
+  const [loadingNuvem, setLoadingNuvem] = useState(false);
 
   // Dados para Novo Personagem
   const [novoNome, setNovoNome] = useState("");
@@ -5508,6 +5830,141 @@ function AdminPanel({
     });
     playReiatsuSound('roll');
   }
+  async function salvarUrlFirebase() {
+    const url = urlNuvemInput.trim();
+    if (!url) {
+      if (confirm("Deseja desconectar a nuvem e operar apenas em modo local?")) {
+        try {
+          localStorage.removeItem("bleach_firebase_url");
+        } catch (e) {}
+        if (setActiveCloudUrl) setActiveCloudUrl("");
+        if (setCloudStatus) setCloudStatus("local");
+        saveDb({
+          ...db,
+          firebaseUrl: ""
+        });
+        setMsgNuvem("✓ Desconectado da nuvem. Operando em modo local.");
+        setTimeout(() => setMsgNuvem(""), 4000);
+      }
+      return;
+    }
+    setLoadingNuvem(true);
+    try {
+      const cleanUrl = url.endsWith('/') ? url.slice(0, -1) : url;
+      const endpoint = cleanUrl.endsWith('.json') ? cleanUrl : cleanUrl + '/bleachDB.json';
+      const testRes = await fetch(endpoint + '?t=' + Date.now());
+      if (testRes.ok) {
+        try {
+          localStorage.setItem("bleach_firebase_url", url);
+        } catch (e) {}
+        if (setActiveCloudUrl) setActiveCloudUrl(url);
+        if (setCloudStatus) setCloudStatus("connected");
+        saveDb({
+          ...db,
+          firebaseUrl: url
+        });
+        setMsgNuvem("✓ Conectado com sucesso ao Firebase Realtime Database!");
+        playReiatsuSound('win');
+      } else {
+        setMsgNuvem("⚠️ Não foi possível comunicar com o Firebase (Status: " + testRes.status + "). Verifique as regras no Firebase Console.");
+      }
+    } catch (err) {
+      setMsgNuvem("❌ Erro ao conectar ao Firebase: " + err.message);
+    } finally {
+      setLoadingNuvem(false);
+      setTimeout(() => setMsgNuvem(""), 6000);
+    }
+  }
+  async function forcarUploadNuvem() {
+    const url = urlNuvemInput.trim() || activeCloudUrl || db?.firebaseUrl;
+    if (!url) {
+      alert("Insira a URL do Firebase primeiro!");
+      return;
+    }
+    setLoadingNuvem(true);
+    try {
+      const cleanUrl = url.endsWith('/') ? url.slice(0, -1) : url;
+      const endpoint = cleanUrl.endsWith('.json') ? cleanUrl : cleanUrl + '/bleachDB.json';
+      const res = await fetch(endpoint, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(db)
+      });
+      if (res.ok) {
+        setMsgNuvem("✓ Todos os dados locais foram enviados com sucesso para o Firebase!");
+        playReiatsuSound('win');
+      } else {
+        setMsgNuvem("⚠️ Falha no envio (Status: " + res.status + ").");
+      }
+    } catch (err) {
+      setMsgNuvem("❌ Erro ao enviar: " + err.message);
+    } finally {
+      setLoadingNuvem(false);
+      setTimeout(() => setMsgNuvem(""), 5000);
+    }
+  }
+  async function puxarDadosNuvem() {
+    const url = urlNuvemInput.trim() || activeCloudUrl || db?.firebaseUrl;
+    if (!url) {
+      alert("Insira a URL do Firebase primeiro!");
+      return;
+    }
+    setLoadingNuvem(true);
+    try {
+      const cleanUrl = url.endsWith('/') ? url.slice(0, -1) : url;
+      const endpoint = cleanUrl.endsWith('.json') ? cleanUrl : cleanUrl + '/bleachDB.json';
+      const res = await fetch(endpoint + '?t=' + Date.now());
+      if (res.ok) {
+        const data = await res.json();
+        if (data && typeof data === 'object' && Array.isArray(data.personagens)) {
+          saveDb(data);
+          setMsgNuvem("✓ Dados da nuvem sincronizados e aplicados com sucesso!");
+          playReiatsuSound('win');
+        } else {
+          setMsgNuvem("⚠️ Nenhum dado encontrado na nuvem para este banco.");
+        }
+      } else {
+        setMsgNuvem("⚠️ Falha ao baixar dados (Status: " + res.status + ").");
+      }
+    } catch (err) {
+      setMsgNuvem("❌ Erro ao sincronizar: " + err.message);
+    } finally {
+      setLoadingNuvem(false);
+      setTimeout(() => setMsgNuvem(""), 5000);
+    }
+  }
+  function baixarBackupJson() {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db, null, 2));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute("download", `bleach_rpg_backup_${Date.now()}.json`);
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+    playReiatsuSound('roll');
+  }
+  function importarBackupJson(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = event => {
+      try {
+        const parsed = JSON.parse(event.target.result);
+        if (parsed && typeof parsed === 'object' && Array.isArray(parsed.personagens)) {
+          saveDb(parsed);
+          alert("✓ Backup restaurado com sucesso!");
+          playReiatsuSound('win');
+        } else {
+          alert("⚠️ Arquivo JSON inválido para a estrutura do Bleach RPG.");
+        }
+      } catch (err) {
+        alert("❌ Erro ao ler arquivo JSON: " + err.message);
+      }
+    };
+    reader.readAsText(file);
+  }
   return /*#__PURE__*/React.createElement("div", {
     className: "space-y-6"
   }, /*#__PURE__*/React.createElement("div", {
@@ -5521,12 +5978,12 @@ function AdminPanel({
   }, "GERENCIADOR DE FICHAS & NARRATIVA"), /*#__PURE__*/React.createElement("p", {
     className: "text-xs text-bleach-creamDim mt-1"
   }, "Crie, gerencie, recompense e fiscalize todas as fichas e combates do RPG.")), /*#__PURE__*/React.createElement("div", {
-    className: "flex gap-2"
-  }, ["fichas", "novo", "subadms", "dados"].map(t => /*#__PURE__*/React.createElement("button", {
+    className: "flex flex-wrap gap-2"
+  }, ["fichas", "novo", "subadms", "dados", "nuvem", "ia"].map(t => /*#__PURE__*/React.createElement("button", {
     key: t,
     onClick: () => setTabAdm(t),
     className: `px-3 py-1.5 rounded-lg text-xs font-bold uppercase transition ${tabAdm === t ? "bg-yellow-500 text-black font-extrabold shadow" : "bg-black/60 border border-yellow-500/30 text-yellow-200"}`
-  }, t === "fichas" ? "Fichas" : t === "novo" ? "+ Criar" : t === "subadms" ? "Avaliadores" : "Dados"))))), tabAdm === "fichas" && /*#__PURE__*/React.createElement(Section, {
+  }, t === "fichas" ? "Fichas" : t === "novo" ? "+ Criar" : t === "subadms" ? "Avaliadores" : t === "dados" ? "Dados" : t === "nuvem" ? "☁️ Firebase" : "🤖 IA & ChatGPT"))))), tabAdm === "fichas" && /*#__PURE__*/React.createElement(Section, {
     title: "Fichas de Shinigamis Registradas",
     subtitle: "Clique para abrir e gerenciar qualquer personagem"
   }, /*#__PURE__*/React.createElement("div", {
@@ -5711,7 +6168,164 @@ function AdminPanel({
     className: "font-mono text-base font-black text-bleach-orange mr-2"
   }, d.resultado), /*#__PURE__*/React.createElement("span", {
     className: "text-[11px] text-yellow-300 font-bold"
-  }, d.categoria)))))));
+  }, d.categoria)))))), tabAdm === "nuvem" && /*#__PURE__*/React.createElement(Section, {
+    title: "Sincroniza\xE7\xE3o em Nuvem \u2014 Firebase Realtime Database",
+    subtitle: "Configura\xE7\xE3o de persist\xEAncia global e sincroniza\xE7\xE3o instant\xE2nea de fichas"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "space-y-6"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "p-5 bg-black/60 border-2 border-yellow-500/50 rounded-2xl space-y-4"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flex flex-wrap items-center justify-between gap-3"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flex items-center gap-3"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "w-10 h-10 rounded-xl bg-yellow-950 border border-yellow-500 flex items-center justify-center text-xl"
+  }, "\u2601\uFE0F"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h4", {
+    className: "font-bold text-white text-base"
+  }, "Banco de Dados Firebase em Tempo Real"), /*#__PURE__*/React.createElement("p", {
+    className: "text-xs text-bleach-muted"
+  }, "Permite que todos os jogadores e mestres vejam altera\xE7\xF5es em tempo real"))), /*#__PURE__*/React.createElement("div", {
+    className: "flex items-center gap-2"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: `text-[11px] font-bold px-3 py-1 rounded-full border ${cloudStatus === "connected" ? "bg-green-950/80 border-green-500 text-green-300" : cloudStatus === "error" ? "bg-red-950/80 border-red-500 text-red-300" : cloudStatus === "syncing" ? "bg-yellow-950/80 border-yellow-500 text-yellow-300" : "bg-blue-950/80 border-blue-500 text-blue-300"}`
+  }, cloudStatus === "connected" ? "🟢 Conectado em Tempo Real" : cloudStatus === "error" ? "🔴 Erro de Conexão" : cloudStatus === "syncing" ? "🟡 Sincronizando..." : "⚪ Modo Local (Offline)"))), /*#__PURE__*/React.createElement("div", {
+    className: "space-y-2"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "block text-xs font-bold text-yellow-300 uppercase"
+  }, "URL do Firebase Realtime Database:"), /*#__PURE__*/React.createElement("div", {
+    className: "flex flex-col sm:flex-row gap-2"
+  }, /*#__PURE__*/React.createElement("input", {
+    type: "text",
+    placeholder: "https://seu-projeto-default-rtdb.firebaseio.com/",
+    value: urlNuvemInput,
+    onChange: e => setUrlNuvemInput(e.target.value),
+    className: "flex-1 bg-bleach-panel2 border border-bleach-border rounded-xl p-3 text-xs text-white font-mono"
+  }), /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    disabled: loadingNuvem,
+    onClick: salvarUrlFirebase,
+    className: "px-5 py-2.5 bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold text-xs uppercase tracking-wider rounded-xl transition shadow disabled:opacity-50"
+  }, loadingNuvem ? "Conectando..." : "Salvar & Conectar")), msgNuvem && /*#__PURE__*/React.createElement("p", {
+    className: "text-xs font-bold mt-1 text-yellow-400"
+  }, msgNuvem)), /*#__PURE__*/React.createElement("div", {
+    className: "grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-white/10"
+  }, /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    disabled: loadingNuvem,
+    onClick: forcarUploadNuvem,
+    className: "p-3 bg-gradient-to-r from-yellow-600 to-yellow-500 hover:brightness-110 text-black font-extrabold text-xs uppercase tracking-wider rounded-xl shadow flex items-center justify-center gap-2"
+  }, /*#__PURE__*/React.createElement("span", null, "\u2B06\uFE0F"), " For\xE7ar Upload para Nuvem (Salvar Tudo)"), /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    disabled: loadingNuvem,
+    onClick: puxarDadosNuvem,
+    className: "p-3 bg-bleach-panel2 hover:bg-white/10 border border-yellow-500/40 text-yellow-300 font-bold text-xs uppercase tracking-wider rounded-xl transition flex items-center justify-center gap-2"
+  }, /*#__PURE__*/React.createElement("span", null, "\u2B07\uFE0F"), " Puxar Dados da Nuvem (Atualizar Fichas)"))), /*#__PURE__*/React.createElement("div", {
+    className: "p-5 bg-bleach-panel2 border border-bleach-border rounded-2xl space-y-4"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flex items-center gap-3"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "w-9 h-9 rounded-xl bg-black border border-bleach-border flex items-center justify-center text-lg"
+  }, "\uD83D\uDCBE"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h4", {
+    className: "font-bold text-white text-sm"
+  }, "Backup Local & Restaura\xE7\xE3o de Seguran\xE7a (JSON)"), /*#__PURE__*/React.createElement("p", {
+    className: "text-xs text-bleach-muted"
+  }, "Exporte ou restaure todo o estado do RPG a qualquer momento em arquivo"))), /*#__PURE__*/React.createElement("div", {
+    className: "flex flex-wrap gap-3"
+  }, /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    onClick: baixarBackupJson,
+    className: "px-5 py-2.5 bg-black/80 hover:bg-black border border-bleach-orange text-bleach-orange font-bold text-xs rounded-xl transition flex items-center gap-2"
+  }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDCE6"), " Baixar Arquivo de Backup (JSON)"), /*#__PURE__*/React.createElement("label", {
+    className: "px-5 py-2.5 bg-bleach-panel hover:bg-white/10 border border-bleach-border text-white font-bold text-xs rounded-xl transition cursor-pointer flex items-center gap-2"
+  }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDCC2"), " Restaurar Backup de Arquivo JSON", /*#__PURE__*/React.createElement("input", {
+    type: "file",
+    accept: ".json",
+    onChange: importarBackupJson,
+    className: "hidden"
+  })))))), tabAdm === "ia" && /*#__PURE__*/React.createElement(Section, {
+    title: "Motor de Intelig\xEAncia Artificial \u2014 Google Gemini, ChatGPT & Motor Cognitivo",
+    subtitle: "Conecte a API gratuita do Google Gemini, OpenAI ou utilize o Motor Cognitivo autoral"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "space-y-6"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "p-5 bg-black/60 border-2 border-yellow-500/50 rounded-2xl space-y-4"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flex flex-wrap items-center justify-between gap-3"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flex items-center gap-3"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "w-10 h-10 rounded-xl bg-yellow-950 border border-yellow-500 flex items-center justify-center text-xl"
+  }, "\uD83E\uDD16"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h4", {
+    className: "font-bold text-white text-base"
+  }, "Gera\xE7\xE3o de Zanpakut\u014D com Intelig\xEAncia Artificial"), /*#__PURE__*/React.createElement("p", {
+    className: "text-xs text-bleach-muted"
+  }, "Compat\xEDvel com Google Gemini (Gratuito), OpenAI ChatGPT e Motor Cognitivo Local"))), /*#__PURE__*/React.createElement("span", {
+    className: `text-[11px] font-bold px-3 py-1 rounded-full border ${openAiKey && (openAiKey.startsWith("AIza") || openAiKey.startsWith("aiza")) ? "bg-green-950/80 border-green-500 text-green-300" : openAiKey && openAiKey.startsWith("sk-") ? "bg-green-950/80 border-green-500 text-green-300" : "bg-blue-950/80 border-cyan-500 text-cyan-300"}`
+  }, openAiKey && (openAiKey.startsWith("AIza") || openAiKey.startsWith("aiza")) ? "🟢 Google Gemini 2.0 Flash Online (Google AI)" : openAiKey && openAiKey.startsWith("sk-") ? "🟢 OpenAI ChatGPT Online (GPT-4o-mini)" : "🔵 Motor Cognitivo ZGE v5.0 Nativo Ativo")), /*#__PURE__*/React.createElement("p", {
+    className: "text-xs text-bleach-creamDim leading-relaxed"
+  }, "O sistema analisa automaticamente os ", /*#__PURE__*/React.createElement("strong", null, "atributos"), " (dominante e deficiente), ", /*#__PURE__*/React.createElement("strong", null, "personalidade selada"), " (virtudes, defeitos, desejos, medos, conflitos e estilo de combate) e a ", /*#__PURE__*/React.createElement("strong", null, "cena de despertar narrada"), "."), /*#__PURE__*/React.createElement("div", {
+    className: "space-y-2"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "block text-xs font-bold text-yellow-300 uppercase"
+  }, "Chave de API (Google Gemini ou OpenAI):"), /*#__PURE__*/React.createElement("div", {
+    className: "flex flex-col sm:flex-row gap-2"
+  }, /*#__PURE__*/React.createElement("input", {
+    type: "password",
+    placeholder: "Chave Google Gemini (AIzaSy...) ou OpenAI (sk-...)",
+    value: openAiKey,
+    onChange: e => setOpenAiKey(e.target.value),
+    className: "flex-1 bg-bleach-panel2 border border-bleach-border rounded-xl p-3 text-xs text-white font-mono"
+  }), /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    onClick: () => {
+      try {
+        localStorage.setItem("bleach_openai_key", openAiKey.trim());
+        setKeyStatusMsg("✓ Chave de API salva com sucesso!");
+        setTimeout(() => setKeyStatusMsg(""), 4000);
+      } catch (e) {}
+    },
+    className: "px-5 py-2.5 bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold text-xs uppercase tracking-wider rounded-xl transition shadow"
+  }, "Salvar Chave"), openAiKey && /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    onClick: () => {
+      try {
+        localStorage.removeItem("bleach_openai_key");
+        setOpenAiKey("");
+        setKeyStatusMsg("✓ Chave removida. Usando Motor Cognitivo Nativo.");
+        setTimeout(() => setKeyStatusMsg(""), 4000);
+      } catch (e) {}
+    },
+    className: "px-4 py-2.5 bg-red-950/80 hover:bg-red-900 border border-red-500 text-red-200 text-xs font-bold rounded-xl transition"
+  }, "Remover")), keyStatusMsg && /*#__PURE__*/React.createElement("p", {
+    className: "text-xs text-green-400 font-bold mt-1"
+  }, keyStatusMsg))), /*#__PURE__*/React.createElement("div", {
+    className: "grid grid-cols-1 md:grid-cols-2 gap-4 text-xs"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "p-4 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-2"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flex items-center gap-2 text-bleach-orange font-bold"
+  }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDD25"), " Op\xE7\xE3o 1: Elemental / Temperamento (~45% Peso)"), /*#__PURE__*/React.createElement("p", {
+    className: "text-bleach-creamDim leading-relaxed"
+  }, "Manifesta\xE7\xE3o da emo\xE7\xE3o central e virtudes da alma. Escala com o ", /*#__PURE__*/React.createElement("strong", null, "Atributo Dominante"), " do personagem (Press\xE3o, For\xE7a, Velocidade ou Resili\xEAncia).")), /*#__PURE__*/React.createElement("div", {
+    className: "p-4 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-2"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flex items-center gap-2 text-cyan-400 font-bold"
+  }, /*#__PURE__*/React.createElement("span", null, "\u2696\uFE0F"), " Op\xE7\xE3o 2: Conceitual / Regras / Progressivo (~20% Peso)"), /*#__PURE__*/React.createElement("p", {
+    className: "text-bleach-creamDim leading-relaxed"
+  }, "Mec\xE2nica t\xE1tica por etapas e imposi\xE7\xE3o de leis inviol\xE1veis no campo de batalha, refletindo a disciplina e o racioc\xEDnio t\xE1tico.")), /*#__PURE__*/React.createElement("div", {
+    className: "p-4 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-2"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flex items-center gap-2 text-green-400 font-bold"
+  }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDEE1\uFE0F"), " Op\xE7\xE3o 3: Compensat\xF3rio / Defesa da Alma"), /*#__PURE__*/React.createElement("p", {
+    className: "text-bleach-creamDim leading-relaxed"
+  }, "Compensa o ", /*#__PURE__*/React.createElement("strong", null, "Atributo Deficiente"), " e ergue uma muralha protetora contra o ", /*#__PURE__*/React.createElement("strong", null, "maior medo"), " do Shinigami.")), /*#__PURE__*/React.createElement("div", {
+    className: "p-4 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-2"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flex items-center gap-2 text-purple-400 font-bold"
+  }, /*#__PURE__*/React.createElement("span", null, "\uD83C\uDF11"), " Op\xE7\xE3o 4: Opositivo / Abstrato / Sombra"), /*#__PURE__*/React.createElement("p", {
+    className: "text-bleach-creamDim leading-relaxed"
+  }, "Explora a dualidade, conflitos internos e o paradoxo oculto do subconsciente, invertendo regras e percep\xE7\xF5es de combate."))))));
 }
 
 // FULL OFFICIAL SISTEMAS & REGRAS VIEW (100% CANONICAL BLEACH RPG BASE SYSTEM)
@@ -6181,23 +6795,111 @@ function App() {
   const [showAdminLoginModal, setShowAdminLoginModal] = useState(false);
   const [activeCloudUrl, setActiveCloudUrl] = useState("");
 
+  // Helper to sanitize character data
+  function sanitizeChar(p) {
+    if (!p || typeof p !== 'object') return null;
+    return {
+      id: p.id || 'char-' + uid(),
+      nome: p.nome || "Shinigami",
+      foto: p.foto || "assets/ichigo-orange.png",
+      whatsapp: p.whatsapp || "",
+      codigo: p.codigo || "",
+      raca: p.raca || "Shinigami",
+      esquadrao: p.esquadrao || "11º Esquadrão",
+      faceclaim: p.faceclaim || p.nome || "",
+      idadePlayer: p.idadePlayer || "20",
+      aniversarioPlayer: p.aniversarioPlayer || "01/01",
+      idadeChar: p.idadeChar || "18",
+      aniversarioChar: p.aniversarioChar || "15/07",
+      pontosDisponiveis: Number(p.pontosDisponiveis || 0),
+      sorteiosComunsRestantes: Number(p.sorteiosComunsRestantes || 0),
+      sorteiosEspeciaisRestantes: Number(p.sorteiosEspeciaisRestantes || 0),
+      sorteiosDrops: Array.isArray(p.sorteiosDrops) ? p.sorteiosDrops : [],
+      permissoes: {
+        shikaiLiberada: !!p.permissoes?.shikaiLiberada,
+        bankaiLiberada: !!p.permissoes?.bankaiLiberada
+      },
+      atributos: {
+        pressao: Number(p.atributos?.pressao || 10),
+        forca: Number(p.atributos?.forca || 10),
+        velocidade: Number(p.atributos?.velocidade || 10),
+        resiliencia: Number(p.atributos?.resiliencia || 10)
+      },
+      kidosConhecidos: Array.isArray(p.kidosConhecidos) ? p.kidosConhecidos : [],
+      tecnicas: Array.isArray(p.tecnicas) ? p.tecnicas : [],
+      personalidade: p.personalidade || {
+        texto: "",
+        virtudes: "",
+        defeitos: "",
+        desejos: "",
+        medos: "",
+        conflitos: "",
+        estiloCombate: ""
+      },
+      personalidadeTravada: !!p.personalidadeTravada,
+      cenaDespertarShikai: p.cenaDespertarShikai || "",
+      cenaDespertarBankai: p.cenaDespertarBankai || "",
+      zanpakuto: p.zanpakuto || {
+        nome: "Em despertar",
+        fotoShikai: "assets/ichigo-orange.png",
+        fotoBankai: "assets/ichigo-moon.png",
+        shikaiAtiva: null,
+        bankaiAtiva: null,
+        notas: ""
+      },
+      estado: p.estado || "Inteiro",
+      treinosHoje: Number(p.treinosHoje || 0),
+      historico: Array.isArray(p.historico) ? p.historico : []
+    };
+  }
+
   // Sync with cloud on startup
   useEffect(() => {
     async function initDb() {
-      let initialData = DEFAULT_DB;
+      let initialData = {
+        ...DEFAULT_DB
+      };
       try {
         const stored = localStorage.getItem("bleachDB");
         if (stored) {
-          initialData = JSON.parse(stored);
+          const parsed = JSON.parse(stored);
+          if (parsed && typeof parsed === 'object') {
+            initialData = {
+              ...DEFAULT_DB,
+              ...parsed,
+              personagens: Array.isArray(parsed.personagens) && parsed.personagens.length > 0 ? parsed.personagens : DEFAULT_DB.personagens,
+              combatesArena: Array.isArray(parsed.combatesArena) ? parsed.combatesArena : DEFAULT_DB.combatesArena,
+              rolagensDadosPublicas: Array.isArray(parsed.rolagensDadosPublicas) ? parsed.rolagensDadosPublicas : DEFAULT_DB.rolagensDadosPublicas,
+              mensagensChat: Array.isArray(parsed.mensagensChat) ? parsed.mensagensChat : DEFAULT_DB.mensagensChat,
+              subAdms: Array.isArray(parsed.subAdms) ? parsed.subAdms : DEFAULT_DB.subAdms,
+              registrosTarefasAdm: Array.isArray(parsed.registrosTarefasAdm) ? parsed.registrosTarefasAdm : DEFAULT_DB.registrosTarefasAdm,
+              zanpakutosVinculadas: Array.isArray(parsed.zanpakutosVinculadas) ? parsed.zanpakutosVinculadas : DEFAULT_DB.zanpakutosVinculadas
+            };
+          }
         }
-      } catch (e) {}
+      } catch (e) {
+        console.warn("Storage parse error, using default DB:", e);
+      }
+
+      // Sanitize characters
+      if (Array.isArray(initialData.personagens)) {
+        initialData.personagens = initialData.personagens.map(sanitizeChar).filter(Boolean);
+      }
       let cloudUrl = "";
       try {
         const cfgRes = await fetch('config.json?t=' + Date.now());
         if (cfgRes.ok) {
           const cfg = await cfgRes.json();
+          if (typeof window !== 'undefined') {
+            window.BLEACH_CONFIG = cfg;
+          }
           if (cfg && cfg.firebaseUrl) {
             cloudUrl = cfg.firebaseUrl.trim();
+          }
+          if (cfg && cfg.openaiApiKey) {
+            try {
+              localStorage.setItem("bleach_openai_key", cfg.openaiApiKey.trim());
+            } catch (e) {}
           }
         }
       } catch (e) {}
@@ -6213,10 +6915,11 @@ function App() {
           const res = await fetch(endpoint + '?t=' + Date.now());
           if (res.ok) {
             const cloudData = await res.json();
-            if (cloudData && typeof cloudData === 'object' && cloudData.personagens) {
+            if (cloudData && typeof cloudData === 'object' && Array.isArray(cloudData.personagens)) {
               initialData = {
                 ...initialData,
                 ...cloudData,
+                personagens: cloudData.personagens.map(sanitizeChar).filter(Boolean),
                 firebaseUrl: cloudUrl
               };
               localStorage.setItem("bleachDB", JSON.stringify(initialData));
@@ -6244,10 +6947,11 @@ function App() {
         const res = await fetch(endpoint + '?t=' + Date.now());
         if (res.ok) {
           const cloudData = await res.json();
-          if (cloudData && typeof cloudData === 'object' && cloudData.personagens) {
+          if (cloudData && typeof cloudData === 'object' && Array.isArray(cloudData.personagens)) {
             setDb(prev => ({
               ...prev,
-              ...cloudData
+              ...cloudData,
+              personagens: cloudData.personagens.map(sanitizeChar).filter(Boolean)
             }));
           }
         }
@@ -6424,6 +7128,9 @@ function App() {
     saveDb: saveDb,
     session: session,
     cloudStatus: cloudStatus,
+    setCloudStatus: setCloudStatus,
+    activeCloudUrl: activeCloudUrl,
+    setActiveCloudUrl: setActiveCloudUrl,
     onAbrirFicha: charId => {
       setAdminCharId(charId);
       setView("ficha");
@@ -6455,5 +7162,5 @@ function App() {
 const container = document.getElementById('root');
 if (container) {
   const root = ReactDOM.createRoot(container);
-  root.render( /*#__PURE__*/React.createElement(App, null));
+  root.render( /*#__PURE__*/React.createElement(ErrorBoundary, null, /*#__PURE__*/React.createElement(App, null)));
 }
