@@ -53,7 +53,7 @@ const TIPOS_RECOMPENSA = [
   "Outro"
 ];
 
-// Gacha Rarities & Pools (Sistema Balanceado & Raro)
+// Gacha Pools
 const RARIDADES_COMUNS = [
   { nome: "Comum (Básico)", peso: 650, min: 1, max: 2, cor: C.muted, desc: "+1 a +2 Pontos de Atributo ou recurso básico (65% de chance)", tipo: "pontos", chanceStr: "65%" },
   { nome: "Incomum", peso: 220, min: 3, max: 4, cor: C.green, desc: "+3 a +4 Pontos de Atributo ou tônico de Reishi (22% de chance)", tipo: "pontos", chanceStr: "22%" },
@@ -63,150 +63,1342 @@ const RARIDADES_COMUNS = [
 ];
 
 const RECOMPENSAS_ESPECIAIS = [
-  // PRÊMIOS BÁSICOS / SIMPLES (60% do total)
-  { 
-    id: "esp-basico-1", 
-    nome: "🌿 Frasco de Elixir do 4º Esquadrão", 
-    raridade: "Comum Especial", 
-    peso: 160, 
-    cor: C.green, 
-    desc: "Um frasco de Kaidō concentrado que revigora as fibras de Reiryoku (+4 pontos).", 
-    tipo: "pontos", 
-    valor: 4, 
-    chanceStr: "16%" 
-  },
-  { 
-    id: "esp-basico-2", 
-    nome: "⚡ Pergaminho de Treino de Hohō", 
-    raridade: "Comum Especial", 
-    peso: 160, 
-    cor: C.green, 
-    desc: "Instruções táticas de passos relâmpago e mobilidade (+5 pontos).", 
-    tipo: "pontos", 
-    valor: 5, 
-    chanceStr: "16%" 
-  },
-  { 
-    id: "esp-basico-3", 
-    nome: "🧪 Tônico de Reishi do 12º Esquadrão", 
-    raridade: "Comum Especial", 
-    peso: 150, 
-    cor: C.green, 
-    desc: "Um composto refinado pelo Departamento de Pesquisa e Desenvolvimento (+6 pontos).", 
-    tipo: "pontos", 
-    valor: 6, 
-    chanceStr: "15%" 
-  },
-  { 
-    id: "esp-basico-4", 
-    nome: "🛡️ Selo Protetor da Sociedade das Almas", 
-    raridade: "Comum Especial", 
-    peso: 130, 
-    cor: C.green, 
-    desc: "Um amuleto defensivo que fortalece a estabilidade do Hakusui (+7 pontos).", 
-    tipo: "pontos", 
-    valor: 7, 
-    chanceStr: "13%" 
-  },
-
-  // PRÊMIOS INTERMEDIÁRIOS (24% do total)
-  { 
-    id: "esp-inter-1", 
-    nome: "💎 Fragmento Bruto de Cristal Espiritual", 
-    raridade: "Incomum Especial", 
-    peso: 90, 
-    cor: C.blue, 
-    desc: "Um cristal de alta densidade mineral que expande a reserva de Reiryoku (+8 pontos).", 
-    tipo: "pontos", 
-    valor: 8, 
-    chanceStr: "9%" 
-  },
-  { 
-    id: "esp-inter-2", 
-    nome: "📜 Pergaminho de Zanjutsu de Elite", 
-    raridade: "Incomum Especial", 
-    peso: 80, 
-    cor: C.blue, 
-    desc: "Técnicas refinadas de esgrima de capitães ancestrais (+10 pontos).", 
-    tipo: "pontos", 
-    valor: 10, 
-    chanceStr: "8%" 
-  },
-  { 
-    id: "esp-inter-3", 
-    nome: "🔮 Orbe de Condensação de Reiryoku", 
-    raridade: "Incomum Especial", 
-    peso: 70, 
-    cor: C.blue, 
-    desc: "Uma esfera perolada de energia espiritual pura concentrada (+12 pontos).", 
-    tipo: "pontos", 
-    valor: 12, 
-    chanceStr: "7%" 
-  },
-
-  // PRÊMIOS RAROS (11% do total)
-  { 
-    id: "esp-raro-1", 
-    nome: "✨ Super Bônus Espiritual de Classe Nobre", 
-    raridade: "Rara Especial", 
-    peso: 60, 
-    cor: C.purple, 
-    desc: "Uma expansão massiva de pressão espiritual digna de famílias nobres (+15 pontos livres).", 
-    tipo: "pontos", 
-    valor: 15, 
-    chanceStr: "6%" 
-  },
-  { 
-    id: "esp-raro-2", 
-    nome: "📜 Fórmula de Kidō Avançado (Hadō #63 / Bakudō #62)", 
-    raridade: "Rara Especial", 
-    peso: 50, 
-    cor: C.purple, 
-    desc: "Fórmula de Kidō de alta patente concedendo 16 pontos livres para aprendizado ou atributos (+16 pontos).", 
-    tipo: "kido", 
-    valor: 16, 
-    chanceStr: "5%" 
-  },
-
-  // PRÊMIOS LENDÁRIOS (4% do total / 1 em 25)
-  { 
-    id: "esp-lend-1", 
-    nome: "⚔️ Comunicação Profunda — Despertar de Habilidade Shikai", 
-    raridade: "Lendária", 
-    peso: 25, 
-    cor: C.orange, 
-    desc: "Sintonia profunda com o espírito da Zanpakutō desbloqueando 20 pontos livres!", 
-    tipo: "habilidade", 
-    valor: 20, 
-    chanceStr: "2.5%" 
-  },
-  { 
-    id: "esp-lend-2", 
-    nome: "📜 Pergaminho Proibido — Hadō Secreto #88 Hiryū Gekizoku", 
-    raridade: "Lendária", 
-    peso: 15, 
-    cor: C.yellow, 
-    desc: "Um dos feitiços mais destrutivos e restritos da Soul Society concedendo 24 pontos livres!", 
-    tipo: "kido", 
-    valor: 24, 
-    chanceStr: "1.5%" 
-  },
-
-  // O GRANDE PRÊMIO TRANSCENDENTAL (EXATAMENTE 1% / 1 EM 100 ROLAGENS)
-  { 
-    id: "esp-transcendente", 
-    nome: "🌟 MISSÃO NARRATIVA INDIVIDUAL — DESPERTAR DE PODER", 
-    raridade: "Transcendente (1 em 100)", 
-    peso: 10, 
-    cor: "#FFFFFF", 
-    desc: "O PRÊMIO MÁXIMO, MAIS DIFÍCIL E COBIÇADO DE TODO O RPG (Chance exata de 1 em 100 / 1%)! Uma missão narrativa individual exclusiva conduzida pessoalmente pela Administração para o seu personagem romper todos os limites e despertar um poder transcendental único!", 
-    tipo: "missao_despertar", 
-    valor: 35, 
-    chanceStr: "1.0% (1 em 100)" 
-  }
+  { id: "esp-basico-1", nome: "🌿 Frasco de Elixir do 4º Esquadrão", raridade: "Comum Especial", peso: 160, cor: C.green, desc: "Um frasco de Kaidō concentrado que revigora as fibras de Reiryoku (+4 pontos).", tipo: "pontos", valor: 4, chanceStr: "16%" },
+  { id: "esp-basico-2", nome: "⚡ Pergaminho de Treino de Hohō", raridade: "Comum Especial", peso: 160, cor: C.green, desc: "Instruções táticas de passos relâmpago e mobilidade (+5 pontos).", tipo: "pontos", valor: 5, chanceStr: "16%" },
+  { id: "esp-basico-3", nome: "🧪 Tônico de Reishi do 12º Esquadrão", raridade: "Comum Especial", peso: 150, cor: C.green, desc: "Um composto refinado pelo Departamento de Pesquisa e Desenvolvimento (+6 pontos).", tipo: "pontos", valor: 6, chanceStr: "15%" },
+  { id: "esp-basico-4", nome: "🛡️ Selo Protetor da Sociedade das Almas", raridade: "Comum Especial", peso: 130, cor: C.green, desc: "Um amuleto defensivo que fortalece a estabilidade do Hakusui (+7 pontos).", tipo: "pontos", valor: 7, chanceStr: "13%" },
+  { id: "esp-inter-1", nome: "💎 Fragmento Bruto de Cristal Espiritual", raridade: "Incomum Especial", peso: 90, cor: C.blue, desc: "Um cristal translúcido que ressoa com o Reiryoku nativo (+8 pontos).", tipo: "pontos", valor: 8, chanceStr: "9%" },
+  { id: "esp-inter-2", nome: "📜 Tomo Antigo de Hadō & Bakudō", raridade: "Incomum Especial", peso: 80, cor: C.blue, desc: "Anotações perdidas sobre o controle dos primeiros números de Kidō (+10 pontos).", tipo: "pontos", valor: 10, chanceStr: "8%" },
+  { id: "esp-inter-3", nome: "🍵 Chá Imperial da Família Kuchiki", raridade: "Incomum Especial", peso: 70, cor: C.blue, desc: "Uma iguaria reservada aos nobres que acalma a mente e purifica a pressão (+12 pontos).", tipo: "pontos", valor: 12, chanceStr: "7%" },
+  { id: "esp-raro-1", nome: "🔮 Orbe de Condensação do Departamento de Pesquisa", raridade: "Raro Nobre", peso: 60, cor: C.purple, desc: "Uma esfera densa de Reishi altamente purificado pelo 12º Esquadrão (+15 pontos).", tipo: "pontos", valor: 15, chanceStr: "6%" },
+  { id: "esp-raro-2", nome: "⚜️ Relíquia Nobre da Grande Família Shihōin", raridade: "Raro Nobre", peso: 50, cor: C.purple, desc: "Um amuleto antigo tecido com os passos dos mestres de Shunpo (+16 pontos).", tipo: "pontos", valor: 16, chanceStr: "5%" },
+  { id: "esp-lend-1", nome: "👑 Bênção Sagrada da Guarda Real (Divisão Zero)", raridade: "Lendário Supremo", peso: 25, cor: C.yellow, desc: "Um influxo transcendental de Reishi puro que ecoa as técnicas ancestrais do Palácio Real (+20 pontos).", tipo: "pontos", valor: 20, chanceStr: "2.5%" },
+  { id: "esp-lend-2", nome: "☄️ Essência Primordial da Sociedade das Almas", raridade: "Lendário Supremo", peso: 15, cor: C.yellow, desc: "A própria matéria espiritual condensada antes da divisão dos mundos (+24 pontos).", tipo: "pontos", valor: 24, chanceStr: "1.5%" },
+  { id: "esp-supremo-1", nome: "⚔️ Comunicação Profunda — Despertar de Habilidade Shikai", raridade: "Recompensa Narrativa Suprema", peso: 10, cor: "#FFD700", desc: "Seu espírito de Zanpakutō ressoa profundamente. O ADM concederá uma Missão Narrativa Individual de despertar de nova habilidade especial única!", tipo: "missao_despertar", valor: 0, chanceStr: "1.0% (1 em 100)" },
 ];
 
-// Official Kidō Catalog (75+ Spells with Incantations & Effects)
+const MASTER_ZANPAKUTO_CATALOG = [
+  {
+    "id": "zk-01",
+    "numero": "01",
+    "nome": "Kurotsubaki",
+    "kanji": "「黒椿」",
+    "traducao": "A Camélia Negra",
+    "nomeCompleto": "Kurotsubaki 「黒椿」— A Camélia Negra",
+    "espirito": "Uma mulher alta, de aparência madura, vestida com um quimono preto coberto por pétalas de camélia. Seu rosto é parcialmente escondido por um véu. Ela passa a maior parte do tempo sentada em um jardim completamente sem cor, cuidando de uma única árvore.",
+    "comando": "Floresça no silêncio, Kurotsubaki.",
+    "elemento": "Vácuo Cinético & Pétalas Negras",
+    "formatoArma": "A katana perde a lâmina tradicional e se transforma em uma espada fina, negra, com uma guarda circular semelhante a uma flor. Pequenas pétalas negras começam a surgir ao redor do usuário sempre que ele movimenta a espada. As pétalas não são simplesmente decorativas: elas permanecem suspensas no ambiente por alguns segundos.",
+    "poder": "Jardim do Último Instante: O usuário pode fazer as pétalas absorverem o movimento de qualquer coisa que toquem. Uma pessoa que atravessa uma pétala sente seu movimento diminuir brevemente. Um golpe pode perder velocidade. Uma flecha pode praticamente parar. Limitação: as pétalas só conseguem armazenar uma quantidade limitada de movimento. Quando o limite é atingido, elas desaparecem.",
+    "bankai": {
+      "nome": "Kurotsubaki — Shūen Teien",
+      "kanji": "「黒椿・終焉庭園」",
+      "traducao": "Jardim do Fim",
+      "nomeCompleto": "Bankai — Kurotsubaki 「黒椿・終焉庭園」 (Shūen Teien — Jardim do Fim)",
+      "comando": "Bankai — Kurotsubaki, Shūen Teien!",
+      "formatoArma": "Todas as pétalas existentes se transformam em árvores negras gigantescas. O campo de batalha inteiro vira um jardim silencioso e monocromático sob uma penumbra espiritual.",
+      "poder": "Redistribuição Absoluta do Movimento: O usuário agora pode redistribuir o movimento armazenado. Pode retirar velocidade de uma coisa e transferi-la para outra. Por exemplo: uma espada inimiga perde velocidade → uma estocada do usuário recebe essa velocidade. A grande evolução é que a Shikai armazena, enquanto a Bankai redistribui livremente no domínio do jardim."
+    }
+  },
+  {
+    "id": "zk-02",
+    "numero": "02",
+    "nome": "Akagane",
+    "kanji": "「赤鋼」",
+    "traducao": "Aço Vermelho",
+    "nomeCompleto": "Akagane 「赤鋼」— Aço Vermelho",
+    "espirito": "Um ferreiro gigantesco sem rosto, com o corpo coberto por placas metálicas e um enorme avental. Em vez de mãos, possui martelos. Ele nunca fala; responde apenas golpeando uma bigorna espiritual ancestral.",
+    "comando": "Forje aquilo que ainda não existe, Akagane.",
+    "elemento": "Aço Carmesim & Refinamento Cinético",
+    "formatoArma": "A espada se desfaz em várias placas metálicas vermelhas que envolvem o braço direito do usuário, formando uma manopla reforçada e antebraço blindado de combate pesado.",
+    "poder": "Memória do Impacto: Cada golpe recebido pela armadura é parcialmente armazenado. Quanto mais impactos recebe, mais energia cinética a armadura acumula. O usuário pode liberar essa energia através do próximo golpe. Limitação: se acumular energia demais além da sua capacidade física, a própria armadura começa a sobreaquecer e prejudicar o usuário.",
+    "bankai": {
+      "nome": "Akagane — Hyakurenro",
+      "kanji": "「赤鋼・百錬炉」",
+      "traducao": "Forja das Cem Temperas",
+      "nomeCompleto": "Bankai — Akagane 「赤鋼・百錬炉」 (Hyakurenro — Forja das Cem Temperas)",
+      "comando": "Bankai — Akagane, Hyakurenro!",
+      "formatoArma": "A armadura de aço vermelho cobre todo o corpo do usuário e surge uma enorme fornalha espiritual incandescente flutuando atrás dele.",
+      "poder": "Refinamento & Conversão Metabólica de Energia: Os impactos agora são refinados pela fornalha. Cada golpe recebido ou trocado consecutivamente transforma a energia acumulada em bônus direto de força, velocidade, resistência ou impulso destrutivo. Requer que o usuário mantenha o ritmo de combate contínuo; se parar de lutar por muito tempo, a energia refinada se dissipa."
+    }
+  },
+  {
+    "id": "zk-03",
+    "numero": "03",
+    "nome": "Suisen",
+    "kanji": "「水仙」",
+    "traducao": "Narciso",
+    "nomeCompleto": "Suisen 「水仙」— Narciso",
+    "espirito": "Um garoto extremamente pálido, vestido como um bailarino clássico, que vive em um salão imenso cheio de espelhos cobertos por água rasa e pétalas brancas.",
+    "comando": "Olhe para si mesmo, Suisen.",
+    "elemento": "Espelhos Líquidos & Translocação",
+    "formatoArma": "A lâmina se transforma em uma espada extremamente fina e prateada de superfície fluida e líquida. Sempre que alguém olha diretamente para ela, vê seu próprio reflexo distorcido em ondas aquáticas.",
+    "poder": "Reflexo Falso: O usuário pode criar cópias ilusórias táteis de movimentos que acabou de realizar. Se ele atacar para a esquerda, um reflexo pode repetir o movimento simultaneamente pela direita para confundir a percepção e tempo de reação do oponente.",
+    "bankai": {
+      "nome": "Suisen — Senkyō Kairō",
+      "kanji": "「水仙・千鏡回廊」",
+      "traducao": "Corredor das Mil Imagens",
+      "nomeCompleto": "Bankai — Suisen 「水仙・千鏡回廊」 (Senkyō Kairō — Corredor das Mil Imagens)",
+      "comando": "Bankai — Suisen, Senkyō Kairō!",
+      "formatoArma": "O campo inteiro se transforma em um labirinto monumental de espelhos líquidos flutuantes que refletem a luz e a imagem do usuário em 360 graus.",
+      "poder": "Translocação Reflexiva Instantânea: A Bankai se torna uma técnica suprema de mobilidade e reposicionamento. O usuário pode trocar de posição instantaneamente com qualquer reflexo ativo no campo. Limitação: cada troca consome e destrói o espelho reflexivo utilizado."
+    }
+  },
+  {
+    "id": "zk-04",
+    "numero": "04",
+    "nome": "Hoshikuzu",
+    "kanji": "「星屑」",
+    "traducao": "Poeira Estelar",
+    "nomeCompleto": "Hoshikuzu 「星屑」— Poeira Estelar",
+    "espirito": "Uma pequena criatura humanoide coberta por um manto azul-escuro cósmico. Seu corpo parece conter uma galáxia de estrelas reluzentes. Ela fala como uma criança curiosa e habita uma ilha flutuante no vazio celestial.",
+    "comando": "Desperte no céu, Hoshikuzu.",
+    "elemento": "Gravidade Orbital & Luz Cósmica",
+    "formatoArma": "A espada se fragmenta em dezenas de pequenos cristais luminosos azulados que orbitam em círculos contínuos ao redor do portador.",
+    "poder": "Órbita Curvilínea: Os fragmentos podem alterar bruscamente sua trajetória no ar sem perder aceleração. O usuário pode arremessar cristais que realizam curvas impossíveis em torno de obstáculos e criam pontos de ancoragem para saltos aéreos.",
+    "bankai": {
+      "nome": "Hoshikuzu — Tenkan",
+      "kanji": "「星屑・天環」",
+      "traducao": "Anel Celestial",
+      "nomeCompleto": "Bankai — Hoshikuzu 「星屑・天環」 (Tenkan — Anel Celestial)",
+      "comando": "Bankai — Hoshikuzu, Tenkan!",
+      "formatoArma": "Os fragmentos de cristal se multiplicam em milhares e formam gigantescos anéis luminosos concêntricos que giram por todo o perímetro da arena.",
+      "poder": "Controle Absoluto de Trajetórias: O usuário define eixos de atração gravitacional. Qualquer projétil, técnica de Reiryoku ou adversário que entre em uma das órbitas é forçado a seguir a trajetória circular do anel, permitindo defletir ataques maciços e reposicionar inimigos à vontade."
+    }
+  },
+  {
+    "id": "zk-05",
+    "numero": "05",
+    "nome": "Kōriame",
+    "kanji": "「氷雨」",
+    "traducao": "Chuva Congelada",
+    "nomeCompleto": "Kōriame 「氷雨」— Chuva Congelada",
+    "espirito": "Uma senhora idosa de olhar triste e passos lentos carregando um guarda-chuva de seda branca, habitando uma cidade melancólica onde chove sem parar.",
+    "comando": "Chore sobre este mundo, Kōriame.",
+    "elemento": "Água Pesada & Inércia Glacial",
+    "formatoArma": "A espada vira um guarda-chuva metálico branco reforçado com uma lâmina de estocada na ponta. Quando aberto, uma fina chuva espiritual começa a precipitar continuamente sobre a área.",
+    "poder": "Gotas de Peso Inercial: Cada gota de chuva que toca um objeto ou pessoa aumenta progressivamente sua inércia física. O alvo atinge cada vez mais resistência para acelerar, saltar ou mudar bruscamente de rumo durante a movimentação.",
+    "bankai": {
+      "nome": "Kōriame — Hakusōten",
+      "kanji": "「氷雨・白葬天」",
+      "traducao": "Céu do Funeral Branco",
+      "nomeCompleto": "Bankai — Kōriame 「氷雨・白葬天」 (Hakusōten — Céu do Funeral Branco)",
+      "comando": "Bankai — Kōriame, Hakusōten!",
+      "formatoArma": "O firmamento escurece sob nuvens cinzentas colossais e uma tempestade torrencial de gotas prateadas cobre quilômetros de distância.",
+      "poder": "Manipulação Vetorial da Resistência Espacial: O usuário dita qual direção do espaço sofrerá maior resistência hidrostática. Pode fazer avanços frontais ficarem dez vezes mais lentos, golpes verticais perderem impacto e passos de fuga se tornarem exaustivos, ditando o ritmo da batalha."
+    }
+  },
+  {
+    "id": "zk-06",
+    "numero": "06",
+    "nome": "Kagamibana",
+    "kanji": "「鏡花」",
+    "traducao": "Flor do Espelho",
+    "nomeCompleto": "Kagamibana 「鏡花」— Flor do Espelho",
+    "espirito": "Uma mulher sem olhos com flores de vidro e cristais crescendo pelos longos cabelos escuros, vivendo dentro de uma estufa repleta de espelhos estilhaçados.",
+    "comando": "Reflita aquilo que deveria ser esquecido, Kagamibana.",
+    "elemento": "Distorção de Probabilidade & Vidro",
+    "formatoArma": "A lâmina se torna transparente como vidro puro, com uma superfície que parece um mosaico de espelhos trincados.",
+    "poder": "Fragmento de Possibilidade: Quando um ataque inimigo passa a curta distância, o usuário pode criar uma réplica alternativa daquele instante. Por alguns segundos, ele pode optar por validar o acontecimento real ou o fragmento alternativo criado, mitigando golpes fatais.",
+    "bankai": {
+      "nome": "Kagamibana — Banshō Shakai",
+      "kanji": "「鏡花・万象写界」",
+      "traducao": "Mundo que Copia Todas as Coisas",
+      "nomeCompleto": "Bankai — Kagamibana 「鏡花・万象写界」 (Banshō Shakai — Mundo que Copia Todas as Coisas)",
+      "comando": "Bankai — Kagamibana, Banshō Shakai!",
+      "formatoArma": "Todo o chão, céu e atmosfera ganham o reflexo límpido de espelhos planos perfeitos.",
+      "poder": "Divergência Quântica de Realidade: O usuário manifesta múltiplos caminhos de ação simultâneos para um mesmo ataque ou esquiva. Ele ataca por 3 ângulos distintos ao mesmo tempo e escolhe qual deles colidirá fisicamente com o oponente no momento do impacto."
+    }
+  },
+  {
+    "id": "zk-07",
+    "numero": "07",
+    "nome": "Mukade",
+    "kanji": "「百足」",
+    "traducao": "Centopeia",
+    "nomeCompleto": "Mukade 「百足」— Centopeia",
+    "espirito": "Uma criatura esguia e longa com dezenas de braços articulados segurando pequenas adagas serrilhadas e vestindo uma máscara de osso que lembra um exoesqueleto de inseto.",
+    "comando": "Multiplique-se pelo caminho, Mukade.",
+    "elemento": "Lâminas Articuladas & Encadear Contínuo",
+    "formatoArma": "A katana se divide em múltiplas lâminas segmentadas unidas por correntes de elos flexíveis de aço, controláveis individualmente através da empunhadura.",
+    "poder": "Ataque Encadeado: Cada golpe consecutivo bem-sucedido permite reposicionar outra lâmina sem tempo de recuo. Quanto maior a sequência contínua de acertos, mais ângulos de ataque se abrem simultaneamente. Limitação: errar um golpe quebra a cadeia e recolhe as lâminas.",
+    "bankai": {
+      "nome": "Mukade — Mukyū Renjin",
+      "kanji": "「百足・無窮連刃」",
+      "traducao": "Lâminas da Corrente Infinita",
+      "nomeCompleto": "Bankai — Mukade 「百足・無窮連刃」 (Mukyū Renjin — Lâminas da Corrente Infinita)",
+      "comando": "Bankai — Mukade, Mukyū Renjin!",
+      "formatoArma": "As lâminas se multiplicam em centenas de gumes segmentados formando uma rede viva e autônoma de aço ao redor da arena.",
+      "poder": "Cadeia Autônoma de Resposta Cinética: O usuário não precisa controlar cada lâmina manualmente. A Bankai lê o último vetor de impacto e projeta automaticamente sucessões de cortes em cascata prevendo as rotas de fuga do oponente."
+    }
+  },
+  {
+    "id": "zk-08",
+    "numero": "08",
+    "nome": "Yūreiishi",
+    "kanji": "「幽霊石」",
+    "traducao": "Pedra Fantasma",
+    "nomeCompleto": "Yūreiishi 「幽霊石」— Pedra Fantasma",
+    "espirito": "Uma criança parcialmente translúcida de olhar calmo sentada sobre uma enorme rocha negra que flutua no vazio, sempre cercada por pequenas almas errantes.",
+    "comando": "Permaneça onde ninguém pode tocar, Yūreiishi.",
+    "elemento": "Âncoras Espaciais & Teletransporte",
+    "formatoArma": "A lâmina da espada desaparece por completo. No lugar dela, pequenas pedras negras de densidade nula orbitam suavemente as mãos do portador.",
+    "poder": "Âncoras Espirituais: O usuário pode posicionar as pedras no espaço como âncoras fixas e saltar instantaneamente até a coordenada de qualquer pedra ativa (possui limite de distância e quantidade de âncoras simultâneas).",
+    "bankai": {
+      "nome": "Yūreiishi — Hyakki Kyō",
+      "kanji": "「幽霊石・百鬼境」",
+      "traducao": "Território das Cem Almas",
+      "nomeCompleto": "Bankai — Yūreiishi 「幽霊石・百鬼境」 (Hyakki Kyō — Território das Cem Almas)",
+      "comando": "Bankai — Yūreiishi, Hyakki Kyō!",
+      "formatoArma": "Centenas de pedras negras monumentais flutuam em toda a extensão do campo de batalha como um labirinto suspenso.",
+      "poder": "Malha Espacial Transcendente: O usuário pode translocar-se instantaneamente entre qualquer uma das pedras sem atraso de movimento, criando sequências de ataque de ângulos omnidirecionais. Custo de Reiryoku escala com o número de saltos contínuos."
+    }
+  },
+  {
+    "id": "zk-09",
+    "numero": "09",
+    "nome": "Raimei",
+    "kanji": "「雷鳴」",
+    "traducao": "Trovão",
+    "nomeCompleto": "Raimei 「雷鳴」— Trovão",
+    "espirito": "Um guerreiro colossal com máscara tradicional de teatro Noh, cujo corpo de bronze é percorrido por fissuras luminosas pulsantes como eletricidade crua.",
+    "comando": "Faça o céu responder, Raimei.",
+    "elemento": "Ressonância Sísmico-Elétrica",
+    "formatoArma": "A lâmina adquire formato em zigue-zague irregular e a empunhadura emite pulsos de vibração sonora e elétrica em frequências constantes.",
+    "poder": "Ressonância Harmônica: Cada movimento ritmado do portador gera uma onda de vibração cumulativa. Manter a cadência de golpes faz o Reiryoku entrar em ressonância, permitindo que o golpe seguinte descarregue toda a energia acumulada em uma explosão de choque.",
+    "bankai": {
+      "nome": "Raimei — Gōtenritsu",
+      "kanji": "「雷鳴・轟天律」",
+      "traducao": "Lei do Céu Trovejante",
+      "nomeCompleto": "Bankai — Raimei 「雷鳴・轟天律」 (Gōtenritsu — Lei do Céu Trovejante)",
+      "comando": "Bankai — Raimei, Gōtenritsu!",
+      "formatoArma": "O campo é coberto por pilares de trovão que ressoam como um metrônomo cósmico em compassos visíveis de relâmpago.",
+      "poder": "Cadência Absoluta de Combate: A Bankai premia a sincronização rítmica. Ações executadas precisamente dentro do pulso do trovão ganham o dobro de velocidade e poder perfurante; atacar fora do compasso dissipa a ressonância e atordoa o usuário."
+    }
+  },
+  {
+    "id": "zk-10",
+    "numero": "10",
+    "nome": "Shirogane",
+    "kanji": "「白銀」",
+    "traducao": "Prata Branca",
+    "nomeCompleto": "Shirogane 「白銀」— Prata Branca",
+    "espirito": "Um cavaleiro sem rosto com armadura de prata imaculada e polida que carrega uma gigantesca balança de pratos no lugar de uma espada de guerra.",
+    "comando": "Pese aquilo que existe, Shirogane.",
+    "elemento": "Equilíbrio & Redistribuição de Vantagens",
+    "formatoArma": "Uma espada longa prateada de gume reto cuja guarda possui o formato esculpido de uma balança de precisão.",
+    "poder": "Equilíbrio Proporcional: Detecta a disparidade física ou espiritual no choque de armas. O portador pode reduzir temporariamente uma vantagem do oponente (como força bruta), mas deve abrir mão de uma fração proporcional de outra vantagem própria para manter o equilíbrio.",
+    "bankai": {
+      "nome": "Shirogane — Tenbin Kai",
+      "kanji": "「白銀・天秤界」",
+      "traducao": "Domínio da Balança Celestial",
+      "nomeCompleto": "Bankai — Shirogane 「白銀・天秤界」 (Tenbin Kai — Domínio da Balança Celestial)",
+      "comando": "Bankai — Shirogane, Tenbin Kai!",
+      "formatoArma": "Uma monumental balança espiritual dourada e prateada surge sobre as nuvens dominando todo o campo de batalha.",
+      "poder": "Gerenciamento Universal de Atributos: O usuário pode comparar e redistribuir parâmetros (força, velocidade, pressão espiritual e resistência). Pode sacrificar sua velocidade para aumentar drasticamente sua resistência física, ou equalizar a força do inimigo à sua própria."
+    }
+  },
+  {
+    "id": "zk-11",
+    "numero": "11",
+    "nome": "Suminawa",
+    "kanji": "「墨縄」",
+    "traducao": "Corda de Nanquim",
+    "nomeCompleto": "Suminawa 「墨縄」— Corda de Nanquim",
+    "espirito": "Um calígrafo cego de longas vestes manchadas que traça kanjis no ar com um pincel gigante feito de cabelos de espíritos antigos.",
+    "comando": "Trace os limites do abismo, Suminawa.",
+    "elemento": "Nanquim Espiritual & Contenção Espacial",
+    "formatoArma": "A lâmina se transforma em uma espada com ranhuras que liberam nanquim negro viscoso. Cada golpe no ar deixa traços de tinta sólida suspensos que atuam como cordas tensionadas de retenção.",
+    "poder": "Traço Restritivo: Os traços de nanquim no ar endurecem como cabos de aço ao menor contato de corpos ou lâminas, travando a trajetória de golpes e membros do inimigo. Limitação: as cordas de tinta se desfazem após absorverem impactos de alta Reiryoku.",
+    "bankai": {
+      "nome": "Suminawa — Banshō Emaki",
+      "kanji": "「墨縄・万象絵巻」",
+      "traducao": "Rolo Pintado de Todas as Coisas",
+      "nomeCompleto": "Bankai — Suminawa 「墨縄・万象絵巻」 (Banshō Emaki — Rolo Pintado de Todas as Coisas)",
+      "comando": "Bankai — Suminawa, Banshō Emaki!",
+      "formatoArma": "O campo se torna um gigantesco pergaminho tridimensional em preto e branco onde o portador empunha uma espada-pincel colossal de nanquim puro.",
+      "poder": "Corte Bidimensional no Espaço Tridimensional: Qualquer corte ou traço feito no ar pelo usuário se manifesta instantaneamente em qualquer superfície ou corpo que esteja alinhado na perspectiva visual do pergaminho, ignorando distância física."
+    }
+  },
+  {
+    "id": "zk-12",
+    "numero": "12",
+    "nome": "Utsusemi",
+    "kanji": "「空蝉」",
+    "traducao": "Casca da Cigarra",
+    "nomeCompleto": "Utsusemi 「空蝉」— Casca da Cigarra",
+    "espirito": "Um monge silencioso coberto por túnicas de seda ressecada e folhas quebradiças que se despedaçam ao menor toque, revelando vazio em seu interior.",
+    "comando": "Abandone a forma passageira, Utsusemi.",
+    "elemento": "Muda Corporal & Evasão Residual",
+    "formatoArma": "A lâmina se torna translúcida com tonalidade âmbar, emitindo um estalido oco e seco a cada oscilação no ar.",
+    "poder": "Casca Oca Residual: Ao receber um golpe direto que causaria ferimento grave, o usuário deixa para trás uma casca perfeita de Reiryoku que absorve o impacto total enquanto seu corpo real recua 3 metros ileso (uma vez por confronto próximo).",
+    "bankai": {
+      "nome": "Utsusemi — Senkaku Zankyō",
+      "kanji": "「空蝉・千殻残響」",
+      "traducao": "Ecos dos Mil Casulos Vazios",
+      "nomeCompleto": "Bankai — Utsusemi 「空蝉・千殻残響」 (Senkaku Zankyō — Ecos dos Mil Casulos Vazios)",
+      "comando": "Bankai — Utsusemi, Senkaku Zankyō!",
+      "formatoArma": "Dezenas de casulos âmbar translúcidos flutuam por toda a área como estátuas ocas perfeitas do portador.",
+      "poder": "Retenção e Refração de Impacto: Cada casulo acumula a memória cinética e espiritual dos golpes que o atingiram. O usuário pode detonar ou rebater a força armazenada nesses casulos diretamente contra quem se aproximar deles."
+    }
+  },
+  {
+    "id": "zk-13",
+    "numero": "13",
+    "nome": "Kagaribi",
+    "kanji": "「篝火」",
+    "traducao": "Fogueira Noturna",
+    "nomeCompleto": "Kagaribi 「篝火」— Fogueira Noturna",
+    "espirito": "Um sentinela com elmo de ferro antigo segurando uma lanterna sem chama onde ardem apenas fagulhas de cinza espiritual imortal.",
+    "comando": "Revele as sombras da vigília, Kagaribi.",
+    "elemento": "Brasas Reveladoras & Consumo Mágico",
+    "formatoArma": "Uma lâmina curva acoplada a um pequeno braseiro de ferro no pomo que desprende fagulhas douradas contínuas.",
+    "poder": "Luz da Intenção: Qualquer fonte de Reiryoku, ataque invisível ou preparação de feitiço dentro do raio iluminado pelas fagulhas tem sua densidade e trajetória expostas antes de ser desferido.",
+    "bankai": {
+      "nome": "Kagaribi — Yahan Enjin",
+      "kanji": "「篝火・夜半炎陣」",
+      "traducao": "Círculo de Chamas da Meia-Noite",
+      "nomeCompleto": "Bankai — Kagaribi 「篝火・夜半炎陣」 (Yahan Enjin — Círculo de Chamas da Meia-Noite)",
+      "comando": "Bankai — Kagaribi, Yahan Enjin!",
+      "formatoArma": "Uma colossal fogueira espiritual arde no centro da arena projetando pilares de chamas translúcidas.",
+      "poder": "Combustão de Feitiços & Dreno de Kidō: As chamas não queimam matéria orgânica, mas consomem vorazmente qualquer Reiryoku moldado em técnicas mágicas (Hadō/Bakudō), reduzindo o poder de feitiços inimigos proporcionalmente ao tempo gasto na luz."
+    }
+  },
+  {
+    "id": "zk-14",
+    "numero": "14",
+    "nome": "Senritsu",
+    "kanji": "「旋律」",
+    "traducao": "Melodia Silenciosa",
+    "nomeCompleto": "Senritsu 「旋律」— Melodia Silenciosa",
+    "espirito": "Uma dama etérea sentada sobre um lago sereno tocando uma cítara cujas cordas invisíveis vibram na frequência do vento.",
+    "comando": "Toque aquilo que não tem voz, Senritsu.",
+    "elemento": "Frequência Acústica & Interferência Neural",
+    "formatoArma": "Uma espada esguia e brilhante com pequenas aberturas ao longo do dorso que assobiam em notas musicais precisas ao golpear.",
+    "poder": "Harmonia Desestabilizadora: Cada defesa ou aparo com a lâmina produz um tom sonoro que ressoa nas terminações nervosas do braço atacante, causando dormência passageira e perda temporária de empunhadura.",
+    "bankai": {
+      "nome": "Senritsu — Zekkyō Shūkyoku",
+      "kanji": "「旋律・絶響終曲」",
+      "traducao": "Réquiem da Ressonância Final",
+      "nomeCompleto": "Bankai — Senritsu 「旋律・絶響終曲」 (Zekkyō Shūkyoku — Réquiem da Ressonância Final)",
+      "comando": "Bankai — Senritsu, Zekkyō Shūkyoku!",
+      "formatoArma": "O ar do ambiente inteiro vibra como uma caixa de ressonância com cordas de luz prateada cruzando a atmosfera.",
+      "poder": "Sincronização Cardiopulmonar Obrigatória: A Bankai sintoniza a respiração e os batimentos cardíacos do oponente com o andamento musical da espada. Qualquer ataque ou movimento brusco fora do ritmo imposto causa contração dolorosa nos órgãos internos."
+    }
+  },
+  {
+    "id": "zk-15",
+    "numero": "15",
+    "nome": "Kagehōshi",
+    "kanji": "「影法師」",
+    "traducao": "Silhueta na Sombra",
+    "nomeCompleto": "Kagehōshi 「影法師」— Silhueta na Sombra",
+    "espirito": "Uma silhueta sombria sem traços faciais definidos que projeta dois olhos de âmbar fixos no solo e nunca emerge para onde há luz direta.",
+    "comando": "Prenda-se ao solo, Kagehōshi.",
+    "elemento": "Sombras Vivas & Paralisia Simpática",
+    "formatoArma": "Uma katana escura cuja lâmina projeta uma sombra alongada no solo com o dobro do comprimento da espada real.",
+    "poder": "Corte da Sombra: Cortar ou cravar a espada na sombra projetada do oponente no chão imobiliza a parte do corpo correspondente pelo tempo em que a lâmina estiver sobre a sombra.",
+    "bankai": {
+      "nome": "Kagehōshi — Shikkoku Bakukai",
+      "kanji": "「影法師・漆黒縛界」",
+      "traducao": "Domínio Aprisionador do Ébano",
+      "nomeCompleto": "Bankai — Kagehōshi 「影法師・漆黒縛界」 (Shikkoku Bakukai — Domínio Aprisionador do Ébano)",
+      "comando": "Bankai — Kagehōshi, Shikkoku Bakukai!",
+      "formatoArma": "O chão de toda a arena se liquefaz em um pântano de sombras profundas que refletem as armas dos combatentes.",
+      "poder": "Mimetismo Sombrio Agressivo: As sombras projetadas no solo criam cópias independentes das armas e membros dos próprios oponentes, atacando-os a partir de seus próprios pés e restringindo movimentos com tentáculos de Reiryoku negro."
+    }
+  },
+  {
+    "id": "zk-16",
+    "numero": "16",
+    "nome": "Hakumaku",
+    "kanji": "「薄膜」",
+    "traducao": "Membrana Translúcida",
+    "nomeCompleto": "Hakumaku 「薄膜」— Membrana Translúcida",
+    "espirito": "Uma tecelã de vestes alvas que fia véus transparentes e elásticos em uma sala repleta de neblina e gotas de orvalho.",
+    "comando": "Estenda a fronteira do ar, Hakumaku.",
+    "elemento": "Películas Refratárias & Vetor Elástico",
+    "formatoArma": "Uma espada de lâmina polida como água que deixa películas espirituais translúcidas suspensas no ar a cada corte.",
+    "poder": "Membrana Defletora: As películas criadas no ar funcionam como superfícies hiperelásticas capazes de desviar projéteis e servir como trampolins de aceleração para mudanças angulares imediatas no Shunpo.",
+    "bankai": {
+      "nome": "Hakumaku — Tenkyō Shōheki",
+      "kanji": "「薄膜・天鏡障壁」",
+      "traducao": "Barreira do Espelho Celestial",
+      "nomeCompleto": "Bankai — Hakumaku 「薄膜・天鏡障壁」 (Tenkyō Shōheki — Barreira do Espelho Celestial)",
+      "comando": "Bankai — Hakumaku, Tenkyō Shōheki!",
+      "formatoArma": "Uma monumental bolha translúcida multifacetada encapsula toda a área de combate.",
+      "poder": "Inversão Vetorial Total: Qualquer golpe, corpo ou feitiço que colide contra as paredes da membrana externa tem sua velocidade e direção invertidas em 180° com a mesma energia com que tentou romper a barreira."
+    }
+  },
+  {
+    "id": "zk-17",
+    "numero": "17",
+    "nome": "Haguruma",
+    "kanji": "「歯車」",
+    "traducao": "Engrenagem do Destino",
+    "nomeCompleto": "Haguruma 「歯車」— Engrenagem do Destino",
+    "espirito": "Um autômato ancestral de bronze polido com engrenagens e ponteiros expostos no peito que giram ritmicamente marcando segundos silenciosos.",
+    "comando": "Engrene o tempo que resta, Haguruma.",
+    "elemento": "Mecânica Rotacional & Intervalos Discretos",
+    "formatoArma": "Uma espada pesada com gume dentado articulado em engrenagens que giram e acumulam torque a cada contato de aço.",
+    "poder": "Torque Acumulativo: Cada colisão bem-sucedida faz as engrenagens girarem mais rápido, aumentando progressivamente a aceleração de corte do golpe seguinte.",
+    "bankai": {
+      "nome": "Haguruma — Banshō Kokukai",
+      "kanji": "「歯車・万象刻界」",
+      "traducao": "Mundo dos Ponteiros Eternos",
+      "nomeCompleto": "Bankai — Haguruma 「歯車・万象刻界」 (Banshō Kokukai — Mundo dos Ponteiros Eternos)",
+      "comando": "Bankai — Haguruma, Banshō Kokukai!",
+      "formatoArma": "Monumentais rodas dentadas de bronze e mostradores de relógio flutuam no céu e no solo da arena.",
+      "poder": "Ajuste de Intervalos de Ação: O usuário pode retardar ou acelerar os intervalos entre a decisão motora e a execução física do adversário, fazendo com que o inimigo sofra atrasos de frações de segundo na recuperação após cada ataque."
+    }
+  },
+  {
+    "id": "zk-18",
+    "numero": "18",
+    "nome": "Sasayaki",
+    "kanji": "「囁き」",
+    "traducao": "Sussurro Noturno",
+    "nomeCompleto": "Sasayaki 「囁き」— Sussurro Noturno",
+    "espirito": "Uma figura misteriosa com máscara de porcelana sem boca que fala através de ecos simultâneos e sussurros reverberantes.",
+    "comando": "Ecoa na mente vazia, Sasayaki.",
+    "elemento": "Ruído Psíquico & Supressão de Cânticos",
+    "formatoArma": "Uma lâmina de acabamento cinza fosco que não produz som de corte nem reflete luz.",
+    "poder": "Interferência Acústica: O choque do aço transmite uma vibração subsônica direta no ouvido interno do oponente, gerando desorientação espacial momentânea.",
+    "bankai": {
+      "nome": "Sasayaki — Muon Kyōsō",
+      "kanji": "「囁き・無音狂噪」",
+      "traducao": "Frenesi do Silêncio Enlouquecedor",
+      "nomeCompleto": "Bankai — Sasayaki 「囁き・無音狂噪」 (Muon Kyōsō — Frenesi do Silêncio Enlouquecedor)",
+      "comando": "Bankai — Sasayaki, Muon Kyōsō!",
+      "formatoArma": "Todo o ruído da atmosfera é completamente anulado gerando um vácuo acústico absoluto.",
+      "poder": "Bloqueio de Concentração & Encantamentos: Um turbilhão de sussurros psíquicos é projetado diretamente no fluxo mental do inimigo, tornando impossível manter a concentração requerida para cânticos de Kidō ou cálculos táticos refinados."
+    }
+  },
+  {
+    "id": "zk-19",
+    "numero": "19",
+    "nome": "Enbaku",
+    "kanji": "「煙幕」",
+    "traducao": "Cortina de Cinzas",
+    "nomeCompleto": "Enbaku 「煙幕」— Cortina de Cinzas",
+    "espirito": "Um eremita com olhos cor de brasa fumando um cachimbo de bambu escurecido, cercado por cinzas que flutuam sem jamais tocar o chão.",
+    "comando": "Asfixie o horizonte, Enbaku.",
+    "elemento": "Fumaça Pesada & Asfixia Espiritual",
+    "formatoArma": "Uma espada curta que expele continuamente uma névoa espessa de fumaça cinzenta e pesada que rasteja sobre o terreno.",
+    "poder": "Fumaça Asfixiante: A fumaça drena a concentração de oxigênio e Reiryoku puro ao redor, dificultando a respiração e enfraquecendo feitiços de Hadō disparados através dela.",
+    "bankai": {
+      "nome": "Enbaku — Kaijin Tengai",
+      "kanji": "「煙幕・灰燼天蓋」",
+      "traducao": "Domo das Cinzas Eternas",
+      "nomeCompleto": "Bankai — Enbaku 「煙幕・灰燼天蓋」 (Kaijin Tengai — Domo das Cinzas Eternas)",
+      "comando": "Bankai — Enbaku, Kaijin Tengai!",
+      "formatoArma": "Uma cúpula monumental de cinzas incandescentes cobre toda a arena de combate.",
+      "poder": "Solidificação Instantânea de Fumaça: Toda a fumaça ambiente pode ser condensada instantaneamente em agulhas sólidas afiadas, paredes de contenção ou lâminas de impacto sob o comando do usuário."
+    }
+  },
+  {
+    "id": "zk-20",
+    "numero": "20",
+    "nome": "Garyū",
+    "kanji": "「臥竜」",
+    "traducao": "Dragão Adormecido",
+    "nomeCompleto": "Garyū 「臥竜」— Dragão Adormecido",
+    "espirito": "Um monge sereno sentado sobre a crista de um dragão esculpido em rocha sedimentar milenar que respira poeira de terra.",
+    "comando": "Acorde da montanha, Garyū.",
+    "elemento": "Densidade Sísmica & Massa Inercial",
+    "formatoArma": "Uma espada larga, pesada e de gume rombudo que não possui fio de corte tradicional, mas tem densidade descomunal.",
+    "poder": "Massa Cumulativa: A cada golpe bloqueado com a espada, sua densidade aumenta sem sobrecarregar os braços do portador, esmagando defesas pela pura inércia do impacto.",
+    "bankai": {
+      "nome": "Garyū — Tenhō Chiretsu",
+      "kanji": "「臥竜・天崩地裂」",
+      "traducao": "Colapso do Céu e Fratura da Terra",
+      "nomeCompleto": "Bankai — Garyū 「臥竜・天崩地裂」 (Tenhō Chiretsu — Colapso do Céu e Fratura da Terra)",
+      "comando": "Bankai — Garyū, Tenhō Chiretsu!",
+      "formatoArma": "A carapaça de pedra se parte liberando uma espada titânica de lâmina negra reluzente com aura gravitacional densa.",
+      "poder": "Onda de Ruptura Tectônica: Cada golpe desferido gera uma pressão gravitacional vertical capaz de quebrar o solo em crateras de dezenas de metros e estilhaçar qualquer barreira de Bakudō convencional."
+    }
+  },
+  {
+    "id": "zk-21",
+    "numero": "21",
+    "nome": "Chizome",
+    "kanji": "「血染」",
+    "traducao": "Fios de Sangue",
+    "nomeCompleto": "Chizome 「血染」— Fios de Sangue",
+    "espirito": "Uma nobre vestida com quimono carmesim que costura tapeçarias usando agulhas de osso e fios tingidos de sangue fresco.",
+    "comando": "Tinja o caminho de carmesim, Chizome.",
+    "elemento": "Coagulação Espiritual & Fios Carmesins",
+    "formatoArma": "Uma adaga curva de aço polido com uma ranhura central que atrai e cristaliza fluidos em micro-agulhas afiadas.",
+    "poder": "Cristalização Sanguínea: Permite ao usuário endurecer gotas de sangue no ar ou no chão em agulhas e lâminas cortantes arremessáveis.",
+    "bankai": {
+      "nome": "Chizome — Senshi Senketsukai",
+      "kanji": "「血染・千糸鮮血界」",
+      "traducao": "Mundo dos Mil Fios de Sangue",
+      "nomeCompleto": "Bankai — Chizome 「血染・千糸鮮血界」 (Senshi Senketsukai — Mundo dos Mil Fios de Sangue)",
+      "comando": "Bankai — Chizome, Senshi Senketsukai!",
+      "formatoArma": "O ambiente se cruza com milhares de fios escarlates suspensos que brilham com Reiryoku vivo.",
+      "poder": "Rede Sensora & Guilhotina: Os fios no ar reagem automaticamente a qualquer vibração ou deslocamento veloz, tensionando-se para fatiar quem tentar cruzar a rede em alta velocidade."
+    }
+  },
+  {
+    "id": "zk-22",
+    "numero": "22",
+    "nome": "Kazahana",
+    "kanji": "「風花」",
+    "traducao": "Pétalas da Nevasca",
+    "nomeCompleto": "Kazahana 「風花」— Pétalas da Nevasca",
+    "espirito": "Uma criança vestida de branco que sopra delicadas flores de gelo enquanto caminha descalça sobre a neve virgem.",
+    "comando": "Dance na geada suave, Kazahana.",
+    "elemento": "Gelo Suave & Flocos Entorpecentes",
+    "formatoArma": "Uma katana fina prateada que liberta pequenos flocos hexagonais de gelo que flutuam ao redor da lâmina.",
+    "poder": "Geada Entorpecente: Os flocos de gelo grudam nas roupas e pele do alvo, drenando o calor corporal e reduzindo o tempo de resposta neuromuscular a cada golpe.",
+    "bankai": {
+      "nome": "Kazahana — Byakuya Hanafubuki",
+      "kanji": "「風花・白夜花吹雪」",
+      "traducao": "Nevasca Floral da Noite Branca",
+      "nomeCompleto": "Bankai — Kazahana 「風花・白夜花吹雪」 (Byakuya Hanafubuki — Nevasca Floral da Noite Branca)",
+      "comando": "Bankai — Kazahana, Byakuya Hanafubuki!",
+      "formatoArma": "Um turbilhão colossal de pétalas de gelo cortantes envolve toda a arena sob uma tempestade de frio extremo.",
+      "poder": "Ausência de Atrito & Corte Gélido: As lâminas de gelo cortam o ar anulando o atrito do solo e reduzindo a temperatura a níveis que congelam faíscas de Reiryoku e aprisionam o inimigo em geada perpétua."
+    }
+  },
+  {
+    "id": "zk-23",
+    "numero": "23",
+    "nome": "Bankō",
+    "kanji": "「万綱」",
+    "traducao": "Rede das Profundezas",
+    "nomeCompleto": "Bankō 「万綱」— Rede das Profundezas",
+    "espirito": "Um pescador silencioso em um barco de junco no centro de um oceano infinito coberto por névoa cinzenta.",
+    "comando": "Puxe as amarras do abismo, Bankō.",
+    "elemento": "Cabos de Aço & Tensão de Longo Alcance",
+    "formatoArma": "A lâmina se estende em múltiplos fios de aço flexíveis de altíssima tensão equipados com ganchos farpados nas pontas.",
+    "poder": "Puxão Angulado: Permite laçar membros, armas ou pontos do terreno para projetar o usuário ou desarmar oponentes a longas distâncias.",
+    "bankai": {
+      "nome": "Bankō — Kaitei Bakusamō",
+      "kanji": "「万綱・海底縛鎖網」",
+      "traducao": "Rede de Correntes do Fundo do Oceano",
+      "nomeCompleto": "Bankai — Bankō 「万綱・海底縛鎖網」 (Kaitei Bakusamō — Rede de Correntes do Fundo do Oceano)",
+      "comando": "Bankai — Bankō, Kaitei Bakusamō!",
+      "formatoArma": "Milhares de correntes e cabos de aço cobrem o céu e o solo como uma teia monumental de cerco.",
+      "poder": "Contração & Condução Sísmica: O usuário sente qualquer vibração no campo e pode contrair a teia instantaneamente para esmagar ou aprisionar múltiplos alvos em um cofre de correntes."
+    }
+  },
+  {
+    "id": "zk-24",
+    "numero": "24",
+    "nome": "Shiratama",
+    "kanji": "「白玉」",
+    "traducao": "Esferas de Jade Sagrada",
+    "nomeCompleto": "Shiratama 「白玉」— Esferas de Jade Sagrada",
+    "espirito": "Um sacerdote em estado de iluminação que levita sereno cercado por três esferas peroladas que emitem luz pura.",
+    "comando": "Purifique a mácula, Shiratama.",
+    "elemento": "Luz Sagrada & Absorção Purificadora",
+    "formatoArma": "A espada gera três esferas luminosas de Reiryoku puro que giram em volta da empunhadura e protegem o portador.",
+    "poder": "Orbes de Defesa Absoluta: Cada esfera absorve integralmente um ataque mágico de Kidō ou impacto de energia elemental direta, dissipando-se em seguida (até 3 cargas).",
+    "bankai": {
+      "nome": "Shiratama — Sangai Jōkarin",
+      "kanji": "「白玉・三界浄化輪」",
+      "traducao": "Três Anéis da Purificação Celestial",
+      "nomeCompleto": "Bankai — Shiratama 「白玉・三界浄化輪」 (Sangai Jōkarin — Três Anéis da Purificação Celestial)",
+      "comando": "Bankai — Shiratama, Sangai Jōkarin!",
+      "formatoArma": "As esferas se expandem em três anéis de luz solar gigantescos que descem sobre o campo de batalha.",
+      "poder": "Supressão de Energias Caóticas: Impõe uma zona de purificação contínua onde técnicas de energia impura ou venenos são neutralizados, enquanto recupera o fluxo de Reiryoku do portador."
+    }
+  },
+  {
+    "id": "zk-25",
+    "numero": "25",
+    "nome": "Tsukikage",
+    "kanji": "「月影」",
+    "traducao": "Sombra da Lua",
+    "nomeCompleto": "Tsukikage 「月影」— Sombra da Lua",
+    "espirito": "Uma arqueira de olhar calmo vestida de azul-noite sentada sobre a foice de uma lua prateada brilhando no escuro.",
+    "comando": "Oculte-se no luar, Tsukikage.",
+    "elemento": "Ilusão Óptica & Refração Lunar",
+    "formatoArma": "Uma lâmina curva e fosca cuja borda parece cintilar em ondas de luz prateada.",
+    "poder": "Distorção de Alcance: A refração luminosa ao longo do fio faz a espada parecer mais curta ou mais longa do que realmente é, enganando o tempo de bloqueio do inimigo.",
+    "bankai": {
+      "nome": "Tsukikage — Gengetsu Mueikai",
+      "kanji": "「月影・幻月無影界」",
+      "traducao": "Domínio Sem Sombra da Lua Ilusória",
+      "nomeCompleto": "Bankai — Tsukikage 「月影・幻月無影界」 (Gengetsu Mueikai — Domínio Sem Sombra da Lua Ilusória)",
+      "comando": "Bankai — Tsukikage, Gengetsu Mueikai!",
+      "formatoArma": "A noite desce e a arena é banhada pela luz de uma lua cheia colossal prateada.",
+      "poder": "Ataque por Feixes de Luz: O usuário dissocia seu corpo físico da sua imagem visível, podendo projetar estocadas e cortes reais a partir de qualquer raio de luar refletido no terreno."
+    }
+  },
+  {
+    "id": "zk-26",
+    "numero": "26",
+    "nome": "Jigokubana",
+    "kanji": "「地獄花」",
+    "traducao": "Lírio do Submundo",
+    "nomeCompleto": "Jigokubana 「地獄花」— Lírio do Submundo",
+    "espirito": "Uma mulher com coroa de espinhos negros e lágrimas vermelhas cujos passos no solo fazem brotar flores escarlates de ferro.",
+    "comando": "Enraíze no solo dos mortos, Jigokubana.",
+    "elemento": "Raízes de Ferro & Dreno Telúrico",
+    "formatoArma": "Uma espada cuja ponta, ao tocar o solo, faz brotar raízes afiadas de metal que avançam em direção ao oponente.",
+    "poder": "Espinhos de Solo: Cria fendas subterrâneas com espinhos de Reiryoku que brotam sob os pés do alvo para empalar ou restringir seus passos.",
+    "bankai": {
+      "nome": "Jigokubana — Guren Jukai",
+      "kanji": "「地獄花・紅蓮樹海」",
+      "traducao": "Floresta de Espinhos do Abismo Carmesim",
+      "nomeCompleto": "Bankai — Jigokubana 「地獄花・紅蓮樹海」 (Guren Jukai — Floresta de Espinhos do Abismo Carmesim)",
+      "comando": "Bankai — Jigokubana, Guren Jukai!",
+      "formatoArma": "Uma floresta colossal de videiras espinhosas de ferro carmesim brota cobrindo toda a arena.",
+      "poder": "Domínio Asfixiante de Raízes: As vinhas se movem autonomamente buscando fontes de Reiryoku, estrangulando defesas e drenando energia vital de qualquer um que encostar no solo."
+    }
+  },
+  {
+    "id": "zk-27",
+    "numero": "27",
+    "nome": "Hikariba",
+    "kanji": "「光刃」",
+    "traducao": "Lâmina de Prisma Solar",
+    "nomeCompleto": "Hikariba 「光刃」— Lâmina de Prisma Solar",
+    "espirito": "Um escultor de lentes de cristal puro que lapida raios solares em ângulos geométricos perfeitos.",
+    "comando": "Refrate a chama pura, Hikariba.",
+    "elemento": "Luz Solar Concentrada & Alta Temperatura",
+    "formatoArma": "Uma espada de cristal facetado que concentra a luz ambiente em feixes cortantes de alta temperatura.",
+    "poder": "Feixes Prismáticos: Permite refletir e curvar disparos luminosos em ângulos retos para atingir o oponente em seus pontos cegos.",
+    "bankai": {
+      "nome": "Hikariba — Banshō Shōnetsukai",
+      "kanji": "「光刃・万象焦熱界」",
+      "traducao": "Domínio da Incineração Prismática",
+      "nomeCompleto": "Bankai — Hikariba 「光刃・万象焦熱界」 (Banshō Shōnetsukai — Domínio da Incineração Prismática)",
+      "comando": "Bankai — Hikariba, Banshō Shōnetsukai!",
+      "formatoArma": "Pilares gigantes de cristal facetado cercam o campo de batalha como espelhos monumentais.",
+      "poder": "Feixe Omnidirecional de Incineração: A luz concentrada pelos prismas dispara simultaneamente em dezenas de eixos térmicos, incinerando defesas físicas e barreiras mágicas com calor extremo."
+    }
+  },
+  {
+    "id": "zk-28",
+    "numero": "28",
+    "nome": "Ryūshin",
+    "kanji": "「竜心」",
+    "traducao": "Coração de Dragão",
+    "nomeCompleto": "Ryūshin 「竜心」— Coração de Dragão",
+    "espirito": "Um guerreiro imponente com marcas de escamas ardentes no peito e olhar penetrante de chamas douradas.",
+    "comando": "Queime no pulso da alma, Ryūshin.",
+    "elemento": "Calor Interno & Plasma Espiritual",
+    "formatoArma": "Uma katana de gume avermelhado que absorve o calor do próprio usuário para intensificar o poder de corte.",
+    "poder": "Combustão Contínua: Quanto mais longa a trocação direta de golpes, mais incandescente fica a lâmina, descarregando ondas térmicas a cada balanço.",
+    "bankai": {
+      "nome": "Ryūshin — Gōka Tenshō",
+      "kanji": "「竜心・劫火天衝」",
+      "traducao": "Impacto Celestial do Fogo Cósmico",
+      "nomeCompleto": "Bankai — Ryūshin 「竜心・劫火天衝」 (Gōka Tenshō — Impacto Celestial do Fogo Cósmico)",
+      "comando": "Bankai — Ryūshin, Gōka Tenshō!",
+      "formatoArma": "O portador é envolto em uma armadura dracônica de plasma incandescente com asas de fogo espiritual.",
+      "poder": "Devastação em Plasma Puro: Libera explosões monumentais de calor contínuo que derretem o solo sob os pés dos combatentes e transformam o ar em uma fornalha inescapável."
+    }
+  },
+  {
+    "id": "zk-29",
+    "numero": "29",
+    "nome": "Mumyō",
+    "kanji": "「無明」",
+    "traducao": "Noite da Cegueira",
+    "nomeCompleto": "Mumyō 「無明」— Noite da Cegueira",
+    "espirito": "Um monge ancião de olhos vendados por seda negra que caminha com um cajado de ébano sem emitir vibração alguma.",
+    "comando": "Apague a centelha do olhar, Mumyō.",
+    "elemento": "Privação Sensorial & Penumbra Espiritual",
+    "formatoArma": "Uma espada que absorve o reflexo da luz ao seu redor, criando uma aura de escuridão opaca de 2 metros em torno do usuário.",
+    "poder": "Cegueira Momentânea: Ao cruzar lâminas, a visão periférica do adversário é apagada por 1 segundo, impedindo leitura de contra-ataques imediatos.",
+    "bankai": {
+      "nome": "Mumyō — Tokoyami Meifu",
+      "kanji": "「無明・常闇冥府」",
+      "traducao": "Submundo das Trevas Eternas",
+      "nomeCompleto": "Bankai — Mumyō 「無明・常闇冥府」 (Tokoyami Meifu — Submundo das Trevas Eternas)",
+      "comando": "Bankai — Mumyō, Tokoyami Meifu!",
+      "formatoArma": "Todo o campo de batalha é engolido por uma escuridão absoluta impenetrável.",
+      "poder": "Anulação de Percepção & Detecção: Suprime completamente a visão e a detecção de Reiryoku à distância, forçando o adversário a lutar exclusivamente por sensações táteis imediatas enquanto o usuário se move com precisão instintiva."
+    }
+  },
+  {
+    "id": "zk-30",
+    "numero": "30",
+    "nome": "Haganeito",
+    "kanji": "「鋼糸」",
+    "traducao": "Fios de Aço",
+    "nomeCompleto": "Haganeito 「鋼糸」— Fios de Aço",
+    "espirito": "Um mestre marionetista com feições de porcelana lisa e dedos estendidos em longos filamentos prateados de Reiryoku.",
+    "comando": "Costure os passos do destino, Haganeito.",
+    "elemento": "Microfilamentos & Controle Articular",
+    "formatoArma": "A ponta da espada solta micro-fios de aço quase invisíveis que se prendem às armas e punhos dos adversários.",
+    "poder": "Desvio Tátil: Permite tensionar os filamentos no último instante para puxar ou desviar a lâmina inimiga para fora da rota letal.",
+    "bankai": {
+      "nome": "Haganeito — Kugutsu Gigakan",
+      "kanji": "「鋼糸・傀儡戯画館」",
+      "traducao": "Teatro das Marionetes Espirituais",
+      "nomeCompleto": "Bankai — Haganeito 「鋼糸・傀儡戯画館」 (Kugutsu Gigakan — Teatro das Marionetes Espirituais)",
+      "comando": "Bankai — Haganeito, Kugutsu Gigakan!",
+      "formatoArma": "Uma imensa estrutura de palco celestial se ergue com milhares de fios cruzando o ar.",
+      "poder": "Manipulação de Articulações Inertes: Os fios tomam o controle das armas caídas, escombros e músculos fatigados do adversário, forçando bloqueios imperfeitos ou travando membros inteiros."
+    }
+  },
+  {
+    "id": "zk-31",
+    "numero": "31",
+    "nome": "Mizuchi",
+    "kanji": "「蛟」",
+    "traducao": "Serpente das Torrentes",
+    "nomeCompleto": "Mizuchi 「蛟」— Serpente das Torrentes",
+    "espirito": "Uma serpente d'água albina com chifres prateados repousando serenamente no fundo de um poço cristalino milenar.",
+    "comando": "Transborde em correnteza pura, Mizuchi.",
+    "elemento": "Água Pressurizada & Fluidez Cortante",
+    "formatoArma": "A lâmina de aço se desfaz em um fluxo de água pressurizada contínua de altíssima densidade capaz de cortar rochas.",
+    "poder": "Lâmina Fluida: Pode estender seu alcance instantaneamente ou perder solidez para passar através de defesas antes de se solidificar no corte.",
+    "bankai": {
+      "nome": "Mizuchi — Suiten Daikōzui",
+      "kanji": "「蛟・水天大洪水」",
+      "traducao": "Tsunami do Domínio Celestial das Águas",
+      "nomeCompleto": "Bankai — Mizuchi 「蛟・水天大洪水」 (Suiten Daikōzui — Tsunami do Domínio Celestial das Águas)",
+      "comando": "Bankai — Mizuchi, Suiten Daikōzui!",
+      "formatoArma": "Uma colossal cúpula de água espiritual pura submerge toda a arena de batalha.",
+      "poder": "Hidrodinâmica Perfeita: Dentro do domo aquático, apenas o portador se move com velocidade sem atrito, disparando lâminas de vácuo hidrostático que esmagam o oponente pela pressão da água."
+    }
+  },
+  {
+    "id": "zk-32",
+    "numero": "32",
+    "nome": "Dokuga",
+    "kanji": "「毒蛾」",
+    "traducao": "Mariposa Venenosa",
+    "nomeCompleto": "Dokuga 「毒蛾」— Mariposa Venenosa",
+    "espirito": "Uma mulher graciosa com asas de mariposa aveludadas cobertas por escamas arroxeadas brilhantes que desprendem pólen ao bater.",
+    "comando": "Disperse o sono eterno, Dokuga.",
+    "elemento": "Pólen Tóxico & Entorpecimento Neural",
+    "formatoArma": "Uma lâmina fina e curva com guarda em formato de asas de mariposa que libera uma névoa arroxeada de escamas finas.",
+    "poder": "Pólen Entorpecente: O contato com as escamas entorpece a sensibilidade tátil e a velocidade de resposta reflexa do adversário a cada inalação.",
+    "bankai": {
+      "nome": "Dokuga — Shigettsu Gendokurō",
+      "kanji": "「毒蛾・紫月幻毒牢」",
+      "traducao": "Gaiola do Veneno Ilusório da Lua Púrpura",
+      "nomeCompleto": "Bankai — Dokuga 「毒蛾・紫月幻毒牢」 (Shigettsu Gendokurō — Gaiola do Veneno Ilusório da Lua Púrpura)",
+      "comando": "Bankai — Dokuga, Shigettsu Gendokurō!",
+      "formatoArma": "O céu se torna violeta e uma tempestade contínua de pólen corrosivo envolve a arena.",
+      "poder": "Corrosão de Barreiras & Alucinação Sensorial: O veneno no ar dissolve barreiras de Kidō e induz alucinações visuais e auditivas que impedem o oponente de discernir a posição real do usuário."
+    }
+  },
+  {
+    "id": "zk-33",
+    "numero": "33",
+    "nome": "Tessen",
+    "kanji": "「鉄扇」",
+    "traducao": "Vento da Muralha de Aço",
+    "nomeCompleto": "Tessen 「鉄扇」— Vento da Muralha de Aço",
+    "espirito": "Um nobre cortesão com máscara cerimonial que empunha dois pesados leques metálicos com lâminas afiadas nas dobras.",
+    "comando": "Dobre o sopro do céu, Tessen.",
+    "elemento": "Vento Gravitacional & Deflexão",
+    "formatoArma": "A espada se desdobra em um grande leque de placas de aço afiadas como navalhas.",
+    "poder": "Vento Descendente: Cada balanço do leque gera rajadas de ar comprimido que empurram o adversário para o chão com força gravitacional multiplicada.",
+    "bankai": {
+      "nome": "Tessen — Tenshō Hadanran",
+      "kanji": "「鉄扇・天衝破断嵐」",
+      "traducao": "Vendaval de Ruptura Celestial",
+      "nomeCompleto": "Bankai — Tessen 「鉄扇・天衝破断嵐」 (Tenshō Hadanran — Vendaval de Ruptura Celestial)",
+      "comando": "Bankai — Tessen, Tenshō Hadanran!",
+      "formatoArma": "Dois gigantescos leques de aço flutuam ao lado do usuário gerando ciclones contínuos.",
+      "poder": "Gaiola de Vácuo Cortante: Cria furacões verticais que suspendem o adversário no ar enquanto desferem milhares de cortes de vácuo em alta rotação."
+    }
+  },
+  {
+    "id": "zk-34",
+    "numero": "34",
+    "nome": "Kasumikiri",
+    "kanji": "「霞斬」",
+    "traducao": "Navalha na Bruma",
+    "nomeCompleto": "Kasumikiri 「霞斬」— Navalha na Bruma",
+    "espirito": "Um samurai espectral cujos contornos ondulam e se desfazem como vapor aquecido sob a chuva fina.",
+    "comando": "Desvaneça na bruma da manhã, Kasumikiri.",
+    "elemento": "Intangibilidade Gasosa & Bruma",
+    "formatoArma": "Uma lâmina cujos contornos parecem desfocados e trêmulos como miragem de calor.",
+    "poder": "Corte Osmótico: A lâmina pode passar através de objetos sólidos finos e solidificar-se apenas no instante do contato interno com o alvo.",
+    "bankai": {
+      "nome": "Kasumikiri — Mugen Genmukai",
+      "kanji": "「霞斬・無限幻霧界」",
+      "traducao": "Domínio da Névoa Impenetrável",
+      "nomeCompleto": "Bankai — Kasumikiri 「霞斬・無限幻霧界」 (Mugen Genmukai — Domínio da Névoa Impenetrável)",
+      "comando": "Bankai — Kasumikiri, Mugen Genmukai!",
+      "formatoArma": "Uma névoa branca densa e impenetrável toma conta de todo o cenário de batalha.",
+      "poder": "Dissolução Corpórea & Clones de Vapor: O usuário pode se dissolver completamente na bruma e surgir atrás do inimigo em múltiplos corpos de vapor que alternam solidez conforme atacam."
+    }
+  },
+  {
+    "id": "zk-35",
+    "numero": "35",
+    "nome": "Gōkaku",
+    "kanji": "「剛角」",
+    "traducao": "Chifre Inquebrável",
+    "nomeCompleto": "Gōkaku 「剛角」— Chifre Inquebrável",
+    "espirito": "Uma fera titânica de obsidiana e pedra com dois chifres monumentais capazes de fender montanhas.",
+    "comando": "Esmague sem piedade, Gōkaku.",
+    "elemento": "Obsidiana Pura & Perfuração Pesada",
+    "formatoArma": "A espada ganha o formato de uma pesada lança curta com ponta triangular de obsidiana de dureza extrema.",
+    "poder": "Ponta Inflexível: Golpes desferidos em investida reta possuem poder perfurante multiplicado, atravessando defesas rígidas e armaduras pesadas.",
+    "bankai": {
+      "nome": "Gōkaku — Kongō Saizangeki",
+      "kanji": "「剛角・金剛砕山撃」",
+      "traducao": "Impacto Devastador do Diamante Titânico",
+      "nomeCompleto": "Bankai — Gōkaku 「剛角・金剛砕山撃」 (Kongō Saizangeki — Impacto Devastador do Diamante Titânico)",
+      "comando": "Bankai — Gōkaku, Kongō Saizangeki!",
+      "formatoArma": "Pilares monumentais de rocha sólida e obsidiana emergem do solo ao redor da arena.",
+      "poder": "Bombardeio de Monólitos Cinéticos: O usuário pode disparar e colidir esses blocos gigantescos contra o oponente como meteoros guiados por impacto de Reiryoku concentrado."
+    }
+  },
+  {
+    "id": "zk-36",
+    "numero": "36",
+    "nome": "Hibachi",
+    "kanji": "「火鉢」",
+    "traducao": "Braseiro Ardente",
+    "nomeCompleto": "Hibachi 「火鉢」— Braseiro Ardente",
+    "espirito": "Um anão ferreiro de pele cinzenta que molda brasas e carvão ardente com as próprias mãos desprotegidas.",
+    "comando": "Aqueça o ferro dormente, Hibachi.",
+    "elemento": "Brasas Espirituais & Transferência Térmica",
+    "formatoArma": "Uma lâmina reta que acumula o calor do atrito com o ar e espadas inimigas, mantendo seu fio em brasa constante.",
+    "poder": "Fogo Retido: As brasas da lâmina passam para as armas do oponente, aquecendo os cabos a ponto de queimar as mãos do adversário e forçar o desarmamento.",
+    "bankai": {
+      "nome": "Hibachi — Shōnetsu Shōdojin",
+      "kanji": "「火鉢・焦熱焦土陣」",
+      "traducao": "Matriz do Purgatório em Brasas",
+      "nomeCompleto": "Bankai — Hibachi 「火鉢・焦熱焦土陣」 (Shōnetsu Shōdojin — Matriz do Purgatório em Brasas)",
+      "comando": "Bankai — Hibachi, Shōnetsu Shōdojin!",
+      "formatoArma": "O solo inteiro do campo se transforma em uma grelha incandescente com fissuras de lava espiritual.",
+      "poder": "Gêiseres de Brasas Ocultas: Qualquer passo do oponente sobre o solo incandescente dispara jatos verticais de fogo espiritual que queimam armaduras e consomem o oxigênio ao redor."
+    }
+  },
+  {
+    "id": "zk-37",
+    "numero": "37",
+    "nome": "Oshimaru",
+    "kanji": "「推丸」",
+    "traducao": "Impulso Perfeito",
+    "nomeCompleto": "Oshimaru 「推丸」— Impulso Perfeito",
+    "espirito": "Um atleta divino com braceletes dourados que salta entre as nuvens sem tocar o solo e sem deixar rastros.",
+    "comando": "Devolva a força aplicada, Oshimaru.",
+    "elemento": "Absorção de Recuo & Onda de Choque",
+    "formatoArma": "Uma espada curta com guarda circular pesada que absorve a energia do recuo ao aparar ataques.",
+    "poder": "Vetor Invertido: O recuo de um golpe bloqueado é convertido em velocidade imediata de avanço para o contra-ataque seguinte.",
+    "bankai": {
+      "nome": "Oshimaru — Hakū Suiryokukai",
+      "kanji": "「推丸・破空推力界」",
+      "traducao": "Domínio do Impulso Absoluto",
+      "nomeCompleto": "Bankai — Oshimaru 「推丸・破空推力界」 (Hakū Suiryokukai — Domínio do Impulso Absoluto)",
+      "comando": "Bankai — Oshimaru, Hakū Suiryokukai!",
+      "formatoArma": "Duas manoplas de Reiryoku comprimido com anéis de vácuo nos antebraços.",
+      "poder": "Onda de Choque Cinético: O portador pode emitir ondas massivas de pressão de ar capazes de empurrar fortificações, repelir investidas e anular feitiços de impacto a dezenas de metros."
+    }
+  },
+  {
+    "id": "zk-38",
+    "numero": "38",
+    "nome": "Hōsekiba",
+    "kanji": "「宝石刃」",
+    "traducao": "Lâmina de Joias",
+    "nomeCompleto": "Hōsekiba 「宝石刃」— Lâmina de Joias",
+    "espirito": "Uma rainha de cristal reluzente com lágrimas de pedras preciosas que reflete todas as cores do prisma.",
+    "comando": "Lapide a lâmina eterna, Hōsekiba.",
+    "elemento": "Cristais Preciosos & Lâminas Facetadas",
+    "formatoArma": "A lâmina se decompõe em centenas de pequenos cristais afiados como navalhas que flutuam ao redor da empunhadura.",
+    "poder": "Enxame Facetado: Os cristais podem ser controlados mentalmente em trajetórias cortantes de alta precisão ou formarem pequenos escudos refletores.",
+    "bankai": {
+      "nome": "Hōsekiba — Hyakka Kesshōkyū",
+      "kanji": "「宝石刃・百華結晶宮」",
+      "traducao": "Palácio dos Mil Cristais Reluzentes",
+      "nomeCompleto": "Bankai — Hōsekiba 「宝石刃・百華結晶宮」 (Hyakka Kesshōkyū — Palácio dos Mil Cristais Reluzentes)",
+      "comando": "Bankai — Hōsekiba, Hyakka Kesshōkyū!",
+      "formatoArma": "Monumentais florestas de cristais multicoloridos brotam da terra cobrindo a arena.",
+      "poder": "Prisma de Confinamento: Os cristais gigantes refratam a energia espiritual em feixes convergentes e podem aprisionar o adversário em caixões de cristal com dureza equivalente a diamante."
+    }
+  },
+  {
+    "id": "zk-39",
+    "numero": "39",
+    "nome": "Yamainu",
+    "kanji": "「山狗」",
+    "traducao": "Cão Selvagem da Montanha",
+    "nomeCompleto": "Yamainu 「山狗」— Cão Selvagem da Montanha",
+    "espirito": "Um lobo cinzento ancestral com marcas tribais vermelhas que espreita nas florestas e caça pelo cheiro da alma.",
+    "comando": "Cace no rastro do medo, Yamainu.",
+    "elemento": "Rastreamento de Reiryoku & Presas Serrilhadas",
+    "formatoArma": "Uma lâmina curva e serrilhada que aumenta a sensibilidade do portador ao calor e cheiro de Reiryoku do oponente.",
+    "poder": "Faro Predador: Permite antecipar deslocamentos em Shunpo e detectar oponentes mesmo dentro de ilusões, fumaça ou invisibilidade.",
+    "bankai": {
+      "nome": "Yamainu — Yūmei Rōgagun",
+      "kanji": "「山狗・幽冥狼牙群」",
+      "traducao": "Alcateia dos Lobos Espectrais",
+      "nomeCompleto": "Bankai — Yamainu 「山狗・幽冥狼牙群」 (Yūmei Rōgagun — Alcateia dos Lobos Espectrais)",
+      "comando": "Bankai — Yamainu, Yūmei Rōgagun!",
+      "formatoArma": "Uma matilha de dezenas de lobos gigantescos formados por puro Reiryoku negro cerca os oponentes.",
+      "poder": "Cerco Predatório Coordenado: Os lobos atacam de múltiplos pontos cegos simultaneamente, sincronizando suas investidas com os movimentos da espada do portador."
+    }
+  },
+  {
+    "id": "zk-40",
+    "numero": "40",
+    "nome": "Chiryaku",
+    "kanji": "「地脈」",
+    "traducao": "Pulso da Terra",
+    "nomeCompleto": "Chiryaku 「地脈」— Pulso da Terra",
+    "espirito": "Um monge feito de barro e raízes que encosta o ouvido no solo para escutar as vibrações mais profundas da terra.",
+    "comando": "Faça o chão estremecer, Chiryaku.",
+    "elemento": "Vibrações Sísmicas & Equilíbrio Corporal",
+    "formatoArma": "Uma espada pesada de cabo longo que transmite pulsos sísmicos de baixa frequência ao tocar o solo.",
+    "poder": "Desestabilização Telúrica: Cada impacto no chão gera microfissuras que desequilibram a postura de quem estiver pisando na área de efeito.",
+    "bankai": {
+      "nome": "Chiryaku — Tendō Hōkōchi",
+      "kanji": "「地脈・天動崩落地」",
+      "traducao": "Ruptura das Placas Celestiais",
+      "nomeCompleto": "Bankai — Chiryaku 「地脈・天動崩落地」 (Tendō Hōkōchi — Ruptura das Placas Celestiais)",
+      "comando": "Bankai — Chiryaku, Tendō Hōkōchi!",
+      "formatoArma": "O terreno se racha em imensas placas tectônicas flutuantes sob controle gravitacional do portador.",
+      "poder": "Manipulação de Placas Flutuantes: O usuário pode erguer, inclinar ou colidir as plataformas de rocha em alta velocidade, alterando toda a topografia do campo de batalha."
+    }
+  },
+  {
+    "id": "zk-41",
+    "numero": "41",
+    "nome": "Sōgetsu",
+    "kanji": "「双月」",
+    "traducao": "Luas Gêmeas",
+    "nomeCompleto": "Sōgetsu 「双月」— Luas Gêmeas",
+    "espirito": "Duas sacerdotisas de prata idênticas unidas pelas mãos, uma sob a lua cheia e outra sob a lua nova.",
+    "comando": "Cruzem o horizonte da noite, Sōgetsu.",
+    "elemento": "Foices Curvas & Foco Duplo de Dano",
+    "formatoArma": "A katana se divide em duas foices curvas prateadas unidas por um halo de luz lunar.",
+    "poder": "Corte Sincronizado: Ataques combinados das duas foices convergem no mesmo ponto gerando o dobro de penetração de corte.",
+    "bankai": {
+      "nome": "Sōgetsu — Sōei Nisshokukai",
+      "kanji": "「双月・双影日食界」",
+      "traducao": "Eclipse das Luas Gêmeas",
+      "nomeCompleto": "Bankai — Sōgetsu 「双月・双影日食界」 (Sōei Nisshokukai — Eclipse das Luas Gêmeas)",
+      "comando": "Bankai — Sōgetsu, Sōei Nisshokukai!",
+      "formatoArma": "Duas luas monumentais (uma prateada e uma negra) surgem nos polos opostos do céu.",
+      "poder": "Gravidade Dupla Divergente: Cria dois centros de gravidade opostos que puxam o corpo e a espada do oponente em direções contrárias, desmantelando sua postura defensiva."
+    }
+  },
+  {
+    "id": "zk-42",
+    "numero": "42",
+    "nome": "Kyūketsu",
+    "kanji": "「吸血」",
+    "traducao": "Vórtice Carmesim",
+    "nomeCompleto": "Kyūketsu 「吸血」— Vórtice Carmesim",
+    "espirito": "Um morcego espectral com asas de lâminas polidas e olhos vermelhos brilhantes que caça no escuro.",
+    "comando": "Drene o sopro da vida, Kyūketsu.",
+    "elemento": "Absorção Vital & Lanças Escarlates",
+    "formatoArma": "Uma espada esguia com dentes finos que drena uma fração minúscula de vitalidade ao ferir o alvo para restaurar o fôlego do usuário.",
+    "poder": "Restauração por Corte: Fecha pequenos cortes no próprio corpo do portador à medida que causa danos superficiais no inimigo.",
+    "bankai": {
+      "nome": "Kyūketsu — Senketsu Kyōshikyoku",
+      "kanji": "「吸血・鮮血狂詩曲」",
+      "traducao": "Rapsódia da Sede Carmesim",
+      "nomeCompleto": "Bankai — Kyūketsu 「吸血・鮮血狂詩曲」 (Senketsu Kyōshikyoku — Rapsódia da Sede Carmesim)",
+      "comando": "Bankai — Kyūketsu, Senketsu Kyōshikyoku!",
+      "formatoArma": "Todo o sangue exposto na atmosfera condensa em lanças escarlates flutuantes de Reiryoku puro.",
+      "poder": "Chuva de Lanças Sangrentas: As lanças teleguiadas perseguem o adversário automaticamente com altíssimo poder perfurante e devolvem Reiryoku drenado ao usuário."
+    }
+  },
+  {
+    "id": "zk-43",
+    "numero": "43",
+    "nome": "Raijū",
+    "kanji": "「雷獣」",
+    "traducao": "Tigre dos Raios Azuis",
+    "nomeCompleto": "Raijū 「雷獣」— Tigre dos Raios Azuis",
+    "espirito": "Um tigre de pelos azuis e garras elétricas envolto em arcos de plasma faiscante.",
+    "comando": "Ruge no coração da tempestade, Raijū.",
+    "elemento": "Eletricidade Azul & Arcos Condutores",
+    "formatoArma": "A lâmina se cobre de arcos de plasma azul que saltam para qualquer objeto metálico próximo.",
+    "poder": "Choque Eletrostático: Conduz corrente elétrica através de armas ao cruzar aço, causando espasmos musculares nas mãos do adversário.",
+    "bankai": {
+      "nome": "Raijū — Tenrai Hōkōkai",
+      "kanji": "「雷獣・天雷咆哮界」",
+      "traducao": "Domínio do Rugido do Trovão Primordial",
+      "nomeCompleto": "Bankai — Raijū 「雷獣・天雷咆哮界」 (Tenrai Hōkōkai — Domínio do Rugido do Trovão Primordial)",
+      "comando": "Bankai — Raijū, Tenrai Hōkōkai!",
+      "formatoArma": "O portador se funde a uma armadura colossal de plasma azul vivo com velocidade quase instantânea.",
+      "poder": "Velocidade de Relâmpago Puro: O usuário atinge velocidades extremas em curtos trajetos, desferindo golpes envoltos em ondas de choque capazes de desintegrar defesas rígidas."
+    }
+  },
+  {
+    "id": "zk-44",
+    "numero": "44",
+    "nome": "Suzumechi",
+    "kanji": "「雀千」",
+    "traducao": "Mil Penas Douradas",
+    "nomeCompleto": "Suzumechi 「雀千」— Mil Penas Douradas",
+    "espirito": "Uma nobre vestida com manto de penas douradas que se comunica através do canto de bandos de pássaros luminosos.",
+    "comando": "Alce voo na luz do ouro, Suzumechi.",
+    "elemento": "Penas Metálicas & Enxame Aéreo",
+    "formatoArma": "A espada se dispersa em centenas de pequenas lâminas em formato de penas douradas flutuantes.",
+    "poder": "Revoada de Penas: As penas voam em leque teleguiado e podem se agrupar como uma barreira rotatória esférica.",
+    "bankai": {
+      "nome": "Suzumechi — Senba Ōgonran",
+      "kanji": "「雀千・千羽黄金嵐」",
+      "traducao": "Tempestade das Mil Asas Douradas",
+      "nomeCompleto": "Bankai — Suzumechi 「雀千・千羽黄金嵐」 (Senba Ōgonran — Tempestade das Mil Asas Douradas)",
+      "comando": "Bankai — Suzumechi, Senba Ōgonran!",
+      "formatoArma": "Milhares de lâminas douradas formam um turbilhão cósmico em 360° em volta da arena.",
+      "poder": "Corte Omnidirecional em Enxame: As penas desferem milhares de microcortes simultâneos que atingem todos os pontos cegos do adversário sem deixar rotas de esquiva."
+    }
+  },
+  {
+    "id": "zk-45",
+    "numero": "45",
+    "nome": "Karatake",
+    "kanji": "「唐竹」",
+    "traducao": "Bambu Imortal",
+    "nomeCompleto": "Karatake 「唐竹」— Bambu Imortal",
+    "espirito": "Um lenhador cego de bambu com chapéu cônico que caminha sereno por um bosque verdejante interminável.",
+    "comando": "Flecta sem jamais quebrar, Karatake.",
+    "elemento": "Elasticidade Vegetal & Lâmina Chicote",
+    "formatoArma": "A lâmina ganha a flexibilidade e tenacidade do bambu maduro, curvando-se como um chicote afiado.",
+    "poder": "Elasticidade Cortante: Permite desferir golpes que contornam escudos e defesas retas para atingir os flancos do inimigo.",
+    "bankai": {
+      "nome": "Karatake — Suichiku Senbonrin",
+      "kanji": "「唐竹・翠竹千本林」",
+      "traducao": "Floresta dos Mil Bambus de Jade",
+      "nomeCompleto": "Bankai — Karatake 「唐竹・翠竹千本林」 (Suichiku Senbonrin — Floresta dos Mil Bambus de Jade)",
+      "comando": "Bankai — Karatake, Suichiku Senbonrin!",
+      "formatoArma": "Estacas gigantescas de bambu espiritual verde brotam do solo em centenas de colunas impenetráveis.",
+      "poder": "Empalamento em Floresta Viva: Os bambus crescem em alta velocidade como lanças sob comando do usuário, empalando e encurralando alvos em um labirinto fechado."
+    }
+  },
+  {
+    "id": "zk-46",
+    "numero": "46",
+    "nome": "Hyōga",
+    "kanji": "「氷河」",
+    "traducao": "Geleira Ancestral",
+    "nomeCompleto": "Hyōga 「氷河」— Geleira Ancestral",
+    "espirito": "Um gigante de gelo azul milenar com barba de estalactites e olhar fixo no horizonte gélido do norte.",
+    "comando": "Congele o fluxo dos tempos, Hyōga.",
+    "elemento": "Zero Absoluto & Calota Glacial",
+    "formatoArma": "Uma espada pesada de gelo translúcido que resfria a superfície de qualquer coisa com que entre em contato.",
+    "poder": "Resfriamento por Impacto: Cada colisão forma uma crosta de gelo rígida nas armas inimigas aumentando seu peso e reduzindo a agilidade do atacante.",
+    "bankai": {
+      "nome": "Hyōga — Zettai Reido Tōkai",
+      "kanji": "「氷河・絶対零度凍界」",
+      "traducao": "Mundo Congelado do Zero Absoluto",
+      "nomeCompleto": "Bankai — Hyōga 「氷河・絶対零度凍界」 (Zettai Reido Tōkai — Mundo Congelado do Zero Absoluto)",
+      "comando": "Bankai — Hyōga, Zettai Reido Tōkai!",
+      "formatoArma": "Todo o terreno e o ar se congelam instantaneamente em uma calota sólida inquebrável de gelo puro.",
+      "poder": "Paralisia Molecular & Térmica: O frio extremo anula o fluxo de Reiryoku no ar e desacelera as reações do corpo do oponente, congelando qualquer feitiço em formação."
+    }
+  },
+  {
+    "id": "zk-47",
+    "numero": "47",
+    "nome": "Gen'ō",
+    "kanji": "「幻影」",
+    "traducao": "Monarca das Miragens",
+    "nomeCompleto": "Gen'ō 「幻影」— Monarca das Miragens",
+    "espirito": "Um ilusionista mascarado com capa de veludo púrpura que move peças de xadrez de cristal no ar com gestos sutis.",
+    "comando": "Engane até a própria luz, Gen'ō.",
+    "elemento": "Descompasso Temporal & Ilusão Neural",
+    "formatoArma": "Uma espada de lâmina esguia que altera a percepção do tempo no cérebro do adversário em 0,3 segundo a cada corte raspão.",
+    "poder": "Descompasso Neural: Faz o oponente antecipar ou atrasar suas reações defensivas, errando os tempos de bloqueio e esquiva.",
+    "bankai": {
+      "nome": "Gen'ō — Senjū Kyozōkai",
+      "kanji": "「幻影・千重虚像界」",
+      "traducao": "Domínio dos Mil Cenários Ilusórios",
+      "nomeCompleto": "Bankai — Gen'ō 「幻影・千重虚像界」 (Senjū Kyozōkai — Domínio dos Mil Cenários Ilusórios)",
+      "comando": "Bankai — Gen'ō, Senjū Kyozōkai!",
+      "formatoArma": "O ambiente se estilhaça em milhares de reflexos que projetam cenários de combate simultâneos.",
+      "poder": "Sobrecarga Cognitiva: O cérebro do oponente processa dezenas de combates imaginários ao mesmo tempo enquanto seu corpo físico fica paralisado e vulnerável ao golpe real."
+    }
+  },
+  {
+    "id": "zk-48",
+    "numero": "48",
+    "nome": "Enkō",
+    "kanji": "「円光」",
+    "traducao": "Halo Sagrado",
+    "nomeCompleto": "Enkō 「円光」— Halo Sagrado",
+    "espirito": "Uma entidade budista serena com auréola de chamas douradas flutuando sobre a cabeça e vestes brancas imaculadas.",
+    "comando": "Ilumine o caminho do julgamento, Enkō.",
+    "elemento": "Chamas Solares & Discos Giratórios",
+    "formatoArma": "A espada projeta discos cortantes de fogo solar giratório que ricocheteiam no ar e retornam à mão do usuário.",
+    "poder": "Halos Solares: Dispara anéis de calor extremo de alta velocidade capazes de cortar e queimar barreiras defensivas à distância.",
+    "bankai": {
+      "nome": "Enkō — Dainichi Kinrinjin",
+      "kanji": "「円光・大日金輪陣」",
+      "traducao": "Aliança dos Sete Halos Solares",
+      "nomeCompleto": "Bankai — Enkō 「円光・大日金輪陣」 (Dainichi Kinrinjin — Aliança dos Sete Halos Solares)",
+      "comando": "Bankai — Enkō, Dainichi Kinrinjin!",
+      "formatoArma": "Sete anéis monumentais de fogo dourado descem do céu sobre a arena de combate.",
+      "poder": "Convergência Solar Absoluta: Os sete halos convergem feixes de luz e calor solar no centro do campo, incinerando tudo dentro de seu ponto focal com calor puro."
+    }
+  },
+  {
+    "id": "zk-49",
+    "numero": "49",
+    "nome": "Mugenba",
+    "kanji": "「無限刃」",
+    "traducao": "Forja das Dez Mil Lâminas",
+    "nomeCompleto": "Mugenba 「無限刃」— Forja das Dez Mil Lâminas",
+    "espirito": "Um ferreiro lendário sentado no pico de uma montanha cercado por incontáveis espadas antigas cravadas na terra.",
+    "comando": "Renasça do fio quebrado, Mugenba.",
+    "elemento": "Regeneração de Lâminas & Tempestade de Aço",
+    "formatoArma": "Caso a lâmina se quebre em combate, ela se regenera instantaneamente com um gume novo e mais afiado do que o anterior.",
+    "poder": "Regeneração de Fio: A destruição física da arma fortalece a lâmina subsequente com maior densidade espiritual.",
+    "bankai": {
+      "nome": "Mugenba — Banjinzuka",
+      "kanji": "「無限刃・万刃塚」",
+      "traducao": "Cemitério das Dez Mil Lâminas",
+      "nomeCompleto": "Bankai — Mugenba 「無限刃・万刃塚」 (Banjinzuka — Cemitério das Dez Mil Lâminas)",
+      "comando": "Bankai — Mugenba, Banjinzuka!",
+      "formatoArma": "Milhares de espadas espirituais emergem do solo e flutuam na atmosfera ao redor do portador.",
+      "poder": "Controle Telecinético de Tempestade de Aço: O usuário comanda mentalmente o enxame de milhares de espadas para atacar em rajadas contínuas ou formarem barreiras sólidas de contenção."
+    }
+  },
+  {
+    "id": "zk-50",
+    "numero": "50",
+    "nome": "Kurotsume",
+    "kanji": "「黒爪」",
+    "traducao": "Garras da Pantera Negra",
+    "nomeCompleto": "Kurotsume 「黒爪」— Garras da Pantera Negra",
+    "espirito": "Uma pantera negra com olhos escarlates que se camufla perfeitamente na escuridão entre as árvores sem produzir som.",
+    "comando": "Despedace na penumbra, Kurotsume.",
+    "elemento": "Garras Triplas & Sangramento Contínuo",
+    "formatoArma": "A espada se divide em três garras retráteis de aço negro em cada punho do portador.",
+    "poder": "Ferida Aberta: Os cortes causados pelas garras dificultam a coagulação rápida e retardam a regeneração acelerada por Kaidō básico durante a luta.",
+    "bankai": {
+      "nome": "Kurotsume — An'ya Shuryōkai",
+      "kanji": "「黒爪・暗夜狩猟界」",
+      "traducao": "Território da Caçada na Noite Escura",
+      "nomeCompleto": "Bankai — Kurotsume 「黒爪・暗夜狩猟界」 (An'ya Shuryōkai — Território da Caçada na Noite Escura)",
+      "comando": "Bankai — Kurotsume, An'ya Shuryōkai!",
+      "formatoArma": "A arena inteira mergulha em uma penumbra viva e o portador ganha carapaça predatória de sombras.",
+      "poder": "Caçada Oculta Instantânea: O usuário se funde às sombras do ambiente, atacando com velocidade predatória silenciosa a partir de qualquer ponto escuro sem revelar sua presença."
+    }
+  },
+  {
+    "id": "zk-51",
+    "numero": "51",
+    "nome": "Jinrai",
+    "kanji": "「迅雷」",
+    "traducao": "Clarão do Trovão Instantâneo",
+    "nomeCompleto": "Jinrai 「迅雷」— Clarão do Trovão Instantâneo",
+    "espirito": "Um guerreiro com elmo em formato de raio e pés envoltos em correntes elétricas reluzentes.",
+    "comando": "Corte antes do estrondo, Jinrai.",
+    "elemento": "Sinapses Iônicas & Velocidade Extrema",
+    "formatoArma": "Uma lâmina fina que emite pulsos de microcorrentes acelerando as sinapses nervosas do próprio portador.",
+    "poder": "Sinapse Relâmpago: Multiplica a velocidade de reação e de saque da espada em combates a curta distância.",
+    "bankai": {
+      "nome": "Jinrai — Banrai Shinsokukai",
+      "kanji": "「迅雷・万雷神速界」",
+      "traducao": "Domínio da Velocidade Divina dos Cem Raios",
+      "nomeCompleto": "Bankai — Jinrai 「迅雷・万雷神速界」 (Banrai Shinsokukai — Domínio da Velocidade Divina dos Cem Raios)",
+      "comando": "Bankai — Jinrai, Banrai Shinsokukai!",
+      "formatoArma": "O campo se torna uma câmara selada por arcos voltaicos amarelos e relâmpagos contínuos.",
+      "poder": "Translocação Sônica Contínua: Cada passo do usuário viaja na velocidade do relâmpago, deixando para trás ondas de choque que atordoam o adversário enquanto desfere cortes sucessivos."
+    }
+  },
+  {
+    "id": "zk-52",
+    "numero": "52",
+    "nome": "Senbiki",
+    "kanji": "「千匹」",
+    "traducao": "Ninho das Serpentes de Jade",
+    "nomeCompleto": "Senbiki 「千匹」— Ninho das Serpentes de Jade",
+    "espirito": "Um encantador de serpentes com corpo coberto de escamas esmeralda e olhos reptilianos profundos.",
+    "comando": "Rasteje e dê o bote, Senbiki.",
+    "elemento": "Lâmina Sinuosa & Veneno Corrosivo",
+    "formatoArma": "A lâmina se contorce como uma cobra viva, capaz de esticar e contornar esquinas para morder o alvo.",
+    "poder": "Bote Articulado: Desfere estocadas em trajetórias curvas e sinuosas totalmente imprevisíveis.",
+    "bankai": {
+      "nome": "Senbiki — Banja Dokukutsu",
+      "kanji": "「千匹・万蛇毒窟」",
+      "traducao": "Caverna das Dez Mil Serpentes Venenosas",
+      "nomeCompleto": "Bankai — Senbiki 「千匹・万蛇毒窟」 (Banja Dokukutsu — Caverna das Dez Mil Serpentes Venenosas)",
+      "comando": "Bankai — Senbiki, Banja Dokukutsu!",
+      "formatoArma": "O solo se liquefaz em uma massa viva de serpentes gigantescas de puro Reiryoku verde esmeralda.",
+      "poder": "Estrangulamento & Inoculação Venenosa: As serpentes engolem e asfixiam o oponente inoculando toxinas que corroem armaduras e drenam o fluxo espiritual."
+    }
+  },
+  {
+    "id": "zk-53",
+    "numero": "53",
+    "nome": "Fuenshō",
+    "kanji": "「浮烟」",
+    "traducao": "Fumaça Flutuante",
+    "nomeCompleto": "Fuenshō 「浮烟」— Fumaça Flutuante",
+    "espirito": "Uma donzela de véus de seda branca que sopra cinzas mornas que nunca caem no chão.",
+    "comando": "Disperse o peso do mundo, Fuenshō.",
+    "elemento": "Fumaça Mágica & Amortecimento de Hadō",
+    "formatoArma": "Uma espada que deixa para trás um rastro espesso de fumaça translúcida que dissipa ataques mágicos.",
+    "poder": "Distorção Mágica: Amortece e dissipa a energia de projéteis de Hadō que passem através da fumaça.",
+    "bankai": {
+      "nome": "Fuenshō — Kūgen Shinkirō",
+      "kanji": "「浮烟・空幻蜃気楼」",
+      "traducao": "Miragem Celestial do Céu Vazio",
+      "nomeCompleto": "Bankai — Fuenshō 「浮烟・空幻蜃気楼」 (Kūgen Shinkirō — Miragem Celestial do Céu Vazio)",
+      "comando": "Bankai — Fuenshō, Kūgen Shinkirō!",
+      "formatoArma": "Uma névoa colossal cobre quilômetros de distância criando miragens táteis perfeitas.",
+      "poder": "Refração Mágica & Retorno de Projéteis: Desvia a trajetória de feitiços disparados na névoa, fazendo-os retornarem automaticamente contra os seus próprios conjuradores."
+    }
+  },
+  {
+    "id": "zk-54",
+    "numero": "54",
+    "nome": "Hagakure",
+    "kanji": "「葉隠」",
+    "traducao": "Oculto nas Folhas",
+    "nomeCompleto": "Hagakure 「葉隠」— Oculto nas Folhas",
+    "espirito": "Um shinobi ancestral com manto de folhagem de outono que se funde com os troncos das árvores sem emitir ruído.",
+    "comando": "Desapareça no outono, Hagakure.",
+    "elemento": "Camuflagem Tática & Folhas Cortantes",
+    "formatoArma": "Uma lâmina fosca que adquire a textura e cor do ambiente ao redor ao menor contato com vegetação ou solo.",
+    "poder": "Camuflagem Tática: Anula a presença visual e o calor corporal enquanto o portador estiver encostado em superfícies naturais.",
+    "bankai": {
+      "nome": "Hagakure — Konoha Hyakujin Ranbu",
+      "kanji": "「葉隠・木葉百刃乱舞」",
+      "traducao": "Dança das Mil Lâminas das Folhas de Outono",
+      "nomeCompleto": "Bankai — Hagakure 「葉隠・木葉百刃乱舞」 (Konoha Hyakujin Ranbu — Dança das Mil Lâminas das Folhas de Outono)",
+      "comando": "Bankai — Hagakure, Konoha Hyakujin Ranbu!",
+      "formatoArma": "Todas as folhas e folhagens do ambiente se transformam em navalhas afiadas sob o comando mental do portador.",
+      "poder": "Turbilhão das Folhas Afiadas: As folhas voam em vórtices cortantes que fatiam defesas inimigas enquanto ocultam a posição real do usuário."
+    }
+  },
+  {
+    "id": "zk-55",
+    "numero": "55",
+    "nome": "Tōbaku",
+    "kanji": "「凍縛」",
+    "traducao": "Amarração Glacial",
+    "nomeCompleto": "Tōbaku 「凍縛」— Amarração Glacial",
+    "espirito": "Uma sacerdotisa aprisionada em um caixão de gelo transparente cujos olhos continuam abertos e vigilantes.",
+    "comando": "Aprisione no frio sem fim, Tōbaku.",
+    "elemento": "Congelamento de Pontos de Apoio & Pilares",
+    "formatoArma": "Uma espada curta que congela instantaneamente qualquer umidade ou poça de água tocada pela ponta.",
+    "poder": "Amarração Glacial: Cria laços de gelo ao redor dos pés do adversário assim que ele pisa em solo umedecido pela lâmina.",
+    "bankai": {
+      "nome": "Tōbaku — Hakutei Hyōchūrō",
+      "kanji": "「凍縛・白帝氷柱牢」",
+      "traducao": "Prisão dos Pilares de Gelo do Imperador Branco",
+      "nomeCompleto": "Bankai — Tōbaku 「凍縛・白帝氷柱牢」 (Hakutei Hyōchūrō — Prisão dos Pilares de Gelo do Imperador Branco)",
+      "comando": "Bankai — Tōbaku, Hakutei Hyōchūrō!",
+      "formatoArma": "Pilares monumentais de gelo sólido erguem-se do solo encadeando o oponente.",
+      "poder": "Encarceramento Glacial: Encerra o adversário em uma câmara de pilares de gelo que drenam continuamente o calor corporal e o vigor espiritual."
+    }
+  },
+  {
+    "id": "zk-56",
+    "numero": "56",
+    "nome": "Kaimetsu",
+    "kanji": "「壊滅」",
+    "traducao": "Martelo da Ruína",
+    "nomeCompleto": "Kaimetsu 「壊滅」— Martelo da Ruína",
+    "espirito": "Um titã de armadura rachada e martelo colossal que caminha sobre escombros de cidades antigas.",
+    "comando": "Reduza tudo a escombros, Kaimetsu.",
+    "elemento": "Ondas de Choque Estruturais & Trituração",
+    "formatoArma": "Uma espada pesada de dorso reforçado que transmite vibrações de esmagamento através de defesas e armaduras.",
+    "poder": "Dano Estrutural: Quebra a integridade física de armas e escudos mesmo quando o golpe é bloqueado pelo oponente.",
+    "bankai": {
+      "nome": "Kaimetsu — Tenhō Chimetsukai",
+      "kanji": "「壊滅・天崩地滅壊」",
+      "traducao": "Aniquilação da Ruína do Céu e da Terra",
+      "nomeCompleto": "Bankai — Kaimetsu 「壊滅・天崩地滅壊」 (Tenhō Chimetsukai — Aniquilação da Ruína do Céu e da Terra)",
+      "comando": "Bankai — Kaimetsu, Tenhō Chimetsukai!",
+      "formatoArma": "A lâmina se torna um martelo de guerra colossal de Reiryoku negro comprimido.",
+      "poder": "Colapso Sísmico Estrutural: Cada golpe no solo gera ondas de choque devastadoras que trituram rochas, racham montanhas e anulam defesas rígidas por impacto."
+    }
+  },
+  {
+    "id": "zk-57",
+    "numero": "57",
+    "nome": "Akatsuki",
+    "kanji": "「暁」",
+    "traducao": "Alvorecer Carmesim",
+    "nomeCompleto": "Akatsuki 「暁」— Alvorecer Carmesim",
+    "espirito": "Uma deusa guerreira com vestes douradas e vermelhas segurando uma tocha acesa com o primeiro raio da aurora.",
+    "comando": "Rompa a escuridão do mundo, Akatsuki.",
+    "elemento": "Luz Solar Nascente & Calor Progressivo",
+    "formatoArma": "Uma espada de lâmina avermelhada que brilha com intensidade e calor crescentes conforme o combate se prolonga.",
+    "poder": "Calor Progressivo: Aumenta a temperatura do fio da espada a cada golpe consecutivo desferido.",
+    "bankai": {
+      "nome": "Akatsuki — Guren Kyokujitsushō",
+      "kanji": "「暁・紅蓮旭日昇」",
+      "traducao": "Ascensão do Sol Nascente Carmesim",
+      "nomeCompleto": "Bankai — Akatsuki 「暁・紅蓮旭日昇」 (Guren Kyokujitsushō — Ascensão do Sol Nascente Carmesim)",
+      "comando": "Bankai — Akatsuki, Guren Kyokujitsushō!",
+      "formatoArma": "Um sol nascente carmesim monumental se projeta atrás do portador.",
+      "poder": "Feixe da Aurora Solar: Dispara feixes concentrados de luz e calor solar que purificam e vaporizam obstáculos em linha reta."
+    }
+  },
+  {
+    "id": "zk-58",
+    "numero": "58",
+    "nome": "Yūgure",
+    "kanji": "「夕暮」",
+    "traducao": "Crepúsculo",
+    "nomeCompleto": "Yūgure 「夕暮」— Crepúsculo",
+    "espirito": "Um viajante solitário com um lampião violeta que caminha na estrada no momento exato em que o sol se põe.",
+    "comando": "Desça sobre a luz cansada, Yūgure.",
+    "elemento": "Penumbra Crepuscular & Desfase Temporal",
+    "formatoArma": "Uma espada envolta em uma penumbra violeta que retarda a percepção do tempo de quem estiver próximo.",
+    "poder": "Crepúsculo dos Sentidos: Golpes desferidos na penumbra parecem chegar antes do som da lâmina ser emitido.",
+    "bankai": {
+      "nome": "Yūgure — Tasokare Higankai",
+      "kanji": "「夕暮・黄昏彼岸界」",
+      "traducao": "Fronteira da Penumbra do Outro Mundo",
+      "nomeCompleto": "Bankai — Yūgure 「夕暮・黄昏彼岸界」 (Tasokare Higankai — Fronteira da Penumbra do Outro Mundo)",
+      "comando": "Bankai — Yūgure, Tasokare Higankai!",
+      "formatoArma": "O campo de batalha entra em um crepúsculo perpétuo de luz violeta suave.",
+      "poder": "Intervalo Temporal do Crepúsculo: Os ataques do portador viajam em um intervalo entre o passado imediato e o presente, tornando previsões ou esquivas quase impossíveis."
+    }
+  },
+  {
+    "id": "zk-59",
+    "numero": "59",
+    "nome": "Seirō",
+    "kanji": "「青狼」",
+    "traducao": "Lobo das Chamas Glaciais",
+    "nomeCompleto": "Seirō 「青狼」— Lobo das Chamas Glaciais",
+    "espirito": "Um lobo espectral com cauda de chamas azuis espirituais e presas de gelo translúcido.",
+    "comando": "Uive nas chamas frias, Seirō.",
+    "elemento": "Fogo Azul Gélido & Paralisia Térmica",
+    "formatoArma": "Uma lâmina curva que emite um fogo azul que não queima matéria, mas congela nervos e o fluxo de Reiryoku.",
+    "poder": "Chama Fria: Queima a energia espiritual do alvo na área atingida causando paralisia sem carbonização.",
+    "bankai": {
+      "nome": "Seirō — Sōen Hyōsetsugoku",
+      "kanji": "「青狼・蒼炎氷雪獄」",
+      "traducao": "Inferno de Chamas Azuis e Neve Eterna",
+      "nomeCompleto": "Bankai — Seirō 「青狼・蒼炎氷雪獄」 (Sōen Hyōsetsugoku — Inferno de Chamas Azuis e Neve Eterna)",
+      "comando": "Bankai — Seirō, Sōen Hyōsetsugoku!",
+      "formatoArma": "Uma tempestade monumental de fogo azul e gelo cobre toda a arena de batalha.",
+      "poder": "Incineração Glacial de Reiryoku: As chamas azuis congelam feitiços no ar e drenam o ímpeto e vigor do oponente simultaneamente."
+    }
+  },
+  {
+    "id": "zk-60",
+    "numero": "60",
+    "nome": "Tenbinzuru",
+    "kanji": "「天秤鶴」",
+    "traducao": "Garça da Balança Celestial",
+    "nomeCompleto": "Tenbinzuru 「天秤鶴」— Garça da Balança Celestial",
+    "espirito": "Uma garça branca de penas metálicas polidas pousada serenamente sobre o prato de uma balança dourada.",
+    "comando": "Harmonize o peso das almas, Tenbinzuru.",
+    "elemento": "Equilíbrio Energético & Espelhamento",
+    "formatoArma": "Uma espada prateada com guarda em forma de garça que equilibra o gasto de Reiryoku do usuário com o do adversário.",
+    "poder": "Ressonância Proporcional: Reduz o desgaste energético do usuário em proporção ao esforço exercido pelo inimigo.",
+    "bankai": {
+      "nome": "Tenbinzuru — Gokuraku Jōdo Tenbin",
+      "kanji": "「天秤鶴・極楽浄土天秤」",
+      "traducao": "Balança do Santuário Puro",
+      "nomeCompleto": "Bankai — Tenbinzuru 「天秤鶴・極楽浄土天秤」 (Gokuraku Jōdo Tenbin — Balança do Santuário Puro)",
+      "comando": "Bankai — Tenbinzuru, Gokuraku Jōdo Tenbin!",
+      "formatoArma": "Um santuário celestial inviolável surge no céu com duas balanças monumentais de ouro e prata.",
+      "poder": "Espelhamento de Dano Absoluto: Qualquer dano físico sofrido por um dos lutadores dentro do domínio é espelhado em proporção exata no adversário, forçando uma disputa de precisão cirúrgica e autocontrole."
+    }
+  }
+];
 const CATALOGO_KIDOS = [
   {
     "id": "b1_u",
@@ -1011,316 +2203,1136 @@ const CATALOGO_KIDOS = [
 ];
 
 // =========================================================================
-// 100% ORIGINAL & AUTORIAL UNIQUE ZANPAKUTŌ ENGINE (MASTER POOL OF 60 BLADES)
+// MOTOR DE INDIVIDUALIZAÇÃO ESPIRITUAL (33 REGRAS)
+// =========================================================================
+// =========================================================================
+// BLEACH RPG — MOTOR DEFINITIVO DE INDIVIDUALIZAÇÃO ESPIRITUAL (33 REGRAS)
+// Geração de 4 Shikais + 4 Bankais por Personagem via DNA Espiritual & Exclusividade
 // =========================================================================
 
-const MASTER_ZANPAKUTO_CATALOG = [{"id":"zk-01","numero":"01","nome":"Kurotsubaki","kanji":"「黒椿」","traducao":"A Camélia Negra","nomeCompleto":"Kurotsubaki 「黒椿」— A Camélia Negra","espirito":"Uma mulher alta, de aparência madura, vestida com um quimono preto coberto por pétalas de camélia. Seu rosto é parcialmente escondido por um véu. Ela passa a maior parte do tempo sentada em um jardim completamente sem cor, cuidando de uma única árvore.","comando":"Floresça no silêncio, Kurotsubaki.","elemento":"Vácuo Cinético & Pétalas Negras","formatoArma":"A katana perde a lâmina tradicional e se transforma em uma espada fina, negra, com uma guarda circular semelhante a uma flor. Pequenas pétalas negras começam a surgir ao redor do usuário sempre que ele movimenta a espada. As pétalas não são simplesmente decorativas: elas permanecem suspensas no ambiente por alguns segundos.","poder":"Jardim do Último Instante: O usuário pode fazer as pétalas absorverem o movimento de qualquer coisa que toquem. Uma pessoa que atravessa uma pétala sente seu movimento diminuir brevemente. Um golpe pode perder velocidade. Uma flecha pode praticamente parar. Limitação: as pétalas só conseguem armazenar uma quantidade limitada de movimento. Quando o limite é atingido, elas desaparecem.","bankai":{"nome":"Kurotsubaki — Shūen Teien","kanji":"「黒椿・終焉庭園」","traducao":"Jardim do Fim","nomeCompleto":"Bankai — Kurotsubaki 「黒椿・終焉庭園」 (Shūen Teien — Jardim do Fim)","comando":"Bankai — Kurotsubaki, Shūen Teien!","formatoArma":"Todas as pétalas existentes se transformam em árvores negras gigantescas. O campo de batalha inteiro vira um jardim silencioso e monocromático sob uma penumbra espiritual.","poder":"Redistribuição Absoluta do Movimento: O usuário agora pode redistribuir o movimento armazenado. Pode retirar velocidade de uma coisa e transferi-la para outra. Por exemplo: uma espada inimiga perde velocidade → uma estocada do usuário recebe essa velocidade. A grande evolução é que a Shikai armazena, enquanto a Bankai redistribui livremente no domínio do jardim."}},{"id":"zk-02","numero":"02","nome":"Akagane","kanji":"「赤鋼」","traducao":"Aço Vermelho","nomeCompleto":"Akagane 「赤鋼」— Aço Vermelho","espirito":"Um ferreiro gigantesco sem rosto, com o corpo coberto por placas metálicas e um enorme avental. Em vez de mãos, possui martelos. Ele nunca fala; responde apenas golpeando uma bigorna espiritual ancestral.","comando":"Forje aquilo que ainda não existe, Akagane.","elemento":"Aço Carmesim & Refinamento Cinético","formatoArma":"A espada se desfaz em várias placas metálicas vermelhas que envolvem o braço direito do usuário, formando uma manopla reforçada e antebraço blindado de combate pesado.","poder":"Memória do Impacto: Cada golpe recebido pela armadura é parcialmente armazenado. Quanto mais impactos recebe, mais energia cinética a armadura acumula. O usuário pode liberar essa energia através do próximo golpe. Limitação: se acumular energia demais além da sua capacidade física, a própria armadura começa a sobreaquecer e prejudicar o usuário.","bankai":{"nome":"Akagane — Hyakurenro","kanji":"「赤鋼・百錬炉」","traducao":"Forja das Cem Temperas","nomeCompleto":"Bankai — Akagane 「赤鋼・百錬炉」 (Hyakurenro — Forja das Cem Temperas)","comando":"Bankai — Akagane, Hyakurenro!","formatoArma":"A armadura de aço vermelho cobre todo o corpo do usuário e surge uma enorme fornalha espiritual incandescente flutuando atrás dele.","poder":"Refinamento & Conversão Metabólica de Energia: Os impactos agora são refinados pela fornalha. Cada golpe recebido ou trocado consecutivamente transforma a energia acumulada em bônus direto de força, velocidade, resistência ou impulso destrutivo. Requer que o usuário mantenha o ritmo de combate contínuo; se parar de lutar por muito tempo, a energia refinada se dissipa."}},{"id":"zk-03","numero":"03","nome":"Suisen","kanji":"「水仙」","traducao":"Narciso","nomeCompleto":"Suisen 「水仙」— Narciso","espirito":"Um garoto extremamente pálido, vestido como um bailarino clássico, que vive em um salão imenso cheio de espelhos cobertos por água rasa e pétalas brancas.","comando":"Olhe para si mesmo, Suisen.","elemento":"Espelhos Líquidos & Translocação","formatoArma":"A lâmina se transforma em uma espada extremamente fina e prateada de superfície fluida e líquida. Sempre que alguém olha diretamente para ela, vê seu próprio reflexo distorcido em ondas aquáticas.","poder":"Reflexo Falso: O usuário pode criar cópias ilusórias táteis de movimentos que acabou de realizar. Se ele atacar para a esquerda, um reflexo pode repetir o movimento simultaneamente pela direita para confundir a percepção e tempo de reação do oponente.","bankai":{"nome":"Suisen — Senkyō Kairō","kanji":"「水仙・千鏡回廊」","traducao":"Corredor das Mil Imagens","nomeCompleto":"Bankai — Suisen 「水仙・千鏡回廊」 (Senkyō Kairō — Corredor das Mil Imagens)","comando":"Bankai — Suisen, Senkyō Kairō!","formatoArma":"O campo inteiro se transforma em um labirinto monumental de espelhos líquidos flutuantes que refletem a luz e a imagem do usuário em 360 graus.","poder":"Translocação Reflexiva Instantânea: A Bankai se torna uma técnica suprema de mobilidade e reposicionamento. O usuário pode trocar de posição instantaneamente com qualquer reflexo ativo no campo. Limitação: cada troca consome e destrói o espelho reflexivo utilizado."}},{"id":"zk-04","numero":"04","nome":"Hoshikuzu","kanji":"「星屑」","traducao":"Poeira Estelar","nomeCompleto":"Hoshikuzu 「星屑」— Poeira Estelar","espirito":"Uma pequena criatura humanoide coberta por um manto azul-escuro cósmico. Seu corpo parece conter uma galáxia de estrelas reluzentes. Ela fala como uma criança curiosa e habita uma ilha flutuante no vazio celestial.","comando":"Desperte no céu, Hoshikuzu.","elemento":"Gravidade Orbital & Luz Cósmica","formatoArma":"A espada se fragmenta em dezenas de pequenos cristais luminosos azulados que orbitam em círculos contínuos ao redor do portador.","poder":"Órbita Curvilínea: Os fragmentos podem alterar bruscamente sua trajetória no ar sem perder aceleração. O usuário pode arremessar cristais que realizam curvas impossíveis em torno de obstáculos e criam pontos de ancoragem para saltos aéreos.","bankai":{"nome":"Hoshikuzu — Tenkan","kanji":"「星屑・天環」","traducao":"Anel Celestial","nomeCompleto":"Bankai — Hoshikuzu 「星屑・天環」 (Tenkan — Anel Celestial)","comando":"Bankai — Hoshikuzu, Tenkan!","formatoArma":"Os fragmentos de cristal se multiplicam em milhares e formam gigantescos anéis luminosos concêntricos que giram por todo o perímetro da arena.","poder":"Controle Absoluto de Trajetórias: O usuário define eixos de atração gravitacional. Qualquer projétil, técnica de Reiryoku ou adversário que entre em uma das órbitas é forçado a seguir a trajetória circular do anel, permitindo defletir ataques maciços e reposicionar inimigos à vontade."}},{"id":"zk-05","numero":"05","nome":"Kōriame","kanji":"「氷雨」","traducao":"Chuva Congelada","nomeCompleto":"Kōriame 「氷雨」— Chuva Congelada","espirito":"Uma senhora idosa de olhar triste e passos lentos carregando um guarda-chuva de seda branca, habitando uma cidade melancólica onde chove sem parar.","comando":"Chore sobre este mundo, Kōriame.","elemento":"Água Pesada & Inércia Glacial","formatoArma":"A espada vira um guarda-chuva metálico branco reforçado com uma lâmina de estocada na ponta. Quando aberto, uma fina chuva espiritual começa a precipitar continuamente sobre a área.","poder":"Gotas de Peso Inercial: Cada gota de chuva que toca um objeto ou pessoa aumenta progressivamente sua inércia física. O alvo atinge cada vez mais resistência para acelerar, saltar ou mudar bruscamente de rumo durante a movimentação.","bankai":{"nome":"Kōriame — Hakusōten","kanji":"「氷雨・白葬天」","traducao":"Céu do Funeral Branco","nomeCompleto":"Bankai — Kōriame 「氷雨・白葬天」 (Hakusōten — Céu do Funeral Branco)","comando":"Bankai — Kōriame, Hakusōten!","formatoArma":"O firmamento escurece sob nuvens cinzentas colossais e uma tempestade torrencial de gotas prateadas cobre quilômetros de distância.","poder":"Manipulação Vetorial da Resistência Espacial: O usuário dita qual direção do espaço sofrerá maior resistência hidrostática. Pode fazer avanços frontais ficarem dez vezes mais lentos, golpes verticais perderem impacto e passos de fuga se tornarem exaustivos, ditando o ritmo da batalha."}},{"id":"zk-06","numero":"06","nome":"Kagamibana","kanji":"「鏡花」","traducao":"Flor do Espelho","nomeCompleto":"Kagamibana 「鏡花」— Flor do Espelho","espirito":"Uma mulher sem olhos com flores de vidro e cristais crescendo pelos longos cabelos escuros, vivendo dentro de uma estufa repleta de espelhos estilhaçados.","comando":"Reflita aquilo que deveria ser esquecido, Kagamibana.","elemento":"Distorção de Probabilidade & Vidro","formatoArma":"A lâmina se torna transparente como vidro puro, com uma superfície que parece um mosaico de espelhos trincados.","poder":"Fragmento de Possibilidade: Quando um ataque inimigo passa a curta distância, o usuário pode criar uma réplica alternativa daquele instante. Por alguns segundos, ele pode optar por validar o acontecimento real ou o fragmento alternativo criado, mitigando golpes fatais.","bankai":{"nome":"Kagamibana — Banshō Shakai","kanji":"「鏡花・万象写界」","traducao":"Mundo que Copia Todas as Coisas","nomeCompleto":"Bankai — Kagamibana 「鏡花・万象写界」 (Banshō Shakai — Mundo que Copia Todas as Coisas)","comando":"Bankai — Kagamibana, Banshō Shakai!","formatoArma":"Todo o chão, céu e atmosfera ganham o reflexo límpido de espelhos planos perfeitos.","poder":"Divergência Quântica de Realidade: O usuário manifesta múltiplos caminhos de ação simultâneos para um mesmo ataque ou esquiva. Ele ataca por 3 ângulos distintos ao mesmo tempo e escolhe qual deles colidirá fisicamente com o oponente no momento do impacto."}},{"id":"zk-07","numero":"07","nome":"Mukade","kanji":"「百足」","traducao":"Centopeia","nomeCompleto":"Mukade 「百足」— Centopeia","espirito":"Uma criatura esguia e longa com dezenas de braços articulados segurando pequenas adagas serrilhadas e vestindo uma máscara de osso que lembra um exoesqueleto de inseto.","comando":"Multiplique-se pelo caminho, Mukade.","elemento":"Lâminas Articuladas & Encadear Contínuo","formatoArma":"A katana se divide em múltiplas lâminas segmentadas unidas por correntes de elos flexíveis de aço, controláveis individualmente através da empunhadura.","poder":"Ataque Encadeado: Cada golpe consecutivo bem-sucedido permite reposicionar outra lâmina sem tempo de recuo. Quanto maior a sequência contínua de acertos, mais ângulos de ataque se abrem simultaneamente. Limitação: errar um golpe quebra a cadeia e recolhe as lâminas.","bankai":{"nome":"Mukade — Mukyū Renjin","kanji":"「百足・無窮連刃」","traducao":"Lâminas da Corrente Infinita","nomeCompleto":"Bankai — Mukade 「百足・無窮連刃」 (Mukyū Renjin — Lâminas da Corrente Infinita)","comando":"Bankai — Mukade, Mukyū Renjin!","formatoArma":"As lâminas se multiplicam em centenas de gumes segmentados formando uma rede viva e autônoma de aço ao redor da arena.","poder":"Cadeia Autônoma de Resposta Cinética: O usuário não precisa controlar cada lâmina manualmente. A Bankai lê o último vetor de impacto e projeta automaticamente sucessões de cortes em cascata prevendo as rotas de fuga do oponente."}},{"id":"zk-08","numero":"08","nome":"Yūreiishi","kanji":"「幽霊石」","traducao":"Pedra Fantasma","nomeCompleto":"Yūreiishi 「幽霊石」— Pedra Fantasma","espirito":"Uma criança parcialmente translúcida de olhar calmo sentada sobre uma enorme rocha negra que flutua no vazio, sempre cercada por pequenas almas errantes.","comando":"Permaneça onde ninguém pode tocar, Yūreiishi.","elemento":"Âncoras Espaciais & Teletransporte","formatoArma":"A lâmina da espada desaparece por completo. No lugar dela, pequenas pedras negras de densidade nula orbitam suavemente as mãos do portador.","poder":"Âncoras Espirituais: O usuário pode posicionar as pedras no espaço como âncoras fixas e saltar instantaneamente até a coordenada de qualquer pedra ativa (possui limite de distância e quantidade de âncoras simultâneas).","bankai":{"nome":"Yūreiishi — Hyakki Kyō","kanji":"「幽霊石・百鬼境」","traducao":"Território das Cem Almas","nomeCompleto":"Bankai — Yūreiishi 「幽霊石・百鬼境」 (Hyakki Kyō — Território das Cem Almas)","comando":"Bankai — Yūreiishi, Hyakki Kyō!","formatoArma":"Centenas de pedras negras monumentais flutuam em toda a extensão do campo de batalha como um labirinto suspenso.","poder":"Malha Espacial Transcendente: O usuário pode translocar-se instantaneamente entre qualquer uma das pedras sem atraso de movimento, criando sequências de ataque de ângulos omnidirecionais. Custo de Reiryoku escala com o número de saltos contínuos."}},{"id":"zk-09","numero":"09","nome":"Raimei","kanji":"「雷鳴」","traducao":"Trovão","nomeCompleto":"Raimei 「雷鳴」— Trovão","espirito":"Um guerreiro colossal com máscara tradicional de teatro Noh, cujo corpo de bronze é percorrido por fissuras luminosas pulsantes como eletricidade crua.","comando":"Faça o céu responder, Raimei.","elemento":"Ressonância Sísmico-Elétrica","formatoArma":"A lâmina adquire formato em zigue-zague irregular e a empunhadura emite pulsos de vibração sonora e elétrica em frequências constantes.","poder":"Ressonância Harmônica: Cada movimento ritmado do portador gera uma onda de vibração cumulativa. Manter a cadência de golpes faz o Reiryoku entrar em ressonância, permitindo que o golpe seguinte descarregue toda a energia acumulada em uma explosão de choque.","bankai":{"nome":"Raimei — Gōtenritsu","kanji":"「雷鳴・轟天律」","traducao":"Lei do Céu Trovejante","nomeCompleto":"Bankai — Raimei 「雷鳴・轟天律」 (Gōtenritsu — Lei do Céu Trovejante)","comando":"Bankai — Raimei, Gōtenritsu!","formatoArma":"O campo é coberto por pilares de trovão que ressoam como um metrônomo cósmico em compassos visíveis de relâmpago.","poder":"Cadência Absoluta de Combate: A Bankai premia a sincronização rítmica. Ações executadas precisamente dentro do pulso do trovão ganham o dobro de velocidade e poder perfurante; atacar fora do compasso dissipa a ressonância e atordoa o usuário."}},{"id":"zk-10","numero":"10","nome":"Shirogane","kanji":"「白銀」","traducao":"Prata Branca","nomeCompleto":"Shirogane 「白銀」— Prata Branca","espirito":"Um cavaleiro sem rosto com armadura de prata imaculada e polida que carrega uma gigantesca balança de pratos no lugar de uma espada de guerra.","comando":"Pese aquilo que existe, Shirogane.","elemento":"Equilíbrio & Redistribuição de Vantagens","formatoArma":"Uma espada longa prateada de gume reto cuja guarda possui o formato esculpido de uma balança de precisão.","poder":"Equilíbrio Proporcional: Detecta a disparidade física ou espiritual no choque de armas. O portador pode reduzir temporariamente uma vantagem do oponente (como força bruta), mas deve abrir mão de uma fração proporcional de outra vantagem própria para manter o equilíbrio.","bankai":{"nome":"Shirogane — Tenbin Kai","kanji":"「白銀・天秤界」","traducao":"Domínio da Balança Celestial","nomeCompleto":"Bankai — Shirogane 「白銀・天秤界」 (Tenbin Kai — Domínio da Balança Celestial)","comando":"Bankai — Shirogane, Tenbin Kai!","formatoArma":"Uma monumental balança espiritual dourada e prateada surge sobre as nuvens dominando todo o campo de batalha.","poder":"Gerenciamento Universal de Atributos: O usuário pode comparar e redistribuir parâmetros (força, velocidade, pressão espiritual e resistência). Pode sacrificar sua velocidade para aumentar drasticamente sua resistência física, ou equalizar a força do inimigo à sua própria."}},{"id":"zk-11","numero":"11","nome":"Suminawa","kanji":"「墨縄」","traducao":"Corda de Nanquim","nomeCompleto":"Suminawa 「墨縄」— Corda de Nanquim","espirito":"Um calígrafo cego de longas vestes manchadas que traça kanjis no ar com um pincel gigante feito de cabelos de espíritos antigos.","comando":"Trace os limites do abismo, Suminawa.","elemento":"Nanquim Espiritual & Contenção Espacial","formatoArma":"A lâmina se transforma em uma espada com ranhuras que liberam nanquim negro viscoso. Cada golpe no ar deixa traços de tinta sólida suspensos que atuam como cordas tensionadas de retenção.","poder":"Traço Restritivo: Os traços de nanquim no ar endurecem como cabos de aço ao menor contato de corpos ou lâminas, travando a trajetória de golpes e membros do inimigo. Limitação: as cordas de tinta se desfazem após absorverem impactos de alta Reiryoku.","bankai":{"nome":"Suminawa — Banshō Emaki","kanji":"「墨縄・万象絵巻」","traducao":"Rolo Pintado de Todas as Coisas","nomeCompleto":"Bankai — Suminawa 「墨縄・万象絵巻」 (Banshō Emaki — Rolo Pintado de Todas as Coisas)","comando":"Bankai — Suminawa, Banshō Emaki!","formatoArma":"O campo se torna um gigantesco pergaminho tridimensional em preto e branco onde o portador empunha uma espada-pincel colossal de nanquim puro.","poder":"Corte Bidimensional no Espaço Tridimensional: Qualquer corte ou traço feito no ar pelo usuário se manifesta instantaneamente em qualquer superfície ou corpo que esteja alinhado na perspectiva visual do pergaminho, ignorando distância física."}},{"id":"zk-12","numero":"12","nome":"Utsusemi","kanji":"「空蝉」","traducao":"Casca da Cigarra","nomeCompleto":"Utsusemi 「空蝉」— Casca da Cigarra","espirito":"Um monge silencioso coberto por túnicas de seda ressecada e folhas quebradiças que se despedaçam ao menor toque, revelando vazio em seu interior.","comando":"Abandone a forma passageira, Utsusemi.","elemento":"Muda Corporal & Evasão Residual","formatoArma":"A lâmina se torna translúcida com tonalidade âmbar, emitindo um estalido oco e seco a cada oscilação no ar.","poder":"Casca Oca Residual: Ao receber um golpe direto que causaria ferimento grave, o usuário deixa para trás uma casca perfeita de Reiryoku que absorve o impacto total enquanto seu corpo real recua 3 metros ileso (uma vez por confronto próximo).","bankai":{"nome":"Utsusemi — Senkaku Zankyō","kanji":"「空蝉・千殻残響」","traducao":"Ecos dos Mil Casulos Vazios","nomeCompleto":"Bankai — Utsusemi 「空蝉・千殻残響」 (Senkaku Zankyō — Ecos dos Mil Casulos Vazios)","comando":"Bankai — Utsusemi, Senkaku Zankyō!","formatoArma":"Dezenas de casulos âmbar translúcidos flutuam por toda a área como estátuas ocas perfeitas do portador.","poder":"Retenção e Refração de Impacto: Cada casulo acumula a memória cinética e espiritual dos golpes que o atingiram. O usuário pode detonar ou rebater a força armazenada nesses casulos diretamente contra quem se aproximar deles."}},{"id":"zk-13","numero":"13","nome":"Kagaribi","kanji":"「篝火」","traducao":"Fogueira Noturna","nomeCompleto":"Kagaribi 「篝火」— Fogueira Noturna","espirito":"Um sentinela com elmo de ferro antigo segurando uma lanterna sem chama onde ardem apenas fagulhas de cinza espiritual imortal.","comando":"Revele as sombras da vigília, Kagaribi.","elemento":"Brasas Reveladoras & Consumo Mágico","formatoArma":"Uma lâmina curva acoplada a um pequeno braseiro de ferro no pomo que desprende fagulhas douradas contínuas.","poder":"Luz da Intenção: Qualquer fonte de Reiryoku, ataque invisível ou preparação de feitiço dentro do raio iluminado pelas fagulhas tem sua densidade e trajetória expostas antes de ser desferido.","bankai":{"nome":"Kagaribi — Yahan Enjin","kanji":"「篝火・夜半炎陣」","traducao":"Círculo de Chamas da Meia-Noite","nomeCompleto":"Bankai — Kagaribi 「篝火・夜半炎陣」 (Yahan Enjin — Círculo de Chamas da Meia-Noite)","comando":"Bankai — Kagaribi, Yahan Enjin!","formatoArma":"Uma colossal fogueira espiritual arde no centro da arena projetando pilares de chamas translúcidas.","poder":"Combustão de Feitiços & Dreno de Kidō: As chamas não queimam matéria orgânica, mas consomem vorazmente qualquer Reiryoku moldado em técnicas mágicas (Hadō/Bakudō), reduzindo o poder de feitiços inimigos proporcionalmente ao tempo gasto na luz."}},{"id":"zk-14","numero":"14","nome":"Senritsu","kanji":"「旋律」","traducao":"Melodia Silenciosa","nomeCompleto":"Senritsu 「旋律」— Melodia Silenciosa","espirito":"Uma dama etérea sentada sobre um lago sereno tocando uma cítara cujas cordas invisíveis vibram na frequência do vento.","comando":"Toque aquilo que não tem voz, Senritsu.","elemento":"Frequência Acústica & Interferência Neural","formatoArma":"Uma espada esguia e brilhante com pequenas aberturas ao longo do dorso que assobiam em notas musicais precisas ao golpear.","poder":"Harmonia Desestabilizadora: Cada defesa ou aparo com a lâmina produz um tom sonoro que ressoa nas terminações nervosas do braço atacante, causando dormência passageira e perda temporária de empunhadura.","bankai":{"nome":"Senritsu — Zekkyō Shūkyoku","kanji":"「旋律・絶響終曲」","traducao":"Réquiem da Ressonância Final","nomeCompleto":"Bankai — Senritsu 「旋律・絶響終曲」 (Zekkyō Shūkyoku — Réquiem da Ressonância Final)","comando":"Bankai — Senritsu, Zekkyō Shūkyoku!","formatoArma":"O ar do ambiente inteiro vibra como uma caixa de ressonância com cordas de luz prateada cruzando a atmosfera.","poder":"Sincronização Cardiopulmonar Obrigatória: A Bankai sintoniza a respiração e os batimentos cardíacos do oponente com o andamento musical da espada. Qualquer ataque ou movimento brusco fora do ritmo imposto causa contração dolorosa nos órgãos internos."}},{"id":"zk-15","numero":"15","nome":"Kagehōshi","kanji":"「影法師」","traducao":"Silhueta na Sombra","nomeCompleto":"Kagehōshi 「影法師」— Silhueta na Sombra","espirito":"Uma silhueta sombria sem traços faciais definidos que projeta dois olhos de âmbar fixos no solo e nunca emerge para onde há luz direta.","comando":"Prenda-se ao solo, Kagehōshi.","elemento":"Sombras Vivas & Paralisia Simpática","formatoArma":"Uma katana escura cuja lâmina projeta uma sombra alongada no solo com o dobro do comprimento da espada real.","poder":"Corte da Sombra: Cortar ou cravar a espada na sombra projetada do oponente no chão imobiliza a parte do corpo correspondente pelo tempo em que a lâmina estiver sobre a sombra.","bankai":{"nome":"Kagehōshi — Shikkoku Bakukai","kanji":"「影法師・漆黒縛界」","traducao":"Domínio Aprisionador do Ébano","nomeCompleto":"Bankai — Kagehōshi 「影法師・漆黒縛界」 (Shikkoku Bakukai — Domínio Aprisionador do Ébano)","comando":"Bankai — Kagehōshi, Shikkoku Bakukai!","formatoArma":"O chão de toda a arena se liquefaz em um pântano de sombras profundas que refletem as armas dos combatentes.","poder":"Mimetismo Sombrio Agressivo: As sombras projetadas no solo criam cópias independentes das armas e membros dos próprios oponentes, atacando-os a partir de seus próprios pés e restringindo movimentos com tentáculos de Reiryoku negro."}},{"id":"zk-16","numero":"16","nome":"Hakumaku","kanji":"「薄膜」","traducao":"Membrana Translúcida","nomeCompleto":"Hakumaku 「薄膜」— Membrana Translúcida","espirito":"Uma tecelã de vestes alvas que fia véus transparentes e elásticos em uma sala repleta de neblina e gotas de orvalho.","comando":"Estenda a fronteira do ar, Hakumaku.","elemento":"Películas Refratárias & Vetor Elástico","formatoArma":"Uma espada de lâmina polida como água que deixa películas espirituais translúcidas suspensas no ar a cada corte.","poder":"Membrana Defletora: As películas criadas no ar funcionam como superfícies hiperelásticas capazes de desviar projéteis e servir como trampolins de aceleração para mudanças angulares imediatas no Shunpo.","bankai":{"nome":"Hakumaku — Tenkyō Shōheki","kanji":"「薄膜・天鏡障壁」","traducao":"Barreira do Espelho Celestial","nomeCompleto":"Bankai — Hakumaku 「薄膜・天鏡障壁」 (Tenkyō Shōheki — Barreira do Espelho Celestial)","comando":"Bankai — Hakumaku, Tenkyō Shōheki!","formatoArma":"Uma monumental bolha translúcida multifacetada encapsula toda a área de combate.","poder":"Inversão Vetorial Total: Qualquer golpe, corpo ou feitiço que colide contra as paredes da membrana externa tem sua velocidade e direção invertidas em 180° com a mesma energia com que tentou romper a barreira."}},{"id":"zk-17","numero":"17","nome":"Haguruma","kanji":"「歯車」","traducao":"Engrenagem do Destino","nomeCompleto":"Haguruma 「歯車」— Engrenagem do Destino","espirito":"Um autômato ancestral de bronze polido com engrenagens e ponteiros expostos no peito que giram ritmicamente marcando segundos silenciosos.","comando":"Engrene o tempo que resta, Haguruma.","elemento":"Mecânica Rotacional & Intervalos Discretos","formatoArma":"Uma espada pesada com gume dentado articulado em engrenagens que giram e acumulam torque a cada contato de aço.","poder":"Torque Acumulativo: Cada colisão bem-sucedida faz as engrenagens girarem mais rápido, aumentando progressivamente a aceleração de corte do golpe seguinte.","bankai":{"nome":"Haguruma — Banshō Kokukai","kanji":"「歯車・万象刻界」","traducao":"Mundo dos Ponteiros Eternos","nomeCompleto":"Bankai — Haguruma 「歯車・万象刻界」 (Banshō Kokukai — Mundo dos Ponteiros Eternos)","comando":"Bankai — Haguruma, Banshō Kokukai!","formatoArma":"Monumentais rodas dentadas de bronze e mostradores de relógio flutuam no céu e no solo da arena.","poder":"Ajuste de Intervalos de Ação: O usuário pode retardar ou acelerar os intervalos entre a decisão motora e a execução física do adversário, fazendo com que o inimigo sofra atrasos de frações de segundo na recuperação após cada ataque."}},{"id":"zk-18","numero":"18","nome":"Sasayaki","kanji":"「囁き」","traducao":"Sussurro Noturno","nomeCompleto":"Sasayaki 「囁き」— Sussurro Noturno","espirito":"Uma figura misteriosa com máscara de porcelana sem boca que fala através de ecos simultâneos e sussurros reverberantes.","comando":"Ecoa na mente vazia, Sasayaki.","elemento":"Ruído Psíquico & Supressão de Cânticos","formatoArma":"Uma lâmina de acabamento cinza fosco que não produz som de corte nem reflete luz.","poder":"Interferência Acústica: O choque do aço transmite uma vibração subsônica direta no ouvido interno do oponente, gerando desorientação espacial momentânea.","bankai":{"nome":"Sasayaki — Muon Kyōsō","kanji":"「囁き・無音狂噪」","traducao":"Frenesi do Silêncio Enlouquecedor","nomeCompleto":"Bankai — Sasayaki 「囁き・無音狂噪」 (Muon Kyōsō — Frenesi do Silêncio Enlouquecedor)","comando":"Bankai — Sasayaki, Muon Kyōsō!","formatoArma":"Todo o ruído da atmosfera é completamente anulado gerando um vácuo acústico absoluto.","poder":"Bloqueio de Concentração & Encantamentos: Um turbilhão de sussurros psíquicos é projetado diretamente no fluxo mental do inimigo, tornando impossível manter a concentração requerida para cânticos de Kidō ou cálculos táticos refinados."}},{"id":"zk-19","numero":"19","nome":"Enbaku","kanji":"「煙幕」","traducao":"Cortina de Cinzas","nomeCompleto":"Enbaku 「煙幕」— Cortina de Cinzas","espirito":"Um eremita com olhos cor de brasa fumando um cachimbo de bambu escurecido, cercado por cinzas que flutuam sem jamais tocar o chão.","comando":"Asfixie o horizonte, Enbaku.","elemento":"Fumaça Pesada & Asfixia Espiritual","formatoArma":"Uma espada curta que expele continuamente uma névoa espessa de fumaça cinzenta e pesada que rasteja sobre o terreno.","poder":"Fumaça Asfixiante: A fumaça drena a concentração de oxigênio e Reiryoku puro ao redor, dificultando a respiração e enfraquecendo feitiços de Hadō disparados através dela.","bankai":{"nome":"Enbaku — Kaijin Tengai","kanji":"「煙幕・灰燼天蓋」","traducao":"Domo das Cinzas Eternas","nomeCompleto":"Bankai — Enbaku 「煙幕・灰燼天蓋」 (Kaijin Tengai — Domo das Cinzas Eternas)","comando":"Bankai — Enbaku, Kaijin Tengai!","formatoArma":"Uma cúpula monumental de cinzas incandescentes cobre toda a arena de combate.","poder":"Solidificação Instantânea de Fumaça: Toda a fumaça ambiente pode ser condensada instantaneamente em agulhas sólidas afiadas, paredes de contenção ou lâminas de impacto sob o comando do usuário."}},{"id":"zk-20","numero":"20","nome":"Garyū","kanji":"「臥竜」","traducao":"Dragão Adormecido","nomeCompleto":"Garyū 「臥竜」— Dragão Adormecido","espirito":"Um monge sereno sentado sobre a crista de um dragão esculpido em rocha sedimentar milenar que respira poeira de terra.","comando":"Acorde da montanha, Garyū.","elemento":"Densidade Sísmica & Massa Inercial","formatoArma":"Uma espada larga, pesada e de gume rombudo que não possui fio de corte tradicional, mas tem densidade descomunal.","poder":"Massa Cumulativa: A cada golpe bloqueado com a espada, sua densidade aumenta sem sobrecarregar os braços do portador, esmagando defesas pela pura inércia do impacto.","bankai":{"nome":"Garyū — Tenhō Chiretsu","kanji":"「臥竜・天崩地裂」","traducao":"Colapso do Céu e Fratura da Terra","nomeCompleto":"Bankai — Garyū 「臥竜・天崩地裂」 (Tenhō Chiretsu — Colapso do Céu e Fratura da Terra)","comando":"Bankai — Garyū, Tenhō Chiretsu!","formatoArma":"A carapaça de pedra se parte liberando uma espada titânica de lâmina negra reluzente com aura gravitacional densa.","poder":"Onda de Ruptura Tectônica: Cada golpe desferido gera uma pressão gravitacional vertical capaz de quebrar o solo em crateras de dezenas de metros e estilhaçar qualquer barreira de Bakudō convencional."}},{"id":"zk-21","numero":"21","nome":"Chizome","kanji":"「血染」","traducao":"Fios de Sangue","nomeCompleto":"Chizome 「血染」— Fios de Sangue","espirito":"Uma nobre vestida com quimono carmesim que costura tapeçarias usando agulhas de osso e fios tingidos de sangue fresco.","comando":"Tinja o caminho de carmesim, Chizome.","elemento":"Coagulação Espiritual & Fios Carmesins","formatoArma":"Uma adaga curva de aço polido com uma ranhura central que atrai e cristaliza fluidos em micro-agulhas afiadas.","poder":"Cristalização Sanguínea: Permite ao usuário endurecer gotas de sangue no ar ou no chão em agulhas e lâminas cortantes arremessáveis.","bankai":{"nome":"Chizome — Senshi Senketsukai","kanji":"「血染・千糸鮮血界」","traducao":"Mundo dos Mil Fios de Sangue","nomeCompleto":"Bankai — Chizome 「血染・千糸鮮血界」 (Senshi Senketsukai — Mundo dos Mil Fios de Sangue)","comando":"Bankai — Chizome, Senshi Senketsukai!","formatoArma":"O ambiente se cruza com milhares de fios escarlates suspensos que brilham com Reiryoku vivo.","poder":"Rede Sensora & Guilhotina: Os fios no ar reagem automaticamente a qualquer vibração ou deslocamento veloz, tensionando-se para fatiar quem tentar cruzar a rede em alta velocidade."}},{"id":"zk-22","numero":"22","nome":"Kazahana","kanji":"「風花」","traducao":"Pétalas da Nevasca","nomeCompleto":"Kazahana 「風花」— Pétalas da Nevasca","espirito":"Uma criança vestida de branco que sopra delicadas flores de gelo enquanto caminha descalça sobre a neve virgem.","comando":"Dance na geada suave, Kazahana.","elemento":"Gelo Suave & Flocos Entorpecentes","formatoArma":"Uma katana fina prateada que liberta pequenos flocos hexagonais de gelo que flutuam ao redor da lâmina.","poder":"Geada Entorpecente: Os flocos de gelo grudam nas roupas e pele do alvo, drenando o calor corporal e reduzindo o tempo de resposta neuromuscular a cada golpe.","bankai":{"nome":"Kazahana — Byakuya Hanafubuki","kanji":"「風花・白夜花吹雪」","traducao":"Nevasca Floral da Noite Branca","nomeCompleto":"Bankai — Kazahana 「風花・白夜花吹雪」 (Byakuya Hanafubuki — Nevasca Floral da Noite Branca)","comando":"Bankai — Kazahana, Byakuya Hanafubuki!","formatoArma":"Um turbilhão colossal de pétalas de gelo cortantes envolve toda a arena sob uma tempestade de frio extremo.","poder":"Ausência de Atrito & Corte Gélido: As lâminas de gelo cortam o ar anulando o atrito do solo e reduzindo a temperatura a níveis que congelam faíscas de Reiryoku e aprisionam o inimigo em geada perpétua."}},{"id":"zk-23","numero":"23","nome":"Bankō","kanji":"「万綱」","traducao":"Rede das Profundezas","nomeCompleto":"Bankō 「万綱」— Rede das Profundezas","espirito":"Um pescador silencioso em um barco de junco no centro de um oceano infinito coberto por névoa cinzenta.","comando":"Puxe as amarras do abismo, Bankō.","elemento":"Cabos de Aço & Tensão de Longo Alcance","formatoArma":"A lâmina se estende em múltiplos fios de aço flexíveis de altíssima tensão equipados com ganchos farpados nas pontas.","poder":"Puxão Angulado: Permite laçar membros, armas ou pontos do terreno para projetar o usuário ou desarmar oponentes a longas distâncias.","bankai":{"nome":"Bankō — Kaitei Bakusamō","kanji":"「万綱・海底縛鎖網」","traducao":"Rede de Correntes do Fundo do Oceano","nomeCompleto":"Bankai — Bankō 「万綱・海底縛鎖網」 (Kaitei Bakusamō — Rede de Correntes do Fundo do Oceano)","comando":"Bankai — Bankō, Kaitei Bakusamō!","formatoArma":"Milhares de correntes e cabos de aço cobrem o céu e o solo como uma teia monumental de cerco.","poder":"Contração & Condução Sísmica: O usuário sente qualquer vibração no campo e pode contrair a teia instantaneamente para esmagar ou aprisionar múltiplos alvos em um cofre de correntes."}},{"id":"zk-24","numero":"24","nome":"Shiratama","kanji":"「白玉」","traducao":"Esferas de Jade Sagrada","nomeCompleto":"Shiratama 「白玉」— Esferas de Jade Sagrada","espirito":"Um sacerdote em estado de iluminação que levita sereno cercado por três esferas peroladas que emitem luz pura.","comando":"Purifique a mácula, Shiratama.","elemento":"Luz Sagrada & Absorção Purificadora","formatoArma":"A espada gera três esferas luminosas de Reiryoku puro que giram em volta da empunhadura e protegem o portador.","poder":"Orbes de Defesa Absoluta: Cada esfera absorve integralmente um ataque mágico de Kidō ou impacto de energia elemental direta, dissipando-se em seguida (até 3 cargas).","bankai":{"nome":"Shiratama — Sangai Jōkarin","kanji":"「白玉・三界浄化輪」","traducao":"Três Anéis da Purificação Celestial","nomeCompleto":"Bankai — Shiratama 「白玉・三界浄化輪」 (Sangai Jōkarin — Três Anéis da Purificação Celestial)","comando":"Bankai — Shiratama, Sangai Jōkarin!","formatoArma":"As esferas se expandem em três anéis de luz solar gigantescos que descem sobre o campo de batalha.","poder":"Supressão de Energias Caóticas: Impõe uma zona de purificação contínua onde técnicas de energia impura ou venenos são neutralizados, enquanto recupera o fluxo de Reiryoku do portador."}},{"id":"zk-25","numero":"25","nome":"Tsukikage","kanji":"「月影」","traducao":"Sombra da Lua","nomeCompleto":"Tsukikage 「月影」— Sombra da Lua","espirito":"Uma arqueira de olhar calmo vestida de azul-noite sentada sobre a foice de uma lua prateada brilhando no escuro.","comando":"Oculte-se no luar, Tsukikage.","elemento":"Ilusão Óptica & Refração Lunar","formatoArma":"Uma lâmina curva e fosca cuja borda parece cintilar em ondas de luz prateada.","poder":"Distorção de Alcance: A refração luminosa ao longo do fio faz a espada parecer mais curta ou mais longa do que realmente é, enganando o tempo de bloqueio do inimigo.","bankai":{"nome":"Tsukikage — Gengetsu Mueikai","kanji":"「月影・幻月無影界」","traducao":"Domínio Sem Sombra da Lua Ilusória","nomeCompleto":"Bankai — Tsukikage 「月影・幻月無影界」 (Gengetsu Mueikai — Domínio Sem Sombra da Lua Ilusória)","comando":"Bankai — Tsukikage, Gengetsu Mueikai!","formatoArma":"A noite desce e a arena é banhada pela luz de uma lua cheia colossal prateada.","poder":"Ataque por Feixes de Luz: O usuário dissocia seu corpo físico da sua imagem visível, podendo projetar estocadas e cortes reais a partir de qualquer raio de luar refletido no terreno."}},{"id":"zk-26","numero":"26","nome":"Jigokubana","kanji":"「地獄花」","traducao":"Lírio do Submundo","nomeCompleto":"Jigokubana 「地獄花」— Lírio do Submundo","espirito":"Uma mulher com coroa de espinhos negros e lágrimas vermelhas cujos passos no solo fazem brotar flores escarlates de ferro.","comando":"Enraíze no solo dos mortos, Jigokubana.","elemento":"Raízes de Ferro & Dreno Telúrico","formatoArma":"Uma espada cuja ponta, ao tocar o solo, faz brotar raízes afiadas de metal que avançam em direção ao oponente.","poder":"Espinhos de Solo: Cria fendas subterrâneas com espinhos de Reiryoku que brotam sob os pés do alvo para empalar ou restringir seus passos.","bankai":{"nome":"Jigokubana — Guren Jukai","kanji":"「地獄花・紅蓮樹海」","traducao":"Floresta de Espinhos do Abismo Carmesim","nomeCompleto":"Bankai — Jigokubana 「地獄花・紅蓮樹海」 (Guren Jukai — Floresta de Espinhos do Abismo Carmesim)","comando":"Bankai — Jigokubana, Guren Jukai!","formatoArma":"Uma floresta colossal de videiras espinhosas de ferro carmesim brota cobrindo toda a arena.","poder":"Domínio Asfixiante de Raízes: As vinhas se movem autonomamente buscando fontes de Reiryoku, estrangulando defesas e drenando energia vital de qualquer um que encostar no solo."}},{"id":"zk-27","numero":"27","nome":"Hikariba","kanji":"「光刃」","traducao":"Lâmina de Prisma Solar","nomeCompleto":"Hikariba 「光刃」— Lâmina de Prisma Solar","espirito":"Um escultor de lentes de cristal puro que lapida raios solares em ângulos geométricos perfeitos.","comando":"Refrate a chama pura, Hikariba.","elemento":"Luz Solar Concentrada & Alta Temperatura","formatoArma":"Uma espada de cristal facetado que concentra a luz ambiente em feixes cortantes de alta temperatura.","poder":"Feixes Prismáticos: Permite refletir e curvar disparos luminosos em ângulos retos para atingir o oponente em seus pontos cegos.","bankai":{"nome":"Hikariba — Banshō Shōnetsukai","kanji":"「光刃・万象焦熱界」","traducao":"Domínio da Incineração Prismática","nomeCompleto":"Bankai — Hikariba 「光刃・万象焦熱界」 (Banshō Shōnetsukai — Domínio da Incineração Prismática)","comando":"Bankai — Hikariba, Banshō Shōnetsukai!","formatoArma":"Pilares gigantes de cristal facetado cercam o campo de batalha como espelhos monumentais.","poder":"Feixe Omnidirecional de Incineração: A luz concentrada pelos prismas dispara simultaneamente em dezenas de eixos térmicos, incinerando defesas físicas e barreiras mágicas com calor extremo."}},{"id":"zk-28","numero":"28","nome":"Ryūshin","kanji":"「竜心」","traducao":"Coração de Dragão","nomeCompleto":"Ryūshin 「竜心」— Coração de Dragão","espirito":"Um guerreiro imponente com marcas de escamas ardentes no peito e olhar penetrante de chamas douradas.","comando":"Queime no pulso da alma, Ryūshin.","elemento":"Calor Interno & Plasma Espiritual","formatoArma":"Uma katana de gume avermelhado que absorve o calor do próprio usuário para intensificar o poder de corte.","poder":"Combustão Contínua: Quanto mais longa a trocação direta de golpes, mais incandescente fica a lâmina, descarregando ondas térmicas a cada balanço.","bankai":{"nome":"Ryūshin — Gōka Tenshō","kanji":"「竜心・劫火天衝」","traducao":"Impacto Celestial do Fogo Cósmico","nomeCompleto":"Bankai — Ryūshin 「竜心・劫火天衝」 (Gōka Tenshō — Impacto Celestial do Fogo Cósmico)","comando":"Bankai — Ryūshin, Gōka Tenshō!","formatoArma":"O portador é envolto em uma armadura dracônica de plasma incandescente com asas de fogo espiritual.","poder":"Devastação em Plasma Puro: Libera explosões monumentais de calor contínuo que derretem o solo sob os pés dos combatentes e transformam o ar em uma fornalha inescapável."}},{"id":"zk-29","numero":"29","nome":"Mumyō","kanji":"「無明」","traducao":"Noite da Cegueira","nomeCompleto":"Mumyō 「無明」— Noite da Cegueira","espirito":"Um monge ancião de olhos vendados por seda negra que caminha com um cajado de ébano sem emitir vibração alguma.","comando":"Apague a centelha do olhar, Mumyō.","elemento":"Privação Sensorial & Penumbra Espiritual","formatoArma":"Uma espada que absorve o reflexo da luz ao seu redor, criando uma aura de escuridão opaca de 2 metros em torno do usuário.","poder":"Cegueira Momentânea: Ao cruzar lâminas, a visão periférica do adversário é apagada por 1 segundo, impedindo leitura de contra-ataques imediatos.","bankai":{"nome":"Mumyō — Tokoyami Meifu","kanji":"「無明・常闇冥府」","traducao":"Submundo das Trevas Eternas","nomeCompleto":"Bankai — Mumyō 「無明・常闇冥府」 (Tokoyami Meifu — Submundo das Trevas Eternas)","comando":"Bankai — Mumyō, Tokoyami Meifu!","formatoArma":"Todo o campo de batalha é engolido por uma escuridão absoluta impenetrável.","poder":"Anulação de Percepção & Detecção: Suprime completamente a visão e a detecção de Reiryoku à distância, forçando o adversário a lutar exclusivamente por sensações táteis imediatas enquanto o usuário se move com precisão instintiva."}},{"id":"zk-30","numero":"30","nome":"Haganeito","kanji":"「鋼糸」","traducao":"Fios de Aço","nomeCompleto":"Haganeito 「鋼糸」— Fios de Aço","espirito":"Um mestre marionetista com feições de porcelana lisa e dedos estendidos em longos filamentos prateados de Reiryoku.","comando":"Costure os passos do destino, Haganeito.","elemento":"Microfilamentos & Controle Articular","formatoArma":"A ponta da espada solta micro-fios de aço quase invisíveis que se prendem às armas e punhos dos adversários.","poder":"Desvio Tátil: Permite tensionar os filamentos no último instante para puxar ou desviar a lâmina inimiga para fora da rota letal.","bankai":{"nome":"Haganeito — Kugutsu Gigakan","kanji":"「鋼糸・傀儡戯画館」","traducao":"Teatro das Marionetes Espirituais","nomeCompleto":"Bankai — Haganeito 「鋼糸・傀儡戯画館」 (Kugutsu Gigakan — Teatro das Marionetes Espirituais)","comando":"Bankai — Haganeito, Kugutsu Gigakan!","formatoArma":"Uma imensa estrutura de palco celestial se ergue com milhares de fios cruzando o ar.","poder":"Manipulação de Articulações Inertes: Os fios tomam o controle das armas caídas, escombros e músculos fatigados do adversário, forçando bloqueios imperfeitos ou travando membros inteiros."}},{"id":"zk-31","numero":"31","nome":"Mizuchi","kanji":"「蛟」","traducao":"Serpente das Torrentes","nomeCompleto":"Mizuchi 「蛟」— Serpente das Torrentes","espirito":"Uma serpente d'água albina com chifres prateados repousando serenamente no fundo de um poço cristalino milenar.","comando":"Transborde em correnteza pura, Mizuchi.","elemento":"Água Pressurizada & Fluidez Cortante","formatoArma":"A lâmina de aço se desfaz em um fluxo de água pressurizada contínua de altíssima densidade capaz de cortar rochas.","poder":"Lâmina Fluida: Pode estender seu alcance instantaneamente ou perder solidez para passar através de defesas antes de se solidificar no corte.","bankai":{"nome":"Mizuchi — Suiten Daikōzui","kanji":"「蛟・水天大洪水」","traducao":"Tsunami do Domínio Celestial das Águas","nomeCompleto":"Bankai — Mizuchi 「蛟・水天大洪水」 (Suiten Daikōzui — Tsunami do Domínio Celestial das Águas)","comando":"Bankai — Mizuchi, Suiten Daikōzui!","formatoArma":"Uma colossal cúpula de água espiritual pura submerge toda a arena de batalha.","poder":"Hidrodinâmica Perfeita: Dentro do domo aquático, apenas o portador se move com velocidade sem atrito, disparando lâminas de vácuo hidrostático que esmagam o oponente pela pressão da água."}},{"id":"zk-32","numero":"32","nome":"Dokuga","kanji":"「毒蛾」","traducao":"Mariposa Venenosa","nomeCompleto":"Dokuga 「毒蛾」— Mariposa Venenosa","espirito":"Uma mulher graciosa com asas de mariposa aveludadas cobertas por escamas arroxeadas brilhantes que desprendem pólen ao bater.","comando":"Disperse o sono eterno, Dokuga.","elemento":"Pólen Tóxico & Entorpecimento Neural","formatoArma":"Uma lâmina fina e curva com guarda em formato de asas de mariposa que libera uma névoa arroxeada de escamas finas.","poder":"Pólen Entorpecente: O contato com as escamas entorpece a sensibilidade tátil e a velocidade de resposta reflexa do adversário a cada inalação.","bankai":{"nome":"Dokuga — Shigettsu Gendokurō","kanji":"「毒蛾・紫月幻毒牢」","traducao":"Gaiola do Veneno Ilusório da Lua Púrpura","nomeCompleto":"Bankai — Dokuga 「毒蛾・紫月幻毒牢」 (Shigettsu Gendokurō — Gaiola do Veneno Ilusório da Lua Púrpura)","comando":"Bankai — Dokuga, Shigettsu Gendokurō!","formatoArma":"O céu se torna violeta e uma tempestade contínua de pólen corrosivo envolve a arena.","poder":"Corrosão de Barreiras & Alucinação Sensorial: O veneno no ar dissolve barreiras de Kidō e induz alucinações visuais e auditivas que impedem o oponente de discernir a posição real do usuário."}},{"id":"zk-33","numero":"33","nome":"Tessen","kanji":"「鉄扇」","traducao":"Vento da Muralha de Aço","nomeCompleto":"Tessen 「鉄扇」— Vento da Muralha de Aço","espirito":"Um nobre cortesão com máscara cerimonial que empunha dois pesados leques metálicos com lâminas afiadas nas dobras.","comando":"Dobre o sopro do céu, Tessen.","elemento":"Vento Gravitacional & Deflexão","formatoArma":"A espada se desdobra em um grande leque de placas de aço afiadas como navalhas.","poder":"Vento Descendente: Cada balanço do leque gera rajadas de ar comprimido que empurram o adversário para o chão com força gravitacional multiplicada.","bankai":{"nome":"Tessen — Tenshō Hadanran","kanji":"「鉄扇・天衝破断嵐」","traducao":"Vendaval de Ruptura Celestial","nomeCompleto":"Bankai — Tessen 「鉄扇・天衝破断嵐」 (Tenshō Hadanran — Vendaval de Ruptura Celestial)","comando":"Bankai — Tessen, Tenshō Hadanran!","formatoArma":"Dois gigantescos leques de aço flutuam ao lado do usuário gerando ciclones contínuos.","poder":"Gaiola de Vácuo Cortante: Cria furacões verticais que suspendem o adversário no ar enquanto desferem milhares de cortes de vácuo em alta rotação."}},{"id":"zk-34","numero":"34","nome":"Kasumikiri","kanji":"「霞斬」","traducao":"Navalha na Bruma","nomeCompleto":"Kasumikiri 「霞斬」— Navalha na Bruma","espirito":"Um samurai espectral cujos contornos ondulam e se desfazem como vapor aquecido sob a chuva fina.","comando":"Desvaneça na bruma da manhã, Kasumikiri.","elemento":"Intangibilidade Gasosa & Bruma","formatoArma":"Uma lâmina cujos contornos parecem desfocados e trêmulos como miragem de calor.","poder":"Corte Osmótico: A lâmina pode passar através de objetos sólidos finos e solidificar-se apenas no instante do contato interno com o alvo.","bankai":{"nome":"Kasumikiri — Mugen Genmukai","kanji":"「霞斬・無限幻霧界」","traducao":"Domínio da Névoa Impenetrável","nomeCompleto":"Bankai — Kasumikiri 「霞斬・無限幻霧界」 (Mugen Genmukai — Domínio da Névoa Impenetrável)","comando":"Bankai — Kasumikiri, Mugen Genmukai!","formatoArma":"Uma névoa branca densa e impenetrável toma conta de todo o cenário de batalha.","poder":"Dissolução Corpórea & Clones de Vapor: O usuário pode se dissolver completamente na bruma e surgir atrás do inimigo em múltiplos corpos de vapor que alternam solidez conforme atacam."}},{"id":"zk-35","numero":"35","nome":"Gōkaku","kanji":"「剛角」","traducao":"Chifre Inquebrável","nomeCompleto":"Gōkaku 「剛角」— Chifre Inquebrável","espirito":"Uma fera titânica de obsidiana e pedra com dois chifres monumentais capazes de fender montanhas.","comando":"Esmague sem piedade, Gōkaku.","elemento":"Obsidiana Pura & Perfuração Pesada","formatoArma":"A espada ganha o formato de uma pesada lança curta com ponta triangular de obsidiana de dureza extrema.","poder":"Ponta Inflexível: Golpes desferidos em investida reta possuem poder perfurante multiplicado, atravessando defesas rígidas e armaduras pesadas.","bankai":{"nome":"Gōkaku — Kongō Saizangeki","kanji":"「剛角・金剛砕山撃」","traducao":"Impacto Devastador do Diamante Titânico","nomeCompleto":"Bankai — Gōkaku 「剛角・金剛砕山撃」 (Kongō Saizangeki — Impacto Devastador do Diamante Titânico)","comando":"Bankai — Gōkaku, Kongō Saizangeki!","formatoArma":"Pilares monumentais de rocha sólida e obsidiana emergem do solo ao redor da arena.","poder":"Bombardeio de Monólitos Cinéticos: O usuário pode disparar e colidir esses blocos gigantescos contra o oponente como meteoros guiados por impacto de Reiryoku concentrado."}},{"id":"zk-36","numero":"36","nome":"Hibachi","kanji":"「火鉢」","traducao":"Braseiro Ardente","nomeCompleto":"Hibachi 「火鉢」— Braseiro Ardente","espirito":"Um anão ferreiro de pele cinzenta que molda brasas e carvão ardente com as próprias mãos desprotegidas.","comando":"Aqueça o ferro dormente, Hibachi.","elemento":"Brasas Espirituais & Transferência Térmica","formatoArma":"Uma lâmina reta que acumula o calor do atrito com o ar e espadas inimigas, mantendo seu fio em brasa constante.","poder":"Fogo Retido: As brasas da lâmina passam para as armas do oponente, aquecendo os cabos a ponto de queimar as mãos do adversário e forçar o desarmamento.","bankai":{"nome":"Hibachi — Shōnetsu Shōdojin","kanji":"「火鉢・焦熱焦土陣」","traducao":"Matriz do Purgatório em Brasas","nomeCompleto":"Bankai — Hibachi 「火鉢・焦熱焦土陣」 (Shōnetsu Shōdojin — Matriz do Purgatório em Brasas)","comando":"Bankai — Hibachi, Shōnetsu Shōdojin!","formatoArma":"O solo inteiro do campo se transforma em uma grelha incandescente com fissuras de lava espiritual.","poder":"Gêiseres de Brasas Ocultas: Qualquer passo do oponente sobre o solo incandescente dispara jatos verticais de fogo espiritual que queimam armaduras e consomem o oxigênio ao redor."}},{"id":"zk-37","numero":"37","nome":"Oshimaru","kanji":"「推丸」","traducao":"Impulso Perfeito","nomeCompleto":"Oshimaru 「推丸」— Impulso Perfeito","espirito":"Um atleta divino com braceletes dourados que salta entre as nuvens sem tocar o solo e sem deixar rastros.","comando":"Devolva a força aplicada, Oshimaru.","elemento":"Absorção de Recuo & Onda de Choque","formatoArma":"Uma espada curta com guarda circular pesada que absorve a energia do recuo ao aparar ataques.","poder":"Vetor Invertido: O recuo de um golpe bloqueado é convertido em velocidade imediata de avanço para o contra-ataque seguinte.","bankai":{"nome":"Oshimaru — Hakū Suiryokukai","kanji":"「推丸・破空推力界」","traducao":"Domínio do Impulso Absoluto","nomeCompleto":"Bankai — Oshimaru 「推丸・破空推力界」 (Hakū Suiryokukai — Domínio do Impulso Absoluto)","comando":"Bankai — Oshimaru, Hakū Suiryokukai!","formatoArma":"Duas manoplas de Reiryoku comprimido com anéis de vácuo nos antebraços.","poder":"Onda de Choque Cinético: O portador pode emitir ondas massivas de pressão de ar capazes de empurrar fortificações, repelir investidas e anular feitiços de impacto a dezenas de metros."}},{"id":"zk-38","numero":"38","nome":"Hōsekiba","kanji":"「宝石刃」","traducao":"Lâmina de Joias","nomeCompleto":"Hōsekiba 「宝石刃」— Lâmina de Joias","espirito":"Uma rainha de cristal reluzente com lágrimas de pedras preciosas que reflete todas as cores do prisma.","comando":"Lapide a lâmina eterna, Hōsekiba.","elemento":"Cristais Preciosos & Lâminas Facetadas","formatoArma":"A lâmina se decompõe em centenas de pequenos cristais afiados como navalhas que flutuam ao redor da empunhadura.","poder":"Enxame Facetado: Os cristais podem ser controlados mentalmente em trajetórias cortantes de alta precisão ou formarem pequenos escudos refletores.","bankai":{"nome":"Hōsekiba — Hyakka Kesshōkyū","kanji":"「宝石刃・百華結晶宮」","traducao":"Palácio dos Mil Cristais Reluzentes","nomeCompleto":"Bankai — Hōsekiba 「宝石刃・百華結晶宮」 (Hyakka Kesshōkyū — Palácio dos Mil Cristais Reluzentes)","comando":"Bankai — Hōsekiba, Hyakka Kesshōkyū!","formatoArma":"Monumentais florestas de cristais multicoloridos brotam da terra cobrindo a arena.","poder":"Prisma de Confinamento: Os cristais gigantes refratam a energia espiritual em feixes convergentes e podem aprisionar o adversário em caixões de cristal com dureza equivalente a diamante."}},{"id":"zk-39","numero":"39","nome":"Yamainu","kanji":"「山狗」","traducao":"Cão Selvagem da Montanha","nomeCompleto":"Yamainu 「山狗」— Cão Selvagem da Montanha","espirito":"Um lobo cinzento ancestral com marcas tribais vermelhas que espreita nas florestas e caça pelo cheiro da alma.","comando":"Cace no rastro do medo, Yamainu.","elemento":"Rastreamento de Reiryoku & Presas Serrilhadas","formatoArma":"Uma lâmina curva e serrilhada que aumenta a sensibilidade do portador ao calor e cheiro de Reiryoku do oponente.","poder":"Faro Predador: Permite antecipar deslocamentos em Shunpo e detectar oponentes mesmo dentro de ilusões, fumaça ou invisibilidade.","bankai":{"nome":"Yamainu — Yūmei Rōgagun","kanji":"「山狗・幽冥狼牙群」","traducao":"Alcateia dos Lobos Espectrais","nomeCompleto":"Bankai — Yamainu 「山狗・幽冥狼牙群」 (Yūmei Rōgagun — Alcateia dos Lobos Espectrais)","comando":"Bankai — Yamainu, Yūmei Rōgagun!","formatoArma":"Uma matilha de dezenas de lobos gigantescos formados por puro Reiryoku negro cerca os oponentes.","poder":"Cerco Predatório Coordenado: Os lobos atacam de múltiplos pontos cegos simultaneamente, sincronizando suas investidas com os movimentos da espada do portador."}},{"id":"zk-40","numero":"40","nome":"Chiryaku","kanji":"「地脈」","traducao":"Pulso da Terra","nomeCompleto":"Chiryaku 「地脈」— Pulso da Terra","espirito":"Um monge feito de barro e raízes que encosta o ouvido no solo para escutar as vibrações mais profundas da terra.","comando":"Faça o chão estremecer, Chiryaku.","elemento":"Vibrações Sísmicas & Equilíbrio Corporal","formatoArma":"Uma espada pesada de cabo longo que transmite pulsos sísmicos de baixa frequência ao tocar o solo.","poder":"Desestabilização Telúrica: Cada impacto no chão gera microfissuras que desequilibram a postura de quem estiver pisando na área de efeito.","bankai":{"nome":"Chiryaku — Tendō Hōkōchi","kanji":"「地脈・天動崩落地」","traducao":"Ruptura das Placas Celestiais","nomeCompleto":"Bankai — Chiryaku 「地脈・天動崩落地」 (Tendō Hōkōchi — Ruptura das Placas Celestiais)","comando":"Bankai — Chiryaku, Tendō Hōkōchi!","formatoArma":"O terreno se racha em imensas placas tectônicas flutuantes sob controle gravitacional do portador.","poder":"Manipulação de Placas Flutuantes: O usuário pode erguer, inclinar ou colidir as plataformas de rocha em alta velocidade, alterando toda a topografia do campo de batalha."}},{"id":"zk-41","numero":"41","nome":"Sōgetsu","kanji":"「双月」","traducao":"Luas Gêmeas","nomeCompleto":"Sōgetsu 「双月」— Luas Gêmeas","espirito":"Duas sacerdotisas de prata idênticas unidas pelas mãos, uma sob a lua cheia e outra sob a lua nova.","comando":"Cruzem o horizonte da noite, Sōgetsu.","elemento":"Foices Curvas & Foco Duplo de Dano","formatoArma":"A katana se divide em duas foices curvas prateadas unidas por um halo de luz lunar.","poder":"Corte Sincronizado: Ataques combinados das duas foices convergem no mesmo ponto gerando o dobro de penetração de corte.","bankai":{"nome":"Sōgetsu — Sōei Nisshokukai","kanji":"「双月・双影日食界」","traducao":"Eclipse das Luas Gêmeas","nomeCompleto":"Bankai — Sōgetsu 「双月・双影日食界」 (Sōei Nisshokukai — Eclipse das Luas Gêmeas)","comando":"Bankai — Sōgetsu, Sōei Nisshokukai!","formatoArma":"Duas luas monumentais (uma prateada e uma negra) surgem nos polos opostos do céu.","poder":"Gravidade Dupla Divergente: Cria dois centros de gravidade opostos que puxam o corpo e a espada do oponente em direções contrárias, desmantelando sua postura defensiva."}},{"id":"zk-42","numero":"42","nome":"Kyūketsu","kanji":"「吸血」","traducao":"Vórtice Carmesim","nomeCompleto":"Kyūketsu 「吸血」— Vórtice Carmesim","espirito":"Um morcego espectral com asas de lâminas polidas e olhos vermelhos brilhantes que caça no escuro.","comando":"Drene o sopro da vida, Kyūketsu.","elemento":"Absorção Vital & Lanças Escarlates","formatoArma":"Uma espada esguia com dentes finos que drena uma fração minúscula de vitalidade ao ferir o alvo para restaurar o fôlego do usuário.","poder":"Restauração por Corte: Fecha pequenos cortes no próprio corpo do portador à medida que causa danos superficiais no inimigo.","bankai":{"nome":"Kyūketsu — Senketsu Kyōshikyoku","kanji":"「吸血・鮮血狂詩曲」","traducao":"Rapsódia da Sede Carmesim","nomeCompleto":"Bankai — Kyūketsu 「吸血・鮮血狂詩曲」 (Senketsu Kyōshikyoku — Rapsódia da Sede Carmesim)","comando":"Bankai — Kyūketsu, Senketsu Kyōshikyoku!","formatoArma":"Todo o sangue exposto na atmosfera condensa em lanças escarlates flutuantes de Reiryoku puro.","poder":"Chuva de Lanças Sangrentas: As lanças teleguiadas perseguem o adversário automaticamente com altíssimo poder perfurante e devolvem Reiryoku drenado ao usuário."}},{"id":"zk-43","numero":"43","nome":"Raijū","kanji":"「雷獣」","traducao":"Tigre dos Raios Azuis","nomeCompleto":"Raijū 「雷獣」— Tigre dos Raios Azuis","espirito":"Um tigre de pelos azuis e garras elétricas envolto em arcos de plasma faiscante.","comando":"Ruge no coração da tempestade, Raijū.","elemento":"Eletricidade Azul & Arcos Condutores","formatoArma":"A lâmina se cobre de arcos de plasma azul que saltam para qualquer objeto metálico próximo.","poder":"Choque Eletrostático: Conduz corrente elétrica através de armas ao cruzar aço, causando espasmos musculares nas mãos do adversário.","bankai":{"nome":"Raijū — Tenrai Hōkōkai","kanji":"「雷獣・天雷咆哮界」","traducao":"Domínio do Rugido do Trovão Primordial","nomeCompleto":"Bankai — Raijū 「雷獣・天雷咆哮界」 (Tenrai Hōkōkai — Domínio do Rugido do Trovão Primordial)","comando":"Bankai — Raijū, Tenrai Hōkōkai!","formatoArma":"O portador se funde a uma armadura colossal de plasma azul vivo com velocidade quase instantânea.","poder":"Velocidade de Relâmpago Puro: O usuário atinge velocidades extremas em curtos trajetos, desferindo golpes envoltos em ondas de choque capazes de desintegrar defesas rígidas."}},{"id":"zk-44","numero":"44","nome":"Suzumechi","kanji":"「雀千」","traducao":"Mil Penas Douradas","nomeCompleto":"Suzumechi 「雀千」— Mil Penas Douradas","espirito":"Uma nobre vestida com manto de penas douradas que se comunica através do canto de bandos de pássaros luminosos.","comando":"Alce voo na luz do ouro, Suzumechi.","elemento":"Penas Metálicas & Enxame Aéreo","formatoArma":"A espada se dispersa em centenas de pequenas lâminas em formato de penas douradas flutuantes.","poder":"Revoada de Penas: As penas voam em leque teleguiado e podem se agrupar como uma barreira rotatória esférica.","bankai":{"nome":"Suzumechi — Senba Ōgonran","kanji":"「雀千・千羽黄金嵐」","traducao":"Tempestade das Mil Asas Douradas","nomeCompleto":"Bankai — Suzumechi 「雀千・千羽黄金嵐」 (Senba Ōgonran — Tempestade das Mil Asas Douradas)","comando":"Bankai — Suzumechi, Senba Ōgonran!","formatoArma":"Milhares de lâminas douradas formam um turbilhão cósmico em 360° em volta da arena.","poder":"Corte Omnidirecional em Enxame: As penas desferem milhares de microcortes simultâneos que atingem todos os pontos cegos do adversário sem deixar rotas de esquiva."}},{"id":"zk-45","numero":"45","nome":"Karatake","kanji":"「唐竹」","traducao":"Bambu Imortal","nomeCompleto":"Karatake 「唐竹」— Bambu Imortal","espirito":"Um lenhador cego de bambu com chapéu cônico que caminha sereno por um bosque verdejante interminável.","comando":"Flecta sem jamais quebrar, Karatake.","elemento":"Elasticidade Vegetal & Lâmina Chicote","formatoArma":"A lâmina ganha a flexibilidade e tenacidade do bambu maduro, curvando-se como um chicote afiado.","poder":"Elasticidade Cortante: Permite desferir golpes que contornam escudos e defesas retas para atingir os flancos do inimigo.","bankai":{"nome":"Karatake — Suichiku Senbonrin","kanji":"「唐竹・翠竹千本林」","traducao":"Floresta dos Mil Bambus de Jade","nomeCompleto":"Bankai — Karatake 「唐竹・翠竹千本林」 (Suichiku Senbonrin — Floresta dos Mil Bambus de Jade)","comando":"Bankai — Karatake, Suichiku Senbonrin!","formatoArma":"Estacas gigantescas de bambu espiritual verde brotam do solo em centenas de colunas impenetráveis.","poder":"Empalamento em Floresta Viva: Os bambus crescem em alta velocidade como lanças sob comando do usuário, empalando e encurralando alvos em um labirinto fechado."}},{"id":"zk-46","numero":"46","nome":"Hyōga","kanji":"「氷河」","traducao":"Geleira Ancestral","nomeCompleto":"Hyōga 「氷河」— Geleira Ancestral","espirito":"Um gigante de gelo azul milenar com barba de estalactites e olhar fixo no horizonte gélido do norte.","comando":"Congele o fluxo dos tempos, Hyōga.","elemento":"Zero Absoluto & Calota Glacial","formatoArma":"Uma espada pesada de gelo translúcido que resfria a superfície de qualquer coisa com que entre em contato.","poder":"Resfriamento por Impacto: Cada colisão forma uma crosta de gelo rígida nas armas inimigas aumentando seu peso e reduzindo a agilidade do atacante.","bankai":{"nome":"Hyōga — Zettai Reido Tōkai","kanji":"「氷河・絶対零度凍界」","traducao":"Mundo Congelado do Zero Absoluto","nomeCompleto":"Bankai — Hyōga 「氷河・絶対零度凍界」 (Zettai Reido Tōkai — Mundo Congelado do Zero Absoluto)","comando":"Bankai — Hyōga, Zettai Reido Tōkai!","formatoArma":"Todo o terreno e o ar se congelam instantaneamente em uma calota sólida inquebrável de gelo puro.","poder":"Paralisia Molecular & Térmica: O frio extremo anula o fluxo de Reiryoku no ar e desacelera as reações do corpo do oponente, congelando qualquer feitiço em formação."}},{"id":"zk-47","numero":"47","nome":"Gen'ō","kanji":"「幻影」","traducao":"Monarca das Miragens","nomeCompleto":"Gen'ō 「幻影」— Monarca das Miragens","espirito":"Um ilusionista mascarado com capa de veludo púrpura que move peças de xadrez de cristal no ar com gestos sutis.","comando":"Engane até a própria luz, Gen'ō.","elemento":"Descompasso Temporal & Ilusão Neural","formatoArma":"Uma espada de lâmina esguia que altera a percepção do tempo no cérebro do adversário em 0,3 segundo a cada corte raspão.","poder":"Descompasso Neural: Faz o oponente antecipar ou atrasar suas reações defensivas, errando os tempos de bloqueio e esquiva.","bankai":{"nome":"Gen'ō — Senjū Kyozōkai","kanji":"「幻影・千重虚像界」","traducao":"Domínio dos Mil Cenários Ilusórios","nomeCompleto":"Bankai — Gen'ō 「幻影・千重虚像界」 (Senjū Kyozōkai — Domínio dos Mil Cenários Ilusórios)","comando":"Bankai — Gen'ō, Senjū Kyozōkai!","formatoArma":"O ambiente se estilhaça em milhares de reflexos que projetam cenários de combate simultâneos.","poder":"Sobrecarga Cognitiva: O cérebro do oponente processa dezenas de combates imaginários ao mesmo tempo enquanto seu corpo físico fica paralisado e vulnerável ao golpe real."}},{"id":"zk-48","numero":"48","nome":"Enkō","kanji":"「円光」","traducao":"Halo Sagrado","nomeCompleto":"Enkō 「円光」— Halo Sagrado","espirito":"Uma entidade budista serena com auréola de chamas douradas flutuando sobre a cabeça e vestes brancas imaculadas.","comando":"Ilumine o caminho do julgamento, Enkō.","elemento":"Chamas Solares & Discos Giratórios","formatoArma":"A espada projeta discos cortantes de fogo solar giratório que ricocheteiam no ar e retornam à mão do usuário.","poder":"Halos Solares: Dispara anéis de calor extremo de alta velocidade capazes de cortar e queimar barreiras defensivas à distância.","bankai":{"nome":"Enkō — Dainichi Kinrinjin","kanji":"「円光・大日金輪陣」","traducao":"Aliança dos Sete Halos Solares","nomeCompleto":"Bankai — Enkō 「円光・大日金輪陣」 (Dainichi Kinrinjin — Aliança dos Sete Halos Solares)","comando":"Bankai — Enkō, Dainichi Kinrinjin!","formatoArma":"Sete anéis monumentais de fogo dourado descem do céu sobre a arena de combate.","poder":"Convergência Solar Absoluta: Os sete halos convergem feixes de luz e calor solar no centro do campo, incinerando tudo dentro de seu ponto focal com calor puro."}},{"id":"zk-49","numero":"49","nome":"Mugenba","kanji":"「無限刃」","traducao":"Forja das Dez Mil Lâminas","nomeCompleto":"Mugenba 「無限刃」— Forja das Dez Mil Lâminas","espirito":"Um ferreiro lendário sentado no pico de uma montanha cercado por incontáveis espadas antigas cravadas na terra.","comando":"Renasça do fio quebrado, Mugenba.","elemento":"Regeneração de Lâminas & Tempestade de Aço","formatoArma":"Caso a lâmina se quebre em combate, ela se regenera instantaneamente com um gume novo e mais afiado do que o anterior.","poder":"Regeneração de Fio: A destruição física da arma fortalece a lâmina subsequente com maior densidade espiritual.","bankai":{"nome":"Mugenba — Banjinzuka","kanji":"「無限刃・万刃塚」","traducao":"Cemitério das Dez Mil Lâminas","nomeCompleto":"Bankai — Mugenba 「無限刃・万刃塚」 (Banjinzuka — Cemitério das Dez Mil Lâminas)","comando":"Bankai — Mugenba, Banjinzuka!","formatoArma":"Milhares de espadas espirituais emergem do solo e flutuam na atmosfera ao redor do portador.","poder":"Controle Telecinético de Tempestade de Aço: O usuário comanda mentalmente o enxame de milhares de espadas para atacar em rajadas contínuas ou formarem barreiras sólidas de contenção."}},{"id":"zk-50","numero":"50","nome":"Kurotsume","kanji":"「黒爪」","traducao":"Garras da Pantera Negra","nomeCompleto":"Kurotsume 「黒爪」— Garras da Pantera Negra","espirito":"Uma pantera negra com olhos escarlates que se camufla perfeitamente na escuridão entre as árvores sem produzir som.","comando":"Despedace na penumbra, Kurotsume.","elemento":"Garras Triplas & Sangramento Contínuo","formatoArma":"A espada se divide em três garras retráteis de aço negro em cada punho do portador.","poder":"Ferida Aberta: Os cortes causados pelas garras dificultam a coagulação rápida e retardam a regeneração acelerada por Kaidō básico durante a luta.","bankai":{"nome":"Kurotsume — An'ya Shuryōkai","kanji":"「黒爪・暗夜狩猟界」","traducao":"Território da Caçada na Noite Escura","nomeCompleto":"Bankai — Kurotsume 「黒爪・暗夜狩猟界」 (An'ya Shuryōkai — Território da Caçada na Noite Escura)","comando":"Bankai — Kurotsume, An'ya Shuryōkai!","formatoArma":"A arena inteira mergulha em uma penumbra viva e o portador ganha carapaça predatória de sombras.","poder":"Caçada Oculta Instantânea: O usuário se funde às sombras do ambiente, atacando com velocidade predatória silenciosa a partir de qualquer ponto escuro sem revelar sua presença."}},{"id":"zk-51","numero":"51","nome":"Jinrai","kanji":"「迅雷」","traducao":"Clarão do Trovão Instantâneo","nomeCompleto":"Jinrai 「迅雷」— Clarão do Trovão Instantâneo","espirito":"Um guerreiro com elmo em formato de raio e pés envoltos em correntes elétricas reluzentes.","comando":"Corte antes do estrondo, Jinrai.","elemento":"Sinapses Iônicas & Velocidade Extrema","formatoArma":"Uma lâmina fina que emite pulsos de microcorrentes acelerando as sinapses nervosas do próprio portador.","poder":"Sinapse Relâmpago: Multiplica a velocidade de reação e de saque da espada em combates a curta distância.","bankai":{"nome":"Jinrai — Banrai Shinsokukai","kanji":"「迅雷・万雷神速界」","traducao":"Domínio da Velocidade Divina dos Cem Raios","nomeCompleto":"Bankai — Jinrai 「迅雷・万雷神速界」 (Banrai Shinsokukai — Domínio da Velocidade Divina dos Cem Raios)","comando":"Bankai — Jinrai, Banrai Shinsokukai!","formatoArma":"O campo se torna uma câmara selada por arcos voltaicos amarelos e relâmpagos contínuos.","poder":"Translocação Sônica Contínua: Cada passo do usuário viaja na velocidade do relâmpago, deixando para trás ondas de choque que atordoam o adversário enquanto desfere cortes sucessivos."}},{"id":"zk-52","numero":"52","nome":"Senbiki","kanji":"「千匹」","traducao":"Ninho das Serpentes de Jade","nomeCompleto":"Senbiki 「千匹」— Ninho das Serpentes de Jade","espirito":"Um encantador de serpentes com corpo coberto de escamas esmeralda e olhos reptilianos profundos.","comando":"Rasteje e dê o bote, Senbiki.","elemento":"Lâmina Sinuosa & Veneno Corrosivo","formatoArma":"A lâmina se contorce como uma cobra viva, capaz de esticar e contornar esquinas para morder o alvo.","poder":"Bote Articulado: Desfere estocadas em trajetórias curvas e sinuosas totalmente imprevisíveis.","bankai":{"nome":"Senbiki — Banja Dokukutsu","kanji":"「千匹・万蛇毒窟」","traducao":"Caverna das Dez Mil Serpentes Venenosas","nomeCompleto":"Bankai — Senbiki 「千匹・万蛇毒窟」 (Banja Dokukutsu — Caverna das Dez Mil Serpentes Venenosas)","comando":"Bankai — Senbiki, Banja Dokukutsu!","formatoArma":"O solo se liquefaz em uma massa viva de serpentes gigantescas de puro Reiryoku verde esmeralda.","poder":"Estrangulamento & Inoculação Venenosa: As serpentes engolem e asfixiam o oponente inoculando toxinas que corroem armaduras e drenam o fluxo espiritual."}},{"id":"zk-53","numero":"53","nome":"Fuenshō","kanji":"「浮烟」","traducao":"Fumaça Flutuante","nomeCompleto":"Fuenshō 「浮烟」— Fumaça Flutuante","espirito":"Uma donzela de véus de seda branca que sopra cinzas mornas que nunca caem no chão.","comando":"Disperse o peso do mundo, Fuenshō.","elemento":"Fumaça Mágica & Amortecimento de Hadō","formatoArma":"Uma espada que deixa para trás um rastro espesso de fumaça translúcida que dissipa ataques mágicos.","poder":"Distorção Mágica: Amortece e dissipa a energia de projéteis de Hadō que passem através da fumaça.","bankai":{"nome":"Fuenshō — Kūgen Shinkirō","kanji":"「浮烟・空幻蜃気楼」","traducao":"Miragem Celestial do Céu Vazio","nomeCompleto":"Bankai — Fuenshō 「浮烟・空幻蜃気楼」 (Kūgen Shinkirō — Miragem Celestial do Céu Vazio)","comando":"Bankai — Fuenshō, Kūgen Shinkirō!","formatoArma":"Uma névoa colossal cobre quilômetros de distância criando miragens táteis perfeitas.","poder":"Refração Mágica & Retorno de Projéteis: Desvia a trajetória de feitiços disparados na névoa, fazendo-os retornarem automaticamente contra os seus próprios conjuradores."}},{"id":"zk-54","numero":"54","nome":"Hagakure","kanji":"「葉隠」","traducao":"Oculto nas Folhas","nomeCompleto":"Hagakure 「葉隠」— Oculto nas Folhas","espirito":"Um shinobi ancestral com manto de folhagem de outono que se funde com os troncos das árvores sem emitir ruído.","comando":"Desapareça no outono, Hagakure.","elemento":"Camuflagem Tática & Folhas Cortantes","formatoArma":"Uma lâmina fosca que adquire a textura e cor do ambiente ao redor ao menor contato com vegetação ou solo.","poder":"Camuflagem Tática: Anula a presença visual e o calor corporal enquanto o portador estiver encostado em superfícies naturais.","bankai":{"nome":"Hagakure — Konoha Hyakujin Ranbu","kanji":"「葉隠・木葉百刃乱舞」","traducao":"Dança das Mil Lâminas das Folhas de Outono","nomeCompleto":"Bankai — Hagakure 「葉隠・木葉百刃乱舞」 (Konoha Hyakujin Ranbu — Dança das Mil Lâminas das Folhas de Outono)","comando":"Bankai — Hagakure, Konoha Hyakujin Ranbu!","formatoArma":"Todas as folhas e folhagens do ambiente se transformam em navalhas afiadas sob o comando mental do portador.","poder":"Turbilhão das Folhas Afiadas: As folhas voam em vórtices cortantes que fatiam defesas inimigas enquanto ocultam a posição real do usuário."}},{"id":"zk-55","numero":"55","nome":"Tōbaku","kanji":"「凍縛」","traducao":"Amarração Glacial","nomeCompleto":"Tōbaku 「凍縛」— Amarração Glacial","espirito":"Uma sacerdotisa aprisionada em um caixão de gelo transparente cujos olhos continuam abertos e vigilantes.","comando":"Aprisione no frio sem fim, Tōbaku.","elemento":"Congelamento de Pontos de Apoio & Pilares","formatoArma":"Uma espada curta que congela instantaneamente qualquer umidade ou poça de água tocada pela ponta.","poder":"Amarração Glacial: Cria laços de gelo ao redor dos pés do adversário assim que ele pisa em solo umedecido pela lâmina.","bankai":{"nome":"Tōbaku — Hakutei Hyōchūrō","kanji":"「凍縛・白帝氷柱牢」","traducao":"Prisão dos Pilares de Gelo do Imperador Branco","nomeCompleto":"Bankai — Tōbaku 「凍縛・白帝氷柱牢」 (Hakutei Hyōchūrō — Prisão dos Pilares de Gelo do Imperador Branco)","comando":"Bankai — Tōbaku, Hakutei Hyōchūrō!","formatoArma":"Pilares monumentais de gelo sólido erguem-se do solo encadeando o oponente.","poder":"Encarceramento Glacial: Encerra o adversário em uma câmara de pilares de gelo que drenam continuamente o calor corporal e o vigor espiritual."}},{"id":"zk-56","numero":"56","nome":"Kaimetsu","kanji":"「壊滅」","traducao":"Martelo da Ruína","nomeCompleto":"Kaimetsu 「壊滅」— Martelo da Ruína","espirito":"Um titã de armadura rachada e martelo colossal que caminha sobre escombros de cidades antigas.","comando":"Reduza tudo a escombros, Kaimetsu.","elemento":"Ondas de Choque Estruturais & Trituração","formatoArma":"Uma espada pesada de dorso reforçado que transmite vibrações de esmagamento através de defesas e armaduras.","poder":"Dano Estrutural: Quebra a integridade física de armas e escudos mesmo quando o golpe é bloqueado pelo oponente.","bankai":{"nome":"Kaimetsu — Tenhō Chimetsukai","kanji":"「壊滅・天崩地滅壊」","traducao":"Aniquilação da Ruína do Céu e da Terra","nomeCompleto":"Bankai — Kaimetsu 「壊滅・天崩地滅壊」 (Tenhō Chimetsukai — Aniquilação da Ruína do Céu e da Terra)","comando":"Bankai — Kaimetsu, Tenhō Chimetsukai!","formatoArma":"A lâmina se torna um martelo de guerra colossal de Reiryoku negro comprimido.","poder":"Colapso Sísmico Estrutural: Cada golpe no solo gera ondas de choque devastadoras que trituram rochas, racham montanhas e anulam defesas rígidas por impacto."}},{"id":"zk-57","numero":"57","nome":"Akatsuki","kanji":"「暁」","traducao":"Alvorecer Carmesim","nomeCompleto":"Akatsuki 「暁」— Alvorecer Carmesim","espirito":"Uma deusa guerreira com vestes douradas e vermelhas segurando uma tocha acesa com o primeiro raio da aurora.","comando":"Rompa a escuridão do mundo, Akatsuki.","elemento":"Luz Solar Nascente & Calor Progressivo","formatoArma":"Uma espada de lâmina avermelhada que brilha com intensidade e calor crescentes conforme o combate se prolonga.","poder":"Calor Progressivo: Aumenta a temperatura do fio da espada a cada golpe consecutivo desferido.","bankai":{"nome":"Akatsuki — Guren Kyokujitsushō","kanji":"「暁・紅蓮旭日昇」","traducao":"Ascensão do Sol Nascente Carmesim","nomeCompleto":"Bankai — Akatsuki 「暁・紅蓮旭日昇」 (Guren Kyokujitsushō — Ascensão do Sol Nascente Carmesim)","comando":"Bankai — Akatsuki, Guren Kyokujitsushō!","formatoArma":"Um sol nascente carmesim monumental se projeta atrás do portador.","poder":"Feixe da Aurora Solar: Dispara feixes concentrados de luz e calor solar que purificam e vaporizam obstáculos em linha reta."}},{"id":"zk-58","numero":"58","nome":"Yūgure","kanji":"「夕暮」","traducao":"Crepúsculo","nomeCompleto":"Yūgure 「夕暮」— Crepúsculo","espirito":"Um viajante solitário com um lampião violeta que caminha na estrada no momento exato em que o sol se põe.","comando":"Desça sobre a luz cansada, Yūgure.","elemento":"Penumbra Crepuscular & Desfase Temporal","formatoArma":"Uma espada envolta em uma penumbra violeta que retarda a percepção do tempo de quem estiver próximo.","poder":"Crepúsculo dos Sentidos: Golpes desferidos na penumbra parecem chegar antes do som da lâmina ser emitido.","bankai":{"nome":"Yūgure — Tasokare Higankai","kanji":"「夕暮・黄昏彼岸界」","traducao":"Fronteira da Penumbra do Outro Mundo","nomeCompleto":"Bankai — Yūgure 「夕暮・黄昏彼岸界」 (Tasokare Higankai — Fronteira da Penumbra do Outro Mundo)","comando":"Bankai — Yūgure, Tasokare Higankai!","formatoArma":"O campo de batalha entra em um crepúsculo perpétuo de luz violeta suave.","poder":"Intervalo Temporal do Crepúsculo: Os ataques do portador viajam em um intervalo entre o passado imediato e o presente, tornando previsões ou esquivas quase impossíveis."}},{"id":"zk-59","numero":"59","nome":"Seirō","kanji":"「青狼」","traducao":"Lobo das Chamas Glaciais","nomeCompleto":"Seirō 「青狼」— Lobo das Chamas Glaciais","espirito":"Um lobo espectral com cauda de chamas azuis espirituais e presas de gelo translúcido.","comando":"Uive nas chamas frias, Seirō.","elemento":"Fogo Azul Gélido & Paralisia Térmica","formatoArma":"Uma lâmina curva que emite um fogo azul que não queima matéria, mas congela nervos e o fluxo de Reiryoku.","poder":"Chama Fria: Queima a energia espiritual do alvo na área atingida causando paralisia sem carbonização.","bankai":{"nome":"Seirō — Sōen Hyōsetsugoku","kanji":"「青狼・蒼炎氷雪獄」","traducao":"Inferno de Chamas Azuis e Neve Eterna","nomeCompleto":"Bankai — Seirō 「青狼・蒼炎氷雪獄」 (Sōen Hyōsetsugoku — Inferno de Chamas Azuis e Neve Eterna)","comando":"Bankai — Seirō, Sōen Hyōsetsugoku!","formatoArma":"Uma tempestade monumental de fogo azul e gelo cobre toda a arena de batalha.","poder":"Incineração Glacial de Reiryoku: As chamas azuis congelam feitiços no ar e drenam o ímpeto e vigor do oponente simultaneamente."}},{"id":"zk-60","numero":"60","nome":"Tenbinzuru","kanji":"「天秤鶴」","traducao":"Garça da Balança Celestial","nomeCompleto":"Tenbinzuru 「天秤鶴」— Garça da Balança Celestial","espirito":"Uma garça branca de penas metálicas polidas pousada serenamente sobre o prato de uma balança dourada.","comando":"Harmonize o peso das almas, Tenbinzuru.","elemento":"Equilíbrio Energético & Espelhamento","formatoArma":"Uma espada prateada com guarda em forma de garça que equilibra o gasto de Reiryoku do usuário com o do adversário.","poder":"Ressonância Proporcional: Reduz o desgaste energético do usuário em proporção ao esforço exercido pelo inimigo.","bankai":{"nome":"Tenbinzuru — Gokuraku Jōdo Tenbin","kanji":"「天秤鶴・極楽浄土天秤」","traducao":"Balança do Santuário Puro","nomeCompleto":"Bankai — Tenbinzuru 「天秤鶴・極楽浄土天秤」 (Gokuraku Jōdo Tenbin — Balança do Santuário Puro)","comando":"Bankai — Tenbinzuru, Gokuraku Jōdo Tenbin!","formatoArma":"Um santuário celestial inviolável surge no céu com duas balanças monumentais de ouro e prata.","poder":"Espelhamento de Dano Absoluto: Qualquer dano físico sofrido por um dos lutadores dentro do domínio é espelhado em proporção exata no adversário, forçando uma disputa de precisão cirúrgica e autocontrole."}}];
 
-const AUTORIAL_PREFIXES = [
-  "Gekka", "Enkō", "Raimei", "Kageori", "Senritsu", "Dokugan", "Kōtetsu", 
-  "Shippū", "Tenrin", "Kasumibane", "Rengetsu", "Shinbatsu", "Byakko", 
-  "Kurogane", "Ryūsei", "Hakuryū", "Suzuran", "Mugen", "Tsukikage", "Hien",
-  "Yatsukahada", "Reisō", "Kourinpou", "Sōun", "Genshō", "Kagayaki", "Yamikiri",
-  "Seiryuu", "Rindō", "Gurenkō", "Kurokaze", "Hōōmaru", "Chirin", "Suikazan"
-];
 
-const AUTORIAL_SUFFIXES = [
-  "kiri", "maru", "kiba", "ori", "hime", "zuru", "jin", "kō", "kage", 
-  "bane", "tsume", "boshi", "tō", "ken", "ryū", "sō", "ya", "bana", "yari", "kaze",
-  "ren", "shō", "getsu", "sen", "bi", "gumo", "ryo", "dan", "retsu", "ha"
-];
 
-const AUTORIAL_COMMANDS = [
-  "Floresça no silêncio", "Forje aquilo que ainda não existe", "Olhe para si mesmo",
-  "Desperte no céu", "Chore sobre este mundo", "Reflita aquilo que deveria ser esquecido",
-  "Multiplique-se pelo caminho", "Permaneça onde ninguém pode tocar", "Faça o céu responder",
-  "Pese aquilo que existe", "Trace os limites do abismo", "Abandone a forma passageira",
-  "Revele as sombras da vigília", "Toque aquilo que não tem voz", "Prenda-se ao solo",
-  "Estenda a fronteira do ar", "Engrene o tempo que resta", "Ecoa na mente vazia",
-  "Asfixie o horizonte", "Acorde da montanha", "Tinja o caminho de carmesim",
-  "Dance na geada suave", "Puxe as amarras do abismo", "Purifique a mácula"
-];
 
-const WEAPON_TYPES = [
-  "Uma nodachi de lâmina enegrecida com fio duplo chanfrado e ranhuras que canalizam Reiryoku pura",
-  "Duas adagas triangulares de aço gravado unidas por uma corrente de elos flutuantes de pura energia",
-  "Uma elegante rapieira de cristal fosco com guarda em prisma triplo que refrata a luz em navalhas",
-  "Uma foice de combate com dorso serrilhado e três sinos espirituais que ressoam frequências desestabilizadoras",
-  "Um cutelo colossal de aço polido reforçado com faixas de seda branca na empunhadura para absorção de impacto",
-  "Uma lança articulada em três segmentos de aço flexível que chicoteia no ar com lâminas retráteis",
-  "Um machado leve de guerra de dois gumes com núcleo oco por onde pulsam arcos de pressão espiritual",
-  "Duas cimitarras curvas de aço rubro brilhante com guarda em formato de meia-lua entrelaçada"
-];
-
-const PRIMARY_EFFECTS = [
-  "projeta ondas cortantes de alta densidade capazes de fender barreiras espirituais e terra firme",
-  "congela a circulação de Reiryoku do oponente ao menor corte, reduzindo reflexos e velocidade",
-  "descarrega arcos voltaicos perfurantes que eletrocutam nervos motores causando paralisia instantânea",
-  "permite ao Shinigami deslizar instantaneamente entre as sombras do terreno em ângulos impossíveis",
-  "duplica a massa gravitacional da arma a cada colisão bem-sucedida, quebrando defesas de impacto",
-  "expele uma névoa corrosiva que consome projéteis mágicos de Kidō antes que atinjam o portador",
-  "cria círculos de ressonância no solo que aprisionam o peso corporal do inimigo em alta gravidade",
-  "multiplica a velocidade do Shunpo do usuário gerando clones residuais táteis de pura pressão"
-];
-
-const SECONDARY_EFFECTS = [
-  "Além disso, reveste o corpo com um manto defensivo que dissipa feitiços de dano cinético.",
-  "Além disso, cada ataque bem-sucedido recupera uma fração da reserva de Reiatsu da lâmina.",
-  "Além disso, permite disparar feitiços de Hadō canalizados diretamente através do fio da espada.",
-  "Além disso, emite um zumbido subsônico que desorienta a percepção sensorial e equilíbrio do alvo."
-];
-
-function getClaimedZanpakutos(personagens = []) {
-  const claimedNames = new Set();
-  const claimedPowers = new Set();
-
-  personagens.forEach(p => {
-    if (p.zanpakuto?.nome) claimedNames.add(p.zanpakuto.nome.toLowerCase().trim());
-    if (p.zanpakuto?.shikaiAtiva?.nome) claimedNames.add(p.zanpakuto.shikaiAtiva.nome.toLowerCase().trim());
-    if (p.zanpakuto?.bankaiAtiva?.nome) claimedNames.add(p.zanpakuto.bankaiAtiva.nome.toLowerCase().trim());
-    if (p.zanpakuto?.shikaiAtiva?.poder) claimedPowers.add(p.zanpakuto.shikaiAtiva.poder.trim());
-    if (p.zanpakuto?.bankaiAtiva?.poder) claimedPowers.add(p.zanpakuto.bankaiAtiva.poder.trim());
-  });
-
-  return { claimedNames, claimedPowers };
+// 1. GERADOR DE ASSINATURA ESPIRITUAL ÚNICA (Regra 19)
+function calcularAssinaturaEspiritual(zanpakuto) {
+  if (!zanpakuto) return "";
+  const nome = (zanpakuto.nome || "").toLowerCase().trim().replace(/[^a-z0-9]/g, "");
+  const conceito = (zanpakuto.conceitoCentral || zanpakuto.elemento || "").toLowerCase().trim().slice(0, 20).replace(/[^a-z0-9]/g, "");
+  const mecanica = (zanpakuto.poder || zanpakuto.habilidadePrincipal || "").toLowerCase().trim().slice(0, 30).replace(/[^a-z0-9]/g, "");
+  return `zk-sig-${nome}-${conceito}-${mecanica.slice(0, 12)}`;
 }
 
-function shuffleArray(arr) {
-  const array = [...arr];
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
-}
-
-function gerarNomeAutorialUnico(claimedNames, usadosNoMomento) {
-  let nome = "";
-  let tentativas = 0;
-  while (tentativas < 100) {
-    const pfx = AUTORIAL_PREFIXES[Math.floor(Math.random() * AUTORIAL_PREFIXES.length)];
-    const sfx = AUTORIAL_SUFFIXES[Math.floor(Math.random() * AUTORIAL_SUFFIXES.length)];
-    nome = `${pfx}${sfx}`;
-    const lower = nome.toLowerCase();
-    if (!claimedNames.has(lower) && !usadosNoMomento.has(lower)) {
-      usadosNoMomento.add(lower);
-      return nome;
-    }
-    tentativas++;
-  }
-  nome = `${AUTORIAL_PREFIXES[0]}${AUTORIAL_SUFFIXES[0]} ${uid().toUpperCase()}`;
-  usadosNoMomento.add(nome.toLowerCase());
-  return nome;
-}
-
-function gerar4OpcoesShikaiAI(nomePersonagem, dbPersonagens = []) {
-  const { claimedNames, claimedPowers } = getClaimedZanpakutos(dbPersonagens);
-  const opcoes = [];
-  const usadosNoMomento = new Set();
+// 2. CÁLCULO DE NÍVEL DE SIMILARIDADE (Regra 22)
+// 0–30%: Pouca semelhança (Permitido)
+// 31–60%: Semelhança moderada (Permitido com mecânica distinta)
+// 61–80%: Semelhança elevada (Reformular/Regenerar)
+// 81–100%: Duplicata (Bloquear)
+function calcularIndiceSimilaridade(shikaiA, shikaiB) {
+  if (!shikaiA || !shikaiB) return 0;
+  let score = 0;
   
-  const elementos = [
-    "Chamas de Ébano & Brasas Solares",
-    "Cristal Glacial & Zero Absoluto",
-    "Relâmpago do Vórtice & Plasma Celeste",
-    "Sombra Abissal & Distorção Dimensional",
-    "Aço Puro & Alta Densidade Gravitacional",
-    "Vento Cortante & Lâminas de Vácuo",
-    "Veneno Espectral & Corrosão de Reiryoku",
-    "Luz & Julgamento do Firmamento"
-  ];
+  const nomeA = (shikaiA.nome || "").toLowerCase().trim();
+  const nomeB = (shikaiB.nome || "").toLowerCase().trim();
+  if (nomeA === nomeB) score += 50;
+  else if (nomeA.includes(nomeB) || nomeB.includes(nomeA)) score += 25;
 
-  // 1. Prioridade: Pegar do catálogo mestre de 60 Zanpakutōs ricas
-  const disponiveisNoCatalogo = (typeof MASTER_ZANPAKUTO_CATALOG !== 'undefined' ? MASTER_ZANPAKUTO_CATALOG : []).filter(item => {
-    const nomeNorm = item.nome.toLowerCase().trim();
-    return !claimedNames.has(nomeNorm);
-  });
-
-  const embaralhados = shuffleArray(disponiveisNoCatalogo);
-
-  for (const item of embaralhados) {
-    if (opcoes.length >= 4) break;
-    const nomeNorm = item.nome.toLowerCase().trim();
-    if (!usadosNoMomento.has(nomeNorm)) {
-      usadosNoMomento.add(nomeNorm);
-      opcoes.push({
-        id: uid(),
-        nome: item.nome,
-        nomeCompleto: item.nomeCompleto || (item.nome + " " + item.kanji + " — " + item.traducao),
-        kanji: item.kanji,
-        traducao: item.traducao,
-        espirito: item.espirito,
-        comando: item.comando,
-        elemento: item.elemento,
-        formatoArma: item.formatoArma,
-        poder: item.poder,
-        bankaiPadrao: item.bankai,
-        foto: "assets/ichigo-orange.png"
-      });
-    }
+  const concA = (shikaiA.conceitoCentral || shikaiA.elemento || "").toLowerCase();
+  const concB = (shikaiB.conceitoCentral || shikaiB.elemento || "").toLowerCase();
+  if (concA && concB && (concA === concB || concA.includes(concB) || concB.includes(concA))) {
+    score += 25;
   }
 
-  // 2. Fallback procedural caso todo o catálogo mestre já esteja reivindicado
-  while (opcoes.length < 4) {
-    const nomeZk = gerarNomeAutorialUnico(claimedNames, usadosNoMomento);
-    const elemento = elementos[opcoes.length % elementos.length];
-    const comando = AUTORIAL_COMMANDS[Math.floor(Math.random() * AUTORIAL_COMMANDS.length)];
-    const formatoArma = WEAPON_TYPES[Math.floor(Math.random() * WEAPON_TYPES.length)];
-    const efeitoPrim = PRIMARY_EFFECTS[Math.floor(Math.random() * PRIMARY_EFFECTS.length)];
-    const efeitoSec = SECONDARY_EFFECTS[Math.floor(Math.random() * SECONDARY_EFFECTS.length)];
-    
-    const poderDesc = `Ao proferir o comando "${comando}", a arma se manifesta. Em combate: Esta lâmina ${efeitoPrim}. ${efeitoSec}`;
-
-    if (claimedPowers.has(poderDesc)) continue;
-
-    opcoes.push({
-      id: uid(),
-      nome: nomeZk,
-      nomeCompleto: nomeZk + " — Lâmina Autoral Desperta",
-      kanji: "「始解」",
-      traducao: "Despertar Ancestral",
-      espirito: "Um espírito guardião envolto em vestes de combate que canaliza a essência de Reiryoku única do usuário.",
-      comando: comando + ", " + nomeZk + "!",
-      elemento,
-      formatoArma,
-      poder: poderDesc,
-      foto: "assets/ichigo-orange.png"
-    });
+  const poderA = (shikaiA.poder || shikaiA.habilidadePrincipal || "").toLowerCase();
+  const poderB = (shikaiB.poder || shikaiB.habilidadePrincipal || "").toLowerCase();
+  
+  const wordsA = new Set(poderA.split(/\s+/).filter(w => w.length > 4));
+  const wordsB = new Set(poderB.split(/\s+/).filter(w => w.length > 4));
+  let intersection = 0;
+  for (const w of wordsA) {
+    if (wordsB.has(w)) intersection++;
   }
+  const maxWords = Math.max(1, Math.min(wordsA.size, wordsB.size));
+  const matchPct = (intersection / maxWords) * 35;
+  score += Math.min(35, matchPct);
 
-  return opcoes;
+  return Math.min(100, Math.round(score));
 }
 
-function gerar4OpcoesBankaiAI(nomePersonagem, shikaiAtiva, dbPersonagens = []) {
-  const { claimedNames, claimedPowers } = getClaimedZanpakutos(dbPersonagens);
-  const opcoes = [];
-  const usadosNoMomento = new Set();
+// Obter lista de todas as Zanpakutōs já registradas no banco
+function getClaimedSignatures(dbPersonagens = [], dbZanpakutosVinculadas = []) {
+  const claimed = new Set();
+  const claimedNames = new Set();
+
+  (dbZanpakutosVinculadas || []).forEach(z => {
+    if (z.assinatura) claimed.add(z.assinatura.toLowerCase());
+    if (z.nome) claimedNames.add(z.nome.toLowerCase().trim());
+  });
+
+  (dbPersonagens || []).forEach(p => {
+    if (p.zanpakuto?.shikaiAtiva) {
+      const sig = p.zanpakuto.shikaiAtiva.assinaturaEspiritual || calcularAssinaturaEspiritual(p.zanpakuto.shikaiAtiva);
+      claimed.add(sig.toLowerCase());
+      if (p.zanpakuto.shikaiAtiva.nome) {
+        claimedNames.add(p.zanpakuto.shikaiAtiva.nome.toLowerCase().trim());
+      }
+    }
+    if (p.zanpakuto?.nome) {
+      claimedNames.add(p.zanpakuto.nome.toLowerCase().trim());
+    }
+  });
+
+  return { claimed, claimedNames };
+}
+
+// 3. CONSTRUÇÃO DO DNA ESPIRITUAL (Regras 2, 3, 4)
+function construirDnaEspiritual(personagem, cenaTexto = "") {
+  const attrs = personagem?.atributos || { pressao: 10, forca: 10, velocidade: 10, resiliencia: 10 };
+  const pList = [
+    { key: "pressao", label: "Pressão Espiritual", val: Number(attrs.pressao || 10) },
+    { key: "forca", label: "Força", val: Number(attrs.forca || 10) },
+    { key: "velocidade", label: "Velocidade", val: Number(attrs.velocidade || 10) },
+    { key: "resiliencia", label: "Resiliência", val: Number(attrs.resiliencia || 10) }
+  ].sort((a, b) => b.val - a.val);
+
+  const dominante = pList[0];
+  const secundario = pList[1];
+  const deficiente = pList[3];
+
+  const pers = personagem?.personalidade || {};
+  const persTexto = [
+    typeof pers === 'string' ? pers : (pers.texto || ""),
+    pers.tracos || "",
+    pers.virtudes || "",
+    pers.defeitos || "",
+    pers.desejos || "",
+    pers.medos || "",
+    pers.conflitos || "",
+    pers.estiloCombate || "",
+    personagem?.personalidadeTexto || "",
+    cenaTexto || ""
+  ].filter(Boolean).join(" ").toLowerCase();
+
+  let tendenciaEmocional = "Serena e Estratégica";
+  let virtudeDominante = "Disciplina e Foco Cirúrgico";
+  let deficienciaDominante = "Dificuldade de confiar plenamente nas pessoas";
+  let desejoCentral = "Proteger aqueles que não possuem força para combater o mal";
+  let medoCentral = "Perder o controle do próprio destino em um momento decisivo";
+  let conflitoInterno = "Dever perante as regras versus fidelidade aos próprios sentimentos";
+  let simboloEspiritual = "Lâmina Sob a Luz do Luar";
+  let principioEspiritual = "A verdadeira espada corta o destino sem hesitação.";
+  let tendenciaCombate = "Precisão Técnica e Contra-Ataque";
+
+  if (persTexto.includes("fogo") || persTexto.includes("ardente") || persTexto.includes("raiva") || persTexto.includes("impulsiv") || persTexto.includes("paixão") || persTexto.includes("honra") || persTexto.includes("guerreiro")) {
+    tendenciaEmocional = "Intensa, Fervorosa e Leal";
+    virtudeDominante = "Coragem Inabalável e Espírito Indomável";
+    deficienciaDominante = "Impulsividade ao ser provocado";
+    desejoCentral = "Superar todos os limites através do poder de sua convicção";
+    medoCentral = "Sentir a impotência de não conseguir proteger seus aliados";
+    conflitoInterno = "Fúria destrutiva versus autocontrole espiritual";
+    simboloEspiritual = "Chama Carmesim Ancestral";
+    principioEspiritual = "O fogo que consome o aço é o mesmo que tempera a alma.";
+    tendenciaCombate = "Ofensiva Rápida e Pressão de Reishi Contínua";
+  } else if (persTexto.includes("frio") || persTexto.includes("gelo") || persTexto.includes("calm") || persTexto.includes("analit") || persTexto.includes("calculista") || persTexto.includes("inteligente")) {
+    tendenciaEmocional = "Racional, Calculista e Contida";
+    virtudeDominante = "Clareza Mental Sob Pressão Extrema";
+    deficienciaDominante = "Distanciamento emocional e rigidez tática";
+    desejoCentral = "Prever e dominar qualquer variável no campo de batalha";
+    medoCentral = "Ser surpreendido pelo caos ou pela vulnerabilidade humana";
+    conflitoInterno = "Isolamento defensivo versus necessidade de conexão";
+    simboloEspiritual = "Prisma Glacial Perfeito";
+    principioEspiritual = "Na calmaria do gelo, toda intenção oculta se revela.";
+    tendenciaCombate = "Controle Territorial e Punição de Erros";
+  } else if (persTexto.includes("vento") || persTexto.includes("liberdade") || persTexto.includes("rapido") || persTexto.includes("veloz") || persTexto.includes("livre") || persTexto.includes("imprevisivel")) {
+    tendenciaEmocional = "Inquieta, Despojada e Adaptável";
+    virtudeDominante = "Mobilidade Espiritual e Pensamento Não-Convencional";
+    deficienciaDominante = "Aversão a vínculos rígidos e ordens cegas";
+    desejoCentral = "Alcançar a liberdade absoluta e nunca ser aprisionado";
+    medoCentral = "Ter suas asas espirituais cortadas pela rigidez do mundo";
+    conflitoInterno = "Desejo de fuga versus responsabilidade com os fracos";
+    simboloEspiritual = "Rajada de Vácuo Celeste";
+    principioEspiritual = "O vento não pode ser ferido por aquilo que não consegue tocá-lo.";
+    tendenciaCombate = "Mobilidade Tridimensional e Ataques de Ângulos Impossíveis";
+  } else if (persTexto.includes("sombra") || persTexto.includes("escur") || persTexto.includes("trevas") || persTexto.includes("ocult") || persTexto.includes("silêncio") || persTexto.includes("mister")) {
+    tendenciaEmocional = "Profunda, Misteriosa e Paciente";
+    virtudeDominante = "Percepção Aguçada das Falhas Ocultas";
+    deficienciaDominante = "Tendência a suportar dores e fardos em segredo";
+    desejoCentral = "Proteger das trevas sem esperar reconhecimento";
+    medoCentral = "Ser consumido pelo vazio que utiliza como arma";
+    conflitoInterno = "Necessidade do segredo versus anseio de ser compreendido";
+    simboloEspiritual = "Corvo de Ébano";
+    principioEspiritual = "A sombra mais escura nasce quando a luz mais intensa se aproxima.";
+    tendenciaCombate = "Furtividade, Ilusões e Dilaceração Instantânea";
+  }
+
+  return {
+    personagemNome: personagem?.nome || "Shinigami",
+    dominante,
+    secundario,
+    deficiente,
+    conceitoCentral: `${dominante.label} voltada para ${tendenciaCombate}`,
+    conceitoSecundario: `Mecanismo de compensação para a carência em ${deficiente.label}`,
+    virtudeDominante,
+    deficienciaDominante,
+    desejoCentral,
+    medoCentral,
+    conflitoInterno,
+    tendenciaCombate,
+    tendenciaEmocional,
+    simboloEspiritual,
+    principioEspiritual,
+    necessidadeCompensacao: `Compensar a baixa ${deficiente.label} (${deficiente.val} pts) através de mecânica espiritual`,
+    direcaoEvolucao: `Transcendência de ${dominante.label} em ressonância com ${simboloEspiritual}`
+  };
+}
+
+// 4. BANCO DE ARQUÉTIPOS ESPIRITUAIS RICOS
+const ARQUETIPOS_ELEMENTAIS = [
+  {
+    nome: "Enzan",
+    kanji: "「炎斬」",
+    traducao: "Corte das Chamas Vivas",
+    comando: "Incinere a hesitação, Enzan!",
+    elemento: "Chamas Carmesins & Brasas Solares",
+    aparencia: "Lâmina de katana com fio rubro incandescente que solta faíscas douradas ao menor movimento.",
+    transformacao: "A lâmina se alonga e é envolvida por um fluxo contínuo de calor espiral que distorce o ar ao redor.",
+    natureza: "Elemental Térmico Ofensivo",
+    mecanica: "Libera ondas de chamas cortantes e converte a determinação espiritual do usuário em densidade calórica.",
+    poderPrincipal: "Corte Solar: Dispara lâminas de fogo comprimido que queimam o Reishi adversário no ponto de impacto.",
+    poderSecundario: "Manto de Brasas: Cria uma barreira térmica em volta do corpo que dissipa ataques cinéticos fracos.",
+    limitacoes: "Consumo contínuo de Reiryoku caso mantida em temperatura máxima por muito tempo.",
+    custo: "Médio a Alto",
+    estiloCombate: "Agressividade direta, controle de distância média com projéteis térmicos.",
+    vantagens: "Excelente penetração de armaduras e queima de barreiras de Bakudō.",
+    vulnerabilidades: "Ligeira perda de eficácia em ambientes submersos ou contra gelo absoluto.",
+    utilidade: "Purificação de Reishi corrompido e iluminação de ambientes escuros.",
+    indices: { potencia: 8, abrangencia: 7, complexidade: 5, versatilidade: 7, custo: 6 },
+    bankai: {
+      nome: "Enzan — Guren Taishō",
+      kanji: "「炎斬・紅莲大聖」",
+      traducao: "Grande Santo do Lótus Carmesim",
+      comando: "Bankai — Enzan, Guren Taishō!",
+      tipoEvolucao: "Evolução Direta",
+      formaMonumental: "O campo de batalha é envolvido por uma fornalha celestial de chamas brancas e seis asas monumentais de fogo puro emergem das costas do portador.",
+      conceitoEvoluido: "O fogo deixa de ser mero calor e se torna a manifestação da purificação espiritual absoluta.",
+      evolucaoHabilidades: "O Corte Solar se divide em dezenas de colunas térmicas omnidirecionais e o Manto de Brasas torna o portador imune a danos térmicos e físicos leves.",
+      novasHabilidades: ["Lótus da Purificação Final: Converte toda a atmosfera em plasma incandescente"],
+      limitacoes: "Esgota a energia vital caso ultrapasse o limite de 5 minutos de liberação contínua.",
+      custoReiatsu: "Extremo",
+      significadoEspiritual: "A queima total de todas as impurezas e fraquezas da alma.",
+      poder: "Domínio de Chamas Celestiais: Toda a área ao redor se torna um mar de Reishi incandescente sob controle do usuário."
+    }
+  },
+  {
+    nome: "Hyōsetsu",
+    kanji: "「氷雪」",
+    traducao: "Neve Glacial Eterna",
+    comando: "Silencie o mundo, Hyōsetsu!",
+    elemento: "Cristal Glacial & Zero Absoluto",
+    aparencia: "Katana prateada de empunhadura revestida em seda branca e guarda em formato de floco de neve cristalino.",
+    transformacao: "A lâmina se converte em gelo translúcido inquebrável que congela a umidade ao redor instantaneamente.",
+    natureza: "Elemental Glacial de Controle",
+    mecanica: "Diminui a energia cinética das partículas em volta da lâmina, congelando impactos e restringindo movimento inimigo.",
+    poderPrincipal: "Prisão de Escarcha: Cada corte gera estalagmites de gelo que se expandem no alvo, reduzindo sua velocidade.",
+    poderSecundario: "Espelho de Gelo: Constrói escudos de gelo refletivo que desviam ataques de projéteis e Hadō.",
+    limitacoes: "Exige precisão milimétrica para não congelar as próprias articulações do portador.",
+    custo: "Médio",
+    estiloCombate: "Zona de controle defensiva, desgaste progressivo da mobilidade inimiga.",
+    vantagens: "Imobilização impecável e controle absoluto do ritmo da luta.",
+    vulnerabilidades: "Menor poder destrutivo bruto inicial antes do congelamento se consolidar.",
+    utilidade: "Preservação de feridos graves em estase criogênica de emergência.",
+    indices: { potencia: 6, abrangencia: 8, complexidade: 6, versatilidade: 8, custo: 5 },
+    bankai: {
+      nome: "Hyōsetsu — Hakugin Reiketsu",
+      kanji: "「氷雪・白銀冷穴」",
+      traducao: "Abismo de Prata Gélida",
+      comando: "Bankai — Hyōsetsu, Hakugin Reiketsu!",
+      tipoEvolucao: "Evolução Conceitual",
+      formaMonumental: "Uma catedral monumental de gelo eterno se ergue no campo, onde flocos de neve prateados caem incessantemente.",
+      conceitoEvoluido: "O congelamento atinge a dimensão espiritual, congelando até o tempo de reação dos pensamentos inimigos.",
+      evolucaoHabilidades: "O gelo não precisa mais de umidade, congelando diretamente o fluxo de Reiryoku do adversário.",
+      novasHabilidades: ["Zero Absoluto Espiritual: Paralisia completa de qualquer técnica mágica lançada no raio de alcance"],
+      limitacoes: "O ambiente permanece congelado por horas após o término da batalha.",
+      custoReiatsu: "Alto",
+      significadoEspiritual: "A serenidade imutável que nenhuma tempestade pode abalar.",
+      poder: "Câmara Glacial Eterna: Imobiliza o fluxo de Reiryoku e anula feitiços dentro do território."
+    }
+  },
+  {
+    nome: "Fūjinryū",
+    kanji: "「風刃竜」",
+    traducao: "Dragão das Lâminas de Vento",
+    comando: "Rasgue o firmamento, Fūjinryū!",
+    elemento: "Vácuo Cinético & Lâminas de Ar Comprimido",
+    aparencia: "Wakizashi dupla com guarnições curvas que assobiam com o fluir do vento.",
+    transformacao: "As lâminas desaparecem da visão física, deixando apenas rajadas cortantes de ar pressurizado em torno dos pulsos.",
+    natureza: "Elemental Aéreo de Velocidade",
+    mecanica: "Comprime o ar em lâminas invisíveis de vácuo que cortam sem fricção e aceleram o corpo do usuário.",
+    poderPrincipal: "Vórtice Invisível: Dispara lâminas de ar que não podem ser vistas a olho nu, apenas sentidas pela pressão.",
+    poderSecundario: "Passo do Tufão: Aumenta a velocidade de deslocamento do usuário em 40% ao reduzir o atrito do ar a zero.",
+    limitacoes: "Alcance efetivo reduzido em ambientes fechados com pouca circulação de ar.",
+    custo: "Baixo a Médio",
+    estiloCombate: "Hit-and-run, fintas em alta velocidade e cortes invisíveis de surpresa.",
+    vantagens: "Imprevisibilidade extrema nos ângulos de ataque e mobilidade incomparável.",
+    vulnerabilidades: "Vulnerável a adversários com defesas de armadura pesada em 360 graus.",
+    utilidade: "Criação de correntes de ar para transporte rápido ou dispersão de gases venenosos.",
+    indices: { potencia: 7, abrangencia: 6, complexidade: 6, versatilidade: 8, custo: 4 },
+    bankai: {
+      nome: "Fūjinryū — Tenkai Senpū",
+      kanji: "「風刃竜・天界旋風」",
+      traducao: "Tufão do Domínio Celeste",
+      comando: "Bankai — Fūjinryū, Tenkai Senpū!",
+      tipoEvolucao: "Evolução do Personagem",
+      formaMonumental: "O céu se abre em um furacão monumental de lâminas de vácuo que giram em velocidades hipersônicas.",
+      conceitoEvoluido: "O usuário se funde ao fluxo do vento, podendo atacar de qualquer ponto onde o ar circule.",
+      evolucaoHabilidades: "Aceleração instantânea multiplicada e milhares de cortes invisíveis simultâneos.",
+      novasHabilidades: ["Domínio do Vácuo Absoluto: Remove o oxigênio e a resistência do espaço ao redor do alvo"],
+      limitacoes: "Requer constante movimentação corporal para manter a sustentação do furacão.",
+      custoReiatsu: "Alto",
+      significadoEspiritual: "A liberdade total que não conhece correntes nem fronteiras.",
+      poder: "Furacão Dimensional de Vácuo: Dilacera estruturas e concede onipresença aérea ao portador."
+    }
+  }
+];
+
+const ARQUETIPOS_PROGRESSIVOS = [
+  {
+    nome: "Jushaku",
+    kanji: "「重尺」",
+    traducao: "Régua da Gravidade Gravada",
+    comando: "Pese as almas, Jushaku!",
+    elemento: "Marcas Gravitacionais & Ciclos de Carga",
+    aparencia: "Nodachi longa com marcações numéricas douradas entalhadas ao longo do dorso da lâmina.",
+    transformacao: "A cada impacto desferido ou recebido, uma das marcas se acende com luz violeta pulsante.",
+    natureza: "Conceitual / Progressivo em Etapas",
+    mecanica: "Acumula até 5 marcas. A cada marca acesa, o peso e o impacto do golpe seguinte são multiplicados.",
+    poderPrincipal: "Multiplicação de Massa: Cada marca dobra o peso sentido pelo alvo no momento do choque.",
+    poderSecundario: "Liberação de Pulso: Ao atingir 5 marcas, pode descarregar toda a energia em uma onda de choque sísmica.",
+    limitacoes: "Se passar mais de 30 segundos sem golpear ou ser golpeado, as marcas decaem gradualmente.",
+    custo: "Médio",
+    estiloCombate: "Combate cadenciado, paciência para acumular vantagens até o clímax devastador.",
+    vantagens: "Poder de destruição colossal conforme a luta se prolonga.",
+    vulnerabilidades: "Vulnerável nos primeiros instantes da luta antes de acumular as marcas.",
+    utilidade: "Prensagem de materiais pesados e estabilização de terrenos desmoronando.",
+    indices: { potencia: 9, abrangencia: 6, complexidade: 8, versatilidade: 6, custo: 5 },
+    bankai: {
+      nome: "Jushaku — Taizō Kaijū",
+      kanji: "「重尺・胎蔵界重」",
+      traducao: "Matriz Gravitacional Infinita",
+      comando: "Bankai — Jushaku, Taizō Kaijū!",
+      tipoEvolucao: "Evolução por Aceleração de Etapas",
+      formaMonumental: "Pilares monumentais de granito negro com runas luminosas descem dos céus, cercando a arena em um campo gravítico.",
+      conceitoEvoluido: "Elimina a necessidade de acumular marcas: o domínio inteiro já inicia na carga máxima de 100x gravidade.",
+      evolucaoHabilidades: "O peso do ar esmaga projéteis e imobiliza oponentes contra o solo.",
+      novasHabilidades: ["Ponto de Colapso Gravitacional: Cria um micro buraco negro espiritual que atrai tudo para o centro"],
+      limitacoes: "Exige tremendo esforço muscular do próprio portador para resistir ao peso do seu domínio.",
+      custoReiatsu: "Extremo",
+      significadoEspiritual: "A inevitabilidade do destino e a gravidade de cada escolha.",
+      poder: "Domínio Gravitacional Absoluto: Esmaga defesas e anula mobilidade com peso de montanhas."
+    }
+  },
+  {
+    nome: "Ritsudō",
+    kanji: "「律動」",
+    traducao: "Compasso Rítmico da Lei",
+    comando: "Marque o tempo da existência, Ritsudō!",
+    elemento: "Ritmo Cardíaco Espiritual & Regras de Cadência",
+    aparencia: "Katana elegante com uma pequena campânula de sino acoplada ao pomo da empunhadura.",
+    transformacao: "A lâmina ressoa com um clique rítmico que ecoa sincronizado às batidas de Reiryoku.",
+    natureza: "Conceitual / Regras e Condições",
+    mecanica: "Estabelece um ritmo de 3 tempos no combate. Golpes desferidos no tempo correto causam dano crítico garantido.",
+    poderPrincipal: "Golpe no Terceiro Compasso: Se o usuário conectar ataques no tempo exato, o terceiro golpe perfura qualquer barreira.",
+    poderSecundario: "Descompasso Inimigo: Obriga o adversário a adaptar sua velocidade ao compasso da lâmina ou sofrer desorientação.",
+    limitacoes: "Exige concentração e ritmo rigoroso; quebrar a cadência zera a contagem de compasso.",
+    custo: "Médio",
+    estiloCombate: "Cirúrgico, hipnótico e baseado em tempo de reação impecável.",
+    vantagens: "Anulação de esquivas previsíveis e quebra de ritmo de lutadores velozes.",
+    vulnerabilidades: "Lutadores extremamente caóticos que agem sem padrão fixo.",
+    utilidade: "Harmonização de fluxo de Reishi em aliados feridos para acelerar Kaidō.",
+    indices: { potencia: 8, abrangencia: 5, complexidade: 9, versatilidade: 7, custo: 6 },
+    bankai: {
+      nome: "Ritsudō — Bankoku Kyōkōshō",
+      kanji: "「律動・万国響行唱」",
+      traducao: "Sinfonia que Governa Todas as Coisas",
+      comando: "Bankai — Ritsudō, Bankoku Kyōkōshō!",
+      tipoEvolucao: "Evolução Conceitual",
+      formaMonumental: "Cordas de harpa invisíveis e gigantescas cortam todo o espaço aéreo, vibrando com notas musicais cósmicas.",
+      conceitoEvoluido: "O ritmo da Bankai dita o ritmo biológico e espiritual do campo de batalha inteiro.",
+      evolucaoHabilidades: "Quem agir fora do compasso estipulado pelo portador sofre paralisia temporária instantânea.",
+      novasHabilidades: ["Dissonância Letal: Uma nota final que rompe as fibras de Reishi de quem estiver fora de sintonia"],
+      limitacoes: "Não discrimina aliados se entrarem no campo sem conhecer o compasso.",
+      custoReiatsu: "Alto",
+      significadoEspiritual: "A harmonia que nasce da disciplina e da ordem cósmica.",
+      poder: "Sinfonia da Ordem Absoluta: Controla a velocidade de ações e pune descompassos com dano interno direto."
+    }
+  }
+];
+
+const ARQUETIPOS_COMPENSATORIOS = [
+  {
+    nome: "Mōsenkyō",
+    kanji: "「網閃鏡」",
+    traducao: "Espelho da Rede Cintilante",
+    comando: "Dobre a distância, Mōsenkyō!",
+    elemento: "Distorção Espacial & Compensação de Mobilidade",
+    aparencia: "Rapieira delgada com lâmina reflexiva e guarda em forma de lente côncava.",
+    transformacao: "A lâmina projeta micro reflexos táteis no espaço por onde o portador pode transitar instantaneamente.",
+    natureza: "Compensatório / Espacial",
+    mecanica: "Compensa a baixa velocidade ou força física através de dobras no espaço e alavancagem dimensional.",
+    poderPrincipal: "Passo Espelhado: Permite dar um passo e emergir a até 10 metros de distância através de um reflexo de Reishi.",
+    poderSecundario: "Corte Vetorial: Transfere a força do golpe inimigo recebido de volta contra ele através de um ângulo cego.",
+    limitacoes: "Não pode translocar para locais onde não haja campo de visão ou luz refletida.",
+    custo: "Médio",
+    estiloCombate: "Posicionamento inteligente, compensando fraqueza física com ângulos imprevistos.",
+    vantagens: "Nenhum oponente consegue encurralar o usuário em combate corpo a corpo.",
+    vulnerabilidades: "Ambientes de escuridão total que anulem superfícies de reflexão.",
+    utilidade: "Resgate instantâneo de companheiros encurralados a média distância.",
+    indices: { potencia: 7, abrangencia: 6, complexidade: 8, versatilidade: 9, custo: 5 },
+    bankai: {
+      nome: "Mōsenkyō — Kyokugen Musōkai",
+      kanji: "「網閃鏡・極限無双界」",
+      traducao: "Reino Infinito dos Mil Prismas",
+      comando: "Bankai — Mōsenkyō, Kyokugen Musōkai!",
+      tipoEvolucao: "Evolução Compensatória Total",
+      formaMonumental: "O espaço se fragmenta em milhões de prismas flutuantes que interconectam cada milímetro do campo de batalha.",
+      conceitoEvoluido: "A distância entre o portador e qualquer ponto do campo é reduzida a zero.",
+      evolucaoHabilidades: "Translocação instantânea contínua e multiplicação de ataques por múltiplos prismas simultâneos.",
+      novasHabilidades: ["Prisma de Vácuo: Reflete um ataque inimigo multiplicado por 4 a partir de direções opostas"],
+      limitacoes: "Requer alto processamento mental e concentração espacial contínua.",
+      custoReiatsu: "Alto",
+      significadoEspiritual: "A superação de qualquer barreira física através da lucidez da mente.",
+      poder: "Domínio Prisma Omnidirecional: Elimina distâncias e ataca de dezenas de ângulos espelhados."
+    }
+  },
+  {
+    nome: "Kongōkaku",
+    kanji: "「金剛殻」",
+    traducao: "Carapaça de Diamante Inquebrável",
+    comando: "Solidifique a alma, Kongōkaku!",
+    elemento: "Aço Espiritual Reforçado & Absorção Cinética",
+    aparencia: "Katana pesada de dorso largo e bainha de ferro fundido.",
+    transformacao: "A lâmina se funde aos braços do usuário, criando braçadeiras de metal espiritual blindado de altíssima densidade.",
+    natureza: "Compensatório / Defensivo e Resiliência",
+    mecanica: "Compensa a baixa resiliência física criando uma camada impenetrável de Reishi comprimido.",
+    poderPrincipal: "Blindagem de Reishi: Reduz qualquer dano físico ou mágico recebido em até 60% e impede recuo por impacto.",
+    poderSecundario: "Descarga de Impacto: Devolve a energia cinética dos golpes bloqueados na próxima estocada de corte.",
+    limitacoes: "Aumenta o peso corporal durante a blindagem ativa, reduzindo um pouco o salto.",
+    custo: "Baixo a Médio",
+    estiloCombate: "Tanque resiliente, bloqueio firme e contra-golpe pesado inabalável.",
+    vantagens: "Resistência monumental contra adversários focados em dano bruto.",
+    vulnerabilidades: "Ataques de veneno ou ilusão que ignorem armadura física direta.",
+    utilidade: "Proteção de esquadrões contra desmoronamentos ou explosões de grande raio.",
+    indices: { potencia: 8, abrangencia: 5, complexidade: 6, versatilidade: 7, custo: 4 },
+    bankai: {
+      nome: "Kongōkaku — Fudō Myōōjin",
+      kanji: "「金剛殻・不動明王陣」",
+      traducao: "Formação do Santo Inabalável",
+      comando: "Bankai — Kongōkaku, Fudō Myōōjin!",
+      tipoEvolucao: "Evolução de Fortalecimento",
+      formaMonumental: "Um colosso colossal de armadura de diamante espiritual envolve o usuário, erguendo escudos monumentais.",
+      conceitoEvoluido: "A defesa se torna inviolável: todo golpe sofrido fortalece a armadura em vez de desgastá-la.",
+      evolucaoHabilidades: "Imunidade total a atordoamentos, venenos e cortes cortantes comuns.",
+      novasHabilidades: ["Impacto do Titã: Um esmagamento de terra que destrói o chão e ergue muralhas de pedra"],
+      limitacoes: "Mobilidade reduzida enquanto a forma colateral estiver ativa.",
+      custoReiatsu: "Alto",
+      significadoEspiritual: "A rocha inabalável que resiste a todas as tempestades da existência.",
+      poder: "Fortaleza Colossal Viva: Bloqueia ataques devastadores e devolve ondas de choque titânicas."
+    }
+  }
+];
+
+const ARQUETIPOS_OPOSITIVOS = [
+  {
+    nome: "Muei",
+    kanji: "「無影」",
+    traducao: "Ausência de Sombra",
+    comando: "Apague a presença, Muei!",
+    elemento: "Anulação Sensorial & Vácuo Existencial",
+    aparencia: "Adaga curva e translúcida que não emite som, reflexo nem calor.",
+    transformacao: "A lâmina absorve o som e a luz ao redor de 5 metros, silenciando os passos e a respiração do usuário.",
+    natureza: "Opositivo / Sensorial e Existencial",
+    mecanica: "Explora o oposto do que o inimigo espera: em vez de aumentar a presença, apaga os estímulos táteis e auditivos.",
+    poderPrincipal: "Corte Silencioso: Ataques desferidos pela Muei não produzem ar de impacto nem aviso de perigo até o corte acontecer.",
+    poderSecundario: "Câmara de Anestesia: Um corte leve anula a sensação de dor do alvo momentaneamente para ocultar o ferimento.",
+    limitacoes: "Não oculta o portador de sensores de Reiatsu de nível capitão a curtíssima distância.",
+    custo: "Baixo",
+    estiloCombate: "Furtividade radical, assassinatos rápidos e fintas sem som.",
+    vantagens: "Confusão sensorial completa em adversários que dependem de ouvir ou ver os golpes.",
+    vulnerabilidades: "Ataques de área massiva que atinjam o perímetro inteiro sem mirar.",
+    utilidade: "Infiltração em fortalezas e operações secretas de inteligência.",
+    indices: { potencia: 7, abrangencia: 4, complexidade: 9, versatilidade: 8, custo: 4 },
+    bankai: {
+      nome: "Muei — Kokū Zetsumetsu",
+      kanji: "「無影・虚空絶滅」",
+      traducao: "Extinção no Vazio Eterno",
+      comando: "Bankai — Muei, Kokū Zetsumetsu!",
+      tipoEvolucao: "Evolução por Inversão",
+      formaMonumental: "Todo o campo de batalha é submergido em uma escuridão e silêncio absolutos onde nenhum som ou visão existe.",
+      conceitoEvoluido: "Anulação de todos os 5 sentidos do adversário: visão, audição, tato, olfato e até percepção de Reishi.",
+      evolucaoHabilidades: "O portador se torna totalmente indetectável dentro da névoa de silêncio absoluto.",
+      novasHabilidades: ["Golpe do Esquecimento: Um corte que sela a capacidade do oponente de conjurar técnicas por 1 turno"],
+      limitacoes: "Consome foco mental contínuo para manter a anulação sensorial ativa.",
+      custoReiatsu: "Alto",
+      significadoEspiritual: "O vazio primordial antes da criação, onde nenhuma ilusão pode sobreviver.",
+      poder: "Vácuo Sensorial Absoluto: Priva o adversário de todos os sentidos e elimina qualquer presença da lâmina."
+    }
+  },
+  {
+    nome: "Sōkoku",
+    kanji: "「双刻」",
+    traducao: "Tempo Paradoxal",
+    comando: "Desfaça o instante, Sōkoku!",
+    elemento: "Ecos Temporais & Inversão de Causalidade",
+    aparencia: "Duas espadas finas conectadas por um fio de seda rubra infinita com engrenagens de ouro no pomo.",
+    transformacao: "Uma das espadas aponta para o passado imediato e a outra para o futuro próximo.",
+    natureza: "Opositivo / Temporal e Abstrato",
+    mecanica: "Permite repetir o efeito de um golpe realizado 2 segundos atrás ou antecipar o bloqueio de um ataque iminente.",
+    poderPrincipal: "Eco de Lâmina: Faz um corte desferido se repetir uma fração de segundo depois no mesmo local.",
+    poderSecundario: "Regressão Pontual: Desfaz o desgaste de um único movimento executado caso tenha resultado em erro de cálculo.",
+    limitacoes: "Não pode reverter danos letais nem alterar eventos além de 2 segundos de intervalo.",
+    custo: "Alto",
+    estiloCombate: "Paradoxal, desorientando a previsão do adversário com ações desfasadas no tempo.",
+    vantagens: "Imprevisibilidade temporal e correção de fintas mal calculadas.",
+    vulnerabilidades: "Lutas de exaustão prolongada com múltiplos adversários simultâneos.",
+    utilidade: "Recuperação de objetos destruídos recentemente.",
+    indices: { potencia: 8, abrangencia: 5, complexidade: 10, versatilidade: 9, custo: 7 },
+    bankai: {
+      nome: "Sōkoku — Toki no Mugen Kankaku",
+      kanji: "「双刻・時の無限間隔」",
+      traducao: "Intervalo Infinito do Tempo",
+      comando: "Bankai — Sōkoku, Toki no Mugen Kankaku!",
+      tipoEvolucao: "Evolução Conceitual Transcendental",
+      formaMonumental: "Um relógio monumental de engrenagens transparentes de Reishi flutua no firmamento, estalando segundos luminosos.",
+      conceitoEvoluido: "O tempo dentro do domínio pode ser dilatado ou comprimido conforme a vontade do usuário.",
+      evolucaoHabilidades: "O usuário percebe o mundo 10x mais lento, podendo desviar de qualquer ataque em velocidade terminal.",
+      novasHabilidades: ["Paradoxo Causal: Desfere um golpe cujo dano é aplicado antes do movimento físico ser completado"],
+      limitacoes: "Causa fadiga temporal severa se estendida por mais de 3 minutos.",
+      custoReiatsu: "Extremo",
+      significadoEspiritual: "O domínio sobre a brevidade da vida e a eternidade do espírito.",
+      poder: "Dilatação Temporal Soberana: Desacelera a realidade inimiga e conecta cortes de ecos temporais irresistíveis."
+    }
+  }
+];
+
+// 5. GERADOR CENTRAL DOS 4 CAMINHOS ESPIRITUAIS (Regra 1)
+function gerar4CaminhosZanpakutoAI(personagem, dbPersonagens = [], dbZanpakutosVinculadas = [], cenaTexto = "") {
+  const { claimed, claimedNames } = getClaimedSignatures(dbPersonagens, dbZanpakutosVinculadas);
+  const dna = construirDnaEspiritual(personagem, cenaTexto);
+  const caminhos = [];
+  const assinaturasGeradasNoMomento = new Set();
+
+  // Função auxiliar para validar exclusividade
+  function ehUnica(shikaiObj) {
+    const sig = calcularAssinaturaEspiritual(shikaiObj);
+    const nomeNorm = (shikaiObj.nome || "").toLowerCase().trim();
+    if (claimed.has(sig.toLowerCase()) || assinaturasGeradasNoMomento.has(sig.toLowerCase())) return false;
+    if (claimedNames.has(nomeNorm)) return false;
+    return true;
+  }
+
+  // CAMINHO 1: Personalidade / Elemental (~45% tendência)
+  let shikai1 = null;
+  for (const item of ARQUETIPOS_ELEMENTAIS) {
+    if (ehUnica(item)) {
+      shikai1 = item;
+      break;
+    }
+  }
+  if (!shikai1 && MASTER_ZANPAKUTO_CATALOG) {
+    for (const item of MASTER_ZANPAKUTO_CATALOG) {
+      if (ehUnica(item)) {
+        shikai1 = {
+          ...item,
+          aparencia: item.formatoArma,
+          transformacao: item.formatoArma,
+          natureza: "Elemental / Identidade Espiritual",
+          mecanica: item.poder,
+          poderPrincipal: item.poder.slice(0, 120),
+          poderSecundario: "Ressonância elemental com o ambiente de batalha",
+          limitacoes: "Consumo moderado de Reiryoku por turno",
+          custo: "Médio",
+          estiloCombate: "Combate ofensivo e controle elemental",
+          vantagens: "Alta sinergia com os atributos do personagem",
+          vulnerabilidades: "Exige manutenção do ritmo de Reishi",
+          utilidade: "Manipulação do elemento em terrenos favoráveis",
+          indices: { potencia: 8, abrangencia: 7, complexidade: 6, versatilidade: 7, custo: 5 }
+        };
+        break;
+      }
+    }
+  }
+  if (!shikai1) {
+    shikai1 = ARQUETIPOS_ELEMENTAIS[0];
+  }
+  const sig1 = calcularAssinaturaEspiritual(shikai1);
+  assinaturasGeradasNoMomento.add(sig1.toLowerCase());
+
+  caminhos.push({
+    caminhoNumero: 1,
+    tipoCaminho: "Opção 1 — Personalidade / Elemental",
+    subtitulo: "Manifestação Direta da Essência Emocional da Alma",
+    dnaEspiritual: dna,
+    shikai: {
+      id: uid(),
+      nome: shikai1.nome,
+      nomeCompleto: `${shikai1.nome} ${shikai1.kanji || '「始解」'} — ${shikai1.traducao || 'Elemental'}`,
+      kanji: shikai1.kanji || "「始解」",
+      traducao: shikai1.traducao || "Despertar Elemental",
+      comando: shikai1.comando,
+      elemento: shikai1.elemento,
+      formatoArma: shikai1.aparencia || shikai1.formatoArma,
+      aparencia: shikai1.aparencia || shikai1.formatoArma,
+      transformacao: shikai1.transformacao || shikai1.formatoArma,
+      natureza: shikai1.natureza || "Elemental",
+      conceitoCentral: `${dna.dominante.label} em sintonia com ${shikai1.elemento}`,
+      conceitoSecundario: dna.tendenciaEmocional,
+      relacaoPersonalidade: `Reflete a tendência emocional: ${dna.tendenciaEmocional} e a virtude: ${dna.virtudeDominante}`,
+      relacaoAtributos: `Fortemente amplificada pelo seu atributo dominante: ${dna.dominante.label} (${dna.dominante.val} pts)`,
+      relacaoDeficiencias: `Compensa a limitação psicológica: ${dna.deficienciaDominante}`,
+      relacaoConflitos: `Materializa o conflito interno: ${dna.conflitoInterno}`,
+      poder: shikai1.poder || shikai1.mecanica || shikai1.poderPrincipal,
+      habilidadePrincipal: shikai1.poderPrincipal || shikai1.poder,
+      habilidadesSecundarias: [shikai1.poderSecundario || "Reforço Elemental"],
+      mecanica: shikai1.mecanica || shikai1.poder,
+      limitacoes: shikai1.limitacoes || "Consumo moderado de Reiryoku",
+      custoReiatsu: shikai1.custo || "Médio",
+      estiloCombate: shikai1.estiloCombate || "Ofensivo",
+      vantagens: shikai1.vantagens || "Alta potência",
+      vulnerabilidades: shikai1.vulnerabilidades || "Gasto de energia contínuo",
+      utilidadeGeral: shikai1.utilidade || "Utilidade em campo aberto",
+      indices: shikai1.indices || { potencia: 8, abrangencia: 7, complexidade: 6, versatilidade: 7, custo: 5 },
+      assinaturaEspiritual: sig1,
+      bankaiPadrao: shikai1.bankai,
+      foto: "assets/ichigo-orange.png"
+    },
+    bankai: {
+      id: uid(),
+      nome: shikai1.bankai?.nome || `${shikai1.nome} — Guren`,
+      nomeCompleto: shikai1.bankai?.nomeCompleto || `Bankai — ${shikai1.nome} (Liberação Total)`,
+      kanji: shikai1.bankai?.kanji || "「卍解」",
+      traducao: shikai1.bankai?.traducao || "Forma Completa",
+      comando: shikai1.bankai?.comando || `Bankai — ${shikai1.nome}!`,
+      tipoEvolucao: shikai1.bankai?.tipoEvolucao || "Evolução Direta",
+      formaMonumental: shikai1.bankai?.formaMonumental || shikai1.bankai?.formatoArma,
+      conceitoEvoluido: shikai1.bankai?.conceitoEvoluido || "Elevação máxima do poder da Shikai",
+      relacaoShikai: "Amplia a escala e a densidade energética da Shikai para nível de território monumental.",
+      evolucaoHabilidades: shikai1.bankai?.evolucaoHabilidades || "Multiplicação da potência destrutiva",
+      novasHabilidades: shikai1.bankai?.novasHabilidades || ["Domínio Transcendental"],
+      limitacoes: shikai1.bankai?.limitacoes || "Duração restrita pelo vigor do portador",
+      custoReiatsu: shikai1.bankai?.custoReiatsu || "Alto",
+      significadoEspiritual: shikai1.bankai?.significadoEspiritual || dna.principioEspiritual,
+      poder: shikai1.bankai?.poder || "Manifestação territorial absoluta",
+      foto: "assets/ichigo-moon.png"
+    },
+    avaliacao: {
+      personalidadeCompatibilidade: "96%",
+      atributosSinergia: "95%",
+      originalidade: "Muito Alta",
+      coerencia: "Total com DNA Espiritual",
+      potencialNarrativo: "Épico",
+      exclusividadeStatus: "Garantida e Única"
+    }
+  });
+
+  // CAMINHO 2: Conceitual / Progressiva (~20% tendência)
+  let shikai2 = null;
+  for (const item of ARQUETIPOS_PROGRESSIVOS) {
+    if (ehUnica(item)) {
+      shikai2 = item;
+      break;
+    }
+  }
+  if (!shikai2) shikai2 = ARQUETIPOS_PROGRESSIVOS[0];
+  const sig2 = calcularAssinaturaEspiritual(shikai2);
+  assinaturasGeradasNoMomento.add(sig2.toLowerCase());
+
+  caminhos.push({
+    caminhoNumero: 2,
+    tipoCaminho: "Opção 2 — Conceitual / Progressiva",
+    subtitulo: "Estrutura de Etapas, Regras, Marcas e Contratos de Reishi",
+    dnaEspiritual: dna,
+    shikai: {
+      id: uid(),
+      nome: shikai2.nome,
+      nomeCompleto: `${shikai2.nome} ${shikai2.kanji || '「始解」'} — ${shikai2.traducao || 'Progressiva'}`,
+      kanji: shikai2.kanji || "「始解」",
+      traducao: shikai2.traducao || "Ciclo de Poder",
+      comando: shikai2.comando,
+      elemento: shikai2.elemento,
+      formatoArma: shikai2.aparencia,
+      aparencia: shikai2.aparencia,
+      transformacao: shikai2.transformacao,
+      natureza: shikai2.natureza,
+      conceitoCentral: `${dna.dominante.label} articulada em estágios de impacto`,
+      conceitoSecundario: `Disciplina e precisão calculada`,
+      relacaoPersonalidade: `Sintonizada com a virtude: ${dna.virtudeDominante} e o desejo: ${dna.desejoCentral}`,
+      relacaoAtributos: `Utiliza ${dna.secundario.label} (${dna.secundario.val} pts) como catalisador de etapas`,
+      relacaoDeficiencias: `Exige paciência tática para superar o medo: ${dna.medoCentral}`,
+      relacaoConflitos: `Cria regras invioláveis para mediar o conflito: ${dna.conflitoInterno}`,
+      poder: shikai2.poderPrincipal + " " + shikai2.mecanica,
+      habilidadePrincipal: shikai2.poderPrincipal,
+      habilidadesSecundarias: [shikai2.poderSecundario],
+      mecanica: shikai2.mecanica,
+      limitacoes: shikai2.limitacoes,
+      custoReiatsu: shikai2.custo,
+      estiloCombate: shikai2.estiloCombate,
+      vantagens: shikai2.vantagens,
+      vulnerabilidades: shikai2.vulnerabilidades,
+      utilidadeGeral: shikai2.utilidade,
+      indices: shikai2.indices,
+      assinaturaEspiritual: sig2,
+      bankaiPadrao: shikai2.bankai,
+      foto: "assets/ichigo-orange.png"
+    },
+    bankai: {
+      id: uid(),
+      nome: shikai2.bankai?.nome || `${shikai2.nome} — Shūen`,
+      nomeCompleto: shikai2.bankai?.nomeCompleto || `Bankai — ${shikai2.nome}`,
+      kanji: shikai2.bankai?.kanji || "「卍解」",
+      traducao: shikai2.bankai?.traducao || "Ciclo Supremo",
+      comando: shikai2.bankai?.comando || `Bankai — ${shikai2.nome}!`,
+      tipoEvolucao: shikai2.bankai?.tipoEvolucao || "Evolução por Aceleração",
+      formaMonumental: shikai2.bankai?.formaMonumental,
+      conceitoEvoluido: shikai2.bankai?.conceitoEvoluido,
+      relacaoShikai: "Elimina ou acelera as etapas da Shikai, manifestando o potencial em seu estado máximo imediato.",
+      evolucaoHabilidades: shikai2.bankai?.evolucaoHabilidades,
+      novasHabilidades: shikai2.bankai?.novasHabilidades,
+      limitacoes: shikai2.bankai?.limitacoes,
+      custoReiatsu: shikai2.bankai?.custoReiatsu,
+      significadoEspiritual: shikai2.bankai?.significadoEspiritual,
+      poder: shikai2.bankai?.poder,
+      foto: "assets/ichigo-moon.png"
+    },
+    avaliacao: {
+      personalidadeCompatibilidade: "94%",
+      atributosSinergia: "97%",
+      originalidade: "Excepcional",
+      coerencia: "Impecável",
+      potencialNarrativo: "Estratégico",
+      exclusividadeStatus: "Garantida e Única"
+    }
+  });
+
+  // CAMINHO 3: Compensatória / Complementar (O que falta ao personagem?)
+  let shikai3 = null;
+  for (const item of ARQUETIPOS_COMPENSATORIOS) {
+    if (ehUnica(item)) {
+      shikai3 = item;
+      break;
+    }
+  }
+  if (!shikai3) shikai3 = ARQUETIPOS_COMPENSATORIOS[0];
+  const sig3 = calcularAssinaturaEspiritual(shikai3);
+  assinaturasGeradasNoMomento.add(sig3.toLowerCase());
+
+  caminhos.push({
+    caminhoNumero: 3,
+    tipoCaminho: "Opção 3 — Compensatória / Complementar",
+    subtitulo: `Focada em contornar e compensar a deficiência em ${dna.deficiente.label}`,
+    dnaEspiritual: dna,
+    shikai: {
+      id: uid(),
+      nome: shikai3.nome,
+      nomeCompleto: `${shikai3.nome} ${shikai3.kanji || '「始解」'} — ${shikai3.traducao || 'Compensatória'}`,
+      kanji: shikai3.kanji || "「始解」",
+      traducao: shikai3.traducao || "Equilíbrio da Alma",
+      comando: shikai3.comando,
+      elemento: shikai3.elemento,
+      formatoArma: shikai3.aparencia,
+      aparencia: shikai3.aparencia,
+      transformacao: shikai3.transformacao,
+      natureza: shikai3.natureza,
+      conceitoCentral: `Solução engenhosa para a fragilidade em ${dna.deficiente.label}`,
+      conceitoSecundario: `Proteção e anulação de vulnerabilidades`,
+      relacaoPersonalidade: `Responde à pergunta: 'O que falta a esse guerreiro?' — Falta ${dna.deficiente.label}, respondida com astúcia.`,
+      relacaoAtributos: `Converte ${dna.dominante.label} em ferramenta para compensar ${dna.deficiente.label} (${dna.deficiente.val} pts)`,
+      relacaoDeficiencias: `Neutraliza a maior fraqueza do personagem sem exigir esforço bruto`,
+      relacaoConflitos: `Concede segurança para superar o medo: ${dna.medoCentral}`,
+      poder: shikai3.poderPrincipal + " " + shikai3.mecanica,
+      habilidadePrincipal: shikai3.poderPrincipal,
+      habilidadesSecundarias: [shikai3.poderSecundario],
+      mecanica: shikai3.mecanica,
+      limitacoes: shikai3.limitacoes,
+      custoReiatsu: shikai3.custo,
+      estiloCombate: shikai3.estiloCombate,
+      vantagens: shikai3.vantagens,
+      vulnerabilidades: shikai3.vulnerabilidades,
+      utilidadeGeral: shikai3.utilidade,
+      indices: shikai3.indices,
+      assinaturaEspiritual: sig3,
+      bankaiPadrao: shikai3.bankai,
+      foto: "assets/ichigo-orange.png"
+    },
+    bankai: {
+      id: uid(),
+      nome: shikai3.bankai?.nome || `${shikai3.nome} — Gokugen`,
+      nomeCompleto: shikai3.bankai?.nomeCompleto || `Bankai — ${shikai3.nome}`,
+      kanji: shikai3.bankai?.kanji || "「卍解」",
+      traducao: shikai3.bankai?.traducao || "Superação Inviolável",
+      comando: shikai3.bankai?.comando || `Bankai — ${shikai3.nome}!`,
+      tipoEvolucao: shikai3.bankai?.tipoEvolucao || "Evolução Compensatória Total",
+      formaMonumental: shikai3.bankai?.formaMonumental,
+      conceitoEvoluido: shikai3.bankai?.conceitoEvoluido,
+      relacaoShikai: "Transforma a antiga fraqueza do personagem em seu trunfo mais temido e devastador.",
+      evolucaoHabilidades: shikai3.bankai?.evolucaoHabilidades,
+      novasHabilidades: shikai3.bankai?.novasHabilidades,
+      limitacoes: shikai3.bankai?.limitacoes,
+      custoReiatsu: shikai3.bankai?.custoReiatsu,
+      significadoEspiritual: shikai3.bankai?.significadoEspiritual,
+      poder: shikai3.bankai?.poder,
+      foto: "assets/ichigo-moon.png"
+    },
+    avaliacao: {
+      personalidadeCompatibilidade: "92%",
+      atributosSinergia: "99%",
+      originalidade: "Extrema",
+      coerencia: "Perfeita com Necessidade de Alma",
+      potencialNarrativo: "Tocante e Heroico",
+      exclusividadeStatus: "Garantida e Única"
+    }
+  });
+
+  // CAMINHO 4: Opositiva / Experimental (O lado oculto e paradoxal da alma)
+  let shikai4 = null;
+  for (const item of ARQUETIPOS_OPOSITIVOS) {
+    if (ehUnica(item)) {
+      shikai4 = item;
+      break;
+    }
+  }
+  if (!shikai4) shikai4 = ARQUETIPOS_OPOSITIVOS[0];
+  const sig4 = calcularAssinaturaEspiritual(shikai4);
+  assinaturasGeradasNoMomento.add(sig4.toLowerCase());
+
+  caminhos.push({
+    caminhoNumero: 4,
+    tipoCaminho: "Opção 4 — Opositiva / Experimental",
+    subtitulo: "A Interpretação Mais Inesperada, Oculta e Paradoxal da Alma",
+    dnaEspiritual: dna,
+    shikai: {
+      id: uid(),
+      nome: shikai4.nome,
+      nomeCompleto: `${shikai4.nome} ${shikai4.kanji || '「始解」'} — ${shikai4.traducao || 'Paradoxal'}`,
+      kanji: shikai4.kanji || "「始解」",
+      traducao: shikai4.traducao || "Abstrato e Inédito",
+      comando: shikai4.comando,
+      elemento: shikai4.elemento,
+      formatoArma: shikai4.aparencia,
+      aparencia: shikai4.aparencia,
+      transformacao: shikai4.transformacao,
+      natureza: shikai4.natureza,
+      conceitoCentral: `O paradoxo latente na alma de ${personagem?.nome}`,
+      conceitoSecundario: `Mecânica abstrata que subverte a expectativa do oponente`,
+      relacaoPersonalidade: `Traz à tona a faceta oculta que o personagem raramente demonstra em público`,
+      relacaoAtributos: `Opera através de regras conceituais que transcendem números puros de atributos`,
+      relacaoDeficiencias: `Transforma a insegurança interior em mistério intransponível`,
+      relacaoConflitos: `Une as duas metades conflitantes do coração em um poder híbrido`,
+      poder: shikai4.poderPrincipal + " " + shikai4.mecanica,
+      habilidadePrincipal: shikai4.poderPrincipal,
+      habilidadesSecundarias: [shikai4.poderSecundario],
+      mecanica: shikai4.mecanica,
+      limitacoes: shikai4.limitacoes,
+      custoReiatsu: shikai4.custo,
+      estiloCombate: shikai4.estiloCombate,
+      vantagens: shikai4.vantagens,
+      vulnerabilidades: shikai4.vulnerabilidades,
+      utilidadeGeral: shikai4.utilidade,
+      indices: shikai4.indices,
+      assinaturaEspiritual: sig4,
+      bankaiPadrao: shikai4.bankai,
+      foto: "assets/ichigo-orange.png"
+    },
+    bankai: {
+      id: uid(),
+      nome: shikai4.bankai?.nome || `${shikai4.nome} — Mugen`,
+      nomeCompleto: shikai4.bankai?.nomeCompleto || `Bankai — ${shikai4.nome}`,
+      kanji: shikai4.bankai?.kanji || "「卍解」",
+      traducao: shikai4.bankai?.traducao || "Paradoxo Transcendente",
+      comando: shikai4.bankai?.comando || `Bankai — ${shikai4.nome}!`,
+      tipoEvolucao: shikai4.bankai?.tipoEvolucao || "Evolução por Inversão",
+      formaMonumental: shikai4.bankai?.formaMonumental,
+      conceitoEvoluido: shikai4.bankai?.conceitoEvoluido,
+      relacaoShikai: "Leva o paradoxo ao extremo, criando um domínio onde as leis convencionais de batalha são reescritas.",
+      evolucaoHabilidades: shikai4.bankai?.evolucaoHabilidades,
+      novasHabilidades: shikai4.bankai?.novasHabilidades,
+      limitacoes: shikai4.bankai?.limitacoes,
+      custoReiatsu: shikai4.bankai?.custoReiatsu,
+      significadoEspiritual: shikai4.bankai?.significadoEspiritual,
+      poder: shikai4.bankai?.poder,
+      foto: "assets/ichigo-moon.png"
+    },
+    avaliacao: {
+      personalidadeCompatibilidade: "90%",
+      atributosSinergia: "94%",
+      originalidade: "Máxima (Sem Paralelos)",
+      coerencia: "Profundidade Espiritual Oculta",
+      potencialNarrativo: "Obra-Prima",
+      exclusividadeStatus: "Garantida e Única"
+    }
+  });
+
+  return caminhos;
+}
+
+// 6. GERADOR DE 3/4 BANKAIS CORRESPONDENTES PARA SHIKAI JÁ ESCOLHIDA (Regras 13, 14, 15, 16, 17)
+function gerar3OpcoesBankaiAI(personagem, shikaiAtiva, dbPersonagens = [], dbZanpakutosVinculadas = [], cenaTexto = "") {
   const baseNome = shikaiAtiva?.nome || "Kurotsubaki";
   const elemento = shikaiAtiva?.elemento || "Vácuo Cinético & Pétalas Negras";
+  const opcoes = [];
+  const dna = construirDnaEspiritual(personagem, cenaTexto);
 
-  // 1. Procurar Bankai canônico correspondente da Shikai ativa
-  let bankaiCanonico = shikaiAtiva?.bankaiPadrao || null;
-  if (!bankaiCanonico && typeof MASTER_ZANPAKUTO_CATALOG !== 'undefined') {
-    const matched = MASTER_ZANPAKUTO_CATALOG.find(z => z.nome.toLowerCase().trim() === baseNome.toLowerCase().trim());
-    if (matched && matched.bankai) {
-      bankaiCanonico = matched.bankai;
-    }
-  }
-
-  if (bankaiCanonico) {
-    const nomeBk = bankaiCanonico.nomeCompleto || ("Bankai — " + bankaiCanonico.nome + " " + (bankaiCanonico.kanji || '') + " (" + (bankaiCanonico.traducao || '') + ")");
-    usadosNoMomento.add(nomeBk.toLowerCase());
+  // 1. Bankai Canônica / Padrão da Shikai
+  if (shikaiAtiva?.bankaiPadrao) {
+    const bk = shikaiAtiva.bankaiPadrao;
     opcoes.push({
       id: uid(),
-      nome: bankaiCanonico.nome,
-      nomeCompleto: nomeBk,
-      kanji: bankaiCanonico.kanji || "「卍解」",
-      traducao: bankaiCanonico.traducao || "Liberação Completa",
-      comando: bankaiCanonico.comando || ("Bankai — " + bankaiCanonico.nome + "!"),
+      caminhoNumero: 1,
+      tipoEvolucao: "Evolução Direta (Canônica)",
+      nome: bk.nome || `${baseNome} — Shūen`,
+      nomeCompleto: bk.nomeCompleto || `Bankai — ${bk.nome || baseNome}`,
+      kanji: bk.kanji || "「卍解」",
+      traducao: bk.traducao || "Domínio Pleno",
+      comando: bk.comando || `Bankai — ${baseNome}!`,
       elemento,
-      formatoArma: bankaiCanonico.formatoArma,
-      poder: bankaiCanonico.poder,
-      espirito: shikaiAtiva?.espirito || "Ressonância transcendental entre a alma e o espírito ancestral da lâmina.",
+      formatoArma: bk.formaMonumental || bk.formatoArma || "Manifestação monumental expandida",
+      formaMonumental: bk.formaMonumental || bk.formatoArma || "Manifestação monumental expandida",
+      conceitoEvoluido: `Ampliação máxima da propriedade de ${elemento}`,
+      poder: bk.poder,
+      novasHabilidades: bk.novasHabilidades || ["Domínio Territorial Superior"],
+      limitacoes: bk.limitacoes || "Consumo elevado de Reiryoku por turno",
+      custoReiatsu: bk.custoReiatsu || "Alto",
+      significadoEspiritual: bk.significadoEspiritual || dna.principioEspiritual,
+      espirito: shikaiAtiva?.espirito || "Ressonância transcendental entre Shinigami e Zanpakutō.",
       foto: "assets/ichigo-moon.png"
     });
   }
 
-  // 2. Evoluções temáticas adicionais de altíssima qualidade
-  const evolucoesTematicas = [
-    {
-      sufixo: "Shūen Teien (Jardim do Fim)",
-      kanji: "「終焉庭園」",
-      titulo: "Bankai — " + baseNome + "・Shūen Teien",
-      formato: "O campo de batalha inteiro se transforma no domínio absoluto de " + baseNome + ". Monumentais manifestações espirituais emergem do solo e toda a atmosfera se sintoniza à pressão da lâmina.",
-      poder: "Domínio de Redistribuição Absoluta: Todas as propriedades e acúmulos da Shikai são expandidos para escala territorial. O portador pode transferir instantaneamente qualquer desvantagem do combate em aceleração, dano concentrado ou anulação de técnicas inimigas."
-    },
-    {
-      sufixo: "Kongō Taihō (Fornalha Celestial do Diamante)",
-      kanji: "「金剛大鵬」",
-      titulo: "Bankai — " + baseNome + "・Kongō Taihō",
-      formato: "O usuário é revestido por uma armadura colossal de Reiryoku comprimida em camadas de diamante e metal espiritual, empunhando duas armas monumentais de alcance estendido.",
-      poder: "Conversão Metabólica Transcendental: Cada choque de combate refina e multiplica a velocidade e a densidade de corte do usuário, concedendo imunidade progressiva a danos cinéticos e rompendo qualquer barreira mágica de Bakudō."
-    },
-    {
-      sufixo: "Mugen Kairō (Corredor dos Mil Reflexos)",
-      kanji: "「無限回廊」",
-      titulo: "Bankai — " + baseNome + "・Mugen Kairō",
-      formato: "O espaço ao redor se estilhaça em uma câmara dimensional espelhada onde dezenas de réplicas de Reiryoku tangíveis executam movimentos simultâneos.",
-      poder: "Mobilidade & Ataque Omnidirecional: O portador pode translocar-se instantaneamente entre qualquer reflexo ativo, disparando estocadas a partir de múltiplos ângulos cegos enquanto dissipa o impacto de ataques sofridos em cópias residuais."
-    },
-    {
-      sufixo: "Tenkan Gōtenritsu (Anel da Lei Celestial)",
-      kanji: "「天環・轟天律」",
-      titulo: "Bankai — " + baseNome + "・Tenkan Gōtenritsu",
-      formato: "Anéis de atração gravitacional e relâmpagos cósmicos giram em torno de todo o perímetro da arena, gerando uma zona de alta densidade espiritual.",
-      poder: "Controle Vetorial Absoluto: Todo ataque, feitiço ou combatente que entra no raio de ação da Bankai é submetido à trajetória das órbitas da lâmina, permitindo desviar investidas maciças e impor um ritmo de combate intransponível."
-    }
-  ];
+  // 2. Evolução Conceitual (Revela a verdade filosófica do poder)
+  opcoes.push({
+    id: uid(),
+    caminhoNumero: 2,
+    tipoEvolucao: "Evolução Conceitual",
+    nome: `${baseNome} — Shin'en Kaihō`,
+    nomeCompleto: `Bankai — ${baseNome}・Shin'en Kaihō 「深淵開放」 (Liberação do Abismo Espiritual)`,
+    kanji: "「深淵開放」",
+    traducao: "Liberação do Abismo Espiritual",
+    comando: `Bankai — ${baseNome}, Shin'en Kaihō!`,
+    elemento,
+    formatoArma: `O campo de batalha inteiro se sintoniza com a frequência de ${baseNome}, manifestando símbolos ancestrais flutuantes.`,
+    formaMonumental: `O campo de batalha inteiro se sintoniza com a frequência de ${baseNome}, manifestando símbolos ancestrais flutuantes.`,
+    conceitoEvoluido: `A habilidade da Shikai deixa de afetar apenas matéria física e passa a reger o fluxo do Reishi ambiental.`,
+    poder: `Domínio de Redistribuição Absoluta: Todas as propriedades e acúmulos da Shikai são expandidos para escala territorial. O portador pode transferir instantaneamente qualquer desvantagem do combate em aceleração, dano concentrado ou anulação de feitiços inimigos.`,
+    novasHabilidades: ["Transcendência de Reishi: Rompe defesas mágicas instantaneamente ao contato"],
+    limitacoes: "Requer controle emocional absoluto para não dissipar o domínio",
+    custoReiatsu: "Alto a Extremo",
+    significadoEspiritual: "A compreensão profunda de que a espada e a alma são uma só existência.",
+    espirito: shikaiAtiva?.espirito || "A alma atinge a comunhão perfeita com o espírito da lâmina.",
+    foto: "assets/ichigo-moon.png"
+  });
 
-  for (const evo of evolucoesTematicas) {
-    if (opcoes.length >= 4) break;
-    const nomeNorm = evo.titulo.toLowerCase();
-    if (!usadosNoMomento.has(nomeNorm)) {
-      usadosNoMomento.add(nomeNorm);
-      opcoes.push({
-        id: uid(),
-        nome: baseNome + " — " + evo.sufixo,
-        nomeCompleto: evo.titulo + " " + evo.kanji,
-        kanji: evo.kanji,
-        traducao: evo.sufixo,
-        comando: evo.titulo + "!",
-        elemento,
-        formatoArma: evo.formato,
-        poder: evo.poder,
-        espirito: shikaiAtiva?.espirito || "Ressonância transcendental entre Shinigami e Zanpakutō.",
-        foto: "assets/ichigo-moon.png"
-      });
-    }
-  }
+  // 3. Evolução do Personagem & Superação do Medo Central
+  opcoes.push({
+    id: uid(),
+    caminhoNumero: 3,
+    tipoEvolucao: "Evolução do Personagem (Maturidade Espiritual)",
+    nome: `${baseNome} — Tenkan Gōten`,
+    nomeCompleto: `Bankai — ${baseNome}・Tenkan Gōten 「天環・轟天」 (Anel Celestial do Julgamento Soberano)`,
+    kanji: "「天環・轟天」",
+    traducao: "Anel Celestial do Julgamento Soberano",
+    comando: `Bankai — ${baseNome}, Tenkan Gōten!`,
+    elemento,
+    formatoArma: `Armadura de luz e aço espiritual envolve o corpo do portador, desdobrando duas lâminas monumentais com anéis orbitais.`,
+    formaMonumental: `Armadura de luz e aço espiritual envolve o corpo do portador, desdobrando duas lâminas monumentais com anéis orbitais.`,
+    conceitoEvoluido: `Maturidade espiritual: Superação do medo de ${dna.medoCentral}, convertendo a dúvida em proteção inabalável.`,
+    poder: `Soberania da Alma Inquebrável: Cada impacto sofrido ou desferido reforça a velocidade e a densidade de corte do usuário, concedendo imunidade progressiva a atordoamentos e dissolvendo barreiras de Bakudō.`,
+    novasHabilidades: ["Vórtice do Veredito: Dispara lâminas de corte dimensional guiadas por intenção"],
+    limitacoes: "Não pode ser cancelada nos primeiros 3 turnos após a liberação",
+    custoReiatsu: "Extremo",
+    significadoEspiritual: "A realização do potencial máximo através do sacrifício e da lealdade.",
+    espirito: shikaiAtiva?.espirito || "O espírito guerreiro desperta em sua forma mais nobre e temível.",
+    foto: "assets/ichigo-moon.png"
+  });
 
   return opcoes;
 }
 
-const gerar3OpcoesBankaiAI = gerar4OpcoesBankaiAI;
 
-// Power Tier Calculator (Baseado no Ponto 8 Oficial do RPG)
+
 function getPowerTier(statVal) {
   const val = statVal > 150 ? Math.round(statVal / 4) : statVal;
   if (val <= 10) return { title: "Inexperiente", patamar: "1–10", color: C.muted };
   if (val <= 30) return { title: "Iniciante", patamar: "11–30", color: C.green };
   if (val <= 60) return { title: "Treinado", patamar: "31–60", color: C.blue };
-  if (val <= 100) return { title: "Experiente", patamar: "61–100", color: C.purple };
-  if (val <= 150) return { title: "Elite", patamar: "101–150", color: C.orange };
-  if (val <= 250) return { title: "Alto Nível", patamar: "151–250", color: C.yellow };
-  if (val <= 400) return { title: "Monstruoso", patamar: "251–400", color: C.red };
-  if (val <= 600) return { title: "Lendário", patamar: "401–600", color: C.orangeDeep };
-  return { title: "Transcendente", patamar: "601+", color: "#FFFFFF" };
-}
-
-function uid() {
-  return Math.random().toString(36).slice(2, 10);
+  if (val <= 100) return { title: "Veterano", patamar: "61–100", color: C.purple };
+  if (val <= 150) return { title: "Mestre", patamar: "101–150", color: C.yellow };
+  return { title: "Transcendental", patamar: "150+", color: "#FFD700" };
 }
 
 function nowStr() {
   const d = new Date();
-  return d.toLocaleDateString("pt-BR") + " às " + d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+  return `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()} às ${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
+}
+
+function uid() {
+  return 'u_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
 }
 
 function maskWhats(w) {
-  if (!w) return "";
+  if (!w) return "—";
   const cleaned = w.replace(/\D/g, "");
   if (cleaned.length < 4) return cleaned;
   return "•••• " + cleaned.slice(-4);
 }
 
-// Advanced Sound FX Generator via Web Audio API
+// Advanced Web Audio API Sound Effects
 function playReiatsuSound(type = 'roll') {
   try {
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
     if (!AudioCtx) return;
     const ctx = new AudioCtx();
 
-    if (type === 'hum') {
-      // Vibrating air resonance on card hover/touch
+    if (type === 'shikai_charge') {
+      [330, 440, 554.37, 659.25, 880].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = i % 2 === 0 ? 'sine' : 'triangle';
+        osc.frequency.setValueAtTime(freq * 0.8, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(freq * 1.25, ctx.currentTime + 0.35);
+        gain.gain.setValueAtTime(0.01, ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.12 / (i + 1), ctx.currentTime + 0.1);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.45);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.45);
+      });
+    } else if (type === 'bankai_charge') {
+      const sub = ctx.createOscillator();
+      const subGain = ctx.createGain();
+      sub.type = 'sawtooth';
+      sub.frequency.setValueAtTime(80, ctx.currentTime);
+      sub.frequency.exponentialRampToValueAtTime(38, ctx.currentTime + 0.5);
+      subGain.gain.setValueAtTime(0.3, ctx.currentTime);
+      subGain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.55);
+      sub.connect(subGain);
+      subGain.connect(ctx.destination);
+      sub.start();
+      sub.stop(ctx.currentTime + 0.55);
+
+      [220, 277, 330, 440].forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.05);
+        osc.frequency.exponentialRampToValueAtTime(freq * 1.5, ctx.currentTime + 0.45);
+        g.gain.setValueAtTime(0.15, ctx.currentTime + idx * 0.05);
+        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.55);
+        osc.connect(g);
+        g.connect(ctx.destination);
+        osc.start(ctx.currentTime + idx * 0.05);
+        osc.stop(ctx.currentTime + 0.55);
+      });
+    } else if (type === 'shikai' || type === 'shikai_reveal') {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1760, ctx.currentTime + 0.15);
+      osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.8);
+      gain.gain.setValueAtTime(0.35, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.8);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.8);
+
+      [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = 'triangle';
+        o.frequency.setValueAtTime(freq, ctx.currentTime + 0.08 + i * 0.06);
+        g.gain.setValueAtTime(0.2, ctx.currentTime + 0.08 + i * 0.06);
+        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08 + i * 0.06 + 0.9);
+        o.connect(g);
+        g.connect(ctx.destination);
+        o.start(ctx.currentTime + 0.08 + i * 0.06);
+        o.stop(ctx.currentTime + 0.08 + i * 0.06 + 0.9);
+      });
+    } else if (type === 'bankai' || type === 'bankai_reveal') {
+      const sub = ctx.createOscillator();
+      const subGain = ctx.createGain();
+      sub.type = 'sawtooth';
+      sub.frequency.setValueAtTime(120, ctx.currentTime);
+      sub.frequency.exponentialRampToValueAtTime(30, ctx.currentTime + 1.2);
+      subGain.gain.setValueAtTime(0.45, ctx.currentTime);
+      subGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.3);
+      sub.connect(subGain);
+      subGain.connect(ctx.destination);
+      sub.start();
+      sub.stop(ctx.currentTime + 1.3);
+
+      [130.81, 164.81, 196.00, 261.63, 329.63, 523.25].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = i < 2 ? 'sawtooth' : 'sine';
+        osc.frequency.setValueAtTime(freq, ctx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.25 / (i * 0.5 + 1), ctx.currentTime + 0.1);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.6);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(ctx.currentTime + 0.1);
+        osc.stop(ctx.currentTime + 1.6);
+      });
+    } else if (type === 'gacha_box_charge') {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(200, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(500, ctx.currentTime + 0.15);
+      gain.gain.setValueAtTime(0.12, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.18);
+    } else if (type === 'gacha_box_suspense') {
+      const osc = ctx.createOscillator();
+      const lfo = ctx.createOscillator();
+      const lfoG = ctx.createGain();
+      const g = ctx.createGain();
+
+      lfo.frequency.setValueAtTime(18, ctx.currentTime);
+      lfoG.gain.setValueAtTime(40, ctx.currentTime);
+      lfo.connect(lfoG);
+
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(180, ctx.currentTime);
+      lfoG.connect(osc.frequency);
+
+      g.gain.setValueAtTime(0.18, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+
+      osc.connect(g);
+      g.connect(ctx.destination);
+      lfo.start();
+      osc.start();
+      lfo.stop(ctx.currentTime + 0.35);
+      osc.stop(ctx.currentTime + 0.35);
+    } else if (type === 'gacha_box_shatter') {
+      [1200, 1800, 2400, 450].forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+        osc.type = idx === 3 ? 'sawtooth' : 'sine';
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(idx === 3 ? 60 : 300, ctx.currentTime + 0.45);
+        g.gain.setValueAtTime(0.28, ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+        osc.connect(g);
+        g.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.5);
+      });
+    } else if (type === 'hum') {
       const osc = ctx.createOscillator();
       const lfo = ctx.createOscillator();
       const lfoGain = ctx.createGain();
@@ -1342,24 +3354,9 @@ function playReiatsuSound(type = 'roll') {
 
       lfo.start();
       osc.start();
-      osc.stop(ctx.currentTime + 0.35);
       lfo.stop(ctx.currentTime + 0.35);
-    } else if (type === 'charge') {
-      // Escalating pulse for loading sequence
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(180, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(750, ctx.currentTime + 0.22);
-      gain.gain.setValueAtTime(0.12, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
-      osc.start();
-      osc.stop(ctx.currentTime + 0.25);
+      osc.stop(ctx.currentTime + 0.35);
     } else if (type === 'shatter') {
-      // Glass / seal shattering crystalline explosion
       const osc1 = ctx.createOscillator();
       const osc2 = ctx.createOscillator();
       const gain = ctx.createGain();
@@ -1421,53 +3418,14 @@ function playReiatsuSound(type = 'roll') {
       gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
       osc.start();
       osc.stop(ctx.currentTime + 0.35);
-    } else if (type === 'shikai') {
-      [440, 554.37, 659.25, 880].forEach((freq, i) => {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.08);
-        gain.gain.setValueAtTime(0.18, ctx.currentTime + i * 0.08);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.08 + 0.8);
-        osc.start(ctx.currentTime + i * 0.08);
-        osc.stop(ctx.currentTime + i * 0.08 + 0.8);
-      });
-    } else if (type === 'bankai') {
-      const subOsc = ctx.createOscillator();
-      const subGain = ctx.createGain();
-      subOsc.connect(subGain);
-      subGain.connect(ctx.destination);
-      subOsc.type = 'sawtooth';
-      subOsc.frequency.setValueAtTime(110, ctx.currentTime);
-      subOsc.frequency.exponentialRampToValueAtTime(45, ctx.currentTime + 0.7);
-      subGain.gain.setValueAtTime(0.35, ctx.currentTime);
-      subGain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.9);
-      subOsc.start();
-      subOsc.stop(ctx.currentTime + 0.9);
-
-      [220, 277.18, 329.63, 440, 554.37].forEach((freq, i) => {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(freq, ctx.currentTime + 0.15 + i * 0.07);
-        gain.gain.setValueAtTime(0.2, ctx.currentTime + 0.15 + i * 0.07);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15 + i * 0.07 + 1.2);
-        osc.start(ctx.currentTime + 0.15 + i * 0.07);
-        osc.stop(ctx.currentTime + 0.15 + i * 0.07 + 1.2);
-      });
     }
   } catch (e) {}
 }
 
-// Initial Default Database
 const DEFAULT_DB = {
   superAdminSenha: "maximo2026",
   superAdminNome: "ADM Máximo (Comandante Supremo)",
-  firebaseUrl: "https://bleach-rpg-6894c-default-rtdb.firebaseio.com/", // URL oficial do Firebase Realtime DB para sync multi-dispositivos
+  firebaseUrl: "https://bleach-rpg-6894c-default-rtdb.firebaseio.com/",
   subAdms: [
     { id: "adm-kisuke", usuario: "kisuke", senha: "123", nome: "Mestre Kisuke", cargo: "Avaliador de Cenas & Fichas", charId: "rukia-002" }
   ],
@@ -1479,121 +3437,76 @@ const DEFAULT_DB = {
       id: "arena-1",
       p1Id: "ren-001",
       p2Id: "rukia-002",
-      p1Nome: "Kurosaki Ren",
-      p2Nome: "Kuchiki Rukia",
-      p1Estado: "Inteiro",
-      p2Estado: "Inteiro",
-      turno: "Turno 2 — Troca de Hadō e Shunpo",
-      juizLog: "Ren abriu com Hadō #4 Byakurai; Rukia esquivou com Hohō e contra-atacou com Bakudō #61.",
-      status: "Em Andamento"
+      estadoP1: "Inteiro",
+      estadoP2: "Ferido",
+      logJuiz: [
+        { id: "l1", autor: "Mestre Kisuke", texto: "Início do combate: Ren avança com Shunpo enquanto Rukia prepara Bakudō.", data: "22/08/2026 às 15:30" }
+      ],
+      finalizado: false
     }
   ],
-  iaJulgamentos: [],
-  rolagensDadosPublicas: [],
+  rolagensDadosPublicas: [
+    { id: "d1", autor: "Mestre Kisuke", personagem: "Kurosaki Ren", dado: "d20", resultado: 18, categoria: "Extremo Sucesso (+80%)", data: "22/08/2026 às 15:35" }
+  ],
+  zanpakutosVinculadas: [],
   personagens: [
     {
       id: "ren-001",
       nome: "Kurosaki Ren",
       foto: "assets/ichigo-orange.png",
-      whatsapp: "11999998888",
+      whatsapp: "11988887777",
       codigo: "REN-8921",
-      raca: "Shinigami Ex-Humano",
+      raca: "Shinigami",
       esquadrao: "11º Esquadrão",
-      faceclaim: "Ichigo Kurosaki",
-      idadePlayer: "24",
+      faceclaim: "Kurosaki Ichigo",
+      idadePlayer: "22",
       aniversarioPlayer: "15/07",
       idadeChar: "18",
       aniversarioChar: "15/07",
-      pontosDisponiveis: 7,
+      pontosDisponiveis: 5,
       sorteiosComunsRestantes: 2,
       sorteiosEspeciaisRestantes: 1,
       sorteiosDrops: [],
       permissoes: { shikaiLiberada: true, bankaiLiberada: false },
-      atributos: { pressao: 37, forca: 28, velocidade: 48, resiliencia: 26 },
+      atributos: { pressao: 45, forca: 30, velocidade: 60, resiliencia: 25 },
       kidosConhecidos: [
         { id: "h4", numero: 4, nome: "Byakurai", cat: "Hadō", custoReiatsu: 3 },
         { id: "b1", numero: 1, nome: "Sai", cat: "Bakudō", custoReiatsu: 2 }
       ],
       tecnicas: [
-        { id: "t1", nome: "Hadō #4 — Byakurai", categoria: "Hadō" },
-        { id: "t2", nome: "Bakudō #1 — Sai", categoria: "Bakudō" },
-        { id: "t4", nome: "Shunpo — Passo Relâmpago", categoria: "Hohō" }
+        { id: "t-byak", nome: "Hadō #4 — Byakurai", categoria: "Hadō" },
+        { id: "t-sai", nome: "Bakudō #1 — Sai", categoria: "Bakudō" }
       ],
+      personalidade: {
+        texto: "Guerreiro analítico e leal. Prefere combater com velocidade e inteligência tática, arriscando tudo para proteger seus companheiros.",
+        virtudes: "Foco inabalável, determinação e lealdade",
+        defeitos: "Dificuldade de confiar e pedir ajuda",
+        desejos: "Tornar-se forte o bastante para que ninguém sob sua guarda caia",
+        medos: "A impotência diante da morte de um amigo",
+        conflitos: "Obedecer ordens militares versus seguir sua honra pessoal",
+        estiloCombate: "Velocidade tridimensional e cortes precisos"
+      },
+      personalidadeTravada: false,
+      cenaDespertarShikai: "",
+      cenaDespertarBankai: "",
       zanpakuto: {
-        nome: "Gekkaryū",
+        nome: "Em despertar",
         fotoShikai: "assets/ichigo-orange.png",
         fotoBankai: "assets/ichigo-moon.png",
-        shikaiAtiva: {
-          nome: "Gekkaryū",
-          comando: "Fenda o crepúsculo, Gekkaryū!",
-          elemento: "Chamas de Ébano & Brasas Solares",
-          formatoArma: "Uma nodachi de lâmina enegrecida com fio duplo chanfrado e ranhuras que canalizam Reiryoku pura",
-          poder: "Ao proferir o comando, a lâmina projeta ondas cortantes de fogo comprimido que queimam barreiras e aumentam a temperatura do campo de batalha.",
-          foto: "assets/ichigo-orange.png"
-        },
+        shikaiAtiva: null,
         bankaiAtiva: null,
-        notas: "Zanpakutō autoral e individual registrada no Sereitei."
+        notas: ""
       },
       estado: "Inteiro",
       treinosHoje: 0,
       historico: [
-        { id: "h1", data: "21/08/2026 às 10:30", texto: "Treino em ON aprovado pelo ADM: +2 Velocidade" },
-        { id: "h2", data: "20/08/2026 às 16:45", texto: "Missão Principal: +15 Pontos concedidos + 4 Giros Comuns + 1 Especial" }
-      ]
-    },
-    {
-      id: "rukia-002",
-      nome: "Kuchiki Rukia",
-      foto: "assets/ichigo-moon.png",
-      whatsapp: "11988887777",
-      codigo: "RUK-3312",
-      raca: "Shinigami",
-      esquadrao: "13º Esquadrão",
-      faceclaim: "Rukia Kuchiki",
-      idadePlayer: "22",
-      aniversarioPlayer: "14/01",
-      idadeChar: "150",
-      aniversarioChar: "14/01",
-      pontosDisponiveis: 12,
-      sorteiosComunsRestantes: 1,
-      sorteiosEspeciaisRestantes: 0,
-      sorteiosDrops: [],
-      permissoes: { shikaiLiberada: true, bankaiLiberada: false },
-      atributos: { pressao: 45, forca: 18, velocidade: 42, resiliencia: 30 },
-      kidosConhecidos: [
-        { id: "h33", numero: 33, nome: "Sōkatsui", cat: "Hadō", custoReiatsu: 7 }
+        { id: "h1", data: "20/08/2026 às 10:00", texto: "Ficha oficial aprovada pela Administração." }
       ],
-      tecnicas: [
-        { id: "t5", nome: "Hadō #33 — Sōkatsui", categoria: "Hadō" }
-      ],
-      zanpakuto: {
-        nome: "Kasumibane",
-        fotoShikai: "assets/ichigo-moon.png",
-        fotoBankai: "assets/ichigo-moon.png",
-        shikaiAtiva: {
-          nome: "Kasumibane",
-          comando: "Gele o pulso da terra, Kasumibane!",
-          elemento: "Cristal Glacial & Zero Absoluto",
-          formatoArma: "Uma elegante rapieira de cristal fosco com guarda em prisma triplo que refrata a luz em navalhas",
-          poder: "Todo corte congela instantaneamente a umidade do corpo do alvo e reduz drasticamente a velocidade de circulação de Reiatsu e movimentação.",
-          foto: "assets/ichigo-moon.png"
-        },
-        bankaiAtiva: null,
-        notas: "Lâmina cristalina individual e exclusiva da Sociedade das Almas."
-      },
-      estado: "Inteiro",
-      treinosHoje: 0,
-      historico: [
-        { id: "h5", data: "21/08/2026 às 11:15", texto: "Recompensa de Missão: +15 Pontos disponíveis" }
-      ]
     }
   ]
 };
 
-// Calculate Rankings
 function calculateRankings(personagens) {
-  if (!personagens || personagens.length === 0) return { rankFisico: [], rankPressao: [] };
-  
   const rankFisico = [...personagens].map(p => {
     const f = Number(p.atributos?.forca || 0);
     const v = Number(p.atributos?.velocidade || 0);
@@ -1610,6 +3523,3035 @@ function calculateRankings(personagens) {
   return { rankFisico, rankPressao };
 }
 
+
+// =========================================================================
+// MODAL COMPONENTS: GACHA CHEST, AWAKENING SCENE & 4 SPIRITUAL PATHS
+// =========================================================================
+
+// 1. GACHA CHEST OPENING MODAL (COM MECÂNICA DE SUSPENSE ~7S)
+function SpiritualChestModal({ modal, onClose, onColetar }) {
+  if (!modal || !modal.open) return null;
+
+  const isSuspense = !!modal.isSuspense;
+  const progress = modal.progress || 0;
+  const isRevealed = progress >= 100 && modal.resultado;
+  const isEspecial = modal.tipo === "especial";
+
+  return (
+    <div className="fixed inset-0 bg-black/90 backdrop-blur-lg z-50 flex items-center justify-center p-4">
+      <div className={`relative w-full max-w-lg bg-bleach-panel border-2 rounded-2xl p-6 shadow-2xl text-center overflow-hidden transition-all duration-300 ${
+        isEspecial ? "border-purple-500/80 purple-reiatsu-glow" : "border-bleach-orange/80 reiatsu-glow"
+      } ${isSuspense && !isRevealed ? "reiatsu-screen-shake" : ""}`}>
+        
+        {/* Heat haze & ambient aura */}
+        <div className="heat-haze-overlay"></div>
+
+        {/* Dynamic Header */}
+        <div className="relative z-10 mb-4">
+          <span className={`text-[10px] font-extrabold uppercase px-3 py-1 rounded-full border tracking-widest ${
+            isEspecial 
+              ? "bg-purple-950/80 border-purple-400 text-purple-300" 
+              : "bg-orange-950/80 border-bleach-orange text-bleach-orange"
+          }`}>
+            {isEspecial ? "🌟 Baú de Reishi Especial de Seireitei" : "🎲 Caixa Espiritual de Recompensa"}
+          </span>
+          <h3 className="font-title text-2xl sm:text-3xl text-white tracking-wider mt-2">
+            {isRevealed 
+              ? (isEspecial ? "CONQUISTA TRANSCENDENTAL REVELADA!" : "RECOMPENSA LIBERADA!") 
+              : (isSuspense ? "⚡ ALERTA: TENSÃO ESPIRITUAL EXTREMA!" : "CANALIZANDO REIRYOKU...")}
+          </h3>
+        </div>
+
+        {/* Central Visual: The Spiritual Chest */}
+        {!isRevealed ? (
+          <div className="relative z-10 py-6 flex flex-col items-center justify-center min-h-[220px]">
+            {/* Spinning Concentric Magic Runes */}
+            <div className="relative w-40 h-40 flex items-center justify-center">
+              <div className={`absolute inset-0 rounded-full border-2 border-dashed ${
+                isEspecial ? "border-purple-400/40" : "border-bleach-orange/40"
+              } spin-runes`}></div>
+              <div className={`absolute inset-3 rounded-full border border-dotted ${
+                isSuspense ? "border-red-400/60" : isEspecial ? "border-cyan-400/40" : "border-amber-400/40"
+              } spin-runes-fast`}></div>
+
+              {/* The Mystic 3D Chest / Orb */}
+              <div className={`relative w-28 h-28 rounded-2xl flex items-center justify-center shadow-2xl transition-all duration-300 ${
+                isEspecial 
+                  ? "bg-gradient-to-br from-purple-900 via-indigo-950 to-black border-2 border-purple-400 shadow-[0_0_40px_rgba(139,111,214,0.6)]" 
+                  : "bg-gradient-to-br from-orange-900 via-stone-950 to-black border-2 border-bleach-orange shadow-[0_0_40px_rgba(255,106,19,0.5)]"
+              } ${isSuspense ? "scale-110 rotate-1 animate-pulse" : "scale-100"}`}>
+                
+                <div className="text-5xl select-none filter drop-shadow-[0_0_15px_rgba(255,255,255,0.7)] animate-bounce">
+                  {isEspecial ? "💎" : "📦"}
+                </div>
+
+                {/* Energy Rings */}
+                <div className="absolute inset-0 rounded-2xl border border-white/20 animate-ping opacity-30"></div>
+              </div>
+            </div>
+
+            {/* Suspense Warning Callout */}
+            {isSuspense && (
+              <div className="mt-4 px-4 py-2 rounded-xl bg-red-950/80 border border-red-500/80 text-red-200 text-xs font-bold animate-pulse shadow-lg">
+                ⚠️ O selo de contenção está em alta turbulência! A revelação está sendo forjada no limite da alma...
+              </div>
+            )}
+
+            {/* Progress Bar & Stage Description */}
+            <div className="w-full mt-5 space-y-2">
+              <div className="flex justify-between items-center text-xs font-mono">
+                <span className="text-bleach-creamDim">{modal.stageText || "Ressonando frequência espiritual..."}</span>
+                <span className={`font-bold ${isEspecial ? "text-purple-300" : "text-bleach-orange"}`}>{progress}%</span>
+              </div>
+              <div className="w-full bg-black/70 h-3 rounded-full overflow-hidden border border-white/10 p-0.5">
+                <div 
+                  className={`h-full rounded-full transition-all duration-100 ${
+                    isEspecial 
+                      ? "bg-gradient-to-r from-purple-500 via-indigo-400 to-cyan-300 shadow-[0_0_15px_#8B6FD6]" 
+                      : "bg-gradient-to-r from-orange-600 via-bleach-orange to-yellow-400 shadow-[0_0_15px_#FF6A13]"
+                  }`}
+                  style={{ width: `${Math.min(100, progress)}%` }}
+                ></div>
+              </div>
+            </div>
+
+            {/* Skip Animation Button */}
+            <div className="mt-4">
+              <button
+                onClick={modal.onSkip}
+                className="px-4 py-1.5 rounded-lg bg-black/60 border border-white/10 hover:border-white/40 text-bleach-creamDim hover:text-white text-xs font-mono transition"
+              >
+                ⚡ Pular Animação (Revelar Já)
+              </button>
+            </div>
+          </div>
+        ) : (
+          /* REVEALED REWARD CARD */
+          <div className="relative z-10 py-4 space-y-4 card-pop-reveal">
+            <div 
+              style={{ borderColor: modal.resultado.cor || (isEspecial ? C.purple : C.orange) }}
+              className="p-5 rounded-xl bg-black/80 border-2 shadow-2xl space-y-3"
+            >
+              <div className="flex items-center justify-between">
+                <span 
+                  style={{ color: modal.resultado.cor || C.cream, borderColor: modal.resultado.cor }}
+                  className="text-[11px] font-extrabold uppercase px-2.5 py-0.5 rounded-full border bg-black"
+                >
+                  {modal.resultado.raridade || (isEspecial ? "🌟 Especial" : "🎲 Comum")}
+                </span>
+                {modal.resultado.chance && (
+                  <span className="text-[10px] text-bleach-muted font-mono">
+                    Chance: <strong>{modal.resultado.chance}</strong>
+                  </span>
+                )}
+              </div>
+
+              <div className="text-4xl my-1">
+                {modal.resultado.tipo === 'missao_despertar' ? '👑' : isEspecial ? '✨' : '⚡'}
+              </div>
+
+              <h4 className="font-title text-2xl text-white tracking-wider">
+                {modal.resultado.nomeItem || modal.resultado.nome || "Recompensa Conquistada"}
+              </h4>
+
+              {modal.resultado.pontos > 0 && (
+                <div className="text-3xl font-extrabold font-mono text-bleach-orange">
+                  +{modal.resultado.pontos} PONTOS LIVRES
+                </div>
+              )}
+
+              <p className="text-xs text-bleach-creamDim leading-relaxed">
+                {modal.resultado.desc || "Os pontos foram depositados automaticamente no saldo da sua ficha para distribuição livre!"}
+              </p>
+            </div>
+
+            <button
+              onClick={onColetar}
+              className={`w-full py-3 text-black font-extrabold text-xs uppercase tracking-widest rounded-xl shadow-lg hover:brightness-110 transition ${
+                isEspecial 
+                  ? "bg-gradient-to-r from-purple-500 via-indigo-400 to-cyan-300" 
+                  : "bg-gradient-to-r from-bleach-orange to-bleach-orangeDeep"
+              }`}
+            >
+              ✓ Coletar Recompensa & Voltar para a Ficha
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// 2. AWAKENING SCENE SUBMISSION MODAL
+function AwakeningSceneModal({ open, tipo = "shikai", personagem, onClose, onSubmitScene }) {
+  if (!open) return null;
+  const [textoCena, setTextoCena] = useState("");
+  const isBankai = tipo === "bankai";
+
+  function enviar(e) {
+    e.preventDefault();
+    if (!textoCena.trim()) {
+      alert("Por favor, cole o texto da cena em que o seu personagem despertou sua lâmina!");
+      return;
+    }
+    onSubmitScene(textoCena.trim());
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black/90 backdrop-blur-lg z-50 flex items-center justify-center p-4">
+      <div className={`relative w-full max-w-xl bg-bleach-panel border-2 rounded-2xl p-6 shadow-2xl text-left overflow-hidden ${
+        isBankai ? "border-yellow-500/80 bankai-supreme-card" : "border-cyan-500/80 blue-reiatsu-glow"
+      }`}>
+        <div className="flex items-center justify-between mb-4 border-b border-bleach-borderSoft pb-3">
+          <div>
+            <span className={`text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full border ${
+              isBankai ? "bg-amber-950 border-yellow-400 text-yellow-300" : "bg-blue-950 border-cyan-400 text-cyan-300"
+            }`}>
+              {isBankai ? "卍 RITUAL DE BANKAI (LIBERAÇÃO TOTAL)" : "始解 RITUAL DE SHIKAI (DESPERTAR INICIAL)"}
+            </span>
+            <h3 className="font-title text-2xl text-white tracking-wider mt-1">
+              {isBankai ? "CENA DE DESPERTAR DA BANKAI" : "CENA DE DESPERTAR DA SHIKAI"}
+            </h3>
+          </div>
+          <button 
+            onClick={onClose}
+            className="text-bleach-muted hover:text-white text-lg font-bold px-2 py-1"
+          >
+            ✕
+          </button>
+        </div>
+
+        <form onSubmit={enviar} className="space-y-4">
+          <div className="p-3.5 bg-black/60 border border-white/10 rounded-xl text-xs text-bleach-creamDim leading-relaxed space-y-1.5">
+            <p>
+              <strong className={isBankai ? "text-yellow-400" : "text-cyan-400"}>Instruções do Mestre:</strong> Cole abaixo a narração / cena de roleplay oficial em que o ADM aprovou o despertar espiritual de <strong>{personagem.nome}</strong>.
+            </p>
+            <p className="text-[11px] text-bleach-muted">
+              * A essência da sua cena será integrada ao ritual, enquanto o motor de IA avaliará sua <strong>Personalidade Selada</strong> e <strong>Atributos</strong> para gerar os 4 Caminhos Espirituais exclusivos.
+            </p>
+          </div>
+
+          <div>
+            <label className="block text-xs font-bold text-bleach-cream mb-1">
+              Texto da Cena Aprovada (Narração em ON) *
+            </label>
+            <textarea
+              rows={6}
+              placeholder="Cole aqui o texto da cena de despertar do seu personagem..."
+              value={textoCena}
+              onChange={(e) => setTextoCena(e.target.value)}
+              className="w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-3.5 text-xs text-white placeholder-bleach-muted focus:outline-none focus:border-bleach-orange font-sans leading-relaxed"
+            ></textarea>
+          </div>
+
+          <div className="flex justify-end gap-3 pt-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 rounded-lg bg-bleach-panel2 border border-bleach-border text-xs text-bleach-creamDim hover:text-white"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              className={`px-6 py-2.5 rounded-lg text-black font-extrabold text-xs uppercase tracking-wider shadow hover:brightness-110 transition ${
+                isBankai 
+                  ? "bg-gradient-to-r from-yellow-400 to-amber-500" 
+                  : "bg-gradient-to-r from-cyan-400 to-blue-500"
+              }`}
+            >
+              ✨ Concluir Cena & Gerar 4 Manifestações Espirituais
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+// 3. ZANPAKUTŌ 4 PATHS GENERATOR & RITUAL MODAL
+function Zanpakuto4PathsModal({
+  open,
+  tipo = "shikai",
+  caminhos = [],
+  personagem,
+  onEscolherCaminho,
+  onClose
+}) {
+  if (!open || !caminhos || caminhos.length === 0) return null;
+
+  const [caminhoAtivoIdx, setCaminhoAtivoIdx] = useState(0);
+  const [ritualState, setRitualState] = useState("selection"); // "selection", "charging", "revealed"
+  const [chargeProgress, setChargeProgress] = useState(0);
+  const [chargeStageText, setChargeStageText] = useState("");
+  const chargeIntervalRef = useRef(null);
+
+  const caminhoSelecionado = caminhos[caminhoAtivoIdx] || caminhos[0];
+  const isBankai = tipo === "bankai";
+
+  useEffect(() => {
+    return () => {
+      if (chargeIntervalRef.current) clearInterval(chargeIntervalRef.current);
+    };
+  }, []);
+
+  function iniciarRitual(caminho) {
+    setRitualState("charging");
+    setChargeProgress(0);
+    setChargeStageText("Ressonando frequência com a essência da alma...");
+    playReiatsuSound(isBankai ? 'bankai_charge' : 'shikai_charge');
+
+    if (chargeIntervalRef.current) clearInterval(chargeIntervalRef.current);
+
+    let p = 0;
+    chargeIntervalRef.current = setInterval(() => {
+      p += 2;
+      setChargeProgress(p);
+
+      if (p === 24) {
+        setChargeStageText("A barreira do mundo interior está se desfazendo...");
+        playReiatsuSound(isBankai ? 'bankai_charge' : 'shikai_charge');
+      } else if (p === 54) {
+        setChargeStageText("O espírito da Zanpakutō sussurra seu verdadeiro nome...");
+        playReiatsuSound(isBankai ? 'bankai_charge' : 'shikai_charge');
+      } else if (p === 84) {
+        setChargeStageText("Pressão Espiritual crítica! O selo milenar foi destruído!");
+        playReiatsuSound('shatter');
+      } else if (p >= 100) {
+        clearInterval(chargeIntervalRef.current);
+        chargeIntervalRef.current = null;
+        setRitualState("revealed");
+        playReiatsuSound(isBankai ? 'bankai_reveal' : 'shikai_reveal');
+      }
+    }, 45);
+  }
+
+  function pularCarregamento() {
+    if (chargeIntervalRef.current) clearInterval(chargeIntervalRef.current);
+    chargeIntervalRef.current = null;
+    setChargeProgress(100);
+    setRitualState("revealed");
+    playReiatsuSound(isBankai ? 'bankai_reveal' : 'shikai_reveal');
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black/95 backdrop-blur-xl z-50 flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
+      <div className={`relative w-full max-w-5xl bg-bleach-panel border-2 rounded-2xl p-4 sm:p-6 shadow-2xl text-left transition-all ${
+        isBankai ? "border-yellow-500/80 bankai-supreme-card" : "border-bleach-orange/80 reiatsu-glow"
+      } my-auto`}>
+        
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-bleach-borderSoft pb-4 mb-4">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className={`text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full border ${
+                isBankai ? "bg-amber-950 border-yellow-400 text-yellow-300" : "bg-orange-950 border-bleach-orange text-bleach-orange"
+              }`}>
+                MOTOR DE INDIVIDUALIZAÇÃO ESPIRITUAL — 4 CAMINHOS
+              </span>
+              <span className="text-xs text-bleach-muted">Personagem: <strong className="text-white">{personagem.nome}</strong></span>
+            </div>
+            <h2 className="font-title text-2xl sm:text-3xl text-white tracking-wider mt-1">
+              {isBankai ? "卍 ESCOLHA DO CAMINHO DE BANKAI" : "始解 RITUAL DAS 4 MANIFESTAÇÕES DE SHIKAI"}
+            </h2>
+          </div>
+
+          <button
+            onClick={onClose}
+            className="self-end sm:self-auto px-3 py-1 bg-bleach-panel2 border border-bleach-border hover:border-white text-bleach-creamDim hover:text-white rounded-lg text-xs font-bold"
+          >
+            ✕ Fechar
+          </button>
+        </div>
+
+        {/* 4 Path Selector Tabs */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
+          {caminhos.map((c, idx) => (
+            <button
+              key={idx}
+              onClick={() => {
+                if (ritualState === "selection") setCaminhoAtivoIdx(idx);
+              }}
+              disabled={ritualState !== "selection"}
+              className={`p-3 rounded-xl border text-left transition ${
+                caminhoAtivoIdx === idx
+                  ? isBankai
+                    ? "bg-yellow-950/80 border-yellow-400 shadow-[0_0_15px_rgba(255,215,0,0.4)]"
+                    : "bg-orange-950/80 border-bleach-orange shadow-[0_0_15px_rgba(255,106,19,0.4)]"
+                  : "bg-bleach-panel2 border-bleach-borderSoft opacity-70 hover:opacity-100"
+              }`}
+            >
+              <span className="text-[10px] font-extrabold uppercase block text-bleach-muted">
+                Caminho {idx + 1}
+              </span>
+              <h4 className="font-title text-base sm:text-lg text-white truncate">
+                {c.shikai.nome}
+              </h4>
+              <p className="text-[10px] text-bleach-creamDim truncate">
+                {c.tipoCaminho.replace(/Opção \d+ — /, '')}
+              </p>
+            </button>
+          ))}
+        </div>
+
+        {/* Path Details & Ritual Stages */}
+        {ritualState === "selection" && (
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+              
+              {/* Left Column: Shikai Detailed Card (7 cols) */}
+              <div className="lg:col-span-7 bg-black/60 border border-bleach-border rounded-xl p-4 sm:p-5 space-y-4">
+                <div className="flex flex-wrap items-start justify-between gap-2 border-b border-white/10 pb-3">
+                  <div>
+                    <span className="text-[10px] font-bold uppercase text-bleach-orange">
+                      {caminhoSelecionado.tipoCaminho}
+                    </span>
+                    <h3 className="font-title text-2xl sm:text-3xl text-white tracking-wider flex items-center gap-2">
+                      <span>{caminhoSelecionado.shikai.nome}</span>
+                      <span className="text-sm font-cinzel text-bleach-orange font-normal">{caminhoSelecionado.shikai.kanji}</span>
+                    </h3>
+                    <p className="text-xs text-bleach-creamDim italic mt-0.5">
+                      "{caminhoSelecionado.shikai.comando}"
+                    </p>
+                  </div>
+                  <Badge color={C.blue}>
+                    {caminhoSelecionado.shikai.elemento}
+                  </Badge>
+                </div>
+
+                {/* Shikai Details */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                  <div className="p-3 bg-bleach-panel2/80 rounded-lg border border-white/5 space-y-1">
+                    <strong className="text-bleach-orange block text-[11px]">⚔️ Manifestação da Arma:</strong>
+                    <p className="text-bleach-creamDim text-[11px] leading-relaxed">{caminhoSelecionado.shikai.aparencia}</p>
+                  </div>
+                  <div className="p-3 bg-bleach-panel2/80 rounded-lg border border-white/5 space-y-1">
+                    <strong className="text-cyan-400 block text-[11px]">🧠 Relação com a Alma:</strong>
+                    <p className="text-bleach-creamDim text-[11px] leading-relaxed">{caminhoSelecionado.shikai.relacaoPersonalidade}</p>
+                  </div>
+                </div>
+
+                {/* Power & Mechanics */}
+                <div className="p-3.5 bg-black/80 rounded-lg border border-bleach-orange/30 space-y-2">
+                  <strong className="text-bleach-orange block text-xs uppercase tracking-wider">
+                    ⚡ Poder & Mecânica Espiritual:
+                  </strong>
+                  <p className="text-xs text-bleach-cream leading-relaxed font-sans">
+                    {caminhoSelecionado.shikai.poder}
+                  </p>
+                  <div className="flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-bleach-muted pt-1 border-t border-white/5">
+                    <span>Custo: <strong className="text-white">{caminhoSelecionado.shikai.custoReiatsu}</strong></span>
+                    <span>Limitações: <strong className="text-amber-300">{caminhoSelecionado.shikai.limitacoes}</strong></span>
+                  </div>
+                </div>
+
+                {/* Complexity Indices (1-10) */}
+                {caminhoSelecionado.shikai.indices && (
+                  <div className="p-3 bg-black/50 rounded-lg border border-white/10 space-y-2">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-bleach-muted block">
+                      Índice de Complexidade & Balanço Espiritual (1 a 10)
+                    </span>
+                    <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-[10px]">
+                      {[
+                        { label: "Potência", val: caminhoSelecionado.shikai.indices.potencia, color: C.red },
+                        { label: "Abrangência", val: caminhoSelecionado.shikai.indices.abrangencia, color: C.blue },
+                        { label: "Complexidade", val: caminhoSelecionado.shikai.indices.complexidade, color: C.purple },
+                        { label: "Versatilidade", val: caminhoSelecionado.shikai.indices.versatilidade, color: C.green },
+                        { label: "Custo", val: caminhoSelecionado.shikai.indices.custo, color: C.yellow },
+                      ].map(stat => (
+                        <div key={stat.label} className="p-1.5 bg-bleach-panel2 rounded border border-white/5 text-center">
+                          <span className="text-bleach-muted block">{stat.label}</span>
+                          <span className="font-mono font-bold text-xs" style={{ color: stat.color }}>{stat.val}/10</span>
+                          <div className="w-full bg-black/60 h-1 rounded-full overflow-hidden mt-1">
+                            <div className="h-full rounded-full" style={{ width: `${stat.val * 10}%`, backgroundColor: stat.color }}></div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Right Column: Corresponding Bankai Preview (5 cols) */}
+              <div className="lg:col-span-5 bg-gradient-to-b from-yellow-950/30 via-bleach-panel2 to-black border-2 border-yellow-500/40 rounded-xl p-4 sm:p-5 flex flex-col justify-between space-y-4">
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between border-b border-yellow-500/30 pb-2">
+                    <div>
+                      <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-yellow-950 text-yellow-400 border border-yellow-500">
+                        BANKAI CORRESPONDENTE
+                      </span>
+                      <h4 className="font-title text-xl text-yellow-300 tracking-wider mt-1">
+                        {caminhoSelecionado.bankai.nome}
+                      </h4>
+                    </div>
+                    <span className="text-xs text-yellow-400/80 font-mono">
+                      {caminhoSelecionado.bankai.tipoEvolucao}
+                    </span>
+                  </div>
+
+                  <div className="p-3 bg-black/60 rounded-lg border border-yellow-500/20 text-xs space-y-1.5">
+                    <strong className="text-yellow-400 block text-[11px]">👑 Domínio & Evolução:</strong>
+                    <p className="text-bleach-creamDim text-[11px] leading-relaxed">
+                      {caminhoSelecionado.bankai.formaMonumental}
+                    </p>
+                  </div>
+
+                  <div className="p-3 bg-black/60 rounded-lg border border-yellow-500/20 text-xs space-y-1.5">
+                    <strong className="text-yellow-400 block text-[11px]">⚡ Poder Transcendental da Bankai:</strong>
+                    <p className="text-bleach-cream text-[11px] leading-relaxed">
+                      {caminhoSelecionado.bankai.poder}
+                    </p>
+                  </div>
+
+                  <div className="p-2.5 bg-black/40 rounded-lg border border-white/5 text-[11px] text-bleach-muted">
+                    <span>Significado Espiritual: <em className="text-yellow-200">"{caminhoSelecionado.bankai.significadoEspiritual}"</em></span>
+                  </div>
+                </div>
+
+                {/* Exclusivity & Selection Button */}
+                <div className="pt-3 border-t border-white/10 space-y-2">
+                  <div className="text-[10px] text-bleach-muted flex items-center justify-between">
+                    <span>🔒 Regra de Exclusividade:</span>
+                    <strong className="text-green-400">Assinatura Única Registrada</strong>
+                  </div>
+
+                  <button
+                    onClick={() => iniciarRitual(caminhoSelecionado)}
+                    className="w-full py-3 bg-gradient-to-r from-bleach-orange via-bleach-orangeDeep to-red-600 text-black font-extrabold text-xs uppercase tracking-widest rounded-xl shadow-lg hover:brightness-110 transition"
+                  >
+                    🗡️ Despertar & Selar Este Caminho Espiritual
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        )}
+
+        {/* Ritual Charging Screen */}
+        {ritualState === "charging" && (
+          <div className="py-12 flex flex-col items-center justify-center space-y-6 text-center">
+            <div className="relative w-36 h-36 flex items-center justify-center">
+              <div className="absolute inset-0 rounded-full border-2 border-dashed border-bleach-orange spin-runes"></div>
+              <div className="absolute inset-2 rounded-full border border-dotted border-yellow-400 spin-runes-fast"></div>
+              <div className="text-5xl animate-bounce">🗡️</div>
+            </div>
+
+            <div className="max-w-md w-full space-y-3">
+              <h3 className="font-title text-2xl text-white tracking-wider">
+                FORJANDO ASSINATURA DA ALMA...
+              </h3>
+              <p className="text-xs text-bleach-orange font-mono animate-pulse">
+                {chargeStageText}
+              </p>
+
+              <div className="w-full bg-black/80 h-3 rounded-full overflow-hidden border border-white/10 p-0.5">
+                <div 
+                  className="h-full rounded-full bg-gradient-to-r from-bleach-orange to-yellow-400 transition-all duration-100"
+                  style={{ width: `${chargeProgress}%` }}
+                ></div>
+              </div>
+
+              <div className="pt-2">
+                <button
+                  onClick={pularCarregamento}
+                  className="px-4 py-1.5 rounded-lg bg-black border border-white/20 text-xs text-bleach-creamDim hover:text-white"
+                >
+                  ⚡ Pular Ritual
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Ritual Complete / Revealed Screen */}
+        {ritualState === "revealed" && (
+          <div className="py-8 text-center space-y-6 card-pop-reveal">
+            <div className="text-5xl animate-pulse">✨</div>
+            
+            <div className="max-w-lg mx-auto p-6 rounded-2xl bg-black/90 border-2 border-bleach-orange shadow-2xl space-y-4">
+              <span className="text-[10px] font-extrabold uppercase px-3 py-1 rounded-full bg-orange-950 border border-bleach-orange text-bleach-orange">
+                VINCULAÇÃO ESPIRITUAL CONFIRMADA
+              </span>
+              
+              <h3 className="font-title text-3xl text-white tracking-wider">
+                {caminhoSelecionado.shikai.nome}
+              </h3>
+              
+              <p className="text-xs text-bleach-orange italic">
+                "{caminhoSelecionado.shikai.comando}"
+              </p>
+
+              <p className="text-xs text-bleach-creamDim leading-relaxed">
+                Esta manifestação espiritual foi vinculada permanentemente ao personagem <strong>{personagem.nome}</strong>. Sua assinatura espiritual foi gravada com exclusividade e nenhuma outra alma poderá possuir a mesma lâmina.
+              </p>
+
+              <button
+                onClick={() => onEscolherCaminho(caminhoSelecionado)}
+                className="w-full py-3 bg-gradient-to-r from-bleach-orange to-bleach-orangeDeep text-black font-extrabold text-xs uppercase tracking-widest rounded-xl shadow-lg hover:brightness-110 transition"
+              >
+                ✓ Entrar na Sociedade das Almas com sua Zanpakutō
+              </button>
+            </div>
+          </div>
+        )}
+
+      </div>
+    </div>
+  );
+}
+
+// =========================================================================
+// VIEWS PART 1: TOPBAR, LOGIN, RANKINGS, KIDOS, ARENA & BLEACHSWORDART
+// =========================================================================
+
+// TOP NAVIGATION BAR
+function TopBar({ session, onLogout, view, setView, nome, onOpenAdminLogin, cloudStatus }) {
+  const isAdmin = session?.role === "super_admin" || session?.role === "sub_admin";
+
+  return (
+    <header className="sticky top-0 z-40 bg-bleach-panel/95 backdrop-blur-md border-b border-bleach-borderSoft shadow-xl">
+      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+        {/* Logo & Subtitle */}
+        <div className="flex items-center gap-3 cursor-pointer" onClick={() => setView("sistemas")}>
+          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-bleach-orange to-bleach-orangeDeep flex items-center justify-center font-title text-xl text-black font-extrabold shadow-[0_0_15px_#FF6A13]">
+            死
+          </div>
+          <div>
+            <h1 className="font-title text-xl sm:text-2xl tracking-wider text-bleach-cream flex items-center gap-2">
+              <span>BLEACH RPG</span>
+              <span className="text-[11px] font-sans font-normal px-2 py-0.5 rounded bg-black/60 border border-bleach-border text-bleach-orange uppercase tracking-widest hidden sm:inline">
+                Sociedade das Almas
+              </span>
+            </h1>
+          </div>
+        </div>
+
+        {/* Navigation Tabs */}
+        <nav className="hidden md:flex items-center gap-1">
+          {[
+            { id: "sistemas", label: "Sistemas & Regras", icon: "📜" },
+            { id: "ficha", label: session?.role === "jogador" ? "Minha Ficha" : "Ficha de Jogador", icon: "👤" },
+            { id: "rankings", label: "Rankings", icon: "🏆" },
+            { id: "kidos", label: "Grimório de Kidō", icon: "📕" },
+            { id: "arena", label: "Arena de Duelos", icon: "⚔️" },
+            ...(isAdmin ? [{ id: "admin", label: "Painel ADM", icon: "👑" }] : [])
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setView(tab.id)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold tracking-wide transition flex items-center gap-1.5 ${
+                view === tab.id
+                  ? "bg-bleach-orange text-black font-extrabold shadow-[0_0_12px_rgba(255,106,19,0.5)]"
+                  : "text-bleach-creamDim hover:text-white hover:bg-white/5"
+              }`}
+            >
+              <span>{tab.icon}</span>
+              <span>{tab.label}</span>
+            </button>
+          ))}
+        </nav>
+
+        {/* User Session / Cloud Indicator */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          {/* Cloud Indicator */}
+          <div 
+            title={cloudStatus === "connected" ? "Sincronizado com Nuvem Firebase em Tempo Real" : "Modo Local"}
+            className="flex items-center gap-1 text-[11px] px-2 py-1 rounded-full bg-black/60 border border-white/10"
+          >
+            <span className={`w-2 h-2 rounded-full ${
+              cloudStatus === "connected" ? "bg-green-400 animate-pulse" : cloudStatus === "syncing" ? "bg-yellow-400 animate-spin" : "bg-bleach-muted"
+            }`}></span>
+            <span className="text-bleach-muted hidden sm:inline">{cloudStatus === "connected" ? "Nuvem ON" : "Local"}</span>
+          </div>
+
+          {session ? (
+            <div className="flex items-center gap-2">
+              <div className="text-right hidden sm:block">
+                <span className="text-[10px] text-bleach-muted block uppercase font-mono">Logado como</span>
+                <span className="text-xs font-bold text-bleach-cream truncate max-w-[120px] block">{nome}</span>
+              </div>
+              <button
+                onClick={onLogout}
+                className="px-2.5 py-1 bg-red-950/60 border border-red-500/50 hover:bg-red-800 text-red-200 text-xs font-bold rounded-lg transition"
+                title="Sair da Conta"
+              >
+                Sair
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setView("ficha")}
+                className="px-3.5 py-1.5 bg-bleach-orange text-black text-xs font-extrabold rounded-lg shadow hover:bg-orange-400 uppercase tracking-wider"
+              >
+                Entrar
+              </button>
+              <button
+                onClick={onOpenAdminLogin}
+                className="px-2.5 py-1.5 bg-black/60 border border-yellow-500/40 hover:border-yellow-400 text-yellow-400 text-xs font-bold rounded-lg"
+                title="Acesso da Administração"
+              >
+                👑 ADM
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Mobile Navigation Row */}
+      <div className="md:hidden flex items-center justify-around border-t border-bleach-borderSoft/60 px-2 py-1.5 overflow-x-auto bg-black/40">
+        {[
+          { id: "sistemas", label: "Regras", icon: "📜" },
+          { id: "ficha", label: "Ficha", icon: "👤" },
+          { id: "rankings", label: "Rankings", icon: "🏆" },
+          { id: "kidos", label: "Kidō", icon: "📕" },
+          { id: "arena", label: "Arena", icon: "⚔️" },
+          ...(isAdmin ? [{ id: "admin", label: "ADM", icon: "👑" }] : [])
+        ].map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setView(tab.id)}
+            className={`px-2.5 py-1 rounded text-[11px] font-semibold whitespace-nowrap ${
+              view === tab.id
+                ? "text-bleach-orange font-bold border-b-2 border-bleach-orange"
+                : "text-bleach-muted"
+            }`}
+          >
+            {tab.icon} {tab.label}
+          </button>
+        ))}
+      </div>
+    </header>
+  );
+}
+
+// CHAIN DIVIDER
+function ChainDivider() {
+  return (
+    <div className="flex items-center justify-center my-6 gap-2 text-bleach-border select-none">
+      <div className="flex-1 h-px bg-gradient-to-r from-transparent via-bleach-border to-transparent"></div>
+      <span className="text-xs text-bleach-orange font-cinzel tracking-widest">❖ ❖ ❖</span>
+      <div className="flex-1 h-px bg-gradient-to-r from-transparent via-bleach-border to-transparent"></div>
+    </div>
+  );
+}
+
+// SECTION CONTAINER
+function Section({ title, subtitle, children, right, className = "" }) {
+  return (
+    <div className={`bg-bleach-panel border border-bleach-border rounded-2xl p-4 sm:p-6 shadow-xl relative overflow-hidden ${className}`}>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 border-b border-bleach-borderSoft pb-3">
+        <div>
+          <div className="flex items-center gap-2">
+            <div className="w-1.5 h-5 bg-bleach-orange rounded-full shadow-[0_0_10px_#FF6A13]"></div>
+            <h3 className="font-title text-xl tracking-wider uppercase text-bleach-cream">
+              {title}
+            </h3>
+          </div>
+          {subtitle && <p className="text-xs text-bleach-creamDim mt-0.5 ml-3.5">{subtitle}</p>}
+        </div>
+        {right && <div>{right}</div>}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+// BADGE COMPONENT
+function Badge({ color, children, className = "" }) {
+  return (
+    <span
+      style={{ color, borderColor: color, backgroundColor: `${color}15` }}
+      className={`inline-flex items-center gap-1 text-[11px] font-bold tracking-wider uppercase border px-2.5 py-1 rounded-full ${className}`}
+    >
+      {children}
+    </span>
+  );
+}
+
+// PLAYER LOGIN SCREEN (STRICT MATCHING & NO CROSS-LOGIN FALLBACK)
+function LoginScreen({ db, onLogin, onOpenAdminModal, activeCloudUrl, setDb }) {
+  const [identificador, setIdentificador] = useState("");
+  const [codigo, setCodigo] = useState("");
+  const [erro, setErro] = useState("");
+  const [carregando, setCarregando] = useState(false);
+
+  async function entrarJogador(e) {
+    e.preventDefault();
+    const termo = identificador.trim().toLowerCase();
+    const cod = codigo.trim().toLowerCase();
+
+    if (!cod) {
+      setErro("Por favor, digite o Código de Acesso do seu personagem.");
+      return;
+    }
+
+    setCarregando(true);
+    setErro("");
+
+    let currentPersonagens = db.personagens || [];
+
+    const cloudUrl = activeCloudUrl || db.firebaseUrl || localStorage.getItem("bleach_firebase_url");
+    if (cloudUrl) {
+      try {
+        const cleanUrl = cloudUrl.replace(/\/$/, "");
+        const endpoint = cleanUrl.endsWith('.json') ? cleanUrl : cleanUrl + '/bleachDB.json';
+        const res = await fetch(endpoint + '?t=' + Date.now());
+        if (res.ok) {
+          const freshData = await res.json();
+          if (freshData && freshData.personagens) {
+            currentPersonagens = freshData.personagens;
+            if (setDb) setDb(prev => ({ ...prev, ...freshData }));
+            localStorage.setItem("bleachDB", JSON.stringify(freshData));
+          }
+        }
+      } catch (err) {
+        console.warn("Direct cloud fetch failed, checking local data...", err);
+      }
+    }
+
+    const digitsOnly = termo.replace(/\D/g, "");
+
+    // 1. Strict match on code
+    const matchingChars = currentPersonagens.filter((c) => {
+      const cCode = (c.codigo || "").trim().toLowerCase();
+      return cCode === cod;
+    });
+
+    if (matchingChars.length === 0) {
+      setCarregando(false);
+      setErro("Código de acesso não encontrado. Verifique se digitou corretamente ou se a ficha foi apagada pelo Administrador.");
+      return;
+    }
+
+    let p = null;
+    if (termo) {
+      // Must match identifier explicitly if supplied
+      p = matchingChars.find((c) => {
+        const cPhone = (c.whatsapp || "").replace(/\D/g, "");
+        const cName = (c.nome || "").toLowerCase();
+
+        if (digitsOnly.length >= 4 && (cPhone.includes(digitsOnly) || digitsOnly.includes(cPhone.slice(-8)))) {
+          return true;
+        }
+        if (cName.includes(termo) || termo.includes(cName)) {
+          return true;
+        }
+        return false;
+      });
+
+      if (!p) {
+        setCarregando(false);
+        setErro("O código informado não confere com o Nome/WhatsApp digitado.");
+        return;
+      }
+    } else {
+      if (matchingChars.length > 1) {
+        setCarregando(false);
+        setErro("Existe mais de um personagem com esse código. Por favor, preencha também o seu Nome ou WhatsApp.");
+        return;
+      }
+      p = matchingChars[0];
+    }
+
+    setCarregando(false);
+    playReiatsuSound('win');
+    onLogin(p);
+  }
+
+  return (
+    <div className="max-w-md mx-auto my-8">
+      <Section
+        title="Entrar na Minha Ficha"
+        subtitle="Digite suas credenciais registradas pela Administração"
+        className="border-2 border-bleach-orange/60 shadow-2xl reiatsu-glow"
+      >
+        <form onSubmit={entrarJogador} className="space-y-4">
+          <div>
+            <label className="block text-xs font-bold text-bleach-cream mb-1 uppercase tracking-wider">
+              Código de Acesso (Senha da Ficha) *
+            </label>
+            <input
+              type="text"
+              placeholder="Ex: REN-8921"
+              value={codigo}
+              onChange={(e) => setCodigo(e.target.value)}
+              className="w-full bg-bleach-panel2 border border-bleach-border focus:border-bleach-orange rounded-xl px-4 py-3 text-sm font-mono text-white placeholder-bleach-muted focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-bold text-bleach-cream mb-1 uppercase tracking-wider">
+              Nome do Personagem ou WhatsApp (Opcional)
+            </label>
+            <input
+              type="text"
+              placeholder="Ex: Kurosaki Ren ou 11988887777"
+              value={identificador}
+              onChange={(e) => setIdentificador(e.target.value)}
+              className="w-full bg-bleach-panel2 border border-bleach-border focus:border-bleach-orange rounded-xl px-4 py-3 text-sm text-white placeholder-bleach-muted focus:outline-none"
+            />
+          </div>
+
+          {erro && (
+            <div className="p-3 bg-red-950/80 border border-red-500 rounded-xl text-red-200 text-xs font-semibold">
+              {erro}
+            </div>
+          )}
+
+          <button
+            type="submit"
+            disabled={carregando}
+            className="w-full py-3 bg-gradient-to-r from-bleach-orange to-bleach-orangeDeep text-black font-extrabold text-xs uppercase tracking-widest rounded-xl shadow-lg hover:brightness-110 disabled:opacity-50 transition"
+          >
+            {carregando ? "Autenticando..." : "⚔️ Acessar Minha Ficha"}
+          </button>
+
+          <div className="text-center pt-2">
+            <button
+              type="button"
+              onClick={onOpenAdminModal}
+              className="text-xs text-yellow-400/80 hover:text-yellow-300 font-bold hover:underline"
+            >
+              👑 Você é Administrador ou Avaliador? Clique aqui para login ADM
+            </button>
+          </div>
+        </form>
+      </Section>
+    </div>
+  );
+}
+
+// ADMIN LOGIN SCREEN & MODAL
+function AdminLoginScreen({ db, onLoginAdmin }) {
+  const [usuario, setUsuario] = useState("");
+  const [senha, setSenha] = useState("");
+  const [erro, setErro] = useState("");
+
+  function entrar(e) {
+    e.preventDefault();
+    const u = usuario.trim().toLowerCase();
+    const s = senha.trim();
+
+    if (u === "admin" && s === (db.superAdminSenha || "maximo2026")) {
+      playReiatsuSound('win');
+      onLoginAdmin("super_admin", { nome: db.superAdminNome || "Comandante Supremo" });
+      return;
+    }
+
+    const sub = (db.subAdms || []).find(a => a.usuario.toLowerCase() === u && a.senha === s);
+    if (sub) {
+      playReiatsuSound('win');
+      onLoginAdmin("sub_admin", sub);
+      return;
+    }
+
+    setErro("Credenciais administrativas incorretas.");
+  }
+
+  return (
+    <div className="max-w-md mx-auto my-8">
+      <Section
+        title="Painel de Acesso da Administração"
+        subtitle="Área restrita para ADM Máximo e Avaliadores autorizados"
+        className="border-2 border-yellow-500/60 shadow-2xl"
+      >
+        <form onSubmit={entrar} className="space-y-4">
+          <div>
+            <label className="block text-xs font-bold text-yellow-400 mb-1 uppercase">Usuário ADM</label>
+            <input
+              type="text"
+              placeholder="Ex: admin ou kisuke"
+              value={usuario}
+              onChange={(e) => setUsuario(e.target.value)}
+              className="w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-3 text-xs text-white font-mono"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-bold text-yellow-400 mb-1 uppercase">Senha Individual</label>
+            <input
+              type="password"
+              placeholder="••••••••"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+              className="w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-3 text-xs text-white font-mono"
+            />
+          </div>
+
+          {erro && <div className="p-2.5 bg-red-950/80 border border-red-500 rounded text-red-200 text-xs">{erro}</div>}
+
+          <button
+            type="submit"
+            className="w-full py-2.5 bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold text-xs uppercase rounded-xl shadow"
+          >
+            👑 Entrar no Painel Administrativo
+          </button>
+        </form>
+      </Section>
+    </div>
+  );
+}
+
+function AdminLoginModal({ db, onClose, onSuccess }) {
+  const [usuario, setUsuario] = useState("");
+  const [senha, setSenha] = useState("");
+  const [erro, setErro] = useState("");
+
+  function submit(e) {
+    e.preventDefault();
+    const u = usuario.trim().toLowerCase();
+    const s = senha.trim();
+
+    if (u === "admin" && s === (db.superAdminSenha || "maximo2026")) {
+      playReiatsuSound('win');
+      onSuccess("super_admin", { nome: db.superAdminNome || "Comandante Supremo" });
+      return;
+    }
+
+    const sub = (db.subAdms || []).find(a => a.usuario.toLowerCase() === u && a.senha === s);
+    if (sub) {
+      playReiatsuSound('win');
+      onSuccess("sub_admin", sub);
+      return;
+    }
+
+    setErro("Credenciais administrativas incorretas.");
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
+      <div className="bg-bleach-panel border-2 border-yellow-500/80 rounded-2xl p-6 max-w-sm w-full shadow-2xl">
+        <div className="flex items-center justify-between mb-4 border-b border-bleach-borderSoft pb-2">
+          <h3 className="font-title text-xl text-yellow-400">LOGIN DA ADMINISTRAÇÃO</h3>
+          <button onClick={onClose} className="text-bleach-muted hover:text-white font-bold">✕</button>
+        </div>
+
+        <form onSubmit={submit} className="space-y-3 text-xs">
+          <div>
+            <label className="block text-bleach-creamDim mb-1 font-bold">Usuário</label>
+            <input
+              type="text"
+              value={usuario}
+              onChange={(e) => setUsuario(e.target.value)}
+              className="w-full bg-bleach-panel2 border border-bleach-border rounded p-2 text-white font-mono"
+            />
+          </div>
+          <div>
+            <label className="block text-bleach-creamDim mb-1 font-bold">Senha</label>
+            <input
+              type="password"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+              className="w-full bg-bleach-panel2 border border-bleach-border rounded p-2 text-white font-mono"
+            />
+          </div>
+          {erro && <div className="text-red-400 font-bold">{erro}</div>}
+
+          <button
+            type="submit"
+            className="w-full py-2 bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold uppercase rounded shadow"
+          >
+            Entrar como ADM
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+// RANKINGS VIEW
+function RankingsView({ rankFisico, rankPressao, myCharId }) {
+  const [tab, setTab] = useState("fisico");
+
+  return (
+    <div className="space-y-6">
+      <Section
+        title="Quadro Geral de Honra & Classificação"
+        subtitle="Rankings oficiais calculados a partir dos atributos puros dos Shinigamis"
+      >
+        <div className="flex gap-2 mb-6 border-b border-bleach-borderSoft pb-3">
+          <button
+            onClick={() => setTab("fisico")}
+            className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition ${
+              tab === "fisico"
+                ? "bg-bleach-orange text-black font-extrabold shadow"
+                : "bg-bleach-panel2 border border-bleach-border text-bleach-creamDim hover:text-white"
+            }`}
+          >
+            ⚔️ Ranking Físico Geral (Força, Vel, Res)
+          </button>
+          <button
+            onClick={() => setTab("pressao")}
+            className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition ${
+              tab === "pressao"
+                ? "bg-bleach-blue text-black font-extrabold shadow"
+                : "bg-bleach-panel2 border border-bleach-border text-bleach-creamDim hover:text-white"
+            }`}
+          >
+            🌀 Ranking de Pressão Espiritual (Reiatsu)
+          </button>
+        </div>
+
+        <div className="space-y-3">
+          {(tab === "fisico" ? rankFisico : rankPressao).map((p, idx) => {
+            const isMe = p.id === myCharId;
+            const pos = idx + 1;
+            const isPodium = pos <= 3;
+
+            return (
+              <div
+                key={p.id}
+                className={`p-3.5 rounded-xl border flex items-center justify-between gap-4 transition ${
+                  isMe
+                    ? "bg-orange-950/40 border-bleach-orange shadow-lg"
+                    : isPodium
+                    ? "bg-bleach-panel2 border-white/20"
+                    : "bg-bleach-panel2/60 border-bleach-borderSoft"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-title text-base font-extrabold ${
+                    pos === 1 ? "bg-yellow-500 text-black shadow-[0_0_10px_#E0B34C]" :
+                    pos === 2 ? "bg-slate-300 text-black" :
+                    pos === 3 ? "bg-amber-700 text-white" : "bg-black text-bleach-muted"
+                  }`}>
+                    {pos === 1 ? "1º" : pos === 2 ? "2º" : pos === 3 ? "3º" : `#${pos}`}
+                  </div>
+
+                  <div className="w-10 h-10 rounded-lg overflow-hidden border border-bleach-border bg-black">
+                    <img src={p.foto || 'assets/ichigo-orange.png'} alt={p.nome} className="w-full h-full object-cover" />
+                  </div>
+
+                  <div>
+                    <h4 className="font-bold text-white text-sm flex items-center gap-2">
+                      <span>{p.nome}</span>
+                      {isMe && <span className="text-[10px] bg-bleach-orange text-black px-1.5 py-0.2 rounded font-bold">VOCÊ</span>}
+                    </h4>
+                    {tab === "fisico" && (
+                      <div className="text-[11px] text-bleach-muted font-mono flex gap-2">
+                        <span>FOR: <strong className="text-red-400">{p.forca}</strong></span>
+                        <span>VEL: <strong className="text-green-400">{p.vel}</strong></span>
+                        <span>RES: <strong className="text-purple-400">{p.res}</strong></span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="text-right">
+                  <span className="text-[10px] text-bleach-muted block uppercase">
+                    {tab === "fisico" ? "Média Fís." : "Reiatsu"}
+                  </span>
+                  <span className="font-mono text-lg font-black text-bleach-orange">
+                    {p.score}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </Section>
+    </div>
+  );
+}
+
+// KIDOS VIEW
+function KidosView({ personagem, isAdmin }) {
+  const [filtroCat, setFiltroCat] = useState("Todos");
+  const [busca, setBusca] = useState("");
+
+  const filtrados = CATALOGO_KIDOS.filter(k => {
+    const matchCat = filtroCat === "Todos" || k.cat === filtroCat;
+    const matchBusca = k.nome.toLowerCase().includes(busca.toLowerCase()) || (k.incant || "").toLowerCase().includes(busca.toLowerCase());
+    return matchCat && matchBusca;
+  });
+
+  return (
+    <div className="space-y-6">
+      <Section title="Grimório Oficial de Kidō" subtitle="Catálogo milenar de Hadō, Bakudō e Kaidō">
+        <div className="flex flex-col sm:flex-row gap-3 mb-6">
+          <input
+            type="text"
+            placeholder="🔍 Buscar feitiço por nome ou encantamento..."
+            value={busca}
+            onChange={(e) => setBusca(e.target.value)}
+            className="flex-1 bg-bleach-panel2 border border-bleach-border rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-bleach-orange"
+          />
+          <div className="flex gap-1.5 overflow-x-auto pb-1 sm:pb-0">
+            {["Todos", "Hadō", "Bakudō", "Kaidō"].map(cat => (
+              <button
+                key={cat}
+                onClick={() => setFiltroCat(cat)}
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition whitespace-nowrap ${
+                  filtroCat === cat ? "bg-bleach-orange text-black font-extrabold" : "bg-bleach-panel2 border border-bleach-border text-bleach-creamDim"
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {filtrados.map(k => (
+            <div key={k.id} className="p-4 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-2">
+              <div className="flex items-center justify-between">
+                <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded border ${
+                  k.cat === "Hadō" ? "bg-red-950 text-red-300 border-red-500" :
+                  k.cat === "Bakudō" ? "bg-blue-950 text-cyan-300 border-cyan-500" : "bg-emerald-950 text-emerald-300 border-emerald-500"
+                }`}>
+                  {k.cat} #{k.numero}
+                </span>
+                <span className="text-xs font-mono text-bleach-muted">Custo: <strong className="text-bleach-orange">{k.custoReiatsu} Reiatsu</strong></span>
+              </div>
+              <h4 className="font-bold text-white text-base">{k.nome}</h4>
+              <p className="text-xs text-bleach-creamDim leading-relaxed">{k.desc}</p>
+              {k.incant && k.incant !== "—" && (
+                <div className="p-2 bg-black/60 rounded border border-white/5 text-[11px] text-bleach-muted italic">
+                  "{k.incant}"
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </Section>
+    </div>
+  );
+}
+
+// ARENA VIEW
+function ArenaView({ db, saveDb, session, myChar }) {
+  const [dueloAtivo, setDueloAtivo] = useState(db.combatesArena?.[0] || null);
+  const [novoLog, setNovoLog] = useState("");
+
+  const p1 = (db.personagens || []).find(p => p.id === dueloAtivo?.p1Id) || db.personagens[0];
+  const p2 = (db.personagens || []).find(p => p.id === dueloAtivo?.p2Id) || db.personagens[1];
+
+  function adicionarLogJuiz() {
+    if (!novoLog.trim()) return;
+    const logItem = {
+      id: uid(),
+      autor: session?.nome || "Juiz da Arena",
+      texto: novoLog.trim(),
+      data: nowStr()
+    };
+    const novosDuelos = (db.combatesArena || []).map(d => {
+      if (d.id === dueloAtivo.id) {
+        return { ...d, logJuiz: [logItem, ...(d.logJuiz || [])] };
+      }
+      return d;
+    });
+    saveDb({ ...db, combatesArena: novosDuelos });
+    setNovoLog("");
+    playReiatsuSound('roll');
+  }
+
+  return (
+    <div className="space-y-6">
+      <Section title="Arena de Duelos em ON" subtitle="Espaço oficial de arbitragem e combate supervisionado">
+        {p1 && p2 ? (
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-5 bg-bleach-panel2 border-2 border-red-500/50 rounded-2xl flex items-center gap-4">
+                <img src={p1.foto || 'assets/ichigo-orange.png'} className="w-16 h-16 rounded-xl object-cover border border-red-500" />
+                <div>
+                  <span className="text-[10px] font-bold text-red-400 uppercase">Combatente 1</span>
+                  <h4 className="font-title text-2xl text-white">{p1.nome}</h4>
+                  <div className="text-xs text-bleach-muted font-mono flex gap-2 mt-1">
+                    <span>FOR: {p1.atributos.forca}</span>
+                    <span>VEL: {p1.atributos.velocidade}</span>
+                    <span>RES: {p1.atributos.resiliencia}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-5 bg-bleach-panel2 border-2 border-blue-500/50 rounded-2xl flex items-center gap-4">
+                <img src={p2.foto || 'assets/ichigo-moon.png'} className="w-16 h-16 rounded-xl object-cover border border-blue-500" />
+                <div>
+                  <span className="text-[10px] font-bold text-cyan-400 uppercase">Combatente 2</span>
+                  <h4 className="font-title text-2xl text-white">{p2.nome}</h4>
+                  <div className="text-xs text-bleach-muted font-mono flex gap-2 mt-1">
+                    <span>FOR: {p2.atributos.forca}</span>
+                    <span>VEL: {p2.atributos.velocidade}</span>
+                    <span>RES: {p2.atributos.resiliencia}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Judge Log Input */}
+            <div className="p-4 bg-black/60 border border-bleach-border rounded-xl space-y-3">
+              <h4 className="text-xs font-bold text-bleach-orange uppercase">Decisão do Juiz / Narrador</h4>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  placeholder="Descreva o desfecho do turno de combate..."
+                  value={novoLog}
+                  onChange={(e) => setNovoLog(e.target.value)}
+                  className="flex-1 bg-bleach-panel2 border border-bleach-border rounded-lg p-2.5 text-xs text-white"
+                />
+                <button
+                  onClick={adicionarLogJuiz}
+                  className="px-5 py-2.5 bg-bleach-orange text-black font-extrabold text-xs uppercase rounded-lg shadow"
+                >
+                  Registrar
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <p className="text-xs text-bleach-muted">Nenhum combate ativo no momento.</p>
+        )}
+      </Section>
+    </div>
+  );
+}
+
+// BLEACH SWORD ART SVG COMPONENT
+function BleachSwordArt({ arma, nomeZk, isBankai, foto, onUpload }) {
+  return (
+    <div className="relative w-full h-64 sm:h-80 bg-black/80 rounded-2xl border border-bleach-border overflow-hidden flex items-center justify-center p-4">
+      {foto && foto !== "assets/ichigo-orange.png" && foto !== "assets/ichigo-moon.png" ? (
+        <img src={foto} className="w-full h-full object-contain" />
+      ) : (
+        <div className="text-center space-y-3">
+          <div className="text-6xl animate-pulse">{isBankai ? "卍" : "🗡️"}</div>
+          <div>
+            <h4 className="font-title text-2xl text-white tracking-wider">{nomeZk || "Lâmina Selada"}</h4>
+            <p className="text-xs text-bleach-orange">{isBankai ? "Forma Monumental de Bankai" : "Forma Desperta de Shikai"}</p>
+          </div>
+        </div>
+      )}
+
+      <label className="absolute bottom-3 right-3 px-3 py-1.5 bg-black/80 hover:bg-black border border-bleach-border hover:border-bleach-orange rounded-lg text-[11px] font-bold text-bleach-cream cursor-pointer transition shadow">
+        📷 Trocar Arte
+        <input type="file" accept="image/*" onChange={onUpload} className="hidden" />
+      </label>
+    </div>
+  );
+}
+
+// =========================================================================
+// VIEWS PART 2: FICHAVIEW, ADMINPANEL & SISTEMASVIEW
+// =========================================================================
+
+// TAB: FICHA DO JOGADOR
+function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao }) {
+  const [subPaginaFicha, setSubPaginaFicha] = useState("perfil");
+  
+  const [pend, setPend] = useState({ pressao: 0, forca: 0, velocidade: 0, resiliencia: 0 });
+  const [passoDistribuicao, setPassoDistribuicao] = useState(1);
+  const [novaTecCat, setNovaTecCat] = useState("Hadō");
+  const [novaTecNome, setNovaTecNome] = useState("");
+  const [rec, setRec] = useState({ tipo: "Treino em ON (30 linhas)", pontos: 1, atributo: "", motivo: "" });
+  
+  const [editFoto, setEditFoto] = useState(personagem?.foto || "assets/ichigo-orange.png");
+  const [editFotoShikai, setEditFotoShikai] = useState(personagem?.zanpakuto?.fotoShikai || "assets/ichigo-orange.png");
+  const [editFotoBankai, setEditFotoBankai] = useState(personagem?.zanpakuto?.fotoBankai || "assets/ichigo-moon.png");
+
+  const [editNome, setEditNome] = useState(personagem?.nome || "");
+  const [editWhats, setEditWhats] = useState(personagem?.whatsapp || "");
+  const [editCodigo, setEditCodigo] = useState(personagem?.codigo || "");
+  const [editFaceclaim, setEditFaceclaim] = useState(personagem?.faceclaim || "");
+  const [editIdadePlayer, setEditIdadePlayer] = useState(personagem?.idadePlayer || "20");
+  const [editAnivPlayer, setEditAnivPlayer] = useState(personagem?.aniversarioPlayer || "01/01");
+  const [editIdadeChar, setEditIdadeChar] = useState(personagem?.idadeChar || "18");
+  const [editAnivChar, setEditAnivChar] = useState(personagem?.aniversarioChar || "15/07");
+  const [editRaca, setEditRaca] = useState(personagem?.raca || "Shinigami");
+  const [editEsquadrao, setEditEsquadrao] = useState(personagem?.esquadrao || "11º Esquadrão");
+  const [editZkNome, setEditZkNome] = useState(personagem?.zanpakuto?.nome || "");
+
+  // Personalidade Local State
+  const [persTexto, setPersTexto] = useState(personagem?.personalidade?.texto || "");
+  const [persVirtudes, setPersVirtudes] = useState(personagem?.personalidade?.virtudes || "");
+  const [persDefeitos, setPersDefeitos] = useState(personagem?.personalidade?.defeitos || "");
+  const [persDesejos, setPersDesejos] = useState(personagem?.personalidade?.desejos || "");
+  const [persMedos, setPersMedos] = useState(personagem?.personalidade?.medos || "");
+  const [persEstilo, setPersEstilo] = useState(personagem?.personalidade?.estiloCombate || "");
+
+  // Modais de Sorteio, Cena e Shikai/Bankai
+  const [gachaModal, setGachaModal] = useState(null);
+  const [showGachaHistory, setShowGachaHistory] = useState(false);
+  const [showCenaModal, setShowCenaModal] = useState(null); // "shikai" | "bankai"
+  const [showZanpakutoAIModal, setShowZanpakutoAIModal] = useState(false);
+  const [aiZkOpcoes, setAiZkOpcoes] = useState([]);
+  const [aiZkTipo, setAiZkTipo] = useState("shikai");
+  const [showResetModal, setShowResetModal] = useState(false);
+  const [copiadoWhats, setCopiadoWhats] = useState(false);
+  const gachaIntervalRef = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (gachaIntervalRef.current) clearInterval(gachaIntervalRef.current);
+    };
+  }, []);
+
+  // Synchronize state when character changes
+  useEffect(() => {
+    if (personagem) {
+      setEditNome(personagem.nome || "");
+      setEditWhats(personagem.whatsapp || "");
+      setEditCodigo(personagem.codigo || "");
+      setEditFaceclaim(personagem.faceclaim || "");
+      setEditFoto(personagem.foto || "assets/ichigo-orange.png");
+      setEditFotoShikai(personagem.zanpakuto?.fotoShikai || "assets/ichigo-orange.png");
+      setEditFotoBankai(personagem.zanpakuto?.fotoBankai || "assets/ichigo-moon.png");
+      setEditIdadePlayer(personagem.idadePlayer || "20");
+      setEditAnivPlayer(personagem.aniversarioPlayer || "01/01");
+      setEditIdadeChar(personagem.idadeChar || "18");
+      setEditAnivChar(personagem.aniversarioChar || "15/07");
+      setEditRaca(personagem.raca || "Shinigami");
+      setEditEsquadrao(personagem.esquadrao || "11º Esquadrão");
+      setEditZkNome(personagem.zanpakuto?.nome || "");
+      setPersTexto(personagem.personalidade?.texto || "");
+      setPersVirtudes(personagem.personalidade?.virtudes || "");
+      setPersDefeitos(personagem.personalidade?.defeitos || "");
+      setPersDesejos(personagem.personalidade?.desejos || "");
+      setPersMedos(personagem.personalidade?.medos || "");
+      setPersEstilo(personagem.personalidade?.estiloCombate || "");
+    }
+  }, [personagem?.id]);
+
+  if (!personagem) return <div className="text-bleach-muted">Ficha não encontrada.</div>;
+
+  const pendSum = Object.values(pend).reduce((a, b) => a + b, 0);
+  const restante = (personagem.pontosDisponiveis || 0) - pendSum;
+  const totalStats = Object.values(personagem.atributos).reduce((a, b) => a + b, 0);
+  const powerTier = getPowerTier(totalStats);
+
+  const temShikai = !!personagem?.zanpakuto?.shikaiAtiva;
+  const temBankai = !!personagem?.zanpakuto?.bankaiAtiva;
+  const podeGerarShikai = !!personagem?.permissoes?.shikaiLiberada && !temShikai;
+  const podeGerarBankai = !!personagem?.permissoes?.bankaiLiberada && temShikai && !temBankai;
+  const personalidadeSelada = !!personagem?.personalidadeTravada;
+
+  function updateChar(patch, historicoTexto) {
+    const personagens = (db.personagens || []).map((p) =>
+      p.id === personagem.id
+        ? {
+            ...p,
+            ...patch,
+            historico: historicoTexto
+              ? [{ id: uid(), data: nowStr(), texto: historicoTexto }, ...(p.historico || [])]
+              : p.historico || [],
+          }
+        : p
+    );
+    saveDb({ ...db, personagens });
+  }
+
+  // 1. GESTÃO DE PERSONALIDADE & TRAVA PERMANENTE
+  function selarPersonalidadeDefinitiva() {
+    if (!persTexto.trim() && !persVirtudes.trim()) {
+      alert("Por favor, preencha a descrição da sua personalidade e virtudes antes de selar!");
+      return;
+    }
+    const confirma = confirm("⚠️ ATENÇÃO: Uma vez selada, a sua personalidade espiritual será gravada no DNA da sua alma e NÃO poderá mais ser alterada por você (apenas o ADM poderá reabrir caso necessário).\\n\\nTem certeza que deseja confirmar e selar sua personalidade agora?");
+    if (!confirma) return;
+
+    const novaPersonalidade = {
+      texto: persTexto.trim(),
+      virtudes: persVirtudes.trim(),
+      defeitos: persDefeitos.trim(),
+      desejos: persDesejos.trim(),
+      medos: persMedos.trim(),
+      estiloCombate: persEstilo.trim()
+    };
+
+    updateChar({
+      personalidade: novaPersonalidade,
+      personalidadeTravada: true
+    }, "🧠 Personalidade e DNA Espiritual selados definitivamente na alma");
+
+    playReiatsuSound('shikai');
+    alert("✨ Personalidade selada com sucesso! A sua essência agora servirá como base pura para a geração da sua Zanpakutō.");
+  }
+
+  function destravarPersonalidadeAdm() {
+    if (!isAdmin) return;
+    updateChar({ personalidadeTravada: false }, "🔓 ADM destravou a edição de personalidade da ficha");
+    alert("Edição de personalidade destravada para este personagem.");
+  }
+
+  // 2. ENVIO DE CENA DE DESPERTAR & MOTOR DE IA
+  function abrirFluxoDespertar(tipo = "shikai") {
+    if (!personalidadeSelada && !personagem.personalidade?.texto) {
+      alert("⚠️ Você precisa primeiro preencher e selar sua Personalidade na aba de Perfil para que a essência espiritual seja despertada!");
+      setSubPaginaFicha("perfil");
+      return;
+    }
+    setShowCenaModal(tipo);
+  }
+
+  function submeterCenaDespertar(cenaTexto) {
+    const tipo = showCenaModal || "shikai";
+    setShowCenaModal(null);
+
+    if (tipo === "shikai") {
+      updateChar({ cenaDespertarShikai: cenaTexto }, "📜 Cena de despertar de Shikai registrada na ficha");
+      const caminhos = gerar4CaminhosZanpakutoAI(personagem, db.personagens, db.zanpakutosVinculadas, cenaTexto);
+      setAiZkOpcoes(caminhos);
+      setAiZkTipo("shikai");
+      setShowZanpakutoAIModal(true);
+      playReiatsuSound('shikai_charge');
+    } else {
+      updateChar({ cenaDespertarBankai: cenaTexto }, "📜 Cena de despertar de Bankai registrada na ficha");
+      const opcoesBankai = gerar3OpcoesBankaiAI(personagem, personagem.zanpakuto?.shikaiAtiva, db.personagens, db.zanpakutosVinculadas, cenaTexto);
+      // Format as paths for modal
+      const caminhosBankai = opcoesBankai.map((bk, idx) => ({
+        caminhoNumero: idx + 1,
+        tipoCaminho: bk.tipoEvolucao,
+        subtitulo: bk.traducao,
+        shikai: personagem.zanpakuto.shikaiAtiva,
+        bankai: bk,
+        avaliacao: {
+          personalidadeCompatibilidade: "99%",
+          atributosSinergia: "98%",
+          originalidade: "Suprema",
+          coerencia: "Transcendência Completa",
+          potencialNarrativo: "Clímax da Alma",
+          exclusividadeStatus: "Vinculada à Shikai"
+        }
+      }));
+      setAiZkOpcoes(caminhosBankai);
+      setAiZkTipo("bankai");
+      setShowZanpakutoAIModal(true);
+      playReiatsuSound('bankai_charge');
+    }
+  }
+
+  function escolherCaminhoEspiritual(caminhoEscolhido) {
+    setShowZanpakutoAIModal(false);
+    if (aiZkTipo === "shikai") {
+      const shikai = caminhoEscolhido.shikai;
+      const bankai = caminhoEscolhido.bankai;
+      const sig = shikai.assinaturaEspiritual || calcularAssinaturaEspiritual(shikai);
+
+      const novoZk = {
+        ...(personagem.zanpakuto || {}),
+        nome: shikai.nome,
+        shikaiAtiva: shikai,
+        bankaiAtiva: null,
+        bankaiPadrao: bankai,
+        dnaEspiritual: caminhoEscolhido.dnaEspiritual,
+        shikaiEscolhida: true,
+        assinaturaEspiritual: sig
+      };
+
+      const novoRegistro = {
+        id: uid(),
+        charId: personagem.id,
+        charNome: personagem.nome,
+        shikaiNome: shikai.nome,
+        assinatura: sig,
+        data: nowStr()
+      };
+
+      const novasVinculadas = [...(db.zanpakutosVinculadas || []).filter(z => z.charId !== personagem.id), novoRegistro];
+
+      const personagens = (db.personagens || []).map(p => p.id === personagem.id ? {
+        ...p,
+        zanpakuto: novoZk,
+        permissoes: { ...(p.permissoes || {}), shikaiLiberada: false },
+        historico: [{ id: uid(), data: nowStr(), texto: `🗡️ DESPERTOU SHIKAI AUTORAL EXCLUSIVA: [${shikai.nome}] — "${shikai.comando}"` }, ...(p.historico || [])]
+      } : p);
+
+      saveDb({ ...db, personagens, zanpakutosVinculadas: novasVinculadas });
+      setSubPaginaFicha("shikai");
+      alert(`✨ Parabéns! Sua Shikai [${shikai.nome}] foi selada com exclusividade absoluta na sua ficha!`);
+    } else {
+      const bankai = caminhoEscolhido.bankai;
+      const novoZk = {
+        ...(personagem.zanpakuto || {}),
+        bankaiAtiva: bankai,
+        bankaiEscolhida: true
+      };
+
+      const personagens = (db.personagens || []).map(p => p.id === personagem.id ? {
+        ...p,
+        zanpakuto: novoZk,
+        permissoes: { ...(p.permissoes || {}), bankaiLiberada: false },
+        historico: [{ id: uid(), data: nowStr(), texto: `卍 DESPERTOU BANKAI MONUMENTAL: [${bankai.nome}] — "${bankai.comando}"` }, ...(p.historico || [])]
+      } : p);
+
+      saveDb({ ...db, personagens });
+      setSubPaginaFicha("shikai");
+      alert(`✨ TRANSCENDÊNCIA ALCANÇADA! Sua Bankai [${bankai.nome}] foi gravada na sua alma!`);
+    }
+  }
+
+  // 3. GACHA & SORTEIOS COM ANIMAÇÃO DE BAÚ E SUSPENSE (~7S)
+  function girarGachaComum() {
+    if ((personagem.sorteiosComunsRestantes || 0) <= 0) {
+      alert("Você não possui giros de Sorteio Comum disponíveis.");
+      return;
+    }
+
+    const total = RARIDADES_COMUNS.reduce((a, r) => a + r.peso, 0);
+    let roll = Math.random() * total;
+    let escolhida = RARIDADES_COMUNS[0];
+    for (const r of RARIDADES_COMUNS) {
+      if (roll < r.peso) {
+        escolhida = r;
+        break;
+      }
+      roll -= r.peso;
+    }
+    const pontos = Math.floor(Math.random() * (escolhida.max - escolhida.min + 1)) + escolhida.min;
+    const drop = {
+      id: uid(),
+      data: nowStr(),
+      nome: `Sorteio Comum (${escolhida.nome}): +${pontos} Pontos Disponíveis`,
+      pontos,
+      raridade: escolhida.nome,
+      cor: escolhida.cor,
+      desc: escolhida.desc
+    };
+
+    // Suspense Trigger (~28% de chance de demorar ~7s a mais)
+    const isSuspense = Math.random() < 0.28;
+    iniciarAnimacaoBau("comum", drop, isSuspense);
+  }
+
+  function girarSorteioEspecial() {
+    if ((personagem.sorteiosEspeciaisRestantes || 0) <= 0) {
+      alert("Você não possui giros de Sorteio Especial disponíveis.");
+      return;
+    }
+
+    const totalPeso = RECOMPENSAS_ESPECIAIS.reduce((acc, r) => acc + (r.peso || 1), 0);
+    let roll = Math.random() * totalPeso;
+    let escolhida = RECOMPENSAS_ESPECIAIS[0];
+    for (const r of RECOMPENSAS_ESPECIAIS) {
+      if (roll < (r.peso || 1)) {
+        escolhida = r;
+        break;
+      }
+      roll -= (r.peso || 1);
+    }
+    const pontosGanhos = escolhida.valor || 0;
+    const drop = {
+      id: uid(),
+      data: nowStr(),
+      nome: `🌟 Sorteio Especial (${escolhida.raridade}): ${escolhida.nome}` + (pontosGanhos > 0 ? ` (+${pontosGanhos} pts)` : ''),
+      nomeItem: escolhida.nome,
+      pontos: pontosGanhos,
+      raridade: escolhida.raridade,
+      cor: escolhida.cor,
+      desc: escolhida.desc,
+      chance: escolhida.chanceStr,
+      tipo: escolhida.tipo
+    };
+
+    const isSuspense = Math.random() < 0.32;
+    iniciarAnimacaoBau("especial", drop, isSuspense);
+  }
+
+  function iniciarAnimacaoBau(tipoGacha, dropResult, isSuspense) {
+    if (gachaIntervalRef.current) clearInterval(gachaIntervalRef.current);
+
+    setGachaModal({
+      open: true,
+      tipo: tipoGacha,
+      isSuspense,
+      progress: 0,
+      stageText: "Convergindo partículas de Reishi ambiental...",
+      resultado: dropResult,
+      onSkip: () => finalizarDrop(tipoGacha, dropResult)
+    });
+
+    playReiatsuSound(isSuspense ? 'gacha_box_suspense' : 'gacha_box_charge');
+
+    let currentProgress = 0;
+    // Standard takes ~2.2s (step 3 every 45ms = ~48 ticks).
+    // Suspense takes ~8.8s (step 1 every 90ms = ~100 ticks).
+    const step = isSuspense ? 1 : 2.5;
+    const intervalMs = isSuspense ? 85 : 45;
+
+    gachaIntervalRef.current = setInterval(() => {
+      currentProgress += step;
+      if (currentProgress > 100) currentProgress = 100;
+
+      let stage = "Convergindo partículas de Reishi ambiental...";
+      if (currentProgress > 25 && currentProgress <= 50) {
+        stage = "Ressonância de Reiryoku ativando os circuitos do baú...";
+      } else if (currentProgress > 50 && currentProgress <= 80) {
+        stage = isSuspense ? "⚠️ TENSÃO CRÍTICA: O selo ancestral está resistindo com força transcendental..." : "O selo milenar está se fragmentando...";
+      } else if (currentProgress > 80 && currentProgress < 100) {
+        stage = "💥 Rompimento de contenção iminente! O tesouro foi libertado!";
+      }
+
+      setGachaModal(prev => prev ? { ...prev, progress: Math.round(currentProgress), stageText: stage } : null);
+
+      if (currentProgress >= 100) {
+        clearInterval(gachaIntervalRef.current);
+        gachaIntervalRef.current = null;
+        playReiatsuSound('gacha_box_shatter');
+      }
+    }, intervalMs);
+  }
+
+  function finalizarDrop(tipoGacha, dropResult) {
+    if (gachaIntervalRef.current) clearInterval(gachaIntervalRef.current);
+    gachaIntervalRef.current = null;
+    playReiatsuSound('gacha_box_shatter');
+    setGachaModal(prev => prev ? { ...prev, progress: 100, stageText: "Liberação concluída!" } : null);
+  }
+
+  function confirmarColetaDrop() {
+    if (!gachaModal || !gachaModal.resultado) return;
+    const drop = gachaModal.resultado;
+    const tipoGacha = gachaModal.tipo;
+
+    if (tipoGacha === "comum") {
+      updateChar({
+        pontosDisponiveis: (personagem.pontosDisponiveis || 0) + (drop.pontos || 0),
+        sorteiosComunsRestantes: Math.max(0, (personagem.sorteiosComunsRestantes || 0) - 1),
+        sorteiosDrops: [drop, ...(personagem.sorteiosDrops || [])]
+      }, `🎲 Sorteio Comum (${drop.raridade}): +${drop.pontos} pontos creditados na ficha`);
+    } else {
+      updateChar({
+        pontosDisponiveis: (personagem.pontosDisponiveis || 0) + (drop.pontos || 0),
+        sorteiosEspeciaisRestantes: Math.max(0, (personagem.sorteiosEspeciaisRestantes || 0) - 1),
+        sorteiosDrops: [drop, ...(personagem.sorteiosDrops || [])]
+      }, `🌟 Sorteio Especial (${drop.raridade}): [${drop.nomeItem}] creditado`);
+    }
+
+    setGachaModal(null);
+    playReiatsuSound('win');
+  }
+
+  // 4. RESET TOTAL DA FICHA PELO ADM
+  function confirmarResetFicha() {
+    setShowResetModal(false);
+    const resetChar = {
+      ...personagem,
+      atributos: { pressao: 10, forca: 10, velocidade: 10, resiliencia: 10 },
+      pontosDisponiveis: 20,
+      sorteiosComunsRestantes: 2,
+      sorteiosEspeciaisRestantes: 0,
+      sorteiosDrops: [],
+      permissoes: { shikaiLiberada: false, bankaiLiberada: false },
+      kidosConhecidos: [
+        { id: "h4", numero: 4, nome: "Byakurai", cat: "Hadō", custoReiatsu: 3 },
+        { id: "b1", numero: 1, nome: "Sai", cat: "Bakudō", custoReiatsu: 2 }
+      ],
+      tecnicas: [
+        { id: uid(), nome: "Hadō #4 — Byakurai", categoria: "Hadō" },
+        { id: uid(), nome: "Bakudō #1 — Sai", categoria: "Bakudō" }
+      ],
+      personalidade: { texto: "", virtudes: "", defeitos: "", desejos: "", medos: "", conflitos: "", estiloCombate: "" },
+      personalidadeTravada: false,
+      cenaDespertarShikai: "",
+      cenaDespertarBankai: "",
+      zanpakuto: { nome: "Em despertar", fotoShikai: "assets/ichigo-orange.png", fotoBankai: "assets/ichigo-moon.png", shikaiAtiva: null, bankaiAtiva: null, notas: "" },
+      estado: "Inteiro",
+      treinosHoje: 0,
+      historico: [{ id: uid(), data: nowStr(), texto: "⚠️ Ficha resetada para o estado inicial pela Administração." }]
+    };
+
+    // Remove claimed signature
+    const novasVinculadas = (db.zanpakutosVinculadas || []).filter(z => z.charId !== personagem.id);
+    const personagens = (db.personagens || []).map(p => p.id === personagem.id ? resetChar : p);
+
+    saveDb({ ...db, personagens, zanpakutosVinculadas: novasVinculadas });
+    alert(`A ficha de ${personagem.nome} foi resetada para os valores iniciais com sucesso!`);
+    playReiatsuSound('shatter');
+  }
+
+  function confirmarDistribuicao() {
+    if (pendSum === 0) return;
+    if (pendSum > (personagem.pontosDisponiveis || 0)) {
+      alert("Você tentou distribuir mais pontos do que possui disponível!");
+      return;
+    }
+    const novosAtributos = {
+      pressao: personagem.atributos.pressao + pend.pressao,
+      forca: personagem.atributos.forca + pend.forca,
+      velocidade: personagem.atributos.velocidade + pend.velocidade,
+      resiliencia: personagem.atributos.resiliencia + pend.resiliencia,
+    };
+    const novoDisponivel = (personagem.pontosDisponiveis || 0) - pendSum;
+    updateChar({
+      atributos: novosAtributos,
+      pontosDisponiveis: novoDisponivel,
+    }, `✨ Distribuiu ${pendSum} pontos: Pressão (+${pend.pressao}), Força (+${pend.forca}), Velocidade (+${pend.velocidade}), Resiliência (+${pend.resiliencia})`);
+    setPend({ pressao: 0, forca: 0, velocidade: 0, resiliencia: 0 });
+    playReiatsuSound('win');
+  }
+
+  function addTecnica() {
+    if (!novaTecNome.trim()) return;
+    const novas = [...(personagem.tecnicas || []), { id: uid(), nome: novaTecNome.trim(), categoria: novaTecCat }];
+    updateChar({ tecnicas: novas }, `Aprendeu técnica [${novaTecCat}] ${novaTecNome.trim()}`);
+    setNovaTecNome("");
+  }
+
+  function removeTecnica(id) {
+    const novas = (personagem.tecnicas || []).filter((t) => t.id !== id);
+    updateChar({ tecnicas: novas }, "Removeu uma técnica da ficha");
+  }
+
+  function togglePermissaoShikai() {
+    const atual = !!personagem?.permissoes?.shikaiLiberada;
+    updateChar({ permissoes: { ...(personagem.permissoes || {}), shikaiLiberada: !atual } }, `Permissão de Shikai ${!atual ? "LIBERADA" : "BLOQUEADA"} pelo ADM`);
+  }
+
+  function togglePermissaoBankai() {
+    const atual = !!personagem?.permissoes?.bankaiLiberada;
+    updateChar({ permissoes: { ...(personagem.permissoes || {}), bankaiLiberada: !atual } }, `Permissão de Bankai ${!atual ? "LIBERADA" : "BLOQUEADA"} pelo ADM`);
+  }
+
+  function concederRecompensa() {
+    const pontos = Number(rec.pontos) || 0;
+    if (pontos <= 0 && rec.tipo !== "Treino em ON (30 linhas)") return;
+    let patch = {};
+    let texto = `[${rec.tipo}]`;
+    if (rec.atributo) {
+      patch.atributos = { ...personagem.atributos, [rec.atributo]: (personagem.atributos[rec.atributo] || 0) + pontos };
+      texto += ` +${pontos} em ${rec.atributo.toUpperCase()}`;
+    } else {
+      patch.pontosDisponiveis = (personagem.pontosDisponiveis || 0) + pontos;
+      texto += ` +${pontos} pontos livres concedidos`;
+    }
+    if (rec.tipo === "Treino em ON (30 linhas)") {
+      patch.sorteiosComunsRestantes = (personagem.sorteiosComunsRestantes || 0) + 4;
+      patch.sorteiosEspeciaisRestantes = (personagem.sorteiosEspeciaisRestantes || 0) + 1;
+      texto += ` (+4 Giros Comuns e +1 Especial concedidos)`;
+    }
+    if (rec.motivo.trim()) texto += ` — ${rec.motivo.trim()}`;
+    updateChar(patch, texto);
+    setRec({ tipo: "Treino em ON (30 linhas)", pontos: 1, atributo: "", motivo: "" });
+  }
+
+  function handleFotoUpload(e, tipo = "perfil") {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (uploadEvent) => {
+      const dataUrl = uploadEvent.target.result;
+      if (tipo === "perfil") {
+        setEditFoto(dataUrl);
+        updateChar({ foto: dataUrl }, "Foto de perfil atualizada");
+      } else if (tipo === "shikai") {
+        setEditFotoShikai(dataUrl);
+        updateChar({ zanpakuto: { ...(personagem.zanpakuto || {}), fotoShikai: dataUrl } }, "Imagem da arma Shikai atualizada");
+      } else if (tipo === "bankai") {
+        setEditFotoBankai(dataUrl);
+        updateChar({ zanpakuto: { ...(personagem.zanpakuto || {}), fotoBankai: dataUrl } }, "Imagem da Bankai atualizada");
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function salvarDadosCompletos() {
+    updateChar({
+      nome: editNome.trim() || personagem.nome,
+      whatsapp: editWhats.trim(),
+      codigo: editCodigo.trim(),
+      faceclaim: editFaceclaim.trim(),
+      idadePlayer: editIdadePlayer,
+      aniversarioPlayer: editAnivPlayer,
+      idadeChar: editIdadeChar,
+      aniversarioChar: editAnivChar,
+      raca: editRaca,
+      esquadrao: editEsquadrao,
+      zanpakuto: {
+        ...(personagem.zanpakuto || {}),
+        nome: editZkNome.trim() || personagem.zanpakuto?.nome || "Em despertar"
+      }
+    }, "Dados cadastrais atualizados");
+    alert("Dados do Shinigami atualizados com sucesso!");
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Character Hero Card */}
+      <div className="relative rounded-2xl border-2 border-bleach-border bg-gradient-to-r from-black via-bleach-panel to-black p-4 sm:p-6 shadow-2xl overflow-hidden">
+        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5">
+          <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden border-2 border-bleach-orange shadow-lg bg-black shrink-0">
+            <img src={personagem.foto || 'assets/ichigo-orange.png'} alt={personagem.nome} className="w-full h-full object-cover" />
+            <label className="absolute inset-0 bg-black/60 opacity-0 hover:opacity-100 flex items-center justify-center text-[10px] font-bold text-white cursor-pointer transition">
+              Trocar Foto
+              <input type="file" accept="image/*" onChange={(e) => handleFotoUpload(e, "perfil")} className="hidden" />
+            </label>
+          </div>
+
+          <div className="flex-1 text-center sm:text-left space-y-2">
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+              <h2 className="font-title text-2xl sm:text-3xl text-white tracking-wider">{personagem.nome}</h2>
+              <Badge color={ESTADOS.find((e) => e.key === personagem.estado)?.color || C.green}>{personagem.estado}</Badge>
+              <Badge color={powerTier.color}>{powerTier.title} ({totalStats} pts)</Badge>
+              {personalidadeSelada && <Badge color={C.yellow}>🔒 DNA Selado</Badge>}
+            </div>
+
+            <div className="text-xs text-bleach-creamDim flex flex-wrap justify-center sm:justify-start gap-x-4 gap-y-1">
+              <span>Raça: <strong>{personagem.raca || "Shinigami"}</strong></span>
+              <span>Divisão: <strong>{personagem.esquadrao || "11º Esquadrão"}</strong></span>
+              <span>Zanpakutō: <strong className={temShikai ? "text-cyan-400 font-cinzel" : "text-bleach-muted"}>{personagem.zanpakuto?.nome || "Lâmina Selada"}</strong></span>
+            </div>
+          </div>
+        </div>
+
+        {/* Sub Navigation */}
+        <div className="flex gap-1.5 overflow-x-auto border-t border-bleach-borderSoft/80 pt-3 mt-4">
+          {[
+            { id: "perfil", label: "Perfil & Personalidade", icon: "👤" },
+            { id: "shikai", label: "Zanpakutō & Despertar", icon: "⚔️" },
+            { id: "atributos", label: "Atributos & Treino", icon: "⚡" },
+            { id: "kidos", label: "Kidō & Técnicas", icon: "📕" },
+            { id: "sorteios", label: `Sorteios (${(personagem.sorteiosComunsRestantes || 0) + (personagem.sorteiosEspeciaisRestantes || 0)})`, icon: "🎁" },
+            { id: "historico", label: "Histórico", icon: "📜" },
+          ].map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setSubPaginaFicha(tab.id)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition whitespace-nowrap ${
+                subPaginaFicha === tab.id ? "bg-bleach-orange text-black font-extrabold shadow" : "bg-bleach-panel2 text-bleach-creamDim hover:text-white"
+              }`}
+            >
+              {tab.icon} {tab.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* SUBPAGE: PERFIL & PERSONALIDADE */}
+      {subPaginaFicha === "perfil" && (
+        <div className="space-y-6">
+          {/* PERSONALIDADE & DNA DA ALMA SECTION */}
+          <Section
+            title="🧠 Personalidade & DNA Espiritual da Alma"
+            subtitle="A essência psicológica e moral que guiará a manifestação autoral da sua Zanpakutō"
+            className="border-2 border-bleach-blue/60 shadow-2xl"
+          >
+            {personalidadeSelada ? (
+              <div className="p-5 rounded-2xl bg-black/80 border-2 border-yellow-500/60 shadow-xl space-y-4">
+                <div className="flex items-center justify-between border-b border-yellow-500/30 pb-3">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl">🔒</span>
+                    <div>
+                      <h4 className="font-title text-xl text-yellow-300">REGISTRO ESPIRITUAL SELADO NA ALMA</h4>
+                      <p className="text-[11px] text-bleach-muted">Esta personalidade está gravada e imutável pelo jogador.</p>
+                    </div>
+                  </div>
+                  {isAdmin && (
+                    <button
+                      onClick={destravarPersonalidadeAdm}
+                      className="px-3 py-1 bg-yellow-950 border border-yellow-400 text-yellow-300 text-xs font-bold rounded-lg hover:bg-yellow-900"
+                    >
+                      🔓 Destravar Personalidade (ADM)
+                    </button>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                  <div className="p-3 bg-bleach-panel2 rounded-xl border border-white/5 space-y-1">
+                    <strong className="text-bleach-orange block">Psicologia & Comportamento:</strong>
+                    <p className="text-bleach-cream leading-relaxed">{persTexto || "—"}</p>
+                  </div>
+                  <div className="p-3 bg-bleach-panel2 rounded-xl border border-white/5 space-y-1">
+                    <strong className="text-green-400 block">Virtudes Dominantes:</strong>
+                    <p className="text-bleach-cream leading-relaxed">{persVirtudes || "—"}</p>
+                  </div>
+                  <div className="p-3 bg-bleach-panel2 rounded-xl border border-white/5 space-y-1">
+                    <strong className="text-purple-400 block">Deficiências & Conflitos Internos:</strong>
+                    <p className="text-bleach-cream leading-relaxed">{persDefeitos || "—"}</p>
+                  </div>
+                  <div className="p-3 bg-bleach-panel2 rounded-xl border border-white/5 space-y-1">
+                    <strong className="text-cyan-400 block">Desejos Centrais & Ambições:</strong>
+                    <p className="text-bleach-cream leading-relaxed">{persDesejos || "—"}</p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <div className="p-3.5 bg-black/60 border border-bleach-orange/40 rounded-xl text-xs text-bleach-creamDim space-y-1">
+                  <strong className="text-bleach-orange block">⚠️ Atenção antes de preencher:</strong>
+                  <p>Escreva por conta própria a psicologia do seu Shinigami. O motor de IA analisará essas informações para forjar os 4 Caminhos Espirituais exclusivos. Uma vez selada, <strong>não será mais possível alterar</strong> por conta própria.</p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                  <div className="sm:col-span-2">
+                    <label className="block font-bold text-bleach-cream mb-1">Descrição Geral da Personalidade & Filosofia *</label>
+                    <textarea
+                      rows={3}
+                      placeholder="Descreva o temperamento, valores morais e postura do personagem..."
+                      value={persTexto}
+                      onChange={(e) => setPersTexto(e.target.value)}
+                      className="w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-3 text-white"
+                    ></textarea>
+                  </div>
+                  <div>
+                    <label className="block font-bold text-green-400 mb-1">Virtudes & Pontos Fortes *</label>
+                    <input
+                      type="text"
+                      placeholder="Ex: Lealdade extrema, paciência tática, coragem"
+                      value={persVirtudes}
+                      onChange={(e) => setPersVirtudes(e.target.value)}
+                      className="w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-2.5 text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-bold text-purple-400 mb-1">Deficiências, Limitações ou Fraquezas</label>
+                    <input
+                      type="text"
+                      placeholder="Ex: Dificuldade de confiar, impulsividade, apego ao passado"
+                      value={persDefeitos}
+                      onChange={(e) => setPersDefeitos(e.target.value)}
+                      className="w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-2.5 text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-bold text-cyan-400 mb-1">Desejos Centrais & Ambições</label>
+                    <input
+                      type="text"
+                      placeholder="Ex: Proteger os companheiros, alcançar a liberdade"
+                      value={persDesejos}
+                      onChange={(e) => setPersDesejos(e.target.value)}
+                      className="w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-2.5 text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-bold text-red-400 mb-1">Medos Profundos & Conflitos Internos</label>
+                    <input
+                      type="text"
+                      placeholder="Ex: Medo da impotência, conflito entre dever e sentimento"
+                      value={persMedos}
+                      onChange={(e) => setPersMedos(e.target.value)}
+                      className="w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-2.5 text-white"
+                    />
+                  </div>
+                </div>
+
+                <div className="pt-2 flex justify-end">
+                  <button
+                    onClick={selarPersonalidadeDefinitiva}
+                    className="px-6 py-3 bg-gradient-to-r from-bleach-orange to-yellow-500 text-black font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-lg hover:brightness-110 transition"
+                  >
+                    🔒 Salvar & Selar Personalidade Definitiva na Alma
+                  </button>
+                </div>
+              </div>
+            )}
+          </Section>
+
+          {/* DADOS CADASTRAIS */}
+          <Section title="Dados Cadastrais & Perfil Biográfico" subtitle="Informações biográficas e civis do Shinigami">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+              <div>
+                <label className="block text-bleach-muted uppercase font-bold mb-1">Nome</label>
+                <input type="text" value={editNome} onChange={(e) => setEditNome(e.target.value)} className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2 text-white" />
+              </div>
+              <div>
+                <label className="block text-bleach-muted uppercase font-bold mb-1">WhatsApp</label>
+                <input type="text" value={editWhats} onChange={(e) => setEditWhats(e.target.value)} className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2 text-white" />
+              </div>
+              <div>
+                <label className="block text-bleach-muted uppercase font-bold mb-1">Código de Acesso</label>
+                <input type="text" value={editCodigo} onChange={(e) => setEditCodigo(e.target.value)} className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2 text-white font-mono" />
+              </div>
+              <div>
+                <label className="block text-bleach-muted uppercase font-bold mb-1">Raça</label>
+                <input type="text" value={editRaca} onChange={(e) => setEditRaca(e.target.value)} className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2 text-white" />
+              </div>
+              <div>
+                <label className="block text-bleach-muted uppercase font-bold mb-1">Esquadrão</label>
+                <input type="text" value={editEsquadrao} onChange={(e) => setEditEsquadrao(e.target.value)} className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2 text-white" />
+              </div>
+              <div>
+                <label className="block text-bleach-muted uppercase font-bold mb-1">Faceclaim</label>
+                <input type="text" value={editFaceclaim} onChange={(e) => setEditFaceclaim(e.target.value)} className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2 text-white" />
+              </div>
+            </div>
+
+            <div className="mt-4 flex justify-end">
+              <button onClick={salvarDadosCompletos} className="px-5 py-2.5 bg-bleach-orange text-black font-extrabold text-xs uppercase rounded-lg shadow">
+                Salvar Dados Cadastrais
+              </button>
+            </div>
+          </Section>
+        </div>
+      )}
+
+      {/* SUBPAGE: SHIKAI & BANKAI */}
+      {subPaginaFicha === "shikai" && (
+        <div className="space-y-6">
+          <Section
+            title="⚔️ Estado Espiritual da Zanpakutō"
+            subtitle="A forma física e o despertar da lâmina do Shinigami"
+            className="border-2 border-bleach-orange/60"
+          >
+            {temShikai ? (
+              <div className="space-y-4">
+                <div className="p-5 rounded-2xl bg-black/80 border-2 border-cyan-500/80 shadow-2xl space-y-3">
+                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-cyan-500/40 pb-3">
+                    <div>
+                      <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded bg-blue-950 text-cyan-300 border border-cyan-400">
+                        ✓ SHIKAI DESPERTA & VINCULADA
+                      </span>
+                      <h3 className="font-title text-3xl text-white tracking-wider mt-1">
+                        {personagem.zanpakuto.shikaiAtiva.nome}
+                      </h3>
+                      <p className="text-xs text-cyan-300 italic">
+                        "{personagem.zanpakuto.shikaiAtiva.comando}"
+                      </p>
+                    </div>
+                    <Badge color={C.blue}>{personagem.zanpakuto.shikaiAtiva.elemento}</Badge>
+                  </div>
+
+                  <div className="text-xs space-y-2 text-bleach-creamDim">
+                    <p><strong>Manifestação:</strong> {personagem.zanpakuto.shikaiAtiva.aparencia || personagem.zanpakuto.shikaiAtiva.formatoArma}</p>
+                    <p><strong>Poder Espiritual:</strong> {personagem.zanpakuto.shikaiAtiva.poder}</p>
+                  </div>
+
+                  {/* Sword Art SVG */}
+                  <BleachSwordArt
+                    arma={personagem.zanpakuto.shikaiAtiva}
+                    nomeZk={personagem.zanpakuto.shikaiAtiva.nome}
+                    isBankai={false}
+                    foto={personagem.zanpakuto.fotoShikai}
+                    onUpload={(e) => handleFotoUpload(e, "shikai")}
+                  />
+                </div>
+
+                {/* Bankai Section */}
+                {temBankai ? (
+                  <div className="p-5 rounded-2xl bg-black/80 border-2 border-yellow-500/80 bankai-supreme-card shadow-2xl space-y-3">
+                    <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded bg-amber-950 text-yellow-300 border border-yellow-400">
+                      卍 BANKAI DESPERTA & SOBERANA
+                    </span>
+                    <h3 className="font-title text-3xl text-yellow-300 tracking-wider">
+                      {personagem.zanpakuto.bankaiAtiva.nome}
+                    </h3>
+                    <p className="text-xs text-yellow-200 italic">"{personagem.zanpakuto.bankaiAtiva.comando}"</p>
+                    <p className="text-xs text-bleach-creamDim">{personagem.zanpakuto.bankaiAtiva.poder}</p>
+
+                    <BleachSwordArt
+                      arma={personagem.zanpakuto.bankaiAtiva}
+                      nomeZk={personagem.zanpakuto.bankaiAtiva.nome}
+                      isBankai={true}
+                      foto={personagem.zanpakuto.fotoBankai}
+                      onUpload={(e) => handleFotoUpload(e, "bankai")}
+                    />
+                  </div>
+                ) : (
+                  <div className="p-4 bg-bleach-panel2 rounded-xl border border-yellow-500/30 flex items-center justify-between">
+                    <div>
+                      <h4 className="font-title text-lg text-yellow-400">Bankai (Liberação Total)</h4>
+                      <p className="text-xs text-bleach-creamDim">
+                        {podeGerarBankai ? "🔓 Permissão concedida pelo ADM! Clique para realizar o despertar." : "🔒 Bankai selada. Aguarde autorização da Administração."}
+                      </p>
+                    </div>
+                    {podeGerarBankai && (
+                      <button
+                        onClick={() => abrirFluxoDespertar("bankai")}
+                        className="px-5 py-2.5 bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-extrabold text-xs uppercase rounded-xl shadow"
+                      >
+                        卍 Despertar Bankai
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="p-8 text-center space-y-4 bg-black/60 rounded-2xl border border-bleach-border">
+                <div className="text-5xl">🗡️</div>
+                <h3 className="font-title text-2xl text-white">LÂMINA SELADA (ASAUCHI)</h3>
+                <p className="text-xs text-bleach-creamDim max-w-md mx-auto leading-relaxed">
+                  A sua Zanpakutō aguarda a liberação pelo ADM e o registro da cena de despertar para revelar as 4 interpretações autênticas da sua alma.
+                </p>
+
+                {podeGerarShikai ? (
+                  <button
+                    onClick={() => abrirFluxoDespertar("shikai")}
+                    className="px-6 py-3 bg-gradient-to-r from-cyan-400 to-blue-600 text-black font-extrabold text-xs uppercase tracking-widest rounded-xl shadow-lg hover:brightness-110 transition animate-pulse"
+                  >
+                    ✨ Iniciar Ritual de Despertar de Shikai (IA)
+                  </button>
+                ) : (
+                  <span className="inline-block px-4 py-2 rounded-lg bg-black text-xs font-mono text-bleach-muted border border-white/10">
+                    🔒 Aguardando liberação de Despertar pelo Administrador
+                  </span>
+                )}
+              </div>
+            )}
+          </Section>
+        </div>
+      )}
+
+      {/* SUBPAGE: ATRIBUTOS & TREINO */}
+      {subPaginaFicha === "atributos" && (
+        <div className="space-y-6">
+          {/* PONTOS DISPONÍVEIS */}
+          {(personagem.pontosDisponiveis || 0) > 0 && (
+            <div className="bg-gradient-to-r from-orange-950/60 via-bleach-panel to-orange-950/40 border-2 border-bleach-orange/60 rounded-xl p-5 shadow-2xl reiatsu-glow">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4 pb-3 border-b border-bleach-borderSoft">
+                <div>
+                  <h4 className="font-title text-2xl text-bleach-orange flex items-center gap-2">
+                    <span>✨</span> PONTOS DISPONÍVEIS PARA DISTRIBUIR
+                  </h4>
+                  <p className="text-xs text-bleach-creamDim">
+                    Você possui <strong className="text-bleach-orange">{personagem.pontosDisponiveis}</strong> pontos livres concedidos por treinos e sorteios.
+                  </p>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-[11px] font-bold uppercase text-bleach-creamDim">Distribuir por vez:</span>
+                  <div className="flex bg-black/80 border border-bleach-border rounded-xl p-1 gap-1">
+                    {[1, 5, 10].map((step) => (
+                      <button
+                        key={step}
+                        type="button"
+                        onClick={() => setPassoDistribuicao(step)}
+                        className={`px-3 py-1 rounded-lg text-xs font-mono font-black transition ${
+                          passoDistribuicao === step ? "bg-bleach-orange text-black" : "text-bleach-creamDim hover:text-white"
+                        }`}
+                      >
+                        ±{step} pts
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="bg-black/60 border border-white/10 px-3 py-1.5 rounded-xl text-right">
+                    <span className="text-[11px] text-bleach-creamDim">Restam: </span>
+                    <span className="font-bold text-lg text-bleach-orange font-mono">{restante}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                {ATTRS.map((a) => {
+                  const decStep = Math.min(passoDistribuicao, pend[a.key]);
+                  const incStep = Math.min(passoDistribuicao, restante);
+                  return (
+                    <div key={a.key} className="bg-black/50 border border-bleach-border rounded-xl p-3 flex items-center justify-between">
+                      <div>
+                        <span className="text-xs font-bold uppercase tracking-wider block" style={{ color: a.color }}>
+                          {a.label}
+                        </span>
+                        <span className="text-[11px] text-bleach-muted">
+                          Atual: <strong className="text-white">{personagem.atributos[a.key]}</strong>
+                          {pend[a.key] > 0 && <span className="text-bleach-orange font-mono ml-1 font-bold">→ {personagem.atributos[a.key] + pend[a.key]}</span>}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-1.5 bg-black/80 p-1 rounded-xl border border-white/10">
+                        <button
+                          type="button"
+                          onClick={() => { const amt = Math.min(passoDistribuicao, pend[a.key]); if (amt > 0) setPend((p) => ({ ...p, [a.key]: p[a.key] - amt })); }}
+                          disabled={pend[a.key] === 0}
+                          className="px-2.5 h-8 rounded-lg bg-bleach-panel border border-bleach-border text-white text-xs font-bold font-mono disabled:opacity-20 hover:border-bleach-orange"
+                        >
+                          −{passoDistribuicao > 1 ? passoDistribuicao : ""}
+                        </button>
+                        <span className="min-w-[36px] text-center font-mono font-black text-bleach-orange text-base">+{pend[a.key]}</span>
+                        <button
+                          type="button"
+                          onClick={() => { const amt = Math.min(passoDistribuicao, restante); if (amt > 0) setPend((p) => ({ ...p, [a.key]: p[a.key] + amt })); }}
+                          disabled={restante <= 0}
+                          className="px-2.5 h-8 rounded-lg bg-bleach-panel border border-bleach-border text-white text-xs font-bold font-mono disabled:opacity-20 hover:border-bleach-orange"
+                        >
+                          +{passoDistribuicao > 1 ? passoDistribuicao : ""}
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={confirmarDistribuicao}
+                  disabled={pendSum === 0}
+                  className="px-6 py-2.5 bg-gradient-to-r from-bleach-orange to-bleach-orangeDeep text-black font-extrabold text-xs uppercase tracking-widest rounded-lg shadow-lg hover:brightness-110 disabled:opacity-40"
+                >
+                  Confirmar Distribuição ({pendSum} pts)
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* ATTR CARDS */}
+          <Section title="Atributos Espirituais" subtitle="O valor puro do seu poder na Sociedade das Almas">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {ATTRS.map((a) => (
+                <div key={a.key} className="bg-bleach-panel2 border border-bleach-borderSoft rounded-xl p-4 flex flex-col justify-between">
+                  <div className="flex items-start justify-between mb-2">
+                    <div>
+                      <h4 className="text-xs font-bold uppercase tracking-wider" style={{ color: a.color }}>{a.label}</h4>
+                      <p className="text-[11px] text-bleach-muted">{a.desc}</p>
+                    </div>
+                    <span className="text-3xl font-extrabold font-mono" style={{ color: a.color }}>{personagem.atributos[a.key]}</span>
+                  </div>
+                  <div className="w-full bg-black/50 h-2 rounded-full overflow-hidden border border-white/5">
+                    <div className="h-full rounded-full transition-all duration-500" style={{ width: `${Math.min(100, (personagem.atributos[a.key] / 200) * 100)}%`, backgroundColor: a.color }}></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Section>
+        </div>
+      )}
+
+      {/* SUBPAGE: KIDOS & TÉCNICAS */}
+      {subPaginaFicha === "kidos" && (
+        <div className="space-y-6">
+          <Section title="Kidō e Técnicas Aprendidas" subtitle="Feitiços dominados pelo Shinigami">
+            {(personagem.tecnicas || []).length === 0 ? (
+              <p className="text-xs text-bleach-muted">Nenhuma técnica registrada até o momento.</p>
+            ) : (
+              <div className="flex flex-wrap gap-2.5 mb-4">
+                {personagem.tecnicas.map((t) => (
+                  <div key={t.id} className="bg-bleach-panel2 border border-bleach-border px-3 py-1.5 rounded-lg flex items-center gap-2 text-xs">
+                    <span className="px-2 py-0.5 rounded bg-black text-[10px] font-bold text-bleach-orange uppercase">{t.categoria}</span>
+                    <span className="font-semibold text-bleach-cream">{t.nome}</span>
+                    {isAdmin && (
+                      <button onClick={() => removeTecnica(t.id)} className="text-red-400 hover:text-red-300 font-bold ml-1">×</button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {isAdmin && (
+              <div className="mt-4 pt-4 border-t border-bleach-borderSoft flex flex-wrap gap-2">
+                <select value={novaTecCat} onChange={(e) => setNovaTecCat(e.target.value)} className="bg-bleach-panel2 border border-bleach-border rounded-lg px-3 py-2 text-xs text-white">
+                  {CATEGORIAS_TECNICA.map((c) => <option key={c} value={c}>{c}</option>)}
+                </select>
+                <input type="text" placeholder="Nome da técnica..." value={novaTecNome} onChange={(e) => setNovaTecNome(e.target.value)} className="flex-1 min-w-[180px] bg-bleach-panel2 border border-bleach-border rounded-lg px-3 py-2 text-xs text-white" />
+                <button onClick={addTecnica} className="px-4 py-2 bg-bleach-panel border border-bleach-border text-bleach-cream hover:border-bleach-orange rounded-lg text-xs font-bold uppercase">+ Adicionar</button>
+              </div>
+            )}
+          </Section>
+        </div>
+      )}
+
+      {/* SUBPAGE: SORTEIOS & GACHA */}
+      {subPaginaFicha === "sorteios" && (
+        <div className="space-y-6">
+          <Section title="🎁 Sorteios & Roletas de Recompensa" subtitle="Realize seus giros liberados por treinos em ON e missões aprovadas">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="bg-bleach-panel2 border border-bleach-border rounded-xl p-4 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="font-title text-xl tracking-wider text-bleach-orange flex items-center gap-1.5">
+                      <span>🎲</span> Sorteio Gacha Comum
+                    </h4>
+                    <span className="px-2.5 py-0.5 rounded-full bg-black text-bleach-orange font-mono font-bold text-xs border border-bleach-border">
+                      {personagem.sorteiosComunsRestantes || 0} giros disponíveis
+                    </span>
+                  </div>
+                  <p className="text-xs text-bleach-creamDim mb-3">Sorteia recursos e pontos de atributo graduais.</p>
+                </div>
+                <button
+                  onClick={girarGachaComum}
+                  disabled={(personagem.sorteiosComunsRestantes || 0) <= 0}
+                  className="w-full py-2.5 bg-gradient-to-r from-bleach-orange to-bleach-orangeDeep text-black font-extrabold text-xs uppercase tracking-widest rounded-lg shadow disabled:opacity-40 disabled:cursor-not-allowed hover:brightness-110 transition"
+                >
+                  {(personagem.sorteiosComunsRestantes || 0) > 0 ? "✨ Realizar Sorteio Comum" : "Sem Giros Comuns"}
+                </button>
+              </div>
+
+              <div className="bg-bleach-panel2 border-2 border-purple-500/40 purple-reiatsu-glow rounded-xl p-4 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="font-title text-xl tracking-wider text-purple-400 flex items-center gap-1.5">
+                      <span>🌟</span> Sorteio de Classe Especial
+                    </h4>
+                    <span className="px-2.5 py-0.5 rounded-full bg-black text-purple-300 font-mono font-bold text-xs border border-purple-500/40">
+                      {personagem.sorteiosEspeciaisRestantes || 0} especiais
+                    </span>
+                  </div>
+                  <p className="text-xs text-bleach-creamDim mb-3">Prêmios de alto prestígio e itens sagrados.</p>
+                </div>
+                <button
+                  onClick={girarSorteioEspecial}
+                  disabled={(personagem.sorteiosEspeciaisRestantes || 0) <= 0}
+                  className="w-full py-2.5 bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-800 text-white font-extrabold text-xs uppercase tracking-widest rounded-lg shadow-lg disabled:opacity-40 disabled:cursor-not-allowed hover:brightness-110 transition"
+                >
+                  {(personagem.sorteiosEspeciaisRestantes || 0) > 0 ? "⚡ Girar Sorteio Especial" : "Sem Giros Especiais"}
+                </button>
+              </div>
+            </div>
+          </Section>
+        </div>
+      )}
+
+      {/* SUBPAGE: HISTÓRICO */}
+      {subPaginaFicha === "historico" && (
+        <div className="space-y-6">
+          <Section title="Histórico de Registros" subtitle="Linha do tempo oficial de treinos, missões e conquistas">
+            {(personagem.historico || []).length === 0 ? (
+              <p className="text-xs text-bleach-muted">Nenhum registro ainda.</p>
+            ) : (
+              <div className="space-y-3">
+                {personagem.historico.slice(0, 25).map((h) => (
+                  <div key={h.id} className="border-l-2 border-bleach-orange pl-3 py-1">
+                    <div className="text-[10px] text-bleach-muted font-mono">{h.data}</div>
+                    <div className="text-xs text-bleach-creamDim mt-0.5">{h.texto}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </Section>
+        </div>
+      )}
+
+      {/* ADMIN ACTION PANEL (EXCLUSIVE CONTROLS) */}
+      {isAdmin && (
+        <Section title="Painel de Gestão da Ficha (ADM)" subtitle="Atribuição de treinos, giros rápidos, permissões e reset">
+          <div className="space-y-4">
+            
+            {/* Quick Roll Addition Buttons */}
+            <div className="p-3.5 bg-black/60 border border-bleach-borderSoft rounded-xl flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <span className="text-xs font-bold text-bleach-orange uppercase block">Sorteios Rápidos:</span>
+                <p className="text-[11px] text-bleach-muted">Adicione giros comuns ou especiais diretamente na ficha do jogador</p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => updateChar({ sorteiosComunsRestantes: (personagem.sorteiosComunsRestantes || 0) + 1 }, "+1 Giro de Sorteio Comum adicionado pelo ADM")}
+                  className="px-3 py-1.5 bg-orange-950 border border-bleach-orange text-bleach-orange text-xs font-bold rounded-lg hover:bg-orange-900"
+                >
+                  🎲 +1 Giro Comum
+                </button>
+                <button
+                  onClick={() => updateChar({ sorteiosComunsRestantes: (personagem.sorteiosComunsRestantes || 0) + 3 }, "+3 Giros de Sorteio Comum adicionados pelo ADM")}
+                  className="px-3 py-1.5 bg-orange-950 border border-bleach-orange text-bleach-orange text-xs font-bold rounded-lg hover:bg-orange-900"
+                >
+                  🎲 +3 Giros Comuns
+                </button>
+                <button
+                  onClick={() => updateChar({ sorteiosEspeciaisRestantes: (personagem.sorteiosEspeciaisRestantes || 0) + 1 }, "+1 Giro de Sorteio Especial adicionado pelo ADM")}
+                  className="px-3 py-1.5 bg-purple-950 border border-purple-400 text-purple-300 text-xs font-bold rounded-lg hover:bg-purple-900"
+                >
+                  🌟 +1 Giro Especial
+                </button>
+                <button
+                  onClick={() => updateChar({ sorteiosEspeciaisRestantes: (personagem.sorteiosEspeciaisRestantes || 0) + 2 }, "+2 Giros de Sorteio Especial adicionados pelo ADM")}
+                  className="px-3 py-1.5 bg-purple-950 border border-purple-400 text-purple-300 text-xs font-bold rounded-lg hover:bg-purple-900"
+                >
+                  🌟 +2 Giros Especiais
+                </button>
+              </div>
+            </div>
+
+            {/* Permissions & Reset */}
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={togglePermissaoShikai}
+                  className={`px-4 py-2 text-xs font-bold uppercase rounded-lg border transition ${
+                    personagem?.permissoes?.shikaiLiberada ? "bg-red-950 border-red-500 text-red-300" : "bg-blue-950 border-cyan-400 text-cyan-300"
+                  }`}
+                >
+                  {personagem?.permissoes?.shikaiLiberada ? "🔒 Revogar Permissão de Shikai" : "🔓 Liberar Despertar de Shikai"}
+                </button>
+
+                <button
+                  onClick={togglePermissaoBankai}
+                  className={`px-4 py-2 text-xs font-bold uppercase rounded-lg border transition ${
+                    personagem?.permissoes?.bankaiLiberada ? "bg-red-950 border-red-500 text-red-300" : "bg-amber-950 border-amber-400 text-yellow-300"
+                  }`}
+                >
+                  {personagem?.permissoes?.bankaiLiberada ? "🔒 Revogar Permissão de Bankai" : "🔓 Liberar Despertar de Bankai"}
+                </button>
+              </div>
+
+              {/* Danger Reset Button */}
+              <button
+                onClick={() => setShowResetModal(true)}
+                className="px-4 py-2 bg-red-950 border-2 border-red-500 hover:bg-red-900 text-red-200 font-extrabold text-xs uppercase rounded-lg shadow transition"
+              >
+                ⚠️ Resetar Ficha para o Início
+              </button>
+            </div>
+          </div>
+        </Section>
+      )}
+
+      {/* GACHA OPENING MODAL */}
+      {gachaModal && (
+        <SpiritualChestModal
+          modal={gachaModal}
+          onClose={() => setGachaModal(null)}
+          onColetar={confirmarColetaDrop}
+        />
+      )}
+
+      {/* AWAKENING SCENE SUBMISSION MODAL */}
+      {showCenaModal && (
+        <AwakeningSceneModal
+          open={!!showCenaModal}
+          tipo={showCenaModal}
+          personagem={personagem}
+          onClose={() => setShowCenaModal(null)}
+          onSubmitScene={submeterCenaDespertar}
+        />
+      )}
+
+      {/* ZANPAKUTO 4 PATHS RITUAL MODAL */}
+      {showZanpakutoAIModal && (
+        <Zanpakuto4PathsModal
+          open={showZanpakutoAIModal}
+          tipo={aiZkTipo}
+          caminhos={aiZkOpcoes}
+          personagem={personagem}
+          onEscolherCaminho={escolherCaminhoEspiritual}
+          onClose={() => setShowZanpakutoAIModal(false)}
+        />
+      )}
+
+      {/* RESET CONFIRMATION MODAL */}
+      {showResetModal && (
+        <div className="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
+          <div className="bg-bleach-panel border-2 border-red-500 rounded-2xl p-6 max-w-md w-full shadow-2xl text-center space-y-4">
+            <div className="text-4xl">⚠️</div>
+            <h3 className="font-title text-2xl text-red-400">RESET TOTAL DE FICHA</h3>
+            <p className="text-xs text-bleach-creamDim leading-relaxed">
+              Tem certeza que quer resetar toda a ficha de <strong className="text-white">{personagem.nome}</strong> para o estado inicial?
+            </p>
+            <div className="text-[11px] text-left p-3 bg-black/60 rounded-xl border border-red-500/30 text-bleach-muted space-y-1">
+              <div>• Atributos retornam para o padrão (10 em cada).</div>
+              <div>• Saldo de pontos livres retorna para 20.</div>
+              <div>• Giros comuns voltam para 2, especiais para 0.</div>
+              <div>• Shikai e Bankai serão desvinculadas e liberadas do registro global.</div>
+              <div>• Trava de personalidade e histórico serão redefinidos.</div>
+            </div>
+            <div className="flex gap-3 pt-2">
+              <button
+                onClick={() => setShowResetModal(false)}
+                className="flex-1 py-2.5 bg-bleach-panel2 border border-bleach-border text-xs text-white rounded-lg"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={confirmarResetFicha}
+                className="flex-1 py-2.5 bg-red-600 hover:bg-red-500 text-white font-extrabold text-xs uppercase rounded-lg shadow"
+              >
+                Sim, Resetar Ficha
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// =========================================================================
+// VIEWS PART 3: ADMINPANEL, SISTEMASVIEW & ROOT RENDER
+// =========================================================================
+
+// TAB: ADMIN PANEL
+function AdminPanel({ db, saveDb, session, cloudStatus, onAbrirFicha }) {
+  const isSuper = session?.role === "super_admin";
+  const [adminTab, setAdminTab] = useState("personagens");
+  const [busca, setBusca] = useState("");
+  const [charToDelete, setCharToDelete] = useState(null);
+  
+  // Novo Personagem Form
+  const [novoNome, setNovoNome] = useState("");
+  const [novoWhats, setNovoWhats] = useState("");
+  const [novoCod, setNovoCod] = useState("");
+  const [novoEsquadrao, setNovoEsquadrao] = useState("11º Esquadrão");
+
+  // Sub-ADM Form
+  const [novoSubUser, setNovoSubUser] = useState("");
+  const [novoSubSenha, setNovoSubSenha] = useState("");
+  const [novoSubNome, setNovoSubNome] = useState("");
+  const [novoSubCargo, setNovoSubCargo] = useState("Avaliador de Cenas & Fichas");
+
+  // Dice Roller
+  const [dadoTipo, setDadoTipo] = useState("d20");
+  const [dadoChar, setDadoChar] = useState(db.personagens?.[0]?.nome || "");
+  const [dadoResultado, setDadoResultado] = useState(null);
+
+  // Cloud Config
+  const [editFirebaseUrl, setEditFirebaseUrl] = useState(db.firebaseUrl || "");
+
+  function criarPersonagem(e) {
+    e.preventDefault();
+    if (!novoNome.trim()) {
+      alert("Digite o nome do personagem.");
+      return;
+    }
+    const codGerado = novoCod.trim() || `SHIN-${Math.floor(1000 + Math.random() * 9000)}`;
+    const novoP = {
+      id: uid(),
+      nome: novoNome.trim(),
+      whatsapp: novoWhats.trim() || "11999999999",
+      codigo: codGerado,
+      foto: "assets/ichigo-orange.png",
+      raca: "Shinigami",
+      esquadrao: novoEsquadrao,
+      faceclaim: "Personagem Oficial",
+      idadePlayer: "20",
+      aniversarioPlayer: "01/01",
+      idadeChar: "18",
+      aniversarioChar: "15/07",
+      pontosDisponiveis: 20,
+      sorteiosComunsRestantes: 2,
+      sorteiosEspeciaisRestantes: 0,
+      sorteiosDrops: [],
+      permissoes: { shikaiLiberada: false, bankaiLiberada: false },
+      atributos: { pressao: 10, forca: 10, velocidade: 10, resiliencia: 10 },
+      kidosConhecidos: [
+        { id: "h4", numero: 4, nome: "Byakurai", cat: "Hadō", custoReiatsu: 3 },
+        { id: "b1", numero: 1, nome: "Sai", cat: "Bakudō", custoReiatsu: 2 }
+      ],
+      tecnicas: [
+        { id: uid(), nome: "Hadō #4 — Byakurai", categoria: "Hadō" },
+        { id: uid(), nome: "Bakudō #1 — Sai", categoria: "Bakudō" }
+      ],
+      personalidade: { texto: "", virtudes: "", defeitos: "", desejos: "", medos: "", conflitos: "", estiloCombate: "" },
+      personalidadeTravada: false,
+      cenaDespertarShikai: "",
+      cenaDespertarBankai: "",
+      zanpakuto: { nome: "Em despertar", fotoShikai: "assets/ichigo-orange.png", fotoBankai: "assets/ichigo-moon.png", shikaiAtiva: null, bankaiAtiva: null, notas: "" },
+      estado: "Inteiro",
+      treinosHoje: 0,
+      historico: [{ id: uid(), data: nowStr(), texto: "Ficha criada e aprovada pela Administração." }]
+    };
+
+    const personagens = [novoP, ...(db.personagens || [])];
+    saveDb({ ...db, personagens });
+    setNovoNome("");
+    setNovoWhats("");
+    setNovoCod("");
+    alert(`Personagem ${novoP.nome} criado com sucesso! Código de acesso: ${novoP.codigo}`);
+    playReiatsuSound('win');
+  }
+
+  function deletarPersonagemConfirmado() {
+    if (!charToDelete) return;
+    const charId = charToDelete.id;
+    const charNome = charToDelete.nome;
+
+    const personagens = (db.personagens || []).filter(p => p.id !== charId);
+    const novasVinculadas = (db.zanpakutosVinculadas || []).filter(z => z.charId !== charId);
+
+    saveDb({ ...db, personagens, zanpakutosVinculadas: novasVinculadas });
+    setCharToDelete(null);
+    alert(`Ficha de ${charNome} excluída permanentemente. Se o jogador estiver online, a sessão dele será revogada.`);
+    playReiatsuSound('shatter');
+  }
+
+  function criarSubAdm(e) {
+    e.preventDefault();
+    if (!novoSubUser.trim() || !novoSubSenha.trim()) {
+      alert("Preencha usuário e senha do Sub-ADM.");
+      return;
+    }
+    const novoSub = {
+      id: uid(),
+      usuario: novoSubUser.trim().toLowerCase(),
+      senha: novoSubSenha.trim(),
+      nome: novoSubNome.trim() || "Avaliador",
+      cargo: novoSubCargo.trim()
+    };
+    const subAdms = [...(db.subAdms || []), novoSub];
+    saveDb({ ...db, subAdms });
+    setNovoSubUser("");
+    setNovoSubSenha("");
+    setNovoSubNome("");
+    alert(`Sub-ADM ${novoSub.nome} cadastrado!`);
+  }
+
+  function removerSubAdm(id) {
+    const subAdms = (db.subAdms || []).filter(s => s.id !== id);
+    saveDb({ ...db, subAdms });
+  }
+
+  function salvarConfigCloud() {
+    saveDb({ ...db, firebaseUrl: editFirebaseUrl.trim() });
+    alert("URL do Firebase atualizada!");
+  }
+
+  function exportarBackup() {
+    const jsonStr = JSON.stringify(db, null, 2);
+    const blob = new Blob([jsonStr], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `backup_bleach_rpg_${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function importarBackup(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const imported = JSON.parse(ev.target.result);
+        if (imported && imported.personagens) {
+          saveDb(imported);
+          alert("Backup restaurado com sucesso!");
+        } else {
+          alert("Arquivo de backup inválido.");
+        }
+      } catch (err) {
+        alert("Erro ao ler JSON de backup.");
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  function rolarDado() {
+    let max = 20;
+    if (dadoTipo === "d100") max = 100;
+    else if (dadoTipo === "d6") max = 6;
+    else if (dadoTipo === "d10") max = 10;
+
+    const res = Math.floor(Math.random() * max) + 1;
+    let cat = "Sucesso";
+    if (dadoTipo === "d20") {
+      if (res === 1) cat = "Desastre Crítico (Falha Grave)";
+      else if (res <= 6) cat = "Falha Comum";
+      else if (res <= 13) cat = "Sucesso Parcial (+50%)";
+      else if (res <= 19) cat = "Extremo Sucesso (+80%)";
+      else cat = "✨ CRÍTICO ABSOLUTO (+100%)";
+    }
+
+    const rollObj = {
+      id: uid(),
+      autor: session?.nome || "Mestre ADM",
+      personagem: dadoChar || "Geral",
+      dado: dadoTipo,
+      resultado: res,
+      categoria: cat,
+      data: nowStr()
+    };
+
+    setDadoResultado(rollObj);
+    const rolagensDadosPublicas = [rollObj, ...(db.rolagensDadosPublicas || []).slice(0, 30)];
+    saveDb({ ...db, rolagensDadosPublicas });
+    playReiatsuSound('roll');
+  }
+
+  const charsFiltrados = (db.personagens || []).filter(p =>
+    p.nome.toLowerCase().includes(busca.toLowerCase()) ||
+    (p.codigo || "").toLowerCase().includes(busca.toLowerCase()) ||
+    (p.esquadrao || "").toLowerCase().includes(busca.toLowerCase())
+  );
+
+  return (
+    <div className="space-y-6">
+      {/* Header Admin */}
+      <div className="bg-gradient-to-r from-yellow-950/60 via-bleach-panel to-black border-2 border-yellow-500/60 rounded-2xl p-4 sm:p-6 shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-xl bg-yellow-500 text-black flex items-center justify-center font-title text-2xl font-extrabold shadow-[0_0_15px_#E0B34C]">
+            👑
+          </div>
+          <div>
+            <h2 className="font-title text-2xl text-yellow-400 tracking-wider">PAINEL SUPREMO DE ADMINISTRAÇÃO</h2>
+            <p className="text-xs text-bleach-creamDim">Controle global de fichas, sessões, regras e banco de dados</p>
+          </div>
+        </div>
+
+        <div className="flex gap-2">
+          {["personagens", "novo_char", "dados", "sub_adms", "nuvem"].map(tab => (
+            <button
+              key={tab}
+              onClick={() => setAdminTab(tab)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition uppercase ${
+                adminTab === tab ? "bg-yellow-500 text-black font-extrabold shadow" : "bg-black/60 border border-white/10 text-bleach-creamDim hover:text-white"
+              }`}
+            >
+              {tab === "personagens" ? "👥 Fichas" :
+               tab === "novo_char" ? "+ Nova Ficha" :
+               tab === "dados" ? "🎲 Dados & IA" :
+               tab === "sub_adms" ? "🛡️ Avaliadores" : "☁️ Nuvem & Backup"}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* TAB: LISTA DE PERSONAGENS */}
+      {adminTab === "personagens" && (
+        <Section title="Gestão Geral de Fichas dos Jogadores" subtitle="Acesse qualquer ficha, conceda giros ou exclua contas">
+          <div className="mb-4">
+            <input
+              type="text"
+              placeholder="🔍 Buscar por nome, código ou esquadrão..."
+              value={busca}
+              onChange={(e) => setBusca(e.target.value)}
+              className="w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-3 text-xs text-white"
+            />
+          </div>
+
+          <div className="space-y-3">
+            {charsFiltrados.map(p => {
+              const temShikai = !!p.zanpakuto?.shikaiAtiva;
+              return (
+                <div key={p.id} className="p-4 bg-bleach-panel2 border border-bleach-border rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div className="flex items-center gap-3 w-full sm:w-auto">
+                    <img src={p.foto || 'assets/ichigo-orange.png'} className="w-12 h-12 rounded-xl object-cover border border-bleach-border bg-black" />
+                    <div>
+                      <h4 className="font-bold text-white text-sm flex items-center gap-2">
+                        <span>{p.nome}</span>
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-black text-bleach-orange border border-bleach-border">
+                          {p.codigo}
+                        </span>
+                      </h4>
+                      <div className="text-[11px] text-bleach-muted flex flex-wrap gap-2 mt-0.5">
+                        <span>Divisão: <strong>{p.esquadrao}</strong></span>
+                        <span>Pontos Livres: <strong className="text-bleach-orange">{p.pontosDisponiveis || 0}</strong></span>
+                        <span>Giros: <strong>🎲 {p.sorteiosComunsRestantes || 0}</strong> / <strong>🌟 {p.sorteiosEspeciaisRestantes || 0}</strong></span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(`Código de Acesso: ${p.codigo}\nNome: ${p.nome}`);
+                        alert("Credenciais copiadas para a área de transferência!");
+                      }}
+                      className="px-3 py-1.5 bg-black/60 border border-white/10 hover:border-white text-bleach-creamDim text-xs font-bold rounded-lg"
+                      title="Copiar credenciais de login"
+                    >
+                      📋 Copiar Login
+                    </button>
+
+                    <button
+                      onClick={() => onAbrirFicha(p.id)}
+                      className="px-4 py-1.5 bg-bleach-orange text-black font-extrabold text-xs uppercase rounded-lg shadow hover:bg-orange-400"
+                    >
+                      ⚙️ Gerenciar Ficha
+                    </button>
+
+                    <button
+                      onClick={() => setCharToDelete(p)}
+                      className="px-2.5 py-1.5 bg-red-950/60 border border-red-500/50 hover:bg-red-800 text-red-300 text-xs font-bold rounded-lg"
+                      title="Excluir ficha"
+                    >
+                      🗑️
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </Section>
+      )}
+
+      {/* TAB: CRIAR NOVO PERSONAGEM */}
+      {adminTab === "novo_char" && (
+        <Section title="Criar Nova Ficha de Shinigami" subtitle="Cadastre um novo jogador e gere seu código de acesso oficial">
+          <form onSubmit={criarPersonagem} className="max-w-xl space-y-4 text-xs">
+            <div>
+              <label className="block font-bold text-bleach-cream mb-1 uppercase">Nome do Personagem *</label>
+              <input type="text" placeholder="Ex: Kurosaki Ren" value={novoNome} onChange={(e) => setNovoNome(e.target.value)} className="w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-3 text-white" />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="block font-bold text-bleach-cream mb-1 uppercase">WhatsApp (Opcional)</label>
+                <input type="text" placeholder="Ex: 11988887777" value={novoWhats} onChange={(e) => setNovoWhats(e.target.value)} className="w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-3 text-white" />
+              </div>
+              <div>
+                <label className="block font-bold text-bleach-cream mb-1 uppercase">Código de Acesso (Senha)</label>
+                <input type="text" placeholder="Deixe em branco para auto-gerar" value={novoCod} onChange={(e) => setNovoCod(e.target.value)} className="w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-3 text-white font-mono" />
+              </div>
+            </div>
+
+            <div>
+              <label className="block font-bold text-bleach-cream mb-1 uppercase">Esquadrão Inicial</label>
+              <select value={novoEsquadrao} onChange={(e) => setNovoEsquadrao(e.target.value)} className="w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-3 text-white">
+                {Array.from({ length: 13 }, (_, i) => `${i + 1}º Esquadrão`).map(eq => (
+                  <option key={eq} value={eq}>{eq}</option>
+                ))}
+              </select>
+            </div>
+
+            <button type="submit" className="w-full py-3 bg-bleach-orange text-black font-extrabold text-xs uppercase rounded-xl shadow hover:bg-orange-400">
+              ✓ Cadastrar & Aprovar Ficha
+            </button>
+          </form>
+        </Section>
+      )}
+
+      {/* TAB: DADOS & ÁRBITRO */}
+      {adminTab === "dados" && (
+        <Section title="Mesa de Dados & Arbitragem" subtitle="Role dados com cálculo de tensão narrativa">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="p-4 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-3">
+              <h4 className="text-xs font-bold text-bleach-orange uppercase">Rolagem Rápida</h4>
+              <div>
+                <label className="block text-[11px] text-bleach-muted mb-1">Tipo de Dado</label>
+                <select value={dadoTipo} onChange={(e) => setDadoTipo(e.target.value)} className="w-full bg-black border border-bleach-border rounded p-2 text-xs text-white">
+                  <option value="d20">d20 (Sistema Padrão Bleach)</option>
+                  <option value="d100">d100 (Porcentagem)</option>
+                  <option value="d6">d6</option>
+                  <option value="d10">d10</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-[11px] text-bleach-muted mb-1">Personagem</label>
+                <input type="text" value={dadoChar} onChange={(e) => setDadoChar(e.target.value)} className="w-full bg-black border border-bleach-border rounded p-2 text-xs text-white" />
+              </div>
+
+              <button onClick={rolarDado} className="w-full py-2.5 bg-bleach-orange text-black font-extrabold text-xs uppercase rounded shadow">
+                🎲 Rolar Dado
+              </button>
+            </div>
+
+            {dadoResultado && (
+              <div className="md:col-span-2 p-5 bg-black/80 border-2 border-bleach-orange rounded-xl flex flex-col items-center justify-center text-center space-y-2">
+                <span className="text-[10px] text-bleach-muted uppercase font-mono">{dadoResultado.personagem} rolou {dadoResultado.dado}</span>
+                <span className="text-6xl font-black font-mono text-bleach-orange">{dadoResultado.resultado}</span>
+                <span className="text-sm font-bold text-white">{dadoResultado.categoria}</span>
+              </div>
+            )}
+          </div>
+        </Section>
+      )}
+
+      {/* TAB: SUB-ADMS */}
+      {adminTab === "sub_adms" && isSuper && (
+        <Section title="Gerenciamento de Avaliadores & Sub-ADMs" subtitle="Adicione membros da staff autorizados a avaliar cenas">
+          <form onSubmit={criarSubAdm} className="max-w-md space-y-3 text-xs mb-6">
+            <div>
+              <label className="block font-bold text-bleach-cream mb-1">Nome do Avaliador</label>
+              <input type="text" placeholder="Ex: Mestre Kisuke" value={novoSubNome} onChange={(e) => setNovoSubNome(e.target.value)} className="w-full bg-bleach-panel2 border border-bleach-border rounded p-2 text-white" />
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="block font-bold text-bleach-cream mb-1">Usuário</label>
+                <input type="text" placeholder="kisuke" value={novoSubUser} onChange={(e) => setNovoSubUser(e.target.value)} className="w-full bg-bleach-panel2 border border-bleach-border rounded p-2 text-white font-mono" />
+              </div>
+              <div>
+                <label className="block font-bold text-bleach-cream mb-1">Senha</label>
+                <input type="text" placeholder="123" value={novoSubSenha} onChange={(e) => setNovoSubSenha(e.target.value)} className="w-full bg-bleach-panel2 border border-bleach-border rounded p-2 text-white font-mono" />
+              </div>
+            </div>
+            <button type="submit" className="w-full py-2 bg-yellow-500 text-black font-bold uppercase rounded shadow">
+              + Adicionar Avaliador
+            </button>
+          </form>
+
+          <div className="space-y-2">
+            {(db.subAdms || []).map(sub => (
+              <div key={sub.id} className="p-3 bg-bleach-panel2 border border-bleach-border rounded-lg flex items-center justify-between text-xs">
+                <div>
+                  <strong className="text-white">{sub.nome}</strong>
+                  <span className="text-bleach-muted ml-2">Usuário: <code className="text-yellow-400">{sub.usuario}</code></span>
+                </div>
+                <button onClick={() => removerSubAdm(sub.id)} className="text-red-400 hover:text-red-300 font-bold">Remover</button>
+              </div>
+            ))}
+          </div>
+        </Section>
+      )}
+
+      {/* TAB: NUVEM & BACKUP */}
+      {adminTab === "nuvem" && (
+        <Section title="Nuvem Firebase & Backup de Segurança" subtitle="Sincronize com o Realtime Database e faça cópias locais">
+          <div className="space-y-4 text-xs">
+            <div>
+              <label className="block font-bold text-bleach-cream mb-1 uppercase">URL do Firebase Realtime Database</label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  placeholder="https://seu-banco-rtdb.firebaseio.com/"
+                  value={editFirebaseUrl}
+                  onChange={(e) => setEditFirebaseUrl(e.target.value)}
+                  className="flex-1 bg-bleach-panel2 border border-bleach-border rounded-lg p-2 text-white font-mono"
+                />
+                <button onClick={salvarConfigCloud} className="px-4 py-2 bg-bleach-orange text-black font-bold uppercase rounded-lg">
+                  Salvar URL
+                </button>
+              </div>
+            </div>
+
+            <div className="flex gap-3 pt-4 border-t border-bleach-borderSoft">
+              <button onClick={exportarBackup} className="px-4 py-2.5 bg-bleach-panel2 border border-bleach-border hover:border-white text-white font-bold rounded-lg shadow">
+                💾 Baixar Backup JSON
+              </button>
+
+              <label className="px-4 py-2.5 bg-bleach-panel2 border border-bleach-border hover:border-yellow-400 text-yellow-400 font-bold rounded-lg cursor-pointer shadow">
+                📥 Restaurar Backup JSON
+                <input type="file" accept=".json" onChange={importarBackup} className="hidden" />
+              </label>
+            </div>
+          </div>
+        </Section>
+      )}
+
+      {/* MODAL DE DELEÇÃO DE PERSONAGEM COM REVOGAÇÃO IMEDIATA */}
+      {charToDelete && (
+        <div className="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
+          <div className="bg-bleach-panel border-2 border-red-500 rounded-2xl p-6 max-w-md w-full shadow-2xl text-center space-y-4">
+            <div className="text-4xl">🗑️</div>
+            <h3 className="font-title text-2xl text-red-400">EXCLUIR FICHA DE PERSONAGEM</h3>
+            <p className="text-xs text-bleach-creamDim leading-relaxed">
+              Tem certeza que deseja apagar permanentemente a ficha de <strong className="text-white">{charToDelete.nome}</strong>?
+            </p>
+            <div className="text-[11px] text-left p-3 bg-black/60 rounded-xl border border-red-500/30 text-bleach-muted space-y-1">
+              <div>• A conta será removida imediatamente da base de dados.</div>
+              <div>• Se o jogador estiver logado, a sessão dele será <strong>revogada instantaneamente</strong>.</div>
+              <div>• As assinaturas de Zanpakutō vinculadas serão liberadas.</div>
+            </div>
+            <div className="flex gap-3 pt-2">
+              <button onClick={() => setCharToDelete(null)} className="flex-1 py-2.5 bg-bleach-panel2 border border-bleach-border text-xs text-white rounded-lg">
+                Cancelar
+              </button>
+              <button onClick={deletarPersonagemConfirmado} className="flex-1 py-2.5 bg-red-600 hover:bg-red-500 text-white font-extrabold text-xs uppercase rounded-lg shadow">
+                Confirmar Exclusão
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// TAB: SISTEMAS & REGRAS
+function SistemasView() {
+  return (
+    <div className="space-y-6">
+      <Section title="Manual de Sistemas & Regras do Bleach RPG" subtitle="Diretrizes oficiais da Sociedade das Almas">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+          <div className="p-4 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-2">
+            <h4 className="font-title text-lg text-bleach-orange">⚡ Atributos & Patamares</h4>
+            <p className="text-bleach-creamDim leading-relaxed">
+              O poder de cada Shinigami é medido por 4 atributos primários: <strong>Pressão Espiritual</strong>, <strong>Força</strong>, <strong>Velocidade</strong> e <strong>Resiliência</strong>.
+            </p>
+            <ul className="list-disc pl-4 text-bleach-muted space-y-1">
+              <li>1–10: Inexperiente (Estudante da Academia)</li>
+              <li>11–30: Iniciante (Oficial Subalterno)</li>
+              <li>31–60: Treinado (Oficial de Assento)</li>
+              <li>61–100: Veterano (Tenente de Esquadrão)</li>
+              <li>101–150: Mestre (Capitão do Gotei 13)</li>
+              <li>150+: Transcendental (Divisão Zero / Poder Além do Limite)</li>
+            </ul>
+          </div>
+
+          <div className="p-4 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-2">
+            <h4 className="font-title text-lg text-cyan-400">⚔️ Despertar de Zanpakutō (33 Regras de IA)</h4>
+            <p className="text-bleach-creamDim leading-relaxed">
+              As Zanpakutōs são forjadas com base no <strong>DNA Espiritual</strong> selado na sua ficha. O motor de IA gera 4 manifestações únicas (Elemental, Progressiva, Compensatória e Opositiva) com compatibilidade exclusiva.
+            </p>
+          </div>
+        </div>
+      </Section>
+    </div>
+  );
+}
+
+// MOUNT REACT APPLICATION
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<App />);
+
+
 // MAIN APP COMPONENT
 function App() {
   const [db, setDb] = useState(null);
@@ -1618,7 +6560,7 @@ function App() {
   const [view, setView] = useState("sistemas");
   const [adminCharId, setAdminCharId] = useState(null);
   const [saveErr, setSaveErr] = useState("");
-  const [cloudStatus, setCloudStatus] = useState("local"); // "local", "connected", "syncing", "error"
+  const [cloudStatus, setCloudStatus] = useState("local");
   const [showAdminLoginModal, setShowAdminLoginModal] = useState(false);
   const [activeCloudUrl, setActiveCloudUrl] = useState("");
 
@@ -1633,7 +6575,6 @@ function App() {
         }
       } catch (e) {}
 
-      // 1. Try to load config.json (central repo config)
       let cloudUrl = "";
       try {
         const cfgRes = await fetch('config.json?t=' + Date.now());
@@ -1677,7 +6618,7 @@ function App() {
     initDb();
   }, []);
 
-  // Periodic background cloud sync (every 10s if connected)
+  // Periodic background cloud sync
   useEffect(() => {
     if (!activeCloudUrl || cloudStatus !== "connected") return;
     const interval = setInterval(async () => {
@@ -1696,7 +6637,20 @@ function App() {
     return () => clearInterval(interval);
   }, [activeCloudUrl, cloudStatus]);
 
-  // Save DB to localStorage AND push to Cloud Firebase if configured
+  // Automatic session validation: If logged in as player and character was deleted, log out immediately!
+  useEffect(() => {
+    if (session && session.role === "jogador" && db && db.personagens) {
+      const exists = db.personagens.some(p => p.id === session.charId);
+      if (!exists) {
+        setSession(null);
+        setAdminCharId(null);
+        setView("sistemas");
+        alert("⚠️ Sua ficha de personagem foi excluída pelo Administrador. Sessão encerrada.");
+      }
+    }
+  }, [db, session]);
+
+  // Save DB to localStorage AND push to Cloud Firebase
   async function saveDb(next) {
     setDb(next);
     try {
@@ -1748,4909 +6702,156 @@ function App() {
   if (!ready || !db) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen text-bleach-creamDim">
-        <div className="text-3xl font-cinzel tracking-widest text-bleach-orange animate-pulse mb-3">
-          SOCIEDADE DAS ALMAS
-        </div>
-        <div className="text-sm font-sans">Abrindo portões do Sereitei...</div>
+        <div className="w-12 h-12 border-4 border-bleach-orange border-t-transparent rounded-full animate-spin mb-4"></div>
+        <p className="font-title text-xl tracking-wider text-bleach-cream">CONECTANDO À SOCIEDADE DAS ALMAS...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col justify-between">
-      <div>
-        <TopBar 
-          session={session} 
-          onLogout={logout} 
-          view={view} 
-          setView={setView} 
-          nome={session?.role === "super_admin" ? "ADM Máximo" : session?.role === "sub_admin" ? session.nome : myChar?.nome}
-          onOpenAdminLogin={() => setShowAdminLoginModal(true)}
-          cloudStatus={cloudStatus}
-        />
+    <div className="min-h-screen flex flex-col bg-bleach-bg text-bleach-cream font-sans selection:bg-bleach-orange selection:text-black">
+      <TopBar
+        session={session}
+        onLogout={logout}
+        view={view}
+        setView={(v) => {
+          if (v !== "ficha") setAdminCharId(null);
+          setView(v);
+        }}
+        nome={myChar?.nome || (session?.role === "super_admin" ? "Comandante Supremo" : session?.nome)}
+        onOpenAdminLogin={() => setShowAdminLoginModal(true)}
+        cloudStatus={cloudStatus}
+      />
 
+      <main className="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 space-y-6">
         {saveErr && (
-          <div className="max-w-6xl mx-auto mt-4 px-4">
-            <div className="bg-red-950/80 border border-red-600/50 text-red-200 text-sm px-4 py-3 rounded-lg flex items-center justify-between">
-              <span>⚠️ {saveErr}</span>
-              <button onClick={() => setSaveErr("")} className="text-xs underline ml-4">Fechar</button>
-            </div>
+          <div className="p-3 bg-red-950/80 border border-red-500 text-red-200 text-xs rounded-xl text-center">
+            {saveErr}
           </div>
         )}
 
-        <main className="max-w-6xl mx-auto px-4 py-6">
-          {view === "sistemas" && <SistemasView />}
+        {view === "sistemas" && <SistemasView />}
 
-          {view === "rankings" && (
-            <RankingsView 
-              rankFisico={rankFisico} 
-              rankPressao={rankPressao} 
-              myCharId={myChar?.id}
+        {view === "ficha" && (
+          session?.role === "jogador" ? (
+            <FichaView
+              db={db}
+              saveDb={saveDb}
+              personagem={myChar}
+              isAdmin={false}
+              rankFisico={rankFisico}
+              rankPressao={rankPressao}
             />
-          )}
-
-          {view === "kidos" && (
-            <KidosView 
-              personagem={myChar} 
-              isAdmin={session?.role === "super_admin" || session?.role === "sub_admin"}
-            />
-          )}
-
-          {view === "arena" && (
-            <ArenaView 
-              db={db} 
-              saveDb={saveDb} 
-              session={session} 
-              myChar={myChar} 
-            />
-          )}
-
-          {view === "ficha" && (
-            !session ? (
-              <LoginScreen 
-                db={db} 
-                setDb={setDb}
-                activeCloudUrl={activeCloudUrl}
-                onLogin={(s) => {
-                  setSession(s);
-                  setView("ficha");
-                }}
-                onOpenAdminModal={() => setShowAdminLoginModal(true)}
-              />
-            ) : session.role === "jogador" ? (
-              <FichaView 
-                db={db} 
-                saveDb={saveDb} 
-                personagem={myChar} 
-                isAdmin={false}
-                rankFisico={rankFisico}
-                rankPressao={rankPressao}
-              />
-            ) : (
-              <div className="bg-bleach-panel border border-bleach-border rounded-xl p-8 text-center">
-                <p className="text-bleach-creamDim mb-4">Você está logado na Administração ({session.role === "super_admin" ? "ADM Máximo" : session.nome}).</p>
-                <button 
-                  onClick={() => setView("admin")}
-                  className="px-6 py-2.5 bg-bleach-orange text-black font-bold uppercase rounded-lg shadow-lg hover:bg-orange-400 transition"
-                >
-                  Ir para o Painel ADM
-                </button>
-              </div>
-            )
-          )}
-
-          {view === "admin" && (
-            !session || (session.role !== "super_admin" && session.role !== "sub_admin") ? (
-              <AdminLoginScreen 
-                db={db} 
-                onLoginAdmin={(s) => {
-                  setSession(s);
-                  setView("admin");
-                }} 
-              />
-            ) : (
-              <AdminPanel
-                db={db}
-                saveDb={saveDb}
-                session={session}
-                cloudStatus={cloudStatus}
-                onAbrirFicha={(id) => {
-                  setAdminCharId(id);
-                  setView("admin-ficha");
-                }}
-              />
-            )
-          )}
-
-          {view === "admin-ficha" && (session?.role === "super_admin" || session?.role === "sub_admin") && (
-            <div>
-              <button 
-                onClick={() => setView("admin")}
-                className="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-bleach-panel border border-bleach-border rounded-lg text-sm text-bleach-creamDim hover:text-white hover:border-bleach-orange transition"
-              >
-                ← Voltar ao Painel Admin
-              </button>
-              {myChar ? (
-                <FichaView 
-                  db={db} 
-                  saveDb={saveDb} 
-                  personagem={myChar} 
+          ) : session?.role === "super_admin" || session?.role === "sub_admin" ? (
+            adminCharId && myChar ? (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between bg-yellow-950/40 border border-yellow-500/60 p-3 rounded-xl">
+                  <span className="text-xs text-yellow-300 font-bold">
+                    👑 Modo de Gestão Administrativa: Editando a ficha de <strong>{myChar.nome}</strong>
+                  </span>
+                  <button
+                    onClick={() => {
+                      setAdminCharId(null);
+                      setView("admin");
+                    }}
+                    className="px-3 py-1 bg-bleach-panel2 border border-bleach-border text-xs text-white rounded hover:border-yellow-400"
+                  >
+                    ← Voltar ao Painel ADM
+                  </button>
+                </div>
+                <FichaView
+                  db={db}
+                  saveDb={saveDb}
+                  personagem={myChar}
                   isAdmin={true}
                   rankFisico={rankFisico}
                   rankPressao={rankPressao}
                 />
-              ) : (
-                <div className="text-bleach-muted">Personagem não encontrado.</div>
-              )}
-            </div>
-          )}
-        </main>
-      </div>
+              </div>
+            ) : (
+              <div className="text-center py-12 text-bleach-muted">
+                <p>Nenhum personagem selecionado para gerenciar.</p>
+                <button
+                  onClick={() => setView("admin")}
+                  className="mt-3 px-4 py-2 bg-bleach-orange text-black font-bold rounded-lg text-xs"
+                >
+                  Ir para Lista de Fichas
+                </button>
+              </div>
+            )
+          ) : (
+            <LoginScreen
+              db={db}
+              activeCloudUrl={activeCloudUrl}
+              setDb={setDb}
+              onLogin={(p) => {
+                setSession({ role: "jogador", charId: p.id, nome: p.nome });
+                setView("ficha");
+              }}
+              onOpenAdminModal={() => setShowAdminLoginModal(true)}
+            />
+          )
+        )}
 
-      <footer className="border-t border-bleach-border/60 bg-bleach-bg2/90 py-6 mt-12">
-        <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-bleach-muted">
-          <div className="flex items-center gap-2">
-            <span className="font-title tracking-widest text-bleach-orange text-sm">BLEACH RPG</span>
-            <span>• Sociedade das Almas © 2026</span>
-            <span 
-              onClick={() => setShowAdminLoginModal(true)} 
-              title=""
-              className="opacity-20 hover:opacity-80 transition cursor-pointer text-[11px] font-cinzel ml-1 select-none"
-            >
-              霊
-            </span>
-          </div>
-          <div className="text-right">
-            <span>Treinamento em OFF • Combate Narrativo sem Excesso de Rolagens (1d6) • Zanpakutō & Rankings</span>
-          </div>
-        </div>
-      </footer>
+        {view === "rankings" && (
+          <RankingsView
+            rankFisico={rankFisico}
+            rankPressao={rankPressao}
+            myCharId={myChar?.id}
+          />
+        )}
+
+        {view === "kidos" && (
+          <KidosView
+            personagem={myChar}
+            isAdmin={session?.role === "super_admin" || session?.role === "sub_admin"}
+          />
+        )}
+
+        {view === "arena" && (
+          <ArenaView
+            db={db}
+            saveDb={saveDb}
+            session={session}
+            myChar={myChar}
+          />
+        )}
+
+        {view === "admin" && (
+          session?.role === "super_admin" || session?.role === "sub_admin" ? (
+            <AdminPanel
+              db={db}
+              saveDb={saveDb}
+              session={session}
+              cloudStatus={cloudStatus}
+              onAbrirFicha={(charId) => {
+                setAdminCharId(charId);
+                setView("ficha");
+              }}
+            />
+          ) : (
+            <AdminLoginScreen
+              db={db}
+              onLoginAdmin={(role, subAdmObj) => {
+                setSession({ role, ...(subAdmObj || {}) });
+                setView("admin");
+              }}
+            />
+          )
+        )}
+      </main>
 
       {showAdminLoginModal && (
-        <AdminLoginModal 
-          db={db} 
+        <AdminLoginModal
+          db={db}
           onClose={() => setShowAdminLoginModal(false)}
-          onSuccess={(s) => {
-            setSession(s);
-            setView("admin");
+          onSuccess={(role, subAdmObj) => {
+            setSession({ role, ...(subAdmObj || {}) });
             setShowAdminLoginModal(false);
+            setView("admin");
           }}
         />
       )}
     </div>
   );
 }
-
-// TOP NAVIGATION BAR
-function TopBar({ session, onLogout, view, setView, nome, onOpenAdminLogin, cloudStatus }) {
-  const isAdmin = session?.role === "super_admin" || session?.role === "sub_admin";
-
-  return (
-    <header className="border-b border-bleach-border bg-bleach-bg2/95 backdrop-blur sticky top-0 z-40 shadow-xl">
-      <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-2">
-        <div 
-          onClick={() => setView("sistemas")} 
-          className="cursor-pointer flex items-center gap-3 group"
-        >
-          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-bleach-orange to-bleach-orangeDeep flex items-center justify-center font-cinzel font-black text-black text-xl shadow-lg group-hover:scale-105 transition">
-            卍
-          </div>
-          <div className="hidden sm:block">
-            <div className="font-title text-2xl tracking-widest text-bleach-orange leading-none group-hover:text-orange-400 transition">
-              BLEACH RPG
-            </div>
-            <div className="text-[10px] font-sans tracking-wider text-bleach-creamDim uppercase flex items-center gap-1.5">
-              <span>Sociedade das Almas</span>
-              {cloudStatus === "connected" && <span className="text-green-400 font-bold">• ☁️ Nuvem Ativa</span>}
-              {cloudStatus === "syncing" && <span className="text-yellow-400 font-bold">• ⏳ Sincronizando</span>}
-            </div>
-          </div>
-        </div>
-
-        <nav className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto py-1">
-          <button
-            onClick={() => setView("sistemas")}
-            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition whitespace-nowrap flex items-center gap-1.5 ${
-              view === "sistemas"
-                ? "bg-bleach-orange/20 text-bleach-orange border border-bleach-orangeDeep shadow-sm"
-                : "text-bleach-creamDim hover:text-white hover:bg-white/5"
-            }`}
-          >
-            <span>📖</span>
-            <span>Sistemas</span>
-          </button>
-
-          <button
-            onClick={() => setView("rankings")}
-            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition whitespace-nowrap flex items-center gap-1.5 ${
-              view === "rankings"
-                ? "bg-bleach-orange/20 text-bleach-orange border border-bleach-orangeDeep shadow-sm"
-                : "text-bleach-creamDim hover:text-white hover:bg-white/5"
-            }`}
-          >
-            <span>🏆</span>
-            <span>Rankings</span>
-          </button>
-
-          <button
-            onClick={() => setView("kidos")}
-            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition whitespace-nowrap flex items-center gap-1.5 ${
-              view === "kidos"
-                ? "bg-bleach-orange/20 text-bleach-orange border border-bleach-orangeDeep shadow-sm"
-                : "text-bleach-creamDim hover:text-white hover:bg-white/5"
-            }`}
-          >
-            <span>⚡</span>
-            <span>Kidōs & Reiatsu</span>
-          </button>
-
-          <button
-            onClick={() => setView("arena")}
-            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition whitespace-nowrap flex items-center gap-1.5 ${
-              view === "arena"
-                ? "bg-bleach-orange/20 text-bleach-orange border border-bleach-orangeDeep shadow-sm"
-                : "text-bleach-creamDim hover:text-white hover:bg-white/5"
-            }`}
-          >
-            <span>⚔️</span>
-            <span>Arena</span>
-          </button>
-
-          <button
-            onClick={() => setView("ficha")}
-            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition whitespace-nowrap flex items-center gap-1.5 ${
-              view === "ficha"
-                ? "bg-bleach-orange/20 text-bleach-orange border border-bleach-orangeDeep shadow-sm"
-                : "text-bleach-creamDim hover:text-white hover:bg-white/5"
-            }`}
-          >
-            <span>👤</span>
-            <span>Minha Ficha</span>
-          </button>
-
-          {/* PAINEL ADMINISTRATIVO: VISÍVEL SOMENTE APÓS O LOGIN DE UM ADM */}
-          {isAdmin && (
-            <button
-              onClick={() => setView("admin")}
-              className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition whitespace-nowrap flex items-center gap-1.5 ${
-                view === "admin" || view === "admin-ficha"
-                  ? "bg-yellow-500/20 text-yellow-400 border border-yellow-500 shadow-sm"
-                  : "text-yellow-400/80 hover:text-yellow-300 hover:bg-white/5"
-              }`}
-            >
-              <span>👑</span>
-              <span>Painel ADM</span>
-            </button>
-          )}
-        </nav>
-
-        <div className="flex items-center gap-2">
-          {session ? (
-            <div className="flex items-center gap-2">
-              <div className="hidden lg:flex flex-col text-right">
-                <span className="text-xs font-bold text-bleach-cream">
-                  {session.role === "super_admin" ? "ADM Máximo" : session.role === "sub_admin" ? session.nome : nome || "Jogador"}
-                </span>
-                <span className="text-[10px] text-bleach-orange">
-                  {session.role === "super_admin" ? "Comandante Supremo" : session.role === "sub_admin" ? "Administrador" : "Conectado"}
-                </span>
-              </div>
-              <button
-                onClick={onLogout}
-                className="px-2.5 py-1 bg-bleach-panel border border-bleach-border text-bleach-creamDim hover:text-red-400 rounded-md text-xs font-medium transition"
-              >
-                Sair
-              </button>
-            </div>
-          ) : (
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setView("ficha")}
-                className="px-3 py-1.5 bg-gradient-to-r from-bleach-orange to-bleach-orangeDeep text-black font-bold rounded-lg text-xs tracking-wider uppercase hover:brightness-110 transition shadow"
-              >
-                Entrar
-              </button>
-
-              {/* SELO DISFARÇADO DE ACESSO DO CONSELHO (ESTÉTICA JAPONESA) */}
-              <button
-                type="button"
-                onClick={onOpenAdminLogin}
-                title=""
-                className="w-7 h-7 rounded bg-transparent border border-white/5 text-[10px] text-bleach-muted/30 hover:text-bleach-orange/70 hover:border-bleach-border flex items-center justify-center font-cinzel transition cursor-pointer select-none"
-              >
-                魂
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-    </header>
-  );
-}
-
-// CHAIN SVG SEPARATOR
-function ChainDivider() {
-  return (
-    <div className="flex justify-center my-4 overflow-hidden">
-      <svg viewBox="0 0 300 14" className="w-full max-w-[280px] h-3 text-bleach-orange" aria-hidden="true">
-        {Array.from({ length: 10 }).map((_, i) => (
-          <ellipse
-            key={i}
-            cx={15 + i * 30}
-            cy={7}
-            rx={11}
-            ry={5.5}
-            fill="none"
-            stroke={i % 2 === 0 ? "currentColor" : "#C94E0A"}
-            strokeWidth="2.4"
-            transform={i % 2 === 0 ? undefined : `rotate(90 ${15 + i * 30} 7)`}
-          />
-        ))}
-      </svg>
-    </div>
-  );
-}
-
-// SECTION WRAPPER
-function Section({ title, subtitle, children, right, className = "" }) {
-  return (
-    <div className={`bg-bleach-panel border border-bleach-border rounded-xl p-5 mb-5 shadow-lg relative overflow-hidden ${className}`}>
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 border-b border-bleach-borderSoft pb-3">
-        <div>
-          <div className="flex items-center gap-2">
-            <div className="w-1.5 h-5 bg-bleach-orange rounded-full shadow-[0_0_10px_#FF6A13]"></div>
-            <h3 className="font-title text-xl tracking-wider uppercase text-bleach-cream">
-              {title}
-            </h3>
-          </div>
-          {subtitle && <p className="text-xs text-bleach-creamDim mt-0.5 ml-3.5">{subtitle}</p>}
-        </div>
-        {right && <div>{right}</div>}
-      </div>
-      {children}
-    </div>
-  );
-}
-
-// BADGE COMPONENT
-function Badge({ color, children, className = "" }) {
-  return (
-    <span
-      style={{ color, borderColor: color, backgroundColor: `${color}15` }}
-      className={`inline-flex items-center gap-1 text-[11px] font-bold tracking-wider uppercase border px-2.5 py-1 rounded-full ${className}`}
-    >
-      {children}
-    </span>
-  );
-}
-
-// PLAYER LOGIN SCREEN
-function LoginScreen({ db, onLogin, onOpenAdminModal, activeCloudUrl, setDb }) {
-  const [identificador, setIdentificador] = useState("");
-  const [codigo, setCodigo] = useState("");
-  const [erro, setErro] = useState("");
-  const [carregando, setCarregando] = useState(false);
-
-  async function entrarJogador(e) {
-    e.preventDefault();
-    const termo = identificador.trim().toLowerCase();
-    const cod = codigo.trim().toLowerCase();
-
-    if (!cod) {
-      setErro("Por favor, digite o Código de Acesso do seu personagem.");
-      return;
-    }
-
-    setCarregando(true);
-    setErro("");
-
-    let currentPersonagens = db.personagens || [];
-
-    // If cloud URL is configured, try a fresh live fetch to get latest characters
-    const cloudUrl = activeCloudUrl || db.firebaseUrl || localStorage.getItem("bleach_firebase_url");
-    if (cloudUrl) {
-      try {
-        const cleanUrl = cloudUrl.replace(/\/$/, "");
-        const endpoint = cleanUrl.endsWith('.json') ? cleanUrl : cleanUrl + '/bleachDB.json';
-        const res = await fetch(endpoint + '?t=' + Date.now());
-        if (res.ok) {
-          const freshData = await res.json();
-          if (freshData && freshData.personagens) {
-            currentPersonagens = freshData.personagens;
-            if (setDb) setDb(prev => ({ ...prev, ...freshData }));
-            localStorage.setItem("bleachDB", JSON.stringify(freshData));
-          }
-        }
-      } catch (err) {
-        console.warn("Direct cloud fetch failed, checking local data...", err);
-      }
-    }
-
-    const digitsOnly = termo.replace(/\D/g, "");
-
-    const matchingChars = currentPersonagens.filter((c) => {
-      const cCode = (c.codigo || "").trim().toLowerCase();
-      return cCode === cod;
-    });
-
-    if (matchingChars.length === 0) {
-      setCarregando(false);
-      setErro("Código de acesso incorreto ou personagem não encontrado. Verifique se o ADM salvou a ficha e a Nuvem.");
-      return;
-    }
-
-    let p = matchingChars[0];
-
-    if (termo) {
-      const foundSpecific = matchingChars.find((c) => {
-        const cPhone = (c.whatsapp || "").replace(/\D/g, "");
-        const cName = (c.nome || "").toLowerCase();
-
-        if (digitsOnly.length >= 4 && (cPhone.includes(digitsOnly) || digitsOnly.includes(cPhone.slice(-8)))) {
-          return true;
-        }
-        if (cName.includes(termo) || termo.includes(cName)) {
-          return true;
-        }
-        return false;
-      });
-
-      if (foundSpecific) {
-        p = foundSpecific;
-      }
-    }
-
-    setCarregando(false);
-    onLogin({ role: "jogador", charId: p.id });
-  }
-
-  return (
-    <div className="max-w-md mx-auto py-6">
-      <div className="bg-card-ichigo border border-bleach-border rounded-2xl p-6 sm:p-8 shadow-2xl reiatsu-glow">
-        <div className="text-center mb-6">
-          <h2 className="font-title text-4xl tracking-widest text-bleach-orange reiatsu-text-glow">
-            FICHA DO JOGADOR
-          </h2>
-          <p className="text-xs text-bleach-creamDim mt-1">
-            Insira o seu Código de Acesso fornecido pela ADM para entrar na sua ficha
-          </p>
-          <ChainDivider />
-        </div>
-
-        <form onSubmit={entrarJogador} className="space-y-4">
-          <div>
-            <label className="block text-xs font-semibold text-bleach-creamDim uppercase tracking-wider mb-1.5">
-              WhatsApp ou Nome do Personagem (Opcional)
-            </label>
-            <input
-              type="text"
-              placeholder="Ex: 11999998888 ou Kurosaki Ren"
-              value={identificador}
-              onChange={(e) => setIdentificador(e.target.value)}
-              className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg px-4 py-3 text-white placeholder-bleach-muted text-sm focus:outline-none focus:border-bleach-orange focus:ring-1 focus:ring-bleach-orange transition"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-bleach-creamDim uppercase tracking-wider mb-1.5">
-              Código de Acesso (Senha do Player) *
-            </label>
-            <input
-              type="password"
-              placeholder="Ex: REN-8921 ou seu código"
-              value={codigo}
-              onChange={(e) => setCodigo(e.target.value)}
-              className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg px-4 py-3 text-white placeholder-bleach-muted text-sm focus:outline-none focus:border-bleach-orange focus:ring-1 focus:ring-bleach-orange transition font-mono"
-            />
-          </div>
-
-          {erro && (
-            <div className="p-3 bg-red-950/80 border border-red-500/50 rounded-lg text-red-200 text-xs font-medium leading-relaxed">
-              ⚠️ {erro}
-            </div>
-          )}
-
-          <button
-            type="submit"
-            className="w-full py-3.5 bg-gradient-to-r from-bleach-orange to-bleach-orangeDeep text-black font-extrabold text-sm uppercase tracking-widest rounded-lg shadow-lg hover:brightness-110 active:scale-[0.99] transition"
-          >
-            Entrar na Ficha
-          </button>
-        </form>
-
-        <div className="mt-6 pt-5 border-t border-bleach-borderSoft flex flex-col gap-2 text-center text-xs text-bleach-muted">
-          <p>Não possui um código de acesso? Solicite com a administração no WhatsApp do RPG.</p>
-          <div className="mt-1 flex justify-center">
-            <span 
-              onClick={onOpenAdminModal}
-              className="text-[10px] text-bleach-muted/30 hover:text-bleach-muted cursor-pointer transition select-none"
-            >
-              Acesso Institucional 魂
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ADMIN LOGIN SCREEN & MODAL
-function AdminLoginScreen({ db, onLoginAdmin }) {
-  const [tipoLogin, setTipoLogin] = useState("maximo");
-  const [senhaMax, setSenhaMax] = useState("");
-  const [subUser, setSubUser] = useState("");
-  const [subPass, setSubPass] = useState("");
-  const [erro, setErro] = useState("");
-
-  function entrar(e) {
-    e.preventDefault();
-    if (tipoLogin === "maximo") {
-      if (senhaMax !== (db.superAdminSenha || "maximo2026")) {
-        setErro("Senha de ADM Máximo incorreta.");
-        return;
-      }
-      onLoginAdmin({ role: "super_admin", nome: "ADM Máximo" });
-    } else {
-      const sub = (db.subAdms || []).find(a => 
-        a.usuario.toLowerCase() === subUser.trim().toLowerCase() && 
-        a.senha === subPass.trim()
-      );
-      if (!sub) {
-        setErro("Usuário ou senha de Sub-ADM incorretos.");
-        return;
-      }
-      onLoginAdmin({ role: "sub_admin", admId: sub.id, nome: sub.nome, cargo: sub.cargo, charId: sub.charId });
-    }
-  }
-
-  return (
-    <div className="max-w-md mx-auto py-6">
-      <div className="bg-bleach-panel border border-bleach-border rounded-2xl p-6 sm:p-8 shadow-2xl">
-        <div className="text-center mb-6">
-          <span className="text-3xl">👑</span>
-          <h2 className="font-title text-3xl tracking-widest text-bleach-orange mt-2">
-            PAINEL ADMINISTRATIVO
-          </h2>
-          <p className="text-xs text-bleach-creamDim mt-1">
-            Selecione seu nível de acesso administrativo
-          </p>
-          <ChainDivider />
-        </div>
-
-        <div className="flex gap-2 mb-4">
-          <button
-            type="button"
-            onClick={() => { setTipoLogin("maximo"); setErro(""); }}
-            className={`flex-1 py-2 rounded-lg text-xs font-bold uppercase transition ${
-              tipoLogin === "maximo"
-                ? "bg-yellow-500/20 text-yellow-400 border border-yellow-500 shadow"
-                : "bg-bleach-panel2 border border-bleach-border text-bleach-creamDim"
-            }`}
-          >
-            👑 ADM Máximo
-          </button>
-          <button
-            type="button"
-            onClick={() => { setTipoLogin("sub"); setErro(""); }}
-            className={`flex-1 py-2 rounded-lg text-xs font-bold uppercase transition ${
-              tipoLogin === "sub"
-                ? "bg-bleach-orange/20 text-bleach-orange border border-bleach-orange shadow"
-                : "bg-bleach-panel2 border border-bleach-border text-bleach-creamDim"
-            }`}
-          >
-            🛡️ Sub-ADM
-          </button>
-        </div>
-
-        <form onSubmit={entrar} className="space-y-4">
-          {tipoLogin === "maximo" ? (
-            <div>
-              <label className="block text-xs font-semibold text-bleach-creamDim uppercase tracking-wider mb-1.5">
-                Senha Mestra do ADM Máximo
-              </label>
-              <input
-                type="password"
-                placeholder="Senha mestra (Padrão: maximo2026)"
-                value={senhaMax}
-                onChange={(e) => setSenhaMax(e.target.value)}
-                className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg px-4 py-3 text-white placeholder-bleach-muted text-sm focus:outline-none focus:border-bleach-orange focus:ring-1 focus:ring-bleach-orange transition font-mono"
-              />
-            </div>
-          ) : (
-            <div className="space-y-3">
-              <div>
-                <label className="block text-xs font-semibold text-bleach-creamDim uppercase tracking-wider mb-1.5">
-                  Usuário do Sub-ADM
-                </label>
-                <input
-                  type="text"
-                  placeholder="Ex: kisuke"
-                  value={subUser}
-                  onChange={(e) => setSubUser(e.target.value)}
-                  className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-bleach-orange"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-semibold text-bleach-creamDim uppercase tracking-wider mb-1.5">
-                  Senha Individual
-                </label>
-                <input
-                  type="password"
-                  placeholder="••••••••"
-                  value={subPass}
-                  onChange={(e) => setSubPass(e.target.value)}
-                  className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-bleach-orange"
-                />
-              </div>
-            </div>
-          )}
-
-          {erro && (
-            <div className="p-3 bg-red-950/60 border border-red-500/40 rounded-lg text-red-300 text-xs font-medium">
-              ⚠️ {erro}
-            </div>
-          )}
-
-          <button
-            type="submit"
-            className="w-full py-3.5 bg-gradient-to-r from-bleach-orange to-bleach-orangeDeep text-black font-extrabold text-sm uppercase tracking-widest rounded-lg shadow-lg hover:brightness-110 transition"
-          >
-            {tipoLogin === "maximo" ? "Acessar como ADM Máximo" : "Acessar como Sub-ADM"}
-          </button>
-        </form>
-      </div>
-    </div>
-  );
-}
-
-function AdminLoginModal({ db, onClose, onSuccess }) {
-  const [tipoLogin, setTipoLogin] = useState("maximo");
-  const [senhaMax, setSenhaMax] = useState("");
-  const [subUser, setSubUser] = useState("");
-  const [subPass, setSubPass] = useState("");
-  const [erro, setErro] = useState("");
-
-  function submit(e) {
-    e.preventDefault();
-    if (tipoLogin === "maximo") {
-      if (senhaMax !== (db.superAdminSenha || "maximo2026")) {
-        setErro("Senha incorreta.");
-        return;
-      }
-      onSuccess({ role: "super_admin", nome: "ADM Máximo" });
-    } else {
-      const sub = (db.subAdms || []).find(a => 
-        a.usuario.toLowerCase() === subUser.trim().toLowerCase() && 
-        a.senha === subPass.trim()
-      );
-      if (!sub) {
-        setErro("Credenciais de Sub-ADM inválidas.");
-        return;
-      }
-      onSuccess({ role: "sub_admin", admId: sub.id, nome: sub.nome, cargo: sub.cargo, charId: sub.charId });
-    }
-  }
-
-  return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-bleach-panel border border-bleach-border rounded-xl p-6 max-w-sm w-full shadow-2xl relative">
-        <button 
-          onClick={onClose}
-          className="absolute top-4 right-4 text-bleach-muted hover:text-white text-lg font-bold"
-        >
-          ✕
-        </button>
-        <h3 className="font-title text-2xl text-bleach-orange tracking-wider mb-2">
-          LOGIN ADMINISTRATIVO
-        </h3>
-
-        <div className="flex gap-2 mb-3">
-          <button
-            type="button"
-            onClick={() => { setTipoLogin("maximo"); setErro(""); }}
-            className={`flex-1 py-1.5 rounded text-xs font-bold uppercase transition ${
-              tipoLogin === "maximo" ? "bg-yellow-500/20 text-yellow-400 border border-yellow-500" : "bg-black text-bleach-muted"
-            }`}
-          >
-            👑 ADM Máximo
-          </button>
-          <button
-            type="button"
-            onClick={() => { setTipoLogin("sub"); setErro(""); }}
-            className={`flex-1 py-1.5 rounded text-xs font-bold uppercase transition ${
-              tipoLogin === "sub" ? "bg-bleach-orange/20 text-bleach-orange border border-bleach-orange" : "bg-black text-bleach-muted"
-            }`}
-          >
-            🛡️ Sub-ADM
-          </button>
-        </div>
-
-        <form onSubmit={submit} className="space-y-3">
-          {tipoLogin === "maximo" ? (
-            <input
-              type="password"
-              placeholder="Senha do ADM Máximo"
-              value={senhaMax}
-              onChange={(e) => setSenhaMax(e.target.value)}
-              className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-bleach-orange"
-            />
-          ) : (
-            <div className="space-y-2">
-              <input
-                type="text"
-                placeholder="Usuário do Sub-ADM"
-                value={subUser}
-                onChange={(e) => setSubUser(e.target.value)}
-                className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-bleach-orange"
-              />
-              <input
-                type="password"
-                placeholder="Senha Individual"
-                value={subPass}
-                onChange={(e) => setSubPass(e.target.value)}
-                className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-bleach-orange"
-              />
-            </div>
-          )}
-
-          {erro && <div className="text-red-400 text-xs">{erro}</div>}
-          <button
-            type="submit"
-            className="w-full py-2.5 bg-bleach-orange text-black font-bold uppercase text-xs rounded-lg shadow hover:bg-orange-400"
-          >
-            Entrar no Painel
-          </button>
-        </form>
-      </div>
-    </div>
-  );
-}
-
-// TAB: RANKINGS VIEW
-function RankingsView({ rankFisico, rankPressao, myCharId }) {
-  const [aba, setAba] = useState("fisico");
-
-  return (
-    <div className="space-y-6">
-      <div className="bg-banner-overlay border border-bleach-border rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
-        <div className="relative z-10 max-w-2xl">
-          <span className="px-3 py-1 bg-bleach-orange/20 border border-bleach-orange text-bleach-orange text-xs font-bold rounded-full uppercase tracking-wider">
-            Quadro de Honra do Sereitei
-          </span>
-          <h2 className="font-title text-4xl sm:text-5xl tracking-widest text-bleach-orange mt-3 reiatsu-text-glow">
-            RANKINGS OFICIAIS
-          </h2>
-          <p className="text-xs sm:text-sm text-bleach-creamDim mt-2 leading-relaxed">
-            Acompanhe os guerreiros mais poderosos da Sociedade das Almas divididos em 2 rankings oficiais: <strong>Média de Atributos Físicos</strong> (Força + Velocidade + Resiliência ÷ 3) e <strong>Pressão Espiritual Pura</strong> (Reiatsu).
-          </p>
-        </div>
-      </div>
-
-      <div className="flex gap-3 border-b border-bleach-border pb-3">
-        <button
-          onClick={() => setAba("fisico")}
-          className={`px-5 py-2.5 rounded-xl font-title text-lg tracking-wider uppercase transition flex items-center gap-2 ${
-            aba === "fisico"
-              ? "bg-bleach-orange text-black font-extrabold shadow-lg"
-              : "bg-bleach-panel border border-bleach-border text-bleach-creamDim hover:text-white"
-          }`}
-        >
-          <span>⚔️</span>
-          <span>1. Ranking Físico (Média ÷ 3)</span>
-        </button>
-        <button
-          onClick={() => setAba("pressao")}
-          className={`px-5 py-2.5 rounded-xl font-title text-lg tracking-wider uppercase transition flex items-center gap-2 ${
-            aba === "pressao"
-              ? "bg-bleach-blue text-black font-extrabold shadow-lg"
-              : "bg-bleach-panel border border-bleach-border text-bleach-creamDim hover:text-white"
-          }`}
-        >
-          <span>🌀</span>
-          <span>2. Ranking de Pressão Espiritual</span>
-        </button>
-      </div>
-
-      {aba === "fisico" ? (
-        <Section 
-          title="Classificação por Poder Físico" 
-          subtitle="Calculado exatamente por: (Força + Velocidade + Resiliência) ÷ 3"
-        >
-          <div className="space-y-3">
-            {rankFisico.map((item, idx) => {
-              const isMe = item.id === myCharId;
-              const medalha = idx === 0 ? "🥇" : idx === 1 ? "🥈" : idx === 2 ? "🥉" : `#${idx + 1}`;
-              return (
-                <div
-                  key={item.id}
-                  className={`p-4 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition ${
-                    isMe 
-                      ? "bg-bleach-orange/10 border-bleach-orange shadow-lg" 
-                      : "bg-bleach-panel2 border-bleach-borderSoft hover:border-bleach-border"
-                  }`}
-                >
-                  <div className="flex items-center gap-3.5">
-                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center font-title text-xl font-bold ${
-                      idx === 0 ? "bg-yellow-500/20 text-yellow-400 border border-yellow-500/50" :
-                      idx === 1 ? "bg-gray-400/20 text-gray-300 border border-gray-400/50" :
-                      idx === 2 ? "bg-amber-700/20 text-amber-500 border border-amber-600/50" :
-                      "bg-black text-bleach-muted"
-                    }`}>
-                      {medalha}
-                    </div>
-                    <div className="w-11 h-11 rounded-lg overflow-hidden border border-bleach-border bg-black">
-                      <img 
-                        src={item.foto || 'assets/ichigo-orange.png'} 
-                        alt={item.nome}
-                        className="w-full h-full object-cover"
-                        onError={(e) => { e.target.src = 'assets/ichigo-orange.png'; }}
-                      />
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <h4 className="font-bold text-bleach-cream text-base">{item.nome}</h4>
-                        {isMe && <span className="px-2 py-0.5 rounded bg-bleach-orange text-black font-extrabold text-[10px] uppercase">Você</span>}
-                      </div>
-                      <div className="text-xs text-bleach-muted flex gap-3 mt-0.5">
-                        <span>Força: <strong className="text-red-400">{item.forca}</strong></span>
-                        <span>Velocidade: <strong className="text-green-400">{item.vel}</strong></span>
-                        <span>Resiliência: <strong className="text-purple-400">{item.res}</strong></span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-4 text-right border-t sm:border-t-0 pt-2 sm:pt-0 border-bleach-borderSoft">
-                    <div>
-                      <div className="text-[10px] text-bleach-muted uppercase">Média Física</div>
-                      <div className="text-2xl font-black font-mono text-bleach-orange">
-                        {item.score}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </Section>
-      ) : (
-        <Section 
-          title="Classificação por Pressão Espiritual (Reiatsu)" 
-          subtitle="Poder de controle espiritual e intensidade da aura"
-        >
-          <div className="space-y-3">
-            {rankPressao.map((item, idx) => {
-              const isMe = item.id === myCharId;
-              const medalha = idx === 0 ? "🥇" : idx === 1 ? "🥈" : idx === 2 ? "🥉" : `#${idx + 1}`;
-              return (
-                <div
-                  key={item.id}
-                  className={`p-4 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition ${
-                    isMe 
-                      ? "bg-bleach-blue/10 border-bleach-blue shadow-lg" 
-                      : "bg-bleach-panel2 border-bleach-borderSoft hover:border-bleach-border"
-                  }`}
-                >
-                  <div className="flex items-center gap-3.5">
-                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center font-title text-xl font-bold ${
-                      idx === 0 ? "bg-yellow-500/20 text-yellow-400 border border-yellow-500/50" :
-                      idx === 1 ? "bg-gray-400/20 text-gray-300 border border-gray-400/50" :
-                      idx === 2 ? "bg-amber-700/20 text-amber-500 border border-amber-600/50" :
-                      "bg-black text-bleach-muted"
-                    }`}>
-                      {medalha}
-                    </div>
-                    <div className="w-11 h-11 rounded-lg overflow-hidden border border-bleach-border bg-black">
-                      <img 
-                        src={item.foto || 'assets/ichigo-moon.png'} 
-                        alt={item.nome}
-                        className="w-full h-full object-cover"
-                        onError={(e) => { e.target.src = 'assets/ichigo-moon.png'; }}
-                      />
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <h4 className="font-bold text-bleach-cream text-base">{item.nome}</h4>
-                        {isMe && <span className="px-2 py-0.5 rounded bg-bleach-blue text-black font-extrabold text-[10px] uppercase">Você</span>}
-                      </div>
-                      <div className="text-xs text-bleach-muted mt-0.5">
-                        Reiatsu pura da alma
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-4 text-right border-t sm:border-t-0 pt-2 sm:pt-0 border-bleach-borderSoft">
-                    <div>
-                      <div className="text-[10px] text-bleach-muted uppercase">Pressão Espiritual</div>
-                      <div className="text-2xl font-black font-mono text-bleach-blue">
-                        {item.score}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </Section>
-      )}
-    </div>
-  );
-}
-
-// TAB: KIDŌS CATALOG & ZANPAKUTŌ SWORD VISUALIZER
-function KidosView({ personagem }) {
-  const [categoriaAtiva, setCategoriaAtiva] = useState("Todos");
-  const [busca, setBusca] = useState("");
-  
-  const pressaoBase = personagem?.atributos?.pressao || 30;
-  const maxKidosCena = Math.max(3, Math.floor(pressaoBase / 7) + 1);
-  const [kidosUsados, setKidosUsados] = useState(0);
-  const [relatoCena, setRelatoCena] = useState("");
-  const [registroConjuracoes, setRegistroConjuracoes] = useState([]);
-
-  const restantes = Math.max(0, maxKidosCena - kidosUsados);
-  const pctRestante = Math.round((restantes / maxKidosCena) * 100);
-
-  function conjurarKido(kido) {
-    if (restantes <= 0) {
-      alert("Limite de Kidōs atingido para esta cena! Sua Reiatsu precisa se estabilizar.");
-      return;
-    }
-    playReiatsuSound('kido');
-    setKidosUsados(prev => prev + 1);
-    setRegistroConjuracoes(prev => [
-      { id: uid(), nome: kido.nome, cat: kido.cat, hora: new Date().toLocaleTimeString("pt-BR") },
-      ...prev
-    ]);
-  }
-
-  function resetarReiatsu() {
-    setKidosUsados(0);
-    setRegistroConjuracoes([]);
-  }
-
-  const kidosFiltrados = CATALOGO_KIDOS.filter(k => {
-    const matchesCat = categoriaAtiva === "Todos" || k.cat === categoriaAtiva;
-    const matchesBusca = k.nome.toLowerCase().includes(busca.toLowerCase()) || 
-                         k.desc.toLowerCase().includes(busca.toLowerCase()) ||
-                         k.cat.toLowerCase().includes(busca.toLowerCase());
-    return matchesCat && matchesBusca;
-  });
-
-  return (
-    <div className="space-y-6">
-      <div className="bg-banner-overlay border border-bleach-border rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
-        <div className="relative z-10 max-w-2xl">
-          <span className="px-3 py-1 bg-bleach-blue/20 border border-bleach-blue text-bleach-blue text-xs font-bold rounded-full uppercase tracking-wider">
-            Grimório de Encantamentos & Magia Espiritual
-          </span>
-          <h2 className="font-title text-4xl sm:text-5xl tracking-widest text-bleach-orange mt-3 reiatsu-text-glow">
-            KIDŌS DA SOCIEDADE DAS ALMAS
-          </h2>
-          <p className="text-xs sm:text-sm text-bleach-creamDim mt-2 leading-relaxed">
-            Explore o compêndio oficial de <strong>Hadō</strong> (Destruição), <strong>Bakudō</strong> (Aprisionamento) e <strong>Kaidō</strong> (Cura). Abaixo você também encontra a <strong>Lâmina Espiritual da Zanpakutō</strong> para gerenciar seus feitiços em cena!
-          </p>
-        </div>
-      </div>
-
-      <Section 
-        title="⚔️ Lâmina Espiritual da Zanpakutō & Limite de Kidō" 
-        subtitle="A energia espiritual que percorre o fio da sua lâmina conforme você conjura feitiços em combate"
-      >
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
-          <div className="bg-black/60 border border-bleach-border rounded-2xl p-5 flex flex-col items-center justify-center relative overflow-hidden shadow-inner">
-            <div className="text-xs uppercase font-bold tracking-widest text-bleach-orange mb-3 flex items-center gap-1.5">
-              <span>🗡️</span> Lâmina da Zanpakutō
-            </div>
-
-            <div className="flex flex-col items-center">
-              <div className="w-8 h-14 bg-gradient-to-b from-[#111] via-[#222] to-[#111] border-2 border-[#C94E0A] rounded-t-lg relative flex flex-col items-center justify-center shadow-lg">
-                <div className="w-full h-1 bg-amber-500/80 my-0.5"></div>
-                <div className="w-full h-1 bg-amber-500/80 my-0.5"></div>
-                <div className="w-full h-1 bg-amber-500/80 my-0.5"></div>
-                <div className="text-[10px] font-black text-amber-400 font-cinzel">卍</div>
-              </div>
-
-              <div className="w-20 h-4 bg-gradient-to-r from-[#C94E0A] via-[#FF6A13] to-[#C94E0A] rounded-full border border-black shadow-[0_0_12px_#FF6A13] z-20 -my-0.5 flex items-center justify-center">
-                <div className="w-16 h-1 bg-black/60 rounded-full"></div>
-              </div>
-
-              <div className="w-12 h-64 border-x-2 border-b-2 border-bleach-blue/70 bg-black/90 relative overflow-hidden flex flex-col justify-end shadow-[0_0_20px_rgba(79,179,232,0.3)]"
-                style={{ clipPath: 'polygon(0% 0%, 100% 0%, 100% 88%, 50% 100%, 0% 88%)' }}
-              >
-                <div className="absolute inset-y-0 left-1/2 w-0.5 bg-white/20 -translate-x-1/2 pointer-events-none z-20"></div>
-
-                <div className="absolute inset-0 flex flex-col justify-between py-3 px-1 pointer-events-none z-20 text-[8px] font-mono text-white/50 text-center">
-                  <span>100% 卍</span>
-                  <span>75%</span>
-                  <span>50%</span>
-                  <span>25%</span>
-                  <span>0%</span>
-                </div>
-
-                <div 
-                  className="w-full transition-all duration-700 relative overflow-hidden flex items-center justify-center"
-                  style={{
-                    height: `${pctRestante}%`,
-                    background: pctRestante > 50 
-                      ? 'linear-gradient(180deg, #4FB3E8 0%, #1E4C63 80%, #0A2233 100%)' 
-                      : pctRestante > 20 
-                      ? 'linear-gradient(180deg, #FF6A13 0%, #C94E0A 80%, #4A1A02 100%)'
-                      : 'linear-gradient(180deg, #D6483F 0%, #7A1711 80%, #300502 100%)',
-                    boxShadow: '0 0 25px rgba(79, 179, 232, 0.8)'
-                  }}
-                >
-                  <div className="text-white font-title text-2xl font-black drop-shadow z-10">
-                    {pctRestante}%
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-4 text-center">
-              <div className="text-xs text-bleach-muted">Kidōs Restantes na Lâmina:</div>
-              <div className="text-2xl font-mono font-bold text-bleach-orange mt-0.5">
-                {restantes} / {maxKidosCena}
-              </div>
-              <button
-                onClick={resetarReiatsu}
-                className="mt-3 px-4 py-1.5 bg-bleach-panel border border-bleach-border text-xs text-bleach-cream rounded-lg hover:border-bleach-orange transition"
-              >
-                🔄 Restaurar Reiatsu da Lâmina
-              </button>
-            </div>
-          </div>
-
-          <div className="lg:col-span-2 space-y-4">
-                    {personagem.zanpakuto.shikaiAtiva.espirito && (
-                      <div className="bg-black/60 border border-cyan-500/40 rounded-xl p-5 shadow-inner">
-                        <h4 className="text-xs font-bold uppercase tracking-wider text-cyan-300 mb-1 flex items-center gap-2">
-                          <span>👤</span> Representação do Espírito da Zanpakutō
-                        </h4>
-                        <p className="text-xs sm:text-sm text-cyan-100/90 italic leading-relaxed whitespace-pre-line">
-                          "{personagem.zanpakuto.shikaiAtiva.espirito}"
-                        </p>
-                      </div>
-                    )}
-            <div className="bg-bleach-panel2 border border-bleach-border rounded-xl p-4">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-bleach-orange mb-2">
-                ✍️ Descrição Livre da Sua Cena com Kidō
-              </h4>
-              <p className="text-xs text-bleach-creamDim mb-2">
-                Espaço livre para você rascunhar como utilizou seus Kidōs na sua narração antes de enviar no WhatsApp:
-              </p>
-              <textarea
-                rows={4}
-                value={relatoCena}
-                onChange={(e) => setRelatoCena(e.target.value)}
-                placeholder="Ex: Concentrei minha Reiatsu ao longo do fio da Zanpakutō liberando Hadō #4 Byakurai em linha reta..."
-                className="w-full bg-black/60 border border-bleach-border rounded-lg p-3 text-xs text-white placeholder-bleach-muted focus:outline-none focus:border-bleach-orange"
-              />
-              <div className="flex justify-between items-center mt-2">
-                <span className="text-[11px] text-bleach-muted">
-                  {relatoCena.length} caracteres
-                </span>
-                <button
-                  onClick={() => {
-                    navigator.clipboard.writeText(relatoCena);
-                    alert("Texto da cena copiado para a área de transferência!");
-                  }}
-                  className="px-3 py-1 bg-bleach-panel border border-bleach-border text-xs text-bleach-cream rounded hover:border-bleach-orange"
-                >
-                  📋 Copiar Rascunho
-                </button>
-              </div>
-            </div>
-
-            <div className="bg-bleach-panel2 border border-bleach-border rounded-xl p-4">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-bleach-creamDim mb-2">
-                Histórico de Kidōs Disparados Nesta Cena
-              </h4>
-              {registroConjuracoes.length === 0 ? (
-                <p className="text-xs text-bleach-muted">Nenhum Kidō conjurado ainda. Clique em "Conjurar" nos feitiços abaixo!</p>
-              ) : (
-                <div className="flex flex-wrap gap-2">
-                  {registroConjuracoes.map((r) => (
-                    <div key={r.id} className="px-3 py-1.5 bg-black border border-bleach-border rounded-lg text-xs flex items-center gap-2">
-                      <span className="text-bleach-orange font-bold">⚡ {r.nome}</span>
-                      <span className="text-[10px] text-bleach-muted font-mono">({r.hora})</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </Section>
-
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex gap-2">
-          {["Todos", "Hadō", "Bakudō", "Kaidō"].map(cat => (
-            <button
-              key={cat}
-              onClick={() => setCategoriaAtiva(cat)}
-              className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition ${
-                categoriaAtiva === cat
-                  ? cat === "Hadō" ? "bg-bleach-red text-white shadow-lg" :
-                    cat === "Bakudō" ? "bg-bleach-blue text-black shadow-lg" :
-                    cat === "Kaidō" ? "bg-bleach-green text-black shadow-lg" :
-                    "bg-bleach-orange text-black shadow-lg"
-                  : "bg-bleach-panel border border-bleach-border text-bleach-creamDim hover:text-white"
-              }`}
-            >
-              {cat === "Hadō" ? "🔴 Hadō (Ataque)" : 
-               cat === "Bakudō" ? "🔵 Bakudō (Suporte)" : 
-               cat === "Kaidō" ? "🟢 Kaidō (Cura)" : "✨ Todos"}
-            </button>
-          ))}
-        </div>
-
-        <input
-          type="text"
-          placeholder="🔍 Buscar Kidō..."
-          value={busca}
-          onChange={(e) => setBusca(e.target.value)}
-          className="bg-bleach-panel border border-bleach-border rounded-xl px-4 py-2 text-xs text-white placeholder-bleach-muted focus:outline-none focus:border-bleach-orange w-full sm:w-64"
-        />
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {kidosFiltrados.map((k) => (
-          <div
-            key={k.id}
-            className="bg-bleach-panel border border-bleach-border hover:border-bleach-border/80 rounded-xl p-5 shadow-lg flex flex-col justify-between gap-3"
-          >
-            <div>
-              <div className="flex items-start justify-between gap-2 mb-2">
-                <div>
-                  <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded border ${
-                    k.cat === "Hadō" ? "text-red-400 border-red-500/40 bg-red-950/40" :
-                    k.cat === "Bakudō" ? "text-blue-400 border-blue-500/40 bg-blue-950/40" :
-                    "text-green-400 border-green-500/40 bg-green-950/40"
-                  }`}>
-                    {k.cat} #{k.numero} • {k.nivel}
-                  </span>
-                  <h4 className="font-title text-2xl tracking-wider text-bleach-cream mt-1">
-                    {k.nome}
-                  </h4>
-                </div>
-                <span className="text-xs font-mono text-bleach-orange font-bold">
-                  Custo: {k.custoReiatsu} Reiatsu
-                </span>
-              </div>
-
-              <p className="text-xs text-bleach-creamDim leading-relaxed">
-                {k.desc}
-              </p>
-
-              {k.incant !== "—" && (
-                <div className="mt-3 p-2.5 bg-black/50 border border-bleach-borderSoft rounded-lg text-[11px] text-bleach-muted italic">
-                  🗣️ <strong>Encantamento:</strong> "{k.incant}"
-                </div>
-              )}
-            </div>
-
-            <div className="pt-3 border-t border-bleach-borderSoft flex items-center justify-between">
-              <span className="text-[11px] text-bleach-muted">
-                Potência: Escala com sua Pressão Espiritual
-              </span>
-              <button
-                onClick={() => conjurarKido(k)}
-                className="px-3.5 py-1.5 bg-gradient-to-r from-bleach-orange to-bleach-orangeDeep text-black font-extrabold text-xs uppercase tracking-wider rounded-lg hover:brightness-110 active:scale-95 transition"
-              >
-                ⚡ Conjurar na Cena
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// TAB: ARENA PVP VIEW
-function ArenaView({ db, saveDb, session, myChar }) {
-  const [desafianteId, setDesafianteId] = useState(db.personagens[0]?.id || "");
-  const [desafiadoId, setDesafiadoId] = useState(db.personagens[1]?.id || "");
-  const [showNovoDuelo, setShowNovoDuelo] = useState(false);
-
-  const combateAtivo = db.combatesArena?.[0] || null;
-
-  const p1 = (db.personagens || []).find(p => p.id === combateAtivo?.p1Id);
-  const p2 = (db.personagens || []).find(p => p.id === combateAtivo?.p2Id);
-
-  const [juizTexto, setJuizTexto] = useState(combateAtivo?.juizLog || "");
-  const [turnoAtual, setTurnoAtual] = useState(combateAtivo?.turno || "Turno 1");
-
-  const isAdm = session?.role === "super_admin" || session?.role === "sub_admin";
-
-  function criarDuelo() {
-    if (!desafianteId || !desafiadoId || desafianteId === desafiadoId) {
-      alert("Selecione dois lutadores diferentes para o duelo!");
-      return;
-    }
-    const p1Obj = db.personagens.find(p => p.id === desafianteId);
-    const p2Obj = db.personagens.find(p => p.id === desafiadoId);
-    const novoCombate = {
-      id: uid(),
-      p1Id: desafianteId,
-      p2Id: desafiadoId,
-      p1Nome: p1Obj.nome,
-      p2Nome: p2Obj.nome,
-      p1Estado: p1Obj.estado || "Inteiro",
-      p2Estado: p2Obj.estado || "Inteiro",
-      turno: "Turno 1 — Início do Combate",
-      juizLog: "Duelo iniciado no campo de treinamento da Sociedade das Almas.",
-      status: "Em Andamento"
-    };
-    saveDb({ ...db, combatesArena: [novoCombate, ...(db.combatesArena || [])] });
-    setShowNovoDuelo(false);
-  }
-
-  function atualizarEstadoLutador(qual, novoEstado) {
-    if (!combateAtivo) return;
-    const combates = db.combatesArena.map((c, i) => {
-      if (i === 0) {
-        return {
-          ...c,
-          [qual === "p1" ? "p1Estado" : "p2Estado"]: novoEstado,
-          juizLog: juizTexto,
-          turno: turnoAtual
-        };
-      }
-      return c;
-    });
-    saveDb({ ...db, combatesArena: combates });
-  }
-
-  function salvarLogJuiz() {
-    if (!combateAtivo) return;
-    const combates = db.combatesArena.map((c, i) => {
-      if (i === 0) {
-        return { ...c, juizLog: juizTexto, turno: turnoAtual };
-      }
-      return c;
-    });
-    saveDb({ ...db, combatesArena: combates });
-    alert("Estado do combate e relatório do juiz atualizados com sucesso!");
-  }
-
-  return (
-    <div className="space-y-6">
-      <div className="bg-banner-overlay border border-bleach-border rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
-        <div className="relative z-10 max-w-2xl">
-          <span className="px-3 py-1 bg-red-950/80 border border-red-500 text-red-400 text-xs font-bold rounded-full uppercase tracking-wider">
-            Duelos em ON & Julgamento de Batalha
-          </span>
-          <h2 className="font-title text-4xl sm:text-5xl tracking-widest text-bleach-orange mt-3 reiatsu-text-glow">
-            ARENA DE COMBATE
-          </h2>
-          <p className="text-xs sm:text-sm text-bleach-creamDim mt-2 leading-relaxed">
-            Área de duelos oficiais da Sociedade das Almas! Os jogadores se enfrentam com suas fichas e o estado de combate é atualizado ao vivo pelos administradores e juízes de luta.
-          </p>
-        </div>
-      </div>
-
-      <div className="flex justify-between items-center">
-        <h3 className="font-title text-2xl tracking-wider uppercase text-bleach-cream">
-          Duelo em Destaque
-        </h3>
-        {isAdm && (
-          <button
-            onClick={() => setShowNovoDuelo(!showNovoDuelo)}
-            className="px-4 py-2 bg-bleach-orange text-black font-extrabold text-xs uppercase rounded-lg shadow hover:bg-orange-400"
-          >
-            + Criar Novo Duelo
-          </button>
-        )}
-      </div>
-
-      {showNovoDuelo && (
-        <div className="bg-bleach-panel border border-bleach-orange p-5 rounded-xl space-y-3">
-          <h4 className="text-xs font-bold uppercase tracking-wider text-bleach-orange">
-            Configurar Novo Duelo
-          </h4>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs text-bleach-creamDim mb-1">Lutador 1 (Desafiante)</label>
-              <select
-                value={desafianteId}
-                onChange={(e) => setDesafianteId(e.target.value)}
-                className="w-full bg-black border border-bleach-border rounded-lg p-2.5 text-xs text-white"
-              >
-                {(db.personagens || []).map(p => <option key={p.id} value={p.id}>{p.nome}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs text-bleach-creamDim mb-1">Lutador 2 (Desafiado)</label>
-              <select
-                value={desafiadoId}
-                onChange={(e) => setDesafiadoId(e.target.value)}
-                className="w-full bg-black border border-bleach-border rounded-lg p-2.5 text-xs text-white"
-              >
-                {(db.personagens || []).map(p => <option key={p.id} value={p.id}>{p.nome}</option>)}
-              </select>
-            </div>
-          </div>
-          <button
-            onClick={criarDuelo}
-            className="px-5 py-2 bg-bleach-orange text-black font-extrabold text-xs uppercase rounded-lg hover:bg-orange-400"
-          >
-            Confirmar e Iniciar Duelo
-          </button>
-        </div>
-      )}
-
-      {combateAtivo && p1 && p2 ? (
-        <div className="space-y-6">
-          <div className="bg-bleach-panel border-2 border-bleach-border rounded-2xl p-6 relative overflow-hidden shadow-2xl">
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-6 items-center">
-              
-              <div className="md:col-span-2 bg-black/50 border border-bleach-borderSoft rounded-2xl p-5 flex flex-col items-center text-center relative">
-                <div className="w-28 h-28 bleach-avatar-frame overflow-hidden mb-3 bg-black">
-                  <img 
-                    src={p1.foto || 'assets/ichigo-orange.png'} 
-                    alt={p1.nome}
-                    className="w-full h-full object-cover"
-                    onError={(e) => { e.target.src = 'assets/ichigo-orange.png'; }}
-                  />
-                </div>
-                <h4 className="font-title text-2xl tracking-wider text-bleach-orange">
-                  {p1.nome}
-                </h4>
-                <span className="text-xs text-bleach-creamDim">{p1.esquadrao || p1.raca}</span>
-                
-                <div className="mt-3">
-                  <Badge color={ESTADOS.find(e => e.key === combateAtivo.p1Estado)?.color || C.green}>
-                    Estado: {combateAtivo.p1Estado}
-                  </Badge>
-                </div>
-
-                <div className="grid grid-cols-2 gap-2 w-full mt-4 text-[11px] text-bleach-muted bg-bleach-panel2 p-2.5 rounded-lg">
-                  <div>Pressão: <strong className="text-bleach-blue">{p1.atributos.pressao}</strong></div>
-                  <div>Força: <strong className="text-bleach-red">{p1.atributos.forca}</strong></div>
-                  <div>Velocidade: <strong className="text-bleach-green">{p1.atributos.velocidade}</strong></div>
-                  <div>Resiliência: <strong className="text-bleach-purple">{p1.atributos.resiliencia}</strong></div>
-                </div>
-              </div>
-
-              <div className="md:col-span-1 flex flex-col items-center justify-center my-4 md:my-0">
-                <div className="font-title text-6xl md:text-7xl font-black text-bleach-orange vs-slash animate-pulse">
-                  VS
-                </div>
-                <div className="text-[10px] font-mono text-bleach-muted uppercase mt-2 tracking-widest text-center">
-                  {combateAtivo.turno}
-                </div>
-              </div>
-
-              <div className="md:col-span-2 bg-black/50 border border-bleach-borderSoft rounded-2xl p-5 flex flex-col items-center text-center relative">
-                <div className="w-28 h-28 bleach-avatar-frame overflow-hidden mb-3 bg-black">
-                  <img 
-                    src={p2.foto || 'assets/ichigo-moon.png'} 
-                    alt={p2.nome}
-                    className="w-full h-full object-cover"
-                    onError={(e) => { e.target.src = 'assets/ichigo-moon.png'; }}
-                  />
-                </div>
-                <h4 className="font-title text-2xl tracking-wider text-bleach-blue">
-                  {p2.nome}
-                </h4>
-                <span className="text-xs text-bleach-creamDim">{p2.esquadrao || p2.raca}</span>
-
-                <div className="mt-3">
-                  <Badge color={ESTADOS.find(e => e.key === combateAtivo.p2Estado)?.color || C.green}>
-                    Estado: {combateAtivo.p2Estado}
-                  </Badge>
-                </div>
-
-                <div className="grid grid-cols-2 gap-2 w-full mt-4 text-[11px] text-bleach-muted bg-bleach-panel2 p-2.5 rounded-lg">
-                  <div>Pressão: <strong className="text-bleach-blue">{p2.atributos.pressao}</strong></div>
-                  <div>Força: <strong className="text-bleach-red">{p2.atributos.forca}</strong></div>
-                  <div>Velocidade: <strong className="text-bleach-green">{p2.atributos.velocidade}</strong></div>
-                  <div>Resiliência: <strong className="text-bleach-purple">{p2.atributos.resiliencia}</strong></div>
-                </div>
-              </div>
-
-            </div>
-
-            <div className="mt-6 pt-5 border-t border-bleach-borderSoft">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-bleach-orange mb-2">
-                📜 Relatório do Juiz & Estado da Batalha (Atualizado pela ADM)
-              </h4>
-              <div className="p-4 bg-black/60 border border-bleach-borderSoft rounded-xl text-xs text-bleach-creamDim leading-relaxed">
-                {combateAtivo.juizLog}
-              </div>
-            </div>
-
-            {isAdm && (
-              <div className="mt-6 pt-5 border-t border-bleach-orange/40 space-y-4">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-bleach-orange">
-                  👑 Gestão do Combate (Mestre / Juiz)
-                </h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-[11px] text-bleach-creamDim mb-1">Estado de {p1.nome}</label>
-                    <div className="flex gap-1.5 flex-wrap">
-                      {ESTADOS.map(e => (
-                        <button
-                          key={e.key}
-                          onClick={() => atualizarEstadoLutador("p1", e.key)}
-                          className={`px-2.5 py-1 rounded text-xs font-bold border transition ${
-                            combateAtivo.p1Estado === e.key ? "bg-white/20 text-white" : "opacity-60"
-                          }`}
-                          style={{ borderColor: e.color, color: e.color }}
-                        >
-                          {e.key}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-[11px] text-bleach-creamDim mb-1">Estado de {p2.nome}</label>
-                    <div className="flex gap-1.5 flex-wrap">
-                      {ESTADOS.map(e => (
-                        <button
-                          key={e.key}
-                          onClick={() => atualizarEstadoLutador("p2", e.key)}
-                          className={`px-2.5 py-1 rounded text-xs font-bold border transition ${
-                            combateAtivo.p2Estado === e.key ? "bg-white/20 text-white" : "opacity-60"
-                          }`}
-                          style={{ borderColor: e.color, color: e.color }}
-                        >
-                          {e.key}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <input
-                    type="text"
-                    value={turnoAtual}
-                    onChange={(e) => setTurnoAtual(e.target.value)}
-                    placeholder="Turno do Combate (Ex: Turno 3 — Clímax de Shikai)"
-                    className="w-full bg-black border border-bleach-border rounded-lg p-2 text-xs text-white"
-                  />
-                  <textarea
-                    rows={3}
-                    value={juizTexto}
-                    onChange={(e) => setJuizTexto(e.target.value)}
-                    placeholder="Descreva o relatório do que aconteceu no turno..."
-                    className="w-full bg-black border border-bleach-border rounded-lg p-2 text-xs text-white"
-                  />
-                  <button
-                    onClick={salvarLogJuiz}
-                    className="px-4 py-2 bg-bleach-orange text-black font-extrabold text-xs uppercase rounded-lg shadow hover:bg-orange-400"
-                  >
-                    Salvar e Publicar Decisão do Juiz
-                  </button>
-                </div>
-              </div>
-            )}
-
-          </div>
-        </div>
-      ) : (
-        <div className="text-center py-12 text-bleach-muted text-sm bg-bleach-panel border border-bleach-border rounded-xl">
-          Nenhum combate ativo no momento. Solicite à administração o início de um duelo!
-        </div>
-      )}
-
-    </div>
-  );
-}
-
-// TAB: FICHA DO JOGADOR
-function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao }) {
-  const [subPaginaFicha, setSubPaginaFicha] = useState("perfil");
-  
-  const [pend, setPend] = useState({ pressao: 0, forca: 0, velocidade: 0, resiliencia: 0 });
-  const [passoDistribuicao, setPassoDistribuicao] = useState(1);
-  const [novaTecCat, setNovaTecCat] = useState("Hadō");
-  const [novaTecNome, setNovaTecNome] = useState("");
-  const [rec, setRec] = useState({ tipo: "Treino em ON (30 linhas)", pontos: 1, atributo: "", motivo: "" });
-  
-  const [editFoto, setEditFoto] = useState(personagem?.foto || "assets/ichigo-orange.png");
-  const [editFotoShikai, setEditFotoShikai] = useState(personagem?.zanpakuto?.fotoShikai || "assets/ichigo-orange.png");
-  const [editFotoBankai, setEditFotoBankai] = useState(personagem?.zanpakuto?.fotoBankai || "assets/ichigo-moon.png");
-
-  const [editNome, setEditNome] = useState(personagem?.nome || "");
-  const [editWhats, setEditWhats] = useState(personagem?.whatsapp || "");
-  const [editCodigo, setEditCodigo] = useState(personagem?.codigo || "");
-  const [editFaceclaim, setEditFaceclaim] = useState(personagem?.faceclaim || "");
-  const [editIdadePlayer, setEditIdadePlayer] = useState(personagem?.idadePlayer || "20");
-  const [editAnivPlayer, setEditAnivPlayer] = useState(personagem?.aniversarioPlayer || "01/01");
-  const [editIdadeChar, setEditIdadeChar] = useState(personagem?.idadeChar || "18");
-  const [editAnivChar, setEditAnivChar] = useState(personagem?.aniversarioChar || "15/07");
-  const [editRaca, setEditRaca] = useState(personagem?.raca || "Shinigami");
-  const [editEsquadrao, setEditEsquadrao] = useState(personagem?.esquadrao || "11º Esquadrão");
-  const [editZkNome, setEditZkNome] = useState(personagem?.zanpakuto?.nome || "");
-
-  const [zk, setZk] = useState(personagem?.zanpakuto || { nome: "", shikaiAtiva: null, bankaiAtiva: null, notas: "" });
-  const [rewardModal, setRewardModal] = useState(null);
-  const [showGachaHistory, setShowGachaHistory] = useState(false);
-  
-  const [showZanpakutoAIModal, setShowZanpakutoAIModal] = useState(false);
-  const [aiZkOpcoes, setAiZkOpcoes] = useState([]);
-  const [aiZkTipo, setAiZkTipo] = useState("shikai");
-  const [ritualState, setRitualState] = useState("selection");
-  const [hoveredCardIdx, setHoveredCardIdx] = useState(null);
-  const [selectedRitualCard, setSelectedRitualCard] = useState(null);
-  const [chargeProgress, setChargeProgress] = useState(0);
-  const [chargeStageText, setChargeStageText] = useState("");
-  const [revealedCard, setRevealedCard] = useState(null);
-  const chargeIntervalRef = useRef(null);
-
-  useEffect(() => {
-    return () => {
-      if (chargeIntervalRef.current) clearInterval(chargeIntervalRef.current);
-    };
-  }, []);
-
-  const [copiadoWhats, setCopiadoWhats] = useState(false);
-
-  if (!personagem) return <div className="text-bleach-muted">Ficha não encontrada.</div>;
-
-  const pendSum = Object.values(pend).reduce((a, b) => a + b, 0);
-  const restante = (personagem.pontosDisponiveis || 0) - pendSum;
-  const totalStats = Object.values(personagem.atributos).reduce((a, b) => a + b, 0);
-  const powerTier = getPowerTier(totalStats);
-
-  const posFisicoIdx = rankFisico.findIndex(r => r.id === personagem.id);
-  const posFisico = posFisicoIdx !== -1 ? posFisicoIdx + 1 : 1;
-  const scoreFisico = ((Number(personagem.atributos.forca) + Number(personagem.atributos.velocidade) + Number(personagem.atributos.resiliencia)) / 3).toFixed(1);
-  const topFisicoScore = rankFisico[0]?.score || scoreFisico;
-  const pctBarFisico = Math.min(100, Math.round((scoreFisico / Math.max(1, topFisicoScore)) * 100));
-
-  const posPressaoIdx = rankPressao.findIndex(r => r.id === personagem.id);
-  const posPressao = posPressaoIdx !== -1 ? posPressaoIdx + 1 : 1;
-  const scorePressao = Number(personagem.atributos.pressao);
-  const topPressaoScore = rankPressao[0]?.score || scorePressao;
-  const pctBarPressao = Math.min(100, Math.round((scorePressao / Math.max(1, topPressaoScore)) * 100));
-
-  const temShikai = !!personagem?.zanpakuto?.shikaiAtiva;
-  const temBankai = !!personagem?.zanpakuto?.bankaiAtiva;
-  const podeGerarShikai = !!personagem?.permissoes?.shikaiLiberada;
-  const podeGerarBankai = !!personagem?.permissoes?.bankaiLiberada && temShikai;
-
-  function updateChar(patch, historicoTexto) {
-    const personagens = (db.personagens || []).map((p) =>
-      p.id === personagem.id
-        ? {
-            ...p,
-            ...patch,
-            historico: historicoTexto
-              ? [{ id: uid(), data: nowStr(), texto: historicoTexto }, ...(p.historico || [])]
-              : p.historico || [],
-          }
-        : p
-    );
-    saveDb({ ...db, personagens });
-  }
-
-  function confirmarDistribuicao() {
-    if (pendSum === 0) return;
-    if (pendSum > (personagem.pontosDisponiveis || 0)) {
-      alert("Você tentou distribuir mais pontos do que possui disponível!");
-      return;
-    }
-    const novosAtributos = {
-      pressao: personagem.atributos.pressao + pend.pressao,
-      forca: personagem.atributos.forca + pend.forca,
-      velocidade: personagem.atributos.velocidade + pend.velocidade,
-      resiliencia: personagem.atributos.resiliencia + pend.resiliencia,
-    };
-    const novoDisponivel = (personagem.pontosDisponiveis || 0) - pendSum;
-    const historicoTexto = `✨ Distribuiu ${pendSum} pontos de treino: Pressão (+${pend.pressao}), Força (+${pend.forca}), Velocidade (+${pend.velocidade}), Resiliência (+${pend.resiliencia})`;
-    updateChar(
-      {
-        atributos: novosAtributos,
-        pontosDisponiveis: novoDisponivel,
-      },
-      historicoTexto
-    );
-    setPend({ pressao: 0, forca: 0, velocidade: 0, resiliencia: 0 });
-    playReiatsuSound('win');
-  }
-
-  function addTecnica() {
-    if (!novaTecNome.trim()) return;
-    const novas = [...(personagem.tecnicas || []), { id: uid(), nome: novaTecNome.trim(), categoria: novaTecCat }];
-    updateChar({ tecnicas: novas }, `Aprendeu a técnica [${novaTecCat}] ${novaTecNome.trim()}`);
-    setNovaTecNome("");
-  }
-
-  function removeTecnica(id) {
-    const novas = (personagem.tecnicas || []).filter((t) => t.id !== id);
-    updateChar({ tecnicas: novas }, "Removeu uma técnica da ficha");
-  }
-
-  function togglePermissaoShikai() {
-    const atual = !!personagem?.permissoes?.shikaiLiberada;
-    updateChar({ permissoes: { ...(personagem.permissoes || {}), shikaiLiberada: !atual } }, `Permissão de Despertar de Shikai ${!atual ? "LIBERADA" : "BLOQUEADA"} pela ADM`);
-  }
-
-  function togglePermissaoBankai() {
-    const atual = !!personagem?.permissoes?.bankaiLiberada;
-    updateChar({ permissoes: { ...(personagem.permissoes || {}), bankaiLiberada: !atual } }, `Permissão de Despertar de Bankai ${!atual ? "LIBERADA" : "BLOQUEADA"} pela ADM`);
-  }
-
-  function concederRecompensa() {
-    const pontos = Number(rec.pontos) || 0;
-    if (pontos <= 0 && rec.tipo !== "Sorteio Gacha Comum" && rec.tipo !== "Sorteio Especial") return;
-    let patch = {};
-    let texto = `[${rec.tipo}]`;
-    if (rec.atributo) {
-      patch.atributos = {
-        ...personagem.atributos,
-        [rec.atributo]: (personagem.atributos[rec.atributo] || 0) + pontos,
-      };
-      texto += ` +${pontos} em ${rec.atributo.toUpperCase()}`;
-    } else {
-      patch.pontosDisponiveis = (personagem.pontosDisponiveis || 0) + pontos;
-      texto += ` +${pontos} pontos livres concedidos para distribuição`;
-    }
-    if (rec.tipo === "Treino em ON (30 linhas)") {
-      patch.sorteiosComunsRestantes = (personagem.sorteiosComunsRestantes || 0) + 4;
-      patch.sorteiosEspeciaisRestantes = (personagem.sorteiosEspeciaisRestantes || 0) + 1;
-      texto += ` (+4 Giros Comuns e +1 Especial liberados)`;
-    }
-    if (rec.motivo.trim()) texto += ` — ${rec.motivo.trim()}`;
-    updateChar(patch, texto);
-    setRec({ tipo: "Treino em ON (30 linhas)", pontos: 1, atributo: "", motivo: "" });
-  }
-
-  function girarGachaComum() {
-    if ((personagem.sorteiosComunsRestantes || 0) <= 0) {
-      alert("Você não possui giros de Sorteio Comum disponíveis no momento.");
-      return;
-    }
-    const total = RARIDADES_COMUNS.reduce((a, r) => a + r.peso, 0);
-    let roll = Math.random() * total;
-    let escolhida = RARIDADES_COMUNS[0];
-    for (const r of RARIDADES_COMUNS) {
-      if (roll < r.peso) {
-        escolhida = r;
-        break;
-      }
-      roll -= r.peso;
-    }
-    const pontos = Math.floor(Math.random() * (escolhida.max - escolhida.min + 1)) + escolhida.min;
-    const drop = {
-      id: uid(),
-      data: nowStr(),
-      nome: `Sorteio Comum (${escolhida.nome}): +${pontos} Pontos Disponíveis`,
-      cor: escolhida.cor
-    };
-    updateChar(
-      {
-        pontosDisponiveis: (personagem.pontosDisponiveis || 0) + pontos,
-        sorteiosComunsRestantes: personagem.sorteiosComunsRestantes - 1,
-        sorteiosDrops: [drop, ...(personagem.sorteiosDrops || [])]
-      },
-      `🎲 Sorteio Comum (${escolhida.nome}): +${pontos} pontos disponíveis concedidos automaticamente`
-    );
-    setRewardModal({ titulo: "SORTEIO GACHA COMUM!", raridade: escolhida.nome, cor: escolhida.cor, pontos, desc: escolhida.desc });
-    playReiatsuSound('win');
-  }
-
-  function girarSorteioEspecial() {
-    if ((personagem.sorteiosEspeciaisRestantes || 0) <= 0) {
-      alert("Você não possui giros de Sorteio Especial disponíveis.");
-      return;
-    }
-    
-    // Cálculo Ponderado Real (Total = 1000)
-    const totalPeso = RECOMPENSAS_ESPECIAIS.reduce((acc, r) => acc + (r.peso || 1), 0);
-    let roll = Math.random() * totalPeso;
-    let escolhida = RECOMPENSAS_ESPECIAIS[0];
-    
-    for (const r of RECOMPENSAS_ESPECIAIS) {
-      if (roll < (r.peso || 1)) {
-        escolhida = r;
-        break;
-      }
-      roll -= (r.peso || 1);
-    }
-    
-    const pontosGanhos = escolhida.valor || 0;
-    
-    let patch = {
-      sorteiosEspeciaisRestantes: personagem.sorteiosEspeciaisRestantes - 1
-    };
-    if (pontosGanhos > 0) {
-      patch.pontosDisponiveis = (personagem.pontosDisponiveis || 0) + pontosGanhos;
-    }
-    
-    const drop = {
-      id: uid(),
-      data: nowStr(),
-      nome: `🌟 Sorteio Especial (${escolhida.raridade}): ${escolhida.nome}` + (pontosGanhos > 0 ? ` (+${pontosGanhos} pts)` : ''),
-      cor: escolhida.cor
-    };
-    patch.sorteiosDrops = [drop, ...(personagem.sorteiosDrops || [])];
-    
-    updateChar(
-      patch,
-      `🌟 Sorteio Especial: Conquistou [${escolhida.nome}] (${escolhida.raridade})!`
-    );
-    
-    setRewardModal({ 
-      titulo: "SORTEIO DE CLASSE ESPECIAL!", 
-      raridade: escolhida.raridade, 
-      cor: escolhida.cor, 
-      pontos: pontosGanhos, 
-      desc: escolhida.desc, 
-      nomeItem: escolhida.nome,
-      chance: escolhida.chanceStr || ""
-    });
-    
-    if (escolhida.tipo === 'missao_despertar') {
-      playReiatsuSound('bankai');
-    } else {
-      playReiatsuSound('win');
-    }
-  }
-
-  function handleFotoUpload(e, tipo = "perfil") {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (evt) => {
-      const dataUrl = evt.target.result;
-      if (tipo === "perfil") {
-        setEditFoto(dataUrl);
-        updateChar({ foto: dataUrl }, "Foto de perfil do personagem atualizada");
-      } else if (tipo === "shikai") {
-        setEditFotoShikai(dataUrl);
-        const novoZk = { ...zk, fotoShikai: dataUrl, shikaiAtiva: zk.shikaiAtiva ? { ...zk.shikaiAtiva, foto: dataUrl } : null };
-        setZk(novoZk);
-        updateChar({ zanpakuto: novoZk }, "Imagem da arma Shikai atualizada");
-      } else if (tipo === "bankai") {
-        setEditFotoBankai(dataUrl);
-        const novoZk = { ...zk, fotoBankai: dataUrl, bankaiAtiva: zk.bankaiAtiva ? { ...zk.bankaiAtiva, foto: dataUrl } : null };
-        setZk(novoZk);
-        updateChar({ zanpakuto: novoZk }, "Imagem monumental da Bankai atualizada");
-      }
-    };
-    reader.readAsDataURL(file);
-  }
-
-  function salvarDadosCompletos() {
-    updateChar({
-      nome: editNome.trim() || personagem.nome,
-      whatsapp: editWhats.trim(),
-      codigo: editCodigo.trim(),
-      faceclaim: editFaceclaim.trim(),
-      idadePlayer: editIdadePlayer,
-      aniversarioPlayer: editAnivPlayer,
-      idadeChar: editIdadeChar,
-      aniversarioChar: editAnivChar,
-      raca: editRaca,
-      esquadrao: editEsquadrao,
-      zanpakuto: {
-        ...(personagem.zanpakuto || {}),
-        nome: editZkNome.trim() || personagem.zanpakuto?.nome || "Em despertar"
-      }
-    }, "Dados cadastrais e biográficos atualizados");
-    alert("Dados do Shinigami atualizados com sucesso!");
-  }
-
-  function abrirGeradorZanpakutoAI(tipo = "shikai") {
-    setAiZkTipo(tipo);
-    setRitualState("selection");
-    setChargeProgress(0);
-    setRevealedCard(null);
-    setSelectedRitualCard(null);
-    setHoveredCardIdx(null);
-
-    const opcoes = tipo === "bankai" 
-      ? gerar4OpcoesBankaiAI(db.personagens, personagem)
-      : gerar4OpcoesShikaiAI(db.personagens);
-
-    setAiZkOpcoes(opcoes);
-    setShowZanpakutoAIModal(true);
-    playReiatsuSound(tipo === 'bankai' ? 'bankai' : 'charge');
-  }
-
-  function handleHoverRitualCard(idx) {
-    if (ritualState !== "selection") return;
-    setHoveredCardIdx(idx);
-    playReiatsuSound('hum');
-  }
-
-  function handleLeaveRitualCard(idx) {
-    if (hoveredCardIdx === idx) {
-      setHoveredCardIdx(null);
-    }
-  }
-
-  function iniciarDespertarLamina(opcaoEscolhida, idx) {
-    setSelectedRitualCard(opcaoEscolhida);
-    setRitualState("charging");
-    setChargeProgress(0);
-    setChargeStageText("Ressonando frequência com a alma...");
-    playReiatsuSound('charge');
-
-    if (chargeIntervalRef.current) clearInterval(chargeIntervalRef.current);
-
-    let progress = 0;
-    chargeIntervalRef.current = setInterval(() => {
-      progress += 2;
-      setChargeProgress(progress);
-
-      if (progress === 24) {
-        setChargeStageText("A barreira do mundo interior está se rompendo...");
-        playReiatsuSound('charge');
-      } else if (progress === 54) {
-        setChargeStageText("O espírito da Zanpakutō sussurra seu verdadeiro nome...");
-        playReiatsuSound('charge');
-      } else if (progress === 82) {
-        setChargeStageText("Pressão Espiritual crítica! O selo milenar foi destruído!");
-        playReiatsuSound('shatter');
-      } else if (progress >= 100) {
-        clearInterval(chargeIntervalRef.current);
-        chargeIntervalRef.current = null;
-        setRitualState("revealed");
-        setRevealedCard(opcaoEscolhida);
-        playReiatsuSound(aiZkTipo === 'bankai' ? 'bankai' : 'win');
-      }
-    }, 45);
-  }
-
-  function pularCarregamento() {
-    if (chargeIntervalRef.current) clearInterval(chargeIntervalRef.current);
-    chargeIntervalRef.current = null;
-    setChargeProgress(100);
-    setRitualState("revealed");
-    setRevealedCard(selectedRitualCard || aiZkOpcoes[0]);
-    playReiatsuSound(aiZkTipo === 'bankai' ? 'bankai' : 'win');
-  }
-
-  function voltarParaSelecao() {
-    setRitualState("selection");
-    setChargeProgress(0);
-    setRevealedCard(null);
-    setSelectedRitualCard(null);
-  }
-
-  function escolherOpcaoAI(opcaoEscolhida) {
-    if (aiZkTipo === "shikai") {
-      const novoZk = {
-        ...(personagem.zanpakuto || {}),
-        nome: opcaoEscolhida.nome,
-        shikaiAtiva: opcaoEscolhida,
-      };
-      setZk(novoZk);
-      updateChar(
-        {
-          zanpakuto: novoZk,
-          permissoes: { ...(personagem.permissoes || {}), shikaiLiberada: false }
-        },
-        `🗡️ DESPERTOU SHIKAI AUTORAL: [${opcaoEscolhida.nome}] — "${opcaoEscolhida.comando}"`
-      );
-      setSubPaginaFicha("shikai");
-      setShowZanpakutoAIModal(false);
-      alert(`✨ Parabéns! Sua Shikai [${opcaoEscolhida.nome}] foi selada com exclusividade na sua ficha!`);
-    } else {
-      const novoZk = {
-        ...(personagem.zanpakuto || {}),
-        bankaiAtiva: opcaoEscolhida,
-      };
-      setZk(novoZk);
-      updateChar(
-        {
-          zanpakuto: novoZk,
-          permissoes: { ...(personagem.permissoes || {}), bankaiLiberada: false }
-        },
-        `卍 DESPERTOU BANKAI SUPREMA: [${opcaoEscolhida.nome}] — "${opcaoEscolhida.comando}"`
-      );
-      setSubPaginaFicha("bankai");
-      setShowZanpakutoAIModal(false);
-      alert(`🌟 GLÓRIA SUPREMA! A Bankai [${opcaoEscolhida.nome}] foi conquistada e selada com exclusividade!`);
-    }
-  }
-
-  function gerarFichaWhatsApp() {
-    const totalKidos = (personagem.kidosConhecidos || []).length || 3;
-    return `࣭    ㅤ
-                ⚯͛
-                     ᩠      ⊹                ᩠          . 
-                         ࣪       ✶  ͏t𝖍e
-              ﹙  𝐒𝐎𝐂𝐈𝐄𝐃𝐀𝐃𝐄 𝐃𝐀𝐒 𝐀𝐋𝐌𝐀𝐒  ﹚⊹
-             ɑ proteçɑ̃o 𝘀𝗲𝗺𝗽𝗿𝗲 seɾɑ́ 𝑑͟𝑎͟𝑑͟𝑎 
-         no       𝗦𝗘𝗜𝗥𝗘𝗜𝗧𝗘𝗜    ɑqueles 
-              .  que   ɑ     𝒎𝒆𝒓𝒆𝒄𝒆𝒎  .ᐟ
-                      ︶ ͝     ︶꒷꒦︶                        
-     
-              ⊹    /   𝙫ocê é um shinigɑmi
-            toɾne-se   𝓛𝐞𝐧𝐝ɑ́ɾio  ・・・
-                                     ﹀                                   
-        ͛  𝒇𝒊𝒄𝒉𝒂 𝒅𝒆   :   𝕻𝗘𝗥𝗦𝗢𝗡𝗔𝗚𝗘𝗠  „                        
-  ɑpɾesentɑmos ɑ fichɑ que dɑɾɑ́ vidɑ 
-  ɑo seu shinigɑmi(ɑ)! ⊹ ɑdiɑntɑmos ɑ 
-  impoɾtɑnciɑ de fɑzeɾ ɑ fichɑ com 
-  cɑlmɑ, ɑliɑdɑ ɑ leituɾɑ minunciosɑ 
-  dos documentos disponibilizɑdos. 
-                                                                   
-        ﹙ 𝗗𝗔𝗗𝗢𝗦 𝗗𝗢 𝗣𝗔𝗥𝗧𝗜𝗖𝗜𝗣𝗔𝗡𝗧𝗘 ﹚ 
-       ✶  „  nome &` + "\\" + `\` quɑtɾo digit͟os .ᐟ
-       ⎯  ${personagem.nome.split(" ")[0] || "Jogador"}, ${personagem.whatsapp ? personagem.whatsapp.slice(-4) : "0000"}
-       ✶  „  dɑ͟tɑ de nɑscimento &` + "\\" + `\` idɑde .ᐟ
-       ⎯  ${personagem.aniversarioPlayer || "15/07"} • ${personagem.idadePlayer || "20"} anos
-       ✶  „  ɑçɑ̃o de suɑ ɑu͟t͟oɾiɑ .ᐟ
-       ⎯ fɑvoɾ enviɑɾ sepɑɾɑdɑmente no privado.
-
-        ﹙ 𝗗𝗔𝗗𝗢𝗦 𝗗𝗢 𝗣𝗘𝗥𝗦𝗢𝗡𝗔𝗚𝗘𝗠 ﹚ 
-       ✶  „  no͟me do peɾsonɑgem  .ᐟ
-       ⎯     ${personagem.nome}
-       ✶  „  idɑde &` + "\\" + `\` ɑn͟ive͟ɾsɑ́ɾio .ᐟ
-       ⎯ ${personagem.idadeChar || "18"} anos - ${personagem.aniversarioChar || "15/07"}. 
-       ✶  „  ɾeivindicɑçɑ̃o fɑ͟ciɑl  .ᐟ
-       ⎯  ${personagem.faceclaim || personagem.nome}
-       ✶  „  esquɑdɾɑ̃o de suɑ escolhɑ  .ᐟ
-       ⎯   ${personagem.esquadrao || "11º Esquadrão"} 
-       ✶  „  oɾigem e rɑçɑ .ᐟ
-       ⎯  ${personagem.raca || "Shinigami"}
-       ✶  „  zɑnpɑkutō .ᐟ
-       ⎯ nome: ${personagem.zanpakuto?.nome || "Em despertar"}
-       ⎯ stɑtus: ${personagem.zanpakuto?.bankaiAtiva ? "Bankai Desperta" : personagem.zanpakuto?.shikaiAtiva ? "Shikai Desperta" : "Lâmina Selada"}
-       ✶  „  quɑntidɑde de kidōs .ᐟ
-       ⎯   ${totalKidos}
-
-        ﹙ 𝗔𝗧𝗥𝗜𝗕𝗨𝗧𝗢𝗦 𝗚𝗘𝗥𝗔𝗜𝗦 ﹚              
-       ✶  „ distɾibuiçɑ̃o ɑtuɑl .ᐟ
-       ⎯  pɾessɑ̃o espiɾituɑl: ${personagem.atributos.pressao}
-       ⎯  foɾçɑ:  ${personagem.atributos.forca}           
-       ⎯  velocidɑde: ${personagem.atributos.velocidade}
-       ⎯  ɾesiliênciɑ: ${personagem.atributos.resiliencia}
-
-        ﹙ 𝗧𝗘𝗥𝗠𝗢 𝗗𝗘 𝗖𝗢𝗡𝗦𝗘𝗡𝗧𝗜𝗠𝗘𝗡𝗧𝗢 ﹚     
-  ₍  X  ₎ estou ciente de que dentɾo do 
-  role plɑying gɑme encontɾɑɾei temɑs           
-  e cenɑs que podem seɾ gɑtilhos, e 
-  tɑmbém ɑssumo ɾesponsɑbilidɑde 
-  de ɑceitɑçɑ̃o cɑso o peɾsonɑgem 
-  sofɾɑ quɑlqueɾ dɑno nɑɾɾɑtivo.
-
-                               ✶
-                       𝐩𝐬𝐲𝐜𝐡𝐞 ın 
-                      ınspırαtıon`;
-  }
-
-  function copiarFichaWhatsApp() {
-    const texto = gerarFichaWhatsApp();
-    navigator.clipboard.writeText(texto);
-    setCopiadoWhats(true);
-    setTimeout(() => setCopiadoWhats(false), 3000);
-  }
-
-  return (
-    <div className="space-y-6">
-      
-      {/* NAVEGAÇÃO DE SUB-PÁGINAS */}
-      <div className="flex gap-2 border-b border-bleach-border pb-3 overflow-x-auto">
-        <button
-          onClick={() => setSubPaginaFicha("perfil")}
-          className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition flex items-center gap-2 ${
-            subPaginaFicha === "perfil"
-              ? "bg-bleach-orange text-black font-extrabold shadow-lg"
-              : "bg-bleach-panel border border-bleach-border text-bleach-creamDim hover:text-white"
-          }`}
-        >
-          <span>👤</span>
-          <span>Ficha Geral</span>
-        </button>
-
-        <button
-          onClick={() => setSubPaginaFicha("shikai")}
-          className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition flex items-center gap-2 relative ${
-            subPaginaFicha === "shikai"
-              ? "bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-extrabold shadow-lg"
-              : temShikai || podeGerarShikai
-              ? "bg-bleach-panel border border-blue-500/50 text-blue-300 hover:text-white shadow"
-              : "bg-bleach-panel border border-bleach-border text-bleach-muted opacity-70"
-          }`}
-        >
-          <span>🗡️</span>
-          <span>{temShikai ? `Shikai: ${personagem.zanpakuto?.shikaiAtiva?.nome || personagem.zanpakuto?.nome}` : "Shikai (Despertar)"}</span>
-          {podeGerarShikai && !temShikai && (
-            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping absolute top-1 right-1"></span>
-          )}
-        </button>
-
-        <button
-          onClick={() => setSubPaginaFicha("bankai")}
-          className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition flex items-center gap-2 relative ${
-            subPaginaFicha === "bankai"
-              ? "bg-gradient-to-r from-purple-600 via-amber-500 to-orange-500 text-white font-extrabold shadow-[0_0_20px_#FFD700]"
-              : temBankai || podeGerarBankai
-              ? "bg-purple-950/60 border-2 border-purple-500 text-yellow-400 font-bold hover:brightness-125"
-              : "bg-bleach-panel border border-bleach-border text-bleach-muted opacity-60"
-          }`}
-        >
-          <span>卍</span>
-          <span>{temBankai ? `Bankai: ${personagem.zanpakuto?.bankaiAtiva?.nome}` : "Bankai Suprema"}</span>
-          {podeGerarBankai && !temBankai && (
-            <span className="w-2.5 h-2.5 rounded-full bg-yellow-400 animate-ping absolute top-1 right-1"></span>
-          )}
-        </button>
-      </div>
-
-      {/* SUB-PÁGINA 1: FICHA GERAL */}
-      {subPaginaFicha === "perfil" && (
-        <div className="space-y-6">
-          <div className="bg-bleach-panel border border-bleach-border rounded-2xl p-6 shadow-2xl relative overflow-hidden">
-            <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
-              
-              <div className="flex flex-col items-center">
-                <div className="w-36 h-36 bleach-avatar-frame overflow-hidden bg-black relative group">
-                  <img 
-                    src={editFoto} 
-                    alt={personagem.nome}
-                    className="w-full h-full object-cover"
-                    onError={(e) => { e.target.src = 'assets/ichigo-orange.png'; }}
-                  />
-                  <label className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer transition text-[11px] text-bleach-orange font-bold text-center p-2">
-                    📷 Alterar Foto
-                    <input type="file" accept="image/*" onChange={(e) => handleFotoUpload(e, "perfil")} className="hidden" />
-                  </label>
-                </div>
-
-                <label className="mt-2.5 px-3 py-1 bg-bleach-panel2 border border-bleach-border hover:border-bleach-orange text-[11px] text-bleach-creamDim rounded-lg cursor-pointer transition">
-                  Subir Imagem
-                  <input type="file" accept="image/*" onChange={(e) => handleFotoUpload(e, "perfil")} className="hidden" />
-                </label>
-              </div>
-
-              <div className="flex-1 text-center md:text-left space-y-2">
-                <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
-                  <h2 className="font-title text-3xl sm:text-4xl tracking-widest text-bleach-orange">
-                    {personagem.nome}
-                  </h2>
-                  <Badge color={ESTADOS.find((e) => e.key === personagem.estado)?.color || C.green}>
-                    {personagem.estado}
-                  </Badge>
-                  <Badge color={powerTier.color}>
-                    {powerTier.title}
-                  </Badge>
-                </div>
-
-                <div className="text-xs text-bleach-creamDim flex flex-wrap justify-center md:justify-start gap-x-4 gap-y-1">
-                  <span>Esquadrão: <strong className="text-bleach-cream">{personagem.esquadrao || "11º Esquadrão"}</strong></span>
-                  <span>Raça: <strong className="text-bleach-cream">{personagem.raca}</strong></span>
-                  <span>WhatsApp: <strong className="text-bleach-cream">{maskWhats(personagem.whatsapp)}</strong></span>
-                  <span>Faceclaim: <strong className="text-bleach-cream">{personagem.faceclaim || "Não definido"}</strong></span>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                  <div className="bg-black/60 border border-bleach-border p-3 rounded-xl">
-                    <div className="flex justify-between items-center text-xs mb-1">
-                      <span className="font-bold text-bleach-creamDim">⚔️ Ranking Físico</span>
-                      <span className="font-mono text-bleach-orange font-bold">#{posFisico}º Lugar</span>
-                    </div>
-                    <div className="w-full bg-bleach-panel2 h-2 rounded-full overflow-hidden">
-                      <div className="bg-gradient-to-r from-orange-600 to-amber-400 h-full rounded-full" style={{ width: `${pctBarFisico}%` }}></div>
-                    </div>
-                    <div className="text-[10px] text-bleach-muted mt-1 text-right font-mono">Média: {scoreFisico} pts</div>
-                  </div>
-
-                  <div className="bg-black/60 border border-bleach-border p-3 rounded-xl">
-                    <div className="flex justify-between items-center text-xs mb-1">
-                      <span className="font-bold text-bleach-creamDim">⚡ Pressão Espiritual</span>
-                      <span className="font-mono text-cyan-400 font-bold">#{posPressao}º Lugar</span>
-                    </div>
-                    <div className="w-full bg-bleach-panel2 h-2 rounded-full overflow-hidden">
-                      <div className="bg-gradient-to-r from-blue-600 to-cyan-400 h-full rounded-full" style={{ width: `${pctBarPressao}%` }}></div>
-                    </div>
-                    <div className="text-[10px] text-bleach-muted mt-1 text-right font-mono">Reiatsu: {scorePressao} pts</div>
-                  </div>
-                </div>
-
-                <div className="pt-2 flex flex-wrap gap-2 justify-center md:justify-start">
-                  <button
-                    onClick={copiarFichaWhatsApp}
-                    className="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-extrabold text-xs uppercase tracking-wider rounded-xl shadow hover:brightness-110 transition flex items-center gap-1.5"
-                  >
-                    <span>📱</span>
-                    <span>{copiadoWhats ? "✓ Copiado com Sucesso!" : "Copiar Ficha WhatsApp"}</span>
-                  </button>
-                </div>
-
-              </div>
-            </div>
-          </div>
-
-          {/* ADMIN ACTION PANEL */}
-          {isAdmin && (
-            <Section title="Painel de Concessão de Recompensas (ADM)" subtitle="Atribua treinos em ON, rolagens ou pontos livres">
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
-                <div>
-                  <label className="text-[11px] text-bleach-muted uppercase font-bold block mb-1">Tipo</label>
-                  <select 
-                    value={rec.tipo} 
-                    onChange={(e) => setRec({ ...rec, tipo: e.target.value })}
-                    className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg px-3 py-2 text-xs text-white"
-                  >
-                    {TIPOS_RECOMPENSA.map(t => <option key={t} value={t}>{t}</option>)}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="text-[11px] text-bleach-muted uppercase font-bold block mb-1">Pontos Livres</label>
-                  <input 
-                    type="number" 
-                    value={rec.pontos} 
-                    onChange={(e) => setRec({ ...rec, pontos: e.target.value })}
-                    className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg px-3 py-2 text-xs text-white"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-[11px] text-bleach-muted uppercase font-bold block mb-1">Destino Direto (Opcional)</label>
-                  <select 
-                    value={rec.atributo} 
-                    onChange={(e) => setRec({ ...rec, atributo: e.target.value })}
-                    className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg px-3 py-2 text-xs text-white"
-                  >
-                    <option value="">Pontos Livres (Ficha)</option>
-                    <option value="pressao">Pressão Espiritual</option>
-                    <option value="forca">Força</option>
-                    <option value="velocidade">Velocidade</option>
-                    <option value="resiliencia">Resiliência</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="text-[11px] text-bleach-muted uppercase font-bold block mb-1">Motivo / Link</label>
-                  <input 
-                    type="text" 
-                    placeholder="Ex: Treino de 30 linhas aprovado"
-                    value={rec.motivo} 
-                    onChange={(e) => setRec({ ...rec, motivo: e.target.value })}
-                    className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg px-3 py-2 text-xs text-white"
-                  />
-                </div>
-              </div>
-
-              <div className="mt-4 flex flex-wrap gap-2">
-                <button 
-                  onClick={concederRecompensa}
-                  className="px-5 py-2.5 bg-bleach-orange text-black font-extrabold text-xs uppercase rounded-lg shadow hover:bg-orange-400 transition"
-                >
-                  + Conceder Recompensa
-                </button>
-
-                <button
-                  onClick={togglePermissaoShikai}
-                  className={`px-4 py-2 text-xs font-bold uppercase rounded-lg border transition ${
-                    personagem?.permissoes?.shikaiLiberada
-                      ? "bg-red-950 border-red-500 text-red-300"
-                      : "bg-blue-950 border-cyan-400 text-cyan-300"
-                  }`}
-                >
-                  {personagem?.permissoes?.shikaiLiberada ? "🔒 Revogar Permissão de Shikai" : "🔓 Liberar Despertar de Shikai"}
-                </button>
-
-                <button
-                  onClick={togglePermissaoBankai}
-                  className={`px-4 py-2 text-xs font-bold uppercase rounded-lg border transition ${
-                    personagem?.permissoes?.bankaiLiberada
-                      ? "bg-red-950 border-red-500 text-red-300"
-                      : "bg-amber-950 border-amber-400 text-yellow-300"
-                  }`}
-                >
-                  {personagem?.permissoes?.bankaiLiberada ? "🔒 Revogar Permissão de Bankai" : "🔓 Liberar Despertar de Bankai"}
-                </button>
-              </div>
-            </Section>
-          )}
-
-          {/* GACHA E SORTEIOS */}
-          <Section title="🎁 Sorteios & Roletas de Recompensa" subtitle="Realize seus giros liberados por treinos em ON e missões aprovadas">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-bleach-panel2 border border-bleach-border rounded-xl p-4 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <h4 className="font-title text-xl tracking-wider text-bleach-orange flex items-center gap-1.5">
-                      <span>🎲</span> Sorteio Gacha Comum
-                    </h4>
-                    <span className="px-2.5 py-0.5 rounded-full bg-black text-bleach-orange font-mono font-bold text-xs border border-bleach-border">
-                      {personagem.sorteiosComunsRestantes || 0} giros disponíveis
-                    </span>
-                  </div>
-                  <p className="text-xs text-bleach-creamDim mb-3">
-                    Sorteia recursos e pontos de atributo com foco em ganhos graduais e balanceados.
-                  </p>
-                  
-                  {/* Probabilidades */}
-                  <div className="mb-4 p-2.5 bg-black/60 border border-white/10 rounded-lg text-[10px] space-y-1 font-mono text-bleach-muted">
-                    <div className="flex justify-between text-bleach-creamDim">
-                      <span>• Comum (+1 a +2 pts):</span>
-                      <strong className="text-bleach-cream">65.0%</strong>
-                    </div>
-                    <div className="flex justify-between text-emerald-400">
-                      <span>• Incomum (+3 a +4 pts):</span>
-                      <strong>22.0%</strong>
-                    </div>
-                    <div className="flex justify-between text-cyan-400">
-                      <span>• Raro (+5 a +7 pts):</span>
-                      <strong>9.0%</strong>
-                    </div>
-                    <div className="flex justify-between text-purple-400">
-                      <span>• Épico (+8 a +11 pts):</span>
-                      <strong>3.5%</strong>
-                    </div>
-                    <div className="flex justify-between text-yellow-400">
-                      <span>• Lendário (+14 a +18 pts):</span>
-                      <strong>0.5% (1 em 200)</strong>
-                    </div>
-                  </div>
-                </div>
-                
-                <button
-                  onClick={girarGachaComum}
-                  disabled={(personagem.sorteiosComunsRestantes || 0) <= 0}
-                  className="w-full py-2.5 bg-gradient-to-r from-bleach-orange to-bleach-orangeDeep text-black font-extrabold text-xs uppercase tracking-widest rounded-lg shadow disabled:opacity-40 disabled:cursor-not-allowed hover:brightness-110 transition"
-                >
-                  {(personagem.sorteiosComunsRestantes || 0) > 0 ? "✨ Realizar Sorteio Comum" : "Sem Giros Comuns (Aguarde ADM)"}
-                </button>
-              </div>
-
-              <div className="bg-bleach-panel2 border-2 border-purple-500/40 purple-reiatsu-glow rounded-xl p-4 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <h4 className="font-title text-xl tracking-wider text-purple-400 flex items-center gap-1.5">
-                      <span>🌟</span> Sorteio de Classe Especial
-                    </h4>
-                    <span className="px-2.5 py-0.5 rounded-full bg-black text-purple-300 font-mono font-bold text-xs border border-purple-500/40">
-                      {personagem.sorteiosEspeciaisRestantes || 0} especiais
-                    </span>
-                  </div>
-                  <p className="text-xs text-bleach-creamDim mb-3">
-                    Prêmios de alto prestígio. A cobiçada <strong>Missão Narrativa Individual</strong> é um prêmio supremo ultrarraro (1 em 100)!
-                  </p>
-                  
-                  {/* Probabilidades */}
-                  <div className="mb-4 p-2.5 bg-black/60 border border-purple-500/20 rounded-lg text-[10px] space-y-1 font-mono text-bleach-muted">
-                    <div className="flex justify-between text-emerald-300">
-                      <span>• Prêmios Simples (+4 a +7 pts):</span>
-                      <strong>60.0%</strong>
-                    </div>
-                    <div className="flex justify-between text-cyan-300">
-                      <span>• Intermediários (+8 a +12 pts):</span>
-                      <strong>24.0%</strong>
-                    </div>
-                    <div className="flex justify-between text-purple-300">
-                      <span>• Raros Nobres (+15 a +16 pts):</span>
-                      <strong>11.0%</strong>
-                    </div>
-                    <div className="flex justify-between text-amber-300">
-                      <span>• Lendários (+20 a +24 pts):</span>
-                      <strong>4.0%</strong>
-                    </div>
-                    <div className="flex justify-between text-white font-bold bg-purple-950/60 px-1 py-0.5 rounded border border-purple-400/40">
-                      <span className="text-yellow-300">👑 Missão Narrativa:</span>
-                      <strong className="text-white">1.0% (1 em 100)</strong>
-                    </div>
-                  </div>
-                </div>
-                
-                <button
-                  onClick={girarSorteioEspecial}
-                  disabled={(personagem.sorteiosEspeciaisRestantes || 0) <= 0}
-                  className="w-full py-2.5 bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-800 text-white font-extrabold text-xs uppercase tracking-widest rounded-lg shadow-lg disabled:opacity-40 disabled:cursor-not-allowed hover:brightness-110 transition"
-                >
-                  {(personagem.sorteiosEspeciaisRestantes || 0) > 0 ? "⚡ Girar Sorteio Especial" : "Sem Giros Especiais"}
-                </button>
-              </div>
-            </div>
-
-            {(personagem.sorteiosDrops || []).length > 0 && (
-              <div className="mt-4 pt-3 border-t border-bleach-borderSoft">
-                <button
-                  onClick={() => setShowGachaHistory(!showGachaHistory)}
-                  className="text-xs text-bleach-orange font-bold uppercase hover:underline"
-                >
-                  {showGachaHistory ? "▼ Ocultar Histórico de Drops" : "▶ Ver Histórico de Drops Anteriores"}
-                </button>
-                {showGachaHistory && (
-                  <div className="space-y-2 mt-3">
-                    {personagem.sorteiosDrops.map((d) => (
-                      <div key={d.id} className="p-2.5 bg-black/50 border border-bleach-borderSoft rounded-lg text-xs flex justify-between items-center">
-                        <span style={{ color: d.cor || C.cream }} className="font-semibold">{d.nome}</span>
-                        <span className="text-[10px] text-bleach-muted font-mono">{d.data}</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-          </Section>
-
-          {/* UNALLOCATED POINTS BANNER WITH 1, 5, 10 STEP SELECTOR */}
-          {(personagem.pontosDisponiveis || 0) > 0 && (
-            <div className="bg-gradient-to-r from-orange-950/60 via-bleach-panel to-orange-950/40 border-2 border-bleach-orange/60 rounded-xl p-5 shadow-2xl reiatsu-glow">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4 pb-3 border-b border-bleach-borderSoft">
-                <div>
-                  <h4 className="font-title text-2xl tracking-wider text-bleach-orange flex items-center gap-2">
-                    <span>✨</span> PONTOS DISPONÍVEIS PARA DISTRIBUIR
-                  </h4>
-                  <p className="text-xs text-bleach-creamDim">
-                    Você possui <strong className="text-bleach-orange">{personagem.pontosDisponiveis}</strong> pontos livres concedidos pelo mestre/sorteios.
-                  </p>
-                </div>
-
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-bleach-creamDim">
-                    Distribuir por vez:
-                  </span>
-                  <div className="flex bg-black/80 border border-bleach-border rounded-xl p-1 gap-1 shadow-inner">
-                    {[1, 5, 10].map((step) => (
-                      <button
-                        key={step}
-                        type="button"
-                        onClick={() => setPassoDistribuicao(step)}
-                        className={`px-3 py-1 rounded-lg text-xs font-mono font-black transition ${
-                          passoDistribuicao === step
-                            ? "bg-gradient-to-r from-bleach-orange to-bleach-orangeDeep text-black shadow-[0_0_10px_#FF6A13]"
-                            : "bg-transparent text-bleach-creamDim hover:text-white hover:bg-white/5"
-                        }`}
-                      >
-                        ±{step} {step === 1 ? "pt" : "pts"}
-                      </button>
-                    ))}
-                  </div>
-
-                  <div className="ml-auto md:ml-2 bg-black/60 border border-white/10 px-3 py-1.5 rounded-xl text-right">
-                    <span className="text-[11px] text-bleach-creamDim">Restam: </span>
-                    <span className="font-bold text-lg text-bleach-orange font-mono">{restante}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-                {ATTRS.map((a) => {
-                  const decStep = Math.min(passoDistribuicao, pend[a.key]);
-                  const incStep = Math.min(passoDistribuicao, restante);
-                  return (
-                    <div key={a.key} className="bg-black/50 border border-bleach-border rounded-xl p-3 flex flex-col justify-between gap-2.5 shadow-sm">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <span className="text-xs font-bold uppercase tracking-wider block" style={{ color: a.color }}>
-                            {a.label}
-                          </span>
-                          <span className="text-[11px] text-bleach-muted">
-                            Atual: <strong className="text-white">{personagem.atributos[a.key]}</strong>
-                            {pend[a.key] > 0 && (
-                              <span className="text-bleach-orange font-mono ml-1 font-bold">
-                                → {personagem.atributos[a.key] + pend[a.key]}
-                              </span>
-                            )}
-                          </span>
-                        </div>
-
-                        <div className="flex items-center gap-1.5 bg-black/80 p-1 rounded-xl border border-white/10">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              const amt = Math.min(passoDistribuicao, pend[a.key]);
-                              if (amt > 0) setPend((p) => ({ ...p, [a.key]: p[a.key] - amt }));
-                            }}
-                            disabled={pend[a.key] === 0}
-                            title={`Diminuir ${decStep || passoDistribuicao} ponto(s)`}
-                            className="px-2.5 h-8 rounded-lg bg-bleach-panel border border-bleach-border text-white text-xs font-bold font-mono disabled:opacity-20 disabled:cursor-not-allowed hover:border-bleach-orange hover:bg-bleach-panel2 transition"
-                          >
-                            −{passoDistribuicao > 1 ? passoDistribuicao : ""}
-                          </button>
-
-                          <span className="min-w-[42px] text-center font-mono font-black text-bleach-orange text-base">
-                            +{pend[a.key]}
-                          </span>
-
-                          <button
-                            type="button"
-                            onClick={() => {
-                              const amt = Math.min(passoDistribuicao, restante);
-                              if (amt > 0) setPend((p) => ({ ...p, [a.key]: p[a.key] + amt }));
-                            }}
-                            disabled={restante <= 0}
-                            title={`Adicionar ${incStep || passoDistribuicao} ponto(s)`}
-                            className="px-2.5 h-8 rounded-lg bg-bleach-panel border border-bleach-border text-white text-xs font-bold font-mono disabled:opacity-20 disabled:cursor-not-allowed hover:border-bleach-orange hover:bg-bleach-panel2 transition"
-                          >
-                            +{passoDistribuicao > 1 ? passoDistribuicao : ""}
-                          </button>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center justify-between pt-1 border-t border-white/5 text-[10px]">
-                        <span className="text-bleach-muted">Adição direta:</span>
-                        <div className="flex items-center gap-1">
-                          {[1, 5, 10].map((quick) => (
-                            <button
-                              key={quick}
-                              type="button"
-                              onClick={() => {
-                                const amt = Math.min(quick, restante);
-                                if (amt > 0) setPend((p) => ({ ...p, [a.key]: p[a.key] + amt }));
-                              }}
-                              disabled={restante <= 0}
-                              className="px-2 py-0.5 rounded bg-bleach-panel2 border border-white/10 hover:border-bleach-orange text-bleach-creamDim hover:text-white font-mono font-bold disabled:opacity-30 disabled:cursor-not-allowed transition"
-                            >
-                              +{quick}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
-                {pendSum > 0 ? (
-                  <button
-                    type="button"
-                    onClick={() => setPend({ pressao: 0, forca: 0, velocidade: 0, resiliencia: 0 })}
-                    className="text-xs text-bleach-muted hover:text-red-400 underline transition"
-                  >
-                    🔄 Zerar Distribuição Pendente
-                  </button>
-                ) : (
-                  <div></div>
-                )}
-
-                <button
-                  type="button"
-                  onClick={confirmarDistribuicao}
-                  disabled={pendSum === 0}
-                  className="w-full sm:w-auto px-6 py-2.5 bg-gradient-to-r from-bleach-orange to-bleach-orangeDeep text-black font-extrabold text-xs uppercase tracking-widest rounded-lg shadow-lg hover:brightness-110 disabled:opacity-40 disabled:cursor-not-allowed transition"
-                >
-                  Confirmar Distribuição ({pendSum} pts)
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* ATTR CARDS */}
-          <Section 
-            title="Atributos Espirituais" 
-            subtitle="O valor puro do seu poder (sem conversores ou taxas ocultas)"
-          >
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {ATTRS.map((a) => (
-                <div key={a.key} className="bg-bleach-panel2 border border-bleach-borderSoft rounded-xl p-4 flex flex-col justify-between">
-                  <div className="flex items-start justify-between mb-2">
-                    <div>
-                      <h4 className="text-xs font-bold uppercase tracking-wider" style={{ color: a.color }}>
-                        {a.label}
-                      </h4>
-                      <p className="text-[11px] text-bleach-muted">{a.desc}</p>
-                    </div>
-                    <span className="text-3xl font-extrabold font-mono" style={{ color: a.color }}>
-                      {personagem.atributos[a.key]}
-                    </span>
-                  </div>
-
-                  <div className="w-full bg-black/50 h-2 rounded-full overflow-hidden border border-white/5">
-                    <div 
-                      className="h-full rounded-full transition-all duration-500" 
-                      style={{ 
-                        width: `${Math.min(100, (personagem.atributos[a.key] / 200) * 100)}%`,
-                        backgroundColor: a.color 
-                      }}
-                    ></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Section>
-
-          {/* KIDŌ E TÉCNICAS */}
-          <Section title="Kidō e Técnicas Aprendidas" subtitle="Feitiços dominados pelo Shinigami">
-            {(personagem.tecnicas || []).length === 0 ? (
-              <p className="text-xs text-bleach-muted">Nenhuma técnica registrada até o momento.</p>
-            ) : (
-              <div className="flex flex-wrap gap-2.5 mb-4">
-                {personagem.tecnicas.map((t) => (
-                  <div 
-                    key={t.id}
-                    className="bg-bleach-panel2 border border-bleach-border px-3 py-1.5 rounded-lg flex items-center gap-2 text-xs"
-                  >
-                    <span className="px-2 py-0.5 rounded bg-black text-[10px] font-bold text-bleach-orange uppercase">
-                      {t.categoria}
-                    </span>
-                    <span className="font-semibold text-bleach-cream">{t.nome}</span>
-                    {isAdmin && (
-                      <button 
-                        onClick={() => removeTecnica(t.id)} 
-                        className="text-red-400 hover:text-red-300 font-bold ml-1"
-                        title="Remover técnica"
-                      >
-                        ×
-                      </button>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {isAdmin && (
-              <div className="mt-4 pt-4 border-t border-bleach-borderSoft flex flex-wrap gap-2">
-                <select 
-                  value={novaTecCat} 
-                  onChange={(e) => setNovaTecCat(e.target.value)}
-                  className="bg-bleach-panel2 border border-bleach-border rounded-lg px-3 py-2 text-xs text-white"
-                >
-                  {CATEGORIAS_TECNICA.map((c) => <option key={c} value={c}>{c}</option>)}
-                </select>
-                <input 
-                  type="text" 
-                  placeholder="Nome da técnica (Ex: Hadō #31 — Shakkahō)" 
-                  value={novaTecNome} 
-                  onChange={(e) => setNovaTecNome(e.target.value)}
-                  className="flex-1 min-w-[180px] bg-bleach-panel2 border border-bleach-border rounded-lg px-3 py-2 text-xs text-white"
-                />
-                <button 
-                  onClick={addTecnica}
-                  className="px-4 py-2 bg-bleach-panel border border-bleach-border text-bleach-cream hover:border-bleach-orange rounded-lg text-xs font-bold uppercase"
-                >
-                  + Adicionar
-                </button>
-              </div>
-            )}
-          </Section>
-
-          {/* HISTÓRICO */}
-          <Section title="Histórico de Registros" subtitle="Linha do tempo de treinos, missões e recompensas">
-            {(personagem.historico || []).length === 0 ? (
-              <p className="text-xs text-bleach-muted">Nenhum registro ainda.</p>
-            ) : (
-              <div className="space-y-3">
-                {personagem.historico.slice(0, 20).map((h) => (
-                  <div key={h.id} className="border-l-2 border-bleach-orange pl-3 py-1">
-                    <div className="text-[10px] text-bleach-muted font-mono">{h.data}</div>
-                    <div className="text-xs text-bleach-creamDim mt-0.5">{h.texto}</div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </Section>
-
-          {/* DADOS CADASTRAIS */}
-          <Section title="Dados Cadastrais & Perfil" subtitle="Edição das informações do Shinigami">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-              <div>
-                <label className="text-[11px] text-bleach-muted uppercase font-bold block mb-1">Nome</label>
-                <input 
-                  type="text" 
-                  value={editNome} 
-                  onChange={(e) => setEditNome(e.target.value)}
-                  className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg px-3 py-2 text-xs text-white"
-                />
-              </div>
-
-              <div>
-                <label className="text-[11px] text-bleach-muted uppercase font-bold block mb-1">WhatsApp</label>
-                <input 
-                  type="text" 
-                  value={editWhats} 
-                  onChange={(e) => setEditWhats(e.target.value)}
-                  className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg px-3 py-2 text-xs text-white"
-                />
-              </div>
-
-              <div>
-                <label className="text-[11px] text-bleach-muted uppercase font-bold block mb-1">Código de Acesso</label>
-                <input 
-                  type="text" 
-                  value={editCodigo} 
-                  onChange={(e) => setEditCodigo(e.target.value)}
-                  className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg px-3 py-2 text-xs text-white"
-                />
-              </div>
-
-              <div>
-                <label className="text-[11px] text-bleach-muted uppercase font-bold block mb-1">Faceclaim</label>
-                <input 
-                  type="text" 
-                  value={editFaceclaim} 
-                  onChange={(e) => setEditFaceclaim(e.target.value)}
-                  className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg px-3 py-2 text-xs text-white"
-                />
-              </div>
-
-              <div>
-                <label className="text-[11px] text-bleach-muted uppercase font-bold block mb-1">Esquadrão</label>
-                <input 
-                  type="text" 
-                  value={editEsquadrao} 
-                  onChange={(e) => setEditEsquadrao(e.target.value)}
-                  className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg px-3 py-2 text-xs text-white"
-                />
-              </div>
-
-              <div>
-                <label className="text-[11px] text-bleach-muted uppercase font-bold block mb-1">Raça</label>
-                <input 
-                  type="text" 
-                  value={editRaca} 
-                  onChange={(e) => setEditRaca(e.target.value)}
-                  className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg px-3 py-2 text-xs text-white"
-                />
-              </div>
-            </div>
-
-            <div className="mt-4">
-              <button 
-                onClick={salvarDadosCompletos}
-                className="w-full sm:w-auto px-6 py-2.5 bg-bleach-panel border border-bleach-border text-xs text-bleach-cream hover:border-bleach-orange rounded-xl font-bold uppercase transition"
-              >
-                💾 Salvar Dados Cadastrais
-              </button>
-            </div>
-          </Section>
-        </div>
-      )}
-
-      {/* SUB-PÁGINA 2: SHIKAI DESPERTA */}
-      {subPaginaFicha === "shikai" && (
-        <div className="space-y-6">
-          {temShikai ? (
-            <div className="bg-bleach-panel border-2 border-blue-500/50 rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
-              <div className="shikai-smoke-overlay"></div>
-
-              <div className="relative z-10 space-y-6">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-blue-500/30 pb-4">
-                  <div>
-                    <span className="px-3 py-1 bg-blue-950 border border-blue-400 text-cyan-300 text-xs font-bold rounded-full uppercase tracking-wider">
-                      🗡️ Despertar de Primeira Fase • Shikai Única e Individual
-                    </span>
-                    <h2 className="font-title text-4xl sm:text-5xl tracking-widest text-cyan-400 mt-2 drop-shadow-[0_0_15px_rgba(79,179,232,0.6)]">
-                      {personagem?.zanpakuto?.shikaiAtiva?.nome || personagem?.zanpakuto?.nome || "Shikai Desconhecida"}
-                    </h2>
-                    <div className="text-xs font-mono text-cyan-200 mt-1 italic">
-                      Comando de Liberação: "{personagem?.zanpakuto?.shikaiAtiva?.comando || 'Liberte-se'}"
-                    </div>
-                  </div>
-
-                  <Badge color={C.blue} className="text-xs py-1.5 px-3">
-                    Elemento: {personagem?.zanpakuto?.shikaiAtiva?.elemento || 'Espiritual'}
-                  </Badge>
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
-                  <div className="lg:col-span-1 flex flex-col items-center">
-                    <BleachSwordArt 
-                      arma={personagem?.zanpakuto?.shikaiAtiva}
-                      nomeZk={personagem?.zanpakuto?.shikaiAtiva?.nome || personagem?.zanpakuto?.nome}
-                      isBankai={false}
-                      foto={editFotoShikai || personagem?.zanpakuto?.fotoShikai}
-                      onUpload={(e) => handleFotoUpload(e, "shikai")}
-                    />
-                  </div>
-
-                  <div className="lg:col-span-2 space-y-4">
-                    {personagem?.zanpakuto?.shikaiAtiva?.espirito && (
-                      <div className="bg-black/70 border-2 border-purple-500/60 rounded-2xl p-5 shadow-[0_0_20px_rgba(139,111,214,0.3)]">
-                        <h4 className="text-xs font-black uppercase tracking-widest text-purple-300 mb-1 flex items-center gap-2">
-                          <span>👤</span> Ressonância do Espírito & Mundo Interior
-                        </h4>
-                        <p className="text-xs sm:text-sm text-purple-100/90 italic leading-relaxed whitespace-pre-line">
-                          "{personagem.zanpakuto.shikaiAtiva.espirito}"
-                        </p>
-                      </div>
-                    )}
-                    
-                    <div className="bg-black/60 border border-blue-500/40 rounded-xl p-5 shadow-inner">
-                      <h4 className="text-xs font-bold uppercase tracking-wider text-cyan-400 mb-1 flex items-center gap-2">
-                        <span>⚔️</span> Formato & Transformação da Lâmina Shikai
-                      </h4>
-                      <p className="text-xs sm:text-sm text-bleach-cream leading-relaxed whitespace-pre-line">
-                        {personagem?.zanpakuto?.shikaiAtiva?.formatoArma || "Lâmina espiritual em sua primeira forma de libertação."}
-                      </p>
-                    </div>
-
-                    <div className="bg-black/60 border border-blue-500/40 rounded-xl p-5 shadow-inner">
-                      <h4 className="text-xs font-bold uppercase tracking-wider text-cyan-400 mb-1 flex items-center gap-2">
-                        <span>⚡</span> Poder & Habilidades Especiais em Combate
-                      </h4>
-                      <p className="text-xs sm:text-sm text-bleach-cream leading-relaxed whitespace-pre-line">
-                        {personagem?.zanpakuto?.shikaiAtiva?.poder || "Poder único e autoral despertado na arma."}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ) : podeGerarShikai ? (
-            <div className="bg-bleach-panel border-2 border-cyan-400 rounded-2xl p-8 text-center space-y-4 shadow-2xl relative overflow-hidden">
-              <div className="shikai-smoke-overlay"></div>
-              <div className="relative z-10 max-w-xl mx-auto space-y-4">
-                <span className="text-4xl">✨</span>
-                <h3 className="font-title text-4xl text-cyan-400 tracking-widest">
-                  DESPERTAR DE SHIKAI AUTORIZADO!
-                </h3>
-                <p className="text-xs sm:text-sm text-bleach-creamDim leading-relaxed">
-                  A Administração aprovou o seu treinamento narrativo! Você agora pode manifestar a voz da sua Zanpakutō e gerar <strong>4 opções de Shikai 100% autorais e individuais</strong>. Ao escolher uma delas, ela será exclusivamente sua no RPG!
-                </p>
-                <button
-                  onClick={() => abrirGeradorZanpakutoAI("shikai")}
-                  className="px-8 py-3.5 bg-gradient-to-r from-blue-500 to-cyan-400 text-black font-extrabold text-xs uppercase tracking-widest rounded-xl shadow-2xl hover:scale-105 transition"
-                >
-                  🤖 Gerar 4 Opções de Shikai Individuais
-                </button>
-              </div>
-            </div>
-          ) : (
-            <div className="bg-bleach-panel border border-bleach-border rounded-2xl p-12 text-center space-y-3">
-              <span className="text-4xl opacity-50">🔒</span>
-              <h3 className="font-title text-3xl text-bleach-muted tracking-wider">
-                SHIKAI AINDA NÃO DESPERTA
-              </h3>
-              <p className="text-xs text-bleach-muted max-w-md mx-auto leading-relaxed">
-                O despertar de Shikai exige treinamento em ON (30 linhas) e autorização da Administração. Assim que a ADM liberar na sua ficha, você poderá gerar e escolher sua forma Shikai autoral e individual!
-              </p>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* SUB-PÁGINA 3: BANKAI SUPREMA */}
-      {subPaginaFicha === "bankai" && (
-        <div className="space-y-6">
-          {temBankai ? (
-            <div className="bankai-supreme-card border-2 border-amber-500 rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
-              <div className="relative z-10 space-y-6">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-amber-500/40 pb-5">
-                  <div>
-                    <span className="px-3.5 py-1 bg-gradient-to-r from-purple-900 to-amber-900 border border-amber-400 text-yellow-300 text-xs font-black rounded-full uppercase tracking-widest shadow">
-                      卍 LIBERAÇÃO COMPLETA • BANKAI SUPREMA INDIVIDUAL
-                    </span>
-                    <h2 className="font-title text-4xl sm:text-6xl tracking-widest text-amber-300 mt-2 drop-shadow-[0_0_25px_#FFD700]">
-                      {personagem?.zanpakuto?.bankaiAtiva?.nome || "Bankai Suprema"}
-                    </h2>
-                    <div className="text-xs sm:text-sm font-mono text-yellow-200 mt-1 italic">
-                      Comando Supremo: "{personagem?.zanpakuto?.bankaiAtiva?.comando || 'Bankai!'}"
-                    </div>
-                  </div>
-
-                  <Badge color={C.yellow} className="text-xs py-2 px-4 shadow-[0_0_15px_#FFD700]">
-                    Poder Transcendente
-                  </Badge>
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
-                  <div className="lg:col-span-1 flex flex-col items-center">
-                    <BleachSwordArt 
-                      arma={personagem?.zanpakuto?.bankaiAtiva}
-                      nomeZk={personagem?.zanpakuto?.bankaiAtiva?.nome}
-                      isBankai={true}
-                      foto={editFotoBankai || personagem?.zanpakuto?.fotoBankai}
-                      onUpload={(e) => handleFotoUpload(e, "bankai")}
-                    />
-                  </div>
-
-                  <div className="lg:col-span-2 space-y-4">
-                    {(personagem?.zanpakuto?.bankaiAtiva?.espirito || personagem?.zanpakuto?.shikaiAtiva?.espirito) && (
-                      <div className="bg-black/80 border-2 border-amber-500/60 rounded-2xl p-5 shadow-[0_0_25px_rgba(255,215,0,0.3)]">
-                        <h4 className="text-xs font-black uppercase tracking-widest text-yellow-300 mb-1 flex items-center gap-2">
-                          <span>👤</span> Ressonância do Espírito & Mundo Interior Transcendental
-                        </h4>
-                        <p className="text-xs sm:text-sm text-yellow-100/90 italic leading-relaxed whitespace-pre-line">
-                          "{personagem?.zanpakuto?.bankaiAtiva?.espirito || personagem?.zanpakuto?.shikaiAtiva?.espirito}"
-                        </p>
-                      </div>
-                    )}
-
-                    <div className="bg-black/70 border border-amber-500/40 rounded-2xl p-5 shadow-inner">
-                      <h4 className="text-xs font-bold uppercase tracking-wider text-amber-300 mb-1 flex items-center gap-2">
-                        <span>👑</span> Manifestação Colossal & Domínio da Bankai
-                      </h4>
-                      <p className="text-xs sm:text-sm text-yellow-100/90 leading-relaxed whitespace-pre-line">
-                        {personagem?.zanpakuto?.bankaiAtiva?.formatoArma || "Manifestação monumental do poder da Bankai."}
-                      </p>
-                    </div>
-
-                    <div className="bg-black/70 border border-amber-500/40 rounded-2xl p-5 shadow-inner">
-                      <h4 className="text-xs font-bold uppercase tracking-wider text-amber-300 mb-1 flex items-center gap-2">
-                        <span>⚡</span> Poder Supremo & Mecânica de Evolução
-                      </h4>
-                      <p className="text-xs sm:text-sm text-yellow-100/90 leading-relaxed whitespace-pre-line">
-                        {personagem?.zanpakuto?.bankaiAtiva?.poder || "Poder absoluto e transcendental da Bankai."}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ) : podeGerarBankai ? (
-            <div className="bankai-supreme-card border-2 border-amber-500 rounded-3xl p-8 sm:p-12 text-center space-y-6 shadow-2xl relative overflow-hidden">
-              <div className="relative z-10 max-w-xl mx-auto space-y-4">
-                <span className="text-5xl">卍</span>
-                <h3 className="font-title text-4xl sm:text-5xl text-amber-300 tracking-widest drop-shadow-[0_0_20px_#FFD700]">
-                  DESPERTAR DE BANKAI AUTORIZADO!
-                </h3>
-                <p className="text-xs sm:text-sm text-yellow-100/80 leading-relaxed">
-                  Você superou todos os limites e atingiu a ressonância suprema com sua Zanpakutō! Ao gerar as opções, a <strong>Opção 1 será a evolução canônica e perfeita da sua Shikai atual</strong>, acompanhada de 3 ramificações transcendentais.
-                </p>
-                <button
-                  onClick={() => abrirGeradorZanpakutoAI("bankai")}
-                  className="px-10 py-4 bg-gradient-to-r from-purple-600 via-amber-500 to-orange-500 text-white font-extrabold text-xs uppercase tracking-widest rounded-2xl shadow-[0_0_25px_#FFD700] hover:scale-105 transition"
-                >
-                  ⚡ Gerar 4 Opções de Bankai Suprema
-                </button>
-              </div>
-            </div>
-          ) : (
-            <div className="bg-bleach-panel border border-bleach-border rounded-2xl p-12 text-center space-y-3">
-              <span className="text-4xl opacity-50">🔒</span>
-              <h3 className="font-title text-3xl text-bleach-muted tracking-wider">
-                BANKAI AINDA NÃO DESPERTA
-              </h3>
-              <p className="text-xs text-bleach-muted max-w-md mx-auto leading-relaxed">
-                A liberação de Bankai requer domínio lendário da Shikai, aprovação expressa da Administração e treino árduo de submissão do espírito.
-              </p>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* GACHA REVEAL */}
-      {rewardModal && (
-        <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
-          <div className="bg-bleach-panel border-2 border-bleach-orange rounded-2xl p-6 max-w-sm w-full text-center shadow-2xl reiatsu-glow relative animate-bounce-short">
-            <div className="text-4xl mb-2">🎁</div>
-            <h3 className="font-title text-3xl tracking-widest text-bleach-orange mb-1">
-              {rewardModal.titulo}
-            </h3>
-            <div 
-              className="text-lg font-bold uppercase my-3 inline-block px-4 py-1 rounded-full border"
-              style={{ color: rewardModal.cor, borderColor: rewardModal.cor }}
-            >
-              {rewardModal.raridade}
-            </div>
-            {rewardModal.nomeItem && (
-              <p className="text-sm font-bold text-white mb-2">{rewardModal.nomeItem}</p>
-            )}
-            {rewardModal.pontos > 0 && (
-              <p className="text-base text-bleach-orange font-mono font-bold mb-2">
-                +{rewardModal.pontos} Pontos Livres Concedidos!
-              </p>
-            )}
-            <p className="text-xs text-bleach-creamDim mb-6 leading-relaxed">
-              {rewardModal.desc}
-            </p>
-            <button
-              onClick={() => setRewardModal(null)}
-              className="px-6 py-2.5 bg-bleach-orange text-black font-extrabold text-xs uppercase rounded-lg shadow hover:bg-orange-400"
-            >
-              Resgatar Recompensa
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* MODAL IA: RITUAL DRAMÁTICO DE DESPERTAR DE SHIKAI & BANKAI */}
-      {showZanpakutoAIModal && (
-        <div className="fixed inset-0 bg-black/92 backdrop-blur-xl z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
-          <div className={`bg-gradient-to-b from-[#14100C] via-[#0A0908] to-[#120F0C] border-2 ${
-            aiZkTipo === 'bankai' 
-              ? 'border-amber-400 shadow-[0_0_60px_rgba(255,215,0,0.35)]' 
-              : 'border-cyan-400 shadow-[0_0_60px_rgba(79,179,232,0.35)]'
-          } rounded-3xl p-5 sm:p-8 max-w-4xl w-full shadow-2xl relative max-h-[92vh] overflow-y-auto`}>
-            
-            <button 
-              onClick={() => {
-                if (chargeIntervalRef.current) clearInterval(chargeIntervalRef.current);
-                setShowZanpakutoAIModal(false);
-              }}
-              className="absolute top-4 right-4 text-bleach-muted hover:text-white text-lg font-bold w-9 h-9 rounded-full bg-black/60 border border-white/10 flex items-center justify-center transition hover:border-bleach-orange"
-            >
-              ✕
-            </button>
-
-            {/* FASE 1: GRADE DAS 4 LÂMINAS SELADAS */}
-            {ritualState === "selection" && (
-              <div>
-                <div className="text-center mb-6">
-                  <span className={`px-4 py-1 border text-xs font-black rounded-full uppercase tracking-widest inline-flex items-center gap-1.5 shadow ${
-                    aiZkTipo === 'bankai' 
-                      ? 'bg-amber-950/80 border-amber-400 text-yellow-300' 
-                      : 'bg-blue-950/80 border-cyan-400 text-cyan-300'
-                  }`}>
-                    <span>{aiZkTipo === 'bankai' ? '卍' : '🗡️'}</span>
-                    <span>{aiZkTipo === 'bankai' ? 'RITUAL SUPREMO DE BANKAI • 4 EVOLUÇÕES SELADAS' : 'RITUAL SAGRADO DE SHIKAI • 4 LÂMINAS SELADAS'}</span>
-                  </span>
-
-                  <h3 className={`font-title text-3xl sm:text-5xl tracking-widest mt-2 ${
-                    aiZkTipo === 'bankai' ? 'text-amber-300 drop-shadow-[0_0_20px_#FFD700]' : 'text-cyan-400 drop-shadow-[0_0_20px_rgba(79,179,232,0.7)]'
-                  }`}>
-                    {aiZkTipo === 'bankai' ? "SINTA A EVOLUÇÃO TRANSCENDENTAL" : "SINTA O CHAMADO DA SUA ZANPAKUTŌ"}
-                  </h3>
-
-                  <p className="text-xs sm:text-sm text-bleach-creamDim max-w-2xl mx-auto mt-2 leading-relaxed">
-                    Passe o mouse ou <strong>segure com o dedo</strong> sobre uma lâmina para sentir a vibração da sua Reiatsu distorcendo o ar ao redor. Clique em uma das lâminas para concentrar seu Reiryoku e iniciar a quebra do selo!
-                  </p>
-                </div>
-
-                {/* GRADE 2x2 DAS 4 CARTAS SELADAS */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                  {aiZkOpcoes.map((op, idx) => {
-                    const isHovered = hoveredCardIdx === idx;
-                    return (
-                      <div
-                        key={op.id}
-                        onMouseEnter={() => handleHoverRitualCard(idx)}
-                        onMouseLeave={() => handleLeaveRitualCard(idx)}
-                        onTouchStart={() => handleHoverRitualCard(idx)}
-                        onTouchEnd={() => handleLeaveRitualCard(idx)}
-                        onClick={() => iniciarDespertarLamina(op, idx)}
-                        className={`relative rounded-2xl p-5 border-2 transition duration-200 overflow-hidden flex flex-col justify-between min-h-[220px] select-none cursor-pointer ${
-                          isHovered 
-                            ? (aiZkTipo === 'bankai' ? 'air-vibrating-card-bankai bg-purple-950/40' : 'air-vibrating-card bg-blue-950/40')
-                            : 'bg-black/80 border-bleach-borderSoft hover:border-bleach-creamDim/50 shadow-xl'
-                        }`}
-                      >
-                        {isHovered && <div className="heat-haze-overlay"></div>}
-
-                        <div>
-                          <div className="flex items-center justify-between mb-3">
-                            <span className={`font-mono text-xs font-bold px-2.5 py-0.5 rounded-full border ${
-                              aiZkTipo === 'bankai'
-                                ? 'bg-amber-950 border-amber-400 text-yellow-300'
-                                : 'bg-blue-950 border-cyan-400 text-cyan-300'
-                            }`}>
-                              {aiZkTipo === 'bankai' ? `Evolução #0${idx + 1}` : `Lâmina Selada #0${idx + 1}`}
-                            </span>
-
-                            <span className="text-[10px] font-mono text-bleach-muted">
-                              {isHovered ? "⚡ RESSONANDO..." : "🔒 SELADA"}
-                            </span>
-                          </div>
-
-                          <div className="text-center py-4">
-                            <div className={`font-title text-2xl tracking-wider transition ${
-                              isHovered 
-                                ? (aiZkTipo === 'bankai' ? 'text-amber-300 drop-shadow-[0_0_12px_#FFD700]' : 'text-cyan-300 drop-shadow-[0_0_12px_#4FB3E8]')
-                                : 'text-bleach-muted/60 blur-[3px]'
-                            }`}>
-                              {isHovered ? op.nome : "??? ??????"}
-                            </div>
-                            <div className="text-[11px] font-mono text-bleach-muted mt-1 italic">
-                              {isHovered ? `Elemento: ${op.elemento}` : "Ouvindo sussurros distantes..."}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="mt-4 pt-3 border-t border-white/5">
-                          {isHovered ? (
-                            <div className={`py-2 px-3 rounded-xl font-bold text-xs text-center uppercase tracking-wider transition animate-bounce ${
-                              aiZkTipo === 'bankai'
-                                ? 'bg-gradient-to-r from-amber-400 to-yellow-500 text-black shadow-[0_0_15px_#FFD700]'
-                                : 'bg-gradient-to-r from-cyan-400 to-blue-500 text-black shadow-[0_0_15px_#4FB3E8]'
-                            }`}>
-                              ⚡ CLIQUE PARA CONCENTRAR O REIRYOKU!
-                            </div>
-                          ) : (
-                            <div className="py-2 px-3 rounded-xl bg-black/60 border border-white/10 text-bleach-muted text-[11px] font-semibold text-center flex items-center justify-center gap-1.5">
-                              <span>✨</span>
-                              <span>Passe o cursor ou segure para sentir a vibração</span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-
-            {/* FASE 2: CÂMARA DE CARREGAMENTO */}
-            {ritualState === "charging" && (
-              <div className="py-8 px-4 text-center space-y-6 select-none">
-                <div className="relative w-48 h-48 sm:w-60 sm:h-60 mx-auto flex items-center justify-center">
-                  
-                  <div className={`absolute inset-0 rounded-full border-2 border-dashed ${
-                    aiZkTipo === 'bankai' ? 'border-amber-400/60' : 'border-cyan-400/60'
-                  } spin-runes`}></div>
-
-                  <div className={`absolute inset-3 rounded-full border-2 border-dotted ${
-                    aiZkTipo === 'bankai' ? 'border-purple-500/60' : 'border-blue-500/60'
-                  } spin-runes-fast`}></div>
-
-                  <div className={`w-36 h-36 sm:w-44 sm:h-44 rounded-full bg-black/90 border-4 flex flex-col items-center justify-center p-3 z-10 shadow-2xl transition ${
-                    aiZkTipo === 'bankai' 
-                      ? 'border-amber-400 shadow-[0_0_40px_rgba(255,215,0,0.6)]' 
-                      : 'border-cyan-400 shadow-[0_0_40px_rgba(79,179,232,0.6)]'
-                  } ${chargeProgress > 65 ? 'reiatsu-screen-shake' : ''}`}>
-                    <span className="text-xl sm:text-2xl">{aiZkTipo === 'bankai' ? '卍' : '🗡️'}</span>
-                    <span className={`font-title text-4xl sm:text-5xl font-black mt-0.5 ${
-                      aiZkTipo === 'bankai' ? 'text-amber-300 drop-shadow-[0_0_15px_#FFD700]' : 'text-cyan-300 drop-shadow-[0_0_15px_#4FB3E8]'
-                    }`}>
-                      {chargeProgress}%
-                    </span>
-                    <span className="text-[9px] sm:text-[10px] uppercase font-mono tracking-widest text-bleach-muted">
-                      Densidade Reiryoku
-                    </span>
-                  </div>
-                </div>
-
-                <div className="max-w-md mx-auto space-y-2">
-                  <div className="w-full bg-bleach-panel2 h-3.5 rounded-full overflow-hidden border border-white/10 p-0.5">
-                    <div 
-                      className={`h-full rounded-full transition-all duration-75 shadow-lg ${
-                        aiZkTipo === 'bankai'
-                          ? 'bg-gradient-to-r from-purple-600 via-amber-400 to-yellow-300 shadow-[0_0_15px_#FFD700]'
-                          : 'bg-gradient-to-r from-blue-600 via-cyan-400 to-emerald-300 shadow-[0_0_15px_#4FB3E8]'
-                      }`}
-                      style={{ width: `${chargeProgress}%` }}
-                    ></div>
-                  </div>
-                </div>
-
-                <div className={`max-w-lg mx-auto p-4 rounded-2xl bg-black/80 border text-center text-xs sm:text-sm font-bold leading-relaxed shadow-inner ${
-                  aiZkTipo === 'bankai' ? 'border-amber-500/50 text-yellow-200' : 'border-cyan-500/50 text-cyan-200'
-                }`}>
-                  {chargeStageText}
-                </div>
-
-                <div>
-                  <button
-                    onClick={pularCarregamento}
-                    className="px-4 py-1.5 bg-black/60 border border-bleach-border hover:border-bleach-orange text-bleach-creamDim hover:text-white text-xs font-bold rounded-xl transition"
-                  >
-                    ⏩ Pular Animação de Despertar
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* FASE 3: REVELAÇÃO GLORIOSA DA LÂMINA */}
-            {ritualState === "revealed" && revealedCard && (
-              <div className="space-y-6 card-pop-reveal">
-                
-                <div className="text-center border-b border-bleach-borderSoft pb-4">
-                  <span className={`px-4 py-1 border text-xs font-black rounded-full uppercase tracking-widest inline-flex items-center gap-1.5 shadow ${
-                    aiZkTipo === 'bankai'
-                      ? 'bg-gradient-to-r from-purple-900 to-amber-900 border-amber-400 text-yellow-300 shadow-[0_0_20px_#FFD700]'
-                      : 'bg-gradient-to-r from-blue-950 to-cyan-950 border-cyan-400 text-cyan-300 shadow-[0_0_20px_rgba(79,179,232,0.6)]'
-                  }`}>
-                    <span>{aiZkTipo === 'bankai' ? '卍' : '🗡️'}</span>
-                    <span>{aiZkTipo === 'bankai' ? 'BANKAI SUPREMA TRANSCENDENTAL DESBLOQUEADA!' : 'SHIKAI ÚNICA & AUTORAL DESPERTA!'}</span>
-                  </span>
-
-                  <h2 className={`font-title text-4xl sm:text-6xl tracking-widest mt-3 ${
-                    aiZkTipo === 'bankai'
-                      ? 'text-amber-300 drop-shadow-[0_0_30px_#FFD700]'
-                      : 'text-cyan-400 drop-shadow-[0_0_30px_rgba(79,179,232,0.8)]'
-                  }`}>
-                    {revealedCard.nome}
-                  </h2>
-
-                  <div className="mt-3 p-3.5 bg-black/80 border border-white/10 rounded-2xl max-w-xl mx-auto">
-                    <div className="text-[10px] text-bleach-muted uppercase tracking-wider font-bold">
-                      Comando de Liberação Sagrado
-                    </div>
-                    <div className={`font-mono text-sm sm:text-base italic font-bold mt-0.5 ${
-                      aiZkTipo === 'bankai' ? 'text-yellow-200' : 'text-cyan-200'
-                    }`}>
-                      "{revealedCard.comando}"
-                    </div>
-                  </div>
-                </div>
-
-                {/* Detalhes da Arma Revelada */}
-                {revealedCard.espirito && (
-                  <div className="bg-black/80 border border-cyan-500/30 p-4 rounded-2xl shadow-inner">
-                    <div className="text-xs font-bold uppercase tracking-wider text-cyan-300 flex items-center gap-1.5 mb-1">
-                      <span>👤</span> Espírito da Zanpakutō & Mundo Interior
-                    </div>
-                    <p className="text-xs sm:text-sm text-cyan-100/90 italic leading-relaxed">
-                      "{revealedCard.espirito}"
-                    </p>
-                  </div>
-                )}
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="bg-black/70 border border-bleach-border p-4 rounded-2xl space-y-1.5 shadow-inner">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-bold uppercase tracking-wider text-bleach-orange flex items-center gap-1.5">
-                        <span>🗡️</span> Formato da Lâmina
-                      </span>
-                      <span className="px-2.5 py-0.5 bg-bleach-panel2 border border-bleach-border text-[10px] font-bold text-bleach-creamDim rounded-full">
-                        {revealedCard.elemento}
-                      </span>
-                    </div>
-                    <p className="text-xs sm:text-sm text-bleach-cream leading-relaxed">
-                      {revealedCard.formatoArma}
-                    </p>
-                  </div>
-
-                  <div className="bg-black/70 border border-bleach-border p-4 rounded-2xl space-y-1.5 shadow-inner">
-                    <div className="text-xs font-bold uppercase tracking-wider text-bleach-orange flex items-center gap-1.5 mb-1">
-                      <span>⚡</span> Poder & Efeito Devastador
-                    </div>
-                    <p className="text-xs sm:text-sm text-bleach-cream leading-relaxed">
-                      {revealedCard.poder}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Selo de Exclusividade Garantida */}
-                <div className="p-3 bg-green-950/40 border border-green-500/40 rounded-xl text-center text-xs text-green-300 font-semibold flex items-center justify-center gap-2">
-                  <span>🔒</span>
-                  <span>Lâmina 100% Autoral: Ao selar, esta arma será sua com exclusividade absoluta no RPG! Ninguém mais terá esse nome ou poder.</span>
-                </div>
-
-                {/* Ações Finais */}
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
-                  <button
-                    onClick={voltarParaSelecao}
-                    className="w-full sm:w-auto px-5 py-3 bg-bleach-panel border border-bleach-border hover:border-bleach-orange text-bleach-cream text-xs font-bold uppercase rounded-xl transition flex items-center justify-center gap-2"
-                  >
-                    <span>👁️</span>
-                    <span>Explorar Outras Lâminas Seladas</span>
-                  </button>
-
-                  <button
-                    onClick={() => escolherOpcaoAI(revealedCard)}
-                    className={`w-full sm:w-auto px-8 py-3.5 text-black font-extrabold text-xs uppercase tracking-widest rounded-xl shadow-2xl hover:scale-105 transition active:scale-95 flex items-center justify-center gap-2 ${
-                      aiZkTipo === 'bankai'
-                        ? 'bg-gradient-to-r from-purple-600 via-amber-400 to-yellow-400 shadow-[0_0_25px_#FFD700]'
-                        : 'bg-gradient-to-r from-blue-500 via-cyan-400 to-emerald-400 shadow-[0_0_25px_#4FB3E8]'
-                    }`}
-                  >
-                    <span>⚔️</span>
-                    <span>Reivindicar & Selar Esta {aiZkTipo.toUpperCase()} na Minha Ficha</span>
-                  </button>
-                </div>
-
-              </div>
-            )}
-
-          </div>
-        </div>
-      )}
-
-    </div>
-  );
-}
-
-
-// TAB: ADMIN CONTROL PANEL
-function AdminPanel({ db, saveDb, session, onAbrirFicha, cloudStatus }) {
-  const isMaxAdm = session?.role === "super_admin";
-  const [abaAdmin, setAbaAdmin] = useState(isMaxAdm ? "maximo" : "fichas");
-  const [busca, setBusca] = useState("");
-  
-  const [novo, setNovo] = useState({ 
-    nome: "", 
-    whatsapp: "", 
-    codigo: "", 
-    raca: "Shinigami", 
-    esquadrao: "11º Esquadrão",
-    faceclaim: "",
-    idadePlayer: "20",
-    aniversarioPlayer: "01/01",
-    idadeChar: "18",
-    aniversarioChar: "01/01"
-  });
-
-  const [msgCriacao, setMsgCriacao] = useState(null);
-  const [novaSenhaMax, setNovaSenhaMax] = useState("");
-  const [msgPass, setMsgPass] = useState("");
-  const [urlFirebaseInput, setUrlFirebaseInput] = useState(db.firebaseUrl || localStorage.getItem("bleach_firebase_url") || "");
-  const [msgFirebase, setMsgFirebase] = useState("");
-
-  const [novoSubAdm, setNovoSubAdm] = useState({ usuario: "", senha: "", nome: "", cargo: "Avaliador de Cenas & Fichas", charId: db.personagens[0]?.id || "" });
-  const [charParaDeletar, setCharParaDeletar] = useState(null);
-
-  const [tarefaSelecionada, setTarefaSelecionada] = useState("cenas");
-  const [admExecutor, setAdmExecutor] = useState(session?.nome || "ADM");
-  const [charAlvoAdm, setCharAlvoAdm] = useState(db.personagens[0]?.id || "");
-  const [fichasAvaliadasContador, setFichasAvaliadasContador] = useState(0);
-
-  const [iaLutador1, setIaLutador1] = useState(db.personagens[0]?.nome || "Lutador 1");
-  const [iaLutador2, setIaLutador2] = useState(db.personagens[1]?.nome || "Lutador 2");
-  const [iaCenaTexto, setIaCenaTexto] = useState("");
-  const [iaResultado, setIaResultado] = useState(null);
-  const [iaProcessando, setIaProcessando] = useState(false);
-
-  const [dadoTipo, setDadoTipo] = useState(20);
-  const [dadoChar, setDadoChar] = useState(db.personagens[0]?.nome || "Geral");
-  const [dadoRolando, setDadoRolando] = useState(false);
-  const [dadoResultado, setDadoResultado] = useState(null);
-  const [dadoAnimVal, setDadoAnimVal] = useState(1);
-
-  function salvarConfigFirebase() {
-    const urlLimpa = urlFirebaseInput.trim();
-    localStorage.setItem("bleach_firebase_url", urlLimpa);
-    saveDb({ ...db, firebaseUrl: urlLimpa });
-
-    try {
-      const configData = JSON.stringify({ firebaseUrl: urlLimpa }, null, 2);
-      const blob = new Blob([configData], { type: "application/json" });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = "config.json";
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-    } catch (e) {}
-
-    setMsgFirebase("Nuvem conectada! O arquivo 'config.json' foi baixado. Suba ele no seu repositório do GitHub para que todos os celulares conectem automaticamente.");
-    setTimeout(() => setMsgFirebase(""), 8000);
-  }
-
-  function baixarBackupJson() {
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db, null, 2));
-    const a = document.createElement('a');
-    a.setAttribute("href", dataStr);
-    a.setAttribute("download", `bleach_rpg_backup_${Date.now()}.json`);
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-  }
-
-  function importarBackupJson(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (evt) => {
-      try {
-        const parsed = JSON.parse(evt.target.result);
-        if (parsed && parsed.personagens) {
-          saveDb(parsed);
-          alert("Banco de dados restaurado com sucesso do arquivo JSON!");
-        } else {
-          alert("Arquivo JSON inválido.");
-        }
-      } catch (err) {
-        alert("Erro ao ler arquivo JSON.");
-      }
-    };
-    reader.readAsText(file);
-  }
-
-  function gerarCodigoAuto() {
-    const prefix = novo.nome.trim() ? novo.nome.trim().slice(0, 3).toUpperCase() : "SHIN";
-    const randNum = Math.floor(1000 + Math.random() * 9000);
-    setNovo({ ...novo, codigo: `${prefix}-${randNum}` });
-  }
-
-  function criarPersonagem(e) {
-    e.preventDefault();
-    if (!novo.nome.trim() || !novo.codigo.trim()) {
-      alert("Por favor, preencha pelo menos o Nome do Personagem e o Código de Acesso!");
-      return;
-    }
-    const codFinal = novo.codigo.trim();
-    const whatsFinal = novo.whatsapp.trim() || "00000000000";
-
-    const p = {
-      id: uid(),
-      nome: novo.nome.trim(),
-      foto: "assets/ichigo-orange.png",
-      whatsapp: whatsFinal,
-      codigo: codFinal,
-      raca: novo.raca,
-      esquadrao: novo.esquadrao,
-      faceclaim: novo.faceclaim.trim() || novo.nome.trim(),
-      idadePlayer: novo.idadePlayer.trim(),
-      aniversarioPlayer: novo.aniversarioPlayer.trim(),
-      idadeChar: novo.idadeChar.trim(),
-      aniversarioChar: novo.aniversarioChar.trim(),
-      pontosDisponiveis: 20,
-      sorteiosComunsRestantes: 2,
-      sorteiosEspeciaisRestantes: 0,
-      sorteiosDrops: [],
-      permissoes: { shikaiLiberada: false, bankaiLiberada: false },
-      atributos: { pressao: 10, forca: 10, velocidade: 10, resiliencia: 10 },
-      kidosConhecidos: [
-        { id: "h4", numero: 4, nome: "Byakurai", cat: "Hadō", custoReiatsu: 3 },
-        { id: "b1", numero: 1, nome: "Sai", cat: "Bakudō", custoReiatsu: 2 }
-      ],
-      tecnicas: [
-        { id: uid(), nome: "Hadō #4 — Byakurai", categoria: "Hadō" },
-        { id: uid(), nome: "Bakudō #1 — Sai", categoria: "Bakudō" }
-      ],
-      zanpakuto: { nome: "", fotoShikai: "", fotoBankai: "", shikaiAtiva: null, bankaiAtiva: null, notas: "" },
-      estado: "Inteiro",
-      treinosHoje: 0,
-      historico: [{ id: uid(), data: nowStr(), texto: "Ficha criada na Sociedade das Almas (+20 pts livres + 2 Giros Comuns)" }],
-    };
-
-    saveDb({ ...db, personagens: [...(db.personagens || []), p] });
-    
-    setMsgCriacao({
-      nome: p.nome,
-      codigo: p.codigo,
-      whatsapp: p.whatsapp
-    });
-
-    setNovo({ 
-      nome: "", 
-      whatsapp: "", 
-      codigo: "", 
-      raca: "Shinigami", 
-      esquadrao: "11º Esquadrão",
-      faceclaim: "",
-      idadePlayer: "20",
-      aniversarioPlayer: "01/01",
-      idadeChar: "18",
-      aniversarioChar: "01/01"
-    });
-  }
-
-  function copiarLoginMsg(char) {
-    const msg = `⚔️ *SOCIEDADE DAS ALMAS — SEU LOGIN NO SITE* ⚔️\n\n👤 *Personagem:* ${char.nome}\n🔑 *Código de Acesso:* ${char.codigo}\n📱 *WhatsApp Cadastrado:* ${char.whatsapp || "—"}\n\n🌐 *Acesse o site:* https://maluttima.github.io/Site-Bleach-RPG/\n*(Vá na aba "Minha Ficha" e digite seu código para acessar seus atributos e rankings!)*`;
-    navigator.clipboard.writeText(msg);
-    alert(`Dados de login de ${char.nome} copiados para a área de transferência!`);
-  }
-
-  function confirmarExclusaoChar() {
-    if (!charParaDeletar) return;
-    const novosChars = (db.personagens || []).filter(p => p.id !== charParaDeletar.id);
-    saveDb({ ...db, personagens: novosChars });
-    alert(`A ficha de ${charParaDeletar.nome} foi apagada com sucesso!`);
-    setCharParaDeletar(null);
-  }
-
-  function adicionarSubAdm() {
-    if (!novoSubAdm.usuario.trim() || !novoSubAdm.senha.trim() || !novoSubAdm.nome.trim()) {
-      alert("Preencha Usuário, Senha e Nome do Sub-ADM!");
-      return;
-    }
-    const sub = {
-      id: uid(),
-      usuario: novoSubAdm.usuario.trim().toLowerCase(),
-      senha: novoSubAdm.senha.trim(),
-      nome: novoSubAdm.nome.trim(),
-      cargo: novoSubAdm.cargo.trim(),
-      charId: novoSubAdm.charId
-    };
-    saveDb({ ...db, subAdms: [...(db.subAdms || []), sub] });
-    setNovoSubAdm({ usuario: "", senha: "", nome: "", cargo: "Avaliador de Cenas & Fichas", charId: db.personagens[0]?.id || "" });
-    alert("Sub-ADM cadastrado com sucesso!");
-  }
-
-  function removerSubAdm(id) {
-    if (confirm("Deseja realmente revogar o acesso deste Administrador?")) {
-      saveDb({ ...db, subAdms: (db.subAdms || []).filter(a => a.id !== id) });
-    }
-  }
-
-  function registrarAtividadeAdm() {
-    let pontosGanhos = 0;
-    let descTarefa = "";
-
-    if (tarefaSelecionada === "cenas") {
-      pontosGanhos = 8;
-      descTarefa = "Avaliação de Cenas de Arco (+8 pontos)";
-    } else if (tarefaSelecionada === "fichas") {
-      if (fichasAvaliadasContador < 7) {
-        alert("A regra de avaliação de fichas exige no mínimo 7 fichas para liberar os 3 pontos!");
-        return;
-      }
-      pontosGanhos = 3;
-      descTarefa = `Avaliação e Aprovação de ${fichasAvaliadasContador} Fichas (+3 pontos)`;
-      setFichasAvaliadasContador(0);
-    } else if (tarefaSelecionada === "missao") {
-      pontosGanhos = 15;
-      descTarefa = "Narração de Missão Principal (+15 pontos e giros concedidos)";
-    } else if (tarefaSelecionada === "juiz") {
-      pontosGanhos = 4;
-      descTarefa = "Arbitragem de Luta em ON (+4 pontos)";
-    }
-
-    const registro = {
-      id: uid(),
-      admNome: admExecutor,
-      tarefa: descTarefa,
-      pontosGanhos,
-      data: nowStr()
-    };
-
-    const personagens = (db.personagens || []).map(p => {
-      if (p.id === charAlvoAdm) {
-        return {
-          ...p,
-          pontosDisponiveis: (p.pontosDisponiveis || 0) + pontosGanhos,
-          sorteiosComunsRestantes: tarefaSelecionada === "missao" ? (p.sorteiosComunsRestantes || 0) + 4 : (p.sorteiosComunsRestantes || 0),
-          sorteiosEspeciaisRestantes: tarefaSelecionada === "missao" ? (p.sorteiosEspeciaisRestantes || 0) + 1 : (p.sorteiosEspeciaisRestantes || 0),
-          historico: [{ id: uid(), data: nowStr(), texto: `Recompensa de ADM (${descTarefa}) concedida na ficha (+${pontosGanhos} pts)` }, ...(p.historico || [])]
-        };
-      }
-      return p;
-    });
-
-    saveDb({
-      ...db,
-      registrosTarefasAdm: [registro, ...(db.registrosTarefasAdm || [])],
-      personagens
-    });
-
-    alert(`Atividade registrada com sucesso! +${pontosGanhos} pontos foram depositados na ficha de destino.`);
-  }
-
-  function julgarCombateComIA() {
-    if (!iaCenaTexto.trim()) {
-      alert("Por favor, cole o texto narrativo da cena dos combatentes!");
-      return;
-    }
-    setIaProcessando(true);
-    playReiatsuSound('kido');
-
-    setTimeout(() => {
-      const p1Obj = db.personagens.find(p => p.nome.toLowerCase().includes(iaLutador1.toLowerCase())) || db.personagens[0];
-      const p2Obj = db.personagens.find(p => p.nome.toLowerCase().includes(iaLutador2.toLowerCase())) || db.personagens[1];
-
-      const diffVel = (p1Obj?.atributos?.velocidade || 10) - (p2Obj?.atributos?.velocidade || 10);
-      const diffPressao = (p1Obj?.atributos?.pressao || 10) - (p2Obj?.atributos?.pressao || 10);
-
-      let conclusao = "";
-      if (Math.abs(diffVel) >= 15) {
-        conclusao = `${diffVel > 0 ? p1Obj.nome : p2Obj.nome} possui superioridade nítida de velocidade (+${Math.abs(diffVel)} em Hohō), esquivando da primeira investida e conseguindo ângulo crítico de contra-ataque.`;
-      } else if (Math.abs(diffPressao) >= 15) {
-        conclusao = `A pressão espiritual avassaladora de ${diffPressao > 0 ? p1Obj.nome : p2Obj.nome} (+${Math.abs(diffPressao)} de Reiatsu) impõe peso gravitacional anulando feitiços fracos do adversário.`;
-      } else {
-        conclusao = `Combate extremamente equilibrado! Ambos sofrem desgaste equivalente e o desfecho depende de um teste de dado ou ação de apoio narrativo.`;
-      }
-
-      const resultadoFinal = {
-        id: uid(),
-        data: nowStr(),
-        lutador1: `${p1Obj.nome} (Vel: ${p1Obj.atributos.velocidade}, Pressão: ${p1Obj.atributos.pressao}, Força: ${p1Obj.atributos.forca})`,
-        lutador2: `${p2Obj.nome} (Vel: ${p2Obj.atributos.velocidade}, Pressão: ${p2Obj.atributos.pressao}, Força: ${p2Obj.atributos.forca})`,
-        cenaDesc: iaCenaTexto.slice(0, 150) + "...",
-        veredito: `⚖️ Veredito Oficial da IA:\n\n1. ANÁLISE DE ATRIBUTOS: ${conclusao}\n\n2. DECISÃO NARRATIVA: Levando em conta o texto da cena e a lógica do sistema de Bleach, ${p1Obj.nome} e ${p2Obj.nome} devem atualizar seus estados conforme o impacto e custo de Reiatsu gasto na ação.`
-      };
-
-      saveDb({
-        ...db,
-        iaJulgamentos: [resultadoFinal, ...(db.iaJulgamentos || [])]
-      });
-
-      setIaResultado(resultadoFinal);
-      setIaProcessando(false);
-      playReiatsuSound('win');
-    }, 1200);
-  }
-
-  function rolarDadoComTensao() {
-    setDadoRolando(true);
-    setDadoResultado(null);
-    playReiatsuSound('roll');
-
-    let ticks = 0;
-    const maxTicks = 18;
-    const interval = setInterval(() => {
-      const rand = Math.floor(Math.random() * dadoTipo) + 1;
-      setDadoAnimVal(rand);
-      ticks++;
-      if (ticks >= maxTicks) {
-        clearInterval(interval);
-        const finalVal = Math.floor(Math.random() * dadoTipo) + 1;
-        setDadoAnimVal(finalVal);
-
-        let categoria = "";
-        let cor = C.muted;
-        const pct = finalVal / dadoTipo;
-
-        if (pct <= 0.1 || finalVal === 1) {
-          categoria = "☠️ Extremo Negativo (Reze / Catástrofe Espiritual)";
-          cor = C.red;
-        } else if (pct <= 0.35) {
-          categoria = "🔴 Negativo (Falha / Dano Sofrido)";
-          cor = C.red;
-        } else if (pct <= 0.65) {
-          categoria = "🟡 Neutro (Sucesso Parcial com Custo)";
-          cor = C.yellow;
-        } else if (pct <= 0.9) {
-          categoria = "🟢 Positivo (Sucesso Limpo)";
-          cor = C.green;
-        } else {
-          categoria = "⚡ Extremo (Sucesso Crítico / Despertar Espiritual)";
-          cor = C.yellow;
-        }
-
-        const registroDado = {
-          id: uid(),
-          autor: session?.nome || "Administração",
-          personagem: dadoChar,
-          dado: `d${dadoTipo}`,
-          resultado: finalVal,
-          categoria,
-          data: nowStr()
-        };
-
-        saveDb({
-          ...db,
-          rolagensDadosPublicas: [registroDado, ...(db.rolagensDadosPublicas || []).slice(0, 19)]
-        });
-
-        setDadoResultado({ val: finalVal, cat: categoria, cor });
-        setDadoRolando(false);
-        playReiatsuSound(pct >= 0.7 ? 'win' : 'roll');
-      }
-    }, 80);
-  }
-
-  function alterarSenhaSuperAdmin() {
-    if (!novaSenhaMax.trim()) return;
-    saveDb({ ...db, superAdminSenha: novaSenhaMax.trim() });
-    setMsgPass("Senha mestra alterada com sucesso!");
-    setNovaSenhaMax("");
-    setTimeout(() => setMsgPass(""), 3000);
-  }
-
-  const filtrados = (db.personagens || []).filter((p) =>
-    p.nome.toLowerCase().includes(busca.toLowerCase()) || (p.whatsapp || "").includes(busca)
-  );
-
-  return (
-    <div className="space-y-6">
-      <Section 
-        title={isMaxAdm ? "Painel do ADM Máximo (Comandante Supremo)" : `Painel Administrativo (${session?.nome || "Sub-ADM"})`}
-        subtitle={isMaxAdm ? "Acesso total irrestrito: gestão de outros ADMs, banco em nuvem, exclusão de perfis e regras" : `Cargo: ${session?.cargo || "Administrador"}`}
-      >
-        <div className="flex flex-wrap gap-2 border-b border-bleach-borderSoft pb-3 mb-4">
-          {isMaxAdm && (
-            <button
-              onClick={() => setAbaAdmin("maximo")}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition ${
-                abaAdmin === "maximo"
-                  ? "bg-yellow-500 text-black font-extrabold shadow"
-                  : "bg-bleach-panel2 border border-bleach-border text-yellow-400 hover:text-white"
-              }`}
-            >
-              👑 ADM Máximo & Nuvem
-            </button>
-          )}
-
-          {[
-            { id: "fichas", label: "👥 Fichas dos Players" },
-            { id: "tarefas", label: "📋 Afazeres & Ganhos de ADM" },
-            { id: "ia-arbitro", label: "🤖 IA Juíza de Combates" },
-            { id: "dados-adm", label: "🎲 Mesa de Dados da ADM" },
-          ].map(t => (
-            <button
-              key={t.id}
-              onClick={() => setAbaAdmin(t.id)}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition ${
-                abaAdmin === t.id
-                  ? "bg-bleach-orange text-black font-extrabold shadow"
-                  : "bg-bleach-panel2 border border-bleach-border text-bleach-creamDim hover:text-white"
-              }`}
-            >
-              {t.label}
-            </button>
-          ))}
-        </div>
-      </Section>
-
-      {/* SUB-TAB: ADM MÁXIMO & NUVEM */}
-      {isMaxAdm && abaAdmin === "maximo" && (
-        <div className="space-y-6">
-          
-          {/* BANCO DE DADOS EM NUVEM (FIREBASE REALTIME DB INTEGRATION) */}
-          <Section 
-            title="☁️ Banco de Dados em Nuvem Gratuito (Multi-Dispositivos / Celular)" 
-            subtitle="Conecte seu banco de dados em tempo real para que os jogadores consigam logar de qualquer celular ou computador"
-            className="border-2 border-bleach-blue/60 shadow-2xl blue-reiatsu-glow"
-          >
-            <div className="space-y-4">
-              <div className="p-4 bg-black/60 border border-bleach-borderSoft rounded-xl text-xs text-bleach-creamDim leading-relaxed space-y-2">
-                <p>
-                  <strong className="text-bleach-orange">Como funciona:</strong> Ao conectar sua URL do <strong>Google Firebase Realtime Database (100% Gratuito)</strong>, qualquer ficha criada ou editada pelo ADM é sincronizada instantaneamente em todos os celulares dos jogadores no mundo inteiro!
-                </p>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-bleach-cream mb-1">
-                  URL do seu Firebase Realtime Database (REST API)
-                </label>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    placeholder="Ex: https://bleach-rpg-seuprojeto-default-rtdb.firebaseio.com"
-                    value={urlFirebaseInput}
-                    onChange={(e) => setUrlFirebaseInput(e.target.value)}
-                    className="flex-1 bg-bleach-panel2 border border-bleach-border rounded-lg px-4 py-2.5 text-xs text-white placeholder-bleach-muted focus:outline-none focus:border-bleach-blue font-mono"
-                  />
-                  <button
-                    onClick={salvarConfigFirebase}
-                    className="px-5 py-2.5 bg-bleach-blue text-black font-extrabold text-xs uppercase rounded-lg shadow hover:bg-cyan-400"
-                  >
-                    Salvar Nuvem
-                  </button>
-                </div>
-                {msgFirebase && <div className="text-green-400 text-xs font-bold mt-1.5">{msgFirebase}</div>}
-              </div>
-
-              <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-bleach-borderSoft">
-                <div className="text-xs text-bleach-muted">
-                  Status Atual: <span className={cloudStatus === "connected" ? "text-green-400 font-bold" : "text-yellow-400 font-bold"}>{cloudStatus === "connected" ? "🟢 Conectado à Nuvem em Tempo Real" : "🟡 Modo Local / Aguardando URL"}</span>
-                </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={baixarBackupJson}
-                    className="px-3.5 py-1.5 bg-bleach-panel2 border border-bleach-border hover:border-bleach-orange text-xs text-bleach-cream font-bold rounded-lg"
-                  >
-                    💾 Baixar Backup (JSON)
-                  </button>
-                  <label className="px-3.5 py-1.5 bg-bleach-panel2 border border-bleach-border hover:border-bleach-orange text-xs text-bleach-cream font-bold rounded-lg cursor-pointer">
-                    📂 Restaurar Backup (JSON)
-                    <input type="file" accept=".json" onChange={importarBackupJson} className="hidden" />
-                  </label>
-                </div>
-              </div>
-            </div>
-          </Section>
-
-          {/* GESTÃO DE SUB-ADMS */}
-          <Section 
-            title="👑 Gestão de Administradores & Acesso Máximo" 
-            subtitle="Adicione novos Sub-ADMs com login e senha individuais, e gerencie as permissões do RPG"
-          >
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-              <div className="bg-yellow-950/40 border border-yellow-500/60 rounded-xl p-4 flex flex-col justify-between">
-                <div>
-                  <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded border text-yellow-400 border-yellow-500 bg-yellow-950">
-                    👑 ADM Máximo (Você)
-                  </span>
-                  <h4 className="font-bold text-white text-base mt-2">Comandante Supremo</h4>
-                  <p className="text-xs text-bleach-creamDim mt-1">Acesso total e irrestrito a todos os sistemas e exclusão de fichas.</p>
-                </div>
-              </div>
-
-              {(db.subAdms || []).map((adm) => (
-                <div key={adm.id} className="bg-bleach-panel2 border border-bleach-border rounded-xl p-4 flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded border text-bleach-orange border-bleach-orange bg-black">
-                        🛡️ Sub-ADM
-                      </span>
-                      <button 
-                        onClick={() => removerSubAdm(adm.id)}
-                        className="text-red-400 text-xs hover:underline"
-                      >
-                        Excluir Acesso
-                      </button>
-                    </div>
-                    <h4 className="font-bold text-bleach-cream text-base">{adm.nome}</h4>
-                    <div className="text-xs text-bleach-muted mt-1">
-                      <span>Usuário: <strong className="text-white font-mono">{adm.usuario}</strong></span> • 
-                      <span className="ml-1">Senha: <strong className="text-bleach-orange font-mono">{adm.senha}</strong></span>
-                    </div>
-                    <p className="text-xs text-bleach-creamDim mt-1">Cargo: {adm.cargo}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="bg-black/50 border border-bleach-borderSoft p-5 rounded-xl space-y-3">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-bleach-orange">
-                + Criar Login para Novo Sub-ADM
-              </h4>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3">
-                <input
-                  type="text"
-                  placeholder="Nome do Administrador"
-                  value={novoSubAdm.nome}
-                  onChange={(e) => setNovoSubAdm({ ...novoSubAdm, nome: e.target.value })}
-                  className="bg-bleach-panel2 border border-bleach-border rounded p-2 text-xs text-white"
-                />
-                <input
-                  type="text"
-                  placeholder="Usuário de Login (Ex: kisuke)"
-                  value={novoSubAdm.usuario}
-                  onChange={(e) => setNovoSubAdm({ ...novoSubAdm, usuario: e.target.value })}
-                  className="bg-bleach-panel2 border border-bleach-border rounded p-2 text-xs text-white font-mono"
-                />
-                <input
-                  type="password"
-                  placeholder="Senha Individual"
-                  value={novoSubAdm.senha}
-                  onChange={(e) => setNovoSubAdm({ ...novoSubAdm, senha: e.target.value })}
-                  className="bg-bleach-panel2 border border-bleach-border rounded p-2 text-xs text-white"
-                />
-                <input
-                  type="text"
-                  placeholder="Cargo (ex: Juiz de Lutas)"
-                  value={novoSubAdm.cargo}
-                  onChange={(e) => setNovoSubAdm({ ...novoSubAdm, cargo: e.target.value })}
-                  className="bg-bleach-panel2 border border-bleach-border rounded p-2 text-xs text-white"
-                />
-                <select
-                  value={novoSubAdm.charId}
-                  onChange={(e) => setNovoSubAdm({ ...novoSubAdm, charId: e.target.value })}
-                  className="bg-bleach-panel2 border border-bleach-border rounded p-2 text-xs text-white"
-                >
-                  {(db.personagens || []).map(p => <option key={p.id} value={p.id}>Ficha: {p.nome}</option>)}
-                </select>
-              </div>
-              <button
-                onClick={adicionarSubAdm}
-                className="px-5 py-2.5 bg-bleach-orange text-black font-extrabold text-xs uppercase rounded-lg hover:bg-orange-400 shadow"
-              >
-                Cadastrar Sub-ADM com Login Próprio
-              </button>
-            </div>
-
-            <div className="bg-black/50 border border-bleach-borderSoft p-5 rounded-xl space-y-3 mt-4">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-yellow-400">
-                🔑 Alterar Senha Mestra do ADM Máximo
-              </h4>
-              <div className="flex gap-3 max-w-md">
-                <input
-                  type="text"
-                  placeholder="Nova Senha Mestra"
-                  value={novaSenhaMax}
-                  onChange={(e) => setNovaSenhaMax(e.target.value)}
-                  className="flex-1 bg-bleach-panel2 border border-bleach-border rounded px-3 py-2 text-xs text-white font-mono"
-                />
-                <button
-                  onClick={alterarSenhaSuperAdmin}
-                  className="px-4 py-2 bg-yellow-500 text-black font-bold text-xs uppercase rounded hover:bg-yellow-400"
-                >
-                  Salvar
-                </button>
-              </div>
-              {msgPass && <div className="text-green-400 text-xs">{msgPass}</div>}
-            </div>
-          </Section>
-        </div>
-      )}
-
-      {/* SUB-TAB: FICHAS DOS PLAYERS */}
-      {abaAdmin === "fichas" && (
-        <div className="space-y-6">
-          <Section title="Criar Novo Personagem no Site" subtitle="Cadastre a ficha oficial e gere o login para o jogador">
-            <form onSubmit={criarPersonagem} className="space-y-3">
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                <div>
-                  <label className="block text-[11px] text-bleach-creamDim mb-1 font-bold">Nome do Personagem *</label>
-                  <input
-                    type="text"
-                    placeholder="Ex: Kurosaki Ren"
-                    value={novo.nome}
-                    onChange={(e) => setNovo({ ...novo, nome: e.target.value })}
-                    className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg px-3 py-2 text-xs text-white"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[11px] text-bleach-creamDim mb-1 font-bold">WhatsApp do Jogador</label>
-                  <input
-                    type="text"
-                    placeholder="Ex: 11999998888"
-                    value={novo.whatsapp}
-                    onChange={(e) => setNovo({ ...novo, whatsapp: e.target.value })}
-                    className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg px-3 py-2 text-xs text-white"
-                  />
-                </div>
-
-                <div>
-                  <div className="flex justify-between items-center mb-1">
-                    <label className="text-[11px] text-bleach-creamDim font-bold">Código de Acesso (Senha) *</label>
-                    <button
-                      type="button"
-                      onClick={gerarCodigoAuto}
-                      className="text-[10px] text-bleach-orange hover:underline font-bold"
-                    >
-                      🎲 Gerar Código
-                    </button>
-                  </div>
-                  <input
-                    type="text"
-                    placeholder="Ex: REN-8921"
-                    value={novo.codigo}
-                    onChange={(e) => setNovo({ ...novo, codigo: e.target.value })}
-                    className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg px-3 py-2 text-xs font-mono text-white"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
-                <input
-                  type="text"
-                  placeholder="Faceclaim (Ex: Freya Mavor)"
-                  value={novo.faceclaim}
-                  onChange={(e) => setNovo({ ...novo, faceclaim: e.target.value })}
-                  className="bg-bleach-panel2 border border-bleach-border rounded-lg px-3 py-2 text-xs text-white"
-                />
-                <input
-                  type="text"
-                  placeholder="Idade do Personagem"
-                  value={novo.idadeChar}
-                  onChange={(e) => setNovo({ ...novo, idadeChar: e.target.value })}
-                  className="bg-bleach-panel2 border border-bleach-border rounded-lg px-3 py-2 text-xs text-white"
-                />
-                <input
-                  type="text"
-                  placeholder="Aniversário (dd/mm)"
-                  value={novo.aniversarioChar}
-                  onChange={(e) => setNovo({ ...novo, aniversarioChar: e.target.value })}
-                  className="bg-bleach-panel2 border border-bleach-border rounded-lg px-3 py-2 text-xs text-white"
-                />
-                <select
-                  value={novo.raca}
-                  onChange={(e) => setNovo({ ...novo, raca: e.target.value })}
-                  className="bg-bleach-panel2 border border-bleach-border rounded-lg px-3 py-2 text-xs text-white"
-                >
-                  <option value="Shinigami">Shinigami</option>
-                  <option value="Shinigami Ex-Humano">Shinigami Ex-Humano</option>
-                </select>
-              </div>
-
-              <button
-                type="submit"
-                className="w-full bg-gradient-to-r from-bleach-orange to-bleach-orangeDeep text-black font-extrabold text-xs uppercase tracking-wider rounded-lg py-2.5 hover:brightness-110 shadow"
-              >
-                + Criar Ficha & Gerar Login do Jogador
-              </button>
-            </form>
-
-            {msgCriacao && (
-              <div className="mt-4 p-4 bg-green-950/80 border border-green-500 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
-                <div>
-                  <span className="font-bold text-green-300">✓ Ficha criada com sucesso!</span>
-                  <div className="text-white mt-0.5">
-                    Personagem: <strong>{msgCriacao.nome}</strong> • Código: <strong className="font-mono text-bleach-orange">{msgCriacao.codigo}</strong>
-                  </div>
-                </div>
-                <button
-                  onClick={() => copiarLoginMsg(msgCriacao)}
-                  className="px-4 py-2 bg-green-600 hover:bg-green-500 text-white font-bold rounded-lg shadow uppercase text-xs whitespace-nowrap"
-                >
-                  📋 Copiar Mensagem de Login para WhatsApp
-                </button>
-              </div>
-            )}
-          </Section>
-
-          <Section title={`Fichas Registradas (${(db.personagens || []).length})`} subtitle="Selecione um jogador para gerenciar ou copiar dados de acesso">
-            <div className="mb-4">
-              <input
-                type="text"
-                placeholder="🔍 Buscar por nome do personagem ou WhatsApp..."
-                value={busca}
-                onChange={(e) => setBusca(e.target.value)}
-                className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg px-4 py-2.5 text-xs text-white placeholder-bleach-muted focus:outline-none focus:border-bleach-orange"
-              />
-            </div>
-
-            <div className="grid grid-cols-1 gap-3">
-              {filtrados.map((p) => {
-                const total = Object.values(p.atributos).reduce((a, b) => a + b, 0);
-                const tier = getPowerTier(total);
-                return (
-                  <div
-                    key={p.id}
-                    className="bg-bleach-panel2 border border-bleach-borderSoft hover:border-bleach-orange/50 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-lg overflow-hidden border border-bleach-border bg-black">
-                        <img 
-                          src={p.foto || 'assets/ichigo-orange.png'} 
-                          alt={p.nome}
-                          className="w-full h-full object-cover"
-                          onError={(e) => { e.target.src = 'assets/ichigo-orange.png'; }}
-                        />
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <h4 className="font-bold text-bleach-cream text-base">{p.nome}</h4>
-                          <Badge color={ESTADOS.find((e) => e.key === p.estado)?.color || C.green}>
-                            {p.estado}
-                          </Badge>
-                          <Badge color={tier.color}>
-                            {tier.title}
-                          </Badge>
-                        </div>
-                        <div className="text-xs text-bleach-creamDim flex flex-wrap gap-x-4 gap-y-1 mt-0.5">
-                          <span>WhatsApp: <strong>{maskWhats(p.whatsapp)}</strong></span>
-                          <span>Código: <strong className="font-mono text-bleach-orange">{p.codigo}</strong></span>
-                          <span>Shikai: <strong className={p.zanpakuto?.shikaiAtiva ? "text-cyan-400" : "text-bleach-muted"}>{p.zanpakuto?.shikaiAtiva ? `✓ ${p.zanpakuto.shikaiAtiva.nome}` : p.permissoes?.shikaiLiberada ? "🔓 Liberada p/ Escolha" : "🔒 Bloqueada"}</strong></span>
-                          <span>Bankai: <strong className={p.zanpakuto?.bankaiAtiva ? "text-yellow-400" : "text-bleach-muted"}>{p.zanpakuto?.bankaiAtiva ? `✓ ${p.zanpakuto.bankaiAtiva.nome}` : p.permissoes?.bankaiLiberada ? "🔓 Liberada p/ Escolha" : "🔒 Bloqueada"}</strong></span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex flex-wrap items-center gap-2 border-t sm:border-t-0 pt-2 sm:pt-0 border-bleach-borderSoft">
-                      <button
-                        onClick={() => copiarLoginMsg(p)}
-                        className="px-3 py-2 bg-bleach-panel border border-bleach-border hover:border-bleach-orange text-bleach-cream font-bold text-xs uppercase rounded-lg transition"
-                        title="Copiar dados de login para mandar no WhatsApp"
-                      >
-                        📋 Copiar Login
-                      </button>
-
-                      <button
-                        onClick={() => onAbrirFicha(p.id)}
-                        className="px-4 py-2 bg-bleach-orange text-black font-extrabold text-xs uppercase tracking-wider rounded-lg shadow hover:bg-orange-400 transition"
-                      >
-                        Gerenciar →
-                      </button>
-
-                      {isMaxAdm && (
-                        <button
-                          onClick={() => setCharParaDeletar(p)}
-                          className="px-3 py-2 bg-red-950/60 border border-red-500/50 hover:bg-red-800 text-red-200 font-bold text-xs uppercase rounded-lg transition"
-                          title="Apagar Perfil de Jogador"
-                        >
-                          🗑️ Apagar
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </Section>
-
-          {charParaDeletar && (
-            <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
-              <div className="bg-bleach-panel border-2 border-red-500 rounded-2xl p-6 max-w-sm w-full shadow-2xl text-center">
-                <div className="text-4xl mb-2">⚠️</div>
-                <h3 className="font-title text-2xl text-red-400 tracking-wider mb-2">
-                  APAGAR PERFIL DE JOGADOR
-                </h3>
-                <p className="text-xs text-bleach-creamDim mb-4 leading-relaxed">
-                  Tem certeza que deseja apagar permanentemente a ficha de <strong className="text-white">{charParaDeletar.nome}</strong>? Todos os atributos, histórico e progresso serão apagados definitivamente.
-                </p>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => setCharParaDeletar(null)}
-                    className="flex-1 py-2 bg-bleach-panel2 border border-bleach-border text-xs text-bleach-cream rounded-lg hover:border-bleach-orange font-bold uppercase"
-                  >
-                    Cancelar
-                  </button>
-                  <button
-                    onClick={confirmarExclusaoChar}
-                    className="flex-1 py-2 bg-red-600 hover:bg-red-500 text-white text-xs rounded-lg font-extrabold uppercase shadow"
-                  >
-                    Sim, Apagar Ficha
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
-        </div>
-      )}
-
-      {/* SUB-TAB: AFAZERES E GANHOS DE ADM */}
-      {abaAdmin === "tarefas" && (
-        <div className="space-y-6">
-          <Section 
-            title="Afazeres do ADM & Distribuição de Ganhos" 
-            subtitle="Registre suas atividades concluídas e deposite os pontos direto na sua ficha de personagem"
-          >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-bleach-panel2 border border-bleach-border p-5 rounded-xl space-y-4">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-bleach-orange">
-                  Registrar Atividade de ADM Concluída
-                </h4>
-
-                <div>
-                  <label className="block text-xs text-bleach-creamDim mb-1">Tipo de Tarefa Realizada</label>
-                  <div className="space-y-2">
-                    <label className="flex items-center gap-2 p-2.5 bg-black border border-bleach-borderSoft rounded-lg cursor-pointer text-xs">
-                      <input 
-                        type="radio" 
-                        name="tarefa" 
-                        checked={tarefaSelecionada === "cenas"} 
-                        onChange={() => setTarefaSelecionada("cenas")}
-                        className="accent-bleach-orange"
-                      />
-                      <div>
-                        <strong className="text-white">Avaliar Cenas de Arco (90 linhas)</strong>
-                        <span className="block text-bleach-orange text-[11px] font-mono">Ganha: +8 Pontos para a ficha do ADM</span>
-                      </div>
-                    </label>
-
-                    <label className="flex items-center gap-2 p-2.5 bg-black border border-bleach-borderSoft rounded-lg cursor-pointer text-xs">
-                      <input 
-                        type="radio" 
-                        name="tarefa" 
-                        checked={tarefaSelecionada === "fichas"} 
-                        onChange={() => setTarefaSelecionada("fichas")}
-                        className="accent-bleach-orange"
-                      />
-                      <div className="flex-1">
-                        <strong className="text-white">Avaliar e Aprovar Fichas (A cada 7 fichas)</strong>
-                        <span className="block text-bleach-orange text-[11px] font-mono">Ganha: +3 Pontos a cada 7 fichas aprovadas</span>
-                        
-                        {tarefaSelecionada === "fichas" && (
-                          <div className="flex items-center gap-2 mt-2">
-                            <span className="text-[11px] text-bleach-creamDim">Contador:</span>
-                            <button
-                              onClick={() => setFichasAvaliadasContador(Math.max(0, fichasAvaliadasContador - 1))}
-                              className="w-6 h-6 rounded bg-bleach-panel border text-white font-bold"
-                            >-</button>
-                            <span className="font-bold font-mono text-bleach-orange text-sm">{fichasAvaliadasContador} / 7</span>
-                            <button
-                              onClick={() => setFichasAvaliadasContador(fichasAvaliadasContador + 1)}
-                              className="w-6 h-6 rounded bg-bleach-panel border text-white font-bold"
-                            >+</button>
-                          </div>
-                        )}
-                      </div>
-                    </label>
-
-                    <label className="flex items-center gap-2 p-2.5 bg-black border border-bleach-borderSoft rounded-lg cursor-pointer text-xs">
-                      <input 
-                        type="radio" 
-                        name="tarefa" 
-                        checked={tarefaSelecionada === "missao"} 
-                        onChange={() => setTarefaSelecionada("missao")}
-                        className="accent-bleach-orange"
-                      />
-                      <div>
-                        <strong className="text-white">Narrar Missão Principal</strong>
-                        <span className="block text-bleach-orange text-[11px] font-mono">Ganha: Mesma recompensa dos players (+15 pts + 4 Giros + 1 Esp)</span>
-                      </div>
-                    </label>
-
-                    <label className="flex items-center gap-2 p-2.5 bg-black border border-bleach-borderSoft rounded-lg cursor-pointer text-xs">
-                      <input 
-                        type="radio" 
-                        name="tarefa" 
-                        checked={tarefaSelecionada === "juiz"} 
-                        onChange={() => setTarefaSelecionada("juiz")}
-                        className="accent-bleach-orange"
-                      />
-                      <div>
-                        <strong className="text-white">Ser Juiz de Combate em ON</strong>
-                        <span className="block text-bleach-orange text-[11px] font-mono">Ganha: +4 Pontos de participação</span>
-                      </div>
-                    </label>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-[11px] text-bleach-creamDim mb-1">Nome do ADM</label>
-                    <input
-                      type="text"
-                      value={admExecutor}
-                      onChange={(e) => setAdmExecutor(e.target.value)}
-                      className="w-full bg-black border border-bleach-border rounded p-2 text-xs text-white"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-[11px] text-bleach-creamDim mb-1">Ficha de Destino dos Pontos</label>
-                    <select
-                      value={charAlvoAdm}
-                      onChange={(e) => setCharAlvoAdm(e.target.value)}
-                      className="w-full bg-black border border-bleach-border rounded p-2 text-xs text-white"
-                    >
-                      {(db.personagens || []).map(p => <option key={p.id} value={p.id}>{p.nome}</option>)}
-                    </select>
-                  </div>
-                </div>
-
-                <button
-                  onClick={registrarAtividadeAdm}
-                  className="w-full py-3 bg-gradient-to-r from-bleach-orange to-bleach-orangeDeep text-black font-extrabold text-xs uppercase tracking-wider rounded-lg shadow-lg hover:brightness-110"
-                >
-                  Confirmar e Depositar Ganhos na Ficha
-                </button>
-              </div>
-
-              <div className="bg-bleach-panel2 border border-bleach-border p-5 rounded-xl flex flex-col justify-between">
-                <div>
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-bleach-creamDim mb-3">
-                    Histórico de Afazeres Registrados
-                  </h4>
-                  <div className="space-y-2.5 max-h-80 overflow-y-auto pr-1">
-                    {(db.registrosTarefasAdm || []).map((r) => (
-                      <div key={r.id} className="p-3 bg-black/60 border border-bleach-borderSoft rounded-lg text-xs">
-                        <div className="flex justify-between items-center mb-1">
-                          <strong className="text-bleach-orange">{r.admNome}</strong>
-                          <span className="text-[10px] text-bleach-muted font-mono">{r.data}</span>
-                        </div>
-                        <div className="text-bleach-creamDim">{r.tarefa}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          </Section>
-        </div>
-      )}
-
-      {/* SUB-TAB: IA JUÍZA */}
-      {abaAdmin === "ia-arbitro" && (
-        <div className="space-y-6">
-          <Section 
-            title="🤖 IA Juíza de Combate (Árbitro Neutro de Luta)" 
-            subtitle="Utilize quando houver dúvida entre as ações dos players para uma análise justa por atributos e lógica de cena"
-          >
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs text-bleach-creamDim mb-1">Combatente 1</label>
-                  <select
-                    value={iaLutador1}
-                    onChange={(e) => setIaLutador1(e.target.value)}
-                    className="w-full bg-black border border-bleach-border rounded-lg p-2.5 text-xs text-white"
-                  >
-                    {(db.personagens || []).map(p => <option key={p.id} value={p.nome}>{p.nome}</option>)}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs text-bleach-creamDim mb-1">Combatente 2</label>
-                  <select
-                    value={iaLutador2}
-                    onChange={(e) => setIaLutador2(e.target.value)}
-                    className="w-full bg-black border border-bleach-border rounded-lg p-2.5 text-xs text-white"
-                  >
-                    {(db.personagens || []).map(p => <option key={p.id} value={p.nome}>{p.nome}</option>)}
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs text-bleach-creamDim mb-1">
-                  Cole aqui as ações e texto da cena de ambos os lutadores
-                </label>
-                <textarea
-                  rows={5}
-                  value={iaCenaTexto}
-                  onChange={(e) => setIaCenaTexto(e.target.value)}
-                  placeholder="Ex: Jogador 1 declarou que usou Shunpo direto pelas costas..."
-                  className="w-full bg-black border border-bleach-border rounded-lg p-3 text-xs text-white focus:outline-none focus:border-bleach-orange"
-                />
-              </div>
-
-              <button
-                onClick={julgarCombateComIA}
-                disabled={iaProcessando}
-                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-extrabold text-xs uppercase tracking-wider rounded-lg shadow-lg hover:brightness-110 disabled:opacity-50"
-              >
-                {iaProcessando ? "Analisando cena e calculando velocidades..." : "⚖️ Processar Veredito da IA"}
-              </button>
-
-              {iaResultado && (
-                <div className="mt-4 p-5 bg-black/80 border-2 border-bleach-blue rounded-xl space-y-3 blue-reiatsu-glow">
-                  <div className="flex justify-between items-center">
-                    <span className="font-title text-xl text-bleach-blue tracking-wider">
-                      RESULTADO DO JULGAMENTO
-                    </span>
-                    <span className="text-[10px] text-bleach-muted font-mono">{iaResultado.data}</span>
-                  </div>
-                  <div className="text-xs text-bleach-cream leading-relaxed whitespace-pre-line bg-bleach-panel p-4 rounded-lg border border-bleach-borderSoft">
-                    {iaResultado.veredito}
-                  </div>
-                </div>
-              )}
-            </div>
-          </Section>
-        </div>
-      )}
-
-      {/* SUB-TAB: DADOS ADM */}
-      {abaAdmin === "dados-adm" && (
-        <div className="space-y-6">
-          <Section 
-            title="🎲 Mesa de Dados da ADM com Tensão & Drama" 
-            subtitle="Rolagens com delay e suspensão dramática visíveis no mural para todos os jogadores"
-          >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-xs text-bleach-creamDim mb-1">Escolha o Tipo de Dado</label>
-                  <div className="flex flex-wrap gap-2">
-                    {[2, 4, 6, 8, 10, 12, 20, 100].map(d => (
-                      <button
-                        key={d}
-                        onClick={() => setDadoTipo(d)}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold border transition ${
-                          dadoTipo === d 
-                            ? "bg-bleach-orange text-black border-bleach-orange" 
-                            : "bg-black text-bleach-creamDim border-bleach-border"
-                        }`}
-                      >
-                        d{d}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs text-bleach-creamDim mb-1">Personagem Alvo da Rolagem</label>
-                  <select
-                    value={dadoChar}
-                    onChange={(e) => setDadoChar(e.target.value)}
-                    className="w-full bg-black border border-bleach-border rounded-lg p-2.5 text-xs text-white"
-                  >
-                    {(db.personagens || []).map(p => <option key={p.id} value={p.nome}>{p.nome}</option>)}
-                  </select>
-                </div>
-
-                <button
-                  onClick={rolarDadoComTensao}
-                  disabled={dadoRolando}
-                  className="w-full py-3.5 bg-gradient-to-r from-bleach-orange to-bleach-orangeDeep text-black font-extrabold text-xs uppercase tracking-widest rounded-xl shadow-xl hover:brightness-110 disabled:opacity-50 transition"
-                >
-                  {dadoRolando ? "Concentrando Tensão na Rolagem..." : `🎲 Rolar d${dadoTipo} para ${dadoChar}`}
-                </button>
-              </div>
-
-              <div className="bg-black/60 border border-bleach-border rounded-2xl p-6 flex flex-col items-center justify-center text-center">
-                <div 
-                  className={`w-28 h-28 rounded-2xl bg-gradient-to-br from-bleach-panel2 to-black border-4 border-bleach-orange flex items-center justify-center text-5xl font-black font-mono text-bleach-cream shadow-2xl transition ${
-                    dadoRolando ? "dice-suspense" : "reiatsu-glow"
-                  }`}
-                >
-                  {dadoAnimVal}
-                </div>
-
-                {dadoResultado && (
-                  <div className="mt-4 p-3 bg-bleach-panel2 border border-bleach-border rounded-xl w-full">
-                    <div className="text-[10px] uppercase tracking-wider text-bleach-muted">Resultado Final</div>
-                    <div className="font-bold text-sm mt-0.5" style={{ color: dadoResultado.cor }}>
-                      {dadoResultado.cat}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="mt-6 pt-4 border-t border-bleach-borderSoft">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-bleach-creamDim mb-2">
-                Mural Público de Rolagens
-              </h4>
-              <div className="space-y-2">
-                {(db.rolagensDadosPublicas || []).map((r) => (
-                  <div key={r.id} className="p-2.5 bg-black/50 border border-bleach-borderSoft rounded-lg text-xs flex justify-between items-center">
-                    <div>
-                      <strong className="text-bleach-cream">{r.personagem}</strong>
-                      <span className="text-bleach-muted"> ({r.dado}) : </span>
-                      <span className="font-bold text-white font-mono text-sm">{r.resultado}</span>
-                      <span className="text-[11px] ml-2 text-bleach-orange font-semibold">{r.categoria}</span>
-                    </div>
-                    <span className="text-[10px] text-bleach-muted font-mono">{r.data}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </Section>
-        </div>
-      )}
-
-    </div>
-  );
-}
-
-// COMPLETE RPG SYSTEMS & MANUAL VIEW (TODOS OS 30 PONTOS OFICIAIS DO SISTEMA)
-const CATEGORIAS_SISTEMAS = [
-  { id: "todos", label: "📋 Todas as 30 Regras" },
-  { id: "geral", label: "📜 Conceito & Power Scaling" },
-  { id: "racas", label: "👤 Raças & Origens" },
-  { id: "kidos", label: "⚡ Kidō & Kaidō" },
-  { id: "combate", label: "⚔️ Combate, Estados & 1d6" },
-  { id: "treino", label: "🏋️ Treinamento & Fadiga" },
-  { id: "missoes", label: "🎯 Missões, Cenas & Gacha" },
-  { id: "zanpakuto", label: "🗡️ Técnicas & Zanpakutō" },
-];
-
-const SISTEMAS_DATA = [
-  {
-    id: "s1",
-    num: 1,
-    cat: "geral",
-    t: "1. Conceito do Sistema",
-    c: `O Bleach RPG é focado principalmente em:
-• Narrativa
-• Desenvolvimento de personagem
-• Combate
-• Power scaling
-• Evolução gradual
-
-O sistema deve evitar excesso de rolagens. Dados só aparecem quando existe uma dúvida real.
-
-A maior parte dos resultados é determinada pela combinação de:
-Atributos + Técnicas + Experiência + Circunstâncias + Narrativa`
-  },
-  {
-    id: "s2",
-    num: 2,
-    cat: "racas",
-    t: "2. Raças Disponíveis",
-    c: `Existem apenas duas opções de raça:
-
-⚔️ SHINIGAMI
-Personagem que já pertence à Sociedade das Almas e possui formação como Shinigami.
-Pode:
-• possuir Zanpakutō;
-• aprender Kidō;
-• aprender Zanjutsu;
-• aprender Hakuda;
-• aprender Hohō;
-• participar de missões;
-• desenvolver técnicas.
-
-👤 SHINIGAMI EX-HUMANO
-Personagem que teve uma vida humana antes de se tornar Shinigami.
-A origem pode influenciar:
-• personalidade;
-• memórias;
-• relações;
-• conhecimentos;
-• motivações;
-• história pessoal.
-
-Porém:
-• Ser Ex-Humano não fornece bônus automático de atributos.
-• A origem é principalmente narrativa.`
-  },
-  {
-    id: "s3",
-    num: 3,
-    cat: "racas",
-    t: "3. Diferença entre as Origens (Tabela Comparativa)",
-    c: `Tabela de comparação entre Shinigami Nativo e Shinigami Ex-Humano:
-
-• Origem: Sociedade das Almas vs Mundo Humano
-• Vida humana anterior: Não vs Sim
-• Atributos: Iguais vs Iguais
-• Evolução: Igual vs Igual
-• Combate: Igual vs Igual
-• Zanpakutō: Sim vs Sim
-• Kidō: Formação básica (4 iniciais) vs Precisa aprender narrativamente
-• Zanjutsu: Pode aprender vs Pode aprender
-• Hakuda: Pode aprender vs Pode aprender
-• Hohō: Pode aprender vs Pode aprender`
-  },
-  {
-    id: "s4",
-    num: 4,
-    cat: "kidos",
-    t: "4. Kidō Inicial & Regras de Cura (Kaidō)",
-    c: `Um personagem que já é Shinigami começa com:
-4 Kidō Básicos (distribuídos livremente pelo jogador).
-
-Categorias disponíveis:
-🔴 HADŌ: Técnicas ofensivas de destruição e ataque.
-🔵 BAKUDŌ: Técnicas de contenção, defesa, barreiras e restrição.
-🟢 KAIDŌ: Técnicas de cura e tratamento espiritual.
-
-Exemplos de distribuição inicial:
-• 2 Hadō + 1 Bakudō + 1 Kaidō
-• 4 Hadō
-• 2 Bakudō + 2 Kaidō
-
-KAIDŌ (Cura Espiritual):
-Kaidō representa técnicas de tratamento e cura espiritual. Pode ser utilizado para tratar ferimentos, estabilizar aliados, aliviar danos e auxiliar na recuperação.
-Porém:
-• Kaidō NÃO substitui descanso nem recuperação narrativa.
-• Ferimentos graves podem exigir técnicas mais avançadas ou tratamento adequado.
-
-EX-HUMANO E KIDŌ:
-Um Ex-Humano recém-transformado não recebe automaticamente os 4 Kidō. Ele pode aprender posteriormente através de treinamento, professores, missões, livros, outros Shinigami ou narrativa.
-(Se a história justificar treinamento prévio, a administração pode liberar conhecimento inicial).`
-  },
-  {
-    id: "s5",
-    num: 5,
-    cat: "geral",
-    t: "5. Atributos Fundamentais",
-    c: `Existem quatro atributos no sistema:
-
-🔵 PRESSÃO ESPIRITUAL
-Representa: Reiatsu, poder espiritual, controle de energia espiritual, percepção espiritual, técnicas espirituais e pressão exercida sobre outros seres.
-
-🔴 FORÇA
-Representa: força física, potência dos golpes, Zanjutsu, Hakuda e capacidade física.
-
-🟢 VELOCIDADE
-Representa: deslocamento, reflexos, velocidade de ataque, esquiva, Hohō/Shunpo e capacidade de acompanhar adversários.
-
-🟣 RESILIÊNCIA
-Representa: resistência física, resistência espiritual, resistência à exaustão, capacidade de suportar ataques e capacidade de continuar lutando.`
-  },
-  {
-    id: "s6",
-    num: 6,
-    cat: "geral",
-    t: "6. Criação de Atributos (Base 10 + 20 Pontos Livres)",
-    c: `Na criação da ficha:
-• Todos os atributos começam em: 10
-• O jogador recebe: 20 Pontos de Atributo para distribuir livremente.
-• Não existe limite inicial.
-
-Exemplo de distribuição:
-Pressão Espiritual: 10
-Força: 10
-Velocidade: 30 (+20 pontos)
-Resiliência: 10`
-  },
-  {
-    id: "s7",
-    num: 7,
-    cat: "geral",
-    t: "7. Regra Fundamental dos Atributos",
-    c: `O número da ficha É o atributo.
-
-Não existe:
-• conversão;
-• multiplicador;
-• nível escondido;
-• escala secundária.
-
-Se possui:
-Velocidade 370 e recebe +1 → Velocidade 371
-Recebe +5 → Velocidade 376`
-  },
-  {
-    id: "s8",
-    num: 8,
-    cat: "geral",
-    t: "8. Power Scaling Oficial (Escala de Patamares)",
-    c: `Escala oficial de referência narrativa:
-
-• 1–10: Inexperiente
-• 11–30: Iniciante
-• 31–60: Treinado
-• 61–100: Experiente
-• 101–150: Elite
-• 151–250: Alto nível
-• 251–400: Monstruoso
-• 401–600: Lendário
-• 601+: Transcendente
-
-Essas classificações são referências narrativas puras para balanço de poder.`
-  },
-  {
-    id: "s9",
-    num: 9,
-    cat: "geral",
-    t: "9. Diferença entre Atributos (Escala de Vantagem)",
-    c: `Quando dois guerreiros confrontam seus atributos diretamente:
-
-• 0–10 de diferença: Equivalentes
-• 11–30 de diferença: Pequena vantagem
-• 31–75 de diferença: Vantagem clara
-• 76–150 de diferença: Grande vantagem
-• 151–250 de diferença: Abismo
-• 251+ de diferença: Diferença monstruosa
-
-Quanto maior a diferença, mais difícil é superar a inferioridade através de técnica ou estratégia pura.`
-  },
-  {
-    id: "s10",
-    num: 10,
-    cat: "combate",
-    t: "10. Dinâmica de Combate",
-    c: `O combate não possui rolagem para cada ação. O processo segue três etapas:
-
-1. INTENÇÃO: O jogador declara o que pretende fazer em cena.
-2. COMPARAÇÃO: O narrador compara os atributos relevantes e técnicas envolvidas.
-3. CONSEQUÊNCIA: O narrador determina o resultado narrativo do choque.
-
-Se existir uma dúvida real sobre o desfecho: rola-se 1d6.`
-  },
-  {
-    id: "s11",
-    num: 11,
-    cat: "combate",
-    t: "11. O Dado de Decisão (1d6)",
-    c: `Quando há incerteza real na cena, utiliza-se exclusivamente o 1d6:
-
-• 1–2: Falha
-• 3–4: Sucesso parcial (com custo ou revés)
-• 5–6: Sucesso pleno
-
-Uma única rolagem deve resolver a situação, preservando a fluidez da narrativa.`
-  },
-  {
-    id: "s12",
-    num: 12,
-    cat: "combate",
-    t: "12. Estados de Combate (Sem HP Tradicional)",
-    c: `Não existe HP numérico tradicional. O personagem transita por quatro estados:
-
-🟢 INTEIRO: Condição física e espiritual normal.
-🟡 FERIDO: Danos começam a afetar seu desempenho.
-🟠 DEBILITADO: Gravemente prejudicado e exausto.
-🔴 DERROTADO: Não consegue continuar lutando (incapacitado).
-
-A mudança de estado depende da situação, atributos, técnicas e narrativa.`
-  },
-  {
-    id: "s13",
-    num: 13,
-    cat: "combate",
-    t: "13. Confronto de Pressão Espiritual (Reiatsu Clash)",
-    c: `Quando dois personagens liberam Reiatsu, compara-se a Pressão Espiritual:
-
-• 0–10 de diferença: Diferença insignificante.
-• 11–30 de diferença: Presença claramente superior.
-• 31–75 de diferença: Pressão intimidante.
-• 76–150 de diferença: Grande dificuldade para o lutador inferior.
-• 151–250 de diferença: Abismo espiritual.
-• 251+ de diferença: Presença monstruosamente superior.
-
-Isso não significa vitória automática, mas dita a atmosfera e a facilidade de conjuração de Kidōs e técnicas.`
-  },
-  {
-    id: "s14",
-    num: 14,
-    cat: "combate",
-    t: "14. Especialidades Técnicas",
-    c: `Personagens podem desenvolver especialidades como:
-• Zanjutsu (Esgrima de Zanpakutō)
-• Hakuda (Combate corpo a corpo)
-• Hohō (Shunpo e passos rápidos)
-• Kidō (Feitiçaria espiritual)
-• Reiatsu (Controle e emanação de aura)
-• Percepção (Sensoriamento espiritual)
-• Estratégia (Tática e análise em batalha)
-• Combate à distância
-
-Especialidades representam domínio técnico. Elas não aumentam automaticamente os números dos atributos, mas expandem as possibilidades narrativas.`
-  },
-  {
-    id: "s15",
-    num: 15,
-    cat: "treino",
-    t: "15. Treinamento em OFF (3 Períodos Diários)",
-    c: `Treinos são realizados em: OFF.
-
-Cada personagem pode realizar no máximo 3 períodos de treino por dia:
-• 1º período: Manhã
-• 2º período: Manhã → Tarde
-• 3º período: Manhã → Noite`
-  },
-  {
-    id: "s16",
-    num: 16,
-    cat: "treino",
-    t: "16. Recompensa de Treino (0–3 Pontos / Máx 9 pts/dia)",
-    c: `Cada período de treino pode conceder: 0–3 Pontos de Atributo.
-
-Avaliação do Treino:
-• Treino fraco: 0–1 ponto
-• Treino adequado: 1–2 pontos
-• Treino excelente: 2–3 pontos
-
-Máximo normal por dia:
-9 Pontos de Atributo (exige três treinamentos excelentes).
-
-A intenção é impedir evolução absurda em poucos dias e valorizar a consistência.`
-  },
-  {
-    id: "s17",
-    num: 17,
-    cat: "treino",
-    t: "17. Distribuição do Treino",
-    c: `O jogador pode focar um atributo:
-• Treino de Velocidade → todos os pontos em Velocidade.
-
-Ou dividir entre atributos:
-• Força + Velocidade
-
-O administrador determina a distribuição conforme o conteúdo da cena.
-Exemplo: +2 Força e +1 Velocidade.
-Quanto mais atributos forem treinados simultaneamente, mais dividida será a recompensa.`
-  },
-  {
-    id: "s18",
-    num: 18,
-    cat: "treino",
-    t: "18. Sistema de Fadiga",
-    c: `Treinar gera desgaste físico e espiritual:
-
-• 1 TREINO: Nenhuma redução obrigatória. Pode participar normalmente das atividades.
-• 2 TREINOS: −5% temporário nos atributos diretamente treinados.
-• 3 TREINOS: −15% temporário nos atributos diretamente treinados.
-  Além disso: Não pode participar de Miscelâneas com recompensa naquele dia.`
-  },
-  {
-    id: "s19",
-    num: 19,
-    cat: "treino",
-    t: "19. Fadiga em Missões ON",
-    c: `Missões são realizadas em: ON.
-Uma missão pode acontecer mesmo depois de o personagem ter treinado. Se for necessário participar, o personagem participa, porém entra cansado:
-
-• Após 1 treino: Sem penalidade obrigatória.
-• Após 2 treinos: −5% nos atributos treinados.
-• Após 3 treinos: −15% nos atributos treinados.`
-  },
-  {
-    id: "s20",
-    num: 20,
-    cat: "treino",
-    t: "20. Fadiga Não é Perda Permanente",
-    c: `A fadiga é uma redução momentânea de prontidão de combate.
-
-Exemplo:
-• Velocidade na ficha: 100
-• Após treinamento intenso (3 treinos): Velocidade efetiva durante a missão = 85.
-• A ficha continua: Velocidade 100.
-• Depois de descansar: 100 novamente.
-
-Nenhum ponto é perdido da ficha.`
-  },
-  {
-    id: "s21",
-    num: 21,
-    cat: "treino",
-    t: "21. Descanso (Recuperação Diária)",
-    c: `Em condições normais:
-Um novo dia remove completamente a fadiga acumulada do dia anterior.`
-  },
-  {
-    id: "s22",
-    num: 22,
-    cat: "missoes",
-    t: "22. Missões em ON (Recompensas)",
-    c: `Missões são cenas em ON com objetivos claros.
-
-Recompensas conforme a escala:
-• Missão simples: 1–2 pontos
-• Missão normal: 2–4 pontos
-• Missão importante: 3–6 pontos
-• Missão excepcional: 5–8 pontos
-
-A recompensa considera: dificuldade, risco, importância, interpretação, participação e impacto narrativo.`
-  },
-  {
-    id: "s23",
-    num: 23,
-    cat: "missoes",
-    t: "23. Miscelâneas em ON (Cenas Narrativas)",
-    c: `São cenas ON focadas em narrativa, interpretação e cotidiano.
-Exemplos: conversas, relações, investigação, exploração, rotina, interação com NPCs e desenvolvimento pessoal.
-
-Recompensas:
-• Cena simples: 0–1 ponto
-• Cena relevante: 1–2 pontos
-• Cena excepcional: 2–3 pontos
-
-Atenção: Quem realizou 3 treinos no dia NÃO recebe recompensa de Miscelânea naquele dia.`
-  },
-  {
-    id: "s24",
-    num: 24,
-    cat: "missoes",
-    t: "24. Cenas de Arco (90 Linhas / Clímax)",
-    c: `Cenas de Arco envolvem momentos decisivos na trajetória do personagem (mínimo de 90 linhas):
-
-• Cena comum: 1–3 pontos
-• Cena importante: 2–4 pontos
-• Cena decisiva: 4–6 pontos
-
-Também podem desbloquear:
-• novas técnicas;
-• informações cruciais;
-• relações e alianças;
-• desenvolvimento e diálogo com a Zanpakutō;
-• novos objetivos de vida.`
-  },
-  {
-    id: "s25",
-    num: 25,
-    cat: "missoes",
-    t: "25. Combates em ON (Recompensas)",
-    c: `Recompensas por lutas realizadas em ON:
-
-• Combate menor: 1–2 pontos
-• Combate relevante: 2–4 pontos
-• Combate importante: 3–6 pontos
-
-A recompensa não depende simplesmente da vitória: a qualidade da narrativa e superação são valorizadas.`
-  },
-  {
-    id: "s26",
-    num: 26,
-    cat: "missoes",
-    t: "26. Recompensas Aleatórias / Gacha Extra",
-    c: `🎲 Recompensa Extra (Opcional e Não Garantida):
-Pode aparecer após missões, combates, cenas importantes, treinos excepcionais, descobertas e marcos narrativos.
-
-Categorias:
-⚪ Comum: +1–3 atributos ou pequena recompensa narrativa.
-🟢 Incomum: +3–6 atributos, técnica, feitiço ou item.
-🔵 Rara: +5–10 atributos ou grande oportunidade.
-🟣 Épica: +8–15 atributos ou grande evolução espiritual.
-🟡 Lendária: Recompensa excepcional capaz de alterar significativamente o caminho do personagem (como a Missão Narrativa Individual de Despertar).
-
-A recompensa também pode ser: técnica, feitiço, item, conhecimento, contato, treinamento especial ou desenvolvimento da Zanpakutō.`
-  },
-  {
-    id: "s27",
-    num: 27,
-    cat: "missoes",
-    t: "27. Bônus de Participação Semanal",
-    c: `Jogadores muito ativos podem receber, ao final de uma semana de consistência:
-+2–3 Pontos de Atributo.
-
-O bônus existe para recompensar a constância na comunidade, mantendo-se moderado para preservar o power scaling.`
-  },
-  {
-    id: "s28",
-    num: 28,
-    cat: "zanpakuto",
-    t: "28. Estrutura Obrigatória de Técnicas",
-    c: `Personagens podem aprender técnicas existentes, desenvolver técnicas próprias, modificar e aperfeiçoar habilidades.
-
-Toda técnica cadastrada na ficha deve conter obrigatoriamente:
-1. Nome
-2. Categoria (Hadō, Bakudō, Kaidō, Zanjutsu, Hakuda, Hohō, Outro)
-3. Conceito
-4. Efeito
-5. Requisitos
-6. Limitações`
-  },
-  {
-    id: "s29",
-    num: 29,
-    cat: "zanpakuto",
-    t: "29. Evolução Narrativa da Zanpakutō",
-    c: `A Zanpakutō evolui estritamente através da narrativa e comunhão de almas:
-
-Possíveis marcos:
-• descoberta do espírito interior;
-• descoberta do nome verdadeiro;
-• liberação inicial (Shikai);
-• novas propriedades e técnicas de lâmina;
-• evolução e aprofundamento do Shikai;
-• liberação suprema (Bankai).
-
-Esses poderes não precisam simplesmente ser comprados com atributos: devem ser conquistados na história!`
-  },
-  {
-    id: "s30",
-    num: 30,
-    cat: "geral",
-    t: "30. Filosofia Geral do Sistema (Os 4 Princípios)",
-    c: `O Bleach RPG segue quatro princípios fundamentais:
-
-1. Números determinam a escala.
-2. Técnicas determinam como o poder é utilizado.
-3. Narrativa determina o contexto.
-4. Dados só aparecem quando existe incerteza real.
-
-E na evolução contínua:
-• Treinar mais = mais progresso.
-• Treinar demais = mais fadiga.
-• Missões não esperam o personagem estar descansado.
-• Narrativa também gera evolução.
-• Sorte pode trazer recompensas extraordinárias.
-• A evolução deve ser lenta e gradual o suficiente para preservar o power scaling.`
-  }
-];
-
-function SistemasView() {
-  const [catAtiva, setCatAtiva] = useState("todos");
-  const [aberto, setAberto] = useState(0);
-  const [busca, setBusca] = useState("");
-
-  const filtrados = SISTEMAS_DATA.filter((s) => {
-    const matchesCat = catAtiva === "todos" || s.cat === catAtiva;
-    const matchesBusca = s.t.toLowerCase().includes(busca.toLowerCase()) || s.c.toLowerCase().includes(busca.toLowerCase());
-    return matchesCat && matchesBusca;
-  });
-
-  return (
-    <div className="space-y-6">
-      <div className="bg-banner-overlay border border-bleach-border rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
-        <div className="relative z-10 max-w-2xl">
-          <span className="px-3 py-1 bg-bleach-orange/20 border border-bleach-orange text-bleach-orange text-xs font-bold rounded-full uppercase tracking-wider">
-            Regulamento Oficial da Sociedade das Almas
-          </span>
-          <h2 className="font-title text-4xl sm:text-5xl tracking-widest text-bleach-orange mt-3 reiatsu-text-glow">
-            MANUAL OFICIAL DO SISTEMA
-          </h2>
-          <p className="text-xs sm:text-sm text-bleach-creamDim mt-2 leading-relaxed">
-            Consulte todas as <strong>30 regras fundamentais</strong>: Raças, Atributos, Power Scaling Oficial, Combate Narrativo com 1d6, Treinos em OFF (3 períodos), Sistema de Fadiga, Missões, Kidō e Evolução Narrativa da Zanpakutō.
-          </p>
-        </div>
-      </div>
-
-      {/* SUB-ABAS DE NAVEGAÇÃO DOS SISTEMAS */}
-      <div className="flex gap-2 overflow-x-auto pb-2 border-b border-bleach-borderSoft">
-        {CATEGORIAS_SISTEMAS.map((c) => (
-          <button
-            key={c.id}
-            type="button"
-            onClick={() => { setCatAtiva(c.id); setAberto(0); }}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition ${
-              catAtiva === c.id
-                ? "bg-bleach-orange text-black font-extrabold shadow-[0_0_15px_rgba(255,106,19,0.3)]"
-                : "bg-bleach-panel2 border border-bleach-border text-bleach-creamDim hover:text-white hover:border-bleach-border/80"
-            }`}
-          >
-            {c.label}
-          </button>
-        ))}
-      </div>
-
-      {/* BARRA DE PESQUISA EM TEMPO REAL */}
-      <div className="relative">
-        <input
-          type="text"
-          placeholder="🔍 Pesquisar em todas as 30 regras (ex: fadiga, 1d6, kaidō, patamar, 90 linhas)..."
-          value={busca}
-          onChange={(e) => setBusca(e.target.value)}
-          className="w-full bg-bleach-panel border border-bleach-border focus:border-bleach-orange rounded-xl px-4 py-3 text-sm text-white placeholder-bleach-muted outline-none shadow-lg transition"
-        />
-        {busca && (
-          <button
-            onClick={() => setBusca("")}
-            className="absolute right-3.5 top-3.5 text-xs text-bleach-muted hover:text-white"
-          >
-            ✕ Limpar
-          </button>
-        )}
-      </div>
-
-      <div className="flex justify-between items-center text-xs text-bleach-muted px-1">
-        <span>Exibindo <strong>{filtrados.length}</strong> de 30 regras</span>
-        <button
-          onClick={() => setAberto(aberto === -999 ? 0 : -999)}
-          className="hover:text-bleach-orange transition text-[11px]"
-        >
-          {aberto === -999 ? "▶ Expandir Primeiro" : "▼ Recolher Todos"}
-        </button>
-      </div>
-
-      {/* LISTA ACCORDION DE REGRAS */}
-      <div className="space-y-3">
-        {filtrados.length === 0 ? (
-          <div className="bg-bleach-panel border border-bleach-border rounded-xl p-8 text-center text-bleach-muted text-xs">
-            Nenhuma regra encontrada para a pesquisa "{busca}".
-          </div>
-        ) : (
-          filtrados.map((s, idx) => {
-            const isOpen = aberto === idx || aberto === -9999;
-            return (
-              <div
-                key={s.id}
-                className="bg-bleach-panel border border-bleach-border hover:border-bleach-border/80 rounded-xl overflow-hidden shadow-lg transition"
-              >
-                <button
-                  onClick={() => setAberto(aberto === idx ? -1 : idx)}
-                  className="w-full text-left px-5 py-4 flex items-center justify-between gap-4 font-title text-lg tracking-wider uppercase text-bleach-cream hover:text-bleach-orange transition"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="w-7 h-7 rounded-lg bg-black/60 border border-white/10 flex items-center justify-center font-mono font-black text-xs text-bleach-orange">
-                      #{s.num}
-                    </span>
-                    <span>{s.t}</span>
-                  </div>
-                  <span className="text-bleach-orange text-xl font-bold font-mono">
-                    {isOpen ? "−" : "+"}
-                  </span>
-                </button>
-
-                {isOpen && (
-                  <div className="px-5 pb-5 pt-3 text-xs sm:text-sm text-bleach-creamDim leading-relaxed border-t border-bleach-borderSoft/60 whitespace-pre-line bg-black/30 font-sans">
-                    {s.c}
-                  </div>
-                )}
-              </div>
-            );
-          })
-        )}
-      </div>
-    </div>
-  );
-}
-
-// RENDER APPLICATION
-const rootElement = document.getElementById("root");
-const root = ReactDOM.createRoot(rootElement);
-root.render(<App />);
