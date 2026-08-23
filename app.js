@@ -2863,23 +2863,26 @@ function SpiritualChestModal({
     className: "w-full py-3 bg-gradient-to-r from-bleach-orange to-bleach-orangeDeep text-black font-extrabold text-xs uppercase tracking-widest rounded-xl shadow-lg hover:brightness-110 transition"
   }, "\u2713 Resgatar Recompensa & Salvar na Ficha"))));
 }
-
-// 2. AWAKENING SCENE SUBMISSION MODAL
 function CenaDespertarModal({
   tipo,
+  modalTipo,
   onClose,
-  onSubmit
+  onSubmit,
+  onSubmitScene
 }) {
   const [texto, setTexto] = useState("");
-  const isBankai = tipo === "bankai";
+  const tipoFinal = tipo || modalTipo || "shikai";
+  const isBankai = tipoFinal === "bankai";
   function handleSubmeter(e) {
     e.preventDefault();
     if (!texto.trim()) {
       alert("Por favor, descreva a cena ou momento em que seu personagem despertou sua lâmina!");
       return;
     }
-    onSubmit(texto.trim());
+    const handler = onSubmit || onSubmitScene;
+    if (handler) handler(texto.trim());
   }
+  const AwakeningSceneModal = CenaDespertarModal;
   return /*#__PURE__*/React.createElement("div", {
     className: "fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4"
   }, /*#__PURE__*/React.createElement("div", {
@@ -5587,12 +5590,10 @@ function FichaView({
     modal: gachaModal,
     onClose: () => setGachaModal(null),
     onColetar: confirmarColetaDrop
-  }), showCenaModal && /*#__PURE__*/React.createElement(AwakeningSceneModal, {
-    open: !!showCenaModal,
+  }), showCenaModal && /*#__PURE__*/React.createElement(CenaDespertarModal, {
     tipo: showCenaModal,
-    personagem: personagem,
     onClose: () => setShowCenaModal(null),
-    onSubmitScene: submeterCenaDespertar
+    onSubmit: submeterCenaDespertar
   }), showZanpakutoAIModal && /*#__PURE__*/React.createElement(Zanpakuto4PathsModal, {
     open: showZanpakutoAIModal,
     tipo: aiZkTipo,
