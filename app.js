@@ -3670,7 +3670,8 @@ function RankingsView({
 
 // TAB: KIDŌS CATALOG & ZANPAKUTŌ SWORD VISUALIZER
 function KidosView({
-  personagem
+  personagem,
+  isAdmin
 }) {
   const [categoriaAtiva, setCategoriaAtiva] = useState("Todos");
   const [busca, setBusca] = useState("");
@@ -3692,6 +3693,7 @@ function KidosView({
       id: uid(),
       nome: kido.nome,
       cat: kido.cat,
+      custo: kido.custoReiatsu,
       hora: new Date().toLocaleTimeString("pt-BR")
     }, ...prev]);
   }
@@ -3701,7 +3703,7 @@ function KidosView({
   }
   const kidosFiltrados = CATALOGO_KIDOS.filter(k => {
     const matchesCat = categoriaAtiva === "Todos" || k.cat === categoriaAtiva;
-    const matchesBusca = k.nome.toLowerCase().includes(busca.toLowerCase()) || k.desc.toLowerCase().includes(busca.toLowerCase()) || k.cat.toLowerCase().includes(busca.toLowerCase());
+    const matchesBusca = (k.nome || "").toLowerCase().includes(busca.toLowerCase()) || (k.desc || "").toLowerCase().includes(busca.toLowerCase()) || (k.incant || "").toLowerCase().includes(busca.toLowerCase()) || (k.cat || "").toLowerCase().includes(busca.toLowerCase());
     return matchesCat && matchesBusca;
   });
   return /*#__PURE__*/React.createElement("div", {
@@ -3709,16 +3711,16 @@ function KidosView({
   }, /*#__PURE__*/React.createElement("div", {
     className: "bg-banner-overlay border border-bleach-border rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "relative z-10 max-w-2xl"
+    className: "relative z-10 max-w-3xl"
   }, /*#__PURE__*/React.createElement("span", {
     className: "px-3 py-1 bg-bleach-blue/20 border border-bleach-blue text-bleach-blue text-xs font-bold rounded-full uppercase tracking-wider"
-  }, "Grim\xF3rio de Encantamentos & Magia Espiritual"), /*#__PURE__*/React.createElement("h2", {
+  }, "Grim\xF3rio Completo da Sociedade das Almas \u2022 75+ Feiti\xE7os Oficiais & Autorais"), /*#__PURE__*/React.createElement("h2", {
     className: "font-title text-4xl sm:text-5xl tracking-widest text-bleach-orange mt-3 reiatsu-text-glow"
-  }, "KID\u014CS DA SOCIEDADE DAS ALMAS"), /*#__PURE__*/React.createElement("p", {
+  }, "COMP\xCANDIO SUPREMO DE KID\u014CS"), /*#__PURE__*/React.createElement("p", {
     className: "text-xs sm:text-sm text-bleach-creamDim mt-2 leading-relaxed"
-  }, "Explore o comp\xEAndio oficial de ", /*#__PURE__*/React.createElement("strong", null, "Had\u014D"), " (Destrui\xE7\xE3o), ", /*#__PURE__*/React.createElement("strong", null, "Bakud\u014D"), " (Aprisionamento) e ", /*#__PURE__*/React.createElement("strong", null, "Kaid\u014D"), " (Cura). Abaixo voc\xEA tamb\xE9m encontra a ", /*#__PURE__*/React.createElement("strong", null, "L\xE2mina Espiritual da Zanpakut\u014D"), " para gerenciar seus feiti\xE7os em cena!"))), /*#__PURE__*/React.createElement(Section, {
-    title: "\u2694\uFE0F L\xE2mina Espiritual da Zanpakut\u014D & Limite de Kid\u014D",
-    subtitle: "A energia espiritual que percorre o fio da sua l\xE2mina conforme voc\xEA conjura feiti\xE7os em combate"
+  }, "Explore o comp\xEAndio oficial de ", /*#__PURE__*/React.createElement("strong", null, "Had\u014D (Destrui\xE7\xE3o)"), ", ", /*#__PURE__*/React.createElement("strong", null, "Bakud\u014D (Aprisionamento & Defesa)"), " e ", /*#__PURE__*/React.createElement("strong", null, "Kaid\u014D (Cura & Suporte)"), ". Gerencie a energia espiritual liberada na sua l\xE2mina atrav\xE9s do medidor de Reiatsu abaixo!"))), /*#__PURE__*/React.createElement(Section, {
+    title: "\u2694\uFE0F L\xE2mina Espiritual da Zanpakut\u014D & Gerenciador de Reiatsu",
+    subtitle: "Acompanhe a energia espiritual que percorre sua l\xE2mina conforme voc\xEA conjura feiti\xE7os na cena"
   }, /*#__PURE__*/React.createElement("div", {
     className: "grid grid-cols-1 lg:grid-cols-3 gap-6 items-center"
   }, /*#__PURE__*/React.createElement("div", {
@@ -3763,31 +3765,31 @@ function KidosView({
     className: "mt-4 text-center"
   }, /*#__PURE__*/React.createElement("div", {
     className: "text-xs text-bleach-muted"
-  }, "Kid\u014Ds Restantes na L\xE2mina:"), /*#__PURE__*/React.createElement("div", {
+  }, "Feiti\xE7os Restantes na L\xE2mina:"), /*#__PURE__*/React.createElement("div", {
     className: "text-2xl font-mono font-bold text-bleach-orange mt-0.5"
   }, restantes, " / ", maxKidosCena), /*#__PURE__*/React.createElement("button", {
     onClick: resetarReiatsu,
     className: "mt-3 px-4 py-1.5 bg-bleach-panel border border-bleach-border text-xs text-bleach-cream rounded-lg hover:border-bleach-orange transition"
   }, "\uD83D\uDD04 Restaurar Reiatsu da L\xE2mina"))), /*#__PURE__*/React.createElement("div", {
     className: "lg:col-span-2 space-y-4"
-  }, personagem.zanpakuto.shikaiAtiva.espirito && /*#__PURE__*/React.createElement("div", {
+  }, personagem?.zanpakuto?.shikaiAtiva?.espirito && /*#__PURE__*/React.createElement("div", {
     className: "bg-black/60 border border-cyan-500/40 rounded-xl p-5 shadow-inner"
   }, /*#__PURE__*/React.createElement("h4", {
     className: "text-xs font-bold uppercase tracking-wider text-cyan-300 mb-1 flex items-center gap-2"
   }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDC64"), " Representa\xE7\xE3o do Esp\xEDrito da Zanpakut\u014D"), /*#__PURE__*/React.createElement("p", {
     className: "text-xs sm:text-sm text-cyan-100/90 italic leading-relaxed whitespace-pre-line"
-  }, "\"", personagem.zanpakuto.shikaiAtiva.espirito, "\"")), /*#__PURE__*/React.createElement("div", {
+  }, "\"", personagem?.zanpakuto?.shikaiAtiva?.espirito, "\"")), /*#__PURE__*/React.createElement("div", {
     className: "bg-bleach-panel2 border border-bleach-border rounded-xl p-4"
   }, /*#__PURE__*/React.createElement("h4", {
     className: "text-xs font-bold uppercase tracking-wider text-bleach-orange mb-2"
-  }, "\u270D\uFE0F Descri\xE7\xE3o Livre da Sua Cena com Kid\u014D"), /*#__PURE__*/React.createElement("p", {
+  }, "\u270D\uFE0F Rascunho de Narrativa da Cena (WhatsApp)"), /*#__PURE__*/React.createElement("p", {
     className: "text-xs text-bleach-creamDim mb-2"
-  }, "Espa\xE7o livre para voc\xEA rascunhar como utilizou seus Kid\u014Ds na sua narra\xE7\xE3o antes de enviar no WhatsApp:"), /*#__PURE__*/React.createElement("textarea", {
+  }, "Espa\xE7o livre para rascunhar como utilizou seus Kid\u014Ds na sua narra\xE7\xE3o antes de enviar no grupo:"), /*#__PURE__*/React.createElement("textarea", {
     rows: 4,
     value: relatoCena,
     onChange: e => setRelatoCena(e.target.value),
     placeholder: "Ex: Concentrei minha Reiatsu ao longo do fio da Zanpakut\u014D liberando Had\u014D #4 Byakurai em linha reta...",
-    className: "w-full bg-black/60 border border-bleach-border rounded-lg p-3 text-xs text-white placeholder-bleach-muted focus:outline-none focus:border-bleach-orange"
+    className: "w-full bg-black/60 border border-bleach-border rounded-xl p-3 text-xs text-white placeholder-bleach-muted/50 focus:border-bleach-orange outline-none resize-none font-sans"
   }), /*#__PURE__*/React.createElement("div", {
     className: "flex justify-between items-center mt-2"
   }, /*#__PURE__*/React.createElement("span", {
@@ -3797,61 +3799,67 @@ function KidosView({
       navigator.clipboard.writeText(relatoCena);
       alert("Texto da cena copiado para a área de transferência!");
     },
-    className: "px-3 py-1 bg-bleach-panel border border-bleach-border text-xs text-bleach-cream rounded hover:border-bleach-orange"
+    className: "px-3 py-1 bg-bleach-panel border border-bleach-border text-xs text-bleach-cream rounded-lg hover:border-bleach-orange transition"
   }, "\uD83D\uDCCB Copiar Rascunho"))), /*#__PURE__*/React.createElement("div", {
     className: "bg-bleach-panel2 border border-bleach-border rounded-xl p-4"
   }, /*#__PURE__*/React.createElement("h4", {
-    className: "text-xs font-bold uppercase tracking-wider text-bleach-creamDim mb-2"
-  }, "Hist\xF3rico de Kid\u014Ds Disparados Nesta Cena"), registroConjuracoes.length === 0 ? /*#__PURE__*/React.createElement("p", {
+    className: "text-xs font-bold uppercase tracking-wider text-bleach-cream mb-2"
+  }, "\uD83D\uDCDC Feiti\xE7os Conjurados Nesta Cena (", registroConjuracoes.length, ")"), registroConjuracoes.length === 0 ? /*#__PURE__*/React.createElement("p", {
     className: "text-xs text-bleach-muted"
-  }, "Nenhum Kid\u014D conjurado ainda. Clique em \"Conjurar\" nos feiti\xE7os abaixo!") : /*#__PURE__*/React.createElement("div", {
-    className: "flex flex-wrap gap-2"
-  }, registroConjuracoes.map(r => /*#__PURE__*/React.createElement("div", {
-    key: r.id,
-    className: "px-3 py-1.5 bg-black border border-bleach-border rounded-lg text-xs flex items-center gap-2"
+  }, "Nenhum Kid\u014D conjurado na cena atual.") : /*#__PURE__*/React.createElement("div", {
+    className: "space-y-1.5 max-h-36 overflow-y-auto pr-1"
+  }, registroConjuracoes.map(c => /*#__PURE__*/React.createElement("div", {
+    key: c.id,
+    className: "p-2 bg-black/50 border border-white/5 rounded-lg text-xs flex justify-between items-center"
   }, /*#__PURE__*/React.createElement("span", {
-    className: "text-bleach-orange font-bold"
-  }, "\u26A1 ", r.nome), /*#__PURE__*/React.createElement("span", {
+    className: "font-semibold text-cyan-300"
+  }, "\u26A1 ", c.nome), /*#__PURE__*/React.createElement("span", {
     className: "text-[10px] text-bleach-muted font-mono"
-  }, "(", r.hora, ")")))))))), /*#__PURE__*/React.createElement("div", {
-    className: "flex flex-wrap items-center justify-between gap-3"
+  }, c.hora)))))))), /*#__PURE__*/React.createElement("div", {
+    className: "flex flex-col sm:flex-row gap-3 items-center justify-between"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "flex gap-2"
+    className: "flex flex-wrap gap-2 w-full sm:w-auto"
   }, ["Todos", "Hadō", "Bakudō", "Kaidō"].map(cat => /*#__PURE__*/React.createElement("button", {
     key: cat,
     onClick: () => setCategoriaAtiva(cat),
-    className: `px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition ${categoriaAtiva === cat ? cat === "Hadō" ? "bg-bleach-red text-white shadow-lg" : cat === "Bakudō" ? "bg-bleach-blue text-black shadow-lg" : cat === "Kaidō" ? "bg-bleach-green text-black shadow-lg" : "bg-bleach-orange text-black shadow-lg" : "bg-bleach-panel border border-bleach-border text-bleach-creamDim hover:text-white"}`
-  }, cat === "Hadō" ? "🔴 Hadō (Ataque)" : cat === "Bakudō" ? "🔵 Bakudō (Suporte)" : cat === "Kaidō" ? "🟢 Kaidō (Cura)" : "✨ Todos"))), /*#__PURE__*/React.createElement("input", {
+    className: `px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition ${categoriaAtiva === cat ? cat === "Hadō" ? "bg-red-600 text-white shadow-lg" : cat === "Bakudō" ? "bg-blue-600 text-white shadow-lg" : cat === "Kaidō" ? "bg-emerald-600 text-white shadow-lg" : "bg-bleach-orange text-black font-extrabold shadow-lg" : "bg-bleach-panel border border-bleach-border text-bleach-creamDim hover:text-white"}`
+  }, cat === "Hadō" ? "🔥 Hadō (Ofensivo)" : cat === "Bakudō" ? "📕 Bakudō (Contenção)" : cat === "Kaidō" ? "🌿 Kaidō (Cura)" : "✨ Todos os Kidōs"))), /*#__PURE__*/React.createElement("input", {
     type: "text",
-    placeholder: "\uD83D\uDD0D Buscar Kid\u014D...",
+    placeholder: "\uD83D\uDD0D Buscar por nome, n\xFAmero ou efeito...",
     value: busca,
     onChange: e => setBusca(e.target.value),
-    className: "bg-bleach-panel border border-bleach-border rounded-xl px-4 py-2 text-xs text-white placeholder-bleach-muted focus:outline-none focus:border-bleach-orange w-full sm:w-64"
+    className: "w-full sm:w-72 bg-bleach-panel2 border border-bleach-border rounded-xl px-4 py-2 text-xs text-white placeholder-bleach-muted focus:border-bleach-orange outline-none"
   })), /*#__PURE__*/React.createElement("div", {
-    className: "grid grid-cols-1 md:grid-cols-2 gap-4"
-  }, kidosFiltrados.map(k => /*#__PURE__*/React.createElement("div", {
-    key: k.id,
-    className: "bg-bleach-panel border border-bleach-border hover:border-bleach-border/80 rounded-xl p-5 shadow-lg flex flex-col justify-between gap-3"
-  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    className: "flex items-start justify-between gap-2 mb-2"
-  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
-    className: `text-[10px] font-bold uppercase px-2 py-0.5 rounded border ${k.cat === "Hadō" ? "text-red-400 border-red-500/40 bg-red-950/40" : k.cat === "Bakudō" ? "text-blue-400 border-blue-500/40 bg-blue-950/40" : "text-green-400 border-green-500/40 bg-green-950/40"}`
-  }, k.cat, " #", k.numero, " \u2022 ", k.nivel), /*#__PURE__*/React.createElement("h4", {
-    className: "font-title text-2xl tracking-wider text-bleach-cream mt-1"
-  }, k.nome)), /*#__PURE__*/React.createElement("span", {
-    className: "text-xs font-mono text-bleach-orange font-bold"
-  }, "Custo: ", k.custoReiatsu, " Reiatsu")), /*#__PURE__*/React.createElement("p", {
-    className: "text-xs text-bleach-creamDim leading-relaxed"
-  }, k.desc), k.incant !== "—" && /*#__PURE__*/React.createElement("div", {
-    className: "mt-3 p-2.5 bg-black/50 border border-bleach-borderSoft rounded-lg text-[11px] text-bleach-muted italic"
-  }, "\uD83D\uDDE3\uFE0F ", /*#__PURE__*/React.createElement("strong", null, "Encantamento:"), " \"", k.incant, "\"")), /*#__PURE__*/React.createElement("div", {
-    className: "pt-3 border-t border-bleach-borderSoft flex items-center justify-between"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "text-[11px] text-bleach-muted"
-  }, "Pot\xEAncia: Escala com sua Press\xE3o Espiritual"), /*#__PURE__*/React.createElement("button", {
-    onClick: () => conjurarKido(k),
-    className: "px-3.5 py-1.5 bg-gradient-to-r from-bleach-orange to-bleach-orangeDeep text-black font-extrabold text-xs uppercase tracking-wider rounded-lg hover:brightness-110 active:scale-95 transition"
-  }, "\u26A1 Conjurar na Cena"))))));
+    className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+  }, kidosFiltrados.map(k => {
+    const isHado = k.cat === "Hadō";
+    const isBakudo = k.cat === "Bakudō";
+    const isKaido = k.cat === "Kaidō";
+    const borderColor = isHado ? "border-red-500/40" : isBakudo ? "border-blue-500/40" : "border-emerald-500/40";
+    const tagBg = isHado ? "bg-red-950 text-red-300 border-red-500/50" : isBakudo ? "bg-blue-950 text-cyan-300 border-blue-500/50" : "bg-emerald-950 text-emerald-300 border-emerald-500/50";
+    return /*#__PURE__*/React.createElement("div", {
+      key: k.id,
+      className: `bg-bleach-panel border ${borderColor} rounded-2xl p-4 flex flex-col justify-between shadow-lg hover:border-bleach-orange transition space-y-3`
+    }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      className: "flex items-center justify-between mb-2"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: `px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase border ${tagBg}`
+    }, k.cat, " \u2022 #", k.numero), /*#__PURE__*/React.createElement("span", {
+      className: "text-[10px] font-mono text-bleach-muted bg-black/60 px-2 py-0.5 rounded border border-white/5"
+    }, "Custo: ", k.custoReiatsu, " Reiatsu")), /*#__PURE__*/React.createElement("h4", {
+      className: "font-title text-xl tracking-wider text-white"
+    }, k.nome), /*#__PURE__*/React.createElement("div", {
+      className: "text-[11px] text-amber-400 font-mono mb-2"
+    }, "N\xEDvel: ", k.nivel), k.incant && k.incant !== "—" && /*#__PURE__*/React.createElement("div", {
+      className: "p-2.5 bg-black/60 border border-white/10 rounded-xl my-2 text-[11px] text-bleach-creamDim italic leading-relaxed"
+    }, "\"", k.incant, "\""), /*#__PURE__*/React.createElement("p", {
+      className: "text-xs text-bleach-creamDim leading-relaxed"
+    }, k.desc)), /*#__PURE__*/React.createElement("button", {
+      onClick: () => conjurarKido(k),
+      disabled: restantes <= 0,
+      className: `w-full py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition disabled:opacity-40 disabled:cursor-not-allowed ${isHado ? "bg-gradient-to-r from-red-600 to-orange-600 text-white hover:brightness-110" : isBakudo ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:brightness-110" : "bg-gradient-to-r from-emerald-600 to-teal-600 text-white hover:brightness-110"}`
+    }, "\u26A1 Conjurar em Cena"));
+  })));
 }
 
 // TAB: ARENA PVP VIEW
@@ -4103,6 +4111,294 @@ function ArenaView({
   }, "Salvar e Publicar Decis\xE3o do Juiz"))))) : /*#__PURE__*/React.createElement("div", {
     className: "text-center py-12 text-bleach-muted text-sm bg-bleach-panel border border-bleach-border rounded-xl"
   }, "Nenhum combate ativo no momento. Solicite \xE0 administra\xE7\xE3o o in\xEDcio de um duelo!"));
+}
+
+// DYNAMIC BLEACH ZANPAKUTŌ VISUAL ART & SWORD GENERATOR
+function BleachSwordArt({
+  arma,
+  nomeZk,
+  isBankai,
+  foto,
+  onUpload
+}) {
+  const elemento = (arma?.elemento || "").toLowerCase();
+  const formato = (arma?.formatoArma || "").toLowerCase();
+  const nome = arma?.nome || nomeZk || "Zanpakutō";
+  const kanji = arma?.kanji || (isBankai ? "卍" : "斬");
+
+  // Determine Elemental Aesthetic Color Schemes
+  let auraColor1 = isBankai ? "#FFD700" : "#4FB3E8";
+  let auraColor2 = isBankai ? "#9333EA" : "#0284C7";
+  let bladeGlow = isBankai ? "#FDE047" : "#67E8F9";
+  let particleSymbol = "✦";
+  if (elemento.includes("gelo") || elemento.includes("neve") || elemento.includes("frio") || elemento.includes("água") || elemento.includes("espelho")) {
+    auraColor1 = "#38BDF8";
+    auraColor2 = "#0369A1";
+    bladeGlow = "#E0F2FE";
+    particleSymbol = "❄";
+  } else if (elemento.includes("fogo") || elemento.includes("chama") || elemento.includes("calor") || elemento.includes("brasa") || elemento.includes("solar") || elemento.includes("vulcão")) {
+    auraColor1 = "#EF4444";
+    auraColor2 = "#991B1B";
+    bladeGlow = "#FBBF24";
+    particleSymbol = "🔥";
+  } else if (elemento.includes("raio") || elemento.includes("trovão") || elemento.includes("elétr")) {
+    auraColor1 = "#FBBF24";
+    auraColor2 = "#B45309";
+    bladeGlow = "#67E8F9";
+    particleSymbol = "⚡";
+  } else if (elemento.includes("sombra") || elemento.includes("vácuo") || elemento.includes("cinza") || elemento.includes("trevas") || elemento.includes("nanquim") || elemento.includes("negro")) {
+    auraColor1 = "#A855F7";
+    auraColor2 = "#4C1D95";
+    bladeGlow = "#D8B4FE";
+    particleSymbol = "🌑";
+  } else if (elemento.includes("flor") || elemento.includes("pétala") || elemento.includes("planta") || elemento.includes("sangue")) {
+    auraColor1 = "#F43F5E";
+    auraColor2 = "#881337";
+    bladeGlow = "#FECDD3";
+    particleSymbol = "🌸";
+  } else if (elemento.includes("gravidade") || elemento.includes("aço") || elemento.includes("peso") || elemento.includes("sísmic") || elemento.includes("rocha")) {
+    auraColor1 = "#F97316";
+    auraColor2 = "#7C2D12";
+    bladeGlow = "#FED7AA";
+    particleSymbol = "⚔️";
+  }
+  const hasCustomFoto = foto && !foto.includes("ichigo-orange.png") && foto.length > 50;
+  return /*#__PURE__*/React.createElement("div", {
+    className: "w-full max-w-[290px] flex flex-col items-center"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: `w-full h-84 rounded-3xl relative overflow-hidden group shadow-2xl transition-all duration-500 border-2 ${isBankai ? "border-amber-400 shadow-[0_0_35px_rgba(255,215,0,0.4)]" : "border-cyan-400 shadow-[0_0_30px_rgba(79,179,232,0.4)]"}`,
+    style: {
+      background: 'radial-gradient(circle at 50% 30%, #1a1b26 0%, #0a0b10 80%, #000000 100%)'
+    }
+  }, hasCustomFoto ? /*#__PURE__*/React.createElement("img", {
+    src: foto,
+    alt: nome,
+    className: "w-full h-full object-cover group-hover:scale-105 transition duration-700"
+  }) :
+  /*#__PURE__*/
+  /* AUTORAL BLEACH SWORD ARTWORK SVG RENDERER */
+  React.createElement("div", {
+    className: "w-full h-full flex flex-col items-center justify-between p-4 relative select-none"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "absolute inset-0 flex items-center justify-center font-cinzel text-9xl font-black pointer-events-none opacity-10 leading-none",
+    style: {
+      color: auraColor1
+    }
+  }, kanji.replace(/[^\p{Script=Han}]/gu, '') || (isBankai ? "卍" : "斬")), /*#__PURE__*/React.createElement("div", {
+    className: "absolute inset-0 pointer-events-none opacity-40 animate-pulse",
+    style: {
+      background: `radial-gradient(circle at 50% 60%, ${auraColor1}33 0%, ${auraColor2}11 70%, transparent 100%)`
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "w-full flex justify-between items-center z-10"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "px-2.5 py-0.5 rounded-full font-mono font-bold text-[10px] uppercase tracking-widest border",
+    style: {
+      backgroundColor: isBankai ? '#451a03' : '#082f49',
+      borderColor: auraColor1,
+      color: isBankai ? '#fde047' : '#7dd3fc'
+    }
+  }, isBankai ? "卍 Bankai" : "始解 Shikai"), /*#__PURE__*/React.createElement("span", {
+    className: "text-xs font-mono font-bold",
+    style: {
+      color: bladeGlow
+    }
+  }, particleSymbol, " ", particleSymbol)), /*#__PURE__*/React.createElement("div", {
+    className: "relative w-full h-52 flex items-center justify-center z-10 my-1"
+  }, /*#__PURE__*/React.createElement("svg", {
+    viewBox: "0 0 200 320",
+    className: "w-full h-full drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]"
+  }, /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("linearGradient", {
+    id: `bladeGrad_${isBankai ? 'b' : 's'}`,
+    x1: "0%",
+    y1: "0%",
+    x2: "100%",
+    y2: "0%"
+  }, /*#__PURE__*/React.createElement("stop", {
+    offset: "0%",
+    stopColor: "#FFFFFF"
+  }), /*#__PURE__*/React.createElement("stop", {
+    offset: "35%",
+    stopColor: "#E2E8F0"
+  }), /*#__PURE__*/React.createElement("stop", {
+    offset: "70%",
+    stopColor: "#94A3B8"
+  }), /*#__PURE__*/React.createElement("stop", {
+    offset: "100%",
+    stopColor: "#475569"
+  })), /*#__PURE__*/React.createElement("linearGradient", {
+    id: `auraGrad_${isBankai ? 'b' : 's'}`,
+    x1: "0%",
+    y1: "0%",
+    x2: "0%",
+    y2: "100%"
+  }, /*#__PURE__*/React.createElement("stop", {
+    offset: "0%",
+    stopColor: bladeGlow,
+    stopOpacity: "0.9"
+  }), /*#__PURE__*/React.createElement("stop", {
+    offset: "50%",
+    stopColor: auraColor1,
+    stopOpacity: "0.6"
+  }), /*#__PURE__*/React.createElement("stop", {
+    offset: "100%",
+    stopColor: auraColor2,
+    stopOpacity: "0.2"
+  })), /*#__PURE__*/React.createElement("filter", {
+    id: `glow_${isBankai ? 'b' : 's'}`,
+    x: "-30%",
+    y: "-30%",
+    width: "160%",
+    height: "160%"
+  }, /*#__PURE__*/React.createElement("feGaussianBlur", {
+    stdDeviation: "6",
+    result: "blur"
+  }), /*#__PURE__*/React.createElement("feComposite", {
+    in: "SourceGraphic",
+    in2: "blur",
+    operator: "over"
+  }))), /*#__PURE__*/React.createElement("path", {
+    d: "M 94,15 Q 85,90 88,180 Q 95,230 102,180 Q 112,90 106,15 Z",
+    fill: `url(#auraGrad_${isBankai ? 'b' : 's'})`,
+    filter: `url(#glow_${isBankai ? 'b' : 's'})`,
+    className: "animate-pulse"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M 100,20 Q 98,70 98,170 L 102,170 Q 102,70 100,20 Z",
+    fill: `url(#bladeGrad_${isBankai ? 'b' : 's'})`,
+    stroke: bladeGlow,
+    strokeWidth: "1.5"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M 100,20 Q 97,75 97,170",
+    fill: "none",
+    stroke: "#FFFFFF",
+    strokeWidth: "2.5",
+    strokeLinecap: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M 99,28 Q 97,45 100,60 Q 98,75 100,90 Q 97,110 100,130 Q 98,150 99,170",
+    fill: "none",
+    stroke: bladeGlow,
+    strokeWidth: "1",
+    strokeOpacity: "0.8"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "96",
+    y: "170",
+    width: "8",
+    height: "12",
+    rx: "1",
+    fill: "#EAB308",
+    stroke: "#713F12",
+    strokeWidth: "1"
+  }), isBankai ?
+  /*#__PURE__*/
+  /* Ornate Four-Pronged Bankai Guard (Manji / Lotus Cross) */
+  React.createElement("g", null, /*#__PURE__*/React.createElement("rect", {
+    x: "80",
+    y: "181",
+    width: "40",
+    height: "7",
+    rx: "3",
+    fill: "#18181B",
+    stroke: "#F59E0B",
+    strokeWidth: "1.5"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "96.5",
+    y: "168",
+    width: "7",
+    height: "33",
+    rx: "2",
+    fill: "#18181B",
+    stroke: "#F59E0B",
+    strokeWidth: "1.5"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "100",
+    cy: "184.5",
+    r: "5",
+    fill: "#F59E0B"
+  })) :
+  /*#__PURE__*/
+  /* Circular Floral / Elegant Shikai Guard */
+  React.createElement("g", null, /*#__PURE__*/React.createElement("ellipse", {
+    cx: "100",
+    cy: "183",
+    rx: "20",
+    ry: "6",
+    fill: "#1E293B",
+    stroke: auraColor1,
+    strokeWidth: "1.5"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "100",
+    cy: "183",
+    r: "3.5",
+    fill: "#E2E8F0"
+  })), /*#__PURE__*/React.createElement("rect", {
+    x: "96.5",
+    y: "188",
+    width: "7",
+    height: "75",
+    rx: "2",
+    fill: "#09090B",
+    stroke: "#27272A",
+    strokeWidth: "1"
+  }), [0, 1, 2, 3, 4, 5, 6].map(i => /*#__PURE__*/React.createElement("polygon", {
+    key: i,
+    points: `100,${193 + i * 9} 98,${197 + i * 9} 100,${201 + i * 9} 102,${197 + i * 9}`,
+    fill: isBankai ? "#F59E0B" : auraColor1
+  })), /*#__PURE__*/React.createElement("rect", {
+    x: "95.5",
+    y: "263",
+    width: "9",
+    height: "7",
+    rx: "2",
+    fill: "#713F12",
+    stroke: "#EAB308",
+    strokeWidth: "1"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "75",
+    cy: "80",
+    r: "2",
+    fill: bladeGlow,
+    className: "animate-ping"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "125",
+    cy: "130",
+    r: "2.5",
+    fill: auraColor1,
+    className: "animate-pulse"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "80",
+    cy: "160",
+    r: "1.5",
+    fill: "#FFFFFF"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "120",
+    cy: "50",
+    r: "2",
+    fill: bladeGlow
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "w-full text-center z-10 bg-black/70 backdrop-blur-sm border border-white/10 rounded-xl py-1.5 px-2"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "font-title text-sm tracking-widest text-white truncate drop-shadow"
+  }, nome), /*#__PURE__*/React.createElement("div", {
+    className: "text-[10px] font-mono text-bleach-muted truncate"
+  }, arma?.elemento || "Reiryoku Condensado"))), /*#__PURE__*/React.createElement("label", {
+    className: "absolute inset-0 bg-black/80 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer transition-all duration-300 text-xs text-cyan-300 font-bold text-center p-4 z-30"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "text-2xl mb-1"
+  }, "\uD83D\uDCF7"), /*#__PURE__*/React.createElement("span", null, hasCustomFoto ? "Substituir Imagem da Espada" : "Fazer Upload de Arte Própria"), /*#__PURE__*/React.createElement("span", {
+    className: "text-[10px] text-bleach-muted mt-1 font-normal"
+  }, "(PNG, JPG ou GIF)"), /*#__PURE__*/React.createElement("input", {
+    type: "file",
+    accept: "image/*",
+    onChange: onUpload,
+    className: "hidden"
+  }))), /*#__PURE__*/React.createElement("label", {
+    className: "mt-3 px-4 py-1.5 bg-bleach-panel2 border border-bleach-border hover:border-bleach-orange text-[11px] text-bleach-cream rounded-xl cursor-pointer transition shadow flex items-center gap-1.5"
+  }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDCF7"), /*#__PURE__*/React.createElement("span", null, hasCustomFoto ? "Alterar Imagem da Lâmina" : "Enviar Arte da Zanpakutō"), /*#__PURE__*/React.createElement("input", {
+    type: "file",
+    accept: "image/*",
+    onChange: onUpload,
+    className: "hidden"
+  })));
 }
 
 // TAB: FICHA DO JOGADOR
@@ -5150,7 +5446,7 @@ function FichaView({
     className: "text-xs font-black uppercase tracking-widest text-purple-300 mb-1 flex items-center gap-2"
   }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDC64"), " Resson\xE2ncia do Esp\xEDrito & Mundo Interior"), /*#__PURE__*/React.createElement("p", {
     className: "text-xs sm:text-sm text-purple-100/90 italic leading-relaxed whitespace-pre-line"
-  }, "\"", personagem.zanpakuto.shikaiAtiva.espirito, "\"")), /*#__PURE__*/React.createElement("div", {
+  }, "\"", personagem?.zanpakuto?.shikaiAtiva?.espirito, "\"")), /*#__PURE__*/React.createElement("div", {
     className: "bg-black/60 border border-blue-500/40 rounded-xl p-5 shadow-inner"
   }, /*#__PURE__*/React.createElement("h4", {
     className: "text-xs font-bold uppercase tracking-wider text-cyan-400 mb-1 flex items-center gap-2"
