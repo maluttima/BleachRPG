@@ -21,6 +21,8 @@ const views3Code = extractCleanCode('templates_part3_builder.js');
 
 const { MASTER_ZANPAKUTO_CATALOG } = require('./zanpakuto_catalog.js');
 const { CATALOGO_KIDOS } = require('./kido_catalog.js');
+const { PATCH_NOTES_HISTORY } = require('./patchnotes_data.js');
+
 let spiritualEngineCode = fs.readFileSync('spiritual_engine.js', 'utf8')
   .replace(/module\.exports\s*=[\s\S]*$/, '')
   .replace(/const\s*\{\s*MASTER_ZANPAKUTO_CATALOG\s*\}\s*=\s*require\([^)]+\);?/g, '')
@@ -52,7 +54,7 @@ const C = {
 
 // Primary Attributes
 const ATTRS = [
-  { key: "pressao", label: "Pressão Espiritual", color: C.blue, desc: "Reiatsu, controle espiritual e percepção" },
+  { key: "pressao", label: "Pressão Espiritual", color: C.blue, desc: "Reiatsu, poder espiritual e percepção" },
   { key: "forca", label: "Força", color: C.red, desc: "Potência física, Zanjutsu e Hakuda" },
   { key: "velocidade", label: "Velocidade", color: C.green, desc: "Deslocamento, reflexos e Hohō/Shunpo" },
   { key: "resiliencia", label: "Resiliência", color: C.purple, desc: "Resistência física, espiritual e vitalidade" },
@@ -98,53 +100,36 @@ const RECOMPENSAS_ESPECIAIS = [
   { id: "esp-inter-1", nome: "💎 Fragmento Bruto de Cristal Espiritual", raridade: "Incomum Especial", peso: 90, cor: C.blue, desc: "Um cristal translúcido que ressoa com o Reiryoku nativo (+8 pontos).", tipo: "pontos", valor: 8, chanceStr: "9%" },
   { id: "esp-inter-2", nome: "📜 Tomo Antigo de Hadō & Bakudō", raridade: "Incomum Especial", peso: 80, cor: C.blue, desc: "Anotações perdidas sobre o controle dos primeiros números de Kidō (+10 pontos).", tipo: "pontos", valor: 10, chanceStr: "8%" },
   { id: "esp-inter-3", nome: "🍵 Chá Imperial da Família Kuchiki", raridade: "Incomum Especial", peso: 70, cor: C.blue, desc: "Uma iguaria reservada aos nobres que acalma a mente e purifica a pressão (+12 pontos).", tipo: "pontos", valor: 12, chanceStr: "7%" },
-  { id: "esp-raro-1", nome: "🔮 Orbe de Condensação do Departamento de Pesquisa", raridade: "Raro Nobre", peso: 60, cor: C.purple, desc: "Uma esfera densa de Reishi altamente purificado pelo 12º Esquadrão (+15 pontos).", tipo: "pontos", valor: 15, chanceStr: "6%" },
-  { id: "esp-raro-2", nome: "⚜️ Relíquia Nobre da Grande Família Shihōin", raridade: "Raro Nobre", peso: 50, cor: C.purple, desc: "Um amuleto antigo tecido com os passos dos mestres de Shunpo (+16 pontos).", tipo: "pontos", valor: 16, chanceStr: "5%" },
-  { id: "esp-lend-1", nome: "👑 Bênção Sagrada da Guarda Real (Divisão Zero)", raridade: "Lendário Supremo", peso: 25, cor: C.yellow, desc: "Um influxo transcendental de Reishi puro que ecoa as técnicas ancestrais do Palácio Real (+20 pontos).", tipo: "pontos", valor: 20, chanceStr: "2.5%" },
-  { id: "esp-lend-2", nome: "☄️ Essência Primordial da Sociedade das Almas", raridade: "Lendário Supremo", peso: 15, cor: C.yellow, desc: "A própria matéria espiritual condensada antes da divisão dos mundos (+24 pontos).", tipo: "pontos", valor: 24, chanceStr: "1.5%" },
-  { id: "esp-supremo-1", nome: "⚔️ Comunicação Profunda — Despertar de Habilidade Shikai", raridade: "Recompensa Narrativa Suprema", peso: 10, cor: "#FFD700", desc: "Seu espírito de Zanpakutō ressoa profundamente. O ADM concederá uma Missão Narrativa Individual de despertar de nova habilidade especial única!", tipo: "missao_despertar", valor: 0, chanceStr: "1.0% (1 em 100)" },
+  { id: "esp-avanc-1", nome: "🍶 Saquê Espiritual Centenário de Kyoraku", raridade: "Rara Especial", peso: 45, cor: C.purple, desc: "Uma infusão lendária que expande os horizontes da percepção espiritual (+14 pontos).", tipo: "pontos", valor: 14, chanceStr: "4.5%" },
+  { id: "esp-avanc-2", nome: "⚙️ Núcleo Condensador de Reishi de Mayuri", raridade: "Rara Especial", peso: 40, cor: C.purple, desc: "Dispositivo experimental capaz de acelerar a absorção de partículas espirituais (+16 pontos).", tipo: "pontos", valor: 16, chanceStr: "4.0%" },
+  { id: "esp-avanc-3", nome: "🥋 Vestimenta Sagrada do Clã Shihōin", raridade: "Rara Especial", peso: 35, cor: C.purple, desc: "Tecido espiritual ultraleve que eleva reflexos e destreza física (+18 pontos).", tipo: "pontos", valor: 18, chanceStr: "3.5%" },
+  { id: "esp-suprema", nome: "🌟 Missão Narrativa Suprema de Despertar Único", raridade: "Lendária Especial", peso: 10, cor: C.yellow, desc: "Uma convocação do Capitão-Comandante que confere +25 pontos de atributo, 1 Tomo de Kidō Proibido e o direito imediato a uma missão de arco prioritária.", tipo: "lendario", valor: 25, chanceStr: "1.0% (1 em 100)" },
 ];
 
 const MASTER_ZANPAKUTO_CATALOG = ${JSON.stringify(MASTER_ZANPAKUTO_CATALOG, null, 2)};
 const CATALOGO_KIDOS = ${JSON.stringify(CATALOGO_KIDOS, null, 2)};
+const PATCH_NOTES_HISTORY = ${JSON.stringify(PATCH_NOTES_HISTORY, null, 2)};
 
-// =========================================================================
-// MOTOR DE INDIVIDUALIZAÇÃO ESPIRITUAL (33 REGRAS)
-// =========================================================================
-${spiritualEngineCode}
+// Web Audio API Synthesizer
+let audioCtx = null;
 
-function getPowerTier(statVal) {
-  const val = statVal > 150 ? Math.round(statVal / 4) : statVal;
-  if (val <= 10) return { title: "Inexperiente", patamar: "1–10", color: C.muted };
-  if (val <= 30) return { title: "Iniciante", patamar: "11–30", color: C.green };
-  if (val <= 60) return { title: "Treinado", patamar: "31–60", color: C.blue };
-  if (val <= 100) return { title: "Veterano", patamar: "61–100", color: C.purple };
-  if (val <= 150) return { title: "Mestre", patamar: "101–150", color: C.yellow };
-  return { title: "Transcendental", patamar: "150+", color: "#FFD700" };
+function getAudioContext() {
+  if (!audioCtx) {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (AudioContextClass) {
+      audioCtx = new AudioContextClass();
+    }
+  }
+  if (audioCtx && audioCtx.state === 'suspended') {
+    audioCtx.resume().catch(() => {});
+  }
+  return audioCtx;
 }
 
-function nowStr() {
-  const d = new Date();
-  return \`\${d.getDate().toString().padStart(2, '0')}/\${(d.getMonth() + 1).toString().padStart(2, '0')}/\${d.getFullYear()} às \${d.getHours().toString().padStart(2, '0')}:\${d.getMinutes().toString().padStart(2, '0')}\`;
-}
-
-function uid() {
-  return 'u_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
-}
-
-function maskWhats(w) {
-  if (!w) return "—";
-  const cleaned = w.replace(/\\D/g, "");
-  if (cleaned.length < 4) return cleaned;
-  return "•••• " + cleaned.slice(-4);
-}
-
-// Advanced Web Audio API Sound Effects
-function playReiatsuSound(type = 'roll') {
+function playReiatsuSound(type = 'hum') {
   try {
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    if (!AudioCtx) return;
-    const ctx = new AudioCtx();
+    const ctx = getAudioContext();
+    if (!ctx) return;
 
     if (type === 'shikai_charge') {
       [330, 440, 554.37, 659.25, 880].forEach((freq, i) => {
@@ -395,14 +380,23 @@ const DEFAULT_DB = {
       p2Id: "rukia-002",
       estadoP1: "Inteiro",
       estadoP2: "Ferido",
-      logJuiz: [
-        { id: "l1", autor: "Mestre Kisuke", texto: "Início do combate: Ren avança com Shunpo enquanto Rukia prepara Bakudō.", data: "22/08/2026 às 15:30" }
-      ],
+      turnos: [],
       finalizado: false
     }
   ],
   rolagensDadosPublicas: [
-    { id: "d1", autor: "Mestre Kisuke", personagem: "Kurosaki Ren", dado: "d20", resultado: 18, categoria: "Extremo Sucesso (+80%)", data: "22/08/2026 às 15:35" }
+    { id: "d1", autor: "Mestre Kisuke", personagem: "Kurosaki Ren", dado: "d6", resultado: 6, categoria: "Sucesso Total (5–6)", data: "22/08/2026 às 15:35" }
+  ],
+  mensagensChat: [
+    {
+      id: "msg-welcome-1",
+      autorNome: "Comandante Supremo",
+      charFoto: "assets/ichigo-moon.png",
+      esquadrao: "1º Esquadrão",
+      texto: "Bem-vindos ao canal de comunicação direta da Sociedade das Almas. Mantenham o decoro e compartilhem suas jornadas!",
+      timestamp: "10:00",
+      data: "Hoje"
+    }
   ],
   zanpakutosVinculadas: [],
   personagens: [
@@ -592,6 +586,7 @@ function App() {
         registrosTarefasAdm: (next.registrosTarefasAdm || []).slice(0, 50),
         combatesArena: (next.combatesArena || []).slice(0, 20),
         rolagensDadosPublicas: (next.rolagensDadosPublicas || []).slice(0, 30),
+        mensagensChat: (next.mensagensChat || []).slice(-100),
         zanpakutosVinculadas: next.zanpakutosVinculadas || [],
         personagens: next.personagens || []
       };
@@ -673,6 +668,19 @@ function App() {
         )}
 
         {view === "sistemas" && <SistemasView />}
+
+        {view === "chat" && (
+          <ChatView
+            db={db}
+            saveDb={saveDb}
+            session={session}
+            myChar={myChar}
+          />
+        )}
+
+        {view === "patchnotes" && (
+          <PatchNotesView />
+        )}
 
         {view === "ficha" && (
           session?.role === "jogador" ? (
@@ -797,10 +805,18 @@ function App() {
     </div>
   );
 }
+
+// MOUNT REACT ROOT
+const container = document.getElementById('root');
+if (container) {
+  const root = ReactDOM.createRoot(container);
+  root.render(<App />);
+}
 `;
 
 const completeSource = [
   headerCode,
+  spiritualEngineCode,
   modalsCode,
   views1Code,
   views2Code,

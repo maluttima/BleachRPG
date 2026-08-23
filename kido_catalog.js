@@ -1,818 +1,535 @@
 // =========================================================================
-// BLEACH RPG — MASTER KIDŌ & GRIMOIRE CATALOG (75+ SPELLS)
+// OFFICIAL SEIREITEI KIDŌ COMPENDIUM (HADŌ, BAKUDŌ & KAIDŌ)
 // =========================================================================
 
 const CATALOGO_KIDOS = [
-  // -----------------------------------------------------------------------
-  // 📕 BAKUDŌ (Feitiços de Contenção, Defesa, Imobilização e Selamento)
-  // -----------------------------------------------------------------------
+  // --- HADŌ (DESTRUIÇÃO) ---
   {
-    id: "b1_u",
+    id: "h1-hibana",
     numero: 1,
-    nome: "Bakudō #1 — Kusari no Yume (Correntes do Sonho)",
-    cat: "Bakudō",
-    custoReiatsu: 2,
-    nivel: "Básico",
-    desc: "Cria correntes espirituais que se enrolam ao redor dos membros do alvo, dificultando seus movimentos.",
-    incant: "Do vazio desperte, corrente que não conhece fuga. Envolva o alvo e silencie seus passos."
-  },
-  {
-    id: "b1_c",
-    numero: 1,
-    nome: "Bakudō #1 — Sai (Obstrução)",
-    cat: "Bakudō",
-    custoReiatsu: 2,
-    nivel: "Básico",
-    desc: "Prende os braços do alvo atrás das costas com uma força magnética invisível.",
-    incant: "—"
-  },
-  {
-    id: "b2",
-    numero: 2,
-    nome: "Bakudō #2 — Shizukesa (Silêncio)",
-    cat: "Bakudō",
-    custoReiatsu: 2,
-    nivel: "Básico",
-    desc: "Cria uma pequena área onde sons são fortemente abafados, impedindo escuta e comunicação.",
-    incant: "Que a voz desapareça, que o som se perca, que o silêncio ocupe este espaço."
-  },
-  {
-    id: "b3",
-    numero: 3,
-    nome: "Bakudō #3 — Kōri no Kusari (Correntes de Gelo)",
-    cat: "Bakudō",
-    custoReiatsu: 3,
-    nivel: "Básico",
-    desc: "Forma correntes espirituais rígidas de frio gélido que prendem os membros do alvo.",
-    incant: "Frio que nasce da alma, cristalize o caminho daquele que diante de mim permanece."
-  },
-  {
-    id: "b4_u",
-    numero: 4,
-    nome: "Bakudō #4 — Kabe (Muralha)",
-    cat: "Bakudō",
-    custoReiatsu: 3,
-    nivel: "Básico",
-    desc: "Cria uma barreira espiritual frontal capaz de bloquear ataques físicos e feitiços leves.",
-    incant: "Terra sem forma, céu sem fim. Erga-se diante de mim e torne-se barreira."
-  },
-  {
-    id: "b4_c",
-    numero: 4,
-    nome: "Bakudō #4 — Hainawa (Corda de Rastejamento)",
-    cat: "Bakudō",
-    custoReiatsu: 3,
-    nivel: "Básico",
-    desc: "Gera uma corda de energia crepitante amarela que amarra o corpo e os pulsos do oponente.",
-    incant: "—"
-  },
-  {
-    id: "b5",
-    numero: 5,
-    nome: "Bakudō #5 — Meikyū (Labirinto)",
-    cat: "Bakudō",
-    custoReiatsu: 3,
-    nivel: "Básico",
-    desc: "Distorce a percepção espacial do alvo, dificultando sua orientação e senso de direção.",
-    incant: "Caminho se torne caminho nenhum. Direção se perca. Prenda o viajante em seu próprio passo."
-  },
-  {
-    id: "b6",
-    numero: 6,
-    nome: "Bakudō #6 — Hikari Ito (Fios de Luz)",
-    cat: "Bakudō",
-    custoReiatsu: 4,
-    nivel: "Básico",
-    desc: "Cria fios luminosos no ar que podem prender objetos em queda, projéteis ou membros do alvo.",
-    incant: "Mil fios atravessam o espaço. Prendam aquilo que minha visão alcançar."
-  },
-  {
-    id: "b7",
-    numero: 7,
-    nome: "Bakudō #7 — Kekkai (Barreira Circular)",
-    cat: "Bakudō",
-    custoReiatsu: 4,
-    nivel: "Básico",
-    desc: "Forma uma barreira circular curta ao redor do usuário para amortecer investidas corpo a corpo.",
-    incant: "Entre mim e o perigo, estabeleça-se a fronteira."
-  },
-  {
-    id: "b8_u",
-    numero: 8,
-    nome: "Bakudō #8 — Kagebari (Agulhas da Sombra)",
-    cat: "Bakudō",
-    custoReiatsu: 4,
-    nivel: "Básico",
-    desc: "Cria pequenas estacas espirituais que prendem temporariamente o alvo ao chão ou a uma superfície.",
-    incant: "Sombra que acompanha todo ser, transforme-se em agulha e fixe aquilo que ela toca."
-  },
-  {
-    id: "b8_c",
-    numero: 8,
-    nome: "Bakudō #8 — Seki (Repulsão)",
-    cat: "Bakudō",
-    custoReiatsu: 3,
-    nivel: "Básico",
-    desc: "Cria um escudo redondo e brilhante no antebraço que repele projéteis e atordoa o atacante.",
-    incant: "—"
-  },
-  {
-    id: "b9",
-    numero: 9,
-    nome: "Bakudō #9 — Fūsa (Selamento Articular)",
-    cat: "Bakudō",
-    custoReiatsu: 4,
-    nivel: "Básico",
-    desc: "Cria uma marca espiritual que dificulta e trava determinado movimento ou postura do alvo.",
-    incant: "Feche a passagem, cerre o caminho, faça do movimento uma lembrança."
-  },
-  {
-    id: "b10",
-    numero: 10,
-    nome: "Bakudō #10 — Hagane Ori (Gaiola de Aço)",
-    cat: "Bakudō",
-    custoReiatsu: 5,
-    nivel: "Intermediário",
-    desc: "Cria uma gaiola espiritual cúbica de barras de energia densa ao redor de um alvo.",
-    incant: "Quatro lados, quatro limites. Ergam-se e aprisionem aquilo que está dentro."
-  },
-  {
-    id: "b11",
-    numero: 11,
-    nome: "Bakudō #11 — Kōsen (Linha de Luz)",
-    cat: "Bakudō",
-    custoReiatsu: 5,
-    nivel: "Intermediário",
-    desc: "Cria uma linha espiritual luminosa que funciona como uma barreira linear intransponível.",
-    incant: "Uma linha separa o mundo. Que ninguém atravesse sua fronteira."
-  },
-  {
-    id: "b12",
-    numero: 12,
-    nome: "Bakudō #12 — Jūryoku (Peso Gravitacional)",
-    cat: "Bakudō",
-    custoReiatsu: 5,
-    nivel: "Intermediário",
-    desc: "Aumenta temporariamente a pressão espiritual sobre um alvo, tornando seus movimentos mais pesados.",
-    incant: "O céu desça, a terra se levante. Faça o corpo lembrar o peso de existir."
-  },
-  {
-    id: "b13",
-    numero: 13,
-    nome: "Bakudō #13 — Mizu Kagami (Espelho d'Água)",
-    cat: "Bakudō",
-    custoReiatsu: 5,
-    nivel: "Intermediário",
-    desc: "Cria uma superfície espiritual translúcida capaz de refletir imagens, movimentos e feitiços leves.",
-    incant: "Água que não corre, superfície que não quebra. Mostre aquilo que diante de ti permanece."
-  },
-  {
-    id: "b14",
-    numero: 14,
-    nome: "Bakudō #14 — Tōmei Kabe (Muralha Transparente)",
-    cat: "Bakudō",
-    custoReiatsu: 6,
-    nivel: "Intermediário",
-    desc: "Cria uma barreira completamente invisível que surpreende atacantes em alta velocidade.",
-    incant: "Aquilo que os olhos não encontram ainda pode permanecer de pé. Erga-se."
-  },
-  {
-    id: "b15",
-    numero: 15,
-    nome: "Bakudō #15 — Shibari no Kage (Prisão da Sombra)",
-    cat: "Bakudō",
-    custoReiatsu: 6,
-    nivel: "Intermediário",
-    desc: "Prende parcialmente o alvo à própria sombra, impedindo saltos e translocações por Shunpo.",
-    incant: "A sombra nasce dos pés e retorna aos pés. Que nenhuma distância seja suficiente para escapar."
-  },
-  {
-    id: "b16",
-    numero: 16,
-    nome: "Bakudō #16 — Rasen Kusari (Corrente Espiral)",
-    cat: "Bakudō",
-    custoReiatsu: 6,
-    nivel: "Intermediário",
-    desc: "Uma corrente espiritual gira ao redor do alvo e restringe progressivamente seus movimentos.",
-    incant: "Gire, envolva, aperte. Quanto mais o prisioneiro luta, mais próximo fica o círculo."
-  },
-  {
-    id: "b17",
-    numero: 17,
-    nome: "Bakudō #17 — Hakujō (Manto Branco)",
-    cat: "Bakudō",
-    custoReiatsu: 6,
-    nivel: "Intermediário",
-    desc: "Forma uma camada espiritual protetora e amortecedora sobre o corpo do usuário ou de um aliado.",
-    incant: "Cubra aquilo que desejo proteger. Torne-se abrigo contra o impacto."
-  },
-  {
-    id: "b18",
-    numero: 18,
-    nome: "Bakudō #18 — Tenmon (Portão Celestial)",
-    cat: "Bakudō",
-    custoReiatsu: 7,
-    nivel: "Intermediário",
-    desc: "Cria uma barreira seletiva que permite apenas a passagem de pessoas autorizadas pelo conjurador.",
-    incant: "Entre dois mundos existe uma porta. Que ela se abra apenas diante daquele que reconheço."
-  },
-  {
-    id: "b19",
-    numero: 19,
-    nome: "Bakudō #19 — Metsubō no Ori (Gaiola da Ruína)",
-    cat: "Bakudō",
-    custoReiatsu: 7,
-    nivel: "Intermediário",
-    desc: "Cria várias camadas de barreiras prismáticas concêntricas ao redor de um alvo em fuga.",
-    incant: "Círculo sobre círculo, parede sobre parede. Fechem-se sobre aquele que ousa permanecer."
-  },
-  {
-    id: "b20",
-    numero: 20,
-    nome: "Bakudō #20 — Hyakuren Kekkai (Barreira das Cem Camadas)",
-    cat: "Bakudō",
-    custoReiatsu: 8,
-    nivel: "Intermediário",
-    desc: "Forma múltiplas camadas de barreiras espirituais sobrepostas para absorver impactos devastadores.",
-    incant: "Que cada camada seja uma muralha, que cada muralha seja uma promessa. Ergam-se e resistam."
-  },
-  {
-    id: "b26",
-    numero: 26,
-    nome: "Bakudō #26 — Kyokkō (Luz Curvada)",
-    cat: "Bakudō",
-    custoReiatsu: 5,
-    nivel: "Intermediário",
-    desc: "Dobra a luz e a percepção de Reiatsu ao redor do usuário, tornando-o completamente invisível.",
-    incant: "—"
-  },
-  {
-    id: "b39",
-    numero: 39,
-    nome: "Bakudō #39 — Enkōsen (Escudo Giratório de Lótus)",
-    cat: "Bakudō",
-    custoReiatsu: 7,
-    nivel: "Intermediário",
-    desc: "Cria um escudo condensado de energia rotatória para absorver ataques diretos e projéteis.",
-    incant: "—"
-  },
-  {
-    id: "b61",
-    numero: 61,
-    nome: "Bakudō #61 — Rikujō Kōrō (Prisão das Seis Varas de Luz)",
-    cat: "Bakudō",
-    custoReiatsu: 12,
-    nivel: "Avançado",
-    desc: "Seis lâminas reluzentes de luz dourada perfuram a cintura do alvo, paralisando-o totalmente.",
-    incant: "Carruagem do trovão, ponte da roda giratória, com a luz dividida em seis!"
-  },
-  {
-    id: "b62",
-    numero: 62,
-    nome: "Bakudō #62 — Hyapporankan (Cem Estacas de Luz)",
-    cat: "Bakudō",
-    custoReiatsu: 13,
-    nivel: "Avançado",
-    desc: "Uma vara de luz se multiplica em uma centena de estacas lançadas para cravar o oponente no chão.",
-    incant: "—"
-  },
-  {
-    id: "b75",
-    numero: 75,
-    nome: "Bakudō #75 — Gochūtekkan (Cinco Pilares de Ferro)",
-    cat: "Bakudō",
-    custoReiatsu: 16,
-    nivel: "Mestre",
-    desc: "Invoca cinco gigantescos pilares de ferro conectados por correntes que esmagam e selam o alvo.",
-    incant: "Muralha de areia de ferro, torre de monge, lâmpada de ferro incandescente!"
-  },
-  {
-    id: "b81",
-    numero: 81,
-    nome: "Bakudō #81 — Dankū (Fenda de Ar)",
-    cat: "Bakudō",
-    custoReiatsu: 18,
-    nivel: "Mestre",
-    desc: "Ergue uma barreira translúcida gigantesca que anula completamente qualquer Hadō até o #89.",
-    incant: "—"
-  },
-  {
-    id: "b99",
-    numero: 99,
-    nome: "Bakudō #99 — Kin / Bankin (Grande Selamento)",
-    cat: "Bakudō",
-    custoReiatsu: 25,
-    nivel: "Classe Especial",
-    desc: "O selamento supremo em três canções: ataduras espirituais, estacas de aço e bloco monumental.",
-    incant: "Primeira Canção: Shiryū! Segunda Canção: Hyakurenzan! Canção Final: Bankin Taihō!"
-  },
-
-  // -----------------------------------------------------------------------
-  // 🔥 HADŌ (Feitiços Ofensivos e de Destruição Espiritual)
-  // -----------------------------------------------------------------------
-  {
-    id: "h1_u",
-    numero: 1,
+    cat: "Hadō",
     nome: "Hadō #1 — Hibana (Faísca)",
-    cat: "Hadō",
-    custoReiatsu: 2,
-    nivel: "Básico",
-    desc: "Dispara uma pequena explosão concentrada de energia espiritual a partir da ponta dos dedos.",
-    incant: "Pequena chama, desperte em minha mão."
+    incant: "Pequena chama, desperte em minha mão.",
+    desc: "Dispara uma pequena explosão de energia espiritual concentrada na ponta dos dedos.",
+    custoReiatsu: 1
   },
   {
-    id: "h1_c",
-    numero: 1,
-    nome: "Hadō #1 — Shō (Empurrão Cinético)",
-    cat: "Hadō",
-    custoReiatsu: 2,
-    nivel: "Básico",
-    desc: "Dispara uma força cinética invisível a partir da ponta do dedo para repelir alvos e projéteis.",
-    incant: "—"
-  },
-  {
-    id: "h2",
+    id: "h2-rekka",
     numero: 2,
+    cat: "Hadō",
     nome: "Hadō #2 — Rekka (Lâmina Flamejante)",
-    cat: "Hadō",
-    custoReiatsu: 2,
-    nivel: "Básico",
-    desc: "Projeta uma lâmina de energia flamejante que corta o ar em média distância.",
-    incant: "Chama comprimida, torne-se lâmina e atravesse o caminho."
+    incant: "Chama comprimida, torne-se lâmina e atravesse o caminho.",
+    desc: "Projeta uma lâmina de energia flamejante que corta a média distância.",
+    custoReiatsu: 2
   },
   {
-    id: "h3",
+    id: "h3-shoge",
     numero: 3,
+    cat: "Hadō",
     nome: "Hadō #3 — Shōgekiha (Onda de Impacto)",
-    cat: "Hadō",
-    custoReiatsu: 2,
-    nivel: "Básico",
-    desc: "Dispara uma onda curta de pressão espiritual de impacto contundente.",
-    incant: "Espírito acumulado, transforme-se em força. Avance."
+    incant: "Espírito acumulado, transforme-se em força. Avance.",
+    desc: "Dispara uma onda curta e densa de pressão espiritual de impacto cinético.",
+    custoReiatsu: 2
   },
   {
-    id: "h4_u",
+    id: "h4-raiko",
     numero: 4,
-    nome: "Hadō #4 — Raikō (Luz Trovejante)",
     cat: "Hadō",
-    custoReiatsu: 3,
-    nivel: "Básico",
-    desc: "Dispara um feixe concentrado de energia elétrica que viaja em linha reta.",
-    incant: "Céu silencioso, rasgue o horizonte com sua luz."
+    nome: "Hadō #4 — Raikō / Byakurai (Luz Trovejante)",
+    incant: "Céu silencioso, rasgue o horizonte com sua luz.",
+    desc: "Dispara um feixe concentrado e perfurante de energia elétrica em linha reta.",
+    custoReiatsu: 3
   },
   {
-    id: "h4_c",
-    numero: 4,
-    nome: "Hadō #4 — Byakurai (Raio Branco)",
-    cat: "Hadō",
-    custoReiatsu: 3,
-    nivel: "Básico",
-    desc: "Dispara um raio concentrado de eletricidade branca perfurante a partir do dedo indicador.",
-    incant: "—"
-  },
-  {
-    id: "h5",
+    id: "h5-kazan",
     numero: 5,
+    cat: "Hadō",
     nome: "Hadō #5 — Kazan (Vulcão)",
-    cat: "Hadō",
-    custoReiatsu: 3,
-    nivel: "Básico",
-    desc: "Projeta uma erupção de energia térmica para cima a partir do solo sob o alvo.",
-    incant: "Sob a terra existe fogo. Rompa o silêncio e desperte."
+    incant: "Sob a terra existe fogo. Rompa o silêncio e desperte.",
+    desc: "Projeta uma explosão ascendente de energia a partir do solo sob os pés do alvo.",
+    custoReiatsu: 3
   },
   {
-    id: "h6",
+    id: "h6-getsumen",
     numero: 6,
+    cat: "Hadō",
     nome: "Hadō #6 — Getsumen (Crescente Lunar)",
-    cat: "Hadō",
-    custoReiatsu: 3,
-    nivel: "Básico",
-    desc: "Dispara uma lâmina curva de energia espiritual em formato de foice lunar.",
-    incant: "Lua partida, desenha teu arco e corta o caminho diante de mim."
+    incant: "Lua partida, desenha teu arco e corta o caminho diante de mim.",
+    desc: "Dispara uma lâmina curva e cortante de pura energia espiritual.",
+    custoReiatsu: 4
   },
   {
-    id: "h7",
+    id: "h7-enko",
     numero: 7,
+    cat: "Hadō",
     nome: "Hadō #7 — Enkō (Arco Flamejante)",
-    cat: "Hadō",
-    custoReiatsu: 4,
-    nivel: "Básico",
-    desc: "Cria uma rajada curva de energia flamejante que contorna obstáculos.",
-    incant: "Fogo que dança no ar, siga meu gesto e avance."
+    incant: "Fogo que dança no ar, siga meu gesto e avance.",
+    desc: "Cria uma rajada curva e envolvente de energia flamejante.",
+    custoReiatsu: 4
   },
   {
-    id: "h8",
+    id: "h8-retsufu",
     numero: 8,
+    cat: "Hadō",
     nome: "Hadō #8 — Retsufū (Vento Violento)",
-    cat: "Hadō",
-    custoReiatsu: 4,
-    nivel: "Básico",
-    desc: "Dispara uma rajada de vento espiritual comprimido capaz de arremessar adversários.",
-    incant: "Ar que dorme, desperte. Céu que observa, desça."
+    incant: "Ar que dorme, desperte. Céu que observa, desça.",
+    desc: "Dispara uma rajada concentrada de vento espiritual comprimido capaz de arremessar inimigos.",
+    custoReiatsu: 4
   },
   {
-    id: "h9",
+    id: "h9-raimeisen",
     numero: 9,
+    cat: "Hadō",
     nome: "Hadō #9 — Raimei Sen (Linha do Trovão)",
-    cat: "Hadō",
-    custoReiatsu: 4,
-    nivel: "Básico",
-    desc: "Dispara uma linha instantânea e extremamente rápida de energia elétrica perfurante.",
-    incant: "Entre céu e terra existe apenas um instante. Atravesse-o."
+    incant: "Entre céu e terra existe apenas um instante. Atravesse-o.",
+    desc: "Dispara uma linha extremamente rápida e relampejante de energia elétrica contínua.",
+    custoReiatsu: 5
   },
   {
-    id: "h10",
+    id: "h10-gekka",
     numero: 10,
+    cat: "Hadō",
     nome: "Hadō #10 — Gekka (Flor Lunar)",
-    cat: "Hadō",
-    custoReiatsu: 5,
-    nivel: "Intermediário",
-    desc: "Cria vários projéteis espirituais que se espalham como pétalas cortantes no ar.",
-    incant: "Abra suas pétalas na escuridão e faça a noite florescer."
+    incant: "Abra suas pétalas na escuridão e faça a noite florescer.",
+    desc: "Cria vários projéteis espirituais que se espalham pelo ar e convergem sobre o alvo como pétalas.",
+    custoReiatsu: 5
   },
   {
-    id: "h11_u",
+    id: "h11-enjin",
     numero: 11,
+    cat: "Hadō",
     nome: "Hadō #11 — Enjin (Lâmina de Fogo)",
-    cat: "Hadō",
-    custoReiatsu: 5,
-    nivel: "Intermediário",
-    desc: "Reveste uma arma ou membro com energia flamejante de alto poder de incineração.",
-    incant: "Fogo que não precisa de combustível, transforme minha intenção em corte."
+    incant: "Fogo que não precisa de combustível, transforme minha intenção em corte.",
+    desc: "Reveste a lâmina da Zanpakutō com chamas densas para amplificar o corte.",
+    custoReiatsu: 5
   },
   {
-    id: "h11_c",
-    numero: 11,
-    nome: "Hadō #11 — Tsuzuri Raiden (Raio Conduzido)",
-    cat: "Hadō",
-    custoReiatsu: 4,
-    nivel: "Básico",
-    desc: "Canaliza uma corrente elétrica através de qualquer objeto condutor ou lâmina de Zanpakutō.",
-    incant: "—"
-  },
-  {
-    id: "h12",
+    id: "h12-shoten",
     numero: 12,
+    cat: "Hadō",
     nome: "Hadō #12 — Shōten (Ascensão)",
-    cat: "Hadō",
-    custoReiatsu: 5,
-    nivel: "Intermediário",
-    desc: "Libera uma coluna vertical colossal de energia espiritual que eleva e quebra o solo.",
-    incant: "Suba, energia que dorme abaixo do mundo."
+    incant: "Suba, energia que dorme abaixo do mundo.",
+    desc: "Libera uma coluna vertical massiva de energia espiritual que se eleva do solo.",
+    custoReiatsu: 6
   },
   {
-    id: "h13",
+    id: "h13-koha",
     numero: 13,
+    cat: "Hadō",
     nome: "Hadō #13 — Kōha (Onda Carmesim)",
-    cat: "Hadō",
-    custoReiatsu: 6,
-    nivel: "Intermediário",
-    desc: "Projeta uma maré maciça de energia espiritual vermelha em cone frontal.",
-    incant: "Vermelho que nasce do espírito, avance como maré."
+    incant: "Vermelho que nasce do espírito, avance como maré.",
+    desc: "Projeta uma grande maré ondulante de energia espiritual destruidora.",
+    custoReiatsu: 6
   },
   {
-    id: "h14",
+    id: "h14-rasenka",
     numero: 14,
+    cat: "Hadō",
     nome: "Hadō #14 — Rasenka (Flor Espiral)",
-    cat: "Hadō",
-    custoReiatsu: 6,
-    nivel: "Intermediário",
-    desc: "Dispara um projétil espiral perfurante de energia concentrada em rotação.",
-    incant: "Gire, comprima, floresça. Transforme o caos em uma única direção."
+    incant: "Gire, comprima, floresça. Transforme o caos em uma única direção.",
+    desc: "Dispara uma broca espiral de energia espiritual de alto poder perfurante.",
+    custoReiatsu: 6
   },
   {
-    id: "h15",
+    id: "h15-hoko",
     numero: 15,
-    nome: "Hadō #15 — Hōkō (Rugido Espiritual)",
     cat: "Hadō",
-    custoReiatsu: 6,
-    nivel: "Intermediário",
-    desc: "Libera uma poderosa onda sonora e espiritual que atordoa e repele múltiplos atacantes.",
-    incant: "Que minha voz atravesse o céu. Que meu espírito responda com força."
+    nome: "Hadō #15 — Hōkō (Rugido)",
+    incant: "Que minha voz atravesse o céu. Que meu espírito responda com força.",
+    desc: "Libera uma poderosa onda de choque sônica e espiritual em cone à frente.",
+    custoReiatsu: 7
   },
   {
-    id: "h16",
+    id: "h16-kagero",
     numero: 16,
+    cat: "Hadō",
     nome: "Hadō #16 — Kagerō (Calor Distorcido)",
-    cat: "Hadō",
-    custoReiatsu: 6,
-    nivel: "Intermediário",
-    desc: "Cria uma onda de calor espiritual que distorce a visão e queima o ar ao redor do oponente.",
-    incant: "Ardance o horizonte. Faça o espaço tremer diante do calor."
+    incant: "Ardente o horizonte. Faça o espaço tremer diante do calor.",
+    desc: "Cria uma onda térmica distorcida que embaça a visão e causa impacto escaldante.",
+    custoReiatsu: 7
   },
   {
-    id: "h17",
+    id: "h17-shakunetsu",
     numero: 17,
+    cat: "Hadō",
     nome: "Hadō #17 — Shakunetsu (Incandescência)",
-    cat: "Hadō",
-    custoReiatsu: 7,
-    nivel: "Intermediário",
-    desc: "Concentra energia espiritual em uma esfera incandescente que explode em estilhaços de calor.",
-    incant: "Consuma o frio, ilumine a noite, transforme energia em chama."
+    incant: "Consuma o frio, ilumine a noite, transforme energia em chama.",
+    desc: "Concentra Reiatsu em uma esfera incandescente que explode com fúria ao contato.",
+    custoReiatsu: 8
   },
   {
-    id: "h18",
+    id: "h18-tenrai",
     numero: 18,
+    cat: "Hadō",
     nome: "Hadō #18 — Tenrai (Trovão Celestial)",
-    cat: "Hadō",
-    custoReiatsu: 7,
-    nivel: "Intermediário",
-    desc: "Invoca um raio espiritual denso que cai dos céus sobre a coordenada do alvo.",
-    incant: "Céu acima de mim, terra abaixo de mim. Entre ambos, faça nascer o trovão."
+    incant: "Céu acima de mim, terra abaixo de mim. Entre ambos, faça nascer o trovão.",
+    desc: "Invoca um raio espiritual fulminante que desaba dos céus sobre a área marcada.",
+    custoReiatsu: 8
   },
   {
-    id: "h19",
+    id: "h19-ryuka",
     numero: 19,
+    cat: "Hadō",
     nome: "Hadō #19 — Ryūka (Dragão de Fogo)",
-    cat: "Hadō",
-    custoReiatsu: 8,
-    nivel: "Intermediário",
-    desc: "Cria uma grande massa de fogo espiritual com formato serpentino que persegue o oponente.",
-    incant: "Chama sem forma, encontre um corpo. Céu sem voz, encontre um rugido."
+    incant: "Chama sem forma, encontre um corpo. Céu sem voz, encontre um rugido.",
+    desc: "Materializa uma serpente dragônica de chamas espirituais que persegue o alvo.",
+    custoReiatsu: 9
   },
   {
-    id: "h20",
+    id: "h20-koten",
     numero: 20,
+    cat: "Hadō",
     nome: "Hadō #20 — Kōten (Explosão Celeste)",
-    cat: "Hadō",
-    custoReiatsu: 8,
-    nivel: "Intermediário",
-    desc: "Concentra uma grande quantidade de energia espiritual em um ponto e libera uma detonação esférica.",
-    incant: "Todo poder converge para um único ponto. Céu e terra, testemunhem o impacto."
+    incant: "Todo poder converge para um único ponto. Céu e terra, testemunhem o impacto.",
+    desc: "Concentra densidade espiritual máxima em um ponto infinitesimal antes de detonar.",
+    custoReiatsu: 10
   },
+  // Feitiços Clássicos Avançados
   {
-    id: "h31",
+    id: "h31-shakkaho",
     numero: 31,
-    nome: "Hadō #31 — Shakkahō (Tiro de Fogo Vermelho)",
     cat: "Hadō",
-    custoReiatsu: 6,
-    nivel: "Intermediário",
-    desc: "Gera e dispara uma esfera de chamas vermelhas de alta potência e raio explosivo.",
-    incant: "Ó, praticante! Dispersai-vos, rastejai! Queimai a terra e tragai a cinza!"
+    nome: "Hadō #31 — Shakkahō (Canhão de Fogo Vermelho)",
+    incant: "Ó senhor! Máscara de sangue e carne, toda a criação, bater de asas, vós que carregais o nome de Homem! Inferno e pandemônio, a barreira marítima avança, marcha para o sul!",
+    desc: "Dispara uma esfera carmesim de alta destruição térmica por concussão e chamas.",
+    custoReiatsu: 7
   },
   {
-    id: "h33",
+    id: "h33-sokatsui",
     numero: 33,
-    nome: "Hadō #33 — Sōkatsui (Chuva Azul do Vazio)",
     cat: "Hadō",
-    custoReiatsu: 7,
-    nivel: "Intermediário",
-    desc: "Dispara uma torrente avassaladora de energia espiritual azul a partir da palma aberta.",
-    incant: "Ó, governante! Máscara de carne e sangue, toda a criação, o bater de asas..."
+    nome: "Hadō #33 — Sōkatsui (Fogo Azul / Impacto Descontrolado)",
+    incant: "Ó senhor! Máscara de carne e osso, bater de asas, vós que carregais o nome de Homem! Verdade e temperança, sobre esta muralha imaculada de sonhos, desencadeai apenas levemente a fúria de vossas garras.",
+    desc: "Gera e dispara uma torrente de chamas azuis com impacto explosivo devastador.",
+    custoReiatsu: 8
   },
   {
-    id: "h54",
-    numero: 54,
-    nome: "Hadō #54 — Haien (Chamas da Abolição)",
-    cat: "Hadō",
-    custoReiatsu: 10,
-    nivel: "Avançado",
-    desc: "Dispara uma onda de fogo roxo que incinera e desintegra a matéria ao menor contato.",
-    incant: "—"
-  },
-  {
-    id: "h63",
-    numero: 63,
-    nome: "Hadō #63 — Raikōhō (Canhão do Trovão)",
-    cat: "Hadō",
-    custoReiatsu: 13,
-    nivel: "Avançado",
-    desc: "Invoca um gigantesco trovão amarelo concentrado que explode com estrondo sísmico.",
-    incant: "Salpicado nos ossos da besta! Torre afiada, cristal vermelho, anel de aço..."
-  },
-  {
-    id: "h73",
+    id: "h73-soren-sokatsui",
     numero: 73,
-    nome: "Hadō #73 — Sōren Sōkatsui (Lótus Azul Gêmeo)",
     cat: "Hadō",
-    custoReiatsu: 16,
-    nivel: "Mestre",
-    desc: "Versão dupla e devastadora do Sōkatsui disparada com ambas as mãos em sincronia.",
-    incant: "Máscara de carne e sangue... Coroai com o nome de humano o abismo sem fim!"
+    nome: "Hadō #73 — Sōren Sōkatsui (Fogo Azul de Lótus Gêmea)",
+    incant: "Ó senhor! Máscara de sangue e carne, toda a criação, bater de asas, vós que carregais o nome do Homem! Na parede de chamas azuis, inscreve um lótus duplo. No abismo da conflagração, aguarda nos céus distantes.",
+    desc: "Forma avançada e dupla do Sōkatsui disparada com ambas as palmas, com o dobro da potência.",
+    custoReiatsu: 14
   },
   {
-    id: "h88",
-    numero: 88,
-    nome: "Hadō #88 — Hiryū Gekizoku Shinten Raihō",
-    cat: "Hadō",
-    custoReiatsu: 20,
-    nivel: "Classe Especial",
-    desc: "Um colossal canhão de relâmpagos espirituais capaz de perfurar fortalezas inteiras.",
-    incant: "Rugido do dragão celeste, queime o firmamento até a última partícula!"
-  },
-  {
-    id: "h90",
+    id: "h90-kurohitsugi",
     numero: 90,
-    nome: "Hadō #90 — Kurohitsugi (Caixão Negro)",
     cat: "Hadō",
-    custoReiatsu: 25,
-    nivel: "Classe Especial",
-    desc: "Cria uma caixa cúbica de gravidade negra ao redor do alvo perfurando-o com incontáveis lanças espirituais.",
-    incant: "Transborde, recipiente do caos! Cão louco e insolente, perca a razão..."
+    nome: "Hadō #90 — Kurohitsugi (Caixão Negro)",
+    incant: "A crista viscosa da corrupção. O arrogante receptáculo da loucura! Negue o impulso fervilhante! Atordoe e cintile! Perturbe o sono! A rainha rastejante de ferro! A boneca de lama eternamente autodestrutiva! Unam-se! Repilam! Preencham a Terra e reconheçam sua própria impotência!",
+    desc: "Confinamento em caixão de gravidade negra perfurado por lanças de Reishi que distorcem o espaço.",
+    custoReiatsu: 20
   },
 
-  // -----------------------------------------------------------------------
-  // 🌿 KAIDŌ (Feitiços de Cura, Estabilização e Suporte Espiritual)
-  // -----------------------------------------------------------------------
+  // --- BAKUDŌ (APRISIONAMENTO & DEFESA) ---
   {
-    id: "k1",
+    id: "b1-sai",
     numero: 1,
-    nome: "Kaidō #1 — Shōmei (Iluminação Diagnóstica)",
-    cat: "Kaidō",
-    custoReiatsu: 3,
-    nivel: "Básico",
-    desc: "Revela ferimentos ocultos, venenos e perturbações espirituais no corpo do paciente.",
-    incant: "Luz suave, encontre aquilo que foi ferido."
+    cat: "Hadō",
+    nome: "Bakudō #1 — Sai (Obstrução)",
+    incant: "—",
+    desc: "Prende os braços do alvo atrás das costas com fios invisíveis de Reiatsu.",
+    custoReiatsu: 1
   },
   {
-    id: "k2",
-    numero: 2,
-    nome: "Kaidō #2 — Yasuragi (Tranquilidade)",
-    cat: "Kaidō",
-    custoReiatsu: 3,
-    nivel: "Básico",
-    desc: "Reduz dores e desconforto, ajudando o paciente a permanecer consciente e estável.",
-    incant: "Respire. Silencie a dor. Deixe o espírito encontrar repouso."
-  },
-  {
-    id: "k3",
-    numero: 3,
-    nome: "Kaidō #3 — Seimei Ito (Fio Vital)",
-    cat: "Kaidō",
-    custoReiatsu: 4,
-    nivel: "Básico",
-    desc: "Estabiliza temporariamente a condição espiritual e o pulso de uma pessoa ferida.",
-    incant: "Fio que une corpo e alma, permaneça firme."
-  },
-  {
-    id: "k4",
+    id: "b4-hainawa",
     numero: 4,
-    nome: "Kaidō #4 — Kōmyō (Luz Serena)",
-    cat: "Kaidō",
-    custoReiatsu: 4,
-    nivel: "Básico",
-    desc: "Acelera a regeneração de cortes superficiais, escoriações e sangramentos rápidos.",
-    incant: "Onde existe ferida, que exista luz. Onde existe fraqueza, que exista calma."
+    cat: "Bakudō",
+    nome: "Bakudō #4 — Hainawa (Corda Rastejante)",
+    incant: "—",
+    desc: "Cria uma corda de energia amarela que laça e imobiliza os membros do adversário.",
+    custoReiatsu: 2
   },
   {
-    id: "k5",
-    numero: 5,
-    nome: "Kaidō #5 — Shinkei (Restauração Neural)",
-    cat: "Kaidō",
-    custoReiatsu: 5,
-    nivel: "Básico",
-    desc: "Ajuda a reanimar terminações nervosas e recuperar movimentos prejudicados por lesões ou dormência.",
-    incant: "Desperte os caminhos adormecidos e faça o corpo lembrar seus próprios movimentos."
-  },
-  {
-    id: "k6",
-    numero: 6,
-    nome: "Kaidō #6 — Seika (Purificação de Impurezas)",
-    cat: "Kaidō",
-    custoReiatsu: 5,
-    nivel: "Básico",
-    desc: "Remove pequenas impurezas espirituais, toxinas leves e energia residual acumulada.",
-    incant: "Aquilo que não pertence ao corpo, deixe-o. Aquilo que pertence, permaneça."
-  },
-  {
-    id: "k7",
-    numero: 7,
-    nome: "Kaidō #7 — Kokyū (Respiração Guiada)",
-    cat: "Kaidō",
-    custoReiatsu: 5,
-    nivel: "Básico",
-    desc: "Auxilia na recuperação da respiração e estabiliza o fluxo de ar e Reiryoku nos pulmões.",
-    incant: "Ar entre os mundos, entre neste corpo e devolva-lhe o ritmo."
-  },
-  {
-    id: "k8",
-    numero: 8,
-    nome: "Kaidō #8 — Shirohana (Flor Branca de Cura)",
-    cat: "Kaidō",
-    custoReiatsu: 6,
-    nivel: "Intermediário",
-    desc: "Cria uma pequena flor espiritual sobre o ferimento que absorve a dor e acelera a cicatrização.",
-    incant: "Pequena flor, abra-se sobre a ferida e carregue consigo a dor."
-  },
-  {
-    id: "k9",
+    id: "b9-geki",
     numero: 9,
-    nome: "Kaidō #9 — Kekkai Seimei (Barreira Vital)",
-    cat: "Kaidō",
-    custoReiatsu: 6,
-    nivel: "Intermediário",
-    desc: "Cria uma película espiritual protetora ao redor de uma lesão grave, impedindo hemorragias.",
-    incant: "Erga-se ao redor da vida. Não permita que a ferida avance."
+    cat: "Bakudō",
+    nome: "Bakudō #9 — Geki (Golpe de Conquista)",
+    incant: "Desintegre-se, cão negro de Rondanini! Olhe para si mesmo com terror e depois rasgue sua própria garganta!",
+    desc: "Envolve o corpo do inimigo em uma luz vermelha paralisante que anula movimentos.",
+    custoReiatsu: 3
   },
   {
-    id: "k10",
-    numero: 10,
-    nome: "Kaidō #10 — Chiyu (Cura de Tecidos Profundos)",
-    cat: "Kaidō",
-    custoReiatsu: 7,
-    nivel: "Intermediário",
-    desc: "Acelera significativamente a recuperação de ferimentos musculares moderados e fraturas parciais.",
-    incant: "Corpo ferido, espírito cansado. Reúna aquilo que ainda permanece."
-  },
-  {
-    id: "k11",
-    numero: 11,
-    nome: "Kaidō #11 — Seimei Kōro (Caminho Vital)",
-    cat: "Kaidō",
-    custoReiatsu: 7,
-    nivel: "Intermediário",
-    desc: "Reorganiza os meridianos e o fluxo espiritual do paciente após sofrer choques de Reiatsu.",
-    incant: "Que cada caminho volte a encontrar seu destino. Que cada fluxo retorne ao seu curso."
-  },
-  {
-    id: "k12",
-    numero: 12,
-    nome: "Kaidō #12 — Kōshin (Renovação de Vigor)",
-    cat: "Kaidō",
-    custoReiatsu: 8,
-    nivel: "Intermediário",
-    desc: "Revigora a estamina e devolve energia física a guerreiros exaustos após combates longos.",
-    incant: "Aquilo que foi gasto, encontre repouso. Aquilo que foi quebrado, encontre forma."
-  },
-  {
-    id: "k13",
-    numero: 13,
-    nome: "Kaidō #13 — Reishō (Pulso Espiritual)",
-    cat: "Kaidō",
-    custoReiatsu: 8,
-    nivel: "Intermediário",
-    desc: "Sincroniza o batimento cardíaco da alma com a Reiatsu pura, revertendo quadros de choque.",
-    incant: "Um pulso chama outro. Que a alma encontre seu próprio ritmo."
-  },
-  {
-    id: "k14",
-    numero: 14,
-    nome: "Kaidō #14 — Shōka (Purificação Residual)",
-    cat: "Kaidō",
-    custoReiatsu: 9,
-    nivel: "Avançado",
-    desc: "Extrai e purifica resíduos cáusticos de venenos complexos e energias corrosivas de Hadō.",
-    incant: "Dor que permanece, deixe o corpo. Energia estranha, abandone a carne."
-  },
-  {
-    id: "k15",
+    id: "b15-kagekake",
     numero: 15,
-    nome: "Kaidō #15 — Meimei (Pulso de Vida Emergencial)",
-    cat: "Kaidō",
-    custoReiatsu: 10,
-    nivel: "Avançado",
-    desc: "Estabiliza alguém em estado físico gravemente debilitado, impedindo a morte iminente.",
-    incant: "Enquanto houver chama, haverá caminho. Enquanto houver espírito, haverá retorno."
+    cat: "Bakudō",
+    nome: "Bakudō #15 — Kagekake (Amarras da Sombra)",
+    incant: "A sombra nasce dos pés e retorna aos pés. Que nenhuma distância seja suficiente para escapar.",
+    desc: "Prende parcialmente o alvo à própria sombra, impedindo locomoção rápida.",
+    custoReiatsu: 4
   },
   {
-    id: "k16",
+    id: "b16-rasen-kusari",
     numero: 16,
-    nome: "Kaidō #16 — Hikari no Ito (Sutura de Luz)",
-    cat: "Kaidō",
-    custoReiatsu: 11,
-    nivel: "Avançado",
-    desc: "Fios espirituais de luz ligam tendões rompidos, vasos e tecidos danificados com precisão cirúrgica.",
-    incant: "Fios de luz, atravessem a ferida. Unam aquilo que foi separado."
+    cat: "Bakudō",
+    nome: "Bakudō #16 — Rasen Kusari (Corrente Espiral)",
+    incant: "Gire, envolva, aperte. Quanto mais o prisioneiro luta, mais próximo fica o círculo.",
+    desc: "Uma corrente espiritual gira ao redor do alvo e restringe progressivamente seus movimentos.",
+    custoReiatsu: 4
   },
   {
-    id: "k17",
+    id: "b17-hakujo",
     numero: 17,
-    nome: "Kaidō #17 — Seishin Nagashi (Transfusão de Reiryoku)",
-    cat: "Kaidō",
-    custoReiatsu: 12,
-    nivel: "Avançado",
-    desc: "Transfere uma quantidade controlada e segura de energia espiritual pura para reanimar um aliado.",
-    incant: "Que minha energia encontre teu caminho e leve consigo aquilo que pesa."
+    cat: "Bakudō",
+    nome: "Bakudō #17 — Hakujō (Manto Branco)",
+    incant: "Cubra aquilo que desejo proteger. Torne-se abrigo contra o impacto.",
+    desc: "Forma uma camada espiritual protetora e resiliente sobre o corpo do aliado.",
+    custoReiatsu: 5
   },
   {
-    id: "k18",
+    id: "b18-tenmon",
     numero: 18,
-    nome: "Kaidō #18 — Kōmyaku (Veias de Luz)",
-    cat: "Kaidō",
-    custoReiatsu: 14,
-    nivel: "Avançado",
-    desc: "Restaura redes neurais e espirituais destruídas por técnicas de alta voltagem ou veneno.",
-    incant: "Que a luz percorra cada caminho. Que nenhum fluxo permaneça perdido."
+    cat: "Bakudō",
+    nome: "Bakudō #18 — Tenmon (Portão Celestial)",
+    incant: "Entre dois mundos existe uma porta. Que ela se abra apenas diante daquele que reconheço.",
+    desc: "Cria uma barreira seletiva que permite a passagem apenas de pessoas autorizadas.",
+    custoReiatsu: 5
   },
   {
-    id: "k19",
+    id: "b19-metsubo-ori",
     numero: 19,
-    nome: "Kaidō #19 — Saisei Hana (Lótus da Regeneração)",
-    cat: "Kaidō",
-    custoReiatsu: 16,
-    nivel: "Mestre",
-    desc: "Acelera profundamente a reconstrução celular de ossos e órgãos vitais com Reiryoku sustentado.",
-    incant: "Daquilo que foi perdido, faça nascer novamente a forma."
+    cat: "Bakudō",
+    nome: "Bakudō #19 — Metsubō no Ori (Gaiola da Ruína)",
+    incant: "Círculo sobre círculo, parede sobre parede. Fechem-se sobre aquele que ousa permanecer.",
+    desc: "Ergue várias camadas concêntricas de barreiras em jaula ao redor do inimigo.",
+    custoReiatsu: 6
   },
   {
-    id: "k20",
+    id: "b20-hyakuren-kekkai",
     numero: 20,
-    nome: "Kaidō #20 — Shōmei Seikai (Luz da Vida Primordial)",
+    cat: "Bakudō",
+    nome: "Bakudō #20 — Hyakuren Kekkai (Barreira das Cem Camadas)",
+    incant: "Que cada camada seja uma muralha, que cada muralha seja uma promessa. Ergam-se e resistam.",
+    desc: "Forma múltiplas barreiras espirituais sobrepostas de altíssima absorção de dano.",
+    custoReiatsu: 6
+  },
+  {
+    id: "b26-kyokko",
+    numero: 26,
+    cat: "Bakudō",
+    nome: "Bakudō #26 — Kyokkō (Luz Curva)",
+    incant: "—",
+    desc: "Dobra a luz e a percepção espiritual ao redor do conjurador, tornando-o imperceptível.",
+    custoReiatsu: 6
+  },
+  {
+    id: "b30-shitotsu-sansen",
+    numero: 30,
+    cat: "Bakudō",
+    nome: "Bakudō #30 — Shitotsu Sansen (Três Raios de Perfuração)",
+    incant: "—",
+    desc: "Dispara três feixes triangulares que cravam o alvo contra uma superfície pelos membros.",
+    custoReiatsu: 7
+  },
+  {
+    id: "b39-enkosen",
+    numero: 39,
+    cat: "Bakudō",
+    nome: "Bakudō #39 — Enkōsen (Escudo Giratório)",
+    incant: "—",
+    desc: "Cria um escudo condensado e rotativo em forma de disco diante da mão.",
+    custoReiatsu: 7
+  },
+  {
+    id: "b61-rikujo-koro",
+    numero: 61,
+    cat: "Bakudō",
+    nome: "Bakudō #61 — Rikujō Kōrō (Prisão das Seis Varas de Luz)",
+    incant: "Carruagem do trovão, ponte da roda giratória. Com a luz, divida este em seis!",
+    desc: "Seis feixes dourados de luz cravam-se na cintura do adversário, imobilizando-o totalmente.",
+    custoReiatsu: 11
+  },
+  {
+    id: "b81-danku",
+    numero: 81,
+    cat: "Bakudō",
+    nome: "Bakudō #81 — Dankū (Muro de Rejeição)",
+    incant: "—",
+    desc: "Cria uma parede translúcida monumental capaz de anular qualquer Hadō de nível 89 ou inferior.",
+    custoReiatsu: 16
+  },
+
+  // --- KAIDŌ (CURA & SUPORTE ESPIRITUAL) ---
+  {
+    id: "k1-shomei",
+    numero: 1,
     cat: "Kaidō",
-    custoReiatsu: 20,
-    nivel: "Classe Especial",
-    desc: "O pináculo da medicina espiritual do 4º Esquadrão capaz de salvar um guerreiro à beira do abismo.",
-    incant: "Luz que atravessa corpo e alma, encontre aquilo que ainda pode ser salvo."
+    nome: "Kaidō #1 — Shōmei (Iluminação)",
+    incant: "Luz suave, encontre aquilo que foi ferido.",
+    desc: "Revela ferimentos internos ocultos e perturbações no fluxo de Reishi do paciente.",
+    custoReiatsu: 1
+  },
+  {
+    id: "k2-yasuragi",
+    numero: 2,
+    cat: "Kaidō",
+    nome: "Kaidō #2 — Yasuragi (Tranquilidade)",
+    incant: "Respire. Silencie a dor. Deixe o espírito encontrar repouso.",
+    desc: "Reduz dores agudas e choque físico, mantendo o aliado estável e consciente.",
+    custoReiatsu: 2
+  },
+  {
+    id: "k3-seimei-ito",
+    numero: 3,
+    cat: "Kaidō",
+    nome: "Kaidō #3 — Seimei Ito (Fio Vital)",
+    incant: "Fio que une corpo e alma, permaneça firme.",
+    desc: "Estabiliza emergencialmente a conexão entre alma e corpo de um aliado ferido.",
+    custoReiatsu: 2
+  },
+  {
+    id: "k4-komyo",
+    numero: 4,
+    cat: "Kaidō",
+    nome: "Kaidō #4 — Kōmyō (Luz Serena)",
+    incant: "Onde existe ferida, que exista luz. Onde existe fraqueza, que exista calma.",
+    desc: "Acelera a cicatrização de cortes leves e queimaduras superficiais.",
+    custoReiatsu: 3
+  },
+  {
+    id: "k5-shinkei",
+    numero: 5,
+    cat: "Kaidō",
+    nome: "Kaidō #5 — Shinkei (Nervo)",
+    incant: "Desperte os caminhos adormecidos e faça o corpo lembrar seus próprios movimentos.",
+    desc: "Reativa conexões neurais e musculares prejudicadas por paralisia ou trauma.",
+    custoReiatsu: 3
+  },
+  {
+    id: "k6-seika",
+    numero: 6,
+    cat: "Kaidō",
+    nome: "Kaidō #6 — Seika (Purificação)",
+    incant: "Aquilo que não pertence ao corpo, deixe-o. Aquilo que pertence, permaneça.",
+    desc: "Remove toxinas, venenos e impurezas espirituais retidas nos tecidos.",
+    custoReiatsu: 4
+  },
+  {
+    id: "k7-kokyu",
+    numero: 7,
+    cat: "Kaidō",
+    nome: "Kaidō #7 — Kokyū (Respiração)",
+    incant: "Ar entre os mundos, entre neste corpo e devolva-lhe o ritmo.",
+    desc: "Restaura o ritmo pulmonar e normaliza o fluxo de respiração espiritual.",
+    custoReiatsu: 4
+  },
+  {
+    id: "k8-shirohana",
+    numero: 8,
+    cat: "Kaidō",
+    nome: "Kaidō #8 — Shirohana (Flor Branca)",
+    incant: "Pequena flor, abra-se sobre a ferida e carregue consigo a dor.",
+    desc: "Materializa uma aura floral sobre lesões pontuais para acelerar recuperação acelerada.",
+    custoReiatsu: 4
+  },
+  {
+    id: "k9-kekkai-seimei",
+    numero: 9,
+    cat: "Kaidō",
+    nome: "Kaidō #9 — Kekkai Seimei (Barreira Vital)",
+    incant: "Erga-se ao redor da vida. Não permita que a ferida avance.",
+    desc: "Cria um selo estéril ao redor do ferimento, estancando hemorragias e impedindo infecções.",
+    custoReiatsu: 5
+  },
+  {
+    id: "k10-chiyu",
+    numero: 10,
+    cat: "Kaidō",
+    nome: "Kaidō #10 — Chiyu (Cura)",
+    incant: "Corpo ferido, espírito cansado. Reúna aquilo que ainda permanece.",
+    desc: "Acelera significativamente a regeneração de ferimentos moderados e lacerações.",
+    custoReiatsu: 5
+  },
+  {
+    id: "k11-seimei-koro",
+    numero: 11,
+    cat: "Kaidō",
+    nome: "Kaidō #11 — Seimei Kōro (Caminho Vital)",
+    incant: "Que cada caminho volte a encontrar seu destino. Que cada fluxo retorne ao seu curso.",
+    desc: "Reorganiza o fluxo de Reishi nos canais espirituais após supressão ou choque.",
+    custoReiatsu: 6
+  },
+  {
+    id: "k12-koshin",
+    numero: 12,
+    cat: "Kaidō",
+    nome: "Kaidō #12 — Kōshin (Renovação)",
+    incant: "Aquilo que foi gasto, encontre repouso. Aquilo que foi quebrado, encontre forma.",
+    desc: "Revitaliza o vigor físico e repõe parte da energia espiritual gasta.",
+    custoReiatsu: 6
+  },
+  {
+    id: "k13-reisho",
+    numero: 13,
+    cat: "Kaidō",
+    nome: "Kaidō #13 — Reishō (Pulso Espiritual)",
+    incant: "Um pulso chama outro. Que a alma encontre seu próprio ritmo.",
+    desc: "Monitora e estabiliza arritmias e descompassos no Hakusui do paciente.",
+    custoReiatsu: 6
+  },
+  {
+    id: "k14-shoka-cura",
+    numero: 14,
+    cat: "Kaidō",
+    nome: "Kaidō #14 — Shōka (Purificação da Ferida)",
+    incant: "Dor que permanece, deixe o corpo. Energia estranha, abandone a carne.",
+    desc: "Dissolve miasmas e resíduos corrosivos de Reiatsu hostil em ferimentos.",
+    custoReiatsu: 7
+  },
+  {
+    id: "k15-meimei",
+    numero: 15,
+    cat: "Kaidō",
+    nome: "Kaidō #15 — Meimei (Pulso de Vida)",
+    incant: "Enquanto houver chama, haverá caminho. Enquanto houver espírito, haverá retorno.",
+    desc: "Estabiliza emergencialmente pacientes à beira da derrota ou inconsciência.",
+    custoReiatsu: 7
+  },
+  {
+    id: "k16-hikari-ito",
+    numero: 16,
+    cat: "Kaidō",
+    nome: "Kaidō #16 — Hikari no Ito (Fios de Luz)",
+    incant: "Fios de luz, atravessem a ferida. Unam aquilo que foi separado.",
+    desc: "Tecelagem cirúrgica de Reishi que sutura músculos e tendões rompidos.",
+    custoReiatsu: 8
+  },
+  {
+    id: "k17-seishin-nagashi",
+    numero: 17,
+    cat: "Kaidō",
+    nome: "Kaidō #17 — Seishin Nagashi (Fluxo Espiritual)",
+    incant: "Que minha energia encontre teu caminho e leve consigo aquilo que pesa.",
+    desc: "Transfere uma cota direta de Reiatsu purificada do conjurador para o receptor.",
+    custoReiatsu: 8
+  },
+  {
+    id: "k18-komyaku",
+    numero: 18,
+    cat: "Kaidō",
+    nome: "Kaidō #18 — Kōmyaku (Veias de Luz)",
+    incant: "Que a luz percorra cada caminho. Que nenhum fluxo permaneça perdido.",
+    desc: "Restaura ramificações profundas do sistema circulatório espiritual.",
+    custoReiatsu: 9
+  },
+  {
+    id: "k19-saisei-hana",
+    numero: 19,
+    cat: "Kaidō",
+    nome: "Kaidō #19 — Saisei Hana (Flor da Regeneração)",
+    incant: "Daquilo que foi perdido, faça nascer novamente a forma.",
+    desc: "Regenera ferimentos graves e tecidos destruídos sob concentração contínua.",
+    custoReiatsu: 10
+  },
+  {
+    id: "k20-shomei-seikai",
+    numero: 20,
+    cat: "Kaidō",
+    nome: "Kaidō #20 — Shōmei Seikai (Luz da Vida)",
+    incant: "Luz que atravessa corpo e alma, encontre aquilo que ainda pode ser salvo.",
+    desc: "Feitiço supremo do 4º Esquadrão para salvar Shinigamis em estado crítico.",
+    custoReiatsu: 12
   }
 ];
 

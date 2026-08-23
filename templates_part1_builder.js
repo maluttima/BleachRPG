@@ -1,8 +1,8 @@
 // =========================================================================
-// VIEWS PART 1: TOPBAR, LOGIN, RANKINGS, KIDOS, ARENA & BLEACHSWORDART
+// VIEWS PART 1: TOPBAR, SUBTLE ADMIN, LIVE CHAT, LOGIN, RANKINGS, KIDOS & ARENA
 // =========================================================================
 
-// TOP NAVIGATION BAR
+// TOP NAVIGATION BAR (WITH SUBTLE ADMIN SEAL, CHAT & PATCH NOTES)
 function TopBar({ session, onLogout, view, setView, nome, onOpenAdminLogin, cloudStatus }) {
   const isAdmin = session?.role === "super_admin" || session?.role === "sub_admin";
 
@@ -29,9 +29,11 @@ function TopBar({ session, onLogout, view, setView, nome, onOpenAdminLogin, clou
           {[
             { id: "sistemas", label: "Sistemas & Regras", icon: "📜" },
             { id: "ficha", label: session?.role === "jogador" ? "Minha Ficha" : "Ficha de Jogador", icon: "👤" },
+            { id: "chat", label: "Chat dos Shinigamis", icon: "💬" },
             { id: "rankings", label: "Rankings", icon: "🏆" },
             { id: "kidos", label: "Grimório de Kidō", icon: "📕" },
             { id: "arena", label: "Arena de Duelos", icon: "⚔️" },
+            { id: "patchnotes", label: "Patch Notes", icon: "📰" },
             ...(isAdmin ? [{ id: "admin", label: "Painel ADM", icon: "👑" }] : [])
           ].map((tab) => (
             <button
@@ -49,7 +51,7 @@ function TopBar({ session, onLogout, view, setView, nome, onOpenAdminLogin, clou
           ))}
         </nav>
 
-        {/* User Session / Cloud Indicator */}
+        {/* User Session / Cloud & Subtle Admin Seal */}
         <div className="flex items-center gap-2 sm:gap-3">
           {/* Cloud Indicator */}
           <div 
@@ -84,15 +86,17 @@ function TopBar({ session, onLogout, view, setView, nome, onOpenAdminLogin, clou
               >
                 Entrar
               </button>
-              <button
-                onClick={onOpenAdminLogin}
-                className="px-2.5 py-1.5 bg-black/60 border border-yellow-500/40 hover:border-yellow-400 text-yellow-400 text-xs font-bold rounded-lg"
-                title="Acesso da Administração"
-              >
-                👑 ADM
-              </button>
             </div>
           )}
+
+          {/* SUBTLE AESTHETIC SEAL FOR ADMIN ACCESS */}
+          <button
+            onClick={onOpenAdminLogin}
+            className="w-7 h-7 flex items-center justify-center rounded-full text-bleach-border hover:text-bleach-orange/60 hover:bg-white/5 transition text-xs select-none"
+            title="Selo Espiritual do Seireitei"
+          >
+            ❖
+          </button>
         </div>
       </div>
 
@@ -101,15 +105,17 @@ function TopBar({ session, onLogout, view, setView, nome, onOpenAdminLogin, clou
         {[
           { id: "sistemas", label: "Regras", icon: "📜" },
           { id: "ficha", label: "Ficha", icon: "👤" },
+          { id: "chat", label: "Chat", icon: "💬" },
           { id: "rankings", label: "Rankings", icon: "🏆" },
           { id: "kidos", label: "Kidō", icon: "📕" },
           { id: "arena", label: "Arena", icon: "⚔️" },
+          { id: "patchnotes", label: "Patch", icon: "📰" },
           ...(isAdmin ? [{ id: "admin", label: "ADM", icon: "👑" }] : [])
         ].map((tab) => (
           <button
             key={tab.id}
             onClick={() => setView(tab.id)}
-            className={`px-2.5 py-1 rounded text-[11px] font-semibold whitespace-nowrap ${
+            className={`px-2 py-1 rounded text-[11px] font-semibold whitespace-nowrap ${
               view === tab.id
                 ? "text-bleach-orange font-bold border-b-2 border-bleach-orange"
                 : "text-bleach-muted"
@@ -167,7 +173,127 @@ function Badge({ color, children, className = "" }) {
   );
 }
 
-// PLAYER LOGIN SCREEN (STRICT MATCHING & NO CROSS-LOGIN FALLBACK)
+// LIVE CHAT ROOM FOR SHINIGAMIS
+function ChatView({ db, saveDb, session, myChar }) {
+  const [mensagem, setMensagem] = useState("");
+  const chatBottomRef = useRef(null);
+
+  const mensagens = db?.mensagensChat || [
+    {
+      id: "msg-welcome-1",
+      autorNome: "Comandante Supremo",
+      charFoto: "assets/ichigo-moon.png",
+      esquadrao: "1º Esquadrão",
+      texto: "Bem-vindos ao canal de comunicação direta da Sociedade das Almas. Mantenham o decoro e compartilhem suas jornadas!",
+      timestamp: "10:00",
+      data: "Hoje"
+    }
+  ];
+
+  useEffect(() => {
+    if (chatBottomRef.current) {
+      chatBottomRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [mensagens.length]);
+
+  function enviarMensagem(e) {
+    e.preventDefault();
+    if (!mensagem.trim()) return;
+    if (!session) {
+      alert("Você precisa estar logado para enviar mensagens no chat.");
+      return;
+    }
+
+    const autorNome = myChar?.nome || (session.role === "super_admin" ? "ADM Máximo" : session.nome || "Shinigami");
+    const charFoto = myChar?.foto || "assets/ichigo-orange.png";
+    const esquadrao = myChar?.esquadrao || "Seireitei";
+
+    const novaMsg = {
+      id: uid(),
+      autorNome,
+      charId: myChar?.id || session.charId || "adm",
+      charFoto,
+      esquadrao,
+      texto: mensagem.trim(),
+      timestamp: new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }),
+      data: nowStr()
+    };
+
+    const novasMensagens = [...mensagens, novaMsg].slice(-100); // manter últimas 100 mensagens
+    saveDb({ ...db, mensagensChat: novasMensagens });
+    setMensagem("");
+    playReiatsuSound('roll');
+  }
+
+  return (
+    <div className="space-y-6">
+      <Section
+        title="💬 Comunicação Espiritual dos Shinigamis"
+        subtitle="Canal de convivência, anúncios e interação entre todos os membros da Sociedade das Almas"
+        className="border-2 border-bleach-orange/40 shadow-2xl"
+      >
+        <div className="flex flex-col h-[520px] bg-black/70 border border-bleach-border rounded-2xl overflow-hidden shadow-inner">
+          {/* Header Bar */}
+          <div className="p-3 bg-bleach-panel2/80 border-b border-bleach-border flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse"></span>
+              <span className="text-xs font-bold text-bleach-cream uppercase tracking-wider">Canal Geral de Karakura & Seireitei</span>
+            </div>
+            <span className="text-[11px] text-bleach-muted font-mono">{mensagens.length} mensagens gravadas</span>
+          </div>
+
+          {/* Messages Area */}
+          <div className="flex-1 p-4 overflow-y-auto space-y-3">
+            {mensagens.map((msg) => {
+              const isMe = session && (msg.charId === myChar?.id || (session.role === "super_admin" && msg.autorNome.includes("ADM")));
+              return (
+                <div key={msg.id} className={`flex items-start gap-3 ${isMe ? "flex-row-reverse" : ""}`}>
+                  <img src={msg.charFoto || 'assets/ichigo-orange.png'} className="w-9 h-9 rounded-xl object-cover border border-bleach-border shrink-0 mt-0.5" />
+                  <div className={`max-w-[75%] rounded-2xl p-3 text-xs space-y-1 ${
+                    isMe ? "bg-orange-950/70 border border-bleach-orange/60 text-white rounded-tr-none" : "bg-bleach-panel2 border border-white/10 text-bleach-cream rounded-tl-none"
+                  }`}>
+                    <div className="flex items-center justify-between gap-3 text-[10px]">
+                      <strong className={isMe ? "text-bleach-orange" : "text-cyan-300"}>{msg.autorNome}</strong>
+                      <span className="text-bleach-muted font-mono">{msg.timestamp}</span>
+                    </div>
+                    <p className="leading-relaxed whitespace-pre-wrap break-words">{msg.texto}</p>
+                    {msg.esquadrao && (
+                      <span className="text-[9px] text-bleach-muted block pt-0.5 border-t border-white/5 uppercase font-mono">
+                        {msg.esquadrao}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+            <div ref={chatBottomRef} />
+          </div>
+
+          {/* Message Input Box */}
+          <form onSubmit={enviarMensagem} className="p-3 bg-bleach-panel2 border-t border-bleach-border flex gap-2">
+            <input
+              type="text"
+              placeholder={session ? "Escreva sua mensagem para todos os Shinigamis..." : "Faça login na sua ficha para interagir no chat..."}
+              disabled={!session}
+              value={mensagem}
+              onChange={(e) => setMensagem(e.target.value)}
+              className="flex-1 bg-black/80 border border-bleach-border focus:border-bleach-orange rounded-xl px-4 py-2.5 text-xs text-white placeholder-bleach-muted outline-none disabled:opacity-50"
+            />
+            <button
+              type="submit"
+              disabled={!session || !mensagem.trim()}
+              className="px-5 py-2.5 bg-gradient-to-r from-bleach-orange to-bleach-orangeDeep text-black font-extrabold text-xs uppercase rounded-xl shadow hover:brightness-110 disabled:opacity-40 transition"
+            >
+              Enviar ➔
+            </button>
+          </form>
+        </div>
+      </Section>
+    </div>
+  );
+}
+
+// PLAYER LOGIN SCREEN
 function LoginScreen({ db, onLogin, onOpenAdminModal, activeCloudUrl, setDb }) {
   const [identificador, setIdentificador] = useState("");
   const [codigo, setCodigo] = useState("");
@@ -192,7 +318,7 @@ function LoginScreen({ db, onLogin, onOpenAdminModal, activeCloudUrl, setDb }) {
     const cloudUrl = activeCloudUrl || db.firebaseUrl || localStorage.getItem("bleach_firebase_url");
     if (cloudUrl) {
       try {
-        const cleanUrl = cloudUrl.replace(/\/$/, "");
+        const cleanUrl = cloudUrl.endsWith('/') ? cloudUrl.slice(0, -1) : cloudUrl;
         const endpoint = cleanUrl.endsWith('.json') ? cleanUrl : cleanUrl + '/bleachDB.json';
         const res = await fetch(endpoint + '?t=' + Date.now());
         if (res.ok) {
@@ -210,7 +336,6 @@ function LoginScreen({ db, onLogin, onOpenAdminModal, activeCloudUrl, setDb }) {
 
     const digitsOnly = termo.replace(/\D/g, "");
 
-    // 1. Strict match on code
     const matchingChars = currentPersonagens.filter((c) => {
       const cCode = (c.codigo || "").trim().toLowerCase();
       return cCode === cod;
@@ -218,7 +343,7 @@ function LoginScreen({ db, onLogin, onOpenAdminModal, activeCloudUrl, setDb }) {
 
     if (matchingChars.length === 0) {
       setCarregando(false);
-      setErro("Código de acesso não encontrado. Verifique se digitou corretamente ou se a ficha foi apagada pelo Administrador.");
+      setErro("Código de acesso não encontrado. Verifique se digitou corretamente.");
       return;
     }
 
@@ -227,13 +352,8 @@ function LoginScreen({ db, onLogin, onOpenAdminModal, activeCloudUrl, setDb }) {
       p = matchingChars.find((c) => {
         const cPhone = (c.whatsapp || "").replace(/\D/g, "");
         const cName = (c.nome || "").toLowerCase();
-
-        if (digitsOnly.length >= 4 && (cPhone.includes(digitsOnly) || digitsOnly.includes(cPhone.slice(-8)))) {
-          return true;
-        }
-        if (cName.includes(termo) || termo.includes(cName)) {
-          return true;
-        }
+        if (digitsOnly.length >= 4 && (cPhone.includes(digitsOnly) || digitsOnly.includes(cPhone.slice(-8)))) return true;
+        if (cName.includes(termo) || termo.includes(cName)) return true;
         return false;
       });
 
@@ -245,7 +365,7 @@ function LoginScreen({ db, onLogin, onOpenAdminModal, activeCloudUrl, setDb }) {
     } else {
       if (matchingChars.length > 1) {
         setCarregando(false);
-        setErro("Existe mais de um personagem com esse código. Por favor, preencha também o seu Nome ou WhatsApp.");
+        setErro("Existe mais de um personagem com esse código. Preencha também seu Nome ou WhatsApp.");
         return;
       }
       p = matchingChars[0];
@@ -303,23 +423,13 @@ function LoginScreen({ db, onLogin, onOpenAdminModal, activeCloudUrl, setDb }) {
           >
             {carregando ? "Autenticando..." : "⚔️ Acessar Minha Ficha"}
           </button>
-
-          <div className="text-center pt-2">
-            <button
-              type="button"
-              onClick={onOpenAdminModal}
-              className="text-xs text-yellow-400/80 hover:text-yellow-300 font-bold hover:underline"
-            >
-              👑 Você é Administrador ou Avaliador? Clique aqui para login ADM
-            </button>
-          </div>
         </form>
       </Section>
     </div>
   );
 }
 
-// ADMIN LOGIN SCREEN & MODAL (SUPPORTS Malu123 & Sociedade2026)
+// ADMIN LOGIN SCREEN & MODAL (CLEAN & SUBTLE)
 function AdminLoginScreen({ db, onLoginAdmin }) {
   const [usuario, setUsuario] = useState("");
   const [senha, setSenha] = useState("");
@@ -361,10 +471,10 @@ function AdminLoginScreen({ db, onLoginAdmin }) {
       >
         <form onSubmit={entrar} className="space-y-4">
           <div>
-            <label className="block text-xs font-bold text-yellow-400 mb-1 uppercase">Usuário ADM</label>
+            <label className="block text-xs font-bold text-yellow-400 mb-1 uppercase">Usuário de Acesso</label>
             <input
               type="text"
-              placeholder="Ex: Malu123 ou kisuke"
+              placeholder="Digite seu usuário..."
               value={usuario}
               onChange={(e) => setUsuario(e.target.value)}
               className="w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-3 text-xs text-white font-mono"
@@ -372,7 +482,7 @@ function AdminLoginScreen({ db, onLoginAdmin }) {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-yellow-400 mb-1 uppercase">Senha Individual</label>
+            <label className="block text-xs font-bold text-yellow-400 mb-1 uppercase">Senha de Acesso</label>
             <input
               type="password"
               placeholder="••••••••"
@@ -388,7 +498,7 @@ function AdminLoginScreen({ db, onLoginAdmin }) {
             type="submit"
             className="w-full py-2.5 bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold text-xs uppercase rounded-xl shadow"
           >
-            👑 Entrar no Painel Administrativo
+            Entrar no Painel Administrativo
           </button>
         </form>
       </Section>
@@ -425,14 +535,14 @@ function AdminLoginModal({ db, onClose, onSuccess }) {
       return;
     }
 
-    setErro("Credenciais administrativas incorretas.");
+    setErro("Credenciais incorretas.");
   }
 
   return (
     <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
       <div className="bg-bleach-panel border-2 border-yellow-500/80 rounded-2xl p-6 max-w-sm w-full shadow-2xl">
         <div className="flex items-center justify-between mb-4 border-b border-bleach-borderSoft pb-2">
-          <h3 className="font-title text-xl text-yellow-400">LOGIN DA ADMINISTRAÇÃO</h3>
+          <h3 className="font-title text-xl text-yellow-400">ACESSO DO SEIREITEI</h3>
           <button onClick={onClose} className="text-bleach-muted hover:text-white font-bold">✕</button>
         </div>
 
@@ -441,7 +551,7 @@ function AdminLoginModal({ db, onClose, onSuccess }) {
             <label className="block text-bleach-creamDim mb-1 font-bold">Usuário</label>
             <input
               type="text"
-              placeholder="Ex: Malu123"
+              placeholder="Usuário..."
               value={usuario}
               onChange={(e) => setUsuario(e.target.value)}
               className="w-full bg-bleach-panel2 border border-bleach-border rounded p-2 text-white font-mono"
@@ -463,7 +573,7 @@ function AdminLoginModal({ db, onClose, onSuccess }) {
             type="submit"
             className="w-full py-2 bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold uppercase rounded shadow"
           >
-            Entrar como ADM
+            Autenticar
           </button>
         </form>
       </div>
@@ -612,7 +722,7 @@ function KidosView({ personagem, isAdmin }) {
       <div className="bg-banner-overlay border border-bleach-border rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
         <div className="relative z-10 max-w-3xl">
           <span className="px-3 py-1 bg-bleach-blue/20 border border-bleach-blue text-bleach-blue text-xs font-bold rounded-full uppercase tracking-wider">
-            Grimório Completo da Sociedade das Almas • 75+ Feitiços Oficiais & Autorais
+            Grimório Completo da Sociedade das Almas • Hadō, Bakudō & Kaidō
           </span>
           <h2 className="font-title text-4xl sm:text-5xl tracking-widest text-bleach-orange mt-3 reiatsu-text-glow">
             COMPÊNDIO SUPREMO DE KIDŌS
@@ -837,88 +947,279 @@ function KidosView({ personagem, isAdmin }) {
   );
 }
 
-// ARENA VIEW
+// ARENA VIEW (WITH TURN LOG TIMELINE & DUEL RESET)
 function ArenaView({ db, saveDb, session, myChar }) {
-  const [dueloAtivo, setDueloAtivo] = useState(db.combatesArena?.[0] || null);
-  const [novoLog, setNovoLog] = useState("");
+  const [dueloAtivoId, setDueloAtivoId] = useState(db.combatesArena?.[0]?.id || "arena-1");
+  const [acaoP1, setAcaoP1] = useState("");
+  const [acaoP2, setAcaoP2] = useState("");
+  const [vereditoJuiz, setVereditoJuiz] = useState("");
+  const [dadoRolado, setDadoRolado] = useState(null);
 
-  const p1 = (db.personagens || []).find(p => p.id === dueloAtivo?.p1Id) || db.personagens[0];
-  const p2 = (db.personagens || []).find(p => p.id === dueloAtivo?.p2Id) || db.personagens[1];
+  const duelo = (db.combatesArena || []).find(d => d.id === dueloAtivoId) || db.combatesArena?.[0] || {
+    id: "arena-1",
+    p1Id: db.personagens?.[0]?.id,
+    p2Id: db.personagens?.[1]?.id,
+    turnos: [],
+    estadoP1: "Inteiro",
+    estadoP2: "Inteiro"
+  };
 
-  function adicionarLogJuiz() {
-    if (!novoLog.trim()) return;
-    const logItem = {
+  const p1 = (db.personagens || []).find(p => p.id === duelo.p1Id) || db.personagens?.[0];
+  const p2 = (db.personagens || []).find(p => p.id === duelo.p2Id) || db.personagens?.[1];
+
+  function rolarDadoDuelo() {
+    const res = Math.floor(Math.random() * 6) + 1;
+    const cat = res <= 2 ? "Falha (1–2)" : res <= 4 ? "Sucesso Parcial (3–4)" : "Sucesso Total (5–6)";
+    setDadoRolado({ res, cat });
+    playReiatsuSound('roll');
+  }
+
+  function registrarTurno(e) {
+    e.preventDefault();
+    if (!vereditoJuiz.trim() && !acaoP1.trim()) return;
+
+    const numTurno = (duelo.turnos || []).length + 1;
+    const novoTurno = {
       id: uid(),
+      numero: numTurno,
       autor: session?.nome || "Juiz da Arena",
-      texto: novoLog.trim(),
+      acaoP1: acaoP1.trim() || "—",
+      acaoP2: acaoP2.trim() || "—",
+      veredito: vereditoJuiz.trim() || "Turno concluído e avaliado pelo narrador.",
+      dado: dadoRolado ? `1d6: ${dadoRolado.res} (${dadoRolado.cat})` : null,
       data: nowStr()
     };
+
     const novosDuelos = (db.combatesArena || []).map(d => {
-      if (d.id === dueloAtivo.id) {
-        return { ...d, logJuiz: [logItem, ...(d.logJuiz || [])] };
+      if (d.id === duelo.id) {
+        return { ...d, turnos: [novoTurno, ...(d.turnos || [])] };
+      }
+      return d;
+    });
+
+    saveDb({ ...db, combatesArena: novosDuelos });
+    setAcaoP1("");
+    setAcaoP2("");
+    setVereditoJuiz("");
+    setDadoRolado(null);
+    playReiatsuSound('win');
+  }
+
+  function resetarDuelo() {
+    const confirma = confirm("⚠️ Deseja reiniciar este combate e limpar o registro de turnos?");
+    if (!confirma) return;
+
+    const novosDuelos = (db.combatesArena || []).map(d => {
+      if (d.id === duelo.id) {
+        return {
+          ...d,
+          turnos: [],
+          estadoP1: "Inteiro",
+          estadoP2: "Inteiro",
+          finalizado: false
+        };
+      }
+      return d;
+    });
+
+    saveDb({ ...db, combatesArena: novosDuelos });
+    playReiatsuSound('shatter');
+    alert("Duelo resetado com sucesso! Os combatentes retornaram ao estado Inteiro.");
+  }
+
+  function alterarEstadoCombatente(combNum, novoEstado) {
+    const novosDuelos = (db.combatesArena || []).map(d => {
+      if (d.id === duelo.id) {
+        return {
+          ...d,
+          [combNum === 1 ? "estadoP1" : "estadoP2"]: novoEstado
+        };
       }
       return d;
     });
     saveDb({ ...db, combatesArena: novosDuelos });
-    setNovoLog("");
-    playReiatsuSound('roll');
   }
 
   return (
     <div className="space-y-6">
-      <Section title="Arena de Duelos em ON" subtitle="Espaço oficial de arbitragem e combate supervisionado">
+      <Section
+        title="⚔️ Arena Oficial de Duelos & Linha do Tempo"
+        subtitle="Espaço de combate com julgamento narrativo por turnos, regra do 1d6 e registro contínuo"
+        right={
+          <button
+            onClick={resetarDuelo}
+            className="px-3.5 py-1.5 bg-red-950/80 hover:bg-red-900 border border-red-500 text-red-200 text-xs font-bold rounded-xl shadow transition flex items-center gap-1.5"
+          >
+            <span>🔄</span> Resetar Duelo
+          </button>
+        }
+      >
         {p1 && p2 ? (
           <div className="space-y-6">
+            {/* Fighter Status Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-5 bg-bleach-panel2 border-2 border-red-500/50 rounded-2xl flex items-center gap-4">
-                <img src={p1.foto || 'assets/ichigo-orange.png'} className="w-16 h-16 rounded-xl object-cover border border-red-500" />
-                <div>
-                  <span className="text-[10px] font-bold text-red-400 uppercase">Combatente 1</span>
-                  <h4 className="font-title text-2xl text-white">{p1.nome}</h4>
-                  <div className="text-xs text-bleach-muted font-mono flex gap-2 mt-1">
-                    <span>FOR: {p1.atributos.forca}</span>
-                    <span>VEL: {p1.atributos.velocidade}</span>
-                    <span>RES: {p1.atributos.resiliencia}</span>
+              <div className="p-5 bg-bleach-panel2 border-2 border-red-500/50 rounded-2xl flex items-center justify-between gap-4 shadow-xl">
+                <div className="flex items-center gap-3">
+                  <img src={p1.foto || 'assets/ichigo-orange.png'} className="w-16 h-16 rounded-xl object-cover border border-red-500" />
+                  <div>
+                    <span className="text-[10px] font-bold text-red-400 uppercase">Combatente 1</span>
+                    <h4 className="font-title text-2xl text-white">{p1.nome}</h4>
+                    <div className="text-xs text-bleach-muted font-mono flex gap-2 mt-1">
+                      <span>FOR: {p1.atributos?.forca}</span>
+                      <span>VEL: {p1.atributos?.velocidade}</span>
+                      <span>RES: {p1.atributos?.resiliencia}</span>
+                    </div>
                   </div>
+                </div>
+
+                <div className="text-right space-y-1">
+                  <span className="text-[10px] text-bleach-muted block uppercase">Estado Atual</span>
+                  <select
+                    value={duelo.estadoP1 || "Inteiro"}
+                    onChange={(e) => alterarEstadoCombatente(1, e.target.value)}
+                    className="bg-black border border-red-500/60 rounded-lg p-1.5 text-xs text-white font-bold"
+                  >
+                    {ESTADOS.map(st => <option key={st.key} value={st.key}>{st.key}</option>)}
+                  </select>
                 </div>
               </div>
 
-              <div className="p-5 bg-bleach-panel2 border-2 border-blue-500/50 rounded-2xl flex items-center gap-4">
-                <img src={p2.foto || 'assets/ichigo-moon.png'} className="w-16 h-16 rounded-xl object-cover border border-blue-500" />
-                <div>
-                  <span className="text-[10px] font-bold text-cyan-400 uppercase">Combatente 2</span>
-                  <h4 className="font-title text-2xl text-white">{p2.nome}</h4>
-                  <div className="text-xs text-bleach-muted font-mono flex gap-2 mt-1">
-                    <span>FOR: {p2.atributos.forca}</span>
-                    <span>VEL: {p2.atributos.velocidade}</span>
-                    <span>RES: {p2.atributos.resiliencia}</span>
+              <div className="p-5 bg-bleach-panel2 border-2 border-blue-500/50 rounded-2xl flex items-center justify-between gap-4 shadow-xl">
+                <div className="flex items-center gap-3">
+                  <img src={p2.foto || 'assets/ichigo-moon.png'} className="w-16 h-16 rounded-xl object-cover border border-blue-500" />
+                  <div>
+                    <span className="text-[10px] font-bold text-cyan-400 uppercase">Combatente 2</span>
+                    <h4 className="font-title text-2xl text-white">{p2.nome}</h4>
+                    <div className="text-xs text-bleach-muted font-mono flex gap-2 mt-1">
+                      <span>FOR: {p2.atributos?.forca}</span>
+                      <span>VEL: {p2.atributos?.velocidade}</span>
+                      <span>RES: {p2.atributos?.resiliencia}</span>
+                    </div>
                   </div>
+                </div>
+
+                <div className="text-right space-y-1">
+                  <span className="text-[10px] text-bleach-muted block uppercase">Estado Atual</span>
+                  <select
+                    value={duelo.estadoP2 || "Inteiro"}
+                    onChange={(e) => alterarEstadoCombatente(2, e.target.value)}
+                    className="bg-black border border-cyan-500/60 rounded-lg p-1.5 text-xs text-white font-bold"
+                  >
+                    {ESTADOS.map(st => <option key={st.key} value={st.key}>{st.key}</option>)}
+                  </select>
                 </div>
               </div>
             </div>
 
-            {/* Judge Log Input */}
-            <div className="p-4 bg-black/60 border border-bleach-border rounded-xl space-y-3">
-              <h4 className="text-xs font-bold text-bleach-orange uppercase">Decisão do Juiz / Narrador</h4>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  placeholder="Descreva o desfecho do turno de combate..."
-                  value={novoLog}
-                  onChange={(e) => setNovoLog(e.target.value)}
-                  className="flex-1 bg-bleach-panel2 border border-bleach-border rounded-lg p-2.5 text-xs text-white"
-                />
+            {/* Registrar Novo Turno Form */}
+            <form onSubmit={registrarTurno} className="p-4 bg-black/60 border border-bleach-border rounded-2xl space-y-3">
+              <div className="flex items-center justify-between border-b border-white/5 pb-2">
+                <h4 className="text-xs font-bold text-bleach-orange uppercase flex items-center gap-2">
+                  <span>✍️</span> Registrar Novo Turno de Combate
+                </h4>
                 <button
-                  onClick={adicionarLogJuiz}
-                  className="px-5 py-2.5 bg-bleach-orange text-black font-extrabold text-xs uppercase rounded-lg shadow"
+                  type="button"
+                  onClick={rolarDadoDuelo}
+                  className="px-3 py-1 bg-bleach-panel border border-bleach-border hover:border-yellow-400 text-yellow-300 text-xs font-bold rounded-lg transition"
                 >
-                  Registrar
+                  🎲 Rolar 1d6 (Regra Oficial)
                 </button>
               </div>
+
+              {dadoRolado && (
+                <div className="p-2.5 bg-yellow-950/60 border border-yellow-500/50 rounded-xl flex items-center justify-between text-xs">
+                  <span className="text-yellow-200">Resultado do Dado: <strong>1d6 = {dadoRolado.res}</strong></span>
+                  <span className="font-bold text-yellow-300 uppercase">{dadoRolado.cat}</span>
+                </div>
+              )}
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div>
+                  <label className="block text-bleach-muted font-bold mb-1">Ação de {p1.nome}</label>
+                  <input
+                    type="text"
+                    placeholder="Ex: Avançou com Shunpo e desferiu corte vertical..."
+                    value={acaoP1}
+                    onChange={(e) => setAcaoP1(e.target.value)}
+                    className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2 text-white"
+                  />
+                </div>
+                <div>
+                  <label className="block text-bleach-muted font-bold mb-1">Ação de {p2.nome}</label>
+                  <input
+                    type="text"
+                    placeholder="Ex: Ergueu Bakudō #39 e contra-atacou com Hadō..."
+                    value={acaoP2}
+                    onChange={(e) => setAcaoP2(e.target.value)}
+                    className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2 text-white"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-bleach-creamDim font-bold mb-1 text-xs uppercase">Decisão do Juiz / Consequência Narrativa *</label>
+                <input
+                  type="text"
+                  placeholder="Ex: O corte rompeu a barreira mas causou apenas dano superficial; ambos recuam..."
+                  value={vereditoJuiz}
+                  onChange={(e) => setVereditoJuiz(e.target.value)}
+                  className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2.5 text-xs text-white"
+                />
+              </div>
+
+              <div className="flex justify-end">
+                <button
+                  type="submit"
+                  className="px-6 py-2.5 bg-gradient-to-r from-bleach-orange to-red-600 text-black font-extrabold text-xs uppercase tracking-wider rounded-xl shadow"
+                >
+                  ✓ Gravar Turno na Linha do Tempo
+                </button>
+              </div>
+            </form>
+
+            {/* Turn Timeline Log */}
+            <div className="space-y-3">
+              <h4 className="font-title text-lg text-bleach-cream flex items-center gap-2">
+                <span>📜</span> REGISTRO CRONOLÓGICO DOS TURNOS ({(duelo.turnos || []).length})
+              </h4>
+
+              {(duelo.turnos || []).length === 0 ? (
+                <div className="p-8 text-center text-xs text-bleach-muted bg-black/40 rounded-xl border border-white/5">
+                  Nenhum turno registrado neste combate ainda.
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {(duelo.turnos || []).map((t) => (
+                    <div key={t.id} className="p-4 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-2">
+                      <div className="flex items-center justify-between border-b border-white/5 pb-1 text-xs">
+                        <span className="font-title text-bleach-orange text-base">TURNO #{t.numero}</span>
+                        <span className="text-bleach-muted font-mono text-[11px]">{t.data} — Juiz: {t.autor}</span>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-bleach-creamDim">
+                        <div className="p-2 bg-black/40 rounded-lg">
+                          <strong className="text-red-400 block">{p1.nome}:</strong>
+                          <p>{t.acaoP1}</p>
+                        </div>
+                        <div className="p-2 bg-black/40 rounded-lg">
+                          <strong className="text-cyan-400 block">{p2.nome}:</strong>
+                          <p>{t.acaoP2}</p>
+                        </div>
+                      </div>
+
+                      <div className="p-2.5 bg-black/70 border border-yellow-500/30 rounded-lg text-xs space-y-1">
+                        <span className="font-bold text-yellow-300 block uppercase text-[10px]">Consequência do Turno:</span>
+                        <p className="text-white">{t.veredito}</p>
+                        {t.dado && <span className="text-[10px] text-yellow-400 font-mono block">🎲 {t.dado}</span>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         ) : (
-          <p className="text-xs text-bleach-muted">Nenhum combate ativo no momento.</p>
+          <p className="text-xs text-bleach-muted">Nenhum combatente selecionado.</p>
         )}
       </Section>
     </div>

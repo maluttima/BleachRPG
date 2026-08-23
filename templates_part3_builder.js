@@ -1,5 +1,5 @@
 // =========================================================================
-// VIEWS PART 3: ADMIN PANEL, RICH SISTEMAS VIEW & APP MOUNT
+// VIEWS PART 3: ADMIN PANEL, FULL OFFICIAL SISTEMAS VIEW & LOL-STYLE PATCH NOTES
 // =========================================================================
 
 // TAB: PAINEL DE CONTROLE DA ADMINISTRAÇÃO
@@ -19,7 +19,7 @@ function AdminPanel({ db, saveDb, session, cloudStatus, onAbrirFicha }) {
   const [novoEsquadrao, setNovoEsquadrao] = useState("11º Esquadrão");
 
   // Dados de Rolagem de Dados
-  const [dadoTipo, setDadoTipo] = useState("d20");
+  const [dadoTipo, setDadoTipo] = useState("d6");
   const [dadoChar, setDadoChar] = useState(db.personagens?.[0]?.nome || "Geral");
 
   function criarPersonagem(e) {
@@ -122,14 +122,16 @@ function AdminPanel({ db, saveDb, session, cloudStatus, onAbrirFicha }) {
   }
 
   function rolarDadoPublico() {
-    const lados = dadoTipo === "d20" ? 20 : dadoTipo === "d100" ? 100 : 10;
+    const lados = dadoTipo === "d6" ? 6 : dadoTipo === "d20" ? 20 : 100;
     const res = Math.floor(Math.random() * lados) + 1;
-    let cat = "Sucesso Regular";
-    if (dadoTipo === "d20") {
-      if (res === 20) cat = "🌟 Sucesso Crítico Absoluto (20)";
+    let cat = "Sucesso";
+    if (dadoTipo === "d6") {
+      cat = res <= 2 ? "Falha (1–2)" : res <= 4 ? "Sucesso Parcial (3–4)" : "Sucesso Total (5–6)";
+    } else if (dadoTipo === "d20") {
+      if (res === 20) cat = "🌟 Crítico Absoluto (20)";
       else if (res >= 16) cat = "✨ Extremo Sucesso (+80%)";
       else if (res >= 10) cat = "✓ Sucesso Médio (+50%)";
-      else if (res === 1) cat = "💀 Falha Crítica (Desastre 1)";
+      else if (res === 1) cat = "💀 Falha Crítica (1)";
       else cat = "✗ Falha";
     }
 
@@ -298,12 +300,12 @@ function AdminPanel({ db, saveDb, session, cloudStatus, onAbrirFicha }) {
 
       {/* SUBTAB: ROLAGEM DE DADOS */}
       {tabAdm === "dados" && (
-        <Section title="Mesa de Rolagem de Dados de Alta Tensão" subtitle="Rolagens públicas de d20 e d100 para julgamento de cenas">
+        <Section title="Mesa de Rolagem de Dados de Alta Tensão" subtitle="Rolagens públicas de 1d6, d20 e d100 para julgamento de cenas">
           <div className="p-4 bg-black/60 rounded-xl border border-bleach-border flex flex-wrap gap-3 items-center mb-6">
             <select value={dadoTipo} onChange={(e) => setDadoTipo(e.target.value)} className="bg-bleach-panel2 border border-bleach-border rounded-lg p-2.5 text-xs text-white">
-              <option value="d20">🎲 Dado d20 (Testes & Combate)</option>
+              <option value="d6">🎲 Dado 1d6 (Regra Oficial de Combate)</option>
+              <option value="d20">🎲 Dado d20 (Testes Críticos)</option>
               <option value="d100">🎲 Dado d100 (Porcentagens)</option>
-              <option value="d10">🎲 Dado d10 (Escalas Rápidas)</option>
             </select>
 
             <select value={dadoChar} onChange={(e) => setDadoChar(e.target.value)} className="bg-bleach-panel2 border border-bleach-border rounded-lg p-2.5 text-xs text-white">
@@ -336,9 +338,9 @@ function AdminPanel({ db, saveDb, session, cloudStatus, onAbrirFicha }) {
   );
 }
 
-// RICH SISTEMAS & REGRAS VIEW (COMPLETE ORIGINAL SYSTEMS RESTORED)
+// FULL OFFICIAL SISTEMAS & REGRAS VIEW (100% CANONICAL BLEACH RPG BASE SYSTEM)
 function SistemasView() {
-  const [tabSis, setTabSis] = useState("atributos");
+  const [tabSis, setTabSis] = useState("conceito");
 
   return (
     <div className="space-y-6">
@@ -346,13 +348,13 @@ function SistemasView() {
       <div className="bg-banner-overlay border border-bleach-border rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
         <div className="relative z-10 max-w-3xl">
           <span className="px-3 py-1 bg-bleach-orange/20 border border-bleach-orange text-bleach-orange text-xs font-bold rounded-full uppercase tracking-wider">
-            Regulamento Oficial da Sociedade das Almas • Versão 2026
+            Regulamento Oficial da Sociedade das Almas • Versão 5.0
           </span>
           <h2 className="font-title text-4xl sm:text-5xl tracking-widest text-bleach-cream mt-3 reiatsu-text-glow">
-            COMPÊNDIO DE SISTEMAS & MECÂNICAS
+            BLEACH RPG — SISTEMA BASE
           </h2>
           <p className="text-xs sm:text-sm text-bleach-creamDim mt-2 leading-relaxed">
-            Consulte todas as diretrizes oficiais de atributos, treinos em ON, roletas de sorteio, individualização de Zanpakutōs e regras de conjuração de Kidō.
+            O RPG é focado principalmente em Narrativa, Desenvolvimento de personagem, Combate, Power scaling e Evolução gradual. Evita excesso de rolagens — dados só aparecem quando existe dúvida real!
           </p>
         </div>
       </div>
@@ -360,11 +362,12 @@ function SistemasView() {
       {/* Category Tabs */}
       <div className="flex gap-2 overflow-x-auto border-b border-bleach-borderSoft pb-2">
         {[
-          { id: "atributos", label: "Atributos & Patamares", icon: "⚡" },
-          { id: "treinos", label: "Treinos em ON & Ganhos", icon: "✍️" },
-          { id: "sorteios", label: "Sorteios & Roletas", icon: "🎁" },
-          { id: "zanpakuto", label: "Zanpakutō & 33 Regras de IA", icon: "🗡️" },
-          { id: "kidos", label: "Kidō & Encantamentos", icon: "📕" },
+          { id: "conceito", label: "1–4. Conceito, Raças & Kidō Inicial", icon: "⚔️" },
+          { id: "atributos", label: "5–9. Atributos & Power Scaling", icon: "⚡" },
+          { id: "combate", label: "10–14. Combate, 1d6 & Estados", icon: "🩸" },
+          { id: "treinamento", label: "15–21. Treinos OFF & Fadiga", icon: "🏋️" },
+          { id: "missoes", label: "22–27. Missões, Miscelâneas & Drops", icon: "📜" },
+          { id: "filosofia", label: "28–30. Técnicas, Zanpakutō & Filosofia", icon: "🗡️" },
         ].map(t => (
           <button
             key={t.id}
@@ -379,185 +382,374 @@ function SistemasView() {
         ))}
       </div>
 
-      {/* ABA 1: ATRIBUTOS & PATAMARES */}
-      {tabSis === "atributos" && (
+      {/* TAB 1: CONCEITO, RAÇAS & KIDŌ INICIAL */}
+      {tabSis === "conceito" && (
         <div className="space-y-6">
-          <Section title="Os 4 Atributos Primários da Alma" subtitle="A base estrutural do poder de todo Shinigami">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {ATTRS.map(a => (
-                <div key={a.key} className="p-4 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-2">
-                  <h4 className="font-bold text-sm uppercase tracking-wider" style={{ color: a.color }}>{a.label}</h4>
-                  <p className="text-xs text-bleach-creamDim leading-relaxed">{a.desc}</p>
-                  <div className="text-[11px] text-bleach-muted pt-1 border-t border-white/5">
-                    {a.key === "pressao" && "Determina a quantidade máxima de Kidōs por cena, o alcance de percepção sensorial e a resistência contra supressões espirituais."}
-                    {a.key === "forca" && "Governa a potência do Zanjutsu (esgrima) e Hakuda (combate desarmado), além do impacto de cortes e colisões físicas."}
-                    {a.key === "velocidade" && "Rege a velocidade de locomoção, reflexos de combate, capacidade de esquiva e a maestria na técnica de Hohō/Shunpo."}
-                    {a.key === "resiliencia" && "Controla a vitalidade do corpo espiritual (Hakusui e Saketsu), absorção de impacto, resistência a ferimentos e fadiga."}
-                  </div>
-                </div>
-              ))}
+          <Section title="1. Conceito do Sistema" subtitle="A essência da interpretação e resolução de ações">
+            <div className="space-y-3 text-xs text-bleach-creamDim leading-relaxed">
+              <p>O RPG é focado principalmente em: <strong>Narrativa, Desenvolvimento de Personagem, Combate, Power Scaling e Evolução Gradual</strong>.</p>
+              <p>O sistema deve evitar excesso de rolagens. <strong>Dados só aparecem quando existe uma dúvida real.</strong></p>
+              <div className="p-3 bg-black/60 border border-bleach-orange/40 rounded-xl text-white font-mono text-center">
+                Resultado = Atributos + Técnicas + Experiência + Circunstâncias + Narrativa
+              </div>
             </div>
           </Section>
 
-          <Section title="Escala Oficial de Patamares de Poder" subtitle="A hierarquia espiritual da Sociedade das Almas">
-            <div className="space-y-3">
-              {[
-                { faixa: "1 a 10 pts", titulo: "Inexperiente", desc: "Aluno recém-ingressado na Academia Shinō.", cor: C.muted },
-                { faixa: "11 a 30 pts", titulo: "Iniciante", desc: "Oficial subalterno, combatente raso de Esquadrão.", cor: C.green },
-                { faixa: "31 a 60 pts", titulo: "Treinado", desc: "Oficial de Assento (10º ao 4º Oficial), experiente em missões no Mundo Humano.", cor: C.blue },
-                { faixa: "61 a 100 pts", titulo: "Veterano", desc: "3º Oficial ou Tenente de Esquadrão; maestria de Shikai e combate de alta escala.", cor: C.purple },
-                { faixa: "101 a 150 pts", titulo: "Mestre", desc: "Capitão do Gotei 13; domínio pleno de Bankai e liderança militar absoluta.", cor: C.yellow },
-                { faixa: "150+ pts", titulo: "Transcendental", desc: "Nível Divisão Zero / Guarda Real / Força Primordial do Seireitei.", cor: "#FFD700" }
-              ].map(tier => (
-                <div key={tier.titulo} className="p-3 bg-bleach-panel2 border border-bleach-border rounded-xl flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-3">
-                    <span className="px-2.5 py-1 rounded font-mono font-bold text-xs bg-black text-white border border-white/10">{tier.faixa}</span>
-                    <div>
-                      <h5 className="font-bold text-xs uppercase" style={{ color: tier.cor }}>{tier.titulo}</h5>
-                      <p className="text-[11px] text-bleach-muted">{tier.desc}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Section>
-        </div>
-      )}
-
-      {/* ABA 2: TREINOS EM ON */}
-      {tabSis === "treinos" && (
-        <div className="space-y-6">
-          <Section title="Sistema de Treinos em ON & Ganhos" subtitle="Diretrizes para progressão de atributos através de roleplay">
-            <div className="space-y-4 text-xs text-bleach-creamDim leading-relaxed">
-              <div className="p-4 bg-bleach-panel2 border-l-4 border-bleach-orange rounded-xl space-y-2">
-                <h4 className="font-bold text-sm text-bleach-orange uppercase">📜 Treino Básico em ON (30 Linhas)</h4>
-                <p>O jogador que narrar uma cena individual de treino focada e bem estruturada com no mínimo <strong>30 linhas</strong> no grupo oficial receberá:</p>
-                <ul className="list-disc list-inside space-y-1 text-white font-mono">
-                  <li>+1 Ponto Livre de Atributo (ou em atributo treinado)</li>
-                  <li>+4 Giros de Sorteio Comum</li>
-                  <li>+1 Giro de Sorteio Especial</li>
+          <Section title="2 & 3. Raças Disponíveis & Diferença de Origens" subtitle="Shinigami da Sociedade das Almas vs Shinigami Ex-Humano">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs mb-4">
+              <div className="p-4 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-2">
+                <h4 className="font-bold text-sm text-cyan-400 uppercase">⚔️ Shinigami (Nativo)</h4>
+                <p className="text-bleach-creamDim">Personagem que já pertence à Sociedade das Almas e possui formação básica como Shinigami na Academia Shinō.</p>
+                <ul className="list-disc list-inside text-[11px] text-bleach-muted space-y-0.5">
+                  <li>Possui Zanpakutō e formação inicial</li>
+                  <li>Começa com 4 Kidōs básicos à escolha</li>
+                  <li>Pode aprender Zanjutsu, Hakuda, Hohō e técnicas</li>
                 </ul>
               </div>
 
-              <div className="p-4 bg-bleach-panel2 border-l-4 border-cyan-400 rounded-xl space-y-2">
-                <h4 className="font-bold text-sm text-cyan-400 uppercase">⚡ Cenas de Arco & Missões Principais (90+ Linhas)</h4>
-                <p>Cenas profundas de desenvolvimento de arco ou missões narradas com <strong>90 linhas ou mais</strong> concedem automaticamente <strong>+15 Pontos de Atributo Garantidos</strong> e pacotes especiais de roletas de bonificação após avaliação do ADM.</p>
-              </div>
-
-              <div className="p-4 bg-bleach-panel2 border-l-4 border-purple-400 rounded-xl space-y-2">
-                <h4 className="font-bold text-sm text-purple-400 uppercase">⚔️ Combates em ON & Arbitragem</h4>
-                <p>Combates na Arena são julgados por turnos com apoio de rolagens públicas de d20. A vitória e a criatividade tática rendem pontos proporcionais definidos pelo Juiz da Arena.</p>
-              </div>
-            </div>
-          </Section>
-        </div>
-      )}
-
-      {/* ABA 3: SORTEIOS & ROLETAS */}
-      {tabSis === "sorteios" && (
-        <div className="space-y-6">
-          <Section title="Probabilidades do Sorteio Gacha Comum" subtitle="Tabela estatística oficial de drops para cada giro comum">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-              {RARIDADES_COMUNS.map(r => (
-                <div key={r.nome} className="p-3.5 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-1.5">
-                  <div className="flex justify-between items-center">
-                    <span className="font-bold text-xs uppercase" style={{ color: r.cor }}>{r.nome}</span>
-                    <span className="font-mono text-xs font-bold text-white">{r.chanceStr}</span>
-                  </div>
-                  <p className="text-[11px] text-bleach-creamDim leading-relaxed">{r.desc}</p>
-                </div>
-              ))}
-            </div>
-          </Section>
-
-          <Section title="Catálogo de Recompensas do Sorteio Especial" subtitle="Itens sagrados, elixires nobres e despertar narrativo supremo">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {RECOMPENSAS_ESPECIAIS.map(item => (
-                <div key={item.id} className="p-3 bg-bleach-panel2 border border-bleach-border rounded-xl flex justify-between items-start gap-2">
-                  <div>
-                    <h5 className="font-bold text-xs" style={{ color: item.cor }}>{item.nome}</h5>
-                    <p className="text-[11px] text-bleach-muted mt-0.5">{item.desc}</p>
-                  </div>
-                  <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-black text-white shrink-0">
-                    {item.chanceStr}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </Section>
-        </div>
-      )}
-
-      {/* ABA 4: ZANPAKUTO & 33 REGRAS */}
-      {tabSis === "zanpakuto" && (
-        <div className="space-y-6">
-          <Section title="Motor Definitivo de Individualização Espiritual (33 Regras)" subtitle="Como a IA gera armas 100% únicas e exclusivas a partir do DNA da alma">
-            <div className="space-y-4 text-xs text-bleach-creamDim leading-relaxed">
-              <p>Nenhuma Zanpakutō na Sociedade das Almas pode ser duplicada ou genérica. O motor de IA utiliza a <strong>Personalidade Selada</strong>, virtudes, fraquezas e estilo de combate para sintetizar simultaneamente <strong>4 Caminhos Espirituais</strong>:</p>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="p-3 bg-bleach-panel2 border border-red-500/40 rounded-xl space-y-1">
-                  <strong className="text-red-400 block font-bold">1. Caminho Elemental / Temperamento (~45%)</strong>
-                  <p>Alinhado diretamente à psicologia dominante do personagem (Chamas, Raios, Sombras, Vento, Gelo, Gravidade).</p>
-                </div>
-                <div className="p-3 bg-bleach-panel2 border border-blue-500/40 rounded-xl space-y-1">
-                  <strong className="text-cyan-400 block font-bold">2. Caminho Conceitual / Progressivo (~20%)</strong>
-                  <p>Baseado em regras, estágios, ciclos de carga, contadores e mecânicas táticas de acúmulo.</p>
-                </div>
-                <div className="p-3 bg-bleach-panel2 border border-purple-500/40 rounded-xl space-y-1">
-                  <strong className="text-purple-400 block font-bold">3. Caminho Compensatório / Complementar</strong>
-                  <p>Fornece exatamente o recurso que falta na anatomia tática do personagem para cobrir suas fraquezas.</p>
-                </div>
-                <div className="p-3 bg-bleach-panel2 border border-amber-500/40 rounded-xl space-y-1">
-                  <strong className="text-yellow-400 block font-bold">4. Caminho Opositivo / Experimental</strong>
-                  <p>Subverte a expectativa: manifesta o paradoxo inconsciente e a sombra da alma do Shinigami.</p>
-                </div>
-              </div>
-
-              <div className="p-3.5 bg-black/60 border border-yellow-500/40 rounded-xl text-[11px] text-yellow-200">
-                <strong>🛡️ Regra de Exclusividade & Anti-Duplicação:</strong> Cada arma escolhida recebe uma Assinatura Espiritual única (`zk-sig-...`) e é registrada no catálogo global. Duplicatas com mais de 60% de similaridade são bloqueadas pelo sistema.
-              </div>
-            </div>
-          </Section>
-        </div>
-      )}
-
-      {/* ABA 5: KIDOS & ENCANTAMENTOS */}
-      {tabSis === "kidos" && (
-        <div className="space-y-6">
-          <Section title="Grimório & Regras de Conjuração de Kidō" subtitle="Diretrizes para o uso de magias espirituais em combate e cenas">
-            <div className="space-y-4 text-xs text-bleach-creamDim leading-relaxed">
               <div className="p-4 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-2">
-                <h4 className="font-bold text-sm text-cyan-400 uppercase">⚡ Limite de Feitiços por Cena</h4>
-                <p>A quantidade máxima de feitiços que um Shinigami pode conjurar em uma mesma cena é calculada pela fórmula:</p>
-                <div className="p-2.5 bg-black rounded font-mono text-center text-bleach-orange font-bold text-sm">
-                  Máximo de Kidōs = Math.max(3, Math.floor(Pressão Espiritual / 7) + 1)
-                </div>
+                <h4 className="font-bold text-sm text-purple-400 uppercase">👤 Shinigami Ex-Humano</h4>
+                <p className="text-bleach-creamDim">Personagem que teve uma vida humana antes de se tornar Shinigami. A origem influencia personalidade, memórias, relações e motivações.</p>
+                <ul className="list-disc list-inside text-[11px] text-bleach-muted space-y-0.5">
+                  <li>Não fornece bônus automático de atributos (origem narrativa)</li>
+                  <li>Aprende Kidō posteriormente através de treino e história</li>
+                  <li>Evolução, Zanpakutō e atributos operam de forma idêntica</li>
+                </ul>
               </div>
+            </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="p-3 bg-red-950/40 border border-red-500/40 rounded-xl space-y-1">
-                  <strong className="text-red-300 block font-bold">Hadō (Destruição)</strong>
-                  <p className="text-[11px]">Feitiços ofensivos de dano direto, calor, eletricidade e impacto cinético.</p>
-                </div>
-                <div className="p-3 bg-blue-950/40 border border-blue-500/40 rounded-xl space-y-1">
-                  <strong className="text-cyan-300 block font-bold">Bakudō (Aprisionamento)</strong>
-                  <p className="text-[11px]">Feitiços de contenção, barreiras reflexivas, rastreamento e supressão de movimento.</p>
-                </div>
-                <div className="p-3 bg-emerald-950/40 border border-emerald-500/40 rounded-xl space-y-1">
-                  <strong className="text-emerald-300 block font-bold">Kaidō (Cura)</strong>
-                  <p className="text-[11px]">Técnicas médicas de regeneração de tecidos e restauração de canais de Reiatsu.</p>
-                </div>
-              </div>
+            {/* Tabela Comparativa */}
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs text-left border border-bleach-border">
+                <thead className="bg-black text-bleach-orange font-bold uppercase text-[10px]">
+                  <tr>
+                    <th className="p-2.5 border-b border-bleach-border">Característica</th>
+                    <th className="p-2.5 border-b border-bleach-border">Shinigami</th>
+                    <th className="p-2.5 border-b border-bleach-border">Shinigami Ex-Humano</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/5 text-bleach-creamDim">
+                  <tr><td className="p-2 font-semibold text-white">Origem</td><td className="p-2">Sociedade das Almas</td><td className="p-2">Mundo Humano</td></tr>
+                  <tr><td className="p-2 font-semibold text-white">Vida humana anterior</td><td className="p-2">Não</td><td className="p-2">Sim</td></tr>
+                  <tr><td className="p-2 font-semibold text-white">Atributos & Evolução</td><td className="p-2 text-green-400 font-bold">Iguais (10 + 20 livres)</td><td className="p-2 text-green-400 font-bold">Iguais (10 + 20 livres)</td></tr>
+                  <tr><td className="p-2 font-semibold text-white">Zanpakutō</td><td className="p-2">Sim</td><td className="p-2">Sim</td></tr>
+                  <tr><td className="p-2 font-semibold text-white">Kidō Inicial</td><td className="p-2 text-cyan-300">4 Kidōs Básicos</td><td className="p-2 text-yellow-300">Aprende na narrativa</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </Section>
 
-              <div className="p-3.5 bg-black/60 border border-white/10 rounded-xl space-y-1 text-[11px]">
-                <strong className="text-white block font-bold">📜 Eishōhaki (Abandono de Encantamento):</strong>
-                <p>Conjurar um Kidō sem recitar o encantamento reduz o tempo de conjuração pela metade, porém diminui a potência do feitiço em aproximadamente um terço. Recitar o encantamento completo libera 100% do poder destrutivo da magia.</p>
+          <Section title="4. Kidō Inicial & Kaidō" subtitle="Distribuição dos feitiços iniciais e diretrizes de cura">
+            <div className="space-y-3 text-xs text-bleach-creamDim leading-relaxed">
+              <p>Um Shinigami nativo começa com <strong>4 Kidō Básicos</strong> distribuídos livremente entre <strong>Hadō (Ataque)</strong>, <strong>Bakudō (Defesa/Contenção)</strong> e <strong>Kaidō (Cura)</strong>.</p>
+              <div className="p-3.5 bg-bleach-panel2 border-l-4 border-green-500 rounded-xl space-y-1">
+                <strong className="text-green-400 block font-bold">🌿 Diretrizes de Kaidō (Cura Espiritual):</strong>
+                <p>Kaidō representa técnicas de tratamento e cura espiritual para tratar ferimentos, estabilizar aliados e aliviar danos. Porém, <strong>Kaidō não substitui descanso nem recuperação narrativa</strong>. Ferimentos graves podem exigir repouso ou técnicas médicas avançadas.</p>
               </div>
             </div>
           </Section>
         </div>
       )}
+
+      {/* TAB 2: ATRIBUTOS & POWER SCALING */}
+      {tabSis === "atributos" && (
+        <div className="space-y-6">
+          <Section title="5, 6 & 7. Atributos & Criação Inicial" subtitle="Regra fundamental: O número na ficha É o atributo">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs mb-4">
+              {ATTRS.map(a => (
+                <div key={a.key} className="p-3.5 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-1">
+                  <h4 className="font-bold uppercase tracking-wider text-xs" style={{ color: a.color }}>{a.label}</h4>
+                  <p className="text-[11px] text-bleach-creamDim leading-relaxed">{a.desc}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="p-4 bg-black/70 border border-yellow-500/50 rounded-xl text-xs space-y-2 text-bleach-creamDim">
+              <strong className="text-yellow-400 block font-bold">✨ Criação & Regra Fundamental:</strong>
+              <p>Todos os atributos começam em <strong>10</strong> e o jogador recebe <strong>20 Pontos de Atributo</strong> para distribuir livremente sem limite inicial.</p>
+              <p className="text-white font-mono font-bold">O número da ficha É o atributo. Não existe conversão, multiplicador, nível escondido ou escala secundária.</p>
+            </div>
+          </Section>
+
+          <Section title="8 & 9. Escala Oficial de Power Scaling & Diferenças" subtitle="Hierarquia e distâncias relativas entre atributos">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+              <div className="space-y-2">
+                <h4 className="font-title text-sm text-bleach-orange uppercase">Escala de Referência</h4>
+                <div className="space-y-1.5">
+                  {[
+                    { faixa: "1–10", patamar: "Inexperiente", cor: C.muted },
+                    { faixa: "11–30", patamar: "Iniciante", cor: C.green },
+                    { faixa: "31–60", patamar: "Treinado", cor: C.blue },
+                    { faixa: "61–100", patamar: "Experiente", cor: C.purple },
+                    { faixa: "101–150", patamar: "Elite", cor: C.yellow },
+                    { faixa: "151–250", patamar: "Alto Nível", cor: "#FFA500" },
+                    { faixa: "251–400", patamar: "Monstruoso", cor: C.red },
+                    { faixa: "401–600", patamar: "Lendário", cor: "#E0B34C" },
+                    { faixa: "601+", patamar: "Transcendente", cor: "#FFD700" }
+                  ].map(p => (
+                    <div key={p.patamar} className="p-2 bg-bleach-panel2 border border-white/5 rounded-lg flex justify-between">
+                      <span className="font-mono font-bold text-white">{p.faixa} pts</span>
+                      <span className="font-bold uppercase" style={{ color: p.cor }}>{p.patamar}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <h4 className="font-title text-sm text-cyan-400 uppercase">Diferença em Combate</h4>
+                <div className="space-y-1.5">
+                  {[
+                    { diff: "0–10 pts", desc: "Equivalentes" },
+                    { diff: "11–30 pts", desc: "Pequena vantagem" },
+                    { diff: "31–75 pts", desc: "Vantagem clara" },
+                    { diff: "76–150 pts", desc: "Grande vantagem" },
+                    { diff: "151–250 pts", desc: "Abismo" },
+                    { diff: "251+ pts", desc: "Diferença monstruosa" }
+                  ].map(d => (
+                    <div key={d.diff} className="p-2 bg-bleach-panel2 border border-white/5 rounded-lg flex justify-between">
+                      <span className="font-mono text-bleach-muted">{d.diff}</span>
+                      <strong className="text-white">{d.desc}</strong>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-[11px] text-bleach-muted italic mt-2">Quanto maior a diferença, mais difícil é superar a inferioridade através de técnica pura.</p>
+              </div>
+            </div>
+          </Section>
+        </div>
+      )}
+
+      {/* TAB 3: COMBATE, 1D6 & ESTADOS */}
+      {tabSis === "combate" && (
+        <div className="space-y-6">
+          <Section title="10 & 11. Estrutura de Combate & O Dado 1d6" subtitle="Processo de 3 etapas e resolução simplificada">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs mb-4">
+              <div className="p-3.5 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-1">
+                <span className="font-bold text-bleach-orange uppercase block text-[10px]">1. Intenção</span>
+                <p>O jogador declara claramente o que pretende fazer em sua narração.</p>
+              </div>
+              <div className="p-3.5 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-1">
+                <span className="font-bold text-cyan-400 uppercase block text-[10px]">2. Comparação</span>
+                <p>O narrador compara os atributos, técnicas e contexto dos envolvidos.</p>
+              </div>
+              <div className="p-3.5 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-1">
+                <span className="font-bold text-green-400 uppercase block text-[10px]">3. Consequência</span>
+                <p>O narrador determina o desfecho sem rolagem obrigatória.</p>
+              </div>
+            </div>
+
+            <div className="p-4 bg-black/60 border border-yellow-500/40 rounded-xl text-xs space-y-2">
+              <h4 className="font-bold text-yellow-300 uppercase">🎲 Regra do Dado 1d6 (Apenas em Dúvida Real)</h4>
+              <div className="grid grid-cols-3 gap-2 text-center font-mono">
+                <div className="p-2 bg-red-950/60 border border-red-500/50 rounded-lg text-red-300">1–2: Falha</div>
+                <div className="p-2 bg-yellow-950/60 border border-yellow-500/50 rounded-lg text-yellow-300">3–4: Sucesso Parcial</div>
+                <div className="p-2 bg-green-950/60 border border-green-500/50 rounded-lg text-green-300">5–6: Sucesso Total</div>
+              </div>
+            </div>
+          </Section>
+
+          <Section title="12 & 13. Estados de Combate & Pressão Espiritual" subtitle="Sem barra de HP tradicional">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs text-center mb-4">
+              <div className="p-3 bg-green-950/40 border border-green-500/40 rounded-xl">
+                <strong className="text-green-400 block font-bold">🟢 Inteiro</strong>
+                <span className="text-[10px] text-bleach-muted">Condição normal</span>
+              </div>
+              <div className="p-3 bg-yellow-950/40 border border-yellow-500/40 rounded-xl">
+                <strong className="text-yellow-400 block font-bold">🟡 Ferido</strong>
+                <span className="text-[10px] text-bleach-muted">Danos afetam desempenho</span>
+              </div>
+              <div className="p-3 bg-orange-950/40 border border-orange-500/40 rounded-xl">
+                <strong className="text-orange-400 block font-bold">🟠 Debilitado</strong>
+                <span className="text-[10px] text-bleach-muted">Gravemente prejudicado</span>
+              </div>
+              <div className="p-3 bg-red-950/40 border border-red-500/40 rounded-xl">
+                <strong className="text-red-400 block font-bold">🔴 Derrotado</strong>
+                <span className="text-[10px] text-bleach-muted">Incapacitado de lutar</span>
+              </div>
+            </div>
+          </Section>
+        </div>
+      )}
+
+      {/* TAB 4: TREINOS OFF & FADIGA */}
+      {tabSis === "treinamento" && (
+        <div className="space-y-6">
+          <Section title="15–21. Treinamento em OFF, Ganhos & Sistema de Fadiga" subtitle="Máximo de 3 treinos diários e penalidades por desgaste">
+            <div className="space-y-4 text-xs text-bleach-creamDim leading-relaxed">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="p-3.5 bg-bleach-panel2 border border-bleach-border rounded-xl">
+                  <span className="font-bold text-white block uppercase text-[10px]">1º Período</span>
+                  <p className="text-bleach-muted">Manhã (0–3 pts)</p>
+                </div>
+                <div className="p-3.5 bg-bleach-panel2 border border-bleach-border rounded-xl">
+                  <span className="font-bold text-white block uppercase text-[10px]">2º Período</span>
+                  <p className="text-bleach-muted">Tarde (0–3 pts)</p>
+                </div>
+                <div className="p-3.5 bg-bleach-panel2 border border-bleach-border rounded-xl">
+                  <span className="font-bold text-white block uppercase text-[10px]">3º Período</span>
+                  <p className="text-bleach-muted">Noite (0–3 pts)</p>
+                </div>
+              </div>
+
+              <div className="p-4 bg-red-950/40 border-2 border-red-500/50 rounded-xl space-y-2">
+                <h4 className="font-bold text-red-300 uppercase">⚠️ Regras de Fadiga Temporária</h4>
+                <ul className="list-disc list-inside space-y-1 font-mono text-[11px] text-white">
+                  <li><strong>1 Treino:</strong> Nenhuma redução obrigatória.</li>
+                  <li><strong>2 Treinos:</strong> −5% temporário nos atributos treinados.</li>
+                  <li><strong>3 Treinos:</strong> −15% temporário nos atributos treinados + <strong>bloqueio de recompensas de Miscelânea</strong> naquele dia.</li>
+                  <li><strong>Descanso:</strong> Um novo dia remove 100% da fadiga acumulada sem perda de pontos permanentes da ficha.</li>
+                </ul>
+              </div>
+            </div>
+          </Section>
+        </div>
+      )}
+
+      {/* TAB 5: MISSÕES, MISCELÂNEAS & DROPS */}
+      {tabSis === "missoes" && (
+        <div className="space-y-6">
+          <Section title="22–27. Recompensas de Cenas ON & Drops Extras" subtitle="Tabela oficial de ganhos por tipo de cena">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs mb-4">
+              <div className="p-3 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-1">
+                <strong className="text-cyan-400 block uppercase font-bold">Missões (ON)</strong>
+                <p className="text-[11px] text-bleach-muted">Simples: 1–2 pts<br/>Normal: 2–4 pts<br/>Importante: 3–6 pts<br/>Excepcional: 5–8 pts</p>
+              </div>
+              <div className="p-3 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-1">
+                <strong className="text-green-400 block uppercase font-bold">Miscelâneas (ON)</strong>
+                <p className="text-[11px] text-bleach-muted">Simples: 0–1 pt<br/>Relevante: 1–2 pts<br/>Excepcional: 2–3 pts</p>
+              </div>
+              <div className="p-3 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-1">
+                <strong className="text-purple-400 block uppercase font-bold">Cenas de Arco</strong>
+                <p className="text-[11px] text-bleach-muted">Comum: 1–3 pts<br/>Importante: 2–4 pts<br/>Decisiva: 4–6 pts</p>
+              </div>
+              <div className="p-3 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-1">
+                <strong className="text-yellow-400 block uppercase font-bold">Combates (ON)</strong>
+                <p className="text-[11px] text-bleach-muted">Menor: 1–2 pts<br/>Relevante: 2–4 pts<br/>Importante: 3–6 pts</p>
+              </div>
+            </div>
+
+            <div className="p-3.5 bg-black/60 border border-white/10 rounded-xl text-xs flex justify-between items-center">
+              <div>
+                <span className="font-bold text-bleach-orange block uppercase">Bônus Semanal de Constância:</span>
+                <span className="text-bleach-creamDim">Jogadores muito ativos recebem +2 a +3 Pontos de Atributo ao final da semana.</span>
+              </div>
+            </div>
+          </Section>
+        </div>
+      )}
+
+      {/* TAB 6: FILOSOFIA & ZANPAKUTŌ */}
+      {tabSis === "filosofia" && (
+        <div className="space-y-6">
+          <Section title="28, 29 & 30. Técnicas, Zanpakutō & Filosofia Geral" subtitle="Os 4 princípios do Bleach RPG">
+            <div className="space-y-4 text-xs text-bleach-creamDim leading-relaxed">
+              <div className="p-4 bg-bleach-panel2 border-l-4 border-yellow-500 rounded-xl space-y-2">
+                <h4 className="font-bold text-sm text-yellow-400 uppercase">Os Quatro Princípios</h4>
+                <ul className="list-disc list-inside space-y-1 font-mono text-white">
+                  <li>Números determinam a escala.</li>
+                  <li>Técnicas determinam como o poder é utilizado.</li>
+                  <li>Narrativa determina o contexto.</li>
+                  <li>Dados só aparecem quando existe incerteza real.</li>
+                </ul>
+              </div>
+
+              <div className="p-3.5 bg-black/60 border border-cyan-500/40 rounded-xl text-[11px] text-cyan-200">
+                <strong>🗡️ Evolução da Zanpakutō:</strong> A Zanpakutō evolui através da história: descoberta do espírito, nome, Shikai e Bankai. Não são poderes comprados com pontos, mas conquistados narrativamente.
+              </div>
+            </div>
+          </Section>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// LEAGUE OF LEGENDS STYLE PATCH NOTES COMPONENT
+function PatchNotesView() {
+  const [patchAtivo, setPatchAtivo] = useState(PATCH_NOTES_HISTORY[0].versao);
+  const patch = PATCH_NOTES_HISTORY.find(p => p.versao === patchAtivo) || PATCH_NOTES_HISTORY[0];
+
+  return (
+    <div className="space-y-6">
+      {/* Header Banner */}
+      <div className="bg-banner-overlay border border-bleach-border rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+        <div className="relative z-10 max-w-3xl">
+          <span className="px-3 py-1 bg-yellow-950 border border-yellow-500 text-yellow-300 text-xs font-bold rounded-full uppercase tracking-wider">
+            Histórico Oficial de Atualizações • Estilo League of Legends
+          </span>
+          <h2 className="font-title text-4xl sm:text-5xl tracking-widest text-bleach-cream mt-3 reiatsu-text-glow">
+            NOTAS DE ATUALIZAÇÃO & BALANCEAMENTO
+          </h2>
+          <p className="text-xs sm:text-sm text-bleach-creamDim mt-2 leading-relaxed">
+            Acompanhe a evolução contínua do Bleach RPG: mudanças de regras, buffs, nerfs, novos sistemas e ajustes no motor de almas.
+          </p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* Version Selector Sidebar */}
+        <div className="lg:col-span-1 space-y-2">
+          <span className="text-xs font-bold uppercase tracking-wider text-bleach-muted px-2 block">Versões Anteriores (10 Patches)</span>
+          <div className="space-y-1.5 max-h-[500px] overflow-y-auto pr-1">
+            {PATCH_NOTES_HISTORY.map((p) => {
+              const isCurrent = p.versao === patchAtivo;
+              return (
+                <button
+                  key={p.versao}
+                  onClick={() => setPatchAtivo(p.versao)}
+                  className={`w-full text-left p-3 rounded-xl border transition flex items-center justify-between ${
+                    isCurrent
+                      ? "bg-bleach-orange text-black font-extrabold border-bleach-orange shadow-lg"
+                      : "bg-bleach-panel2 border-bleach-border text-bleach-creamDim hover:text-white hover:border-white/20"
+                  }`}
+                >
+                  <div>
+                    <span className="font-title text-base block leading-tight">PATCH {p.versao}</span>
+                    <span className={`text-[10px] block ${isCurrent ? "text-black/80 font-bold" : "text-bleach-muted"}`}>{p.data}</span>
+                  </div>
+                  {p.versao === "5.0" && (
+                    <span className="px-2 py-0.5 rounded bg-black text-bleach-orange text-[9px] font-bold uppercase">ATUAL</span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Patch Content Details */}
+        <div className="lg:col-span-3 space-y-5">
+          <Section
+            title={`PATCH ${patch.versao} — ${patch.titulo}`}
+            subtitle={`Lançado oficialmente em ${patch.data}`}
+            className="border-2 border-yellow-500/40 shadow-2xl"
+          >
+            {/* Highlights Box */}
+            <div className="p-4 bg-black/80 border border-yellow-500/40 rounded-2xl mb-6 space-y-2">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-yellow-400 block">Destaques da Atualização</span>
+              <p className="text-sm font-semibold text-white leading-relaxed">{patch.destaque}</p>
+              <p className="text-xs text-bleach-creamDim pt-1 border-t border-white/5">{patch.resumo}</p>
+            </div>
+
+            {/* Sections (Buffs, Nerfs, New Features, Rules) */}
+            <div className="space-y-5">
+              {patch.secoes.map((sec, idx) => (
+                <div key={idx} className="p-4 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-3">
+                  <h4 className="font-title text-lg text-bleach-orange uppercase tracking-wider flex items-center gap-2 border-b border-white/5 pb-2">
+                    {sec.titulo}
+                  </h4>
+                  <div className="space-y-2 text-xs text-bleach-creamDim leading-relaxed">
+                    {sec.itens.map((item, itemIdx) => (
+                      <div key={itemIdx} className="p-2.5 bg-black/40 rounded-lg border border-white/5 whitespace-pre-wrap">
+                        {item}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Section>
+        </div>
+      </div>
     </div>
   );
 }

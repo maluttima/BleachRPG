@@ -24,7 +24,7 @@ const C = {
 
 // Primary Attributes
 const ATTRS = [
-  { key: "pressao", label: "Pressão Espiritual", color: C.blue, desc: "Reiatsu, controle espiritual e percepção" },
+  { key: "pressao", label: "Pressão Espiritual", color: C.blue, desc: "Reiatsu, poder espiritual e percepção" },
   { key: "forca", label: "Força", color: C.red, desc: "Potência física, Zanjutsu e Hakuda" },
   { key: "velocidade", label: "Velocidade", color: C.green, desc: "Deslocamento, reflexos e Hohō/Shunpo" },
   { key: "resiliencia", label: "Resiliência", color: C.purple, desc: "Resistência física, espiritual e vitalidade" },
@@ -70,2141 +70,1834 @@ const RECOMPENSAS_ESPECIAIS = [
   { id: "esp-inter-1", nome: "💎 Fragmento Bruto de Cristal Espiritual", raridade: "Incomum Especial", peso: 90, cor: C.blue, desc: "Um cristal translúcido que ressoa com o Reiryoku nativo (+8 pontos).", tipo: "pontos", valor: 8, chanceStr: "9%" },
   { id: "esp-inter-2", nome: "📜 Tomo Antigo de Hadō & Bakudō", raridade: "Incomum Especial", peso: 80, cor: C.blue, desc: "Anotações perdidas sobre o controle dos primeiros números de Kidō (+10 pontos).", tipo: "pontos", valor: 10, chanceStr: "8%" },
   { id: "esp-inter-3", nome: "🍵 Chá Imperial da Família Kuchiki", raridade: "Incomum Especial", peso: 70, cor: C.blue, desc: "Uma iguaria reservada aos nobres que acalma a mente e purifica a pressão (+12 pontos).", tipo: "pontos", valor: 12, chanceStr: "7%" },
-  { id: "esp-raro-1", nome: "🔮 Orbe de Condensação do Departamento de Pesquisa", raridade: "Raro Nobre", peso: 60, cor: C.purple, desc: "Uma esfera densa de Reishi altamente purificado pelo 12º Esquadrão (+15 pontos).", tipo: "pontos", valor: 15, chanceStr: "6%" },
-  { id: "esp-raro-2", nome: "⚜️ Relíquia Nobre da Grande Família Shihōin", raridade: "Raro Nobre", peso: 50, cor: C.purple, desc: "Um amuleto antigo tecido com os passos dos mestres de Shunpo (+16 pontos).", tipo: "pontos", valor: 16, chanceStr: "5%" },
-  { id: "esp-lend-1", nome: "👑 Bênção Sagrada da Guarda Real (Divisão Zero)", raridade: "Lendário Supremo", peso: 25, cor: C.yellow, desc: "Um influxo transcendental de Reishi puro que ecoa as técnicas ancestrais do Palácio Real (+20 pontos).", tipo: "pontos", valor: 20, chanceStr: "2.5%" },
-  { id: "esp-lend-2", nome: "☄️ Essência Primordial da Sociedade das Almas", raridade: "Lendário Supremo", peso: 15, cor: C.yellow, desc: "A própria matéria espiritual condensada antes da divisão dos mundos (+24 pontos).", tipo: "pontos", valor: 24, chanceStr: "1.5%" },
-  { id: "esp-supremo-1", nome: "⚔️ Comunicação Profunda — Despertar de Habilidade Shikai", raridade: "Recompensa Narrativa Suprema", peso: 10, cor: "#FFD700", desc: "Seu espírito de Zanpakutō ressoa profundamente. O ADM concederá uma Missão Narrativa Individual de despertar de nova habilidade especial única!", tipo: "missao_despertar", valor: 0, chanceStr: "1.0% (1 em 100)" },
+  { id: "esp-avanc-1", nome: "🍶 Saquê Espiritual Centenário de Kyoraku", raridade: "Rara Especial", peso: 45, cor: C.purple, desc: "Uma infusão lendária que expande os horizontes da percepção espiritual (+14 pontos).", tipo: "pontos", valor: 14, chanceStr: "4.5%" },
+  { id: "esp-avanc-2", nome: "⚙️ Núcleo Condensador de Reishi de Mayuri", raridade: "Rara Especial", peso: 40, cor: C.purple, desc: "Dispositivo experimental capaz de acelerar a absorção de partículas espirituais (+16 pontos).", tipo: "pontos", valor: 16, chanceStr: "4.0%" },
+  { id: "esp-avanc-3", nome: "🥋 Vestimenta Sagrada do Clã Shihōin", raridade: "Rara Especial", peso: 35, cor: C.purple, desc: "Tecido espiritual ultraleve que eleva reflexos e destreza física (+18 pontos).", tipo: "pontos", valor: 18, chanceStr: "3.5%" },
+  { id: "esp-suprema", nome: "🌟 Missão Narrativa Suprema de Despertar Único", raridade: "Lendária Especial", peso: 10, cor: C.yellow, desc: "Uma convocação do Capitão-Comandante que confere +25 pontos de atributo, 1 Tomo de Kidō Proibido e o direito imediato a uma missão de arco prioritária.", tipo: "lendario", valor: 25, chanceStr: "1.0% (1 em 100)" },
 ];
 
 const MASTER_ZANPAKUTO_CATALOG = [
   {
-    "id": "zk-01",
-    "numero": "01",
+    "id": "zk-01-kurotsubaki",
     "nome": "Kurotsubaki",
-    "kanji": "「黒椿」",
-    "traducao": "A Camélia Negra",
-    "nomeCompleto": "Kurotsubaki 「黒椿」— A Camélia Negra",
+    "kanji": "黒椿",
+    "traducao": "Camélia Negra",
+    "elemento": "Inércia, Pétalas Negras & Absorção Cinética",
+    "comando": "Floresça no silêncio, Kurotsubaki",
     "espirito": "Uma mulher alta, de aparência madura, vestida com um quimono preto coberto por pétalas de camélia. Seu rosto é parcialmente escondido por um véu. Ela passa a maior parte do tempo sentada em um jardim completamente sem cor, cuidando de uma única árvore.",
-    "comando": "Floresça no silêncio, Kurotsubaki.",
-    "elemento": "Vácuo Cinético & Pétalas Negras",
-    "formatoArma": "A katana perde a lâmina tradicional e se transforma em uma espada fina, negra, com uma guarda circular semelhante a uma flor. Pequenas pétalas negras começam a surgir ao redor do usuário sempre que ele movimenta a espada. As pétalas não são simplesmente decorativas: elas permanecem suspensas no ambiente por alguns segundos.",
-    "poder": "Jardim do Último Instante: O usuário pode fazer as pétalas absorverem o movimento de qualquer coisa que toquem. Uma pessoa que atravessa uma pétala sente seu movimento diminuir brevemente. Um golpe pode perder velocidade. Uma flecha pode praticamente parar. Limitação: as pétalas só conseguem armazenar uma quantidade limitada de movimento. Quando o limite é atingido, elas desaparecem.",
-    "bankai": {
-      "nome": "Kurotsubaki — Shūen Teien",
-      "kanji": "「黒椿・終焉庭園」",
-      "traducao": "Jardim do Fim",
-      "nomeCompleto": "Bankai — Kurotsubaki 「黒椿・終焉庭園」 (Shūen Teien — Jardim do Fim)",
-      "comando": "Bankai — Kurotsubaki, Shūen Teien!",
-      "formatoArma": "Todas as pétalas existentes se transformam em árvores negras gigantescas. O campo de batalha inteiro vira um jardim silencioso e monocromático sob uma penumbra espiritual.",
-      "poder": "Redistribuição Absoluta do Movimento: O usuário agora pode redistribuir o movimento armazenado. Pode retirar velocidade de uma coisa e transferi-la para outra. Por exemplo: uma espada inimiga perde velocidade → uma estocada do usuário recebe essa velocidade. A grande evolução é que a Shikai armazena, enquanto a Bankai redistribui livremente no domínio do jardim."
+    "formaSelada": "Katana de guarda circular no formato de flor de camélia e bainha de laca negra fosca.",
+    "formatoArma": "Espada fina e negra com guarda circular semelhante a uma flor. Pétalas negras suspensas no ar.",
+    "poder": "Jardim do Último Instante: As pétalas absorvem o movimento de qualquer coisa que tocam. Golpes perdem velocidade e flechas quase param. Limite: as pétalas só armazenam uma quantidade limitada de movimento antes de desaparecerem.",
+    "limitacoes": "Capacidade máxima de absorção por pétala; exige reposicionamento para cobrir ângulos.",
+    "bankaiNome": "Kurotsubaki — Shūen Teien",
+    "bankaiKanji": "黒椿・終焉庭園",
+    "bankaiTraducao": "Jardim do Fim",
+    "bankaiComando": "Bankai — Kurotsubaki, Shūen Teien!",
+    "bankaiForma": "Todas as pétalas se transformam em árvores negras gigantescas. O campo vira um jardim silencioso.",
+    "bankaiPoder": "Redistribuição Cinética Total: Retira velocidade de ataques e movimentos inimigos e transfere instantaneamente para os golpes e estocadas do usuário.",
+    "bankaiLimitacoes": "Exige que o usuário mantenha o equilíbrio cinético entre absorção e liberação.",
+    "indices": {
+      "potencia": 8,
+      "alcance": 9,
+      "complexidade": 7,
+      "versatilidade": 8,
+      "custo": 6
     }
   },
   {
-    "id": "zk-02",
-    "numero": "02",
+    "id": "zk-02-akagane",
     "nome": "Akagane",
-    "kanji": "「赤鋼」",
+    "kanji": "赤鋼",
     "traducao": "Aço Vermelho",
-    "nomeCompleto": "Akagane 「赤鋼」— Aço Vermelho",
-    "espirito": "Um ferreiro gigantesco sem rosto, com o corpo coberto por placas metálicas e um enorme avental. Em vez de mãos, possui martelos. Ele nunca fala; responde apenas golpeando uma bigorna espiritual ancestral.",
-    "comando": "Forje aquilo que ainda não existe, Akagane.",
-    "elemento": "Aço Carmesim & Refinamento Cinético",
-    "formatoArma": "A espada se desfaz em várias placas metálicas vermelhas que envolvem o braço direito do usuário, formando uma manopla reforçada e antebraço blindado de combate pesado.",
-    "poder": "Memória do Impacto: Cada golpe recebido pela armadura é parcialmente armazenado. Quanto mais impactos recebe, mais energia cinética a armadura acumula. O usuário pode liberar essa energia através do próximo golpe. Limitação: se acumular energia demais além da sua capacidade física, a própria armadura começa a sobreaquecer e prejudicar o usuário.",
-    "bankai": {
-      "nome": "Akagane — Hyakurenro",
-      "kanji": "「赤鋼・百錬炉」",
-      "traducao": "Forja das Cem Temperas",
-      "nomeCompleto": "Bankai — Akagane 「赤鋼・百錬炉」 (Hyakurenro — Forja das Cem Temperas)",
-      "comando": "Bankai — Akagane, Hyakurenro!",
-      "formatoArma": "A armadura de aço vermelho cobre todo o corpo do usuário e surge uma enorme fornalha espiritual incandescente flutuando atrás dele.",
-      "poder": "Refinamento & Conversão Metabólica de Energia: Os impactos agora são refinados pela fornalha. Cada golpe recebido ou trocado consecutivamente transforma a energia acumulada em bônus direto de força, velocidade, resistência ou impulso destrutivo. Requer que o usuário mantenha o ritmo de combate contínuo; se parar de lutar por muito tempo, a energia refinada se dissipa."
+    "elemento": "Metalurgia Cinética & Armadura de Impacto",
+    "comando": "Forje aquilo que ainda não existe, Akagane",
+    "espirito": "Um ferreiro gigantesco sem rosto, com o corpo coberto por placas metálicas e um enorme avental. Em vez de mãos, possui martelos. Ele nunca fala; responde apenas golpeando uma bigorna.",
+    "formaSelada": "Lâmina pesada de aço avermelhado com acabamento rústico de forja.",
+    "formatoArma": "Placas metálicas vermelhas que envolvem o braço direito, formando manopla e antebraço blindado.",
+    "poder": "Memória do Impacto: Cada golpe recebido pela armadura acumula energia cinética para ser liberada no próximo ataque. Se acumular em excesso sem golpear, a armadura sobrecarrega o usuário.",
+    "limitacoes": "Necessidade de receber impactos para carregar; risco de sobrecarga se não descarregar.",
+    "bankaiNome": "Akagane — Hyakurenro",
+    "bankaiKanji": "赤鋼・百錬炉",
+    "bankaiTraducao": "Forja das Cem Temperas",
+    "bankaiComando": "Bankai — Akagane, Hyakurenro!",
+    "bankaiForma": "Armadura completa cobrindo todo o corpo com uma enorme fornalha espiritual acesa nas costas.",
+    "bankaiPoder": "Refino de Energia: Converte a energia acumulada dos impactos recebidos diretamente em força, velocidade, resistência ou impulso contínuo enquanto se mantém lutando.",
+    "bankaiLimitacoes": "A energia se dissipa se o usuário interromper o combate por muito tempo.",
+    "indices": {
+      "potencia": 9,
+      "alcance": 4,
+      "complexidade": 6,
+      "versatilidade": 8,
+      "custo": 7
     }
   },
   {
-    "id": "zk-03",
-    "numero": "03",
+    "id": "zk-03-suisen",
     "nome": "Suisen",
-    "kanji": "「水仙」",
+    "kanji": "水仙",
     "traducao": "Narciso",
-    "nomeCompleto": "Suisen 「水仙」— Narciso",
-    "espirito": "Um garoto extremamente pálido, vestido como um bailarino clássico, que vive em um salão imenso cheio de espelhos cobertos por água rasa e pétalas brancas.",
-    "comando": "Olhe para si mesmo, Suisen.",
-    "elemento": "Espelhos Líquidos & Translocação",
-    "formatoArma": "A lâmina se transforma em uma espada extremamente fina e prateada de superfície fluida e líquida. Sempre que alguém olha diretamente para ela, vê seu próprio reflexo distorcido em ondas aquáticas.",
-    "poder": "Reflexo Falso: O usuário pode criar cópias ilusórias táteis de movimentos que acabou de realizar. Se ele atacar para a esquerda, um reflexo pode repetir o movimento simultaneamente pela direita para confundir a percepção e tempo de reação do oponente.",
-    "bankai": {
-      "nome": "Suisen — Senkyō Kairō",
-      "kanji": "「水仙・千鏡回廊」",
-      "traducao": "Corredor das Mil Imagens",
-      "nomeCompleto": "Bankai — Suisen 「水仙・千鏡回廊」 (Senkyō Kairō — Corredor das Mil Imagens)",
-      "comando": "Bankai — Suisen, Senkyō Kairō!",
-      "formatoArma": "O campo inteiro se transforma em um labirinto monumental de espelhos líquidos flutuantes que refletem a luz e a imagem do usuário em 360 graus.",
-      "poder": "Translocação Reflexiva Instantânea: A Bankai se torna uma técnica suprema de mobilidade e reposicionamento. O usuário pode trocar de posição instantaneamente com qualquer reflexo ativo no campo. Limitação: cada troca consome e destrói o espelho reflexivo utilizado."
+    "elemento": "Espelhos Líquidos & Ilusão de Movimento",
+    "comando": "Olhe para si mesmo, Suisen",
+    "espirito": "Um garoto extremamente pálido, vestido como um bailarino, que vive em um salão cheio de espelhos cobertos por água.",
+    "formaSelada": "Katana elegante com acabamento prateado espelhado e tsuba translúcida.",
+    "formatoArma": "Espada extremamente fina e prateada com lâmina de aspecto líquido que distorce reflexos.",
+    "poder": "Reflexo Falso: Cria cópias ilusórias de movimentos recém-realizados para confundir a percepção do adversário.",
+    "limitacoes": "As cópias não possuem massa ou dano real, servindo como distração perceptiva.",
+    "bankaiNome": "Suisen — Senkyō Kairō",
+    "bankaiKanji": "水仙・千鏡回廊",
+    "bankaiTraducao": "Corredor das Mil Imagens",
+    "bankaiComando": "Bankai — Suisen, Senkyō Kairō!",
+    "bankaiForma": "O campo se transforma em um enorme corredor de espelhos líquidos flutuantes.",
+    "bankaiPoder": "Troca Espelho-Posicional: O usuário pode trocar de posição quase que instantaneamente com qualquer reflexo criado no campo de batalha.",
+    "bankaiLimitacoes": "Cada troca consome e destrói o espelho utilizado.",
+    "indices": {
+      "potencia": 6,
+      "alcance": 8,
+      "complexidade": 8,
+      "versatilidade": 9,
+      "custo": 5
     }
   },
   {
-    "id": "zk-04",
-    "numero": "04",
+    "id": "zk-04-hoshikuzu",
     "nome": "Hoshikuzu",
-    "kanji": "「星屑」",
+    "kanji": "星屑",
     "traducao": "Poeira Estelar",
-    "nomeCompleto": "Hoshikuzu 「星屑」— Poeira Estelar",
-    "espirito": "Uma pequena criatura humanoide coberta por um manto azul-escuro cósmico. Seu corpo parece conter uma galáxia de estrelas reluzentes. Ela fala como uma criança curiosa e habita uma ilha flutuante no vazio celestial.",
-    "comando": "Desperte no céu, Hoshikuzu.",
-    "elemento": "Gravidade Orbital & Luz Cósmica",
-    "formatoArma": "A espada se fragmenta em dezenas de pequenos cristais luminosos azulados que orbitam em círculos contínuos ao redor do portador.",
-    "poder": "Órbita Curvilínea: Os fragmentos podem alterar bruscamente sua trajetória no ar sem perder aceleração. O usuário pode arremessar cristais que realizam curvas impossíveis em torno de obstáculos e criam pontos de ancoragem para saltos aéreos.",
-    "bankai": {
-      "nome": "Hoshikuzu — Tenkan",
-      "kanji": "「星屑・天環」",
-      "traducao": "Anel Celestial",
-      "nomeCompleto": "Bankai — Hoshikuzu 「星屑・天環」 (Tenkan — Anel Celestial)",
-      "comando": "Bankai — Hoshikuzu, Tenkan!",
-      "formatoArma": "Os fragmentos de cristal se multiplicam em milhares e formam gigantescos anéis luminosos concêntricos que giram por todo o perímetro da arena.",
-      "poder": "Controle Absoluto de Trajetórias: O usuário define eixos de atração gravitacional. Qualquer projétil, técnica de Reiryoku ou adversário que entre em uma das órbitas é forçado a seguir a trajetória circular do anel, permitindo defletir ataques maciços e reposicionar inimigos à vontade."
+    "elemento": "Órbitas Luminosas & Trajetória Curva",
+    "comando": "Desperte no céu, Hoshikuzu",
+    "espirito": "Uma pequena criatura humanoide coberta por um manto azul-escuro contendo um céu estrelado.",
+    "formaSelada": "Wakizashi fina com detalhes estelares dourados no cabo.",
+    "formatoArma": "Dezenas de pequenos cristais luminosos que orbitam o usuário em trajetórias curvas impossíveis.",
+    "poder": "Órbita: Fragmentos que alteram trajetórias de voo no ar e traçam linhas de corte não-lineares.",
+    "limitacoes": "Exige cálculo mental contínuo para manter os cristais em órbita harmônica.",
+    "bankaiNome": "Hoshikuzu — Tenkan",
+    "bankaiKanji": "星屑・天環",
+    "bankaiTraducao": "Anel Celestial",
+    "bankaiComando": "Bankai — Hoshikuzu, Tenkan!",
+    "bankaiForma": "Enormes anéis orbitais luminosos cobrindo todo o céu da área de batalha.",
+    "bankaiPoder": "Controle Gravitacional de Trajetória: Define pontos de atração orbital que curvam qualquer projétil, golpe ou deslocamento que entre no anel.",
+    "bankaiLimitacoes": "Controla a trajetória, mas não anula a força bruta do projétil.",
+    "indices": {
+      "potencia": 7,
+      "alcance": 9,
+      "complexidade": 8,
+      "versatilidade": 9,
+      "custo": 6
     }
   },
   {
-    "id": "zk-05",
-    "numero": "05",
+    "id": "zk-05-koriame",
     "nome": "Kōriame",
-    "kanji": "「氷雨」",
+    "kanji": "氷雨",
     "traducao": "Chuva Congelada",
-    "nomeCompleto": "Kōriame 「氷雨」— Chuva Congelada",
-    "espirito": "Uma senhora idosa de olhar triste e passos lentos carregando um guarda-chuva de seda branca, habitando uma cidade melancólica onde chove sem parar.",
-    "comando": "Chore sobre este mundo, Kōriame.",
-    "elemento": "Água Pesada & Inércia Glacial",
-    "formatoArma": "A espada vira um guarda-chuva metálico branco reforçado com uma lâmina de estocada na ponta. Quando aberto, uma fina chuva espiritual começa a precipitar continuamente sobre a área.",
-    "poder": "Gotas de Peso Inercial: Cada gota de chuva que toca um objeto ou pessoa aumenta progressivamente sua inércia física. O alvo atinge cada vez mais resistência para acelerar, saltar ou mudar bruscamente de rumo durante a movimentação.",
-    "bankai": {
-      "nome": "Kōriame — Hakusōten",
-      "kanji": "「氷雨・白葬天」",
-      "traducao": "Céu do Funeral Branco",
-      "nomeCompleto": "Bankai — Kōriame 「氷雨・白葬天」 (Hakusōten — Céu do Funeral Branco)",
-      "comando": "Bankai — Kōriame, Hakusōten!",
-      "formatoArma": "O firmamento escurece sob nuvens cinzentas colossais e uma tempestade torrencial de gotas prateadas cobre quilômetros de distância.",
-      "poder": "Manipulação Vetorial da Resistência Espacial: O usuário dita qual direção do espaço sofrerá maior resistência hidrostática. Pode fazer avanços frontais ficarem dez vezes mais lentos, golpes verticais perderem impacto e passos de fuga se tornarem exaustivos, ditando o ritmo da batalha."
+    "elemento": "Inércia Hidráulica & Resistência Direcional",
+    "comando": "Chore sobre este mundo, Kōriame",
+    "espirito": "Uma senhora idosa carregando um guarda-chuva branco com expressão melancólica sob chuva eterna.",
+    "formaSelada": "Katana com guarda em forma de cúpula de guarda-chuva dobrada.",
+    "formatoArma": "Guarda-chuva metálico branco com ponta afiada, invocando precipitação espiritual contínua.",
+    "poder": "Gotas de Peso: Cada gota espiritual que atinge um alvo aumenta sua inércia e dificulta a aceleração.",
+    "limitacoes": "O efeito é gradual e depende do tempo de exposição do alvo à chuva.",
+    "bankaiNome": "Kōriame — Hakusōten",
+    "bankaiKanji": "氷雨・白葬天",
+    "bankaiTraducao": "Céu do Funeral Branco",
+    "bankaiComando": "Bankai — Kōriame, Hakusōten!",
+    "bankaiForma": "Céu escurecido cobrindo quilômetros com cortinas torrenciais de chuva congelada.",
+    "bankaiPoder": "Manipulação Direcional de Resistência: O usuário escolhe quais eixos espaciais possuem resistência esmagadora (ex: avançar para frente fica pesado, recuar fica rápido).",
+    "bankaiLimitacoes": "Afeta a física espacial de todos no campo, exigindo planejamento posicional do usuário.",
+    "indices": {
+      "potencia": 8,
+      "alcance": 10,
+      "complexidade": 8,
+      "versatilidade": 8,
+      "custo": 7
     }
   },
   {
-    "id": "zk-06",
-    "numero": "06",
+    "id": "zk-06-kagamibana",
     "nome": "Kagamibana",
-    "kanji": "「鏡花」",
+    "kanji": "鏡花",
     "traducao": "Flor do Espelho",
-    "nomeCompleto": "Kagamibana 「鏡花」— Flor do Espelho",
-    "espirito": "Uma mulher sem olhos com flores de vidro e cristais crescendo pelos longos cabelos escuros, vivendo dentro de uma estufa repleta de espelhos estilhaçados.",
-    "comando": "Reflita aquilo que deveria ser esquecido, Kagamibana.",
-    "elemento": "Distorção de Probabilidade & Vidro",
-    "formatoArma": "A lâmina se torna transparente como vidro puro, com uma superfície que parece um mosaico de espelhos trincados.",
-    "poder": "Fragmento de Possibilidade: Quando um ataque inimigo passa a curta distância, o usuário pode criar uma réplica alternativa daquele instante. Por alguns segundos, ele pode optar por validar o acontecimento real ou o fragmento alternativo criado, mitigando golpes fatais.",
-    "bankai": {
-      "nome": "Kagamibana — Banshō Shakai",
-      "kanji": "「鏡花・万象写界」",
-      "traducao": "Mundo que Copia Todas as Coisas",
-      "nomeCompleto": "Bankai — Kagamibana 「鏡花・万象写界」 (Banshō Shakai — Mundo que Copia Todas as Coisas)",
-      "comando": "Bankai — Kagamibana, Banshō Shakai!",
-      "formatoArma": "Todo o chão, céu e atmosfera ganham o reflexo límpido de espelhos planos perfeitos.",
-      "poder": "Divergência Quântica de Realidade: O usuário manifesta múltiplos caminhos de ação simultâneos para um mesmo ataque ou esquiva. Ele ataca por 3 ângulos distintos ao mesmo tempo e escolhe qual deles colidirá fisicamente com o oponente no momento do impacto."
+    "elemento": "Possibilidade Imediata & Fragmentos de Vidro",
+    "comando": "Reflita aquilo que deveria ser esquecido, Kagamibana",
+    "espirito": "Uma mulher sem olhos com flores de vidro crescendo pelos cabelos dentro de uma estufa quebrada.",
+    "formaSelada": "Katana com lâmina de reflexo fragmentado como mosaico de espelho.",
+    "formatoArma": "Espada transparente com lâmina de vidro espiritual que projeta imagens alternativas de momentos.",
+    "poder": "Fragmento de Possibilidade: Cria uma pequena distorção imediata onde o usuário escolhe entre o acontecimento real e a imagem alternativa nos próximos segundos.",
+    "limitacoes": "Duração de poucos segundos e curto alcance.",
+    "bankaiNome": "Kagamibana — Banshō Shakai",
+    "bankaiKanji": "鏡花・万象写界",
+    "bankaiTraducao": "Mundo que Copia Todas as Coisas",
+    "bankaiComando": "Bankai — Kagamibana, Banshō Shakai!",
+    "bankaiForma": "O ambiente se cristaliza em uma imensa superfície espelhada.",
+    "bankaiPoder": "Colapso de Múltiplas Possibilidades: Cria simultaneamente 3 a 5 desfechos possíveis para uma mesma ação, colapsando a mais vantajosa na realidade.",
+    "bankaiLimitacoes": "Apenas uma possibilidade pode se materializar de fato.",
+    "indices": {
+      "potencia": 8,
+      "alcance": 8,
+      "complexidade": 10,
+      "versatilidade": 9,
+      "custo": 8
     }
   },
   {
-    "id": "zk-07",
-    "numero": "07",
+    "id": "zk-07-mukade",
     "nome": "Mukade",
-    "kanji": "「百足」",
+    "kanji": "百足",
     "traducao": "Centopeia",
-    "nomeCompleto": "Mukade 「百足」— Centopeia",
-    "espirito": "Uma criatura esguia e longa com dezenas de braços articulados segurando pequenas adagas serrilhadas e vestindo uma máscara de osso que lembra um exoesqueleto de inseto.",
-    "comando": "Multiplique-se pelo caminho, Mukade.",
-    "elemento": "Lâminas Articuladas & Encadear Contínuo",
-    "formatoArma": "A katana se divide em múltiplas lâminas segmentadas unidas por correntes de elos flexíveis de aço, controláveis individualmente através da empunhadura.",
-    "poder": "Ataque Encadeado: Cada golpe consecutivo bem-sucedido permite reposicionar outra lâmina sem tempo de recuo. Quanto maior a sequência contínua de acertos, mais ângulos de ataque se abrem simultaneamente. Limitação: errar um golpe quebra a cadeia e recolhe as lâminas.",
-    "bankai": {
-      "nome": "Mukade — Mukyū Renjin",
-      "kanji": "「百足・無窮連刃」",
-      "traducao": "Lâminas da Corrente Infinita",
-      "nomeCompleto": "Bankai — Mukade 「百足・無窮連刃」 (Mukyū Renjin — Lâminas da Corrente Infinita)",
-      "comando": "Bankai — Mukade, Mukyū Renjin!",
-      "formatoArma": "As lâminas se multiplicam em centenas de gumes segmentados formando uma rede viva e autônoma de aço ao redor da arena.",
-      "poder": "Cadeia Autônoma de Resposta Cinética: O usuário não precisa controlar cada lâmina manualmente. A Bankai lê o último vetor de impacto e projeta automaticamente sucessões de cortes em cascata prevendo as rotas de fuga do oponente."
+    "elemento": "Encadeamento de Lâminas & Correntes Sequenciais",
+    "comando": "Multiplique-se pelo caminho, Mukade",
+    "espirito": "Uma criatura longa com dezenas de braços segurando espadas e máscara de crânio de inseto.",
+    "formaSelada": "Katana segmentada com ranhuras visíveis ao longo do fio.",
+    "formatoArma": "Espada dividida em múltiplas lâminas menores conectadas por correntes articuladas.",
+    "poder": "Ataque Encadeado: Cada golpe conectado reposiciona imediatamente a lâmina seguinte em novo ângulo de ataque.",
+    "limitacoes": "Se errar a sequência, todas as lâminas retornam ao ponto de origem.",
+    "bankaiNome": "Mukade — Mukyū Renjin",
+    "bankaiKanji": "百足・無窮連刃",
+    "bankaiTraducao": "Lâminas da Corrente Infinita",
+    "bankaiComando": "Bankai — Mukade, Mukyū Renjin!",
+    "bankaiForma": "Rede gigante de milhares de lâminas articuladas operando em malha tridimensional.",
+    "bankaiPoder": "Encadeamento Autônomo Infinito: A Bankai prevê e executa cadeias ininterruptas de ataques automáticos baseados no último movimento.",
+    "bankaiLimitacoes": "Se o adversário quebrar o ritmo ou ler o padrão geométrico, a rede perde tração.",
+    "indices": {
+      "potencia": 8,
+      "alcance": 7,
+      "complexidade": 7,
+      "versatilidade": 8,
+      "custo": 6
     }
   },
   {
-    "id": "zk-08",
-    "numero": "08",
+    "id": "zk-08-yureiishi",
     "nome": "Yūreiishi",
-    "kanji": "「幽霊石」",
+    "kanji": "幽霊石",
     "traducao": "Pedra Fantasma",
-    "nomeCompleto": "Yūreiishi 「幽霊石」— Pedra Fantasma",
-    "espirito": "Uma criança parcialmente translúcida de olhar calmo sentada sobre uma enorme rocha negra que flutua no vazio, sempre cercada por pequenas almas errantes.",
-    "comando": "Permaneça onde ninguém pode tocar, Yūreiishi.",
-    "elemento": "Âncoras Espaciais & Teletransporte",
-    "formatoArma": "A lâmina da espada desaparece por completo. No lugar dela, pequenas pedras negras de densidade nula orbitam suavemente as mãos do portador.",
-    "poder": "Âncoras Espirituais: O usuário pode posicionar as pedras no espaço como âncoras fixas e saltar instantaneamente até a coordenada de qualquer pedra ativa (possui limite de distância e quantidade de âncoras simultâneas).",
-    "bankai": {
-      "nome": "Yūreiishi — Hyakki Kyō",
-      "kanji": "「幽霊石・百鬼境」",
-      "traducao": "Território das Cem Almas",
-      "nomeCompleto": "Bankai — Yūreiishi 「幽霊石・百鬼境」 (Hyakki Kyō — Território das Cem Almas)",
-      "comando": "Bankai — Yūreiishi, Hyakki Kyō!",
-      "formatoArma": "Centenas de pedras negras monumentais flutuam em toda a extensão do campo de batalha como um labirinto suspenso.",
-      "poder": "Malha Espacial Transcendente: O usuário pode translocar-se instantaneamente entre qualquer uma das pedras sem atraso de movimento, criando sequências de ataque de ângulos omnidirecionais. Custo de Reiryoku escala com o número de saltos contínuos."
+    "elemento": "Âncoras Espirituais & Transição Espacial",
+    "comando": "Permaneça onde ninguém pode tocar, Yūreiishi",
+    "espirito": "Uma criança semitransparente sentada sobre uma enorme rocha flutuante com espíritos menores.",
+    "formaSelada": "Tantō negra com pedra de obsidiana cravada no pomo.",
+    "formatoArma": "A lâmina se dissolve em 4 pequenas pedras negras orbitais.",
+    "poder": "Âncoras Espirituais: O usuário fixa as pedras no cenário e pode retornar instantaneamente para a posição de qualquer uma delas.",
+    "limitacoes": "Número limitado de âncoras e distância máxima definida.",
+    "bankaiNome": "Yūreiishi — Hyakki Kyō",
+    "bankaiKanji": "幽霊石・百鬼境",
+    "bankaiTraducao": "Território das Cem Almas",
+    "bankaiComando": "Bankai — Yūreiishi, Hyakki Kyō!",
+    "bankaiForma": "Centenas de pedras negras flutuando e formando uma matriz dimensional densa no campo.",
+    "bankaiPoder": "Malha de Salto Instantâneo: Permite saltos sucessivos entre centenas de pontos conectados no espaço.",
+    "bankaiLimitacoes": "Grandes distâncias aumentam proporcionalmente o desgaste de Reiatsu.",
+    "indices": {
+      "potencia": 6,
+      "alcance": 9,
+      "complexidade": 8,
+      "versatilidade": 10,
+      "custo": 7
     }
   },
   {
-    "id": "zk-09",
-    "numero": "09",
+    "id": "zk-09-raimei",
     "nome": "Raimei",
-    "kanji": "「雷鳴」",
+    "kanji": "雷鳴",
     "traducao": "Trovão",
-    "nomeCompleto": "Raimei 「雷鳴」— Trovão",
-    "espirito": "Um guerreiro colossal com máscara tradicional de teatro Noh, cujo corpo de bronze é percorrido por fissuras luminosas pulsantes como eletricidade crua.",
-    "comando": "Faça o céu responder, Raimei.",
-    "elemento": "Ressonância Sísmico-Elétrica",
-    "formatoArma": "A lâmina adquire formato em zigue-zague irregular e a empunhadura emite pulsos de vibração sonora e elétrica em frequências constantes.",
-    "poder": "Ressonância Harmônica: Cada movimento ritmado do portador gera uma onda de vibração cumulativa. Manter a cadência de golpes faz o Reiryoku entrar em ressonância, permitindo que o golpe seguinte descarregue toda a energia acumulada em uma explosão de choque.",
-    "bankai": {
-      "nome": "Raimei — Gōtenritsu",
-      "kanji": "「雷鳴・轟天律」",
-      "traducao": "Lei do Céu Trovejante",
-      "nomeCompleto": "Bankai — Raimei 「雷鳴・轟天律」 (Gōtenritsu — Lei do Céu Trovejante)",
-      "comando": "Bankai — Raimei, Gōtenritsu!",
-      "formatoArma": "O campo é coberto por pilares de trovão que ressoam como um metrônomo cósmico em compassos visíveis de relâmpago.",
-      "poder": "Cadência Absoluta de Combate: A Bankai premia a sincronização rítmica. Ações executadas precisamente dentro do pulso do trovão ganham o dobro de velocidade e poder perfurante; atacar fora do compasso dissipa a ressonância e atordoa o usuário."
+    "elemento": "Ressonância Harmônica & Vibração Sônica",
+    "comando": "Faça o céu responder, Raimei",
+    "espirito": "Um gigante usando máscara de teatro tradicional coberto por linhas luminosas como rachaduras.",
+    "formaSelada": "Katana com lâmina em zigue-zague sutil e tsuba de bronze martelado.",
+    "formatoArma": "Lâmina irregular em formato de raio com cabo que emite pulsos luminosos rítmicos.",
+    "poder": "Ressonância: Movimentos executados no mesmo compasso acumulam ondas vibratórias para um golpe devastador.",
+    "limitacoes": "Exige precisão métrica de tempo; se o ritmo for interrompido, a carga dissipa.",
+    "bankaiNome": "Raimei — Gōtenritsu",
+    "bankaiKanji": "雷鳴・轟天律",
+    "bankaiTraducao": "Lei do Céu Trovejante",
+    "bankaiComando": "Bankai — Raimei, Gōtenritsu!",
+    "bankaiForma": "O campo inteiro reverbera ondas sônicas com anéis de ressonância no solo e no céu.",
+    "bankaiPoder": "Harmonia de Batalha: Cada ação executada no compasso espiritual do usuário ganha potência e velocidade multiplicadas.",
+    "bankaiLimitacoes": "Perder o ritmo zera a ressonância acumulada.",
+    "indices": {
+      "potencia": 9,
+      "alcance": 7,
+      "complexidade": 8,
+      "versatilidade": 7,
+      "custo": 6
     }
   },
   {
-    "id": "zk-10",
-    "numero": "10",
+    "id": "zk-10-shirogane",
     "nome": "Shirogane",
-    "kanji": "「白銀」",
+    "kanji": "白銀",
     "traducao": "Prata Branca",
-    "nomeCompleto": "Shirogane 「白銀」— Prata Branca",
-    "espirito": "Um cavaleiro sem rosto com armadura de prata imaculada e polida que carrega uma gigantesca balança de pratos no lugar de uma espada de guerra.",
-    "comando": "Pese aquilo que existe, Shirogane.",
-    "elemento": "Equilíbrio & Redistribuição de Vantagens",
-    "formatoArma": "Uma espada longa prateada de gume reto cuja guarda possui o formato esculpido de uma balança de precisão.",
-    "poder": "Equilíbrio Proporcional: Detecta a disparidade física ou espiritual no choque de armas. O portador pode reduzir temporariamente uma vantagem do oponente (como força bruta), mas deve abrir mão de uma fração proporcional de outra vantagem própria para manter o equilíbrio.",
-    "bankai": {
-      "nome": "Shirogane — Tenbin Kai",
-      "kanji": "「白銀・天秤界」",
-      "traducao": "Domínio da Balança Celestial",
-      "nomeCompleto": "Bankai — Shirogane 「白銀・天秤界」 (Tenbin Kai — Domínio da Balança Celestial)",
-      "comando": "Bankai — Shirogane, Tenbin Kai!",
-      "formatoArma": "Uma monumental balança espiritual dourada e prateada surge sobre as nuvens dominando todo o campo de batalha.",
-      "poder": "Gerenciamento Universal de Atributos: O usuário pode comparar e redistribuir parâmetros (força, velocidade, pressão espiritual e resistência). Pode sacrificar sua velocidade para aumentar drasticamente sua resistência física, ou equalizar a força do inimigo à sua própria."
+    "elemento": "Equilíbrio de Forças & Balança Tática",
+    "comando": "Pese aquilo que existe, Shirogane",
+    "espirito": "Um cavaleiro sem rosto em armadura branca polida segurando uma balança colossal.",
+    "formaSelada": "Katana de aço prateado puro com empunhadura revestida em tecido alvo.",
+    "formatoArma": "Longa lâmina branca reluzente com guarda no formato de braço de balança.",
+    "poder": "Equilíbrio: Detecta a disparidade física entre combatentes e reduz a diferença cedendo outra vantagem.",
+    "limitacoes": "Não cria energia do nada; requer sacrifício equivalente de outro aspecto.",
+    "bankaiNome": "Shirogane — Tenbin Kai",
+    "bankaiKanji": "白銀・天秤界",
+    "bankaiTraducao": "Domínio da Balança Celestial",
+    "bankaiComando": "Bankai — Shirogane, Tenbin Kai!",
+    "bankaiForma": "Uma monumental balança dourada e prateada manifesta-se nos céus sobre o campo de batalha.",
+    "bankaiPoder": "Equalização Multidimensional: Transfere proporcionalmente valores entre força, velocidade, reiatsu e resiliência entre os lutadores.",
+    "bankaiLimitacoes": "Toda alteração exige contrapartida exata de acordo com a balança.",
+    "indices": {
+      "potencia": 7,
+      "alcance": 8,
+      "complexidade": 9,
+      "versatilidade": 10,
+      "custo": 7
     }
   },
   {
-    "id": "zk-11",
-    "numero": "11",
-    "nome": "Suminawa",
-    "kanji": "「墨縄」",
-    "traducao": "Corda de Nanquim",
-    "nomeCompleto": "Suminawa 「墨縄」— Corda de Nanquim",
-    "espirito": "Um calígrafo cego de longas vestes manchadas que traça kanjis no ar com um pincel gigante feito de cabelos de espíritos antigos.",
-    "comando": "Trace os limites do abismo, Suminawa.",
-    "elemento": "Nanquim Espiritual & Contenção Espacial",
-    "formatoArma": "A lâmina se transforma em uma espada com ranhuras que liberam nanquim negro viscoso. Cada golpe no ar deixa traços de tinta sólida suspensos que atuam como cordas tensionadas de retenção.",
-    "poder": "Traço Restritivo: Os traços de nanquim no ar endurecem como cabos de aço ao menor contato de corpos ou lâminas, travando a trajetória de golpes e membros do inimigo. Limitação: as cordas de tinta se desfazem após absorverem impactos de alta Reiryoku.",
-    "bankai": {
-      "nome": "Suminawa — Banshō Emaki",
-      "kanji": "「墨縄・万象絵巻」",
-      "traducao": "Rolo Pintado de Todas as Coisas",
-      "nomeCompleto": "Bankai — Suminawa 「墨縄・万象絵巻」 (Banshō Emaki — Rolo Pintado de Todas as Coisas)",
-      "comando": "Bankai — Suminawa, Banshō Emaki!",
-      "formatoArma": "O campo se torna um gigantesco pergaminho tridimensional em preto e branco onde o portador empunha uma espada-pincel colossal de nanquim puro.",
-      "poder": "Corte Bidimensional no Espaço Tridimensional: Qualquer corte ou traço feito no ar pelo usuário se manifesta instantaneamente em qualquer superfície ou corpo que esteja alinhado na perspectiva visual do pergaminho, ignorando distância física."
+    "id": "zk-11-kurohane",
+    "nome": "Kurohane",
+    "kanji": "黒羽",
+    "traducao": "Asas Negras",
+    "elemento": "Percepção Sensorial & Penas de Informação",
+    "comando": "Observe aquilo que ninguém percebe, Kurohane",
+    "espirito": "Uma enorme coruja negra sem olhos em uma biblioteca de tomos flutuantes.",
+    "formatoArma": "Espada que se divide em penas negras registradoras de dados sensoriais.",
+    "poder": "Registro Sensorial: Penas que captam som, cheiro, temperatura e pressão espiritual ao redor.",
+    "bankaiNome": "Kurohane — Banshikiden",
+    "bankaiKanji": "黒羽・万識殿",
+    "bankaiTraducao": "Palácio das Mil Percepções",
+    "bankaiPoder": "Conexão de Percepções: Reconstrói acontecimentos recentes e antecipa intenções através das penas.",
+    "indices": {
+      "potencia": 6,
+      "alcance": 9,
+      "complexidade": 8,
+      "versatilidade": 9,
+      "custo": 5
     }
   },
   {
-    "id": "zk-12",
-    "numero": "12",
-    "nome": "Utsusemi",
-    "kanji": "「空蝉」",
-    "traducao": "Casca da Cigarra",
-    "nomeCompleto": "Utsusemi 「空蝉」— Casca da Cigarra",
-    "espirito": "Um monge silencioso coberto por túnicas de seda ressecada e folhas quebradiças que se despedaçam ao menor toque, revelando vazio em seu interior.",
-    "comando": "Abandone a forma passageira, Utsusemi.",
-    "elemento": "Muda Corporal & Evasão Residual",
-    "formatoArma": "A lâmina se torna translúcida com tonalidade âmbar, emitindo um estalido oco e seco a cada oscilação no ar.",
-    "poder": "Casca Oca Residual: Ao receber um golpe direto que causaria ferimento grave, o usuário deixa para trás uma casca perfeita de Reiryoku que absorve o impacto total enquanto seu corpo real recua 3 metros ileso (uma vez por confronto próximo).",
-    "bankai": {
-      "nome": "Utsusemi — Senkaku Zankyō",
-      "kanji": "「空蝉・千殻残響」",
-      "traducao": "Ecos dos Mil Casulos Vazios",
-      "nomeCompleto": "Bankai — Utsusemi 「空蝉・千殻残響」 (Senkaku Zankyō — Ecos dos Mil Casulos Vazios)",
-      "comando": "Bankai — Utsusemi, Senkaku Zankyō!",
-      "formatoArma": "Dezenas de casulos âmbar translúcidos flutuam por toda a área como estátuas ocas perfeitas do portador.",
-      "poder": "Retenção e Refração de Impacto: Cada casulo acumula a memória cinética e espiritual dos golpes que o atingiram. O usuário pode detonar ou rebater a força armazenada nesses casulos diretamente contra quem se aproximar deles."
+    "id": "zk-12-akeboshi",
+    "nome": "Akeboshi",
+    "kanji": "明星",
+    "traducao": "Estrela da Manhã",
+    "elemento": "Antecipação de Padrões & Astronomia Espiritual",
+    "comando": "Mostre o instante que se aproxima, Akeboshi",
+    "espirito": "Um astrônomo jovem com relógio sem ponteiros.",
+    "formatoArma": "Lâmina com círculos luminosos que rastreiam ações repetitivas do adversário.",
+    "poder": "Identificação de Padrão: Sinaliza o instante exato em que o inimigo repetirá um movimento.",
+    "bankaiNome": "Akeboshi — Senkenten",
+    "bankaiKanji": "明星・先見天",
+    "bankaiTraducao": "Céu da Visão Antecipada",
+    "bankaiPoder": "Previsibilidade Simultânea: Mapeia dezenas de trajetórias e padrões de combate em tempo real.",
+    "indices": {
+      "potencia": 7,
+      "alcance": 8,
+      "complexidade": 9,
+      "versatilidade": 9,
+      "custo": 6
     }
   },
   {
-    "id": "zk-13",
-    "numero": "13",
-    "nome": "Kagaribi",
-    "kanji": "「篝火」",
-    "traducao": "Fogueira Noturna",
-    "nomeCompleto": "Kagaribi 「篝火」— Fogueira Noturna",
-    "espirito": "Um sentinela com elmo de ferro antigo segurando uma lanterna sem chama onde ardem apenas fagulhas de cinza espiritual imortal.",
-    "comando": "Revele as sombras da vigília, Kagaribi.",
-    "elemento": "Brasas Reveladoras & Consumo Mágico",
-    "formatoArma": "Uma lâmina curva acoplada a um pequeno braseiro de ferro no pomo que desprende fagulhas douradas contínuas.",
-    "poder": "Luz da Intenção: Qualquer fonte de Reiryoku, ataque invisível ou preparação de feitiço dentro do raio iluminado pelas fagulhas tem sua densidade e trajetória expostas antes de ser desferido.",
-    "bankai": {
-      "nome": "Kagaribi — Yahan Enjin",
-      "kanji": "「篝火・夜半炎陣」",
-      "traducao": "Círculo de Chamas da Meia-Noite",
-      "nomeCompleto": "Bankai — Kagaribi 「篝火・夜半炎陣」 (Yahan Enjin — Círculo de Chamas da Meia-Noite)",
-      "comando": "Bankai — Kagaribi, Yahan Enjin!",
-      "formatoArma": "Uma colossal fogueira espiritual arde no centro da arena projetando pilares de chamas translúcidas.",
-      "poder": "Combustão de Feitiços & Dreno de Kidō: As chamas não queimam matéria orgânica, mas consomem vorazmente qualquer Reiryoku moldado em técnicas mágicas (Hadō/Bakudō), reduzindo o poder de feitiços inimigos proporcionalmente ao tempo gasto na luz."
+    "id": "zk-13-shigure",
+    "nome": "Shigure",
+    "kanji": "時雨",
+    "traducao": "Chuva Passageira",
+    "elemento": "Deterioração Estrutural & Desgaste Temporal",
+    "comando": "Passe como a chuva, Shigure",
+    "espirito": "Mulher com vestido feito de relógios quebrados.",
+    "formatoArma": "Lâmina que goteja chuva de aceleração de fadiga em materiais.",
+    "poder": "Gotas de Corrosão: Acelera o desgaste natural de metal, madeira e tecidos tocados.",
+    "bankaiNome": "Shigure — Hyakunen'ame",
+    "bankaiKanji": "時雨・百年雨",
+    "bankaiTraducao": "Chuva dos Cem Anos",
+    "bankaiPoder": "Deterioração Ambiental Seletiva: Controla a velocidade de desgaste e fadiga de tudo na área.",
+    "indices": {
+      "potencia": 8,
+      "alcance": 9,
+      "complexidade": 7,
+      "versatilidade": 8,
+      "custo": 7
     }
   },
   {
-    "id": "zk-14",
-    "numero": "14",
-    "nome": "Senritsu",
-    "kanji": "「旋律」",
-    "traducao": "Melodia Silenciosa",
-    "nomeCompleto": "Senritsu 「旋律」— Melodia Silenciosa",
-    "espirito": "Uma dama etérea sentada sobre um lago sereno tocando uma cítara cujas cordas invisíveis vibram na frequência do vento.",
-    "comando": "Toque aquilo que não tem voz, Senritsu.",
-    "elemento": "Frequência Acústica & Interferência Neural",
-    "formatoArma": "Uma espada esguia e brilhante com pequenas aberturas ao longo do dorso que assobiam em notas musicais precisas ao golpear.",
-    "poder": "Harmonia Desestabilizadora: Cada defesa ou aparo com a lâmina produz um tom sonoro que ressoa nas terminações nervosas do braço atacante, causando dormência passageira e perda temporária de empunhadura.",
-    "bankai": {
-      "nome": "Senritsu — Zekkyō Shūkyoku",
-      "kanji": "「旋律・絶響終曲」",
-      "traducao": "Réquiem da Ressonância Final",
-      "nomeCompleto": "Bankai — Senritsu 「旋律・絶響終曲」 (Zekkyō Shūkyoku — Réquiem da Ressonância Final)",
-      "comando": "Bankai — Senritsu, Zekkyō Shūkyoku!",
-      "formatoArma": "O ar do ambiente inteiro vibra como uma caixa de ressonância com cordas de luz prateada cruzando a atmosfera.",
-      "poder": "Sincronização Cardiopulmonar Obrigatória: A Bankai sintoniza a respiração e os batimentos cardíacos do oponente com o andamento musical da espada. Qualquer ataque ou movimento brusco fora do ritmo imposto causa contração dolorosa nos órgãos internos."
+    "id": "zk-14-ginmokusei",
+    "nome": "Ginmokusei",
+    "kanji": "銀木犀",
+    "traducao": "Osmanthus Prateado",
+    "elemento": "Rastreamento Olfativo & Aromas Espirituais",
+    "comando": "Espalhe aquilo que os olhos não podem encontrar, Ginmokusei",
+    "espirito": "Uma senhora cega cuidando de um jardim invisível.",
+    "formatoArma": "Espada que exala perfume de rastreamento espiritual indelével.",
+    "poder": "Marca Olfativa: Marca alvos pelo odor de Reishi impossível de ocultar.",
+    "bankaiNome": "Ginmokusei — Hyakkōtei",
+    "bankaiKanji": "銀木犀・百香庭",
+    "bankaiTraducao": "Jardim das Cem Fragrâncias",
+    "bankaiPoder": "Rede Sensorial de Fragrâncias: Mapeia perfeitamente qualquer presença marcada em quilômetros.",
+    "indices": {
+      "potencia": 5,
+      "alcance": 10,
+      "complexidade": 7,
+      "versatilidade": 8,
+      "custo": 4
     }
   },
   {
-    "id": "zk-15",
-    "numero": "15",
-    "nome": "Kagehōshi",
-    "kanji": "「影法師」",
-    "traducao": "Silhueta na Sombra",
-    "nomeCompleto": "Kagehōshi 「影法師」— Silhueta na Sombra",
-    "espirito": "Uma silhueta sombria sem traços faciais definidos que projeta dois olhos de âmbar fixos no solo e nunca emerge para onde há luz direta.",
-    "comando": "Prenda-se ao solo, Kagehōshi.",
-    "elemento": "Sombras Vivas & Paralisia Simpática",
-    "formatoArma": "Uma katana escura cuja lâmina projeta uma sombra alongada no solo com o dobro do comprimento da espada real.",
-    "poder": "Corte da Sombra: Cortar ou cravar a espada na sombra projetada do oponente no chão imobiliza a parte do corpo correspondente pelo tempo em que a lâmina estiver sobre a sombra.",
-    "bankai": {
-      "nome": "Kagehōshi — Shikkoku Bakukai",
-      "kanji": "「影法師・漆黒縛界」",
-      "traducao": "Domínio Aprisionador do Ébano",
-      "nomeCompleto": "Bankai — Kagehōshi 「影法師・漆黒縛界」 (Shikkoku Bakukai — Domínio Aprisionador do Ébano)",
-      "comando": "Bankai — Kagehōshi, Shikkoku Bakukai!",
-      "formatoArma": "O chão de toda a arena se liquefaz em um pântano de sombras profundas que refletem as armas dos combatentes.",
-      "poder": "Mimetismo Sombrio Agressivo: As sombras projetadas no solo criam cópias independentes das armas e membros dos próprios oponentes, atacando-os a partir de seus próprios pés e restringindo movimentos com tentáculos de Reiryoku negro."
-    }
-  },
-  {
-    "id": "zk-16",
-    "numero": "16",
-    "nome": "Hakumaku",
-    "kanji": "「薄膜」",
-    "traducao": "Membrana Translúcida",
-    "nomeCompleto": "Hakumaku 「薄膜」— Membrana Translúcida",
-    "espirito": "Uma tecelã de vestes alvas que fia véus transparentes e elásticos em uma sala repleta de neblina e gotas de orvalho.",
-    "comando": "Estenda a fronteira do ar, Hakumaku.",
-    "elemento": "Películas Refratárias & Vetor Elástico",
-    "formatoArma": "Uma espada de lâmina polida como água que deixa películas espirituais translúcidas suspensas no ar a cada corte.",
-    "poder": "Membrana Defletora: As películas criadas no ar funcionam como superfícies hiperelásticas capazes de desviar projéteis e servir como trampolins de aceleração para mudanças angulares imediatas no Shunpo.",
-    "bankai": {
-      "nome": "Hakumaku — Tenkyō Shōheki",
-      "kanji": "「薄膜・天鏡障壁」",
-      "traducao": "Barreira do Espelho Celestial",
-      "nomeCompleto": "Bankai — Hakumaku 「薄膜・天鏡障壁」 (Tenkyō Shōheki — Barreira do Espelho Celestial)",
-      "comando": "Bankai — Hakumaku, Tenkyō Shōheki!",
-      "formatoArma": "Uma monumental bolha translúcida multifacetada encapsula toda a área de combate.",
-      "poder": "Inversão Vetorial Total: Qualquer golpe, corpo ou feitiço que colide contra as paredes da membrana externa tem sua velocidade e direção invertidas em 180° com a mesma energia com que tentou romper a barreira."
-    }
-  },
-  {
-    "id": "zk-17",
-    "numero": "17",
-    "nome": "Haguruma",
-    "kanji": "「歯車」",
-    "traducao": "Engrenagem do Destino",
-    "nomeCompleto": "Haguruma 「歯車」— Engrenagem do Destino",
-    "espirito": "Um autômato ancestral de bronze polido com engrenagens e ponteiros expostos no peito que giram ritmicamente marcando segundos silenciosos.",
-    "comando": "Engrene o tempo que resta, Haguruma.",
-    "elemento": "Mecânica Rotacional & Intervalos Discretos",
-    "formatoArma": "Uma espada pesada com gume dentado articulado em engrenagens que giram e acumulam torque a cada contato de aço.",
-    "poder": "Torque Acumulativo: Cada colisão bem-sucedida faz as engrenagens girarem mais rápido, aumentando progressivamente a aceleração de corte do golpe seguinte.",
-    "bankai": {
-      "nome": "Haguruma — Banshō Kokukai",
-      "kanji": "「歯車・万象刻界」",
-      "traducao": "Mundo dos Ponteiros Eternos",
-      "nomeCompleto": "Bankai — Haguruma 「歯車・万象刻界」 (Banshō Kokukai — Mundo dos Ponteiros Eternos)",
-      "comando": "Bankai — Haguruma, Banshō Kokukai!",
-      "formatoArma": "Monumentais rodas dentadas de bronze e mostradores de relógio flutuam no céu e no solo da arena.",
-      "poder": "Ajuste de Intervalos de Ação: O usuário pode retardar ou acelerar os intervalos entre a decisão motora e a execução física do adversário, fazendo com que o inimigo sofra atrasos de frações de segundo na recuperação após cada ataque."
-    }
-  },
-  {
-    "id": "zk-18",
-    "numero": "18",
-    "nome": "Sasayaki",
-    "kanji": "「囁き」",
-    "traducao": "Sussurro Noturno",
-    "nomeCompleto": "Sasayaki 「囁き」— Sussurro Noturno",
-    "espirito": "Uma figura misteriosa com máscara de porcelana sem boca que fala através de ecos simultâneos e sussurros reverberantes.",
-    "comando": "Ecoa na mente vazia, Sasayaki.",
-    "elemento": "Ruído Psíquico & Supressão de Cânticos",
-    "formatoArma": "Uma lâmina de acabamento cinza fosco que não produz som de corte nem reflete luz.",
-    "poder": "Interferência Acústica: O choque do aço transmite uma vibração subsônica direta no ouvido interno do oponente, gerando desorientação espacial momentânea.",
-    "bankai": {
-      "nome": "Sasayaki — Muon Kyōsō",
-      "kanji": "「囁き・無音狂噪」",
-      "traducao": "Frenesi do Silêncio Enlouquecedor",
-      "nomeCompleto": "Bankai — Sasayaki 「囁き・無音狂噪」 (Muon Kyōsō — Frenesi do Silêncio Enlouquecedor)",
-      "comando": "Bankai — Sasayaki, Muon Kyōsō!",
-      "formatoArma": "Todo o ruído da atmosfera é completamente anulado gerando um vácuo acústico absoluto.",
-      "poder": "Bloqueio de Concentração & Encantamentos: Um turbilhão de sussurros psíquicos é projetado diretamente no fluxo mental do inimigo, tornando impossível manter a concentração requerida para cânticos de Kidō ou cálculos táticos refinados."
-    }
-  },
-  {
-    "id": "zk-19",
-    "numero": "19",
-    "nome": "Enbaku",
-    "kanji": "「煙幕」",
-    "traducao": "Cortina de Cinzas",
-    "nomeCompleto": "Enbaku 「煙幕」— Cortina de Cinzas",
-    "espirito": "Um eremita com olhos cor de brasa fumando um cachimbo de bambu escurecido, cercado por cinzas que flutuam sem jamais tocar o chão.",
-    "comando": "Asfixie o horizonte, Enbaku.",
-    "elemento": "Fumaça Pesada & Asfixia Espiritual",
-    "formatoArma": "Uma espada curta que expele continuamente uma névoa espessa de fumaça cinzenta e pesada que rasteja sobre o terreno.",
-    "poder": "Fumaça Asfixiante: A fumaça drena a concentração de oxigênio e Reiryoku puro ao redor, dificultando a respiração e enfraquecendo feitiços de Hadō disparados através dela.",
-    "bankai": {
-      "nome": "Enbaku — Kaijin Tengai",
-      "kanji": "「煙幕・灰燼天蓋」",
-      "traducao": "Domo das Cinzas Eternas",
-      "nomeCompleto": "Bankai — Enbaku 「煙幕・灰燼天蓋」 (Kaijin Tengai — Domo das Cinzas Eternas)",
-      "comando": "Bankai — Enbaku, Kaijin Tengai!",
-      "formatoArma": "Uma cúpula monumental de cinzas incandescentes cobre toda a arena de combate.",
-      "poder": "Solidificação Instantânea de Fumaça: Toda a fumaça ambiente pode ser condensada instantaneamente em agulhas sólidas afiadas, paredes de contenção ou lâminas de impacto sob o comando do usuário."
-    }
-  },
-  {
-    "id": "zk-20",
-    "numero": "20",
-    "nome": "Garyū",
-    "kanji": "「臥竜」",
-    "traducao": "Dragão Adormecido",
-    "nomeCompleto": "Garyū 「臥竜」— Dragão Adormecido",
-    "espirito": "Um monge sereno sentado sobre a crista de um dragão esculpido em rocha sedimentar milenar que respira poeira de terra.",
-    "comando": "Acorde da montanha, Garyū.",
-    "elemento": "Densidade Sísmica & Massa Inercial",
-    "formatoArma": "Uma espada larga, pesada e de gume rombudo que não possui fio de corte tradicional, mas tem densidade descomunal.",
-    "poder": "Massa Cumulativa: A cada golpe bloqueado com a espada, sua densidade aumenta sem sobrecarregar os braços do portador, esmagando defesas pela pura inércia do impacto.",
-    "bankai": {
-      "nome": "Garyū — Tenhō Chiretsu",
-      "kanji": "「臥竜・天崩地裂」",
-      "traducao": "Colapso do Céu e Fratura da Terra",
-      "nomeCompleto": "Bankai — Garyū 「臥竜・天崩地裂」 (Tenhō Chiretsu — Colapso do Céu e Fratura da Terra)",
-      "comando": "Bankai — Garyū, Tenhō Chiretsu!",
-      "formatoArma": "A carapaça de pedra se parte liberando uma espada titânica de lâmina negra reluzente com aura gravitacional densa.",
-      "poder": "Onda de Ruptura Tectônica: Cada golpe desferido gera uma pressão gravitacional vertical capaz de quebrar o solo em crateras de dezenas de metros e estilhaçar qualquer barreira de Bakudō convencional."
-    }
-  },
-  {
-    "id": "zk-21",
-    "numero": "21",
-    "nome": "Chizome",
-    "kanji": "「血染」",
-    "traducao": "Fios de Sangue",
-    "nomeCompleto": "Chizome 「血染」— Fios de Sangue",
-    "espirito": "Uma nobre vestida com quimono carmesim que costura tapeçarias usando agulhas de osso e fios tingidos de sangue fresco.",
-    "comando": "Tinja o caminho de carmesim, Chizome.",
-    "elemento": "Coagulação Espiritual & Fios Carmesins",
-    "formatoArma": "Uma adaga curva de aço polido com uma ranhura central que atrai e cristaliza fluidos em micro-agulhas afiadas.",
-    "poder": "Cristalização Sanguínea: Permite ao usuário endurecer gotas de sangue no ar ou no chão em agulhas e lâminas cortantes arremessáveis.",
-    "bankai": {
-      "nome": "Chizome — Senshi Senketsukai",
-      "kanji": "「血染・千糸鮮血界」",
-      "traducao": "Mundo dos Mil Fios de Sangue",
-      "nomeCompleto": "Bankai — Chizome 「血染・千糸鮮血界」 (Senshi Senketsukai — Mundo dos Mil Fios de Sangue)",
-      "comando": "Bankai — Chizome, Senshi Senketsukai!",
-      "formatoArma": "O ambiente se cruza com milhares de fios escarlates suspensos que brilham com Reiryoku vivo.",
-      "poder": "Rede Sensora & Guilhotina: Os fios no ar reagem automaticamente a qualquer vibração ou deslocamento veloz, tensionando-se para fatiar quem tentar cruzar a rede em alta velocidade."
-    }
-  },
-  {
-    "id": "zk-22",
-    "numero": "22",
-    "nome": "Kazahana",
-    "kanji": "「風花」",
-    "traducao": "Pétalas da Nevasca",
-    "nomeCompleto": "Kazahana 「風花」— Pétalas da Nevasca",
-    "espirito": "Uma criança vestida de branco que sopra delicadas flores de gelo enquanto caminha descalça sobre a neve virgem.",
-    "comando": "Dance na geada suave, Kazahana.",
-    "elemento": "Gelo Suave & Flocos Entorpecentes",
-    "formatoArma": "Uma katana fina prateada que liberta pequenos flocos hexagonais de gelo que flutuam ao redor da lâmina.",
-    "poder": "Geada Entorpecente: Os flocos de gelo grudam nas roupas e pele do alvo, drenando o calor corporal e reduzindo o tempo de resposta neuromuscular a cada golpe.",
-    "bankai": {
-      "nome": "Kazahana — Byakuya Hanafubuki",
-      "kanji": "「風花・白夜花吹雪」",
-      "traducao": "Nevasca Floral da Noite Branca",
-      "nomeCompleto": "Bankai — Kazahana 「風花・白夜花吹雪」 (Byakuya Hanafubuki — Nevasca Floral da Noite Branca)",
-      "comando": "Bankai — Kazahana, Byakuya Hanafubuki!",
-      "formatoArma": "Um turbilhão colossal de pétalas de gelo cortantes envolve toda a arena sob uma tempestade de frio extremo.",
-      "poder": "Ausência de Atrito & Corte Gélido: As lâminas de gelo cortam o ar anulando o atrito do solo e reduzindo a temperatura a níveis que congelam faíscas de Reiryoku e aprisionam o inimigo em geada perpétua."
-    }
-  },
-  {
-    "id": "zk-23",
-    "numero": "23",
-    "nome": "Bankō",
-    "kanji": "「万綱」",
-    "traducao": "Rede das Profundezas",
-    "nomeCompleto": "Bankō 「万綱」— Rede das Profundezas",
-    "espirito": "Um pescador silencioso em um barco de junco no centro de um oceano infinito coberto por névoa cinzenta.",
-    "comando": "Puxe as amarras do abismo, Bankō.",
-    "elemento": "Cabos de Aço & Tensão de Longo Alcance",
-    "formatoArma": "A lâmina se estende em múltiplos fios de aço flexíveis de altíssima tensão equipados com ganchos farpados nas pontas.",
-    "poder": "Puxão Angulado: Permite laçar membros, armas ou pontos do terreno para projetar o usuário ou desarmar oponentes a longas distâncias.",
-    "bankai": {
-      "nome": "Bankō — Kaitei Bakusamō",
-      "kanji": "「万綱・海底縛鎖網」",
-      "traducao": "Rede de Correntes do Fundo do Oceano",
-      "nomeCompleto": "Bankai — Bankō 「万綱・海底縛鎖網」 (Kaitei Bakusamō — Rede de Correntes do Fundo do Oceano)",
-      "comando": "Bankai — Bankō, Kaitei Bakusamō!",
-      "formatoArma": "Milhares de correntes e cabos de aço cobrem o céu e o solo como uma teia monumental de cerco.",
-      "poder": "Contração & Condução Sísmica: O usuário sente qualquer vibração no campo e pode contrair a teia instantaneamente para esmagar ou aprisionar múltiplos alvos em um cofre de correntes."
-    }
-  },
-  {
-    "id": "zk-24",
-    "numero": "24",
-    "nome": "Shiratama",
-    "kanji": "「白玉」",
-    "traducao": "Esferas de Jade Sagrada",
-    "nomeCompleto": "Shiratama 「白玉」— Esferas de Jade Sagrada",
-    "espirito": "Um sacerdote em estado de iluminação que levita sereno cercado por três esferas peroladas que emitem luz pura.",
-    "comando": "Purifique a mácula, Shiratama.",
-    "elemento": "Luz Sagrada & Absorção Purificadora",
-    "formatoArma": "A espada gera três esferas luminosas de Reiryoku puro que giram em volta da empunhadura e protegem o portador.",
-    "poder": "Orbes de Defesa Absoluta: Cada esfera absorve integralmente um ataque mágico de Kidō ou impacto de energia elemental direta, dissipando-se em seguida (até 3 cargas).",
-    "bankai": {
-      "nome": "Shiratama — Sangai Jōkarin",
-      "kanji": "「白玉・三界浄化輪」",
-      "traducao": "Três Anéis da Purificação Celestial",
-      "nomeCompleto": "Bankai — Shiratama 「白玉・三界浄化輪」 (Sangai Jōkarin — Três Anéis da Purificação Celestial)",
-      "comando": "Bankai — Shiratama, Sangai Jōkarin!",
-      "formatoArma": "As esferas se expandem em três anéis de luz solar gigantescos que descem sobre o campo de batalha.",
-      "poder": "Supressão de Energias Caóticas: Impõe uma zona de purificação contínua onde técnicas de energia impura ou venenos são neutralizados, enquanto recupera o fluxo de Reiryoku do portador."
-    }
-  },
-  {
-    "id": "zk-25",
-    "numero": "25",
+    "id": "zk-15-tsukikage",
     "nome": "Tsukikage",
-    "kanji": "「月影」",
-    "traducao": "Sombra da Lua",
-    "nomeCompleto": "Tsukikage 「月影」— Sombra da Lua",
-    "espirito": "Uma arqueira de olhar calmo vestida de azul-noite sentada sobre a foice de uma lua prateada brilhando no escuro.",
-    "comando": "Oculte-se no luar, Tsukikage.",
-    "elemento": "Ilusão Óptica & Refração Lunar",
-    "formatoArma": "Uma lâmina curva e fosca cuja borda parece cintilar em ondas de luz prateada.",
-    "poder": "Distorção de Alcance: A refração luminosa ao longo do fio faz a espada parecer mais curta ou mais longa do que realmente é, enganando o tempo de bloqueio do inimigo.",
-    "bankai": {
-      "nome": "Tsukikage — Gengetsu Mueikai",
-      "kanji": "「月影・幻月無影界」",
-      "traducao": "Domínio Sem Sombra da Lua Ilusória",
-      "nomeCompleto": "Bankai — Tsukikage 「月影・幻月無影界」 (Gengetsu Mueikai — Domínio Sem Sombra da Lua Ilusória)",
-      "comando": "Bankai — Tsukikage, Gengetsu Mueikai!",
-      "formatoArma": "A noite desce e a arena é banhada pela luz de uma lua cheia colossal prateada.",
-      "poder": "Ataque por Feixes de Luz: O usuário dissocia seu corpo físico da sua imagem visível, podendo projetar estocadas e cortes reais a partir de qualquer raio de luar refletido no terreno."
+    "kanji": "月影",
+    "traducao": "Sombra Lunar",
+    "elemento": "Ocultação Visual & Luz e Trevas",
+    "comando": "Esconda aquilo que a luz revela, Tsukikage",
+    "espirito": "Um homem com máscara meio clara meio escura.",
+    "formatoArma": "Lâmina que apaga detalhes visuais específicos do alvo ou do usuário.",
+    "poder": "Ocultação de Detalhe: Torna armas, feridas ou membros invisíveis aos olhos.",
+    "bankaiNome": "Tsukikage — Mumyōkyō",
+    "bankaiKanji": "月影・無明境",
+    "bankaiTraducao": "Domínio Sem Luz",
+    "bankaiPoder": "Manipulação Coletiva da Percepção: Apaga seletivamente conjuntos inteiros de dados visuais.",
+    "indices": {
+      "potencia": 6,
+      "alcance": 8,
+      "complexidade": 8,
+      "versatilidade": 9,
+      "custo": 6
     }
   },
   {
-    "id": "zk-26",
-    "numero": "26",
-    "nome": "Jigokubana",
-    "kanji": "「地獄花」",
-    "traducao": "Lírio do Submundo",
-    "nomeCompleto": "Jigokubana 「地獄花」— Lírio do Submundo",
-    "espirito": "Uma mulher com coroa de espinhos negros e lágrimas vermelhas cujos passos no solo fazem brotar flores escarlates de ferro.",
-    "comando": "Enraíze no solo dos mortos, Jigokubana.",
-    "elemento": "Raízes de Ferro & Dreno Telúrico",
-    "formatoArma": "Uma espada cuja ponta, ao tocar o solo, faz brotar raízes afiadas de metal que avançam em direção ao oponente.",
-    "poder": "Espinhos de Solo: Cria fendas subterrâneas com espinhos de Reiryoku que brotam sob os pés do alvo para empalar ou restringir seus passos.",
-    "bankai": {
-      "nome": "Jigokubana — Guren Jukai",
-      "kanji": "「地獄花・紅蓮樹海」",
-      "traducao": "Floresta de Espinhos do Abismo Carmesim",
-      "nomeCompleto": "Bankai — Jigokubana 「地獄花・紅蓮樹海」 (Guren Jukai — Floresta de Espinhos do Abismo Carmesim)",
-      "comando": "Bankai — Jigokubana, Guren Jukai!",
-      "formatoArma": "Uma floresta colossal de videiras espinhosas de ferro carmesim brota cobrindo toda a arena.",
-      "poder": "Domínio Asfixiante de Raízes: As vinhas se movem autonomamente buscando fontes de Reiryoku, estrangulando defesas e drenando energia vital de qualquer um que encostar no solo."
+    "id": "zk-16-tetsubana",
+    "nome": "Tetsubana",
+    "kanji": "鉄花",
+    "traducao": "Flor de Ferro",
+    "elemento": "Metal Vegetal & Arquitetura Espiritual",
+    "comando": "Floresça através da dureza, Tetsubana",
+    "espirito": "Uma garota pequena coberta por flores de metal.",
+    "formatoArma": "Lâmina que faz flores metálicas brotarem de superfícies tocadas.",
+    "poder": "Brotamento Metálico: Cria barreiras e pontas de aço vegetal em paredes e solos.",
+    "bankaiNome": "Tetsubana — Banshōtei",
+    "bankaiKanji": "鉄花・万象庭",
+    "bankaiTraducao": "Jardim das Mil Estruturas",
+    "bankaiPoder": "Arquitetura Espiritual Dinâmica: Ergue fortalezas e labirintos de aço orgânico instantaneamente.",
+    "indices": {
+      "potencia": 8,
+      "alcance": 8,
+      "complexidade": 7,
+      "versatilidade": 8,
+      "custo": 6
     }
   },
   {
-    "id": "zk-27",
-    "numero": "27",
-    "nome": "Hikariba",
-    "kanji": "「光刃」",
-    "traducao": "Lâmina de Prisma Solar",
-    "nomeCompleto": "Hikariba 「光刃」— Lâmina de Prisma Solar",
-    "espirito": "Um escultor de lentes de cristal puro que lapida raios solares em ângulos geométricos perfeitos.",
-    "comando": "Refrate a chama pura, Hikariba.",
-    "elemento": "Luz Solar Concentrada & Alta Temperatura",
-    "formatoArma": "Uma espada de cristal facetado que concentra a luz ambiente em feixes cortantes de alta temperatura.",
-    "poder": "Feixes Prismáticos: Permite refletir e curvar disparos luminosos em ângulos retos para atingir o oponente em seus pontos cegos.",
-    "bankai": {
-      "nome": "Hikariba — Banshō Shōnetsukai",
-      "kanji": "「光刃・万象焦熱界」",
-      "traducao": "Domínio da Incineração Prismática",
-      "nomeCompleto": "Bankai — Hikariba 「光刃・万象焦熱界」 (Banshō Shōnetsukai — Domínio da Incineração Prismática)",
-      "comando": "Bankai — Hikariba, Banshō Shōnetsukai!",
-      "formatoArma": "Pilares gigantes de cristal facetado cercam o campo de batalha como espelhos monumentais.",
-      "poder": "Feixe Omnidirecional de Incineração: A luz concentrada pelos prismas dispara simultaneamente em dezenas de eixos térmicos, incinerando defesas físicas e barreiras mágicas com calor extremo."
+    "id": "zk-17-usuginu",
+    "nome": "Usuginu",
+    "kanji": "薄絹",
+    "traducao": "Seda Delicada",
+    "elemento": "Separação Física & Fitas de Espaço",
+    "comando": "Dance entre os espaços, Usuginu",
+    "espirito": "Bailarina envolta em milhares de véus sem rosto.",
+    "formatoArma": "Fita cortante ultrafina que separa temporariamente superfícies contíguas.",
+    "poder": "Linha de Separação: Desconecta lâminas de cabos e portas de batentes momentaneamente.",
+    "bankaiNome": "Usuginu — Dankaimai",
+    "bankaiKanji": "薄絹・断界舞",
+    "bankaiTraducao": "Dança do Mundo Separado",
+    "bankaiPoder": "Zonas de Desconexão Espacial: Cria limites onde nada pode permanecer unido fisicamente.",
+    "indices": {
+      "potencia": 8,
+      "alcance": 8,
+      "complexidade": 9,
+      "versatilidade": 8,
+      "custo": 7
     }
   },
   {
-    "id": "zk-28",
-    "numero": "28",
-    "nome": "Ryūshin",
-    "kanji": "「竜心」",
-    "traducao": "Coração de Dragão",
-    "nomeCompleto": "Ryūshin 「竜心」— Coração de Dragão",
-    "espirito": "Um guerreiro imponente com marcas de escamas ardentes no peito e olhar penetrante de chamas douradas.",
-    "comando": "Queime no pulso da alma, Ryūshin.",
-    "elemento": "Calor Interno & Plasma Espiritual",
-    "formatoArma": "Uma katana de gume avermelhado que absorve o calor do próprio usuário para intensificar o poder de corte.",
-    "poder": "Combustão Contínua: Quanto mais longa a trocação direta de golpes, mais incandescente fica a lâmina, descarregando ondas térmicas a cada balanço.",
-    "bankai": {
-      "nome": "Ryūshin — Gōka Tenshō",
-      "kanji": "「竜心・劫火天衝」",
-      "traducao": "Impacto Celestial do Fogo Cósmico",
-      "nomeCompleto": "Bankai — Ryūshin 「竜心・劫火天衝」 (Gōka Tenshō — Impacto Celestial do Fogo Cósmico)",
-      "comando": "Bankai — Ryūshin, Gōka Tenshō!",
-      "formatoArma": "O portador é envolto em uma armadura dracônica de plasma incandescente com asas de fogo espiritual.",
-      "poder": "Devastação em Plasma Puro: Libera explosões monumentais de calor contínuo que derretem o solo sob os pés dos combatentes e transformam o ar em uma fornalha inescapável."
+    "id": "zk-18-suzunari",
+    "nome": "Suzunari",
+    "kanji": "鈴鳴",
+    "traducao": "Som dos Sinos",
+    "elemento": "Comunicação Sônica & Ondas de Frequência",
+    "comando": "Desperte através do som, Suzunari",
+    "espirito": "Criança com centenas de sinos tilintantes.",
+    "formatoArma": "Espada sonora que transmite mensagens e frequências por vibração.",
+    "poder": "Voz do Sino: Transmite mensagens secretas em frequências inaudíveis pelo ar.",
+    "bankaiNome": "Suzunari — Sen'on Kairō",
+    "bankaiKanji": "鈴鳴・千音回廊",
+    "bankaiTraducao": "Corredor das Mil Vozes",
+    "bankaiPoder": "Rede Sonora Territorial: Projeta dezenas de canais acústicos com atordoamento sônico coordenado.",
+    "indices": {
+      "potencia": 7,
+      "alcance": 9,
+      "complexidade": 7,
+      "versatilidade": 8,
+      "custo": 5
     }
   },
   {
-    "id": "zk-29",
-    "numero": "29",
-    "nome": "Mumyō",
-    "kanji": "「無明」",
-    "traducao": "Noite da Cegueira",
-    "nomeCompleto": "Mumyō 「無明」— Noite da Cegueira",
-    "espirito": "Um monge ancião de olhos vendados por seda negra que caminha com um cajado de ébano sem emitir vibração alguma.",
-    "comando": "Apague a centelha do olhar, Mumyō.",
-    "elemento": "Privação Sensorial & Penumbra Espiritual",
-    "formatoArma": "Uma espada que absorve o reflexo da luz ao seu redor, criando uma aura de escuridão opaca de 2 metros em torno do usuário.",
-    "poder": "Cegueira Momentânea: Ao cruzar lâminas, a visão periférica do adversário é apagada por 1 segundo, impedindo leitura de contra-ataques imediatos.",
-    "bankai": {
-      "nome": "Mumyō — Tokoyami Meifu",
-      "kanji": "「無明・常闇冥府」",
-      "traducao": "Submundo das Trevas Eternas",
-      "nomeCompleto": "Bankai — Mumyō 「無明・常闇冥府」 (Tokoyami Meifu — Submundo das Trevas Eternas)",
-      "comando": "Bankai — Mumyō, Tokoyami Meifu!",
-      "formatoArma": "Todo o campo de batalha é engolido por uma escuridão absoluta impenetrável.",
-      "poder": "Anulação de Percepção & Detecção: Suprime completamente a visão e a detecção de Reiryoku à distância, forçando o adversário a lutar exclusivamente por sensações táteis imediatas enquanto o usuário se move com precisão instintiva."
+    "id": "zk-19-mokuren",
+    "nome": "Mokuren",
+    "kanji": "木蓮",
+    "traducao": "Magnólia",
+    "elemento": "Raízes de Reishi & Condução Energética",
+    "comando": "Crie raízes onde não existem, Mokuren",
+    "espirito": "Monge colossal de madeira viva.",
+    "formatoArma": "Espada viva que finca raízes condutoras no solo.",
+    "poder": "Conexão de Reishi: Transfere energia espiritual entre dois pontos enraizados.",
+    "bankaiNome": "Mokuren — Daijumyaku",
+    "bankaiKanji": "木蓮・大樹脈",
+    "bankaiTraducao": "Grande Veia da Árvore",
+    "bankaiPoder": "Rede Energética Continental: Redistribui ou drena Reiatsu em larga escala pelo solo.",
+    "indices": {
+      "potencia": 8,
+      "alcance": 9,
+      "complexidade": 8,
+      "versatilidade": 8,
+      "custo": 6
     }
   },
   {
-    "id": "zk-30",
-    "numero": "30",
-    "nome": "Haganeito",
-    "kanji": "「鋼糸」",
-    "traducao": "Fios de Aço",
-    "nomeCompleto": "Haganeito 「鋼糸」— Fios de Aço",
-    "espirito": "Um mestre marionetista com feições de porcelana lisa e dedos estendidos em longos filamentos prateados de Reiryoku.",
-    "comando": "Costure os passos do destino, Haganeito.",
-    "elemento": "Microfilamentos & Controle Articular",
-    "formatoArma": "A ponta da espada solta micro-fios de aço quase invisíveis que se prendem às armas e punhos dos adversários.",
-    "poder": "Desvio Tátil: Permite tensionar os filamentos no último instante para puxar ou desviar a lâmina inimiga para fora da rota letal.",
-    "bankai": {
-      "nome": "Haganeito — Kugutsu Gigakan",
-      "kanji": "「鋼糸・傀儡戯画館」",
-      "traducao": "Teatro das Marionetes Espirituais",
-      "nomeCompleto": "Bankai — Haganeito 「鋼糸・傀儡戯画館」 (Kugutsu Gigakan — Teatro das Marionetes Espirituais)",
-      "comando": "Bankai — Haganeito, Kugutsu Gigakan!",
-      "formatoArma": "Uma imensa estrutura de palco celestial se ergue com milhares de fios cruzando o ar.",
-      "poder": "Manipulação de Articulações Inertes: Os fios tomam o controle das armas caídas, escombros e músculos fatigados do adversário, forçando bloqueios imperfeitos ou travando membros inteiros."
+    "id": "zk-20-hakugin",
+    "nome": "Hakugin",
+    "kanji": "白銀",
+    "traducao": "Prata Branca",
+    "elemento": "Análise Estrutural & Pontos de Tensão",
+    "comando": "Revele a forma escondida, Hakugin",
+    "espirito": "Ferreiro em oficina congelada.",
+    "formatoArma": "Lâmina analítica que identifica falhas internas de objetos tocados.",
+    "poder": "Visão Estrutural: Revela trincas e pontos fracos na matéria do adversário.",
+    "bankaiNome": "Hakugin — Shingyōro",
+    "bankaiKanji": "白銀・真形炉",
+    "bankaiTraducao": "Forja da Forma Verdadeira",
+    "bankaiPoder": "Desestruturação Ambiental: Mapeia e colapsa pontos de tensão em construções e defesas.",
+    "indices": {
+      "potencia": 8,
+      "alcance": 7,
+      "complexidade": 9,
+      "versatilidade": 8,
+      "custo": 6
     }
   },
   {
-    "id": "zk-31",
-    "numero": "31",
-    "nome": "Mizuchi",
-    "kanji": "「蛟」",
-    "traducao": "Serpente das Torrentes",
-    "nomeCompleto": "Mizuchi 「蛟」— Serpente das Torrentes",
-    "espirito": "Uma serpente d'água albina com chifres prateados repousando serenamente no fundo de um poço cristalino milenar.",
-    "comando": "Transborde em correnteza pura, Mizuchi.",
-    "elemento": "Água Pressurizada & Fluidez Cortante",
-    "formatoArma": "A lâmina de aço se desfaz em um fluxo de água pressurizada contínua de altíssima densidade capaz de cortar rochas.",
-    "poder": "Lâmina Fluida: Pode estender seu alcance instantaneamente ou perder solidez para passar através de defesas antes de se solidificar no corte.",
-    "bankai": {
-      "nome": "Mizuchi — Suiten Daikōzui",
-      "kanji": "「蛟・水天大洪水」",
-      "traducao": "Tsunami do Domínio Celestial das Águas",
-      "nomeCompleto": "Bankai — Mizuchi 「蛟・水天大洪水」 (Suiten Daikōzui — Tsunami do Domínio Celestial das Águas)",
-      "comando": "Bankai — Mizuchi, Suiten Daikōzui!",
-      "formatoArma": "Uma colossal cúpula de água espiritual pura submerge toda a arena de batalha.",
-      "poder": "Hidrodinâmica Perfeita: Dentro do domo aquático, apenas o portador se move com velocidade sem atrito, disparando lâminas de vácuo hidrostático que esmagam o oponente pela pressão da água."
+    "id": "zk-21-karasuame",
+    "nome": "Karasuame",
+    "kanji": "烏雨",
+    "traducao": "Chuva dos Corvos",
+    "elemento": "Aves Mensageiras & Extensão Sensorial",
+    "comando": "Desça sobre o mundo, Karasuame",
+    "espirito": "Um corvo gigante com três olhos que enxerga através das sombras.",
+    "formatoArma": "Katana de empunhadura emplumada que libera pequenas aves espirituais mensageiras.",
+    "poder": "Mensageiros das Trevas: Pequenas aves que transportam mensagens e espionam pontos cegos.",
+    "bankaiNome": "Karasuame — Manba Ten",
+    "bankaiKanji": "烏雨・万羽天",
+    "bankaiTraducao": "Céu das Mil Asas",
+    "bankaiPoder": "Milhares de corvos espirituais cobrem o campo, servindo como extensões visuais e cinéticas do usuário.",
+    "indices": {
+      "potencia": 7,
+      "alcance": 10,
+      "complexidade": 7,
+      "versatilidade": 9,
+      "custo": 6
     }
   },
   {
-    "id": "zk-32",
-    "numero": "32",
-    "nome": "Dokuga",
-    "kanji": "「毒蛾」",
-    "traducao": "Mariposa Venenosa",
-    "nomeCompleto": "Dokuga 「毒蛾」— Mariposa Venenosa",
-    "espirito": "Uma mulher graciosa com asas de mariposa aveludadas cobertas por escamas arroxeadas brilhantes que desprendem pólen ao bater.",
-    "comando": "Disperse o sono eterno, Dokuga.",
-    "elemento": "Pólen Tóxico & Entorpecimento Neural",
-    "formatoArma": "Uma lâmina fina e curva com guarda em formato de asas de mariposa que libera uma névoa arroxeada de escamas finas.",
-    "poder": "Pólen Entorpecente: O contato com as escamas entorpece a sensibilidade tátil e a velocidade de resposta reflexa do adversário a cada inalação.",
-    "bankai": {
-      "nome": "Dokuga — Shigettsu Gendokurō",
-      "kanji": "「毒蛾・紫月幻毒牢」",
-      "traducao": "Gaiola do Veneno Ilusório da Lua Púrpura",
-      "nomeCompleto": "Bankai — Dokuga 「毒蛾・紫月幻毒牢」 (Shigettsu Gendokurō — Gaiola do Veneno Ilusório da Lua Púrpura)",
-      "comando": "Bankai — Dokuga, Shigettsu Gendokurō!",
-      "formatoArma": "O céu se torna violeta e uma tempestade contínua de pólen corrosivo envolve a arena.",
-      "poder": "Corrosão de Barreiras & Alucinação Sensorial: O veneno no ar dissolve barreiras de Kidō e induz alucinações visuais e auditivas que impedem o oponente de discernir a posição real do usuário."
-    }
-  },
-  {
-    "id": "zk-33",
-    "numero": "33",
-    "nome": "Tessen",
-    "kanji": "「鉄扇」",
-    "traducao": "Vento da Muralha de Aço",
-    "nomeCompleto": "Tessen 「鉄扇」— Vento da Muralha de Aço",
-    "espirito": "Um nobre cortesão com máscara cerimonial que empunha dois pesados leques metálicos com lâminas afiadas nas dobras.",
-    "comando": "Dobre o sopro do céu, Tessen.",
-    "elemento": "Vento Gravitacional & Deflexão",
-    "formatoArma": "A espada se desdobra em um grande leque de placas de aço afiadas como navalhas.",
-    "poder": "Vento Descendente: Cada balanço do leque gera rajadas de ar comprimido que empurram o adversário para o chão com força gravitacional multiplicada.",
-    "bankai": {
-      "nome": "Tessen — Tenshō Hadanran",
-      "kanji": "「鉄扇・天衝破断嵐」",
-      "traducao": "Vendaval de Ruptura Celestial",
-      "nomeCompleto": "Bankai — Tessen 「鉄扇・天衝破断嵐」 (Tenshō Hadanran — Vendaval de Ruptura Celestial)",
-      "comando": "Bankai — Tessen, Tenshō Hadanran!",
-      "formatoArma": "Dois gigantescos leques de aço flutuam ao lado do usuário gerando ciclones contínuos.",
-      "poder": "Gaiola de Vácuo Cortante: Cria furacões verticais que suspendem o adversário no ar enquanto desferem milhares de cortes de vácuo em alta rotação."
-    }
-  },
-  {
-    "id": "zk-34",
-    "numero": "34",
-    "nome": "Kasumikiri",
-    "kanji": "「霞斬」",
-    "traducao": "Navalha na Bruma",
-    "nomeCompleto": "Kasumikiri 「霞斬」— Navalha na Bruma",
-    "espirito": "Um samurai espectral cujos contornos ondulam e se desfazem como vapor aquecido sob a chuva fina.",
-    "comando": "Desvaneça na bruma da manhã, Kasumikiri.",
-    "elemento": "Intangibilidade Gasosa & Bruma",
-    "formatoArma": "Uma lâmina cujos contornos parecem desfocados e trêmulos como miragem de calor.",
-    "poder": "Corte Osmótico: A lâmina pode passar através de objetos sólidos finos e solidificar-se apenas no instante do contato interno com o alvo.",
-    "bankai": {
-      "nome": "Kasumikiri — Mugen Genmukai",
-      "kanji": "「霞斬・無限幻霧界」",
-      "traducao": "Domínio da Névoa Impenetrável",
-      "nomeCompleto": "Bankai — Kasumikiri 「霞斬・無限幻霧界」 (Mugen Genmukai — Domínio da Névoa Impenetrável)",
-      "comando": "Bankai — Kasumikiri, Mugen Genmukai!",
-      "formatoArma": "Uma névoa branca densa e impenetrável toma conta de todo o cenário de batalha.",
-      "poder": "Dissolução Corpórea & Clones de Vapor: O usuário pode se dissolver completamente na bruma e surgir atrás do inimigo em múltiplos corpos de vapor que alternam solidez conforme atacam."
-    }
-  },
-  {
-    "id": "zk-35",
-    "numero": "35",
-    "nome": "Gōkaku",
-    "kanji": "「剛角」",
-    "traducao": "Chifre Inquebrável",
-    "nomeCompleto": "Gōkaku 「剛角」— Chifre Inquebrável",
-    "espirito": "Uma fera titânica de obsidiana e pedra com dois chifres monumentais capazes de fender montanhas.",
-    "comando": "Esmague sem piedade, Gōkaku.",
-    "elemento": "Obsidiana Pura & Perfuração Pesada",
-    "formatoArma": "A espada ganha o formato de uma pesada lança curta com ponta triangular de obsidiana de dureza extrema.",
-    "poder": "Ponta Inflexível: Golpes desferidos em investida reta possuem poder perfurante multiplicado, atravessando defesas rígidas e armaduras pesadas.",
-    "bankai": {
-      "nome": "Gōkaku — Kongō Saizangeki",
-      "kanji": "「剛角・金剛砕山撃」",
-      "traducao": "Impacto Devastador do Diamante Titânico",
-      "nomeCompleto": "Bankai — Gōkaku 「剛角・金剛砕山撃」 (Kongō Saizangeki — Impacto Devastador do Diamante Titânico)",
-      "comando": "Bankai — Gōkaku, Kongō Saizangeki!",
-      "formatoArma": "Pilares monumentais de rocha sólida e obsidiana emergem do solo ao redor da arena.",
-      "poder": "Bombardeio de Monólitos Cinéticos: O usuário pode disparar e colidir esses blocos gigantescos contra o oponente como meteoros guiados por impacto de Reiryoku concentrado."
-    }
-  },
-  {
-    "id": "zk-36",
-    "numero": "36",
-    "nome": "Hibachi",
-    "kanji": "「火鉢」",
-    "traducao": "Braseiro Ardente",
-    "nomeCompleto": "Hibachi 「火鉢」— Braseiro Ardente",
-    "espirito": "Um anão ferreiro de pele cinzenta que molda brasas e carvão ardente com as próprias mãos desprotegidas.",
-    "comando": "Aqueça o ferro dormente, Hibachi.",
-    "elemento": "Brasas Espirituais & Transferência Térmica",
-    "formatoArma": "Uma lâmina reta que acumula o calor do atrito com o ar e espadas inimigas, mantendo seu fio em brasa constante.",
-    "poder": "Fogo Retido: As brasas da lâmina passam para as armas do oponente, aquecendo os cabos a ponto de queimar as mãos do adversário e forçar o desarmamento.",
-    "bankai": {
-      "nome": "Hibachi — Shōnetsu Shōdojin",
-      "kanji": "「火鉢・焦熱焦土陣」",
-      "traducao": "Matriz do Purgatório em Brasas",
-      "nomeCompleto": "Bankai — Hibachi 「火鉢・焦熱焦土陣」 (Shōnetsu Shōdojin — Matriz do Purgatório em Brasas)",
-      "comando": "Bankai — Hibachi, Shōnetsu Shōdojin!",
-      "formatoArma": "O solo inteiro do campo se transforma em uma grelha incandescente com fissuras de lava espiritual.",
-      "poder": "Gêiseres de Brasas Ocultas: Qualquer passo do oponente sobre o solo incandescente dispara jatos verticais de fogo espiritual que queimam armaduras e consomem o oxigênio ao redor."
-    }
-  },
-  {
-    "id": "zk-37",
-    "numero": "37",
-    "nome": "Oshimaru",
-    "kanji": "「推丸」",
-    "traducao": "Impulso Perfeito",
-    "nomeCompleto": "Oshimaru 「推丸」— Impulso Perfeito",
-    "espirito": "Um atleta divino com braceletes dourados que salta entre as nuvens sem tocar o solo e sem deixar rastros.",
-    "comando": "Devolva a força aplicada, Oshimaru.",
-    "elemento": "Absorção de Recuo & Onda de Choque",
-    "formatoArma": "Uma espada curta com guarda circular pesada que absorve a energia do recuo ao aparar ataques.",
-    "poder": "Vetor Invertido: O recuo de um golpe bloqueado é convertido em velocidade imediata de avanço para o contra-ataque seguinte.",
-    "bankai": {
-      "nome": "Oshimaru — Hakū Suiryokukai",
-      "kanji": "「推丸・破空推力界」",
-      "traducao": "Domínio do Impulso Absoluto",
-      "nomeCompleto": "Bankai — Oshimaru 「推丸・破空推力界」 (Hakū Suiryokukai — Domínio do Impulso Absoluto)",
-      "comando": "Bankai — Oshimaru, Hakū Suiryokukai!",
-      "formatoArma": "Duas manoplas de Reiryoku comprimido com anéis de vácuo nos antebraços.",
-      "poder": "Onda de Choque Cinético: O portador pode emitir ondas massivas de pressão de ar capazes de empurrar fortificações, repelir investidas e anular feitiços de impacto a dezenas de metros."
-    }
-  },
-  {
-    "id": "zk-38",
-    "numero": "38",
-    "nome": "Hōsekiba",
-    "kanji": "「宝石刃」",
-    "traducao": "Lâmina de Joias",
-    "nomeCompleto": "Hōsekiba 「宝石刃」— Lâmina de Joias",
-    "espirito": "Uma rainha de cristal reluzente com lágrimas de pedras preciosas que reflete todas as cores do prisma.",
-    "comando": "Lapide a lâmina eterna, Hōsekiba.",
-    "elemento": "Cristais Preciosos & Lâminas Facetadas",
-    "formatoArma": "A lâmina se decompõe em centenas de pequenos cristais afiados como navalhas que flutuam ao redor da empunhadura.",
-    "poder": "Enxame Facetado: Os cristais podem ser controlados mentalmente em trajetórias cortantes de alta precisão ou formarem pequenos escudos refletores.",
-    "bankai": {
-      "nome": "Hōsekiba — Hyakka Kesshōkyū",
-      "kanji": "「宝石刃・百華結晶宮」",
-      "traducao": "Palácio dos Mil Cristais Reluzentes",
-      "nomeCompleto": "Bankai — Hōsekiba 「宝石刃・百華結晶宮」 (Hyakka Kesshōkyū — Palácio dos Mil Cristais Reluzentes)",
-      "comando": "Bankai — Hōsekiba, Hyakka Kesshōkyū!",
-      "formatoArma": "Monumentais florestas de cristais multicoloridos brotam da terra cobrindo a arena.",
-      "poder": "Prisma de Confinamento: Os cristais gigantes refratam a energia espiritual em feixes convergentes e podem aprisionar o adversário em caixões de cristal com dureza equivalente a diamante."
-    }
-  },
-  {
-    "id": "zk-39",
-    "numero": "39",
-    "nome": "Yamainu",
-    "kanji": "「山狗」",
-    "traducao": "Cão Selvagem da Montanha",
-    "nomeCompleto": "Yamainu 「山狗」— Cão Selvagem da Montanha",
-    "espirito": "Um lobo cinzento ancestral com marcas tribais vermelhas que espreita nas florestas e caça pelo cheiro da alma.",
-    "comando": "Cace no rastro do medo, Yamainu.",
-    "elemento": "Rastreamento de Reiryoku & Presas Serrilhadas",
-    "formatoArma": "Uma lâmina curva e serrilhada que aumenta a sensibilidade do portador ao calor e cheiro de Reiryoku do oponente.",
-    "poder": "Faro Predador: Permite antecipar deslocamentos em Shunpo e detectar oponentes mesmo dentro de ilusões, fumaça ou invisibilidade.",
-    "bankai": {
-      "nome": "Yamainu — Yūmei Rōgagun",
-      "kanji": "「山狗・幽冥狼牙群」",
-      "traducao": "Alcateia dos Lobos Espectrais",
-      "nomeCompleto": "Bankai — Yamainu 「山狗・幽冥狼牙群」 (Yūmei Rōgagun — Alcateia dos Lobos Espectrais)",
-      "comando": "Bankai — Yamainu, Yūmei Rōgagun!",
-      "formatoArma": "Uma matilha de dezenas de lobos gigantescos formados por puro Reiryoku negro cerca os oponentes.",
-      "poder": "Cerco Predatório Coordenado: Os lobos atacam de múltiplos pontos cegos simultaneamente, sincronizando suas investidas com os movimentos da espada do portador."
-    }
-  },
-  {
-    "id": "zk-40",
-    "numero": "40",
-    "nome": "Chiryaku",
-    "kanji": "「地脈」",
-    "traducao": "Pulso da Terra",
-    "nomeCompleto": "Chiryaku 「地脈」— Pulso da Terra",
-    "espirito": "Um monge feito de barro e raízes que encosta o ouvido no solo para escutar as vibrações mais profundas da terra.",
-    "comando": "Faça o chão estremecer, Chiryaku.",
-    "elemento": "Vibrações Sísmicas & Equilíbrio Corporal",
-    "formatoArma": "Uma espada pesada de cabo longo que transmite pulsos sísmicos de baixa frequência ao tocar o solo.",
-    "poder": "Desestabilização Telúrica: Cada impacto no chão gera microfissuras que desequilibram a postura de quem estiver pisando na área de efeito.",
-    "bankai": {
-      "nome": "Chiryaku — Tendō Hōkōchi",
-      "kanji": "「地脈・天動崩落地」",
-      "traducao": "Ruptura das Placas Celestiais",
-      "nomeCompleto": "Bankai — Chiryaku 「地脈・天動崩落地」 (Tendō Hōkōchi — Ruptura das Placas Celestiais)",
-      "comando": "Bankai — Chiryaku, Tendō Hōkōchi!",
-      "formatoArma": "O terreno se racha em imensas placas tectônicas flutuantes sob controle gravitacional do portador.",
-      "poder": "Manipulação de Placas Flutuantes: O usuário pode erguer, inclinar ou colidir as plataformas de rocha em alta velocidade, alterando toda a topografia do campo de batalha."
-    }
-  },
-  {
-    "id": "zk-41",
-    "numero": "41",
-    "nome": "Sōgetsu",
-    "kanji": "「双月」",
-    "traducao": "Luas Gêmeas",
-    "nomeCompleto": "Sōgetsu 「双月」— Luas Gêmeas",
-    "espirito": "Duas sacerdotisas de prata idênticas unidas pelas mãos, uma sob a lua cheia e outra sob a lua nova.",
-    "comando": "Cruzem o horizonte da noite, Sōgetsu.",
-    "elemento": "Foices Curvas & Foco Duplo de Dano",
-    "formatoArma": "A katana se divide em duas foices curvas prateadas unidas por um halo de luz lunar.",
-    "poder": "Corte Sincronizado: Ataques combinados das duas foices convergem no mesmo ponto gerando o dobro de penetração de corte.",
-    "bankai": {
-      "nome": "Sōgetsu — Sōei Nisshokukai",
-      "kanji": "「双月・双影日食界」",
-      "traducao": "Eclipse das Luas Gêmeas",
-      "nomeCompleto": "Bankai — Sōgetsu 「双月・双影日食界」 (Sōei Nisshokukai — Eclipse das Luas Gêmeas)",
-      "comando": "Bankai — Sōgetsu, Sōei Nisshokukai!",
-      "formatoArma": "Duas luas monumentais (uma prateada e uma negra) surgem nos polos opostos do céu.",
-      "poder": "Gravidade Dupla Divergente: Cria dois centros de gravidade opostos que puxam o corpo e a espada do oponente em direções contrárias, desmantelando sua postura defensiva."
-    }
-  },
-  {
-    "id": "zk-42",
-    "numero": "42",
-    "nome": "Kyūketsu",
-    "kanji": "「吸血」",
-    "traducao": "Vórtice Carmesim",
-    "nomeCompleto": "Kyūketsu 「吸血」— Vórtice Carmesim",
-    "espirito": "Um morcego espectral com asas de lâminas polidas e olhos vermelhos brilhantes que caça no escuro.",
-    "comando": "Drene o sopro da vida, Kyūketsu.",
-    "elemento": "Absorção Vital & Lanças Escarlates",
-    "formatoArma": "Uma espada esguia com dentes finos que drena uma fração minúscula de vitalidade ao ferir o alvo para restaurar o fôlego do usuário.",
-    "poder": "Restauração por Corte: Fecha pequenos cortes no próprio corpo do portador à medida que causa danos superficiais no inimigo.",
-    "bankai": {
-      "nome": "Kyūketsu — Senketsu Kyōshikyoku",
-      "kanji": "「吸血・鮮血狂詩曲」",
-      "traducao": "Rapsódia da Sede Carmesim",
-      "nomeCompleto": "Bankai — Kyūketsu 「吸血・鮮血狂詩曲」 (Senketsu Kyōshikyoku — Rapsódia da Sede Carmesim)",
-      "comando": "Bankai — Kyūketsu, Senketsu Kyōshikyoku!",
-      "formatoArma": "Todo o sangue exposto na atmosfera condensa em lanças escarlates flutuantes de Reiryoku puro.",
-      "poder": "Chuva de Lanças Sangrentas: As lanças teleguiadas perseguem o adversário automaticamente com altíssimo poder perfurante e devolvem Reiryoku drenado ao usuário."
-    }
-  },
-  {
-    "id": "zk-43",
-    "numero": "43",
-    "nome": "Raijū",
-    "kanji": "「雷獣」",
-    "traducao": "Tigre dos Raios Azuis",
-    "nomeCompleto": "Raijū 「雷獣」— Tigre dos Raios Azuis",
-    "espirito": "Um tigre de pelos azuis e garras elétricas envolto em arcos de plasma faiscante.",
-    "comando": "Ruge no coração da tempestade, Raijū.",
-    "elemento": "Eletricidade Azul & Arcos Condutores",
-    "formatoArma": "A lâmina se cobre de arcos de plasma azul que saltam para qualquer objeto metálico próximo.",
-    "poder": "Choque Eletrostático: Conduz corrente elétrica através de armas ao cruzar aço, causando espasmos musculares nas mãos do adversário.",
-    "bankai": {
-      "nome": "Raijū — Tenrai Hōkōkai",
-      "kanji": "「雷獣・天雷咆哮界」",
-      "traducao": "Domínio do Rugido do Trovão Primordial",
-      "nomeCompleto": "Bankai — Raijū 「雷獣・天雷咆哮界」 (Tenrai Hōkōkai — Domínio do Rugido do Trovão Primordial)",
-      "comando": "Bankai — Raijū, Tenrai Hōkōkai!",
-      "formatoArma": "O portador se funde a uma armadura colossal de plasma azul vivo com velocidade quase instantânea.",
-      "poder": "Velocidade de Relâmpago Puro: O usuário atinge velocidades extremas em curtos trajetos, desferindo golpes envoltos em ondas de choque capazes de desintegrar defesas rígidas."
-    }
-  },
-  {
-    "id": "zk-44",
-    "numero": "44",
-    "nome": "Suzumechi",
-    "kanji": "「雀千」",
-    "traducao": "Mil Penas Douradas",
-    "nomeCompleto": "Suzumechi 「雀千」— Mil Penas Douradas",
-    "espirito": "Uma nobre vestida com manto de penas douradas que se comunica através do canto de bandos de pássaros luminosos.",
-    "comando": "Alce voo na luz do ouro, Suzumechi.",
-    "elemento": "Penas Metálicas & Enxame Aéreo",
-    "formatoArma": "A espada se dispersa em centenas de pequenas lâminas em formato de penas douradas flutuantes.",
-    "poder": "Revoada de Penas: As penas voam em leque teleguiado e podem se agrupar como uma barreira rotatória esférica.",
-    "bankai": {
-      "nome": "Suzumechi — Senba Ōgonran",
-      "kanji": "「雀千・千羽黄金嵐」",
-      "traducao": "Tempestade das Mil Asas Douradas",
-      "nomeCompleto": "Bankai — Suzumechi 「雀千・千羽黄金嵐」 (Senba Ōgonran — Tempestade das Mil Asas Douradas)",
-      "comando": "Bankai — Suzumechi, Senba Ōgonran!",
-      "formatoArma": "Milhares de lâminas douradas formam um turbilhão cósmico em 360° em volta da arena.",
-      "poder": "Corte Omnidirecional em Enxame: As penas desferem milhares de microcortes simultâneos que atingem todos os pontos cegos do adversário sem deixar rotas de esquiva."
-    }
-  },
-  {
-    "id": "zk-45",
-    "numero": "45",
-    "nome": "Karatake",
-    "kanji": "「唐竹」",
-    "traducao": "Bambu Imortal",
-    "nomeCompleto": "Karatake 「唐竹」— Bambu Imortal",
-    "espirito": "Um lenhador cego de bambu com chapéu cônico que caminha sereno por um bosque verdejante interminável.",
-    "comando": "Flecta sem jamais quebrar, Karatake.",
-    "elemento": "Elasticidade Vegetal & Lâmina Chicote",
-    "formatoArma": "A lâmina ganha a flexibilidade e tenacidade do bambu maduro, curvando-se como um chicote afiado.",
-    "poder": "Elasticidade Cortante: Permite desferir golpes que contornam escudos e defesas retas para atingir os flancos do inimigo.",
-    "bankai": {
-      "nome": "Karatake — Suichiku Senbonrin",
-      "kanji": "「唐竹・翠竹千本林」",
-      "traducao": "Floresta dos Mil Bambus de Jade",
-      "nomeCompleto": "Bankai — Karatake 「唐竹・翠竹千本林」 (Suichiku Senbonrin — Floresta dos Mil Bambus de Jade)",
-      "comando": "Bankai — Karatake, Suichiku Senbonrin!",
-      "formatoArma": "Estacas gigantescas de bambu espiritual verde brotam do solo em centenas de colunas impenetráveis.",
-      "poder": "Empalamento em Floresta Viva: Os bambus crescem em alta velocidade como lanças sob comando do usuário, empalando e encurralando alvos em um labirinto fechado."
-    }
-  },
-  {
-    "id": "zk-46",
-    "numero": "46",
-    "nome": "Hyōga",
-    "kanji": "「氷河」",
-    "traducao": "Geleira Ancestral",
-    "nomeCompleto": "Hyōga 「氷河」— Geleira Ancestral",
-    "espirito": "Um gigante de gelo azul milenar com barba de estalactites e olhar fixo no horizonte gélido do norte.",
-    "comando": "Congele o fluxo dos tempos, Hyōga.",
-    "elemento": "Zero Absoluto & Calota Glacial",
-    "formatoArma": "Uma espada pesada de gelo translúcido que resfria a superfície de qualquer coisa com que entre em contato.",
-    "poder": "Resfriamento por Impacto: Cada colisão forma uma crosta de gelo rígida nas armas inimigas aumentando seu peso e reduzindo a agilidade do atacante.",
-    "bankai": {
-      "nome": "Hyōga — Zettai Reido Tōkai",
-      "kanji": "「氷河・絶対零度凍界」",
-      "traducao": "Mundo Congelado do Zero Absoluto",
-      "nomeCompleto": "Bankai — Hyōga 「氷河・絶対零度凍界」 (Zettai Reido Tōkai — Mundo Congelado do Zero Absoluto)",
-      "comando": "Bankai — Hyōga, Zettai Reido Tōkai!",
-      "formatoArma": "Todo o terreno e o ar se congelam instantaneamente em uma calota sólida inquebrável de gelo puro.",
-      "poder": "Paralisia Molecular & Térmica: O frio extremo anula o fluxo de Reiryoku no ar e desacelera as reações do corpo do oponente, congelando qualquer feitiço em formação."
-    }
-  },
-  {
-    "id": "zk-47",
-    "numero": "47",
-    "nome": "Gen'ō",
-    "kanji": "「幻影」",
-    "traducao": "Monarca das Miragens",
-    "nomeCompleto": "Gen'ō 「幻影」— Monarca das Miragens",
-    "espirito": "Um ilusionista mascarado com capa de veludo púrpura que move peças de xadrez de cristal no ar com gestos sutis.",
-    "comando": "Engane até a própria luz, Gen'ō.",
-    "elemento": "Descompasso Temporal & Ilusão Neural",
-    "formatoArma": "Uma espada de lâmina esguia que altera a percepção do tempo no cérebro do adversário em 0,3 segundo a cada corte raspão.",
-    "poder": "Descompasso Neural: Faz o oponente antecipar ou atrasar suas reações defensivas, errando os tempos de bloqueio e esquiva.",
-    "bankai": {
-      "nome": "Gen'ō — Senjū Kyozōkai",
-      "kanji": "「幻影・千重虚像界」",
-      "traducao": "Domínio dos Mil Cenários Ilusórios",
-      "nomeCompleto": "Bankai — Gen'ō 「幻影・千重虚像界」 (Senjū Kyozōkai — Domínio dos Mil Cenários Ilusórios)",
-      "comando": "Bankai — Gen'ō, Senjū Kyozōkai!",
-      "formatoArma": "O ambiente se estilhaça em milhares de reflexos que projetam cenários de combate simultâneos.",
-      "poder": "Sobrecarga Cognitiva: O cérebro do oponente processa dezenas de combates imaginários ao mesmo tempo enquanto seu corpo físico fica paralisado e vulnerável ao golpe real."
-    }
-  },
-  {
-    "id": "zk-48",
-    "numero": "48",
+    "id": "zk-22-enko",
     "nome": "Enkō",
-    "kanji": "「円光」",
-    "traducao": "Halo Sagrado",
-    "nomeCompleto": "Enkō 「円光」— Halo Sagrado",
-    "espirito": "Uma entidade budista serena com auréola de chamas douradas flutuando sobre a cabeça e vestes brancas imaculadas.",
-    "comando": "Ilumine o caminho do julgamento, Enkō.",
-    "elemento": "Chamas Solares & Discos Giratórios",
-    "formatoArma": "A espada projeta discos cortantes de fogo solar giratório que ricocheteiam no ar e retornam à mão do usuário.",
-    "poder": "Halos Solares: Dispara anéis de calor extremo de alta velocidade capazes de cortar e queimar barreiras defensivas à distância.",
-    "bankai": {
-      "nome": "Enkō — Dainichi Kinrinjin",
-      "kanji": "「円光・大日金輪陣」",
-      "traducao": "Aliança dos Sete Halos Solares",
-      "nomeCompleto": "Bankai — Enkō 「円光・大日金輪陣」 (Dainichi Kinrinjin — Aliança dos Sete Halos Solares)",
-      "comando": "Bankai — Enkō, Dainichi Kinrinjin!",
-      "formatoArma": "Sete anéis monumentais de fogo dourado descem do céu sobre a arena de combate.",
-      "poder": "Convergência Solar Absoluta: Os sete halos convergem feixes de luz e calor solar no centro do campo, incinerando tudo dentro de seu ponto focal com calor puro."
+    "kanji": "円光",
+    "traducao": "Luz Circular",
+    "elemento": "Delimitação Geométrica & Preservação",
+    "comando": "Circunde aquilo que desejo proteger, Enkō",
+    "espirito": "Um sacerdote solene com um halo dourado giratório.",
+    "formatoArma": "Espada que desenha anéis luminosos no solo com propriedades de conservação.",
+    "poder": "Delimitação: Cria círculos onde uma propriedade física (fogo, integridade, barreira) é preservada intacta.",
+    "bankaiNome": "Enkō — Mankan Seīki",
+    "bankaiKanji": "円光・万環聖域",
+    "bankaiTraducao": "Santuário dos Mil Círculos",
+    "bankaiPoder": "Centenas de anéis concêntricos criando uma geometria de leis locais invioláveis no campo de batalha.",
+    "indices": {
+      "potencia": 8,
+      "alcance": 8,
+      "complexidade": 9,
+      "versatilidade": 9,
+      "custo": 7
     }
   },
   {
-    "id": "zk-49",
-    "numero": "49",
-    "nome": "Mugenba",
-    "kanji": "「無限刃」",
-    "traducao": "Forja das Dez Mil Lâminas",
-    "nomeCompleto": "Mugenba 「無限刃」— Forja das Dez Mil Lâminas",
-    "espirito": "Um ferreiro lendário sentado no pico de uma montanha cercado por incontáveis espadas antigas cravadas na terra.",
-    "comando": "Renasça do fio quebrado, Mugenba.",
-    "elemento": "Regeneração de Lâminas & Tempestade de Aço",
-    "formatoArma": "Caso a lâmina se quebre em combate, ela se regenera instantaneamente com um gume novo e mais afiado do que o anterior.",
-    "poder": "Regeneração de Fio: A destruição física da arma fortalece a lâmina subsequente com maior densidade espiritual.",
-    "bankai": {
-      "nome": "Mugenba — Banjinzuka",
-      "kanji": "「無限刃・万刃塚」",
-      "traducao": "Cemitério das Dez Mil Lâminas",
-      "nomeCompleto": "Bankai — Mugenba 「無限刃・万刃塚」 (Banjinzuka — Cemitério das Dez Mil Lâminas)",
-      "comando": "Bankai — Mugenba, Banjinzuka!",
-      "formatoArma": "Milhares de espadas espirituais emergem do solo e flutuam na atmosfera ao redor do portador.",
-      "poder": "Controle Telecinético de Tempestade de Aço: O usuário comanda mentalmente o enxame de milhares de espadas para atacar em rajadas contínuas ou formarem barreiras sólidas de contenção."
+    "id": "zk-23-shakunetsurin",
+    "nome": "Shakunetsurin",
+    "kanji": "灼熱輪",
+    "traducao": "Anel Incandescente",
+    "elemento": "Transferência Rotacional & Energia Térmica",
+    "comando": "Gire até que o mundo aqueça, Shakunetsurin",
+    "espirito": "Um guerreiro coberto por anéis metálicos incandescentes.",
+    "formatoArma": "Chakram afiado de borda giratória incandescente.",
+    "poder": "Rotação Transferível: Transfere torque e rotação térmica violenta para qualquer objeto tocado.",
+    "bankaiNome": "Shakunetsurin — Tenkai",
+    "bankaiKanji": "灼熱輪・転界",
+    "bankaiTraducao": "Mundo Giratório",
+    "bankaiPoder": "Campos de rotação onde o próprio ambiente gira sob o padrão estabelecido pelo usuário.",
+    "indices": {
+      "potencia": 9,
+      "alcance": 7,
+      "complexidade": 7,
+      "versatilidade": 7,
+      "custo": 6
     }
   },
   {
-    "id": "zk-50",
-    "numero": "50",
-    "nome": "Kurotsume",
-    "kanji": "「黒爪」",
-    "traducao": "Garras da Pantera Negra",
-    "nomeCompleto": "Kurotsume 「黒爪」— Garras da Pantera Negra",
-    "espirito": "Uma pantera negra com olhos escarlates que se camufla perfeitamente na escuridão entre as árvores sem produzir som.",
-    "comando": "Despedace na penumbra, Kurotsume.",
-    "elemento": "Garras Triplas & Sangramento Contínuo",
-    "formatoArma": "A espada se divide em três garras retráteis de aço negro em cada punho do portador.",
-    "poder": "Ferida Aberta: Os cortes causados pelas garras dificultam a coagulação rápida e retardam a regeneração acelerada por Kaidō básico durante a luta.",
-    "bankai": {
-      "nome": "Kurotsume — An'ya Shuryōkai",
-      "kanji": "「黒爪・暗夜狩猟界」",
-      "traducao": "Território da Caçada na Noite Escura",
-      "nomeCompleto": "Bankai — Kurotsume 「黒爪・暗夜狩猟界」 (An'ya Shuryōkai — Território da Caçada na Noite Escura)",
-      "comando": "Bankai — Kurotsume, An'ya Shuryōkai!",
-      "formatoArma": "A arena inteira mergulha em uma penumbra viva e o portador ganha carapaça predatória de sombras.",
-      "poder": "Caçada Oculta Instantânea: O usuário se funde às sombras do ambiente, atacando com velocidade predatória silenciosa a partir de qualquer ponto escuro sem revelar sua presença."
+    "id": "zk-24-aobotan",
+    "nome": "Aobotan",
+    "kanji": "青牡丹",
+    "traducao": "Peônia Azul",
+    "elemento": "Manifestação Espontânea & Preparação Tática",
+    "comando": "Floresça onde ninguém espera, Aobotan",
+    "espirito": "Mulher coberta por peônias azuis que desaparecem e brotam do vazio.",
+    "formatoArma": "Lâmina que planta botões de flores espirituais em qualquer superfície.",
+    "poder": "Botão Espontâneo: Cada flor libera um efeito predeterminado pelo usuário antes da batalha.",
+    "bankaiNome": "Aobotan — Senkakyō",
+    "bankaiKanji": "青牡丹・千花境",
+    "bankaiTraducao": "Domínio das Mil Flores",
+    "bankaiPoder": "Prepara dezenas de armadilhas e efeitos em centenas de flores para controle territorial absoluto.",
+    "indices": {
+      "potencia": 8,
+      "alcance": 8,
+      "complexidade": 9,
+      "versatilidade": 9,
+      "custo": 6
     }
   },
   {
-    "id": "zk-51",
-    "numero": "51",
-    "nome": "Jinrai",
-    "kanji": "「迅雷」",
-    "traducao": "Clarão do Trovão Instantâneo",
-    "nomeCompleto": "Jinrai 「迅雷」— Clarão do Trovão Instantâneo",
-    "espirito": "Um guerreiro com elmo em formato de raio e pés envoltos em correntes elétricas reluzentes.",
-    "comando": "Corte antes do estrondo, Jinrai.",
-    "elemento": "Sinapses Iônicas & Velocidade Extrema",
-    "formatoArma": "Uma lâmina fina que emite pulsos de microcorrentes acelerando as sinapses nervosas do próprio portador.",
-    "poder": "Sinapse Relâmpago: Multiplica a velocidade de reação e de saque da espada em combates a curta distância.",
-    "bankai": {
-      "nome": "Jinrai — Banrai Shinsokukai",
-      "kanji": "「迅雷・万雷神速界」",
-      "traducao": "Domínio da Velocidade Divina dos Cem Raios",
-      "nomeCompleto": "Bankai — Jinrai 「迅雷・万雷神速界」 (Banrai Shinsokukai — Domínio da Velocidade Divina dos Cem Raios)",
-      "comando": "Bankai — Jinrai, Banrai Shinsokukai!",
-      "formatoArma": "O campo se torna uma câmara selada por arcos voltaicos amarelos e relâmpagos contínuos.",
-      "poder": "Translocação Sônica Contínua: Cada passo do usuário viaja na velocidade do relâmpago, deixando para trás ondas de choque que atordoam o adversário enquanto desfere cortes sucessivos."
+    "id": "zk-25-kurogane",
+    "nome": "Kurogane",
+    "kanji": "黒鉄",
+    "traducao": "Ferro Negro",
+    "elemento": "Extração Mineral & Drenagem Geológica",
+    "comando": "Desperte das profundezas, Kurogane",
+    "espirito": "Um gigante mineral acorrentado em uma mina ancestral.",
+    "formatoArma": "Espada pesada que extrai Reishi de minerais e rochas tocadas.",
+    "poder": "Mineração de Reishi: Extrai energia do solo para revitalizar as reservas do usuário.",
+    "bankaiNome": "Kurogane — Shinsōro",
+    "bankaiKanji": "黒鉄・深層炉",
+    "bankaiTraducao": "Forja das Profundezas",
+    "bankaiPoder": "O terreno inteiro vira uma usina espiritual alimentando a força bruta e a resistência do usuário.",
+    "indices": {
+      "potencia": 9,
+      "alcance": 7,
+      "complexidade": 6,
+      "versatilidade": 8,
+      "custo": 7
     }
   },
   {
-    "id": "zk-52",
-    "numero": "52",
-    "nome": "Senbiki",
-    "kanji": "「千匹」",
-    "traducao": "Ninho das Serpentes de Jade",
-    "nomeCompleto": "Senbiki 「千匹」— Ninho das Serpentes de Jade",
-    "espirito": "Um encantador de serpentes com corpo coberto de escamas esmeralda e olhos reptilianos profundos.",
-    "comando": "Rasteje e dê o bote, Senbiki.",
-    "elemento": "Lâmina Sinuosa & Veneno Corrosivo",
-    "formatoArma": "A lâmina se contorce como uma cobra viva, capaz de esticar e contornar esquinas para morder o alvo.",
-    "poder": "Bote Articulado: Desfere estocadas em trajetórias curvas e sinuosas totalmente imprevisíveis.",
-    "bankai": {
-      "nome": "Senbiki — Banja Dokukutsu",
-      "kanji": "「千匹・万蛇毒窟」",
-      "traducao": "Caverna das Dez Mil Serpentes Venenosas",
-      "nomeCompleto": "Bankai — Senbiki 「千匹・万蛇毒窟」 (Banja Dokukutsu — Caverna das Dez Mil Serpentes Venenosas)",
-      "comando": "Bankai — Senbiki, Banja Dokukutsu!",
-      "formatoArma": "O solo se liquefaz em uma massa viva de serpentes gigantescas de puro Reiryoku verde esmeralda.",
-      "poder": "Estrangulamento & Inoculação Venenosa: As serpentes engolem e asfixiam o oponente inoculando toxinas que corroem armaduras e drenam o fluxo espiritual."
+    "id": "zk-26-mizuhanabi",
+    "nome": "Mizuhanabi",
+    "kanji": "水花火",
+    "traducao": "Fogos d'Água",
+    "elemento": "Pressão Hidráulica & Esferas de Impacto",
+    "comando": "Exploda em silêncio, Mizuhanabi",
+    "espirito": "Menina brincando em um festival aquático submerso.",
+    "formatoArma": "Lâmina que gera esferas de água ultra-comprimida detonáveis.",
+    "poder": "Detonação Hidráulica: Esferas de alta pressão que estouram com ondas de choque cortantes.",
+    "bankaiNome": "Mizuhanabi — Shinkaisai",
+    "bankaiKanji": "水花火・深海祭",
+    "bankaiTraducao": "Festival do Mar Profundo",
+    "bankaiPoder": "Envolve o campo em correntes marítimas densas com gradientes esmagadores de pressão.",
+    "indices": {
+      "potencia": 9,
+      "alcance": 8,
+      "complexidade": 7,
+      "versatilidade": 8,
+      "custo": 7
     }
   },
   {
-    "id": "zk-53",
-    "numero": "53",
-    "nome": "Fuenshō",
-    "kanji": "「浮烟」",
-    "traducao": "Fumaça Flutuante",
-    "nomeCompleto": "Fuenshō 「浮烟」— Fumaça Flutuante",
-    "espirito": "Uma donzela de véus de seda branca que sopra cinzas mornas que nunca caem no chão.",
-    "comando": "Disperse o peso do mundo, Fuenshō.",
-    "elemento": "Fumaça Mágica & Amortecimento de Hadō",
-    "formatoArma": "Uma espada que deixa para trás um rastro espesso de fumaça translúcida que dissipa ataques mágicos.",
-    "poder": "Distorção Mágica: Amortece e dissipa a energia de projéteis de Hadō que passem através da fumaça.",
-    "bankai": {
-      "nome": "Fuenshō — Kūgen Shinkirō",
-      "kanji": "「浮烟・空幻蜃気楼」",
-      "traducao": "Miragem Celestial do Céu Vazio",
-      "nomeCompleto": "Bankai — Fuenshō 「浮烟・空幻蜃気楼」 (Kūgen Shinkirō — Miragem Celestial do Céu Vazio)",
-      "comando": "Bankai — Fuenshō, Kūgen Shinkirō!",
-      "formatoArma": "Uma névoa colossal cobre quilômetros de distância criando miragens táteis perfeitas.",
-      "poder": "Refração Mágica & Retorno de Projéteis: Desvia a trajetória de feitiços disparados na névoa, fazendo-os retornarem automaticamente contra os seus próprios conjuradores."
+    "id": "zk-27-shorin",
+    "nome": "Shōrin",
+    "kanji": "鐘輪",
+    "traducao": "Anel do Sino",
+    "elemento": "Ecos Sônicos & Ondas Direcionais",
+    "comando": "Faça o mundo escutar, Shōrin",
+    "espirito": "Um monge meditando dentro de um monumental sino de bronze.",
+    "formatoArma": "Bastão metálico pesado que ressoa notas ensurdecedoras a cada golpe.",
+    "poder": "Golpe do Sino: Emite pulsos sonoros concentrados capazes de atordoar e quebrar matéria.",
+    "bankaiNome": "Shōrin — Tenkyōden",
+    "bankaiKanji": "鐘輪・天響殿",
+    "bankaiTraducao": "Palácio do Eco Celestial",
+    "bankaiPoder": "O campo rebate e amplifica cada emissão sônica, convergindo de todos os lados como uma tempestade acústica.",
+    "indices": {
+      "potencia": 8,
+      "alcance": 8,
+      "complexidade": 7,
+      "versatilidade": 8,
+      "custo": 6
     }
   },
   {
-    "id": "zk-54",
-    "numero": "54",
-    "nome": "Hagakure",
-    "kanji": "「葉隠」",
-    "traducao": "Oculto nas Folhas",
-    "nomeCompleto": "Hagakure 「葉隠」— Oculto nas Folhas",
-    "espirito": "Um shinobi ancestral com manto de folhagem de outono que se funde com os troncos das árvores sem emitir ruído.",
-    "comando": "Desapareça no outono, Hagakure.",
-    "elemento": "Camuflagem Tática & Folhas Cortantes",
-    "formatoArma": "Uma lâmina fosca que adquire a textura e cor do ambiente ao redor ao menor contato com vegetação ou solo.",
-    "poder": "Camuflagem Tática: Anula a presença visual e o calor corporal enquanto o portador estiver encostado em superfícies naturais.",
-    "bankai": {
-      "nome": "Hagakure — Konoha Hyakujin Ranbu",
-      "kanji": "「葉隠・木葉百刃乱舞」",
-      "traducao": "Dança das Mil Lâminas das Folhas de Outono",
-      "nomeCompleto": "Bankai — Hagakure 「葉隠・木葉百刃乱舞」 (Konoha Hyakujin Ranbu — Dança das Mil Lâminas das Folhas de Outono)",
-      "comando": "Bankai — Hagakure, Konoha Hyakujin Ranbu!",
-      "formatoArma": "Todas as folhas e folhagens do ambiente se transformam em navalhas afiadas sob o comando mental do portador.",
-      "poder": "Turbilhão das Folhas Afiadas: As folhas voam em vórtices cortantes que fatiam defesas inimigas enquanto ocultam a posição real do usuário."
+    "id": "zk-28-kobai",
+    "nome": "Kōbai",
+    "kanji": "紅梅",
+    "traducao": "Ameixeira Vermelha",
+    "elemento": "Persistência & Adaptação ao Dano",
+    "comando": "Floresça apesar do inverno, Kōbai",
+    "espirito": "Senhora idosa cultivando flores sob nevasca implacável.",
+    "formatoArma": "Katana que faz brotar pétalas vermelhas a cada ferimento ou dificuldade sofrida.",
+    "poder": "Memória da Dor: Reduz progressivamente o dano de ataques do mesmo tipo recebidos no combate.",
+    "bankaiNome": "Kōbai — Fukutsu Sentei",
+    "bankaiKanji": "紅梅・不屈千庭",
+    "bankaiTraducao": "Mil Jardins Indomáveis",
+    "bankaiPoder": "Converte experiências de impacto acumuladas em adaptação física e resistência quase invulnerável.",
+    "indices": {
+      "potencia": 8,
+      "alcance": 6,
+      "complexidade": 8,
+      "versatilidade": 9,
+      "custo": 7
     }
   },
   {
-    "id": "zk-55",
-    "numero": "55",
-    "nome": "Tōbaku",
-    "kanji": "「凍縛」",
-    "traducao": "Amarração Glacial",
-    "nomeCompleto": "Tōbaku 「凍縛」— Amarração Glacial",
-    "espirito": "Uma sacerdotisa aprisionada em um caixão de gelo transparente cujos olhos continuam abertos e vigilantes.",
-    "comando": "Aprisione no frio sem fim, Tōbaku.",
-    "elemento": "Congelamento de Pontos de Apoio & Pilares",
-    "formatoArma": "Uma espada curta que congela instantaneamente qualquer umidade ou poça de água tocada pela ponta.",
-    "poder": "Amarração Glacial: Cria laços de gelo ao redor dos pés do adversário assim que ele pisa em solo umedecido pela lâmina.",
-    "bankai": {
-      "nome": "Tōbaku — Hakutei Hyōchūrō",
-      "kanji": "「凍縛・白帝氷柱牢」",
-      "traducao": "Prisão dos Pilares de Gelo do Imperador Branco",
-      "nomeCompleto": "Bankai — Tōbaku 「凍縛・白帝氷柱牢」 (Hakutei Hyōchūrō — Prisão dos Pilares de Gelo do Imperador Branco)",
-      "comando": "Bankai — Tōbaku, Hakutei Hyōchūrō!",
-      "formatoArma": "Pilares monumentais de gelo sólido erguem-se do solo encadeando o oponente.",
-      "poder": "Encarceramento Glacial: Encerra o adversário em uma câmara de pilares de gelo que drenam continuamente o calor corporal e o vigor espiritual."
+    "id": "zk-29-hoshigumo",
+    "nome": "Hoshigumo",
+    "kanji": "星蜘蛛",
+    "traducao": "Aranha Estelar",
+    "elemento": "Fios Espirituais & Teias de Reishi",
+    "comando": "Costure o céu, Hoshigumo",
+    "espirito": "Aranha celestial com corpo translúcido de constelações.",
+    "formatoArma": "Fios finíssimos de Reishi presos à guarda que mapeiam vibrações no ar.",
+    "poder": "Fios de Radar: Sente o menor movimento de massa que cruze as linhas no campo.",
+    "bankaiNome": "Hoshigumo — Tengaimō",
+    "bankaiKanji": "星蜘蛛・天蓋網",
+    "bankaiTraducao": "Teia do Firmamento",
+    "bankaiPoder": "Teia monumental cobrindo o céu com leitura perfeita de pressão, vetor e velocidade de tudo no espaço.",
+    "indices": {
+      "potencia": 7,
+      "alcance": 10,
+      "complexidade": 8,
+      "versatilidade": 9,
+      "custo": 6
     }
   },
   {
-    "id": "zk-56",
-    "numero": "56",
-    "nome": "Kaimetsu",
-    "kanji": "「壊滅」",
-    "traducao": "Martelo da Ruína",
-    "nomeCompleto": "Kaimetsu 「壊滅」— Martelo da Ruína",
-    "espirito": "Um titã de armadura rachada e martelo colossal que caminha sobre escombros de cidades antigas.",
-    "comando": "Reduza tudo a escombros, Kaimetsu.",
-    "elemento": "Ondas de Choque Estruturais & Trituração",
-    "formatoArma": "Uma espada pesada de dorso reforçado que transmite vibrações de esmagamento através de defesas e armaduras.",
-    "poder": "Dano Estrutural: Quebra a integridade física de armas e escudos mesmo quando o golpe é bloqueado pelo oponente.",
-    "bankai": {
-      "nome": "Kaimetsu — Tenhō Chimetsukai",
-      "kanji": "「壊滅・天崩地滅壊」",
-      "traducao": "Aniquilação da Ruína do Céu e da Terra",
-      "nomeCompleto": "Bankai — Kaimetsu 「壊滅・天崩地滅壊」 (Tenhō Chimetsukai — Aniquilação da Ruína do Céu e da Terra)",
-      "comando": "Bankai — Kaimetsu, Tenhō Chimetsukai!",
-      "formatoArma": "A lâmina se torna um martelo de guerra colossal de Reiryoku negro comprimido.",
-      "poder": "Colapso Sísmico Estrutural: Cada golpe no solo gera ondas de choque devastadoras que trituram rochas, racham montanhas e anulam defesas rígidas por impacto."
-    }
-  },
-  {
-    "id": "zk-57",
-    "numero": "57",
-    "nome": "Akatsuki",
-    "kanji": "「暁」",
-    "traducao": "Alvorecer Carmesim",
-    "nomeCompleto": "Akatsuki 「暁」— Alvorecer Carmesim",
-    "espirito": "Uma deusa guerreira com vestes douradas e vermelhas segurando uma tocha acesa com o primeiro raio da aurora.",
-    "comando": "Rompa a escuridão do mundo, Akatsuki.",
-    "elemento": "Luz Solar Nascente & Calor Progressivo",
-    "formatoArma": "Uma espada de lâmina avermelhada que brilha com intensidade e calor crescentes conforme o combate se prolonga.",
-    "poder": "Calor Progressivo: Aumenta a temperatura do fio da espada a cada golpe consecutivo desferido.",
-    "bankai": {
-      "nome": "Akatsuki — Guren Kyokujitsushō",
-      "kanji": "「暁・紅蓮旭日昇」",
-      "traducao": "Ascensão do Sol Nascente Carmesim",
-      "nomeCompleto": "Bankai — Akatsuki 「暁・紅蓮旭日昇」 (Guren Kyokujitsushō — Ascensão do Sol Nascente Carmesim)",
-      "comando": "Bankai — Akatsuki, Guren Kyokujitsushō!",
-      "formatoArma": "Um sol nascente carmesim monumental se projeta atrás do portador.",
-      "poder": "Feixe da Aurora Solar: Dispara feixes concentrados de luz e calor solar que purificam e vaporizam obstáculos em linha reta."
-    }
-  },
-  {
-    "id": "zk-58",
-    "numero": "58",
-    "nome": "Yūgure",
-    "kanji": "「夕暮」",
-    "traducao": "Crepúsculo",
-    "nomeCompleto": "Yūgure 「夕暮」— Crepúsculo",
-    "espirito": "Um viajante solitário com um lampião violeta que caminha na estrada no momento exato em que o sol se põe.",
-    "comando": "Desça sobre a luz cansada, Yūgure.",
-    "elemento": "Penumbra Crepuscular & Desfase Temporal",
-    "formatoArma": "Uma espada envolta em uma penumbra violeta que retarda a percepção do tempo de quem estiver próximo.",
-    "poder": "Crepúsculo dos Sentidos: Golpes desferidos na penumbra parecem chegar antes do som da lâmina ser emitido.",
-    "bankai": {
-      "nome": "Yūgure — Tasokare Higankai",
-      "kanji": "「夕暮・黄昏彼岸界」",
-      "traducao": "Fronteira da Penumbra do Outro Mundo",
-      "nomeCompleto": "Bankai — Yūgure 「夕暮・黄昏彼岸界」 (Tasokare Higankai — Fronteira da Penumbra do Outro Mundo)",
-      "comando": "Bankai — Yūgure, Tasokare Higankai!",
-      "formatoArma": "O campo de batalha entra em um crepúsculo perpétuo de luz violeta suave.",
-      "poder": "Intervalo Temporal do Crepúsculo: Os ataques do portador viajam em um intervalo entre o passado imediato e o presente, tornando previsões ou esquivas quase impossíveis."
-    }
-  },
-  {
-    "id": "zk-59",
-    "numero": "59",
-    "nome": "Seirō",
-    "kanji": "「青狼」",
-    "traducao": "Lobo das Chamas Glaciais",
-    "nomeCompleto": "Seirō 「青狼」— Lobo das Chamas Glaciais",
-    "espirito": "Um lobo espectral com cauda de chamas azuis espirituais e presas de gelo translúcido.",
-    "comando": "Uive nas chamas frias, Seirō.",
-    "elemento": "Fogo Azul Gélido & Paralisia Térmica",
-    "formatoArma": "Uma lâmina curva que emite um fogo azul que não queima matéria, mas congela nervos e o fluxo de Reiryoku.",
-    "poder": "Chama Fria: Queima a energia espiritual do alvo na área atingida causando paralisia sem carbonização.",
-    "bankai": {
-      "nome": "Seirō — Sōen Hyōsetsugoku",
-      "kanji": "「青狼・蒼炎氷雪獄」",
-      "traducao": "Inferno de Chamas Azuis e Neve Eterna",
-      "nomeCompleto": "Bankai — Seirō 「青狼・蒼炎氷雪獄」 (Sōen Hyōsetsugoku — Inferno de Chamas Azuis e Neve Eterna)",
-      "comando": "Bankai — Seirō, Sōen Hyōsetsugoku!",
-      "formatoArma": "Uma tempestade monumental de fogo azul e gelo cobre toda a arena de batalha.",
-      "poder": "Incineração Glacial de Reiryoku: As chamas azuis congelam feitiços no ar e drenam o ímpeto e vigor do oponente simultaneamente."
-    }
-  },
-  {
-    "id": "zk-60",
-    "numero": "60",
-    "nome": "Tenbinzuru",
-    "kanji": "「天秤鶴」",
-    "traducao": "Garça da Balança Celestial",
-    "nomeCompleto": "Tenbinzuru 「天秤鶴」— Garça da Balança Celestial",
-    "espirito": "Uma garça branca de penas metálicas polidas pousada serenamente sobre o prato de uma balança dourada.",
-    "comando": "Harmonize o peso das almas, Tenbinzuru.",
-    "elemento": "Equilíbrio Energético & Espelhamento",
-    "formatoArma": "Uma espada prateada com guarda em forma de garça que equilibra o gasto de Reiryoku do usuário com o do adversário.",
-    "poder": "Ressonância Proporcional: Reduz o desgaste energético do usuário em proporção ao esforço exercido pelo inimigo.",
-    "bankai": {
-      "nome": "Tenbinzuru — Gokuraku Jōdo Tenbin",
-      "kanji": "「天秤鶴・極楽浄土天秤」",
-      "traducao": "Balança do Santuário Puro",
-      "nomeCompleto": "Bankai — Tenbinzuru 「天秤鶴・極楽浄土天秤」 (Gokuraku Jōdo Tenbin — Balança do Santuário Puro)",
-      "comando": "Bankai — Tenbinzuru, Gokuraku Jōdo Tenbin!",
-      "formatoArma": "Um santuário celestial inviolável surge no céu com duas balanças monumentais de ouro e prata.",
-      "poder": "Espelhamento de Dano Absoluto: Qualquer dano físico sofrido por um dos lutadores dentro do domínio é espelhado em proporção exata no adversário, forçando uma disputa de precisão cirúrgica e autocontrole."
+    "id": "zk-30-yomotsuhira",
+    "nome": "Yomotsuhira",
+    "kanji": "黄泉平",
+    "traducao": "Planície do Submundo",
+    "elemento": "Preservação de Estados & Restauração",
+    "comando": "Abra o caminho entre partidas e chegadas, Yomotsuhira",
+    "espirito": "Um barqueiro encapuzado navegando em rio infinito.",
+    "formatoArma": "Lâmina cerimonial que marca o estado físico exato de um objeto.",
+    "poder": "Marca de Estado: Pode reverter temporariamente um objeto marcado para seu estado anterior recente.",
+    "bankaiNome": "Yomotsuhira — Tosei",
+    "bankaiKanji": "黄泉平・渡世",
+    "bankaiTraducao": "Travessia Entre Estados",
+    "bankaiPoder": "Registra e transita entre múltiplos estados físicos simultâneos de matéria e terreno no combate.",
+    "indices": {
+      "potencia": 8,
+      "alcance": 8,
+      "complexidade": 10,
+      "versatilidade": 9,
+      "custo": 8
     }
   }
 ];
 const CATALOGO_KIDOS = [
   {
-    "id": "b1_u",
+    "id": "h1-hibana",
     "numero": 1,
-    "nome": "Bakudō #1 — Kusari no Yume (Correntes do Sonho)",
-    "cat": "Bakudō",
-    "custoReiatsu": 2,
-    "nivel": "Básico",
-    "desc": "Cria correntes espirituais que se enrolam ao redor dos membros do alvo, dificultando seus movimentos.",
-    "incant": "Do vazio desperte, corrente que não conhece fuga. Envolva o alvo e silencie seus passos."
-  },
-  {
-    "id": "b1_c",
-    "numero": 1,
-    "nome": "Bakudō #1 — Sai (Obstrução)",
-    "cat": "Bakudō",
-    "custoReiatsu": 2,
-    "nivel": "Básico",
-    "desc": "Prende os braços do alvo atrás das costas com uma força magnética invisível.",
-    "incant": "—"
-  },
-  {
-    "id": "b2",
-    "numero": 2,
-    "nome": "Bakudō #2 — Shizukesa (Silêncio)",
-    "cat": "Bakudō",
-    "custoReiatsu": 2,
-    "nivel": "Básico",
-    "desc": "Cria uma pequena área onde sons são fortemente abafados, impedindo escuta e comunicação.",
-    "incant": "Que a voz desapareça, que o som se perca, que o silêncio ocupe este espaço."
-  },
-  {
-    "id": "b3",
-    "numero": 3,
-    "nome": "Bakudō #3 — Kōri no Kusari (Correntes de Gelo)",
-    "cat": "Bakudō",
-    "custoReiatsu": 3,
-    "nivel": "Básico",
-    "desc": "Forma correntes espirituais rígidas de frio gélido que prendem os membros do alvo.",
-    "incant": "Frio que nasce da alma, cristalize o caminho daquele que diante de mim permanece."
-  },
-  {
-    "id": "b4_u",
-    "numero": 4,
-    "nome": "Bakudō #4 — Kabe (Muralha)",
-    "cat": "Bakudō",
-    "custoReiatsu": 3,
-    "nivel": "Básico",
-    "desc": "Cria uma barreira espiritual frontal capaz de bloquear ataques físicos e feitiços leves.",
-    "incant": "Terra sem forma, céu sem fim. Erga-se diante de mim e torne-se barreira."
-  },
-  {
-    "id": "b4_c",
-    "numero": 4,
-    "nome": "Bakudō #4 — Hainawa (Corda de Rastejamento)",
-    "cat": "Bakudō",
-    "custoReiatsu": 3,
-    "nivel": "Básico",
-    "desc": "Gera uma corda de energia crepitante amarela que amarra o corpo e os pulsos do oponente.",
-    "incant": "—"
-  },
-  {
-    "id": "b5",
-    "numero": 5,
-    "nome": "Bakudō #5 — Meikyū (Labirinto)",
-    "cat": "Bakudō",
-    "custoReiatsu": 3,
-    "nivel": "Básico",
-    "desc": "Distorce a percepção espacial do alvo, dificultando sua orientação e senso de direção.",
-    "incant": "Caminho se torne caminho nenhum. Direção se perca. Prenda o viajante em seu próprio passo."
-  },
-  {
-    "id": "b6",
-    "numero": 6,
-    "nome": "Bakudō #6 — Hikari Ito (Fios de Luz)",
-    "cat": "Bakudō",
-    "custoReiatsu": 4,
-    "nivel": "Básico",
-    "desc": "Cria fios luminosos no ar que podem prender objetos em queda, projéteis ou membros do alvo.",
-    "incant": "Mil fios atravessam o espaço. Prendam aquilo que minha visão alcançar."
-  },
-  {
-    "id": "b7",
-    "numero": 7,
-    "nome": "Bakudō #7 — Kekkai (Barreira Circular)",
-    "cat": "Bakudō",
-    "custoReiatsu": 4,
-    "nivel": "Básico",
-    "desc": "Forma uma barreira circular curta ao redor do usuário para amortecer investidas corpo a corpo.",
-    "incant": "Entre mim e o perigo, estabeleça-se a fronteira."
-  },
-  {
-    "id": "b8_u",
-    "numero": 8,
-    "nome": "Bakudō #8 — Kagebari (Agulhas da Sombra)",
-    "cat": "Bakudō",
-    "custoReiatsu": 4,
-    "nivel": "Básico",
-    "desc": "Cria pequenas estacas espirituais que prendem temporariamente o alvo ao chão ou a uma superfície.",
-    "incant": "Sombra que acompanha todo ser, transforme-se em agulha e fixe aquilo que ela toca."
-  },
-  {
-    "id": "b8_c",
-    "numero": 8,
-    "nome": "Bakudō #8 — Seki (Repulsão)",
-    "cat": "Bakudō",
-    "custoReiatsu": 3,
-    "nivel": "Básico",
-    "desc": "Cria um escudo redondo e brilhante no antebraço que repele projéteis e atordoa o atacante.",
-    "incant": "—"
-  },
-  {
-    "id": "b9",
-    "numero": 9,
-    "nome": "Bakudō #9 — Fūsa (Selamento Articular)",
-    "cat": "Bakudō",
-    "custoReiatsu": 4,
-    "nivel": "Básico",
-    "desc": "Cria uma marca espiritual que dificulta e trava determinado movimento ou postura do alvo.",
-    "incant": "Feche a passagem, cerre o caminho, faça do movimento uma lembrança."
-  },
-  {
-    "id": "b10",
-    "numero": 10,
-    "nome": "Bakudō #10 — Hagane Ori (Gaiola de Aço)",
-    "cat": "Bakudō",
-    "custoReiatsu": 5,
-    "nivel": "Intermediário",
-    "desc": "Cria uma gaiola espiritual cúbica de barras de energia densa ao redor de um alvo.",
-    "incant": "Quatro lados, quatro limites. Ergam-se e aprisionem aquilo que está dentro."
-  },
-  {
-    "id": "b11",
-    "numero": 11,
-    "nome": "Bakudō #11 — Kōsen (Linha de Luz)",
-    "cat": "Bakudō",
-    "custoReiatsu": 5,
-    "nivel": "Intermediário",
-    "desc": "Cria uma linha espiritual luminosa que funciona como uma barreira linear intransponível.",
-    "incant": "Uma linha separa o mundo. Que ninguém atravesse sua fronteira."
-  },
-  {
-    "id": "b12",
-    "numero": 12,
-    "nome": "Bakudō #12 — Jūryoku (Peso Gravitacional)",
-    "cat": "Bakudō",
-    "custoReiatsu": 5,
-    "nivel": "Intermediário",
-    "desc": "Aumenta temporariamente a pressão espiritual sobre um alvo, tornando seus movimentos mais pesados.",
-    "incant": "O céu desça, a terra se levante. Faça o corpo lembrar o peso de existir."
-  },
-  {
-    "id": "b13",
-    "numero": 13,
-    "nome": "Bakudō #13 — Mizu Kagami (Espelho d'Água)",
-    "cat": "Bakudō",
-    "custoReiatsu": 5,
-    "nivel": "Intermediário",
-    "desc": "Cria uma superfície espiritual translúcida capaz de refletir imagens, movimentos e feitiços leves.",
-    "incant": "Água que não corre, superfície que não quebra. Mostre aquilo que diante de ti permanece."
-  },
-  {
-    "id": "b14",
-    "numero": 14,
-    "nome": "Bakudō #14 — Tōmei Kabe (Muralha Transparente)",
-    "cat": "Bakudō",
-    "custoReiatsu": 6,
-    "nivel": "Intermediário",
-    "desc": "Cria uma barreira completamente invisível que surpreende atacantes em alta velocidade.",
-    "incant": "Aquilo que os olhos não encontram ainda pode permanecer de pé. Erga-se."
-  },
-  {
-    "id": "b15",
-    "numero": 15,
-    "nome": "Bakudō #15 — Shibari no Kage (Prisão da Sombra)",
-    "cat": "Bakudō",
-    "custoReiatsu": 6,
-    "nivel": "Intermediário",
-    "desc": "Prende parcialmente o alvo à própria sombra, impedindo saltos e translocações por Shunpo.",
-    "incant": "A sombra nasce dos pés e retorna aos pés. Que nenhuma distância seja suficiente para escapar."
-  },
-  {
-    "id": "b16",
-    "numero": 16,
-    "nome": "Bakudō #16 — Rasen Kusari (Corrente Espiral)",
-    "cat": "Bakudō",
-    "custoReiatsu": 6,
-    "nivel": "Intermediário",
-    "desc": "Uma corrente espiritual gira ao redor do alvo e restringe progressivamente seus movimentos.",
-    "incant": "Gire, envolva, aperte. Quanto mais o prisioneiro luta, mais próximo fica o círculo."
-  },
-  {
-    "id": "b17",
-    "numero": 17,
-    "nome": "Bakudō #17 — Hakujō (Manto Branco)",
-    "cat": "Bakudō",
-    "custoReiatsu": 6,
-    "nivel": "Intermediário",
-    "desc": "Forma uma camada espiritual protetora e amortecedora sobre o corpo do usuário ou de um aliado.",
-    "incant": "Cubra aquilo que desejo proteger. Torne-se abrigo contra o impacto."
-  },
-  {
-    "id": "b18",
-    "numero": 18,
-    "nome": "Bakudō #18 — Tenmon (Portão Celestial)",
-    "cat": "Bakudō",
-    "custoReiatsu": 7,
-    "nivel": "Intermediário",
-    "desc": "Cria uma barreira seletiva que permite apenas a passagem de pessoas autorizadas pelo conjurador.",
-    "incant": "Entre dois mundos existe uma porta. Que ela se abra apenas diante daquele que reconheço."
-  },
-  {
-    "id": "b19",
-    "numero": 19,
-    "nome": "Bakudō #19 — Metsubō no Ori (Gaiola da Ruína)",
-    "cat": "Bakudō",
-    "custoReiatsu": 7,
-    "nivel": "Intermediário",
-    "desc": "Cria várias camadas de barreiras prismáticas concêntricas ao redor de um alvo em fuga.",
-    "incant": "Círculo sobre círculo, parede sobre parede. Fechem-se sobre aquele que ousa permanecer."
-  },
-  {
-    "id": "b20",
-    "numero": 20,
-    "nome": "Bakudō #20 — Hyakuren Kekkai (Barreira das Cem Camadas)",
-    "cat": "Bakudō",
-    "custoReiatsu": 8,
-    "nivel": "Intermediário",
-    "desc": "Forma múltiplas camadas de barreiras espirituais sobrepostas para absorver impactos devastadores.",
-    "incant": "Que cada camada seja uma muralha, que cada muralha seja uma promessa. Ergam-se e resistam."
-  },
-  {
-    "id": "b26",
-    "numero": 26,
-    "nome": "Bakudō #26 — Kyokkō (Luz Curvada)",
-    "cat": "Bakudō",
-    "custoReiatsu": 5,
-    "nivel": "Intermediário",
-    "desc": "Dobra a luz e a percepção de Reiatsu ao redor do usuário, tornando-o completamente invisível.",
-    "incant": "—"
-  },
-  {
-    "id": "b39",
-    "numero": 39,
-    "nome": "Bakudō #39 — Enkōsen (Escudo Giratório de Lótus)",
-    "cat": "Bakudō",
-    "custoReiatsu": 7,
-    "nivel": "Intermediário",
-    "desc": "Cria um escudo condensado de energia rotatória para absorver ataques diretos e projéteis.",
-    "incant": "—"
-  },
-  {
-    "id": "b61",
-    "numero": 61,
-    "nome": "Bakudō #61 — Rikujō Kōrō (Prisão das Seis Varas de Luz)",
-    "cat": "Bakudō",
-    "custoReiatsu": 12,
-    "nivel": "Avançado",
-    "desc": "Seis lâminas reluzentes de luz dourada perfuram a cintura do alvo, paralisando-o totalmente.",
-    "incant": "Carruagem do trovão, ponte da roda giratória, com a luz dividida em seis!"
-  },
-  {
-    "id": "b62",
-    "numero": 62,
-    "nome": "Bakudō #62 — Hyapporankan (Cem Estacas de Luz)",
-    "cat": "Bakudō",
-    "custoReiatsu": 13,
-    "nivel": "Avançado",
-    "desc": "Uma vara de luz se multiplica em uma centena de estacas lançadas para cravar o oponente no chão.",
-    "incant": "—"
-  },
-  {
-    "id": "b75",
-    "numero": 75,
-    "nome": "Bakudō #75 — Gochūtekkan (Cinco Pilares de Ferro)",
-    "cat": "Bakudō",
-    "custoReiatsu": 16,
-    "nivel": "Mestre",
-    "desc": "Invoca cinco gigantescos pilares de ferro conectados por correntes que esmagam e selam o alvo.",
-    "incant": "Muralha de areia de ferro, torre de monge, lâmpada de ferro incandescente!"
-  },
-  {
-    "id": "b81",
-    "numero": 81,
-    "nome": "Bakudō #81 — Dankū (Fenda de Ar)",
-    "cat": "Bakudō",
-    "custoReiatsu": 18,
-    "nivel": "Mestre",
-    "desc": "Ergue uma barreira translúcida gigantesca que anula completamente qualquer Hadō até o #89.",
-    "incant": "—"
-  },
-  {
-    "id": "b99",
-    "numero": 99,
-    "nome": "Bakudō #99 — Kin / Bankin (Grande Selamento)",
-    "cat": "Bakudō",
-    "custoReiatsu": 25,
-    "nivel": "Classe Especial",
-    "desc": "O selamento supremo em três canções: ataduras espirituais, estacas de aço e bloco monumental.",
-    "incant": "Primeira Canção: Shiryū! Segunda Canção: Hyakurenzan! Canção Final: Bankin Taihō!"
-  },
-  {
-    "id": "h1_u",
-    "numero": 1,
+    "cat": "Hadō",
     "nome": "Hadō #1 — Hibana (Faísca)",
-    "cat": "Hadō",
-    "custoReiatsu": 2,
-    "nivel": "Básico",
-    "desc": "Dispara uma pequena explosão concentrada de energia espiritual a partir da ponta dos dedos.",
-    "incant": "Pequena chama, desperte em minha mão."
+    "incant": "Pequena chama, desperte em minha mão.",
+    "desc": "Dispara uma pequena explosão de energia espiritual concentrada na ponta dos dedos.",
+    "custoReiatsu": 1
   },
   {
-    "id": "h1_c",
-    "numero": 1,
-    "nome": "Hadō #1 — Shō (Empurrão Cinético)",
-    "cat": "Hadō",
-    "custoReiatsu": 2,
-    "nivel": "Básico",
-    "desc": "Dispara uma força cinética invisível a partir da ponta do dedo para repelir alvos e projéteis.",
-    "incant": "—"
-  },
-  {
-    "id": "h2",
+    "id": "h2-rekka",
     "numero": 2,
+    "cat": "Hadō",
     "nome": "Hadō #2 — Rekka (Lâmina Flamejante)",
-    "cat": "Hadō",
-    "custoReiatsu": 2,
-    "nivel": "Básico",
-    "desc": "Projeta uma lâmina de energia flamejante que corta o ar em média distância.",
-    "incant": "Chama comprimida, torne-se lâmina e atravesse o caminho."
+    "incant": "Chama comprimida, torne-se lâmina e atravesse o caminho.",
+    "desc": "Projeta uma lâmina de energia flamejante que corta a média distância.",
+    "custoReiatsu": 2
   },
   {
-    "id": "h3",
+    "id": "h3-shoge",
     "numero": 3,
+    "cat": "Hadō",
     "nome": "Hadō #3 — Shōgekiha (Onda de Impacto)",
-    "cat": "Hadō",
-    "custoReiatsu": 2,
-    "nivel": "Básico",
-    "desc": "Dispara uma onda curta de pressão espiritual de impacto contundente.",
-    "incant": "Espírito acumulado, transforme-se em força. Avance."
+    "incant": "Espírito acumulado, transforme-se em força. Avance.",
+    "desc": "Dispara uma onda curta e densa de pressão espiritual de impacto cinético.",
+    "custoReiatsu": 2
   },
   {
-    "id": "h4_u",
+    "id": "h4-raiko",
     "numero": 4,
-    "nome": "Hadō #4 — Raikō (Luz Trovejante)",
     "cat": "Hadō",
-    "custoReiatsu": 3,
-    "nivel": "Básico",
-    "desc": "Dispara um feixe concentrado de energia elétrica que viaja em linha reta.",
-    "incant": "Céu silencioso, rasgue o horizonte com sua luz."
+    "nome": "Hadō #4 — Raikō / Byakurai (Luz Trovejante)",
+    "incant": "Céu silencioso, rasgue o horizonte com sua luz.",
+    "desc": "Dispara um feixe concentrado e perfurante de energia elétrica em linha reta.",
+    "custoReiatsu": 3
   },
   {
-    "id": "h4_c",
-    "numero": 4,
-    "nome": "Hadō #4 — Byakurai (Raio Branco)",
-    "cat": "Hadō",
-    "custoReiatsu": 3,
-    "nivel": "Básico",
-    "desc": "Dispara um raio concentrado de eletricidade branca perfurante a partir do dedo indicador.",
-    "incant": "—"
-  },
-  {
-    "id": "h5",
+    "id": "h5-kazan",
     "numero": 5,
+    "cat": "Hadō",
     "nome": "Hadō #5 — Kazan (Vulcão)",
-    "cat": "Hadō",
-    "custoReiatsu": 3,
-    "nivel": "Básico",
-    "desc": "Projeta uma erupção de energia térmica para cima a partir do solo sob o alvo.",
-    "incant": "Sob a terra existe fogo. Rompa o silêncio e desperte."
+    "incant": "Sob a terra existe fogo. Rompa o silêncio e desperte.",
+    "desc": "Projeta uma explosão ascendente de energia a partir do solo sob os pés do alvo.",
+    "custoReiatsu": 3
   },
   {
-    "id": "h6",
+    "id": "h6-getsumen",
     "numero": 6,
+    "cat": "Hadō",
     "nome": "Hadō #6 — Getsumen (Crescente Lunar)",
-    "cat": "Hadō",
-    "custoReiatsu": 3,
-    "nivel": "Básico",
-    "desc": "Dispara uma lâmina curva de energia espiritual em formato de foice lunar.",
-    "incant": "Lua partida, desenha teu arco e corta o caminho diante de mim."
+    "incant": "Lua partida, desenha teu arco e corta o caminho diante de mim.",
+    "desc": "Dispara uma lâmina curva e cortante de pura energia espiritual.",
+    "custoReiatsu": 4
   },
   {
-    "id": "h7",
+    "id": "h7-enko",
     "numero": 7,
+    "cat": "Hadō",
     "nome": "Hadō #7 — Enkō (Arco Flamejante)",
-    "cat": "Hadō",
-    "custoReiatsu": 4,
-    "nivel": "Básico",
-    "desc": "Cria uma rajada curva de energia flamejante que contorna obstáculos.",
-    "incant": "Fogo que dança no ar, siga meu gesto e avance."
+    "incant": "Fogo que dança no ar, siga meu gesto e avance.",
+    "desc": "Cria uma rajada curva e envolvente de energia flamejante.",
+    "custoReiatsu": 4
   },
   {
-    "id": "h8",
+    "id": "h8-retsufu",
     "numero": 8,
+    "cat": "Hadō",
     "nome": "Hadō #8 — Retsufū (Vento Violento)",
-    "cat": "Hadō",
-    "custoReiatsu": 4,
-    "nivel": "Básico",
-    "desc": "Dispara uma rajada de vento espiritual comprimido capaz de arremessar adversários.",
-    "incant": "Ar que dorme, desperte. Céu que observa, desça."
+    "incant": "Ar que dorme, desperte. Céu que observa, desça.",
+    "desc": "Dispara uma rajada concentrada de vento espiritual comprimido capaz de arremessar inimigos.",
+    "custoReiatsu": 4
   },
   {
-    "id": "h9",
+    "id": "h9-raimeisen",
     "numero": 9,
+    "cat": "Hadō",
     "nome": "Hadō #9 — Raimei Sen (Linha do Trovão)",
-    "cat": "Hadō",
-    "custoReiatsu": 4,
-    "nivel": "Básico",
-    "desc": "Dispara uma linha instantânea e extremamente rápida de energia elétrica perfurante.",
-    "incant": "Entre céu e terra existe apenas um instante. Atravesse-o."
+    "incant": "Entre céu e terra existe apenas um instante. Atravesse-o.",
+    "desc": "Dispara uma linha extremamente rápida e relampejante de energia elétrica contínua.",
+    "custoReiatsu": 5
   },
   {
-    "id": "h10",
+    "id": "h10-gekka",
     "numero": 10,
+    "cat": "Hadō",
     "nome": "Hadō #10 — Gekka (Flor Lunar)",
-    "cat": "Hadō",
-    "custoReiatsu": 5,
-    "nivel": "Intermediário",
-    "desc": "Cria vários projéteis espirituais que se espalham como pétalas cortantes no ar.",
-    "incant": "Abra suas pétalas na escuridão e faça a noite florescer."
+    "incant": "Abra suas pétalas na escuridão e faça a noite florescer.",
+    "desc": "Cria vários projéteis espirituais que se espalham pelo ar e convergem sobre o alvo como pétalas.",
+    "custoReiatsu": 5
   },
   {
-    "id": "h11_u",
+    "id": "h11-enjin",
     "numero": 11,
+    "cat": "Hadō",
     "nome": "Hadō #11 — Enjin (Lâmina de Fogo)",
-    "cat": "Hadō",
-    "custoReiatsu": 5,
-    "nivel": "Intermediário",
-    "desc": "Reveste uma arma ou membro com energia flamejante de alto poder de incineração.",
-    "incant": "Fogo que não precisa de combustível, transforme minha intenção em corte."
+    "incant": "Fogo que não precisa de combustível, transforme minha intenção em corte.",
+    "desc": "Reveste a lâmina da Zanpakutō com chamas densas para amplificar o corte.",
+    "custoReiatsu": 5
   },
   {
-    "id": "h11_c",
-    "numero": 11,
-    "nome": "Hadō #11 — Tsuzuri Raiden (Raio Conduzido)",
-    "cat": "Hadō",
-    "custoReiatsu": 4,
-    "nivel": "Básico",
-    "desc": "Canaliza uma corrente elétrica através de qualquer objeto condutor ou lâmina de Zanpakutō.",
-    "incant": "—"
-  },
-  {
-    "id": "h12",
+    "id": "h12-shoten",
     "numero": 12,
+    "cat": "Hadō",
     "nome": "Hadō #12 — Shōten (Ascensão)",
-    "cat": "Hadō",
-    "custoReiatsu": 5,
-    "nivel": "Intermediário",
-    "desc": "Libera uma coluna vertical colossal de energia espiritual que eleva e quebra o solo.",
-    "incant": "Suba, energia que dorme abaixo do mundo."
+    "incant": "Suba, energia que dorme abaixo do mundo.",
+    "desc": "Libera uma coluna vertical massiva de energia espiritual que se eleva do solo.",
+    "custoReiatsu": 6
   },
   {
-    "id": "h13",
+    "id": "h13-koha",
     "numero": 13,
+    "cat": "Hadō",
     "nome": "Hadō #13 — Kōha (Onda Carmesim)",
-    "cat": "Hadō",
-    "custoReiatsu": 6,
-    "nivel": "Intermediário",
-    "desc": "Projeta uma maré maciça de energia espiritual vermelha em cone frontal.",
-    "incant": "Vermelho que nasce do espírito, avance como maré."
+    "incant": "Vermelho que nasce do espírito, avance como maré.",
+    "desc": "Projeta uma grande maré ondulante de energia espiritual destruidora.",
+    "custoReiatsu": 6
   },
   {
-    "id": "h14",
+    "id": "h14-rasenka",
     "numero": 14,
+    "cat": "Hadō",
     "nome": "Hadō #14 — Rasenka (Flor Espiral)",
-    "cat": "Hadō",
-    "custoReiatsu": 6,
-    "nivel": "Intermediário",
-    "desc": "Dispara um projétil espiral perfurante de energia concentrada em rotação.",
-    "incant": "Gire, comprima, floresça. Transforme o caos em uma única direção."
+    "incant": "Gire, comprima, floresça. Transforme o caos em uma única direção.",
+    "desc": "Dispara uma broca espiral de energia espiritual de alto poder perfurante.",
+    "custoReiatsu": 6
   },
   {
-    "id": "h15",
+    "id": "h15-hoko",
     "numero": 15,
-    "nome": "Hadō #15 — Hōkō (Rugido Espiritual)",
     "cat": "Hadō",
-    "custoReiatsu": 6,
-    "nivel": "Intermediário",
-    "desc": "Libera uma poderosa onda sonora e espiritual que atordoa e repele múltiplos atacantes.",
-    "incant": "Que minha voz atravesse o céu. Que meu espírito responda com força."
+    "nome": "Hadō #15 — Hōkō (Rugido)",
+    "incant": "Que minha voz atravesse o céu. Que meu espírito responda com força.",
+    "desc": "Libera uma poderosa onda de choque sônica e espiritual em cone à frente.",
+    "custoReiatsu": 7
   },
   {
-    "id": "h16",
+    "id": "h16-kagero",
     "numero": 16,
+    "cat": "Hadō",
     "nome": "Hadō #16 — Kagerō (Calor Distorcido)",
-    "cat": "Hadō",
-    "custoReiatsu": 6,
-    "nivel": "Intermediário",
-    "desc": "Cria uma onda de calor espiritual que distorce a visão e queima o ar ao redor do oponente.",
-    "incant": "Ardance o horizonte. Faça o espaço tremer diante do calor."
+    "incant": "Ardente o horizonte. Faça o espaço tremer diante do calor.",
+    "desc": "Cria uma onda térmica distorcida que embaça a visão e causa impacto escaldante.",
+    "custoReiatsu": 7
   },
   {
-    "id": "h17",
+    "id": "h17-shakunetsu",
     "numero": 17,
+    "cat": "Hadō",
     "nome": "Hadō #17 — Shakunetsu (Incandescência)",
-    "cat": "Hadō",
-    "custoReiatsu": 7,
-    "nivel": "Intermediário",
-    "desc": "Concentra energia espiritual em uma esfera incandescente que explode em estilhaços de calor.",
-    "incant": "Consuma o frio, ilumine a noite, transforme energia em chama."
+    "incant": "Consuma o frio, ilumine a noite, transforme energia em chama.",
+    "desc": "Concentra Reiatsu em uma esfera incandescente que explode com fúria ao contato.",
+    "custoReiatsu": 8
   },
   {
-    "id": "h18",
+    "id": "h18-tenrai",
     "numero": 18,
+    "cat": "Hadō",
     "nome": "Hadō #18 — Tenrai (Trovão Celestial)",
-    "cat": "Hadō",
-    "custoReiatsu": 7,
-    "nivel": "Intermediário",
-    "desc": "Invoca um raio espiritual denso que cai dos céus sobre a coordenada do alvo.",
-    "incant": "Céu acima de mim, terra abaixo de mim. Entre ambos, faça nascer o trovão."
+    "incant": "Céu acima de mim, terra abaixo de mim. Entre ambos, faça nascer o trovão.",
+    "desc": "Invoca um raio espiritual fulminante que desaba dos céus sobre a área marcada.",
+    "custoReiatsu": 8
   },
   {
-    "id": "h19",
+    "id": "h19-ryuka",
     "numero": 19,
+    "cat": "Hadō",
     "nome": "Hadō #19 — Ryūka (Dragão de Fogo)",
-    "cat": "Hadō",
-    "custoReiatsu": 8,
-    "nivel": "Intermediário",
-    "desc": "Cria uma grande massa de fogo espiritual com formato serpentino que persegue o oponente.",
-    "incant": "Chama sem forma, encontre um corpo. Céu sem voz, encontre um rugido."
+    "incant": "Chama sem forma, encontre um corpo. Céu sem voz, encontre um rugido.",
+    "desc": "Materializa uma serpente dragônica de chamas espirituais que persegue o alvo.",
+    "custoReiatsu": 9
   },
   {
-    "id": "h20",
+    "id": "h20-koten",
     "numero": 20,
+    "cat": "Hadō",
     "nome": "Hadō #20 — Kōten (Explosão Celeste)",
-    "cat": "Hadō",
-    "custoReiatsu": 8,
-    "nivel": "Intermediário",
-    "desc": "Concentra uma grande quantidade de energia espiritual em um ponto e libera uma detonação esférica.",
-    "incant": "Todo poder converge para um único ponto. Céu e terra, testemunhem o impacto."
+    "incant": "Todo poder converge para um único ponto. Céu e terra, testemunhem o impacto.",
+    "desc": "Concentra densidade espiritual máxima em um ponto infinitesimal antes de detonar.",
+    "custoReiatsu": 10
   },
   {
-    "id": "h31",
+    "id": "h31-shakkaho",
     "numero": 31,
-    "nome": "Hadō #31 — Shakkahō (Tiro de Fogo Vermelho)",
     "cat": "Hadō",
-    "custoReiatsu": 6,
-    "nivel": "Intermediário",
-    "desc": "Gera e dispara uma esfera de chamas vermelhas de alta potência e raio explosivo.",
-    "incant": "Ó, praticante! Dispersai-vos, rastejai! Queimai a terra e tragai a cinza!"
+    "nome": "Hadō #31 — Shakkahō (Canhão de Fogo Vermelho)",
+    "incant": "Ó senhor! Máscara de sangue e carne, toda a criação, bater de asas, vós que carregais o nome de Homem! Inferno e pandemônio, a barreira marítima avança, marcha para o sul!",
+    "desc": "Dispara uma esfera carmesim de alta destruição térmica por concussão e chamas.",
+    "custoReiatsu": 7
   },
   {
-    "id": "h33",
+    "id": "h33-sokatsui",
     "numero": 33,
-    "nome": "Hadō #33 — Sōkatsui (Chuva Azul do Vazio)",
     "cat": "Hadō",
-    "custoReiatsu": 7,
-    "nivel": "Intermediário",
-    "desc": "Dispara uma torrente avassaladora de energia espiritual azul a partir da palma aberta.",
-    "incant": "Ó, governante! Máscara de carne e sangue, toda a criação, o bater de asas..."
+    "nome": "Hadō #33 — Sōkatsui (Fogo Azul / Impacto Descontrolado)",
+    "incant": "Ó senhor! Máscara de carne e osso, bater de asas, vós que carregais o nome de Homem! Verdade e temperança, sobre esta muralha imaculada de sonhos, desencadeai apenas levemente a fúria de vossas garras.",
+    "desc": "Gera e dispara uma torrente de chamas azuis com impacto explosivo devastador.",
+    "custoReiatsu": 8
   },
   {
-    "id": "h54",
-    "numero": 54,
-    "nome": "Hadō #54 — Haien (Chamas da Abolição)",
-    "cat": "Hadō",
-    "custoReiatsu": 10,
-    "nivel": "Avançado",
-    "desc": "Dispara uma onda de fogo roxo que incinera e desintegra a matéria ao menor contato.",
-    "incant": "—"
-  },
-  {
-    "id": "h63",
-    "numero": 63,
-    "nome": "Hadō #63 — Raikōhō (Canhão do Trovão)",
-    "cat": "Hadō",
-    "custoReiatsu": 13,
-    "nivel": "Avançado",
-    "desc": "Invoca um gigantesco trovão amarelo concentrado que explode com estrondo sísmico.",
-    "incant": "Salpicado nos ossos da besta! Torre afiada, cristal vermelho, anel de aço..."
-  },
-  {
-    "id": "h73",
+    "id": "h73-soren-sokatsui",
     "numero": 73,
-    "nome": "Hadō #73 — Sōren Sōkatsui (Lótus Azul Gêmeo)",
     "cat": "Hadō",
-    "custoReiatsu": 16,
-    "nivel": "Mestre",
-    "desc": "Versão dupla e devastadora do Sōkatsui disparada com ambas as mãos em sincronia.",
-    "incant": "Máscara de carne e sangue... Coroai com o nome de humano o abismo sem fim!"
+    "nome": "Hadō #73 — Sōren Sōkatsui (Fogo Azul de Lótus Gêmea)",
+    "incant": "Ó senhor! Máscara de sangue e carne, toda a criação, bater de asas, vós que carregais o nome do Homem! Na parede de chamas azuis, inscreve um lótus duplo. No abismo da conflagração, aguarda nos céus distantes.",
+    "desc": "Forma avançada e dupla do Sōkatsui disparada com ambas as palmas, com o dobro da potência.",
+    "custoReiatsu": 14
   },
   {
-    "id": "h88",
-    "numero": 88,
-    "nome": "Hadō #88 — Hiryū Gekizoku Shinten Raihō",
-    "cat": "Hadō",
-    "custoReiatsu": 20,
-    "nivel": "Classe Especial",
-    "desc": "Um colossal canhão de relâmpagos espirituais capaz de perfurar fortalezas inteiras.",
-    "incant": "Rugido do dragão celeste, queime o firmamento até a última partícula!"
-  },
-  {
-    "id": "h90",
+    "id": "h90-kurohitsugi",
     "numero": 90,
-    "nome": "Hadō #90 — Kurohitsugi (Caixão Negro)",
     "cat": "Hadō",
-    "custoReiatsu": 25,
-    "nivel": "Classe Especial",
-    "desc": "Cria uma caixa cúbica de gravidade negra ao redor do alvo perfurando-o com incontáveis lanças espirituais.",
-    "incant": "Transborde, recipiente do caos! Cão louco e insolente, perca a razão..."
+    "nome": "Hadō #90 — Kurohitsugi (Caixão Negro)",
+    "incant": "A crista viscosa da corrupção. O arrogante receptáculo da loucura! Negue o impulso fervilhante! Atordoe e cintile! Perturbe o sono! A rainha rastejante de ferro! A boneca de lama eternamente autodestrutiva! Unam-se! Repilam! Preencham a Terra e reconheçam sua própria impotência!",
+    "desc": "Confinamento em caixão de gravidade negra perfurado por lanças de Reishi que distorcem o espaço.",
+    "custoReiatsu": 20
   },
   {
-    "id": "k1",
+    "id": "b1-sai",
     "numero": 1,
-    "nome": "Kaidō #1 — Shōmei (Iluminação Diagnóstica)",
-    "cat": "Kaidō",
-    "custoReiatsu": 3,
-    "nivel": "Básico",
-    "desc": "Revela ferimentos ocultos, venenos e perturbações espirituais no corpo do paciente.",
-    "incant": "Luz suave, encontre aquilo que foi ferido."
+    "cat": "Hadō",
+    "nome": "Bakudō #1 — Sai (Obstrução)",
+    "incant": "—",
+    "desc": "Prende os braços do alvo atrás das costas com fios invisíveis de Reiatsu.",
+    "custoReiatsu": 1
   },
   {
-    "id": "k2",
-    "numero": 2,
-    "nome": "Kaidō #2 — Yasuragi (Tranquilidade)",
-    "cat": "Kaidō",
-    "custoReiatsu": 3,
-    "nivel": "Básico",
-    "desc": "Reduz dores e desconforto, ajudando o paciente a permanecer consciente e estável.",
-    "incant": "Respire. Silencie a dor. Deixe o espírito encontrar repouso."
-  },
-  {
-    "id": "k3",
-    "numero": 3,
-    "nome": "Kaidō #3 — Seimei Ito (Fio Vital)",
-    "cat": "Kaidō",
-    "custoReiatsu": 4,
-    "nivel": "Básico",
-    "desc": "Estabiliza temporariamente a condição espiritual e o pulso de uma pessoa ferida.",
-    "incant": "Fio que une corpo e alma, permaneça firme."
-  },
-  {
-    "id": "k4",
+    "id": "b4-hainawa",
     "numero": 4,
-    "nome": "Kaidō #4 — Kōmyō (Luz Serena)",
-    "cat": "Kaidō",
-    "custoReiatsu": 4,
-    "nivel": "Básico",
-    "desc": "Acelera a regeneração de cortes superficiais, escoriações e sangramentos rápidos.",
-    "incant": "Onde existe ferida, que exista luz. Onde existe fraqueza, que exista calma."
+    "cat": "Bakudō",
+    "nome": "Bakudō #4 — Hainawa (Corda Rastejante)",
+    "incant": "—",
+    "desc": "Cria uma corda de energia amarela que laça e imobiliza os membros do adversário.",
+    "custoReiatsu": 2
   },
   {
-    "id": "k5",
-    "numero": 5,
-    "nome": "Kaidō #5 — Shinkei (Restauração Neural)",
-    "cat": "Kaidō",
-    "custoReiatsu": 5,
-    "nivel": "Básico",
-    "desc": "Ajuda a reanimar terminações nervosas e recuperar movimentos prejudicados por lesões ou dormência.",
-    "incant": "Desperte os caminhos adormecidos e faça o corpo lembrar seus próprios movimentos."
-  },
-  {
-    "id": "k6",
-    "numero": 6,
-    "nome": "Kaidō #6 — Seika (Purificação de Impurezas)",
-    "cat": "Kaidō",
-    "custoReiatsu": 5,
-    "nivel": "Básico",
-    "desc": "Remove pequenas impurezas espirituais, toxinas leves e energia residual acumulada.",
-    "incant": "Aquilo que não pertence ao corpo, deixe-o. Aquilo que pertence, permaneça."
-  },
-  {
-    "id": "k7",
-    "numero": 7,
-    "nome": "Kaidō #7 — Kokyū (Respiração Guiada)",
-    "cat": "Kaidō",
-    "custoReiatsu": 5,
-    "nivel": "Básico",
-    "desc": "Auxilia na recuperação da respiração e estabiliza o fluxo de ar e Reiryoku nos pulmões.",
-    "incant": "Ar entre os mundos, entre neste corpo e devolva-lhe o ritmo."
-  },
-  {
-    "id": "k8",
-    "numero": 8,
-    "nome": "Kaidō #8 — Shirohana (Flor Branca de Cura)",
-    "cat": "Kaidō",
-    "custoReiatsu": 6,
-    "nivel": "Intermediário",
-    "desc": "Cria uma pequena flor espiritual sobre o ferimento que absorve a dor e acelera a cicatrização.",
-    "incant": "Pequena flor, abra-se sobre a ferida e carregue consigo a dor."
-  },
-  {
-    "id": "k9",
+    "id": "b9-geki",
     "numero": 9,
-    "nome": "Kaidō #9 — Kekkai Seimei (Barreira Vital)",
-    "cat": "Kaidō",
-    "custoReiatsu": 6,
-    "nivel": "Intermediário",
-    "desc": "Cria uma película espiritual protetora ao redor de uma lesão grave, impedindo hemorragias.",
-    "incant": "Erga-se ao redor da vida. Não permita que a ferida avance."
+    "cat": "Bakudō",
+    "nome": "Bakudō #9 — Geki (Golpe de Conquista)",
+    "incant": "Desintegre-se, cão negro de Rondanini! Olhe para si mesmo com terror e depois rasgue sua própria garganta!",
+    "desc": "Envolve o corpo do inimigo em uma luz vermelha paralisante que anula movimentos.",
+    "custoReiatsu": 3
   },
   {
-    "id": "k10",
-    "numero": 10,
-    "nome": "Kaidō #10 — Chiyu (Cura de Tecidos Profundos)",
-    "cat": "Kaidō",
-    "custoReiatsu": 7,
-    "nivel": "Intermediário",
-    "desc": "Acelera significativamente a recuperação de ferimentos musculares moderados e fraturas parciais.",
-    "incant": "Corpo ferido, espírito cansado. Reúna aquilo que ainda permanece."
-  },
-  {
-    "id": "k11",
-    "numero": 11,
-    "nome": "Kaidō #11 — Seimei Kōro (Caminho Vital)",
-    "cat": "Kaidō",
-    "custoReiatsu": 7,
-    "nivel": "Intermediário",
-    "desc": "Reorganiza os meridianos e o fluxo espiritual do paciente após sofrer choques de Reiatsu.",
-    "incant": "Que cada caminho volte a encontrar seu destino. Que cada fluxo retorne ao seu curso."
-  },
-  {
-    "id": "k12",
-    "numero": 12,
-    "nome": "Kaidō #12 — Kōshin (Renovação de Vigor)",
-    "cat": "Kaidō",
-    "custoReiatsu": 8,
-    "nivel": "Intermediário",
-    "desc": "Revigora a estamina e devolve energia física a guerreiros exaustos após combates longos.",
-    "incant": "Aquilo que foi gasto, encontre repouso. Aquilo que foi quebrado, encontre forma."
-  },
-  {
-    "id": "k13",
-    "numero": 13,
-    "nome": "Kaidō #13 — Reishō (Pulso Espiritual)",
-    "cat": "Kaidō",
-    "custoReiatsu": 8,
-    "nivel": "Intermediário",
-    "desc": "Sincroniza o batimento cardíaco da alma com a Reiatsu pura, revertendo quadros de choque.",
-    "incant": "Um pulso chama outro. Que a alma encontre seu próprio ritmo."
-  },
-  {
-    "id": "k14",
-    "numero": 14,
-    "nome": "Kaidō #14 — Shōka (Purificação Residual)",
-    "cat": "Kaidō",
-    "custoReiatsu": 9,
-    "nivel": "Avançado",
-    "desc": "Extrai e purifica resíduos cáusticos de venenos complexos e energias corrosivas de Hadō.",
-    "incant": "Dor que permanece, deixe o corpo. Energia estranha, abandone a carne."
-  },
-  {
-    "id": "k15",
+    "id": "b15-kagekake",
     "numero": 15,
-    "nome": "Kaidō #15 — Meimei (Pulso de Vida Emergencial)",
-    "cat": "Kaidō",
-    "custoReiatsu": 10,
-    "nivel": "Avançado",
-    "desc": "Estabiliza alguém em estado físico gravemente debilitado, impedindo a morte iminente.",
-    "incant": "Enquanto houver chama, haverá caminho. Enquanto houver espírito, haverá retorno."
+    "cat": "Bakudō",
+    "nome": "Bakudō #15 — Kagekake (Amarras da Sombra)",
+    "incant": "A sombra nasce dos pés e retorna aos pés. Que nenhuma distância seja suficiente para escapar.",
+    "desc": "Prende parcialmente o alvo à própria sombra, impedindo locomoção rápida.",
+    "custoReiatsu": 4
   },
   {
-    "id": "k16",
+    "id": "b16-rasen-kusari",
     "numero": 16,
-    "nome": "Kaidō #16 — Hikari no Ito (Sutura de Luz)",
-    "cat": "Kaidō",
-    "custoReiatsu": 11,
-    "nivel": "Avançado",
-    "desc": "Fios espirituais de luz ligam tendões rompidos, vasos e tecidos danificados com precisão cirúrgica.",
-    "incant": "Fios de luz, atravessem a ferida. Unam aquilo que foi separado."
+    "cat": "Bakudō",
+    "nome": "Bakudō #16 — Rasen Kusari (Corrente Espiral)",
+    "incant": "Gire, envolva, aperte. Quanto mais o prisioneiro luta, mais próximo fica o círculo.",
+    "desc": "Uma corrente espiritual gira ao redor do alvo e restringe progressivamente seus movimentos.",
+    "custoReiatsu": 4
   },
   {
-    "id": "k17",
+    "id": "b17-hakujo",
     "numero": 17,
-    "nome": "Kaidō #17 — Seishin Nagashi (Transfusão de Reiryoku)",
-    "cat": "Kaidō",
-    "custoReiatsu": 12,
-    "nivel": "Avançado",
-    "desc": "Transfere uma quantidade controlada e segura de energia espiritual pura para reanimar um aliado.",
-    "incant": "Que minha energia encontre teu caminho e leve consigo aquilo que pesa."
+    "cat": "Bakudō",
+    "nome": "Bakudō #17 — Hakujō (Manto Branco)",
+    "incant": "Cubra aquilo que desejo proteger. Torne-se abrigo contra o impacto.",
+    "desc": "Forma uma camada espiritual protetora e resiliente sobre o corpo do aliado.",
+    "custoReiatsu": 5
   },
   {
-    "id": "k18",
+    "id": "b18-tenmon",
     "numero": 18,
-    "nome": "Kaidō #18 — Kōmyaku (Veias de Luz)",
-    "cat": "Kaidō",
-    "custoReiatsu": 14,
-    "nivel": "Avançado",
-    "desc": "Restaura redes neurais e espirituais destruídas por técnicas de alta voltagem ou veneno.",
-    "incant": "Que a luz percorra cada caminho. Que nenhum fluxo permaneça perdido."
+    "cat": "Bakudō",
+    "nome": "Bakudō #18 — Tenmon (Portão Celestial)",
+    "incant": "Entre dois mundos existe uma porta. Que ela se abra apenas diante daquele que reconheço.",
+    "desc": "Cria uma barreira seletiva que permite a passagem apenas de pessoas autorizadas.",
+    "custoReiatsu": 5
   },
   {
-    "id": "k19",
+    "id": "b19-metsubo-ori",
     "numero": 19,
-    "nome": "Kaidō #19 — Saisei Hana (Lótus da Regeneração)",
-    "cat": "Kaidō",
-    "custoReiatsu": 16,
-    "nivel": "Mestre",
-    "desc": "Acelera profundamente a reconstrução celular de ossos e órgãos vitais com Reiryoku sustentado.",
-    "incant": "Daquilo que foi perdido, faça nascer novamente a forma."
+    "cat": "Bakudō",
+    "nome": "Bakudō #19 — Metsubō no Ori (Gaiola da Ruína)",
+    "incant": "Círculo sobre círculo, parede sobre parede. Fechem-se sobre aquele que ousa permanecer.",
+    "desc": "Ergue várias camadas concêntricas de barreiras em jaula ao redor do inimigo.",
+    "custoReiatsu": 6
   },
   {
-    "id": "k20",
+    "id": "b20-hyakuren-kekkai",
     "numero": 20,
-    "nome": "Kaidō #20 — Shōmei Seikai (Luz da Vida Primordial)",
+    "cat": "Bakudō",
+    "nome": "Bakudō #20 — Hyakuren Kekkai (Barreira das Cem Camadas)",
+    "incant": "Que cada camada seja uma muralha, que cada muralha seja uma promessa. Ergam-se e resistam.",
+    "desc": "Forma múltiplas barreiras espirituais sobrepostas de altíssima absorção de dano.",
+    "custoReiatsu": 6
+  },
+  {
+    "id": "b26-kyokko",
+    "numero": 26,
+    "cat": "Bakudō",
+    "nome": "Bakudō #26 — Kyokkō (Luz Curva)",
+    "incant": "—",
+    "desc": "Dobra a luz e a percepção espiritual ao redor do conjurador, tornando-o imperceptível.",
+    "custoReiatsu": 6
+  },
+  {
+    "id": "b30-shitotsu-sansen",
+    "numero": 30,
+    "cat": "Bakudō",
+    "nome": "Bakudō #30 — Shitotsu Sansen (Três Raios de Perfuração)",
+    "incant": "—",
+    "desc": "Dispara três feixes triangulares que cravam o alvo contra uma superfície pelos membros.",
+    "custoReiatsu": 7
+  },
+  {
+    "id": "b39-enkosen",
+    "numero": 39,
+    "cat": "Bakudō",
+    "nome": "Bakudō #39 — Enkōsen (Escudo Giratório)",
+    "incant": "—",
+    "desc": "Cria um escudo condensado e rotativo em forma de disco diante da mão.",
+    "custoReiatsu": 7
+  },
+  {
+    "id": "b61-rikujo-koro",
+    "numero": 61,
+    "cat": "Bakudō",
+    "nome": "Bakudō #61 — Rikujō Kōrō (Prisão das Seis Varas de Luz)",
+    "incant": "Carruagem do trovão, ponte da roda giratória. Com a luz, divida este em seis!",
+    "desc": "Seis feixes dourados de luz cravam-se na cintura do adversário, imobilizando-o totalmente.",
+    "custoReiatsu": 11
+  },
+  {
+    "id": "b81-danku",
+    "numero": 81,
+    "cat": "Bakudō",
+    "nome": "Bakudō #81 — Dankū (Muro de Rejeição)",
+    "incant": "—",
+    "desc": "Cria uma parede translúcida monumental capaz de anular qualquer Hadō de nível 89 ou inferior.",
+    "custoReiatsu": 16
+  },
+  {
+    "id": "k1-shomei",
+    "numero": 1,
     "cat": "Kaidō",
-    "custoReiatsu": 20,
-    "nivel": "Classe Especial",
-    "desc": "O pináculo da medicina espiritual do 4º Esquadrão capaz de salvar um guerreiro à beira do abismo.",
-    "incant": "Luz que atravessa corpo e alma, encontre aquilo que ainda pode ser salvo."
+    "nome": "Kaidō #1 — Shōmei (Iluminação)",
+    "incant": "Luz suave, encontre aquilo que foi ferido.",
+    "desc": "Revela ferimentos internos ocultos e perturbações no fluxo de Reishi do paciente.",
+    "custoReiatsu": 1
+  },
+  {
+    "id": "k2-yasuragi",
+    "numero": 2,
+    "cat": "Kaidō",
+    "nome": "Kaidō #2 — Yasuragi (Tranquilidade)",
+    "incant": "Respire. Silencie a dor. Deixe o espírito encontrar repouso.",
+    "desc": "Reduz dores agudas e choque físico, mantendo o aliado estável e consciente.",
+    "custoReiatsu": 2
+  },
+  {
+    "id": "k3-seimei-ito",
+    "numero": 3,
+    "cat": "Kaidō",
+    "nome": "Kaidō #3 — Seimei Ito (Fio Vital)",
+    "incant": "Fio que une corpo e alma, permaneça firme.",
+    "desc": "Estabiliza emergencialmente a conexão entre alma e corpo de um aliado ferido.",
+    "custoReiatsu": 2
+  },
+  {
+    "id": "k4-komyo",
+    "numero": 4,
+    "cat": "Kaidō",
+    "nome": "Kaidō #4 — Kōmyō (Luz Serena)",
+    "incant": "Onde existe ferida, que exista luz. Onde existe fraqueza, que exista calma.",
+    "desc": "Acelera a cicatrização de cortes leves e queimaduras superficiais.",
+    "custoReiatsu": 3
+  },
+  {
+    "id": "k5-shinkei",
+    "numero": 5,
+    "cat": "Kaidō",
+    "nome": "Kaidō #5 — Shinkei (Nervo)",
+    "incant": "Desperte os caminhos adormecidos e faça o corpo lembrar seus próprios movimentos.",
+    "desc": "Reativa conexões neurais e musculares prejudicadas por paralisia ou trauma.",
+    "custoReiatsu": 3
+  },
+  {
+    "id": "k6-seika",
+    "numero": 6,
+    "cat": "Kaidō",
+    "nome": "Kaidō #6 — Seika (Purificação)",
+    "incant": "Aquilo que não pertence ao corpo, deixe-o. Aquilo que pertence, permaneça.",
+    "desc": "Remove toxinas, venenos e impurezas espirituais retidas nos tecidos.",
+    "custoReiatsu": 4
+  },
+  {
+    "id": "k7-kokyu",
+    "numero": 7,
+    "cat": "Kaidō",
+    "nome": "Kaidō #7 — Kokyū (Respiração)",
+    "incant": "Ar entre os mundos, entre neste corpo e devolva-lhe o ritmo.",
+    "desc": "Restaura o ritmo pulmonar e normaliza o fluxo de respiração espiritual.",
+    "custoReiatsu": 4
+  },
+  {
+    "id": "k8-shirohana",
+    "numero": 8,
+    "cat": "Kaidō",
+    "nome": "Kaidō #8 — Shirohana (Flor Branca)",
+    "incant": "Pequena flor, abra-se sobre a ferida e carregue consigo a dor.",
+    "desc": "Materializa uma aura floral sobre lesões pontuais para acelerar recuperação acelerada.",
+    "custoReiatsu": 4
+  },
+  {
+    "id": "k9-kekkai-seimei",
+    "numero": 9,
+    "cat": "Kaidō",
+    "nome": "Kaidō #9 — Kekkai Seimei (Barreira Vital)",
+    "incant": "Erga-se ao redor da vida. Não permita que a ferida avance.",
+    "desc": "Cria um selo estéril ao redor do ferimento, estancando hemorragias e impedindo infecções.",
+    "custoReiatsu": 5
+  },
+  {
+    "id": "k10-chiyu",
+    "numero": 10,
+    "cat": "Kaidō",
+    "nome": "Kaidō #10 — Chiyu (Cura)",
+    "incant": "Corpo ferido, espírito cansado. Reúna aquilo que ainda permanece.",
+    "desc": "Acelera significativamente a regeneração de ferimentos moderados e lacerações.",
+    "custoReiatsu": 5
+  },
+  {
+    "id": "k11-seimei-koro",
+    "numero": 11,
+    "cat": "Kaidō",
+    "nome": "Kaidō #11 — Seimei Kōro (Caminho Vital)",
+    "incant": "Que cada caminho volte a encontrar seu destino. Que cada fluxo retorne ao seu curso.",
+    "desc": "Reorganiza o fluxo de Reishi nos canais espirituais após supressão ou choque.",
+    "custoReiatsu": 6
+  },
+  {
+    "id": "k12-koshin",
+    "numero": 12,
+    "cat": "Kaidō",
+    "nome": "Kaidō #12 — Kōshin (Renovação)",
+    "incant": "Aquilo que foi gasto, encontre repouso. Aquilo que foi quebrado, encontre forma.",
+    "desc": "Revitaliza o vigor físico e repõe parte da energia espiritual gasta.",
+    "custoReiatsu": 6
+  },
+  {
+    "id": "k13-reisho",
+    "numero": 13,
+    "cat": "Kaidō",
+    "nome": "Kaidō #13 — Reishō (Pulso Espiritual)",
+    "incant": "Um pulso chama outro. Que a alma encontre seu próprio ritmo.",
+    "desc": "Monitora e estabiliza arritmias e descompassos no Hakusui do paciente.",
+    "custoReiatsu": 6
+  },
+  {
+    "id": "k14-shoka-cura",
+    "numero": 14,
+    "cat": "Kaidō",
+    "nome": "Kaidō #14 — Shōka (Purificação da Ferida)",
+    "incant": "Dor que permanece, deixe o corpo. Energia estranha, abandone a carne.",
+    "desc": "Dissolve miasmas e resíduos corrosivos de Reiatsu hostil em ferimentos.",
+    "custoReiatsu": 7
+  },
+  {
+    "id": "k15-meimei",
+    "numero": 15,
+    "cat": "Kaidō",
+    "nome": "Kaidō #15 — Meimei (Pulso de Vida)",
+    "incant": "Enquanto houver chama, haverá caminho. Enquanto houver espírito, haverá retorno.",
+    "desc": "Estabiliza emergencialmente pacientes à beira da derrota ou inconsciência.",
+    "custoReiatsu": 7
+  },
+  {
+    "id": "k16-hikari-ito",
+    "numero": 16,
+    "cat": "Kaidō",
+    "nome": "Kaidō #16 — Hikari no Ito (Fios de Luz)",
+    "incant": "Fios de luz, atravessem a ferida. Unam aquilo que foi separado.",
+    "desc": "Tecelagem cirúrgica de Reishi que sutura músculos e tendões rompidos.",
+    "custoReiatsu": 8
+  },
+  {
+    "id": "k17-seishin-nagashi",
+    "numero": 17,
+    "cat": "Kaidō",
+    "nome": "Kaidō #17 — Seishin Nagashi (Fluxo Espiritual)",
+    "incant": "Que minha energia encontre teu caminho e leve consigo aquilo que pesa.",
+    "desc": "Transfere uma cota direta de Reiatsu purificada do conjurador para o receptor.",
+    "custoReiatsu": 8
+  },
+  {
+    "id": "k18-komyaku",
+    "numero": 18,
+    "cat": "Kaidō",
+    "nome": "Kaidō #18 — Kōmyaku (Veias de Luz)",
+    "incant": "Que a luz percorra cada caminho. Que nenhum fluxo permaneça perdido.",
+    "desc": "Restaura ramificações profundas do sistema circulatório espiritual.",
+    "custoReiatsu": 9
+  },
+  {
+    "id": "k19-saisei-hana",
+    "numero": 19,
+    "cat": "Kaidō",
+    "nome": "Kaidō #19 — Saisei Hana (Flor da Regeneração)",
+    "incant": "Daquilo que foi perdido, faça nascer novamente a forma.",
+    "desc": "Regenera ferimentos graves e tecidos destruídos sob concentração contínua.",
+    "custoReiatsu": 10
+  },
+  {
+    "id": "k20-shomei-seikai",
+    "numero": 20,
+    "cat": "Kaidō",
+    "nome": "Kaidō #20 — Shōmei Seikai (Luz da Vida)",
+    "incant": "Luz que atravessa corpo e alma, encontre aquilo que ainda pode ser salvo.",
+    "desc": "Feitiço supremo do 4º Esquadrão para salvar Shinigamis em estado crítico.",
+    "custoReiatsu": 12
+  }
+];
+const PATCH_NOTES_HISTORY = [
+  {
+    "versao": "5.0",
+    "titulo": "A Grande Gênese das Almas & Novo Regulamento Seireitei",
+    "data": "23 de Agosto de 2026",
+    "destaque": "Motor ZGE v5.0, 50 Zanpakutōs Canônicas, Grimório de 60+ Kidōs com Kaidō Completo, Chat dos Shinigamis e Reformulação da Arena.",
+    "banner": "assets/bleach-banner.png",
+    "resumo": "Uma atualização monumental que introduz o motor de IA generativa ZGE V5.0 de 4 caminhos com preservação do Soul DNA, integração do sistema de turnos na Arena de Duelos com botão de reset, chat global em tempo real e compêndio definitivo de regras e Kidōs.",
+    "secoes": [
+      {
+        "tipo": "regras",
+        "titulo": "📜 Regulamento Base & Power Scaling Oficial",
+        "itens": [
+          "✦ **Power Scaling Oficial**: Padronização dos 9 patamares: 1–10 (Inexperiente), 11–30 (Iniciante), 31–60 (Treinado), 61–100 (Experiente), 101–150 (Elite), 151–250 (Alto Nível), 251–400 (Monstruoso), 401–600 (Lendário), 601+ (Transcendente).",
+          "✦ **Regra de Combate 1d6**: Combate baseado na comparação lógica de Atributos + Técnicas + Narrativa. Rolagens de 1d6 acontecem apenas em dúvida real (1–2: Falha, 3–4: Sucesso Parcial, 5–6: Sucesso).",
+          "✦ **Fadiga por Treinamento OFF**: Máximo de 3 períodos por dia. 2º treino diário aplica −5% nos atributos treinados; 3º treino aplica −15% e bloqueia Miscelâneas no dia. O descanso do dia seguinte remove toda a fadiga.",
+          "✦ **Regras de Raça**: Shinigamis nativos começam com 4 Kidōs básicos; Shinigamis Ex-Humanos aprendem Kidō ao longo da história sem bônus numéricos desmedidos."
+        ]
+      },
+      {
+        "tipo": "novo",
+        "titulo": "🗡️ Motor ZGE V5.0 & 50 Arquétipos Canônicos",
+        "itens": [
+          "✦ **4 Caminhos Espirituais Simultâneos**: O gerador agora produz 4 interpretações da mesma alma (1. Elemental/Temperamento ~45%, 2. Conceitual/Progressivo ~20%, 3. Compensatório/Complementar, 4. Opositivo/Experimental).",
+          "✦ **Bankai Evolution Engine**: Toda Bankai identifica o limite da Shikai, o Ponto de Ruptura e evolui o princípio conceitual em vez de apenas inflar números.",
+          "✦ **Anti-Duplicação Estrita**: Assinatura semântica única e índice de similaridade (0–30% Liberado, 31–60% Permitido com mecânica distinta, 61–80% Reformulação, 81–100% Bloqueio).",
+          "✦ **Catálogo dos 50 Mestres**: Ingestão completa de Kurotsubaki, Akagane, Suisen, Hoshikuzu, Kōriame, Kagamibana, Mukade, Raimei, Shirogane e outros 41 espíritos canônicos."
+        ]
+      },
+      {
+        "tipo": "social",
+        "titulo": "💬 Chat Global dos Shinigamis & Arena de Turnos",
+        "itens": [
+          "✦ **Chat dos Shinigamis em Tempo Real**: Canal de interação direta entre todos os jogadores logados e ADMs, com sincronização em nuvem e histórico contínuo.",
+          "✦ **Histórico de Turnos da Arena**: Registro cronológico de ações, decisões dos juízes e rolagens públicas com botão dedicado de **Resetar Duelo**.",
+          "✦ **Acesso Sutil da Administração**: O login do ADM foi transformado em um selo estético discreto (`❖`) no topo da interface para não poluir a imersão dos jogadores."
+        ]
+      },
+      {
+        "tipo": "buffs",
+        "titulo": "▲ Melhorias & Buffs",
+        "itens": [
+          "▲ **Grimório de Kaidō Completo**: Adicionados 20 feitiços médicos de tratamento, regeneração celular e restauração de Reiatsu com seus respectivos encantamentos poéticos.",
+          "▲ **Distribuidor de Recompensas no ADM**: Permite conceder pontos de atributos diretamente em Pressão, Força, Velocidade, Resiliência ou Pontos Livres com atalhos de +1, +2, +5, +10 e +15.",
+          "▲ **Performance de Salvamento**: Serialização enxuta do armazenamento local eliminando mensagens de erro de cota no navegador."
+        ]
+      }
+    ]
+  },
+  {
+    "versao": "4.2",
+    "titulo": "Ressonância do Reishi & O Baú Espiritual",
+    "data": "18 de Agosto de 2026",
+    "destaque": "Animação de baú com mecânica de suspense (~7s), sintetizador sonoro de Shikai e Bankai, selamento permanente de personalidade.",
+    "banner": "assets/ichigo-orange.png",
+    "resumo": "Introdução do sistema de animação visual para abertura de roletas e gacha com probabilidade de tensão crítica de Reiatsu, além da implementação da trava imutável do DNA da alma.",
+    "secoes": [
+      {
+        "tipo": "novo",
+        "titulo": "✦ Novidades do Gacha",
+        "itens": [
+          "✦ **Baú Espiritual 3D**: Animação de convergência de partículas de Reishi com runas rotativas e quebra de selos.",
+          "✦ **Mecânica de Suspense (~28%)**: Em giros de alta tensão, o baú demora ~7s adicionais com tela tremendo e áudio pulsante.",
+          "✦ **Trava de Personalidade**: Campo guiado de psicologia com botão de selamento definitivo e imutável para jogadores."
+        ]
+      },
+      {
+        "tipo": "ajustes",
+        "titulo": "⚙️ Áudio & Efeitos Sonoros",
+        "itens": [
+          "⚙️ Síntese em tempo real com Web Audio API para carregamento e revelação de Shikai (`shikai_charge`, `shikai_reveal`) e Bankai (`bankai_charge`, `bankai_reveal`)."
+        ]
+      }
+    ]
+  },
+  {
+    "versao": "4.0",
+    "titulo": "O Despertar dos 4 Caminhos",
+    "data": "10 de Agosto de 2026",
+    "destaque": "Criação do motor de 4 caminhos simultâneos para Shikai e Bankai com complexidade de 1 a 10.",
+    "banner": "assets/ichigo-moon.png",
+    "resumo": "A transição de sorteios genéricos de Zanpakutō para um ritual autoral de manifestação espiritual guiado pela personalidade do Shinigami.",
+    "secoes": [
+      {
+        "tipo": "novo",
+        "titulo": "✦ Arquitetura de Caminhos",
+        "itens": [
+          "✦ Separação entre Caminho Elemental, Caminho Conceitual, Caminho Compensatório e Caminho Opositivo.",
+          "✦ Gráficos com barras de 1 a 10 para Potência, Alcance, Complexidade, Versatilidade e Custo de Reiatsu."
+        ]
+      }
+    ]
+  },
+  {
+    "versao": "3.5",
+    "titulo": "Ajuste de Power Scaling & Fadiga de Treino",
+    "data": "01 de Agosto de 2026",
+    "destaque": "Regulamentação dos 3 períodos de treino diários em OFF e penalidades de fadiga temporária.",
+    "banner": "assets/bleach-banner.png",
+    "resumo": "Implementação de freios narrativos para impedir inflação desenfreada de atributos em poucos dias de RPG.",
+    "secoes": [
+      {
+        "tipo": "nerfs",
+        "titulo": "▼ Controle de Progressão",
+        "itens": [
+          "▼ **Teto de Treino Diário**: Máximo de 9 pontos conquistáveis por dia (3 períodos excelentes de até 3 pontos).",
+          "▼ **Penalidades de Fadiga**: -5% no 2º treino e -15% no 3º treino nos atributos focados.",
+          "▼ **Restrição de Miscelânea**: Personagens com 3 treinos no dia ficam impossibilitados de recolher drops de cenas cotidianas."
+        ]
+      }
+    ]
+  },
+  {
+    "versao": "3.0",
+    "titulo": "Separação de Roletas & Especialidades Marciais",
+    "data": "20 de Julho de 2026",
+    "destaque": "Divisão entre Giros Comuns e Giros Especiais com tabela de porcentagens estritas.",
+    "banner": "assets/ichigo-orange.png",
+    "resumo": "Criação de pools de recompensas distintos para treinos comuns e missões nobres de grande escala.",
+    "secoes": [
+      {
+        "tipo": "novo",
+        "titulo": "✦ Sorteios Segmentados",
+        "itens": [
+          "✦ **Pool Comum**: 65% Básico (+1/+2 pts), 22% Incomum (+3/+4 pts), 9% Raro (+5/+7 pts), 3.5% Épico (+8/+11 pts), 0.5% Lendário (+14/+18 pts).",
+          "✦ **Pool Especial**: Elixires, Tomos de Hadō, Relíquias Shihōin e Missão Narrativa Suprema de Despertar Único (1%)."
+        ]
+      }
+    ]
+  },
+  {
+    "versao": "2.5",
+    "titulo": "Grimório de Hadō & Bakudō",
+    "data": "05 de Julho de 2026",
+    "destaque": "Compilação dos primeiros 40 feitiços canônicos de Hadō e Bakudō no sistema.",
+    "banner": "assets/ichigo-moon.png",
+    "resumo": "Inclusão do catálogo de feitiços com cálculo de custos de Reiatsu e limites por cena.",
+    "secoes": [
+      {
+        "tipo": "regras",
+        "titulo": "📜 Mecânica de Kidō",
+        "itens": [
+          "✦ Cálculo do teto de conjuração por cena através da fórmula `Math.max(3, Math.floor(Pressão / 7) + 1)`.",
+          "✦ Inclusão de encantamentos completos para Hadō #31, #33, #73 e #90."
+        ]
+      }
+    ]
+  },
+  {
+    "versao": "2.0",
+    "titulo": "Sincronização em Nuvem Firebase",
+    "data": "15 de Junho de 2026",
+    "destaque": "Integração em tempo real com Firebase Realtime Database e gestão multiusuário.",
+    "banner": "assets/bleach-banner.png",
+    "resumo": "Permitiu que mestres e jogadores acessassem fichas simultaneamente com persistência contínua na nuvem.",
+    "secoes": [
+      {
+        "tipo": "novo",
+        "titulo": "✦ Infraestrutura Cloud",
+        "itens": [
+          "✦ Sincronização periódica em background de fichas, combates e logs de dados.",
+          "✦ Revogação instantânea de sessões no navegador quando a ficha é excluída pelo ADM."
+        ]
+      }
+    ]
+  },
+  {
+    "versao": "1.5",
+    "titulo": "Arena de Duelos & Painel de Juiz",
+    "data": "28 de Maio de 2026",
+    "destaque": "Lançamento da Arena com status dos combatentes e registro de decisões narrativas.",
+    "banner": "assets/ichigo-orange.png",
+    "resumo": "Espaço dedicado para combates supervisionados por narradores com apoio de rolagens públicas de dados.",
+    "secoes": [
+      {
+        "tipo": "novo",
+        "titulo": "✦ Recursos da Arena",
+        "itens": [
+          "✦ Comparativo visual de atributos entre dois lutadores.",
+          "✦ Log de arbitragem com decisões oficiais gravadas na linha do tempo."
+        ]
+      }
+    ]
+  },
+  {
+    "versao": "1.2",
+    "titulo": "Padronização de Atributos & Estados",
+    "data": "10 de Maio de 2026",
+    "destaque": "Definição dos 4 atributos base (10 iniciais + 20 livres) e 4 estados de combate.",
+    "banner": "assets/ichigo-moon.png",
+    "resumo": "Estabeleceu a regra fundamental de que o número na ficha é o atributo real, sem multiplicadores ocultos.",
+    "secoes": [
+      {
+        "tipo": "regras",
+        "titulo": "📜 Atributos e Saúde",
+        "itens": [
+          "✦ Definição dos 4 atributos: Pressão Espiritual, Força, Velocidade e Resiliência.",
+          "✦ Substituição de pontos de vida por 4 estados: Inteiro, Ferido, Debilitado e Derrotado."
+        ]
+      }
+    ]
+  },
+  {
+    "versao": "1.0",
+    "titulo": "Fundação da Sociedade das Almas RPG",
+    "data": "01 de Maio de 2026",
+    "destaque": "Lançamento oficial da plataforma de fichas e fichário dos Shinigamis.",
+    "banner": "assets/bleach-banner.png",
+    "resumo": "O nascimento do sistema digital do Bleach RPG com autenticação por código de acesso, ranqueamentos de honra e histórico de personagens.",
+    "secoes": [
+      {
+        "tipo": "novo",
+        "titulo": "✦ Fundação do Sistema",
+        "itens": [
+          "✦ Criação da arquitetura de fichas com suporte a foto de perfil, dados civis e técnicas.",
+          "✦ Rankings automatizados de Honra (Média Física e Pressão Espiritual)."
+        ]
+      }
+    ]
   }
 ];
 
-// =========================================================================
-// MOTOR DE INDIVIDUALIZAÇÃO ESPIRITUAL (33 REGRAS)
-// =========================================================================
+// Web Audio API Synthesizer
+let audioCtx = null;
+
+function getAudioContext() {
+  if (!audioCtx) {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (AudioContextClass) {
+      audioCtx = new AudioContextClass();
+    }
+  }
+  if (audioCtx && audioCtx.state === 'suspended') {
+    audioCtx.resume().catch(() => {});
+  }
+  return audioCtx;
+}
+
+function playReiatsuSound(type = 'hum') {
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
+    if (type === 'shikai_charge') {
+      [330, 440, 554.37, 659.25, 880].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = i % 2 === 0 ? 'sine' : 'triangle';
+        osc.frequency.setValueAtTime(freq * 0.8, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(freq * 1.25, ctx.currentTime + 0.35);
+        gain.gain.setValueAtTime(0.01, ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.12 / (i + 1), ctx.currentTime + 0.1);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.45);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.45);
+      });
+    } else if (type === 'bankai_charge') {
+      const sub = ctx.createOscillator();
+      const subGain = ctx.createGain();
+      sub.type = 'sawtooth';
+      sub.frequency.setValueAtTime(80, ctx.currentTime);
+      sub.frequency.exponentialRampToValueAtTime(38, ctx.currentTime + 0.5);
+      subGain.gain.setValueAtTime(0.3, ctx.currentTime);
+      subGain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.55);
+      sub.connect(subGain);
+      subGain.connect(ctx.destination);
+      sub.start();
+      sub.stop(ctx.currentTime + 0.55);
+
+      [220, 277, 330, 440].forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.05);
+        osc.frequency.exponentialRampToValueAtTime(freq * 1.5, ctx.currentTime + 0.45);
+        g.gain.setValueAtTime(0.15, ctx.currentTime + idx * 0.05);
+        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.55);
+        osc.connect(g);
+        g.connect(ctx.destination);
+        osc.start(ctx.currentTime + idx * 0.05);
+        osc.stop(ctx.currentTime + 0.55);
+      });
+    } else if (type === 'shikai' || type === 'shikai_reveal') {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1760, ctx.currentTime + 0.15);
+      osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.8);
+      gain.gain.setValueAtTime(0.35, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.8);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.8);
+
+      [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = 'triangle';
+        o.frequency.setValueAtTime(freq, ctx.currentTime + 0.08 + i * 0.06);
+        g.gain.setValueAtTime(0.2, ctx.currentTime + 0.08 + i * 0.06);
+        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08 + i * 0.06 + 0.9);
+        o.connect(g);
+        g.connect(ctx.destination);
+        o.start(ctx.currentTime + 0.08 + i * 0.06);
+        o.stop(ctx.currentTime + 0.08 + i * 0.06 + 0.9);
+      });
+    } else if (type === 'bankai' || type === 'bankai_reveal') {
+      const sub = ctx.createOscillator();
+      const subGain = ctx.createGain();
+      sub.type = 'sawtooth';
+      sub.frequency.setValueAtTime(120, ctx.currentTime);
+      sub.frequency.exponentialRampToValueAtTime(30, ctx.currentTime + 1.2);
+      subGain.gain.setValueAtTime(0.45, ctx.currentTime);
+      subGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.3);
+      sub.connect(subGain);
+      subGain.connect(ctx.destination);
+      sub.start();
+      sub.stop(ctx.currentTime + 1.3);
+
+      [130.81, 164.81, 196.00, 261.63, 329.63, 523.25].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = i < 2 ? 'sawtooth' : 'sine';
+        osc.frequency.setValueAtTime(freq, ctx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.25 / (i * 0.5 + 1), ctx.currentTime + 0.1);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.6);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(ctx.currentTime + 0.1);
+        osc.stop(ctx.currentTime + 1.6);
+      });
+    } else if (type === 'gacha_box_charge') {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(200, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(500, ctx.currentTime + 0.15);
+      gain.gain.setValueAtTime(0.12, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.18);
+    } else if (type === 'gacha_box_suspense') {
+      const osc = ctx.createOscillator();
+      const lfo = ctx.createOscillator();
+      const lfoG = ctx.createGain();
+      const g = ctx.createGain();
+
+      lfo.frequency.setValueAtTime(18, ctx.currentTime);
+      lfoG.gain.setValueAtTime(40, ctx.currentTime);
+      lfo.connect(lfoG);
+
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(180, ctx.currentTime);
+      lfoG.connect(osc.frequency);
+
+      g.gain.setValueAtTime(0.18, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+
+      osc.connect(g);
+      g.connect(ctx.destination);
+      lfo.start();
+      osc.start();
+      lfo.stop(ctx.currentTime + 0.35);
+      osc.stop(ctx.currentTime + 0.35);
+    } else if (type === 'gacha_box_shatter') {
+      [1200, 1800, 2400, 450].forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+        osc.type = idx === 3 ? 'sawtooth' : 'sine';
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(idx === 3 ? 60 : 300, ctx.currentTime + 0.45);
+        g.gain.setValueAtTime(0.28, ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+        osc.connect(g);
+        g.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.5);
+      });
+    } else if (type === 'hum') {
+      const osc = ctx.createOscillator();
+      const lfo = ctx.createOscillator();
+      const lfoGain = ctx.createGain();
+      const gain = ctx.createGain();
+
+      lfo.frequency.setValueAtTime(14, ctx.currentTime);
+      lfoGain.gain.setValueAtTime(25, ctx.currentTime);
+      lfo.connect(lfoGain);
+
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(150, ctx.currentTime);
+      lfoGain.connect(osc.frequency);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      gain.gain.setValueAtTime(0.09, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+
+      lfo.start();
+      osc.start();
+      lfo.stop(ctx.currentTime + 0.35);
+      osc.stop(ctx.currentTime + 0.35);
+    } else if (type === 'shatter') {
+      const osc1 = ctx.createOscillator();
+      const osc2 = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc1.connect(gain);
+      osc2.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc1.type = 'sawtooth';
+      osc1.frequency.setValueAtTime(1600, ctx.currentTime);
+      osc1.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.45);
+
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(2200, ctx.currentTime);
+      osc2.frequency.exponentialRampToValueAtTime(350, ctx.currentTime + 0.5);
+
+      gain.gain.setValueAtTime(0.28, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+
+      osc1.start();
+      osc2.start();
+      osc1.stop(ctx.currentTime + 0.5);
+      osc2.stop(ctx.currentTime + 0.5);
+    } else if (type === 'roll') {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(150, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(650, ctx.currentTime + 0.15);
+      gain.gain.setValueAtTime(0.15, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.35);
+    } else if (type === 'win') {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(300, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.5);
+      gain.gain.setValueAtTime(0.25, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.6);
+    } else if (type === 'kido') {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(250, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.3);
+      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.35);
+    }
+  } catch (e) {}
+}
+
+const DEFAULT_DB = {
+  superAdminUsuario: "Malu123",
+  superAdminSenha: "Sociedade2026",
+  superAdminNome: "ADM Máximo (Comandante Supremo)",
+  firebaseUrl: "https://bleach-rpg-6894c-default-rtdb.firebaseio.com/",
+  subAdms: [
+    { id: "adm-kisuke", usuario: "kisuke", senha: "123", nome: "Mestre Kisuke", cargo: "Avaliador de Cenas & Fichas", charId: "rukia-002" }
+  ],
+  registrosTarefasAdm: [
+    { id: "t1", admNome: "Mestre Kisuke", tarefa: "Avaliação de Cenas de Arco (+8 pontos)", pontosGanhos: 8, data: "21/08/2026 às 14:00" }
+  ],
+  combatesArena: [
+    {
+      id: "arena-1",
+      p1Id: "ren-001",
+      p2Id: "rukia-002",
+      estadoP1: "Inteiro",
+      estadoP2: "Ferido",
+      turnos: [],
+      finalizado: false
+    }
+  ],
+  rolagensDadosPublicas: [
+    { id: "d1", autor: "Mestre Kisuke", personagem: "Kurosaki Ren", dado: "d6", resultado: 6, categoria: "Sucesso Total (5–6)", data: "22/08/2026 às 15:35" }
+  ],
+  mensagensChat: [
+    {
+      id: "msg-welcome-1",
+      autorNome: "Comandante Supremo",
+      charFoto: "assets/ichigo-moon.png",
+      esquadrao: "1º Esquadrão",
+      texto: "Bem-vindos ao canal de comunicação direta da Sociedade das Almas. Mantenham o decoro e compartilhem suas jornadas!",
+      timestamp: "10:00",
+      data: "Hoje"
+    }
+  ],
+  zanpakutosVinculadas: [],
+  personagens: [
+    {
+      id: "ren-001",
+      nome: "Kurosaki Ren",
+      foto: "assets/ichigo-orange.png",
+      whatsapp: "11988887777",
+      codigo: "REN-8921",
+      raca: "Shinigami",
+      esquadrao: "11º Esquadrão",
+      faceclaim: "Kurosaki Ichigo",
+      idadePlayer: "22",
+      aniversarioPlayer: "15/07",
+      idadeChar: "18",
+      aniversarioChar: "15/07",
+      pontosDisponiveis: 5,
+      sorteiosComunsRestantes: 2,
+      sorteiosEspeciaisRestantes: 1,
+      sorteiosDrops: [],
+      permissoes: { shikaiLiberada: true, bankaiLiberada: false },
+      atributos: { pressao: 45, forca: 30, velocidade: 60, resiliencia: 25 },
+      kidosConhecidos: [
+        { id: "h4", numero: 4, nome: "Byakurai", cat: "Hadō", custoReiatsu: 3 },
+        { id: "b1", numero: 1, nome: "Sai", cat: "Bakudō", custoReiatsu: 2 }
+      ],
+      tecnicas: [
+        { id: "t-byak", nome: "Hadō #4 — Byakurai", categoria: "Hadō" },
+        { id: "t-sai", nome: "Bakudō #1 — Sai", categoria: "Bakudō" }
+      ],
+      personalidade: {
+        texto: "Guerreiro analítico e leal. Prefere combater com velocidade e inteligência tática, arriscando tudo para proteger seus companheiros.",
+        virtudes: "Foco inabalável, determinação e lealdade",
+        defeitos: "Dificuldade de confiar e pedir ajuda",
+        desejos: "Tornar-se forte o bastante para que ninguém sob sua guarda caia",
+        medos: "A impotência diante da morte de um amigo",
+        conflitos: "Obedecer ordens militares versus seguir sua honra pessoal",
+        estiloCombate: "Velocidade tridimensional e cortes precisos"
+      },
+      personalidadeTravada: false,
+      cenaDespertarShikai: "",
+      cenaDespertarBankai: "",
+      zanpakuto: {
+        nome: "Em despertar",
+        fotoShikai: "assets/ichigo-orange.png",
+        fotoBankai: "assets/ichigo-moon.png",
+        shikaiAtiva: null,
+        bankaiAtiva: null,
+        notas: ""
+      },
+      estado: "Inteiro",
+      treinosHoje: 0,
+      historico: [
+        { id: "h1", data: "20/08/2026 às 10:00", texto: "Ficha oficial aprovada pela Administração." }
+      ],
+    }
+  ]
+};
+
+function calculateRankings(personagens) {
+  const rankFisico = [...personagens].map(p => {
+    const f = Number(p.atributos?.forca || 0);
+    const v = Number(p.atributos?.velocidade || 0);
+    const r = Number(p.atributos?.resiliencia || 0);
+    const score = Number(((f + v + r) / 3).toFixed(1));
+    return { id: p.id, nome: p.nome, foto: p.foto, score, forca: f, vel: v, res: r };
+  }).sort((a, b) => b.score - a.score);
+
+  const rankPressao = [...personagens].map(p => {
+    const score = Number(p.atributos?.pressao || 0);
+    return { id: p.id, nome: p.nome, foto: p.foto, score };
+  }).sort((a, b) => b.score - a.score);
+
+  return { rankFisico, rankPressao };
+}
+
+
 // =========================================================================
 // BLEACH RPG — MOTOR DEFINITIVO DE INDIVIDUALIZAÇÃO ESPIRITUAL (33 REGRAS)
 // Geração de 4 Shikais + 4 Bankais por Personagem via DNA Espiritual & Exclusividade
@@ -3158,373 +2851,6 @@ function gerar3OpcoesBankaiAI(personagem, shikaiAtiva, dbPersonagens = [], dbZan
 
 
 
-function getPowerTier(statVal) {
-  const val = statVal > 150 ? Math.round(statVal / 4) : statVal;
-  if (val <= 10) return { title: "Inexperiente", patamar: "1–10", color: C.muted };
-  if (val <= 30) return { title: "Iniciante", patamar: "11–30", color: C.green };
-  if (val <= 60) return { title: "Treinado", patamar: "31–60", color: C.blue };
-  if (val <= 100) return { title: "Veterano", patamar: "61–100", color: C.purple };
-  if (val <= 150) return { title: "Mestre", patamar: "101–150", color: C.yellow };
-  return { title: "Transcendental", patamar: "150+", color: "#FFD700" };
-}
-
-function nowStr() {
-  const d = new Date();
-  return `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()} às ${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
-}
-
-function uid() {
-  return 'u_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
-}
-
-function maskWhats(w) {
-  if (!w) return "—";
-  const cleaned = w.replace(/\D/g, "");
-  if (cleaned.length < 4) return cleaned;
-  return "•••• " + cleaned.slice(-4);
-}
-
-// Advanced Web Audio API Sound Effects
-function playReiatsuSound(type = 'roll') {
-  try {
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    if (!AudioCtx) return;
-    const ctx = new AudioCtx();
-
-    if (type === 'shikai_charge') {
-      [330, 440, 554.37, 659.25, 880].forEach((freq, i) => {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = i % 2 === 0 ? 'sine' : 'triangle';
-        osc.frequency.setValueAtTime(freq * 0.8, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(freq * 1.25, ctx.currentTime + 0.35);
-        gain.gain.setValueAtTime(0.01, ctx.currentTime);
-        gain.gain.linearRampToValueAtTime(0.12 / (i + 1), ctx.currentTime + 0.1);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.45);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start(ctx.currentTime);
-        osc.stop(ctx.currentTime + 0.45);
-      });
-    } else if (type === 'bankai_charge') {
-      const sub = ctx.createOscillator();
-      const subGain = ctx.createGain();
-      sub.type = 'sawtooth';
-      sub.frequency.setValueAtTime(80, ctx.currentTime);
-      sub.frequency.exponentialRampToValueAtTime(38, ctx.currentTime + 0.5);
-      subGain.gain.setValueAtTime(0.3, ctx.currentTime);
-      subGain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.55);
-      sub.connect(subGain);
-      subGain.connect(ctx.destination);
-      sub.start();
-      sub.stop(ctx.currentTime + 0.55);
-
-      [220, 277, 330, 440].forEach((freq, idx) => {
-        const osc = ctx.createOscillator();
-        const g = ctx.createGain();
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.05);
-        osc.frequency.exponentialRampToValueAtTime(freq * 1.5, ctx.currentTime + 0.45);
-        g.gain.setValueAtTime(0.15, ctx.currentTime + idx * 0.05);
-        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.55);
-        osc.connect(g);
-        g.connect(ctx.destination);
-        osc.start(ctx.currentTime + idx * 0.05);
-        osc.stop(ctx.currentTime + 0.55);
-      });
-    } else if (type === 'shikai' || type === 'shikai_reveal') {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(880, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(1760, ctx.currentTime + 0.15);
-      osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.8);
-      gain.gain.setValueAtTime(0.35, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.8);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start();
-      osc.stop(ctx.currentTime + 0.8);
-
-      [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
-        const o = ctx.createOscillator();
-        const g = ctx.createGain();
-        o.type = 'triangle';
-        o.frequency.setValueAtTime(freq, ctx.currentTime + 0.08 + i * 0.06);
-        g.gain.setValueAtTime(0.2, ctx.currentTime + 0.08 + i * 0.06);
-        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08 + i * 0.06 + 0.9);
-        o.connect(g);
-        g.connect(ctx.destination);
-        o.start(ctx.currentTime + 0.08 + i * 0.06);
-        o.stop(ctx.currentTime + 0.08 + i * 0.06 + 0.9);
-      });
-    } else if (type === 'bankai' || type === 'bankai_reveal') {
-      const sub = ctx.createOscillator();
-      const subGain = ctx.createGain();
-      sub.type = 'sawtooth';
-      sub.frequency.setValueAtTime(120, ctx.currentTime);
-      sub.frequency.exponentialRampToValueAtTime(30, ctx.currentTime + 1.2);
-      subGain.gain.setValueAtTime(0.45, ctx.currentTime);
-      subGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.3);
-      sub.connect(subGain);
-      subGain.connect(ctx.destination);
-      sub.start();
-      sub.stop(ctx.currentTime + 1.3);
-
-      [130.81, 164.81, 196.00, 261.63, 329.63, 523.25].forEach((freq, i) => {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = i < 2 ? 'sawtooth' : 'sine';
-        osc.frequency.setValueAtTime(freq, ctx.currentTime + 0.1);
-        gain.gain.setValueAtTime(0.25 / (i * 0.5 + 1), ctx.currentTime + 0.1);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.6);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start(ctx.currentTime + 0.1);
-        osc.stop(ctx.currentTime + 1.6);
-      });
-    } else if (type === 'gacha_box_charge') {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(200, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(500, ctx.currentTime + 0.15);
-      gain.gain.setValueAtTime(0.12, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start();
-      osc.stop(ctx.currentTime + 0.18);
-    } else if (type === 'gacha_box_suspense') {
-      const osc = ctx.createOscillator();
-      const lfo = ctx.createOscillator();
-      const lfoG = ctx.createGain();
-      const g = ctx.createGain();
-
-      lfo.frequency.setValueAtTime(18, ctx.currentTime);
-      lfoG.gain.setValueAtTime(40, ctx.currentTime);
-      lfo.connect(lfoG);
-
-      osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(180, ctx.currentTime);
-      lfoG.connect(osc.frequency);
-
-      g.gain.setValueAtTime(0.18, ctx.currentTime);
-      g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
-
-      osc.connect(g);
-      g.connect(ctx.destination);
-      lfo.start();
-      osc.start();
-      lfo.stop(ctx.currentTime + 0.35);
-      osc.stop(ctx.currentTime + 0.35);
-    } else if (type === 'gacha_box_shatter') {
-      [1200, 1800, 2400, 450].forEach((freq, idx) => {
-        const osc = ctx.createOscillator();
-        const g = ctx.createGain();
-        osc.type = idx === 3 ? 'sawtooth' : 'sine';
-        osc.frequency.setValueAtTime(freq, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(idx === 3 ? 60 : 300, ctx.currentTime + 0.45);
-        g.gain.setValueAtTime(0.28, ctx.currentTime);
-        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
-        osc.connect(g);
-        g.connect(ctx.destination);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.5);
-      });
-    } else if (type === 'hum') {
-      const osc = ctx.createOscillator();
-      const lfo = ctx.createOscillator();
-      const lfoGain = ctx.createGain();
-      const gain = ctx.createGain();
-
-      lfo.frequency.setValueAtTime(14, ctx.currentTime);
-      lfoGain.gain.setValueAtTime(25, ctx.currentTime);
-      lfo.connect(lfoGain);
-
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(150, ctx.currentTime);
-      lfoGain.connect(osc.frequency);
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      gain.gain.setValueAtTime(0.09, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
-
-      lfo.start();
-      osc.start();
-      lfo.stop(ctx.currentTime + 0.35);
-      osc.stop(ctx.currentTime + 0.35);
-    } else if (type === 'shatter') {
-      const osc1 = ctx.createOscillator();
-      const osc2 = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc1.connect(gain);
-      osc2.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc1.type = 'sawtooth';
-      osc1.frequency.setValueAtTime(1600, ctx.currentTime);
-      osc1.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.45);
-
-      osc2.type = 'sine';
-      osc2.frequency.setValueAtTime(2200, ctx.currentTime);
-      osc2.frequency.exponentialRampToValueAtTime(350, ctx.currentTime + 0.5);
-
-      gain.gain.setValueAtTime(0.28, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
-
-      osc1.start();
-      osc2.start();
-      osc1.stop(ctx.currentTime + 0.5);
-      osc2.stop(ctx.currentTime + 0.5);
-    } else if (type === 'roll') {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(150, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(650, ctx.currentTime + 0.15);
-      gain.gain.setValueAtTime(0.15, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
-      osc.start();
-      osc.stop(ctx.currentTime + 0.35);
-    } else if (type === 'win') {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(300, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.5);
-      gain.gain.setValueAtTime(0.25, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
-      osc.start();
-      osc.stop(ctx.currentTime + 0.6);
-    } else if (type === 'kido') {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(250, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.3);
-      gain.gain.setValueAtTime(0.2, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
-      osc.start();
-      osc.stop(ctx.currentTime + 0.35);
-    }
-  } catch (e) {}
-}
-
-const DEFAULT_DB = {
-  superAdminUsuario: "Malu123",
-  superAdminSenha: "Sociedade2026",
-  superAdminNome: "ADM Máximo (Comandante Supremo)",
-  firebaseUrl: "https://bleach-rpg-6894c-default-rtdb.firebaseio.com/",
-  subAdms: [
-    { id: "adm-kisuke", usuario: "kisuke", senha: "123", nome: "Mestre Kisuke", cargo: "Avaliador de Cenas & Fichas", charId: "rukia-002" }
-  ],
-  registrosTarefasAdm: [
-    { id: "t1", admNome: "Mestre Kisuke", tarefa: "Avaliação de Cenas de Arco (+8 pontos)", pontosGanhos: 8, data: "21/08/2026 às 14:00" }
-  ],
-  combatesArena: [
-    {
-      id: "arena-1",
-      p1Id: "ren-001",
-      p2Id: "rukia-002",
-      estadoP1: "Inteiro",
-      estadoP2: "Ferido",
-      logJuiz: [
-        { id: "l1", autor: "Mestre Kisuke", texto: "Início do combate: Ren avança com Shunpo enquanto Rukia prepara Bakudō.", data: "22/08/2026 às 15:30" }
-      ],
-      finalizado: false
-    }
-  ],
-  rolagensDadosPublicas: [
-    { id: "d1", autor: "Mestre Kisuke", personagem: "Kurosaki Ren", dado: "d20", resultado: 18, categoria: "Extremo Sucesso (+80%)", data: "22/08/2026 às 15:35" }
-  ],
-  zanpakutosVinculadas: [],
-  personagens: [
-    {
-      id: "ren-001",
-      nome: "Kurosaki Ren",
-      foto: "assets/ichigo-orange.png",
-      whatsapp: "11988887777",
-      codigo: "REN-8921",
-      raca: "Shinigami",
-      esquadrao: "11º Esquadrão",
-      faceclaim: "Kurosaki Ichigo",
-      idadePlayer: "22",
-      aniversarioPlayer: "15/07",
-      idadeChar: "18",
-      aniversarioChar: "15/07",
-      pontosDisponiveis: 5,
-      sorteiosComunsRestantes: 2,
-      sorteiosEspeciaisRestantes: 1,
-      sorteiosDrops: [],
-      permissoes: { shikaiLiberada: true, bankaiLiberada: false },
-      atributos: { pressao: 45, forca: 30, velocidade: 60, resiliencia: 25 },
-      kidosConhecidos: [
-        { id: "h4", numero: 4, nome: "Byakurai", cat: "Hadō", custoReiatsu: 3 },
-        { id: "b1", numero: 1, nome: "Sai", cat: "Bakudō", custoReiatsu: 2 }
-      ],
-      tecnicas: [
-        { id: "t-byak", nome: "Hadō #4 — Byakurai", categoria: "Hadō" },
-        { id: "t-sai", nome: "Bakudō #1 — Sai", categoria: "Bakudō" }
-      ],
-      personalidade: {
-        texto: "Guerreiro analítico e leal. Prefere combater com velocidade e inteligência tática, arriscando tudo para proteger seus companheiros.",
-        virtudes: "Foco inabalável, determinação e lealdade",
-        defeitos: "Dificuldade de confiar e pedir ajuda",
-        desejos: "Tornar-se forte o bastante para que ninguém sob sua guarda caia",
-        medos: "A impotência diante da morte de um amigo",
-        conflitos: "Obedecer ordens militares versus seguir sua honra pessoal",
-        estiloCombate: "Velocidade tridimensional e cortes precisos"
-      },
-      personalidadeTravada: false,
-      cenaDespertarShikai: "",
-      cenaDespertarBankai: "",
-      zanpakuto: {
-        nome: "Em despertar",
-        fotoShikai: "assets/ichigo-orange.png",
-        fotoBankai: "assets/ichigo-moon.png",
-        shikaiAtiva: null,
-        bankaiAtiva: null,
-        notas: ""
-      },
-      estado: "Inteiro",
-      treinosHoje: 0,
-      historico: [
-        { id: "h1", data: "20/08/2026 às 10:00", texto: "Ficha oficial aprovada pela Administração." }
-      ],
-    }
-  ]
-};
-
-function calculateRankings(personagens) {
-  const rankFisico = [...personagens].map(p => {
-    const f = Number(p.atributos?.forca || 0);
-    const v = Number(p.atributos?.velocidade || 0);
-    const r = Number(p.atributos?.resiliencia || 0);
-    const score = Number(((f + v + r) / 3).toFixed(1));
-    return { id: p.id, nome: p.nome, foto: p.foto, score, forca: f, vel: v, res: r };
-  }).sort((a, b) => b.score - a.score);
-
-  const rankPressao = [...personagens].map(p => {
-    const score = Number(p.atributos?.pressao || 0);
-    return { id: p.id, nome: p.nome, foto: p.foto, score };
-  }).sort((a, b) => b.score - a.score);
-
-  return { rankFisico, rankPressao };
-}
-
-
 // =========================================================================
 // MODAL COMPONENTS: GACHA CHEST, AWAKENING SCENE & 4 SPIRITUAL PATHS
 // =========================================================================
@@ -4103,10 +3429,10 @@ function Zanpakuto4PathsModal({
 }
 
 // =========================================================================
-// VIEWS PART 1: TOPBAR, LOGIN, RANKINGS, KIDOS, ARENA & BLEACHSWORDART
+// VIEWS PART 1: TOPBAR, SUBTLE ADMIN, LIVE CHAT, LOGIN, RANKINGS, KIDOS & ARENA
 // =========================================================================
 
-// TOP NAVIGATION BAR
+// TOP NAVIGATION BAR (WITH SUBTLE ADMIN SEAL, CHAT & PATCH NOTES)
 function TopBar({ session, onLogout, view, setView, nome, onOpenAdminLogin, cloudStatus }) {
   const isAdmin = session?.role === "super_admin" || session?.role === "sub_admin";
 
@@ -4133,9 +3459,11 @@ function TopBar({ session, onLogout, view, setView, nome, onOpenAdminLogin, clou
           {[
             { id: "sistemas", label: "Sistemas & Regras", icon: "📜" },
             { id: "ficha", label: session?.role === "jogador" ? "Minha Ficha" : "Ficha de Jogador", icon: "👤" },
+            { id: "chat", label: "Chat dos Shinigamis", icon: "💬" },
             { id: "rankings", label: "Rankings", icon: "🏆" },
             { id: "kidos", label: "Grimório de Kidō", icon: "📕" },
             { id: "arena", label: "Arena de Duelos", icon: "⚔️" },
+            { id: "patchnotes", label: "Patch Notes", icon: "📰" },
             ...(isAdmin ? [{ id: "admin", label: "Painel ADM", icon: "👑" }] : [])
           ].map((tab) => (
             <button
@@ -4153,7 +3481,7 @@ function TopBar({ session, onLogout, view, setView, nome, onOpenAdminLogin, clou
           ))}
         </nav>
 
-        {/* User Session / Cloud Indicator */}
+        {/* User Session / Cloud & Subtle Admin Seal */}
         <div className="flex items-center gap-2 sm:gap-3">
           {/* Cloud Indicator */}
           <div 
@@ -4188,15 +3516,17 @@ function TopBar({ session, onLogout, view, setView, nome, onOpenAdminLogin, clou
               >
                 Entrar
               </button>
-              <button
-                onClick={onOpenAdminLogin}
-                className="px-2.5 py-1.5 bg-black/60 border border-yellow-500/40 hover:border-yellow-400 text-yellow-400 text-xs font-bold rounded-lg"
-                title="Acesso da Administração"
-              >
-                👑 ADM
-              </button>
             </div>
           )}
+
+          {/* SUBTLE AESTHETIC SEAL FOR ADMIN ACCESS */}
+          <button
+            onClick={onOpenAdminLogin}
+            className="w-7 h-7 flex items-center justify-center rounded-full text-bleach-border hover:text-bleach-orange/60 hover:bg-white/5 transition text-xs select-none"
+            title="Selo Espiritual do Seireitei"
+          >
+            ❖
+          </button>
         </div>
       </div>
 
@@ -4205,15 +3535,17 @@ function TopBar({ session, onLogout, view, setView, nome, onOpenAdminLogin, clou
         {[
           { id: "sistemas", label: "Regras", icon: "📜" },
           { id: "ficha", label: "Ficha", icon: "👤" },
+          { id: "chat", label: "Chat", icon: "💬" },
           { id: "rankings", label: "Rankings", icon: "🏆" },
           { id: "kidos", label: "Kidō", icon: "📕" },
           { id: "arena", label: "Arena", icon: "⚔️" },
+          { id: "patchnotes", label: "Patch", icon: "📰" },
           ...(isAdmin ? [{ id: "admin", label: "ADM", icon: "👑" }] : [])
         ].map((tab) => (
           <button
             key={tab.id}
             onClick={() => setView(tab.id)}
-            className={`px-2.5 py-1 rounded text-[11px] font-semibold whitespace-nowrap ${
+            className={`px-2 py-1 rounded text-[11px] font-semibold whitespace-nowrap ${
               view === tab.id
                 ? "text-bleach-orange font-bold border-b-2 border-bleach-orange"
                 : "text-bleach-muted"
@@ -4271,7 +3603,127 @@ function Badge({ color, children, className = "" }) {
   );
 }
 
-// PLAYER LOGIN SCREEN (STRICT MATCHING & NO CROSS-LOGIN FALLBACK)
+// LIVE CHAT ROOM FOR SHINIGAMIS
+function ChatView({ db, saveDb, session, myChar }) {
+  const [mensagem, setMensagem] = useState("");
+  const chatBottomRef = useRef(null);
+
+  const mensagens = db?.mensagensChat || [
+    {
+      id: "msg-welcome-1",
+      autorNome: "Comandante Supremo",
+      charFoto: "assets/ichigo-moon.png",
+      esquadrao: "1º Esquadrão",
+      texto: "Bem-vindos ao canal de comunicação direta da Sociedade das Almas. Mantenham o decoro e compartilhem suas jornadas!",
+      timestamp: "10:00",
+      data: "Hoje"
+    }
+  ];
+
+  useEffect(() => {
+    if (chatBottomRef.current) {
+      chatBottomRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [mensagens.length]);
+
+  function enviarMensagem(e) {
+    e.preventDefault();
+    if (!mensagem.trim()) return;
+    if (!session) {
+      alert("Você precisa estar logado para enviar mensagens no chat.");
+      return;
+    }
+
+    const autorNome = myChar?.nome || (session.role === "super_admin" ? "ADM Máximo" : session.nome || "Shinigami");
+    const charFoto = myChar?.foto || "assets/ichigo-orange.png";
+    const esquadrao = myChar?.esquadrao || "Seireitei";
+
+    const novaMsg = {
+      id: uid(),
+      autorNome,
+      charId: myChar?.id || session.charId || "adm",
+      charFoto,
+      esquadrao,
+      texto: mensagem.trim(),
+      timestamp: new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }),
+      data: nowStr()
+    };
+
+    const novasMensagens = [...mensagens, novaMsg].slice(-100); // manter últimas 100 mensagens
+    saveDb({ ...db, mensagensChat: novasMensagens });
+    setMensagem("");
+    playReiatsuSound('roll');
+  }
+
+  return (
+    <div className="space-y-6">
+      <Section
+        title="💬 Comunicação Espiritual dos Shinigamis"
+        subtitle="Canal de convivência, anúncios e interação entre todos os membros da Sociedade das Almas"
+        className="border-2 border-bleach-orange/40 shadow-2xl"
+      >
+        <div className="flex flex-col h-[520px] bg-black/70 border border-bleach-border rounded-2xl overflow-hidden shadow-inner">
+          {/* Header Bar */}
+          <div className="p-3 bg-bleach-panel2/80 border-b border-bleach-border flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse"></span>
+              <span className="text-xs font-bold text-bleach-cream uppercase tracking-wider">Canal Geral de Karakura & Seireitei</span>
+            </div>
+            <span className="text-[11px] text-bleach-muted font-mono">{mensagens.length} mensagens gravadas</span>
+          </div>
+
+          {/* Messages Area */}
+          <div className="flex-1 p-4 overflow-y-auto space-y-3">
+            {mensagens.map((msg) => {
+              const isMe = session && (msg.charId === myChar?.id || (session.role === "super_admin" && msg.autorNome.includes("ADM")));
+              return (
+                <div key={msg.id} className={`flex items-start gap-3 ${isMe ? "flex-row-reverse" : ""}`}>
+                  <img src={msg.charFoto || 'assets/ichigo-orange.png'} className="w-9 h-9 rounded-xl object-cover border border-bleach-border shrink-0 mt-0.5" />
+                  <div className={`max-w-[75%] rounded-2xl p-3 text-xs space-y-1 ${
+                    isMe ? "bg-orange-950/70 border border-bleach-orange/60 text-white rounded-tr-none" : "bg-bleach-panel2 border border-white/10 text-bleach-cream rounded-tl-none"
+                  }`}>
+                    <div className="flex items-center justify-between gap-3 text-[10px]">
+                      <strong className={isMe ? "text-bleach-orange" : "text-cyan-300"}>{msg.autorNome}</strong>
+                      <span className="text-bleach-muted font-mono">{msg.timestamp}</span>
+                    </div>
+                    <p className="leading-relaxed whitespace-pre-wrap break-words">{msg.texto}</p>
+                    {msg.esquadrao && (
+                      <span className="text-[9px] text-bleach-muted block pt-0.5 border-t border-white/5 uppercase font-mono">
+                        {msg.esquadrao}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+            <div ref={chatBottomRef} />
+          </div>
+
+          {/* Message Input Box */}
+          <form onSubmit={enviarMensagem} className="p-3 bg-bleach-panel2 border-t border-bleach-border flex gap-2">
+            <input
+              type="text"
+              placeholder={session ? "Escreva sua mensagem para todos os Shinigamis..." : "Faça login na sua ficha para interagir no chat..."}
+              disabled={!session}
+              value={mensagem}
+              onChange={(e) => setMensagem(e.target.value)}
+              className="flex-1 bg-black/80 border border-bleach-border focus:border-bleach-orange rounded-xl px-4 py-2.5 text-xs text-white placeholder-bleach-muted outline-none disabled:opacity-50"
+            />
+            <button
+              type="submit"
+              disabled={!session || !mensagem.trim()}
+              className="px-5 py-2.5 bg-gradient-to-r from-bleach-orange to-bleach-orangeDeep text-black font-extrabold text-xs uppercase rounded-xl shadow hover:brightness-110 disabled:opacity-40 transition"
+            >
+              Enviar ➔
+            </button>
+          </form>
+        </div>
+      </Section>
+    </div>
+  );
+}
+
+// PLAYER LOGIN SCREEN
 function LoginScreen({ db, onLogin, onOpenAdminModal, activeCloudUrl, setDb }) {
   const [identificador, setIdentificador] = useState("");
   const [codigo, setCodigo] = useState("");
@@ -4296,7 +3748,7 @@ function LoginScreen({ db, onLogin, onOpenAdminModal, activeCloudUrl, setDb }) {
     const cloudUrl = activeCloudUrl || db.firebaseUrl || localStorage.getItem("bleach_firebase_url");
     if (cloudUrl) {
       try {
-        const cleanUrl = cloudUrl.replace(/\/$/, "");
+        const cleanUrl = cloudUrl.endsWith('/') ? cloudUrl.slice(0, -1) : cloudUrl;
         const endpoint = cleanUrl.endsWith('.json') ? cleanUrl : cleanUrl + '/bleachDB.json';
         const res = await fetch(endpoint + '?t=' + Date.now());
         if (res.ok) {
@@ -4314,7 +3766,6 @@ function LoginScreen({ db, onLogin, onOpenAdminModal, activeCloudUrl, setDb }) {
 
     const digitsOnly = termo.replace(/\D/g, "");
 
-    // 1. Strict match on code
     const matchingChars = currentPersonagens.filter((c) => {
       const cCode = (c.codigo || "").trim().toLowerCase();
       return cCode === cod;
@@ -4322,7 +3773,7 @@ function LoginScreen({ db, onLogin, onOpenAdminModal, activeCloudUrl, setDb }) {
 
     if (matchingChars.length === 0) {
       setCarregando(false);
-      setErro("Código de acesso não encontrado. Verifique se digitou corretamente ou se a ficha foi apagada pelo Administrador.");
+      setErro("Código de acesso não encontrado. Verifique se digitou corretamente.");
       return;
     }
 
@@ -4331,13 +3782,8 @@ function LoginScreen({ db, onLogin, onOpenAdminModal, activeCloudUrl, setDb }) {
       p = matchingChars.find((c) => {
         const cPhone = (c.whatsapp || "").replace(/\D/g, "");
         const cName = (c.nome || "").toLowerCase();
-
-        if (digitsOnly.length >= 4 && (cPhone.includes(digitsOnly) || digitsOnly.includes(cPhone.slice(-8)))) {
-          return true;
-        }
-        if (cName.includes(termo) || termo.includes(cName)) {
-          return true;
-        }
+        if (digitsOnly.length >= 4 && (cPhone.includes(digitsOnly) || digitsOnly.includes(cPhone.slice(-8)))) return true;
+        if (cName.includes(termo) || termo.includes(cName)) return true;
         return false;
       });
 
@@ -4349,7 +3795,7 @@ function LoginScreen({ db, onLogin, onOpenAdminModal, activeCloudUrl, setDb }) {
     } else {
       if (matchingChars.length > 1) {
         setCarregando(false);
-        setErro("Existe mais de um personagem com esse código. Por favor, preencha também o seu Nome ou WhatsApp.");
+        setErro("Existe mais de um personagem com esse código. Preencha também seu Nome ou WhatsApp.");
         return;
       }
       p = matchingChars[0];
@@ -4407,23 +3853,13 @@ function LoginScreen({ db, onLogin, onOpenAdminModal, activeCloudUrl, setDb }) {
           >
             {carregando ? "Autenticando..." : "⚔️ Acessar Minha Ficha"}
           </button>
-
-          <div className="text-center pt-2">
-            <button
-              type="button"
-              onClick={onOpenAdminModal}
-              className="text-xs text-yellow-400/80 hover:text-yellow-300 font-bold hover:underline"
-            >
-              👑 Você é Administrador ou Avaliador? Clique aqui para login ADM
-            </button>
-          </div>
         </form>
       </Section>
     </div>
   );
 }
 
-// ADMIN LOGIN SCREEN & MODAL (SUPPORTS Malu123 & Sociedade2026)
+// ADMIN LOGIN SCREEN & MODAL (CLEAN & SUBTLE)
 function AdminLoginScreen({ db, onLoginAdmin }) {
   const [usuario, setUsuario] = useState("");
   const [senha, setSenha] = useState("");
@@ -4465,10 +3901,10 @@ function AdminLoginScreen({ db, onLoginAdmin }) {
       >
         <form onSubmit={entrar} className="space-y-4">
           <div>
-            <label className="block text-xs font-bold text-yellow-400 mb-1 uppercase">Usuário ADM</label>
+            <label className="block text-xs font-bold text-yellow-400 mb-1 uppercase">Usuário de Acesso</label>
             <input
               type="text"
-              placeholder="Ex: Malu123 ou kisuke"
+              placeholder="Digite seu usuário..."
               value={usuario}
               onChange={(e) => setUsuario(e.target.value)}
               className="w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-3 text-xs text-white font-mono"
@@ -4476,7 +3912,7 @@ function AdminLoginScreen({ db, onLoginAdmin }) {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-yellow-400 mb-1 uppercase">Senha Individual</label>
+            <label className="block text-xs font-bold text-yellow-400 mb-1 uppercase">Senha de Acesso</label>
             <input
               type="password"
               placeholder="••••••••"
@@ -4492,7 +3928,7 @@ function AdminLoginScreen({ db, onLoginAdmin }) {
             type="submit"
             className="w-full py-2.5 bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold text-xs uppercase rounded-xl shadow"
           >
-            👑 Entrar no Painel Administrativo
+            Entrar no Painel Administrativo
           </button>
         </form>
       </Section>
@@ -4529,14 +3965,14 @@ function AdminLoginModal({ db, onClose, onSuccess }) {
       return;
     }
 
-    setErro("Credenciais administrativas incorretas.");
+    setErro("Credenciais incorretas.");
   }
 
   return (
     <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
       <div className="bg-bleach-panel border-2 border-yellow-500/80 rounded-2xl p-6 max-w-sm w-full shadow-2xl">
         <div className="flex items-center justify-between mb-4 border-b border-bleach-borderSoft pb-2">
-          <h3 className="font-title text-xl text-yellow-400">LOGIN DA ADMINISTRAÇÃO</h3>
+          <h3 className="font-title text-xl text-yellow-400">ACESSO DO SEIREITEI</h3>
           <button onClick={onClose} className="text-bleach-muted hover:text-white font-bold">✕</button>
         </div>
 
@@ -4545,7 +3981,7 @@ function AdminLoginModal({ db, onClose, onSuccess }) {
             <label className="block text-bleach-creamDim mb-1 font-bold">Usuário</label>
             <input
               type="text"
-              placeholder="Ex: Malu123"
+              placeholder="Usuário..."
               value={usuario}
               onChange={(e) => setUsuario(e.target.value)}
               className="w-full bg-bleach-panel2 border border-bleach-border rounded p-2 text-white font-mono"
@@ -4567,7 +4003,7 @@ function AdminLoginModal({ db, onClose, onSuccess }) {
             type="submit"
             className="w-full py-2 bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold uppercase rounded shadow"
           >
-            Entrar como ADM
+            Autenticar
           </button>
         </form>
       </div>
@@ -4716,7 +4152,7 @@ function KidosView({ personagem, isAdmin }) {
       <div className="bg-banner-overlay border border-bleach-border rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
         <div className="relative z-10 max-w-3xl">
           <span className="px-3 py-1 bg-bleach-blue/20 border border-bleach-blue text-bleach-blue text-xs font-bold rounded-full uppercase tracking-wider">
-            Grimório Completo da Sociedade das Almas • 75+ Feitiços Oficiais & Autorais
+            Grimório Completo da Sociedade das Almas • Hadō, Bakudō & Kaidō
           </span>
           <h2 className="font-title text-4xl sm:text-5xl tracking-widest text-bleach-orange mt-3 reiatsu-text-glow">
             COMPÊNDIO SUPREMO DE KIDŌS
@@ -4941,88 +4377,279 @@ function KidosView({ personagem, isAdmin }) {
   );
 }
 
-// ARENA VIEW
+// ARENA VIEW (WITH TURN LOG TIMELINE & DUEL RESET)
 function ArenaView({ db, saveDb, session, myChar }) {
-  const [dueloAtivo, setDueloAtivo] = useState(db.combatesArena?.[0] || null);
-  const [novoLog, setNovoLog] = useState("");
+  const [dueloAtivoId, setDueloAtivoId] = useState(db.combatesArena?.[0]?.id || "arena-1");
+  const [acaoP1, setAcaoP1] = useState("");
+  const [acaoP2, setAcaoP2] = useState("");
+  const [vereditoJuiz, setVereditoJuiz] = useState("");
+  const [dadoRolado, setDadoRolado] = useState(null);
 
-  const p1 = (db.personagens || []).find(p => p.id === dueloAtivo?.p1Id) || db.personagens[0];
-  const p2 = (db.personagens || []).find(p => p.id === dueloAtivo?.p2Id) || db.personagens[1];
+  const duelo = (db.combatesArena || []).find(d => d.id === dueloAtivoId) || db.combatesArena?.[0] || {
+    id: "arena-1",
+    p1Id: db.personagens?.[0]?.id,
+    p2Id: db.personagens?.[1]?.id,
+    turnos: [],
+    estadoP1: "Inteiro",
+    estadoP2: "Inteiro"
+  };
 
-  function adicionarLogJuiz() {
-    if (!novoLog.trim()) return;
-    const logItem = {
+  const p1 = (db.personagens || []).find(p => p.id === duelo.p1Id) || db.personagens?.[0];
+  const p2 = (db.personagens || []).find(p => p.id === duelo.p2Id) || db.personagens?.[1];
+
+  function rolarDadoDuelo() {
+    const res = Math.floor(Math.random() * 6) + 1;
+    const cat = res <= 2 ? "Falha (1–2)" : res <= 4 ? "Sucesso Parcial (3–4)" : "Sucesso Total (5–6)";
+    setDadoRolado({ res, cat });
+    playReiatsuSound('roll');
+  }
+
+  function registrarTurno(e) {
+    e.preventDefault();
+    if (!vereditoJuiz.trim() && !acaoP1.trim()) return;
+
+    const numTurno = (duelo.turnos || []).length + 1;
+    const novoTurno = {
       id: uid(),
+      numero: numTurno,
       autor: session?.nome || "Juiz da Arena",
-      texto: novoLog.trim(),
+      acaoP1: acaoP1.trim() || "—",
+      acaoP2: acaoP2.trim() || "—",
+      veredito: vereditoJuiz.trim() || "Turno concluído e avaliado pelo narrador.",
+      dado: dadoRolado ? `1d6: ${dadoRolado.res} (${dadoRolado.cat})` : null,
       data: nowStr()
     };
+
     const novosDuelos = (db.combatesArena || []).map(d => {
-      if (d.id === dueloAtivo.id) {
-        return { ...d, logJuiz: [logItem, ...(d.logJuiz || [])] };
+      if (d.id === duelo.id) {
+        return { ...d, turnos: [novoTurno, ...(d.turnos || [])] };
+      }
+      return d;
+    });
+
+    saveDb({ ...db, combatesArena: novosDuelos });
+    setAcaoP1("");
+    setAcaoP2("");
+    setVereditoJuiz("");
+    setDadoRolado(null);
+    playReiatsuSound('win');
+  }
+
+  function resetarDuelo() {
+    const confirma = confirm("⚠️ Deseja reiniciar este combate e limpar o registro de turnos?");
+    if (!confirma) return;
+
+    const novosDuelos = (db.combatesArena || []).map(d => {
+      if (d.id === duelo.id) {
+        return {
+          ...d,
+          turnos: [],
+          estadoP1: "Inteiro",
+          estadoP2: "Inteiro",
+          finalizado: false
+        };
+      }
+      return d;
+    });
+
+    saveDb({ ...db, combatesArena: novosDuelos });
+    playReiatsuSound('shatter');
+    alert("Duelo resetado com sucesso! Os combatentes retornaram ao estado Inteiro.");
+  }
+
+  function alterarEstadoCombatente(combNum, novoEstado) {
+    const novosDuelos = (db.combatesArena || []).map(d => {
+      if (d.id === duelo.id) {
+        return {
+          ...d,
+          [combNum === 1 ? "estadoP1" : "estadoP2"]: novoEstado
+        };
       }
       return d;
     });
     saveDb({ ...db, combatesArena: novosDuelos });
-    setNovoLog("");
-    playReiatsuSound('roll');
   }
 
   return (
     <div className="space-y-6">
-      <Section title="Arena de Duelos em ON" subtitle="Espaço oficial de arbitragem e combate supervisionado">
+      <Section
+        title="⚔️ Arena Oficial de Duelos & Linha do Tempo"
+        subtitle="Espaço de combate com julgamento narrativo por turnos, regra do 1d6 e registro contínuo"
+        right={
+          <button
+            onClick={resetarDuelo}
+            className="px-3.5 py-1.5 bg-red-950/80 hover:bg-red-900 border border-red-500 text-red-200 text-xs font-bold rounded-xl shadow transition flex items-center gap-1.5"
+          >
+            <span>🔄</span> Resetar Duelo
+          </button>
+        }
+      >
         {p1 && p2 ? (
           <div className="space-y-6">
+            {/* Fighter Status Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-5 bg-bleach-panel2 border-2 border-red-500/50 rounded-2xl flex items-center gap-4">
-                <img src={p1.foto || 'assets/ichigo-orange.png'} className="w-16 h-16 rounded-xl object-cover border border-red-500" />
-                <div>
-                  <span className="text-[10px] font-bold text-red-400 uppercase">Combatente 1</span>
-                  <h4 className="font-title text-2xl text-white">{p1.nome}</h4>
-                  <div className="text-xs text-bleach-muted font-mono flex gap-2 mt-1">
-                    <span>FOR: {p1.atributos.forca}</span>
-                    <span>VEL: {p1.atributos.velocidade}</span>
-                    <span>RES: {p1.atributos.resiliencia}</span>
+              <div className="p-5 bg-bleach-panel2 border-2 border-red-500/50 rounded-2xl flex items-center justify-between gap-4 shadow-xl">
+                <div className="flex items-center gap-3">
+                  <img src={p1.foto || 'assets/ichigo-orange.png'} className="w-16 h-16 rounded-xl object-cover border border-red-500" />
+                  <div>
+                    <span className="text-[10px] font-bold text-red-400 uppercase">Combatente 1</span>
+                    <h4 className="font-title text-2xl text-white">{p1.nome}</h4>
+                    <div className="text-xs text-bleach-muted font-mono flex gap-2 mt-1">
+                      <span>FOR: {p1.atributos?.forca}</span>
+                      <span>VEL: {p1.atributos?.velocidade}</span>
+                      <span>RES: {p1.atributos?.resiliencia}</span>
+                    </div>
                   </div>
+                </div>
+
+                <div className="text-right space-y-1">
+                  <span className="text-[10px] text-bleach-muted block uppercase">Estado Atual</span>
+                  <select
+                    value={duelo.estadoP1 || "Inteiro"}
+                    onChange={(e) => alterarEstadoCombatente(1, e.target.value)}
+                    className="bg-black border border-red-500/60 rounded-lg p-1.5 text-xs text-white font-bold"
+                  >
+                    {ESTADOS.map(st => <option key={st.key} value={st.key}>{st.key}</option>)}
+                  </select>
                 </div>
               </div>
 
-              <div className="p-5 bg-bleach-panel2 border-2 border-blue-500/50 rounded-2xl flex items-center gap-4">
-                <img src={p2.foto || 'assets/ichigo-moon.png'} className="w-16 h-16 rounded-xl object-cover border border-blue-500" />
-                <div>
-                  <span className="text-[10px] font-bold text-cyan-400 uppercase">Combatente 2</span>
-                  <h4 className="font-title text-2xl text-white">{p2.nome}</h4>
-                  <div className="text-xs text-bleach-muted font-mono flex gap-2 mt-1">
-                    <span>FOR: {p2.atributos.forca}</span>
-                    <span>VEL: {p2.atributos.velocidade}</span>
-                    <span>RES: {p2.atributos.resiliencia}</span>
+              <div className="p-5 bg-bleach-panel2 border-2 border-blue-500/50 rounded-2xl flex items-center justify-between gap-4 shadow-xl">
+                <div className="flex items-center gap-3">
+                  <img src={p2.foto || 'assets/ichigo-moon.png'} className="w-16 h-16 rounded-xl object-cover border border-blue-500" />
+                  <div>
+                    <span className="text-[10px] font-bold text-cyan-400 uppercase">Combatente 2</span>
+                    <h4 className="font-title text-2xl text-white">{p2.nome}</h4>
+                    <div className="text-xs text-bleach-muted font-mono flex gap-2 mt-1">
+                      <span>FOR: {p2.atributos?.forca}</span>
+                      <span>VEL: {p2.atributos?.velocidade}</span>
+                      <span>RES: {p2.atributos?.resiliencia}</span>
+                    </div>
                   </div>
+                </div>
+
+                <div className="text-right space-y-1">
+                  <span className="text-[10px] text-bleach-muted block uppercase">Estado Atual</span>
+                  <select
+                    value={duelo.estadoP2 || "Inteiro"}
+                    onChange={(e) => alterarEstadoCombatente(2, e.target.value)}
+                    className="bg-black border border-cyan-500/60 rounded-lg p-1.5 text-xs text-white font-bold"
+                  >
+                    {ESTADOS.map(st => <option key={st.key} value={st.key}>{st.key}</option>)}
+                  </select>
                 </div>
               </div>
             </div>
 
-            {/* Judge Log Input */}
-            <div className="p-4 bg-black/60 border border-bleach-border rounded-xl space-y-3">
-              <h4 className="text-xs font-bold text-bleach-orange uppercase">Decisão do Juiz / Narrador</h4>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  placeholder="Descreva o desfecho do turno de combate..."
-                  value={novoLog}
-                  onChange={(e) => setNovoLog(e.target.value)}
-                  className="flex-1 bg-bleach-panel2 border border-bleach-border rounded-lg p-2.5 text-xs text-white"
-                />
+            {/* Registrar Novo Turno Form */}
+            <form onSubmit={registrarTurno} className="p-4 bg-black/60 border border-bleach-border rounded-2xl space-y-3">
+              <div className="flex items-center justify-between border-b border-white/5 pb-2">
+                <h4 className="text-xs font-bold text-bleach-orange uppercase flex items-center gap-2">
+                  <span>✍️</span> Registrar Novo Turno de Combate
+                </h4>
                 <button
-                  onClick={adicionarLogJuiz}
-                  className="px-5 py-2.5 bg-bleach-orange text-black font-extrabold text-xs uppercase rounded-lg shadow"
+                  type="button"
+                  onClick={rolarDadoDuelo}
+                  className="px-3 py-1 bg-bleach-panel border border-bleach-border hover:border-yellow-400 text-yellow-300 text-xs font-bold rounded-lg transition"
                 >
-                  Registrar
+                  🎲 Rolar 1d6 (Regra Oficial)
                 </button>
               </div>
+
+              {dadoRolado && (
+                <div className="p-2.5 bg-yellow-950/60 border border-yellow-500/50 rounded-xl flex items-center justify-between text-xs">
+                  <span className="text-yellow-200">Resultado do Dado: <strong>1d6 = {dadoRolado.res}</strong></span>
+                  <span className="font-bold text-yellow-300 uppercase">{dadoRolado.cat}</span>
+                </div>
+              )}
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div>
+                  <label className="block text-bleach-muted font-bold mb-1">Ação de {p1.nome}</label>
+                  <input
+                    type="text"
+                    placeholder="Ex: Avançou com Shunpo e desferiu corte vertical..."
+                    value={acaoP1}
+                    onChange={(e) => setAcaoP1(e.target.value)}
+                    className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2 text-white"
+                  />
+                </div>
+                <div>
+                  <label className="block text-bleach-muted font-bold mb-1">Ação de {p2.nome}</label>
+                  <input
+                    type="text"
+                    placeholder="Ex: Ergueu Bakudō #39 e contra-atacou com Hadō..."
+                    value={acaoP2}
+                    onChange={(e) => setAcaoP2(e.target.value)}
+                    className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2 text-white"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-bleach-creamDim font-bold mb-1 text-xs uppercase">Decisão do Juiz / Consequência Narrativa *</label>
+                <input
+                  type="text"
+                  placeholder="Ex: O corte rompeu a barreira mas causou apenas dano superficial; ambos recuam..."
+                  value={vereditoJuiz}
+                  onChange={(e) => setVereditoJuiz(e.target.value)}
+                  className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2.5 text-xs text-white"
+                />
+              </div>
+
+              <div className="flex justify-end">
+                <button
+                  type="submit"
+                  className="px-6 py-2.5 bg-gradient-to-r from-bleach-orange to-red-600 text-black font-extrabold text-xs uppercase tracking-wider rounded-xl shadow"
+                >
+                  ✓ Gravar Turno na Linha do Tempo
+                </button>
+              </div>
+            </form>
+
+            {/* Turn Timeline Log */}
+            <div className="space-y-3">
+              <h4 className="font-title text-lg text-bleach-cream flex items-center gap-2">
+                <span>📜</span> REGISTRO CRONOLÓGICO DOS TURNOS ({(duelo.turnos || []).length})
+              </h4>
+
+              {(duelo.turnos || []).length === 0 ? (
+                <div className="p-8 text-center text-xs text-bleach-muted bg-black/40 rounded-xl border border-white/5">
+                  Nenhum turno registrado neste combate ainda.
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {(duelo.turnos || []).map((t) => (
+                    <div key={t.id} className="p-4 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-2">
+                      <div className="flex items-center justify-between border-b border-white/5 pb-1 text-xs">
+                        <span className="font-title text-bleach-orange text-base">TURNO #{t.numero}</span>
+                        <span className="text-bleach-muted font-mono text-[11px]">{t.data} — Juiz: {t.autor}</span>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-bleach-creamDim">
+                        <div className="p-2 bg-black/40 rounded-lg">
+                          <strong className="text-red-400 block">{p1.nome}:</strong>
+                          <p>{t.acaoP1}</p>
+                        </div>
+                        <div className="p-2 bg-black/40 rounded-lg">
+                          <strong className="text-cyan-400 block">{p2.nome}:</strong>
+                          <p>{t.acaoP2}</p>
+                        </div>
+                      </div>
+
+                      <div className="p-2.5 bg-black/70 border border-yellow-500/30 rounded-lg text-xs space-y-1">
+                        <span className="font-bold text-yellow-300 block uppercase text-[10px]">Consequência do Turno:</span>
+                        <p className="text-white">{t.veredito}</p>
+                        {t.dado && <span className="text-[10px] text-yellow-400 font-mono block">🎲 {t.dado}</span>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         ) : (
-          <p className="text-xs text-bleach-muted">Nenhum combate ativo no momento.</p>
+          <p className="text-xs text-bleach-muted">Nenhum combatente selecionado.</p>
         )}
       </Section>
     </div>
@@ -6391,7 +6018,7 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
 
 
 // =========================================================================
-// VIEWS PART 3: ADMIN PANEL, RICH SISTEMAS VIEW & APP MOUNT
+// VIEWS PART 3: ADMIN PANEL, FULL OFFICIAL SISTEMAS VIEW & LOL-STYLE PATCH NOTES
 // =========================================================================
 
 // TAB: PAINEL DE CONTROLE DA ADMINISTRAÇÃO
@@ -6411,7 +6038,7 @@ function AdminPanel({ db, saveDb, session, cloudStatus, onAbrirFicha }) {
   const [novoEsquadrao, setNovoEsquadrao] = useState("11º Esquadrão");
 
   // Dados de Rolagem de Dados
-  const [dadoTipo, setDadoTipo] = useState("d20");
+  const [dadoTipo, setDadoTipo] = useState("d6");
   const [dadoChar, setDadoChar] = useState(db.personagens?.[0]?.nome || "Geral");
 
   function criarPersonagem(e) {
@@ -6514,14 +6141,16 @@ function AdminPanel({ db, saveDb, session, cloudStatus, onAbrirFicha }) {
   }
 
   function rolarDadoPublico() {
-    const lados = dadoTipo === "d20" ? 20 : dadoTipo === "d100" ? 100 : 10;
+    const lados = dadoTipo === "d6" ? 6 : dadoTipo === "d20" ? 20 : 100;
     const res = Math.floor(Math.random() * lados) + 1;
-    let cat = "Sucesso Regular";
-    if (dadoTipo === "d20") {
-      if (res === 20) cat = "🌟 Sucesso Crítico Absoluto (20)";
+    let cat = "Sucesso";
+    if (dadoTipo === "d6") {
+      cat = res <= 2 ? "Falha (1–2)" : res <= 4 ? "Sucesso Parcial (3–4)" : "Sucesso Total (5–6)";
+    } else if (dadoTipo === "d20") {
+      if (res === 20) cat = "🌟 Crítico Absoluto (20)";
       else if (res >= 16) cat = "✨ Extremo Sucesso (+80%)";
       else if (res >= 10) cat = "✓ Sucesso Médio (+50%)";
-      else if (res === 1) cat = "💀 Falha Crítica (Desastre 1)";
+      else if (res === 1) cat = "💀 Falha Crítica (1)";
       else cat = "✗ Falha";
     }
 
@@ -6690,12 +6319,12 @@ function AdminPanel({ db, saveDb, session, cloudStatus, onAbrirFicha }) {
 
       {/* SUBTAB: ROLAGEM DE DADOS */}
       {tabAdm === "dados" && (
-        <Section title="Mesa de Rolagem de Dados de Alta Tensão" subtitle="Rolagens públicas de d20 e d100 para julgamento de cenas">
+        <Section title="Mesa de Rolagem de Dados de Alta Tensão" subtitle="Rolagens públicas de 1d6, d20 e d100 para julgamento de cenas">
           <div className="p-4 bg-black/60 rounded-xl border border-bleach-border flex flex-wrap gap-3 items-center mb-6">
             <select value={dadoTipo} onChange={(e) => setDadoTipo(e.target.value)} className="bg-bleach-panel2 border border-bleach-border rounded-lg p-2.5 text-xs text-white">
-              <option value="d20">🎲 Dado d20 (Testes & Combate)</option>
+              <option value="d6">🎲 Dado 1d6 (Regra Oficial de Combate)</option>
+              <option value="d20">🎲 Dado d20 (Testes Críticos)</option>
               <option value="d100">🎲 Dado d100 (Porcentagens)</option>
-              <option value="d10">🎲 Dado d10 (Escalas Rápidas)</option>
             </select>
 
             <select value={dadoChar} onChange={(e) => setDadoChar(e.target.value)} className="bg-bleach-panel2 border border-bleach-border rounded-lg p-2.5 text-xs text-white">
@@ -6728,9 +6357,9 @@ function AdminPanel({ db, saveDb, session, cloudStatus, onAbrirFicha }) {
   );
 }
 
-// RICH SISTEMAS & REGRAS VIEW (COMPLETE ORIGINAL SYSTEMS RESTORED)
+// FULL OFFICIAL SISTEMAS & REGRAS VIEW (100% CANONICAL BLEACH RPG BASE SYSTEM)
 function SistemasView() {
-  const [tabSis, setTabSis] = useState("atributos");
+  const [tabSis, setTabSis] = useState("conceito");
 
   return (
     <div className="space-y-6">
@@ -6738,13 +6367,13 @@ function SistemasView() {
       <div className="bg-banner-overlay border border-bleach-border rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
         <div className="relative z-10 max-w-3xl">
           <span className="px-3 py-1 bg-bleach-orange/20 border border-bleach-orange text-bleach-orange text-xs font-bold rounded-full uppercase tracking-wider">
-            Regulamento Oficial da Sociedade das Almas • Versão 2026
+            Regulamento Oficial da Sociedade das Almas • Versão 5.0
           </span>
           <h2 className="font-title text-4xl sm:text-5xl tracking-widest text-bleach-cream mt-3 reiatsu-text-glow">
-            COMPÊNDIO DE SISTEMAS & MECÂNICAS
+            BLEACH RPG — SISTEMA BASE
           </h2>
           <p className="text-xs sm:text-sm text-bleach-creamDim mt-2 leading-relaxed">
-            Consulte todas as diretrizes oficiais de atributos, treinos em ON, roletas de sorteio, individualização de Zanpakutōs e regras de conjuração de Kidō.
+            O RPG é focado principalmente em Narrativa, Desenvolvimento de personagem, Combate, Power scaling e Evolução gradual. Evita excesso de rolagens — dados só aparecem quando existe dúvida real!
           </p>
         </div>
       </div>
@@ -6752,11 +6381,12 @@ function SistemasView() {
       {/* Category Tabs */}
       <div className="flex gap-2 overflow-x-auto border-b border-bleach-borderSoft pb-2">
         {[
-          { id: "atributos", label: "Atributos & Patamares", icon: "⚡" },
-          { id: "treinos", label: "Treinos em ON & Ganhos", icon: "✍️" },
-          { id: "sorteios", label: "Sorteios & Roletas", icon: "🎁" },
-          { id: "zanpakuto", label: "Zanpakutō & 33 Regras de IA", icon: "🗡️" },
-          { id: "kidos", label: "Kidō & Encantamentos", icon: "📕" },
+          { id: "conceito", label: "1–4. Conceito, Raças & Kidō Inicial", icon: "⚔️" },
+          { id: "atributos", label: "5–9. Atributos & Power Scaling", icon: "⚡" },
+          { id: "combate", label: "10–14. Combate, 1d6 & Estados", icon: "🩸" },
+          { id: "treinamento", label: "15–21. Treinos OFF & Fadiga", icon: "🏋️" },
+          { id: "missoes", label: "22–27. Missões, Miscelâneas & Drops", icon: "📜" },
+          { id: "filosofia", label: "28–30. Técnicas, Zanpakutō & Filosofia", icon: "🗡️" },
         ].map(t => (
           <button
             key={t.id}
@@ -6771,185 +6401,374 @@ function SistemasView() {
         ))}
       </div>
 
-      {/* ABA 1: ATRIBUTOS & PATAMARES */}
-      {tabSis === "atributos" && (
+      {/* TAB 1: CONCEITO, RAÇAS & KIDŌ INICIAL */}
+      {tabSis === "conceito" && (
         <div className="space-y-6">
-          <Section title="Os 4 Atributos Primários da Alma" subtitle="A base estrutural do poder de todo Shinigami">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {ATTRS.map(a => (
-                <div key={a.key} className="p-4 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-2">
-                  <h4 className="font-bold text-sm uppercase tracking-wider" style={{ color: a.color }}>{a.label}</h4>
-                  <p className="text-xs text-bleach-creamDim leading-relaxed">{a.desc}</p>
-                  <div className="text-[11px] text-bleach-muted pt-1 border-t border-white/5">
-                    {a.key === "pressao" && "Determina a quantidade máxima de Kidōs por cena, o alcance de percepção sensorial e a resistência contra supressões espirituais."}
-                    {a.key === "forca" && "Governa a potência do Zanjutsu (esgrima) e Hakuda (combate desarmado), além do impacto de cortes e colisões físicas."}
-                    {a.key === "velocidade" && "Rege a velocidade de locomoção, reflexos de combate, capacidade de esquiva e a maestria na técnica de Hohō/Shunpo."}
-                    {a.key === "resiliencia" && "Controla a vitalidade do corpo espiritual (Hakusui e Saketsu), absorção de impacto, resistência a ferimentos e fadiga."}
-                  </div>
-                </div>
-              ))}
+          <Section title="1. Conceito do Sistema" subtitle="A essência da interpretação e resolução de ações">
+            <div className="space-y-3 text-xs text-bleach-creamDim leading-relaxed">
+              <p>O RPG é focado principalmente em: <strong>Narrativa, Desenvolvimento de Personagem, Combate, Power Scaling e Evolução Gradual</strong>.</p>
+              <p>O sistema deve evitar excesso de rolagens. <strong>Dados só aparecem quando existe uma dúvida real.</strong></p>
+              <div className="p-3 bg-black/60 border border-bleach-orange/40 rounded-xl text-white font-mono text-center">
+                Resultado = Atributos + Técnicas + Experiência + Circunstâncias + Narrativa
+              </div>
             </div>
           </Section>
 
-          <Section title="Escala Oficial de Patamares de Poder" subtitle="A hierarquia espiritual da Sociedade das Almas">
-            <div className="space-y-3">
-              {[
-                { faixa: "1 a 10 pts", titulo: "Inexperiente", desc: "Aluno recém-ingressado na Academia Shinō.", cor: C.muted },
-                { faixa: "11 a 30 pts", titulo: "Iniciante", desc: "Oficial subalterno, combatente raso de Esquadrão.", cor: C.green },
-                { faixa: "31 a 60 pts", titulo: "Treinado", desc: "Oficial de Assento (10º ao 4º Oficial), experiente em missões no Mundo Humano.", cor: C.blue },
-                { faixa: "61 a 100 pts", titulo: "Veterano", desc: "3º Oficial ou Tenente de Esquadrão; maestria de Shikai e combate de alta escala.", cor: C.purple },
-                { faixa: "101 a 150 pts", titulo: "Mestre", desc: "Capitão do Gotei 13; domínio pleno de Bankai e liderança militar absoluta.", cor: C.yellow },
-                { faixa: "150+ pts", titulo: "Transcendental", desc: "Nível Divisão Zero / Guarda Real / Força Primordial do Seireitei.", cor: "#FFD700" }
-              ].map(tier => (
-                <div key={tier.titulo} className="p-3 bg-bleach-panel2 border border-bleach-border rounded-xl flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-3">
-                    <span className="px-2.5 py-1 rounded font-mono font-bold text-xs bg-black text-white border border-white/10">{tier.faixa}</span>
-                    <div>
-                      <h5 className="font-bold text-xs uppercase" style={{ color: tier.cor }}>{tier.titulo}</h5>
-                      <p className="text-[11px] text-bleach-muted">{tier.desc}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Section>
-        </div>
-      )}
-
-      {/* ABA 2: TREINOS EM ON */}
-      {tabSis === "treinos" && (
-        <div className="space-y-6">
-          <Section title="Sistema de Treinos em ON & Ganhos" subtitle="Diretrizes para progressão de atributos através de roleplay">
-            <div className="space-y-4 text-xs text-bleach-creamDim leading-relaxed">
-              <div className="p-4 bg-bleach-panel2 border-l-4 border-bleach-orange rounded-xl space-y-2">
-                <h4 className="font-bold text-sm text-bleach-orange uppercase">📜 Treino Básico em ON (30 Linhas)</h4>
-                <p>O jogador que narrar uma cena individual de treino focada e bem estruturada com no mínimo <strong>30 linhas</strong> no grupo oficial receberá:</p>
-                <ul className="list-disc list-inside space-y-1 text-white font-mono">
-                  <li>+1 Ponto Livre de Atributo (ou em atributo treinado)</li>
-                  <li>+4 Giros de Sorteio Comum</li>
-                  <li>+1 Giro de Sorteio Especial</li>
+          <Section title="2 & 3. Raças Disponíveis & Diferença de Origens" subtitle="Shinigami da Sociedade das Almas vs Shinigami Ex-Humano">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs mb-4">
+              <div className="p-4 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-2">
+                <h4 className="font-bold text-sm text-cyan-400 uppercase">⚔️ Shinigami (Nativo)</h4>
+                <p className="text-bleach-creamDim">Personagem que já pertence à Sociedade das Almas e possui formação básica como Shinigami na Academia Shinō.</p>
+                <ul className="list-disc list-inside text-[11px] text-bleach-muted space-y-0.5">
+                  <li>Possui Zanpakutō e formação inicial</li>
+                  <li>Começa com 4 Kidōs básicos à escolha</li>
+                  <li>Pode aprender Zanjutsu, Hakuda, Hohō e técnicas</li>
                 </ul>
               </div>
 
-              <div className="p-4 bg-bleach-panel2 border-l-4 border-cyan-400 rounded-xl space-y-2">
-                <h4 className="font-bold text-sm text-cyan-400 uppercase">⚡ Cenas de Arco & Missões Principais (90+ Linhas)</h4>
-                <p>Cenas profundas de desenvolvimento de arco ou missões narradas com <strong>90 linhas ou mais</strong> concedem automaticamente <strong>+15 Pontos de Atributo Garantidos</strong> e pacotes especiais de roletas de bonificação após avaliação do ADM.</p>
-              </div>
-
-              <div className="p-4 bg-bleach-panel2 border-l-4 border-purple-400 rounded-xl space-y-2">
-                <h4 className="font-bold text-sm text-purple-400 uppercase">⚔️ Combates em ON & Arbitragem</h4>
-                <p>Combates na Arena são julgados por turnos com apoio de rolagens públicas de d20. A vitória e a criatividade tática rendem pontos proporcionais definidos pelo Juiz da Arena.</p>
-              </div>
-            </div>
-          </Section>
-        </div>
-      )}
-
-      {/* ABA 3: SORTEIOS & ROLETAS */}
-      {tabSis === "sorteios" && (
-        <div className="space-y-6">
-          <Section title="Probabilidades do Sorteio Gacha Comum" subtitle="Tabela estatística oficial de drops para cada giro comum">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-              {RARIDADES_COMUNS.map(r => (
-                <div key={r.nome} className="p-3.5 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-1.5">
-                  <div className="flex justify-between items-center">
-                    <span className="font-bold text-xs uppercase" style={{ color: r.cor }}>{r.nome}</span>
-                    <span className="font-mono text-xs font-bold text-white">{r.chanceStr}</span>
-                  </div>
-                  <p className="text-[11px] text-bleach-creamDim leading-relaxed">{r.desc}</p>
-                </div>
-              ))}
-            </div>
-          </Section>
-
-          <Section title="Catálogo de Recompensas do Sorteio Especial" subtitle="Itens sagrados, elixires nobres e despertar narrativo supremo">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {RECOMPENSAS_ESPECIAIS.map(item => (
-                <div key={item.id} className="p-3 bg-bleach-panel2 border border-bleach-border rounded-xl flex justify-between items-start gap-2">
-                  <div>
-                    <h5 className="font-bold text-xs" style={{ color: item.cor }}>{item.nome}</h5>
-                    <p className="text-[11px] text-bleach-muted mt-0.5">{item.desc}</p>
-                  </div>
-                  <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-black text-white shrink-0">
-                    {item.chanceStr}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </Section>
-        </div>
-      )}
-
-      {/* ABA 4: ZANPAKUTO & 33 REGRAS */}
-      {tabSis === "zanpakuto" && (
-        <div className="space-y-6">
-          <Section title="Motor Definitivo de Individualização Espiritual (33 Regras)" subtitle="Como a IA gera armas 100% únicas e exclusivas a partir do DNA da alma">
-            <div className="space-y-4 text-xs text-bleach-creamDim leading-relaxed">
-              <p>Nenhuma Zanpakutō na Sociedade das Almas pode ser duplicada ou genérica. O motor de IA utiliza a <strong>Personalidade Selada</strong>, virtudes, fraquezas e estilo de combate para sintetizar simultaneamente <strong>4 Caminhos Espirituais</strong>:</p>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="p-3 bg-bleach-panel2 border border-red-500/40 rounded-xl space-y-1">
-                  <strong className="text-red-400 block font-bold">1. Caminho Elemental / Temperamento (~45%)</strong>
-                  <p>Alinhado diretamente à psicologia dominante do personagem (Chamas, Raios, Sombras, Vento, Gelo, Gravidade).</p>
-                </div>
-                <div className="p-3 bg-bleach-panel2 border border-blue-500/40 rounded-xl space-y-1">
-                  <strong className="text-cyan-400 block font-bold">2. Caminho Conceitual / Progressivo (~20%)</strong>
-                  <p>Baseado em regras, estágios, ciclos de carga, contadores e mecânicas táticas de acúmulo.</p>
-                </div>
-                <div className="p-3 bg-bleach-panel2 border border-purple-500/40 rounded-xl space-y-1">
-                  <strong className="text-purple-400 block font-bold">3. Caminho Compensatório / Complementar</strong>
-                  <p>Fornece exatamente o recurso que falta na anatomia tática do personagem para cobrir suas fraquezas.</p>
-                </div>
-                <div className="p-3 bg-bleach-panel2 border border-amber-500/40 rounded-xl space-y-1">
-                  <strong className="text-yellow-400 block font-bold">4. Caminho Opositivo / Experimental</strong>
-                  <p>Subverte a expectativa: manifesta o paradoxo inconsciente e a sombra da alma do Shinigami.</p>
-                </div>
-              </div>
-
-              <div className="p-3.5 bg-black/60 border border-yellow-500/40 rounded-xl text-[11px] text-yellow-200">
-                <strong>🛡️ Regra de Exclusividade & Anti-Duplicação:</strong> Cada arma escolhida recebe uma Assinatura Espiritual única (`zk-sig-...`) e é registrada no catálogo global. Duplicatas com mais de 60% de similaridade são bloqueadas pelo sistema.
-              </div>
-            </div>
-          </Section>
-        </div>
-      )}
-
-      {/* ABA 5: KIDOS & ENCANTAMENTOS */}
-      {tabSis === "kidos" && (
-        <div className="space-y-6">
-          <Section title="Grimório & Regras de Conjuração de Kidō" subtitle="Diretrizes para o uso de magias espirituais em combate e cenas">
-            <div className="space-y-4 text-xs text-bleach-creamDim leading-relaxed">
               <div className="p-4 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-2">
-                <h4 className="font-bold text-sm text-cyan-400 uppercase">⚡ Limite de Feitiços por Cena</h4>
-                <p>A quantidade máxima de feitiços que um Shinigami pode conjurar em uma mesma cena é calculada pela fórmula:</p>
-                <div className="p-2.5 bg-black rounded font-mono text-center text-bleach-orange font-bold text-sm">
-                  Máximo de Kidōs = Math.max(3, Math.floor(Pressão Espiritual / 7) + 1)
-                </div>
+                <h4 className="font-bold text-sm text-purple-400 uppercase">👤 Shinigami Ex-Humano</h4>
+                <p className="text-bleach-creamDim">Personagem que teve uma vida humana antes de se tornar Shinigami. A origem influencia personalidade, memórias, relações e motivações.</p>
+                <ul className="list-disc list-inside text-[11px] text-bleach-muted space-y-0.5">
+                  <li>Não fornece bônus automático de atributos (origem narrativa)</li>
+                  <li>Aprende Kidō posteriormente através de treino e história</li>
+                  <li>Evolução, Zanpakutō e atributos operam de forma idêntica</li>
+                </ul>
               </div>
+            </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="p-3 bg-red-950/40 border border-red-500/40 rounded-xl space-y-1">
-                  <strong className="text-red-300 block font-bold">Hadō (Destruição)</strong>
-                  <p className="text-[11px]">Feitiços ofensivos de dano direto, calor, eletricidade e impacto cinético.</p>
-                </div>
-                <div className="p-3 bg-blue-950/40 border border-blue-500/40 rounded-xl space-y-1">
-                  <strong className="text-cyan-300 block font-bold">Bakudō (Aprisionamento)</strong>
-                  <p className="text-[11px]">Feitiços de contenção, barreiras reflexivas, rastreamento e supressão de movimento.</p>
-                </div>
-                <div className="p-3 bg-emerald-950/40 border border-emerald-500/40 rounded-xl space-y-1">
-                  <strong className="text-emerald-300 block font-bold">Kaidō (Cura)</strong>
-                  <p className="text-[11px]">Técnicas médicas de regeneração de tecidos e restauração de canais de Reiatsu.</p>
-                </div>
-              </div>
+            {/* Tabela Comparativa */}
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs text-left border border-bleach-border">
+                <thead className="bg-black text-bleach-orange font-bold uppercase text-[10px]">
+                  <tr>
+                    <th className="p-2.5 border-b border-bleach-border">Característica</th>
+                    <th className="p-2.5 border-b border-bleach-border">Shinigami</th>
+                    <th className="p-2.5 border-b border-bleach-border">Shinigami Ex-Humano</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/5 text-bleach-creamDim">
+                  <tr><td className="p-2 font-semibold text-white">Origem</td><td className="p-2">Sociedade das Almas</td><td className="p-2">Mundo Humano</td></tr>
+                  <tr><td className="p-2 font-semibold text-white">Vida humana anterior</td><td className="p-2">Não</td><td className="p-2">Sim</td></tr>
+                  <tr><td className="p-2 font-semibold text-white">Atributos & Evolução</td><td className="p-2 text-green-400 font-bold">Iguais (10 + 20 livres)</td><td className="p-2 text-green-400 font-bold">Iguais (10 + 20 livres)</td></tr>
+                  <tr><td className="p-2 font-semibold text-white">Zanpakutō</td><td className="p-2">Sim</td><td className="p-2">Sim</td></tr>
+                  <tr><td className="p-2 font-semibold text-white">Kidō Inicial</td><td className="p-2 text-cyan-300">4 Kidōs Básicos</td><td className="p-2 text-yellow-300">Aprende na narrativa</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </Section>
 
-              <div className="p-3.5 bg-black/60 border border-white/10 rounded-xl space-y-1 text-[11px]">
-                <strong className="text-white block font-bold">📜 Eishōhaki (Abandono de Encantamento):</strong>
-                <p>Conjurar um Kidō sem recitar o encantamento reduz o tempo de conjuração pela metade, porém diminui a potência do feitiço em aproximadamente um terço. Recitar o encantamento completo libera 100% do poder destrutivo da magia.</p>
+          <Section title="4. Kidō Inicial & Kaidō" subtitle="Distribuição dos feitiços iniciais e diretrizes de cura">
+            <div className="space-y-3 text-xs text-bleach-creamDim leading-relaxed">
+              <p>Um Shinigami nativo começa com <strong>4 Kidō Básicos</strong> distribuídos livremente entre <strong>Hadō (Ataque)</strong>, <strong>Bakudō (Defesa/Contenção)</strong> e <strong>Kaidō (Cura)</strong>.</p>
+              <div className="p-3.5 bg-bleach-panel2 border-l-4 border-green-500 rounded-xl space-y-1">
+                <strong className="text-green-400 block font-bold">🌿 Diretrizes de Kaidō (Cura Espiritual):</strong>
+                <p>Kaidō representa técnicas de tratamento e cura espiritual para tratar ferimentos, estabilizar aliados e aliviar danos. Porém, <strong>Kaidō não substitui descanso nem recuperação narrativa</strong>. Ferimentos graves podem exigir repouso ou técnicas médicas avançadas.</p>
               </div>
             </div>
           </Section>
         </div>
       )}
+
+      {/* TAB 2: ATRIBUTOS & POWER SCALING */}
+      {tabSis === "atributos" && (
+        <div className="space-y-6">
+          <Section title="5, 6 & 7. Atributos & Criação Inicial" subtitle="Regra fundamental: O número na ficha É o atributo">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs mb-4">
+              {ATTRS.map(a => (
+                <div key={a.key} className="p-3.5 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-1">
+                  <h4 className="font-bold uppercase tracking-wider text-xs" style={{ color: a.color }}>{a.label}</h4>
+                  <p className="text-[11px] text-bleach-creamDim leading-relaxed">{a.desc}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="p-4 bg-black/70 border border-yellow-500/50 rounded-xl text-xs space-y-2 text-bleach-creamDim">
+              <strong className="text-yellow-400 block font-bold">✨ Criação & Regra Fundamental:</strong>
+              <p>Todos os atributos começam em <strong>10</strong> e o jogador recebe <strong>20 Pontos de Atributo</strong> para distribuir livremente sem limite inicial.</p>
+              <p className="text-white font-mono font-bold">O número da ficha É o atributo. Não existe conversão, multiplicador, nível escondido ou escala secundária.</p>
+            </div>
+          </Section>
+
+          <Section title="8 & 9. Escala Oficial de Power Scaling & Diferenças" subtitle="Hierarquia e distâncias relativas entre atributos">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+              <div className="space-y-2">
+                <h4 className="font-title text-sm text-bleach-orange uppercase">Escala de Referência</h4>
+                <div className="space-y-1.5">
+                  {[
+                    { faixa: "1–10", patamar: "Inexperiente", cor: C.muted },
+                    { faixa: "11–30", patamar: "Iniciante", cor: C.green },
+                    { faixa: "31–60", patamar: "Treinado", cor: C.blue },
+                    { faixa: "61–100", patamar: "Experiente", cor: C.purple },
+                    { faixa: "101–150", patamar: "Elite", cor: C.yellow },
+                    { faixa: "151–250", patamar: "Alto Nível", cor: "#FFA500" },
+                    { faixa: "251–400", patamar: "Monstruoso", cor: C.red },
+                    { faixa: "401–600", patamar: "Lendário", cor: "#E0B34C" },
+                    { faixa: "601+", patamar: "Transcendente", cor: "#FFD700" }
+                  ].map(p => (
+                    <div key={p.patamar} className="p-2 bg-bleach-panel2 border border-white/5 rounded-lg flex justify-between">
+                      <span className="font-mono font-bold text-white">{p.faixa} pts</span>
+                      <span className="font-bold uppercase" style={{ color: p.cor }}>{p.patamar}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <h4 className="font-title text-sm text-cyan-400 uppercase">Diferença em Combate</h4>
+                <div className="space-y-1.5">
+                  {[
+                    { diff: "0–10 pts", desc: "Equivalentes" },
+                    { diff: "11–30 pts", desc: "Pequena vantagem" },
+                    { diff: "31–75 pts", desc: "Vantagem clara" },
+                    { diff: "76–150 pts", desc: "Grande vantagem" },
+                    { diff: "151–250 pts", desc: "Abismo" },
+                    { diff: "251+ pts", desc: "Diferença monstruosa" }
+                  ].map(d => (
+                    <div key={d.diff} className="p-2 bg-bleach-panel2 border border-white/5 rounded-lg flex justify-between">
+                      <span className="font-mono text-bleach-muted">{d.diff}</span>
+                      <strong className="text-white">{d.desc}</strong>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-[11px] text-bleach-muted italic mt-2">Quanto maior a diferença, mais difícil é superar a inferioridade através de técnica pura.</p>
+              </div>
+            </div>
+          </Section>
+        </div>
+      )}
+
+      {/* TAB 3: COMBATE, 1D6 & ESTADOS */}
+      {tabSis === "combate" && (
+        <div className="space-y-6">
+          <Section title="10 & 11. Estrutura de Combate & O Dado 1d6" subtitle="Processo de 3 etapas e resolução simplificada">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs mb-4">
+              <div className="p-3.5 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-1">
+                <span className="font-bold text-bleach-orange uppercase block text-[10px]">1. Intenção</span>
+                <p>O jogador declara claramente o que pretende fazer em sua narração.</p>
+              </div>
+              <div className="p-3.5 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-1">
+                <span className="font-bold text-cyan-400 uppercase block text-[10px]">2. Comparação</span>
+                <p>O narrador compara os atributos, técnicas e contexto dos envolvidos.</p>
+              </div>
+              <div className="p-3.5 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-1">
+                <span className="font-bold text-green-400 uppercase block text-[10px]">3. Consequência</span>
+                <p>O narrador determina o desfecho sem rolagem obrigatória.</p>
+              </div>
+            </div>
+
+            <div className="p-4 bg-black/60 border border-yellow-500/40 rounded-xl text-xs space-y-2">
+              <h4 className="font-bold text-yellow-300 uppercase">🎲 Regra do Dado 1d6 (Apenas em Dúvida Real)</h4>
+              <div className="grid grid-cols-3 gap-2 text-center font-mono">
+                <div className="p-2 bg-red-950/60 border border-red-500/50 rounded-lg text-red-300">1–2: Falha</div>
+                <div className="p-2 bg-yellow-950/60 border border-yellow-500/50 rounded-lg text-yellow-300">3–4: Sucesso Parcial</div>
+                <div className="p-2 bg-green-950/60 border border-green-500/50 rounded-lg text-green-300">5–6: Sucesso Total</div>
+              </div>
+            </div>
+          </Section>
+
+          <Section title="12 & 13. Estados de Combate & Pressão Espiritual" subtitle="Sem barra de HP tradicional">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs text-center mb-4">
+              <div className="p-3 bg-green-950/40 border border-green-500/40 rounded-xl">
+                <strong className="text-green-400 block font-bold">🟢 Inteiro</strong>
+                <span className="text-[10px] text-bleach-muted">Condição normal</span>
+              </div>
+              <div className="p-3 bg-yellow-950/40 border border-yellow-500/40 rounded-xl">
+                <strong className="text-yellow-400 block font-bold">🟡 Ferido</strong>
+                <span className="text-[10px] text-bleach-muted">Danos afetam desempenho</span>
+              </div>
+              <div className="p-3 bg-orange-950/40 border border-orange-500/40 rounded-xl">
+                <strong className="text-orange-400 block font-bold">🟠 Debilitado</strong>
+                <span className="text-[10px] text-bleach-muted">Gravemente prejudicado</span>
+              </div>
+              <div className="p-3 bg-red-950/40 border border-red-500/40 rounded-xl">
+                <strong className="text-red-400 block font-bold">🔴 Derrotado</strong>
+                <span className="text-[10px] text-bleach-muted">Incapacitado de lutar</span>
+              </div>
+            </div>
+          </Section>
+        </div>
+      )}
+
+      {/* TAB 4: TREINOS OFF & FADIGA */}
+      {tabSis === "treinamento" && (
+        <div className="space-y-6">
+          <Section title="15–21. Treinamento em OFF, Ganhos & Sistema de Fadiga" subtitle="Máximo de 3 treinos diários e penalidades por desgaste">
+            <div className="space-y-4 text-xs text-bleach-creamDim leading-relaxed">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="p-3.5 bg-bleach-panel2 border border-bleach-border rounded-xl">
+                  <span className="font-bold text-white block uppercase text-[10px]">1º Período</span>
+                  <p className="text-bleach-muted">Manhã (0–3 pts)</p>
+                </div>
+                <div className="p-3.5 bg-bleach-panel2 border border-bleach-border rounded-xl">
+                  <span className="font-bold text-white block uppercase text-[10px]">2º Período</span>
+                  <p className="text-bleach-muted">Tarde (0–3 pts)</p>
+                </div>
+                <div className="p-3.5 bg-bleach-panel2 border border-bleach-border rounded-xl">
+                  <span className="font-bold text-white block uppercase text-[10px]">3º Período</span>
+                  <p className="text-bleach-muted">Noite (0–3 pts)</p>
+                </div>
+              </div>
+
+              <div className="p-4 bg-red-950/40 border-2 border-red-500/50 rounded-xl space-y-2">
+                <h4 className="font-bold text-red-300 uppercase">⚠️ Regras de Fadiga Temporária</h4>
+                <ul className="list-disc list-inside space-y-1 font-mono text-[11px] text-white">
+                  <li><strong>1 Treino:</strong> Nenhuma redução obrigatória.</li>
+                  <li><strong>2 Treinos:</strong> −5% temporário nos atributos treinados.</li>
+                  <li><strong>3 Treinos:</strong> −15% temporário nos atributos treinados + <strong>bloqueio de recompensas de Miscelânea</strong> naquele dia.</li>
+                  <li><strong>Descanso:</strong> Um novo dia remove 100% da fadiga acumulada sem perda de pontos permanentes da ficha.</li>
+                </ul>
+              </div>
+            </div>
+          </Section>
+        </div>
+      )}
+
+      {/* TAB 5: MISSÕES, MISCELÂNEAS & DROPS */}
+      {tabSis === "missoes" && (
+        <div className="space-y-6">
+          <Section title="22–27. Recompensas de Cenas ON & Drops Extras" subtitle="Tabela oficial de ganhos por tipo de cena">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs mb-4">
+              <div className="p-3 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-1">
+                <strong className="text-cyan-400 block uppercase font-bold">Missões (ON)</strong>
+                <p className="text-[11px] text-bleach-muted">Simples: 1–2 pts<br/>Normal: 2–4 pts<br/>Importante: 3–6 pts<br/>Excepcional: 5–8 pts</p>
+              </div>
+              <div className="p-3 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-1">
+                <strong className="text-green-400 block uppercase font-bold">Miscelâneas (ON)</strong>
+                <p className="text-[11px] text-bleach-muted">Simples: 0–1 pt<br/>Relevante: 1–2 pts<br/>Excepcional: 2–3 pts</p>
+              </div>
+              <div className="p-3 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-1">
+                <strong className="text-purple-400 block uppercase font-bold">Cenas de Arco</strong>
+                <p className="text-[11px] text-bleach-muted">Comum: 1–3 pts<br/>Importante: 2–4 pts<br/>Decisiva: 4–6 pts</p>
+              </div>
+              <div className="p-3 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-1">
+                <strong className="text-yellow-400 block uppercase font-bold">Combates (ON)</strong>
+                <p className="text-[11px] text-bleach-muted">Menor: 1–2 pts<br/>Relevante: 2–4 pts<br/>Importante: 3–6 pts</p>
+              </div>
+            </div>
+
+            <div className="p-3.5 bg-black/60 border border-white/10 rounded-xl text-xs flex justify-between items-center">
+              <div>
+                <span className="font-bold text-bleach-orange block uppercase">Bônus Semanal de Constância:</span>
+                <span className="text-bleach-creamDim">Jogadores muito ativos recebem +2 a +3 Pontos de Atributo ao final da semana.</span>
+              </div>
+            </div>
+          </Section>
+        </div>
+      )}
+
+      {/* TAB 6: FILOSOFIA & ZANPAKUTŌ */}
+      {tabSis === "filosofia" && (
+        <div className="space-y-6">
+          <Section title="28, 29 & 30. Técnicas, Zanpakutō & Filosofia Geral" subtitle="Os 4 princípios do Bleach RPG">
+            <div className="space-y-4 text-xs text-bleach-creamDim leading-relaxed">
+              <div className="p-4 bg-bleach-panel2 border-l-4 border-yellow-500 rounded-xl space-y-2">
+                <h4 className="font-bold text-sm text-yellow-400 uppercase">Os Quatro Princípios</h4>
+                <ul className="list-disc list-inside space-y-1 font-mono text-white">
+                  <li>Números determinam a escala.</li>
+                  <li>Técnicas determinam como o poder é utilizado.</li>
+                  <li>Narrativa determina o contexto.</li>
+                  <li>Dados só aparecem quando existe incerteza real.</li>
+                </ul>
+              </div>
+
+              <div className="p-3.5 bg-black/60 border border-cyan-500/40 rounded-xl text-[11px] text-cyan-200">
+                <strong>🗡️ Evolução da Zanpakutō:</strong> A Zanpakutō evolui através da história: descoberta do espírito, nome, Shikai e Bankai. Não são poderes comprados com pontos, mas conquistados narrativamente.
+              </div>
+            </div>
+          </Section>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// LEAGUE OF LEGENDS STYLE PATCH NOTES COMPONENT
+function PatchNotesView() {
+  const [patchAtivo, setPatchAtivo] = useState(PATCH_NOTES_HISTORY[0].versao);
+  const patch = PATCH_NOTES_HISTORY.find(p => p.versao === patchAtivo) || PATCH_NOTES_HISTORY[0];
+
+  return (
+    <div className="space-y-6">
+      {/* Header Banner */}
+      <div className="bg-banner-overlay border border-bleach-border rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+        <div className="relative z-10 max-w-3xl">
+          <span className="px-3 py-1 bg-yellow-950 border border-yellow-500 text-yellow-300 text-xs font-bold rounded-full uppercase tracking-wider">
+            Histórico Oficial de Atualizações • Estilo League of Legends
+          </span>
+          <h2 className="font-title text-4xl sm:text-5xl tracking-widest text-bleach-cream mt-3 reiatsu-text-glow">
+            NOTAS DE ATUALIZAÇÃO & BALANCEAMENTO
+          </h2>
+          <p className="text-xs sm:text-sm text-bleach-creamDim mt-2 leading-relaxed">
+            Acompanhe a evolução contínua do Bleach RPG: mudanças de regras, buffs, nerfs, novos sistemas e ajustes no motor de almas.
+          </p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* Version Selector Sidebar */}
+        <div className="lg:col-span-1 space-y-2">
+          <span className="text-xs font-bold uppercase tracking-wider text-bleach-muted px-2 block">Versões Anteriores (10 Patches)</span>
+          <div className="space-y-1.5 max-h-[500px] overflow-y-auto pr-1">
+            {PATCH_NOTES_HISTORY.map((p) => {
+              const isCurrent = p.versao === patchAtivo;
+              return (
+                <button
+                  key={p.versao}
+                  onClick={() => setPatchAtivo(p.versao)}
+                  className={`w-full text-left p-3 rounded-xl border transition flex items-center justify-between ${
+                    isCurrent
+                      ? "bg-bleach-orange text-black font-extrabold border-bleach-orange shadow-lg"
+                      : "bg-bleach-panel2 border-bleach-border text-bleach-creamDim hover:text-white hover:border-white/20"
+                  }`}
+                >
+                  <div>
+                    <span className="font-title text-base block leading-tight">PATCH {p.versao}</span>
+                    <span className={`text-[10px] block ${isCurrent ? "text-black/80 font-bold" : "text-bleach-muted"}`}>{p.data}</span>
+                  </div>
+                  {p.versao === "5.0" && (
+                    <span className="px-2 py-0.5 rounded bg-black text-bleach-orange text-[9px] font-bold uppercase">ATUAL</span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Patch Content Details */}
+        <div className="lg:col-span-3 space-y-5">
+          <Section
+            title={`PATCH ${patch.versao} — ${patch.titulo}`}
+            subtitle={`Lançado oficialmente em ${patch.data}`}
+            className="border-2 border-yellow-500/40 shadow-2xl"
+          >
+            {/* Highlights Box */}
+            <div className="p-4 bg-black/80 border border-yellow-500/40 rounded-2xl mb-6 space-y-2">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-yellow-400 block">Destaques da Atualização</span>
+              <p className="text-sm font-semibold text-white leading-relaxed">{patch.destaque}</p>
+              <p className="text-xs text-bleach-creamDim pt-1 border-t border-white/5">{patch.resumo}</p>
+            </div>
+
+            {/* Sections (Buffs, Nerfs, New Features, Rules) */}
+            <div className="space-y-5">
+              {patch.secoes.map((sec, idx) => (
+                <div key={idx} className="p-4 bg-bleach-panel2 border border-bleach-border rounded-xl space-y-3">
+                  <h4 className="font-title text-lg text-bleach-orange uppercase tracking-wider flex items-center gap-2 border-b border-white/5 pb-2">
+                    {sec.titulo}
+                  </h4>
+                  <div className="space-y-2 text-xs text-bleach-creamDim leading-relaxed">
+                    {sec.itens.map((item, itemIdx) => (
+                      <div key={itemIdx} className="p-2.5 bg-black/40 rounded-lg border border-white/5 whitespace-pre-wrap">
+                        {item}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Section>
+        </div>
+      </div>
     </div>
   );
 }
@@ -7067,6 +6886,7 @@ function App() {
         registrosTarefasAdm: (next.registrosTarefasAdm || []).slice(0, 50),
         combatesArena: (next.combatesArena || []).slice(0, 20),
         rolagensDadosPublicas: (next.rolagensDadosPublicas || []).slice(0, 30),
+        mensagensChat: (next.mensagensChat || []).slice(-100),
         zanpakutosVinculadas: next.zanpakutosVinculadas || [],
         personagens: next.personagens || []
       };
@@ -7148,6 +6968,19 @@ function App() {
         )}
 
         {view === "sistemas" && <SistemasView />}
+
+        {view === "chat" && (
+          <ChatView
+            db={db}
+            saveDb={saveDb}
+            session={session}
+            myChar={myChar}
+          />
+        )}
+
+        {view === "patchnotes" && (
+          <PatchNotesView />
+        )}
 
         {view === "ficha" && (
           session?.role === "jogador" ? (
@@ -7271,4 +7104,11 @@ function App() {
       )}
     </div>
   );
+}
+
+// MOUNT REACT ROOT
+const container = document.getElementById('root');
+if (container) {
+  const root = ReactDOM.createRoot(container);
+  root.render(<App />);
 }
