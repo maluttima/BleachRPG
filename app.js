@@ -365,12 +365,1273 @@ const CATALOGO_KIDOS = [{
 }];
 
 // =========================================================================
-// 100% ORIGINAL & AUTORIAL UNIQUE ZANPAKUTŌ ENGINE
+// 100% ORIGINAL & AUTORIAL UNIQUE ZANPAKUTŌ ENGINE (MASTER POOL OF 60 BLADES)
 // =========================================================================
 
+const MASTER_ZANPAKUTO_CATALOG = [{
+  "id": "zk-01",
+  "numero": "01",
+  "nome": "Kurotsubaki",
+  "kanji": "「黒椿」",
+  "traducao": "A Camélia Negra",
+  "nomeCompleto": "Kurotsubaki 「黒椿」— A Camélia Negra",
+  "espirito": "Uma mulher alta, de aparência madura, vestida com um quimono preto coberto por pétalas de camélia. Seu rosto é parcialmente escondido por um véu. Ela passa a maior parte do tempo sentada em um jardim completamente sem cor, cuidando de uma única árvore.",
+  "comando": "Floresça no silêncio, Kurotsubaki.",
+  "elemento": "Vácuo Cinético & Pétalas Negras",
+  "formatoArma": "A katana perde a lâmina tradicional e se transforma em uma espada fina, negra, com uma guarda circular semelhante a uma flor. Pequenas pétalas negras começam a surgir ao redor do usuário sempre que ele movimenta a espada. As pétalas não são simplesmente decorativas: elas permanecem suspensas no ambiente por alguns segundos.",
+  "poder": "Jardim do Último Instante: O usuário pode fazer as pétalas absorverem o movimento de qualquer coisa que toquem. Uma pessoa que atravessa uma pétala sente seu movimento diminuir brevemente. Um golpe pode perder velocidade. Uma flecha pode praticamente parar. Limitação: as pétalas só conseguem armazenar uma quantidade limitada de movimento. Quando o limite é atingido, elas desaparecem.",
+  "bankai": {
+    "nome": "Kurotsubaki — Shūen Teien",
+    "kanji": "「黒椿・終焉庭園」",
+    "traducao": "Jardim do Fim",
+    "nomeCompleto": "Bankai — Kurotsubaki 「黒椿・終焉庭園」 (Shūen Teien — Jardim do Fim)",
+    "comando": "Bankai — Kurotsubaki, Shūen Teien!",
+    "formatoArma": "Todas as pétalas existentes se transformam em árvores negras gigantescas. O campo de batalha inteiro vira um jardim silencioso e monocromático sob uma penumbra espiritual.",
+    "poder": "Redistribuição Absoluta do Movimento: O usuário agora pode redistribuir o movimento armazenado. Pode retirar velocidade de uma coisa e transferi-la para outra. Por exemplo: uma espada inimiga perde velocidade → uma estocada do usuário recebe essa velocidade. A grande evolução é que a Shikai armazena, enquanto a Bankai redistribui livremente no domínio do jardim."
+  }
+}, {
+  "id": "zk-02",
+  "numero": "02",
+  "nome": "Akagane",
+  "kanji": "「赤鋼」",
+  "traducao": "Aço Vermelho",
+  "nomeCompleto": "Akagane 「赤鋼」— Aço Vermelho",
+  "espirito": "Um ferreiro gigantesco sem rosto, com o corpo coberto por placas metálicas e um enorme avental. Em vez de mãos, possui martelos. Ele nunca fala; responde apenas golpeando uma bigorna espiritual ancestral.",
+  "comando": "Forje aquilo que ainda não existe, Akagane.",
+  "elemento": "Aço Carmesim & Refinamento Cinético",
+  "formatoArma": "A espada se desfaz em várias placas metálicas vermelhas que envolvem o braço direito do usuário, formando uma manopla reforçada e antebraço blindado de combate pesado.",
+  "poder": "Memória do Impacto: Cada golpe recebido pela armadura é parcialmente armazenado. Quanto mais impactos recebe, mais energia cinética a armadura acumula. O usuário pode liberar essa energia através do próximo golpe. Limitação: se acumular energia demais além da sua capacidade física, a própria armadura começa a sobreaquecer e prejudicar o usuário.",
+  "bankai": {
+    "nome": "Akagane — Hyakurenro",
+    "kanji": "「赤鋼・百錬炉」",
+    "traducao": "Forja das Cem Temperas",
+    "nomeCompleto": "Bankai — Akagane 「赤鋼・百錬炉」 (Hyakurenro — Forja das Cem Temperas)",
+    "comando": "Bankai — Akagane, Hyakurenro!",
+    "formatoArma": "A armadura de aço vermelho cobre todo o corpo do usuário e surge uma enorme fornalha espiritual incandescente flutuando atrás dele.",
+    "poder": "Refinamento & Conversão Metabólica de Energia: Os impactos agora são refinados pela fornalha. Cada golpe recebido ou trocado consecutivamente transforma a energia acumulada em bônus direto de força, velocidade, resistência ou impulso destrutivo. Requer que o usuário mantenha o ritmo de combate contínuo; se parar de lutar por muito tempo, a energia refinada se dissipa."
+  }
+}, {
+  "id": "zk-03",
+  "numero": "03",
+  "nome": "Suisen",
+  "kanji": "「水仙」",
+  "traducao": "Narciso",
+  "nomeCompleto": "Suisen 「水仙」— Narciso",
+  "espirito": "Um garoto extremamente pálido, vestido como um bailarino clássico, que vive em um salão imenso cheio de espelhos cobertos por água rasa e pétalas brancas.",
+  "comando": "Olhe para si mesmo, Suisen.",
+  "elemento": "Espelhos Líquidos & Translocação",
+  "formatoArma": "A lâmina se transforma em uma espada extremamente fina e prateada de superfície fluida e líquida. Sempre que alguém olha diretamente para ela, vê seu próprio reflexo distorcido em ondas aquáticas.",
+  "poder": "Reflexo Falso: O usuário pode criar cópias ilusórias táteis de movimentos que acabou de realizar. Se ele atacar para a esquerda, um reflexo pode repetir o movimento simultaneamente pela direita para confundir a percepção e tempo de reação do oponente.",
+  "bankai": {
+    "nome": "Suisen — Senkyō Kairō",
+    "kanji": "「水仙・千鏡回廊」",
+    "traducao": "Corredor das Mil Imagens",
+    "nomeCompleto": "Bankai — Suisen 「水仙・千鏡回廊」 (Senkyō Kairō — Corredor das Mil Imagens)",
+    "comando": "Bankai — Suisen, Senkyō Kairō!",
+    "formatoArma": "O campo inteiro se transforma em um labirinto monumental de espelhos líquidos flutuantes que refletem a luz e a imagem do usuário em 360 graus.",
+    "poder": "Translocação Reflexiva Instantânea: A Bankai se torna uma técnica suprema de mobilidade e reposicionamento. O usuário pode trocar de posição instantaneamente com qualquer reflexo ativo no campo. Limitação: cada troca consome e destrói o espelho reflexivo utilizado."
+  }
+}, {
+  "id": "zk-04",
+  "numero": "04",
+  "nome": "Hoshikuzu",
+  "kanji": "「星屑」",
+  "traducao": "Poeira Estelar",
+  "nomeCompleto": "Hoshikuzu 「星屑」— Poeira Estelar",
+  "espirito": "Uma pequena criatura humanoide coberta por um manto azul-escuro cósmico. Seu corpo parece conter uma galáxia de estrelas reluzentes. Ela fala como uma criança curiosa e habita uma ilha flutuante no vazio celestial.",
+  "comando": "Desperte no céu, Hoshikuzu.",
+  "elemento": "Gravidade Orbital & Luz Cósmica",
+  "formatoArma": "A espada se fragmenta em dezenas de pequenos cristais luminosos azulados que orbitam em círculos contínuos ao redor do portador.",
+  "poder": "Órbita Curvilínea: Os fragmentos podem alterar bruscamente sua trajetória no ar sem perder aceleração. O usuário pode arremessar cristais que realizam curvas impossíveis em torno de obstáculos e criam pontos de ancoragem para saltos aéreos.",
+  "bankai": {
+    "nome": "Hoshikuzu — Tenkan",
+    "kanji": "「星屑・天環」",
+    "traducao": "Anel Celestial",
+    "nomeCompleto": "Bankai — Hoshikuzu 「星屑・天環」 (Tenkan — Anel Celestial)",
+    "comando": "Bankai — Hoshikuzu, Tenkan!",
+    "formatoArma": "Os fragmentos de cristal se multiplicam em milhares e formam gigantescos anéis luminosos concêntricos que giram por todo o perímetro da arena.",
+    "poder": "Controle Absoluto de Trajetórias: O usuário define eixos de atração gravitacional. Qualquer projétil, técnica de Reiryoku ou adversário que entre em uma das órbitas é forçado a seguir a trajetória circular do anel, permitindo defletir ataques maciços e reposicionar inimigos à vontade."
+  }
+}, {
+  "id": "zk-05",
+  "numero": "05",
+  "nome": "Kōriame",
+  "kanji": "「氷雨」",
+  "traducao": "Chuva Congelada",
+  "nomeCompleto": "Kōriame 「氷雨」— Chuva Congelada",
+  "espirito": "Uma senhora idosa de olhar triste e passos lentos carregando um guarda-chuva de seda branca, habitando uma cidade melancólica onde chove sem parar.",
+  "comando": "Chore sobre este mundo, Kōriame.",
+  "elemento": "Água Pesada & Inércia Glacial",
+  "formatoArma": "A espada vira um guarda-chuva metálico branco reforçado com uma lâmina de estocada na ponta. Quando aberto, uma fina chuva espiritual começa a precipitar continuamente sobre a área.",
+  "poder": "Gotas de Peso Inercial: Cada gota de chuva que toca um objeto ou pessoa aumenta progressivamente sua inércia física. O alvo atinge cada vez mais resistência para acelerar, saltar ou mudar bruscamente de rumo durante a movimentação.",
+  "bankai": {
+    "nome": "Kōriame — Hakusōten",
+    "kanji": "「氷雨・白葬天」",
+    "traducao": "Céu do Funeral Branco",
+    "nomeCompleto": "Bankai — Kōriame 「氷雨・白葬天」 (Hakusōten — Céu do Funeral Branco)",
+    "comando": "Bankai — Kōriame, Hakusōten!",
+    "formatoArma": "O firmamento escurece sob nuvens cinzentas colossais e uma tempestade torrencial de gotas prateadas cobre quilômetros de distância.",
+    "poder": "Manipulação Vetorial da Resistência Espacial: O usuário dita qual direção do espaço sofrerá maior resistência hidrostática. Pode fazer avanços frontais ficarem dez vezes mais lentos, golpes verticais perderem impacto e passos de fuga se tornarem exaustivos, ditando o ritmo da batalha."
+  }
+}, {
+  "id": "zk-06",
+  "numero": "06",
+  "nome": "Kagamibana",
+  "kanji": "「鏡花」",
+  "traducao": "Flor do Espelho",
+  "nomeCompleto": "Kagamibana 「鏡花」— Flor do Espelho",
+  "espirito": "Uma mulher sem olhos com flores de vidro e cristais crescendo pelos longos cabelos escuros, vivendo dentro de uma estufa repleta de espelhos estilhaçados.",
+  "comando": "Reflita aquilo que deveria ser esquecido, Kagamibana.",
+  "elemento": "Distorção de Probabilidade & Vidro",
+  "formatoArma": "A lâmina se torna transparente como vidro puro, com uma superfície que parece um mosaico de espelhos trincados.",
+  "poder": "Fragmento de Possibilidade: Quando um ataque inimigo passa a curta distância, o usuário pode criar uma réplica alternativa daquele instante. Por alguns segundos, ele pode optar por validar o acontecimento real ou o fragmento alternativo criado, mitigando golpes fatais.",
+  "bankai": {
+    "nome": "Kagamibana — Banshō Shakai",
+    "kanji": "「鏡花・万象写界」",
+    "traducao": "Mundo que Copia Todas as Coisas",
+    "nomeCompleto": "Bankai — Kagamibana 「鏡花・万象写界」 (Banshō Shakai — Mundo que Copia Todas as Coisas)",
+    "comando": "Bankai — Kagamibana, Banshō Shakai!",
+    "formatoArma": "Todo o chão, céu e atmosfera ganham o reflexo límpido de espelhos planos perfeitos.",
+    "poder": "Divergência Quântica de Realidade: O usuário manifesta múltiplos caminhos de ação simultâneos para um mesmo ataque ou esquiva. Ele ataca por 3 ângulos distintos ao mesmo tempo e escolhe qual deles colidirá fisicamente com o oponente no momento do impacto."
+  }
+}, {
+  "id": "zk-07",
+  "numero": "07",
+  "nome": "Mukade",
+  "kanji": "「百足」",
+  "traducao": "Centopeia",
+  "nomeCompleto": "Mukade 「百足」— Centopeia",
+  "espirito": "Uma criatura esguia e longa com dezenas de braços articulados segurando pequenas adagas serrilhadas e vestindo uma máscara de osso que lembra um exoesqueleto de inseto.",
+  "comando": "Multiplique-se pelo caminho, Mukade.",
+  "elemento": "Lâminas Articuladas & Encadear Contínuo",
+  "formatoArma": "A katana se divide em múltiplas lâminas segmentadas unidas por correntes de elos flexíveis de aço, controláveis individualmente através da empunhadura.",
+  "poder": "Ataque Encadeado: Cada golpe consecutivo bem-sucedido permite reposicionar outra lâmina sem tempo de recuo. Quanto maior a sequência contínua de acertos, mais ângulos de ataque se abrem simultaneamente. Limitação: errar um golpe quebra a cadeia e recolhe as lâminas.",
+  "bankai": {
+    "nome": "Mukade — Mukyū Renjin",
+    "kanji": "「百足・無窮連刃」",
+    "traducao": "Lâminas da Corrente Infinita",
+    "nomeCompleto": "Bankai — Mukade 「百足・無窮連刃」 (Mukyū Renjin — Lâminas da Corrente Infinita)",
+    "comando": "Bankai — Mukade, Mukyū Renjin!",
+    "formatoArma": "As lâminas se multiplicam em centenas de gumes segmentados formando uma rede viva e autônoma de aço ao redor da arena.",
+    "poder": "Cadeia Autônoma de Resposta Cinética: O usuário não precisa controlar cada lâmina manualmente. A Bankai lê o último vetor de impacto e projeta automaticamente sucessões de cortes em cascata prevendo as rotas de fuga do oponente."
+  }
+}, {
+  "id": "zk-08",
+  "numero": "08",
+  "nome": "Yūreiishi",
+  "kanji": "「幽霊石」",
+  "traducao": "Pedra Fantasma",
+  "nomeCompleto": "Yūreiishi 「幽霊石」— Pedra Fantasma",
+  "espirito": "Uma criança parcialmente translúcida de olhar calmo sentada sobre uma enorme rocha negra que flutua no vazio, sempre cercada por pequenas almas errantes.",
+  "comando": "Permaneça onde ninguém pode tocar, Yūreiishi.",
+  "elemento": "Âncoras Espaciais & Teletransporte",
+  "formatoArma": "A lâmina da espada desaparece por completo. No lugar dela, pequenas pedras negras de densidade nula orbitam suavemente as mãos do portador.",
+  "poder": "Âncoras Espirituais: O usuário pode posicionar as pedras no espaço como âncoras fixas e saltar instantaneamente até a coordenada de qualquer pedra ativa (possui limite de distância e quantidade de âncoras simultâneas).",
+  "bankai": {
+    "nome": "Yūreiishi — Hyakki Kyō",
+    "kanji": "「幽霊石・百鬼境」",
+    "traducao": "Território das Cem Almas",
+    "nomeCompleto": "Bankai — Yūreiishi 「幽霊石・百鬼境」 (Hyakki Kyō — Território das Cem Almas)",
+    "comando": "Bankai — Yūreiishi, Hyakki Kyō!",
+    "formatoArma": "Centenas de pedras negras monumentais flutuam em toda a extensão do campo de batalha como um labirinto suspenso.",
+    "poder": "Malha Espacial Transcendente: O usuário pode translocar-se instantaneamente entre qualquer uma das pedras sem atraso de movimento, criando sequências de ataque de ângulos omnidirecionais. Custo de Reiryoku escala com o número de saltos contínuos."
+  }
+}, {
+  "id": "zk-09",
+  "numero": "09",
+  "nome": "Raimei",
+  "kanji": "「雷鳴」",
+  "traducao": "Trovão",
+  "nomeCompleto": "Raimei 「雷鳴」— Trovão",
+  "espirito": "Um guerreiro colossal com máscara tradicional de teatro Noh, cujo corpo de bronze é percorrido por fissuras luminosas pulsantes como eletricidade crua.",
+  "comando": "Faça o céu responder, Raimei.",
+  "elemento": "Ressonância Sísmico-Elétrica",
+  "formatoArma": "A lâmina adquire formato em zigue-zague irregular e a empunhadura emite pulsos de vibração sonora e elétrica em frequências constantes.",
+  "poder": "Ressonância Harmônica: Cada movimento ritmado do portador gera uma onda de vibração cumulativa. Manter a cadência de golpes faz o Reiryoku entrar em ressonância, permitindo que o golpe seguinte descarregue toda a energia acumulada em uma explosão de choque.",
+  "bankai": {
+    "nome": "Raimei — Gōtenritsu",
+    "kanji": "「雷鳴・轟天律」",
+    "traducao": "Lei do Céu Trovejante",
+    "nomeCompleto": "Bankai — Raimei 「雷鳴・轟天律」 (Gōtenritsu — Lei do Céu Trovejante)",
+    "comando": "Bankai — Raimei, Gōtenritsu!",
+    "formatoArma": "O campo é coberto por pilares de trovão que ressoam como um metrônomo cósmico em compassos visíveis de relâmpago.",
+    "poder": "Cadência Absoluta de Combate: A Bankai premia a sincronização rítmica. Ações executadas precisamente dentro do pulso do trovão ganham o dobro de velocidade e poder perfurante; atacar fora do compasso dissipa a ressonância e atordoa o usuário."
+  }
+}, {
+  "id": "zk-10",
+  "numero": "10",
+  "nome": "Shirogane",
+  "kanji": "「白銀」",
+  "traducao": "Prata Branca",
+  "nomeCompleto": "Shirogane 「白銀」— Prata Branca",
+  "espirito": "Um cavaleiro sem rosto com armadura de prata imaculada e polida que carrega uma gigantesca balança de pratos no lugar de uma espada de guerra.",
+  "comando": "Pese aquilo que existe, Shirogane.",
+  "elemento": "Equilíbrio & Redistribuição de Vantagens",
+  "formatoArma": "Uma espada longa prateada de gume reto cuja guarda possui o formato esculpido de uma balança de precisão.",
+  "poder": "Equilíbrio Proporcional: Detecta a disparidade física ou espiritual no choque de armas. O portador pode reduzir temporariamente uma vantagem do oponente (como força bruta), mas deve abrir mão de uma fração proporcional de outra vantagem própria para manter o equilíbrio.",
+  "bankai": {
+    "nome": "Shirogane — Tenbin Kai",
+    "kanji": "「白銀・天秤界」",
+    "traducao": "Domínio da Balança Celestial",
+    "nomeCompleto": "Bankai — Shirogane 「白銀・天秤界」 (Tenbin Kai — Domínio da Balança Celestial)",
+    "comando": "Bankai — Shirogane, Tenbin Kai!",
+    "formatoArma": "Uma monumental balança espiritual dourada e prateada surge sobre as nuvens dominando todo o campo de batalha.",
+    "poder": "Gerenciamento Universal de Atributos: O usuário pode comparar e redistribuir parâmetros (força, velocidade, pressão espiritual e resistência). Pode sacrificar sua velocidade para aumentar drasticamente sua resistência física, ou equalizar a força do inimigo à sua própria."
+  }
+}, {
+  "id": "zk-11",
+  "numero": "11",
+  "nome": "Suminawa",
+  "kanji": "「墨縄」",
+  "traducao": "Corda de Nanquim",
+  "nomeCompleto": "Suminawa 「墨縄」— Corda de Nanquim",
+  "espirito": "Um calígrafo cego de longas vestes manchadas que traça kanjis no ar com um pincel gigante feito de cabelos de espíritos antigos.",
+  "comando": "Trace os limites do abismo, Suminawa.",
+  "elemento": "Nanquim Espiritual & Contenção Espacial",
+  "formatoArma": "A lâmina se transforma em uma espada com ranhuras que liberam nanquim negro viscoso. Cada golpe no ar deixa traços de tinta sólida suspensos que atuam como cordas tensionadas de retenção.",
+  "poder": "Traço Restritivo: Os traços de nanquim no ar endurecem como cabos de aço ao menor contato de corpos ou lâminas, travando a trajetória de golpes e membros do inimigo. Limitação: as cordas de tinta se desfazem após absorverem impactos de alta Reiryoku.",
+  "bankai": {
+    "nome": "Suminawa — Banshō Emaki",
+    "kanji": "「墨縄・万象絵巻」",
+    "traducao": "Rolo Pintado de Todas as Coisas",
+    "nomeCompleto": "Bankai — Suminawa 「墨縄・万象絵巻」 (Banshō Emaki — Rolo Pintado de Todas as Coisas)",
+    "comando": "Bankai — Suminawa, Banshō Emaki!",
+    "formatoArma": "O campo se torna um gigantesco pergaminho tridimensional em preto e branco onde o portador empunha uma espada-pincel colossal de nanquim puro.",
+    "poder": "Corte Bidimensional no Espaço Tridimensional: Qualquer corte ou traço feito no ar pelo usuário se manifesta instantaneamente em qualquer superfície ou corpo que esteja alinhado na perspectiva visual do pergaminho, ignorando distância física."
+  }
+}, {
+  "id": "zk-12",
+  "numero": "12",
+  "nome": "Utsusemi",
+  "kanji": "「空蝉」",
+  "traducao": "Casca da Cigarra",
+  "nomeCompleto": "Utsusemi 「空蝉」— Casca da Cigarra",
+  "espirito": "Um monge silencioso coberto por túnicas de seda ressecada e folhas quebradiças que se despedaçam ao menor toque, revelando vazio em seu interior.",
+  "comando": "Abandone a forma passageira, Utsusemi.",
+  "elemento": "Muda Corporal & Evasão Residual",
+  "formatoArma": "A lâmina se torna translúcida com tonalidade âmbar, emitindo um estalido oco e seco a cada oscilação no ar.",
+  "poder": "Casca Oca Residual: Ao receber um golpe direto que causaria ferimento grave, o usuário deixa para trás uma casca perfeita de Reiryoku que absorve o impacto total enquanto seu corpo real recua 3 metros ileso (uma vez por confronto próximo).",
+  "bankai": {
+    "nome": "Utsusemi — Senkaku Zankyō",
+    "kanji": "「空蝉・千殻残響」",
+    "traducao": "Ecos dos Mil Casulos Vazios",
+    "nomeCompleto": "Bankai — Utsusemi 「空蝉・千殻残響」 (Senkaku Zankyō — Ecos dos Mil Casulos Vazios)",
+    "comando": "Bankai — Utsusemi, Senkaku Zankyō!",
+    "formatoArma": "Dezenas de casulos âmbar translúcidos flutuam por toda a área como estátuas ocas perfeitas do portador.",
+    "poder": "Retenção e Refração de Impacto: Cada casulo acumula a memória cinética e espiritual dos golpes que o atingiram. O usuário pode detonar ou rebater a força armazenada nesses casulos diretamente contra quem se aproximar deles."
+  }
+}, {
+  "id": "zk-13",
+  "numero": "13",
+  "nome": "Kagaribi",
+  "kanji": "「篝火」",
+  "traducao": "Fogueira Noturna",
+  "nomeCompleto": "Kagaribi 「篝火」— Fogueira Noturna",
+  "espirito": "Um sentinela com elmo de ferro antigo segurando uma lanterna sem chama onde ardem apenas fagulhas de cinza espiritual imortal.",
+  "comando": "Revele as sombras da vigília, Kagaribi.",
+  "elemento": "Brasas Reveladoras & Consumo Mágico",
+  "formatoArma": "Uma lâmina curva acoplada a um pequeno braseiro de ferro no pomo que desprende fagulhas douradas contínuas.",
+  "poder": "Luz da Intenção: Qualquer fonte de Reiryoku, ataque invisível ou preparação de feitiço dentro do raio iluminado pelas fagulhas tem sua densidade e trajetória expostas antes de ser desferido.",
+  "bankai": {
+    "nome": "Kagaribi — Yahan Enjin",
+    "kanji": "「篝火・夜半炎陣」",
+    "traducao": "Círculo de Chamas da Meia-Noite",
+    "nomeCompleto": "Bankai — Kagaribi 「篝火・夜半炎陣」 (Yahan Enjin — Círculo de Chamas da Meia-Noite)",
+    "comando": "Bankai — Kagaribi, Yahan Enjin!",
+    "formatoArma": "Uma colossal fogueira espiritual arde no centro da arena projetando pilares de chamas translúcidas.",
+    "poder": "Combustão de Feitiços & Dreno de Kidō: As chamas não queimam matéria orgânica, mas consomem vorazmente qualquer Reiryoku moldado em técnicas mágicas (Hadō/Bakudō), reduzindo o poder de feitiços inimigos proporcionalmente ao tempo gasto na luz."
+  }
+}, {
+  "id": "zk-14",
+  "numero": "14",
+  "nome": "Senritsu",
+  "kanji": "「旋律」",
+  "traducao": "Melodia Silenciosa",
+  "nomeCompleto": "Senritsu 「旋律」— Melodia Silenciosa",
+  "espirito": "Uma dama etérea sentada sobre um lago sereno tocando uma cítara cujas cordas invisíveis vibram na frequência do vento.",
+  "comando": "Toque aquilo que não tem voz, Senritsu.",
+  "elemento": "Frequência Acústica & Interferência Neural",
+  "formatoArma": "Uma espada esguia e brilhante com pequenas aberturas ao longo do dorso que assobiam em notas musicais precisas ao golpear.",
+  "poder": "Harmonia Desestabilizadora: Cada defesa ou aparo com a lâmina produz um tom sonoro que ressoa nas terminações nervosas do braço atacante, causando dormência passageira e perda temporária de empunhadura.",
+  "bankai": {
+    "nome": "Senritsu — Zekkyō Shūkyoku",
+    "kanji": "「旋律・絶響終曲」",
+    "traducao": "Réquiem da Ressonância Final",
+    "nomeCompleto": "Bankai — Senritsu 「旋律・絶響終曲」 (Zekkyō Shūkyoku — Réquiem da Ressonância Final)",
+    "comando": "Bankai — Senritsu, Zekkyō Shūkyoku!",
+    "formatoArma": "O ar do ambiente inteiro vibra como uma caixa de ressonância com cordas de luz prateada cruzando a atmosfera.",
+    "poder": "Sincronização Cardiopulmonar Obrigatória: A Bankai sintoniza a respiração e os batimentos cardíacos do oponente com o andamento musical da espada. Qualquer ataque ou movimento brusco fora do ritmo imposto causa contração dolorosa nos órgãos internos."
+  }
+}, {
+  "id": "zk-15",
+  "numero": "15",
+  "nome": "Kagehōshi",
+  "kanji": "「影法師」",
+  "traducao": "Silhueta na Sombra",
+  "nomeCompleto": "Kagehōshi 「影法師」— Silhueta na Sombra",
+  "espirito": "Uma silhueta sombria sem traços faciais definidos que projeta dois olhos de âmbar fixos no solo e nunca emerge para onde há luz direta.",
+  "comando": "Prenda-se ao solo, Kagehōshi.",
+  "elemento": "Sombras Vivas & Paralisia Simpática",
+  "formatoArma": "Uma katana escura cuja lâmina projeta uma sombra alongada no solo com o dobro do comprimento da espada real.",
+  "poder": "Corte da Sombra: Cortar ou cravar a espada na sombra projetada do oponente no chão imobiliza a parte do corpo correspondente pelo tempo em que a lâmina estiver sobre a sombra.",
+  "bankai": {
+    "nome": "Kagehōshi — Shikkoku Bakukai",
+    "kanji": "「影法師・漆黒縛界」",
+    "traducao": "Domínio Aprisionador do Ébano",
+    "nomeCompleto": "Bankai — Kagehōshi 「影法師・漆黒縛界」 (Shikkoku Bakukai — Domínio Aprisionador do Ébano)",
+    "comando": "Bankai — Kagehōshi, Shikkoku Bakukai!",
+    "formatoArma": "O chão de toda a arena se liquefaz em um pântano de sombras profundas que refletem as armas dos combatentes.",
+    "poder": "Mimetismo Sombrio Agressivo: As sombras projetadas no solo criam cópias independentes das armas e membros dos próprios oponentes, atacando-os a partir de seus próprios pés e restringindo movimentos com tentáculos de Reiryoku negro."
+  }
+}, {
+  "id": "zk-16",
+  "numero": "16",
+  "nome": "Hakumaku",
+  "kanji": "「薄膜」",
+  "traducao": "Membrana Translúcida",
+  "nomeCompleto": "Hakumaku 「薄膜」— Membrana Translúcida",
+  "espirito": "Uma tecelã de vestes alvas que fia véus transparentes e elásticos em uma sala repleta de neblina e gotas de orvalho.",
+  "comando": "Estenda a fronteira do ar, Hakumaku.",
+  "elemento": "Películas Refratárias & Vetor Elástico",
+  "formatoArma": "Uma espada de lâmina polida como água que deixa películas espirituais translúcidas suspensas no ar a cada corte.",
+  "poder": "Membrana Defletora: As películas criadas no ar funcionam como superfícies hiperelásticas capazes de desviar projéteis e servir como trampolins de aceleração para mudanças angulares imediatas no Shunpo.",
+  "bankai": {
+    "nome": "Hakumaku — Tenkyō Shōheki",
+    "kanji": "「薄膜・天鏡障壁」",
+    "traducao": "Barreira do Espelho Celestial",
+    "nomeCompleto": "Bankai — Hakumaku 「薄膜・天鏡障壁」 (Tenkyō Shōheki — Barreira do Espelho Celestial)",
+    "comando": "Bankai — Hakumaku, Tenkyō Shōheki!",
+    "formatoArma": "Uma monumental bolha translúcida multifacetada encapsula toda a área de combate.",
+    "poder": "Inversão Vetorial Total: Qualquer golpe, corpo ou feitiço que colide contra as paredes da membrana externa tem sua velocidade e direção invertidas em 180° com a mesma energia com que tentou romper a barreira."
+  }
+}, {
+  "id": "zk-17",
+  "numero": "17",
+  "nome": "Haguruma",
+  "kanji": "「歯車」",
+  "traducao": "Engrenagem do Destino",
+  "nomeCompleto": "Haguruma 「歯車」— Engrenagem do Destino",
+  "espirito": "Um autômato ancestral de bronze polido com engrenagens e ponteiros expostos no peito que giram ritmicamente marcando segundos silenciosos.",
+  "comando": "Engrene o tempo que resta, Haguruma.",
+  "elemento": "Mecânica Rotacional & Intervalos Discretos",
+  "formatoArma": "Uma espada pesada com gume dentado articulado em engrenagens que giram e acumulam torque a cada contato de aço.",
+  "poder": "Torque Acumulativo: Cada colisão bem-sucedida faz as engrenagens girarem mais rápido, aumentando progressivamente a aceleração de corte do golpe seguinte.",
+  "bankai": {
+    "nome": "Haguruma — Banshō Kokukai",
+    "kanji": "「歯車・万象刻界」",
+    "traducao": "Mundo dos Ponteiros Eternos",
+    "nomeCompleto": "Bankai — Haguruma 「歯車・万象刻界」 (Banshō Kokukai — Mundo dos Ponteiros Eternos)",
+    "comando": "Bankai — Haguruma, Banshō Kokukai!",
+    "formatoArma": "Monumentais rodas dentadas de bronze e mostradores de relógio flutuam no céu e no solo da arena.",
+    "poder": "Ajuste de Intervalos de Ação: O usuário pode retardar ou acelerar os intervalos entre a decisão motora e a execução física do adversário, fazendo com que o inimigo sofra atrasos de frações de segundo na recuperação após cada ataque."
+  }
+}, {
+  "id": "zk-18",
+  "numero": "18",
+  "nome": "Sasayaki",
+  "kanji": "「囁き」",
+  "traducao": "Sussurro Noturno",
+  "nomeCompleto": "Sasayaki 「囁き」— Sussurro Noturno",
+  "espirito": "Uma figura misteriosa com máscara de porcelana sem boca que fala através de ecos simultâneos e sussurros reverberantes.",
+  "comando": "Ecoa na mente vazia, Sasayaki.",
+  "elemento": "Ruído Psíquico & Supressão de Cânticos",
+  "formatoArma": "Uma lâmina de acabamento cinza fosco que não produz som de corte nem reflete luz.",
+  "poder": "Interferência Acústica: O choque do aço transmite uma vibração subsônica direta no ouvido interno do oponente, gerando desorientação espacial momentânea.",
+  "bankai": {
+    "nome": "Sasayaki — Muon Kyōsō",
+    "kanji": "「囁き・無音狂噪」",
+    "traducao": "Frenesi do Silêncio Enlouquecedor",
+    "nomeCompleto": "Bankai — Sasayaki 「囁き・無音狂噪」 (Muon Kyōsō — Frenesi do Silêncio Enlouquecedor)",
+    "comando": "Bankai — Sasayaki, Muon Kyōsō!",
+    "formatoArma": "Todo o ruído da atmosfera é completamente anulado gerando um vácuo acústico absoluto.",
+    "poder": "Bloqueio de Concentração & Encantamentos: Um turbilhão de sussurros psíquicos é projetado diretamente no fluxo mental do inimigo, tornando impossível manter a concentração requerida para cânticos de Kidō ou cálculos táticos refinados."
+  }
+}, {
+  "id": "zk-19",
+  "numero": "19",
+  "nome": "Enbaku",
+  "kanji": "「煙幕」",
+  "traducao": "Cortina de Cinzas",
+  "nomeCompleto": "Enbaku 「煙幕」— Cortina de Cinzas",
+  "espirito": "Um eremita com olhos cor de brasa fumando um cachimbo de bambu escurecido, cercado por cinzas que flutuam sem jamais tocar o chão.",
+  "comando": "Asfixie o horizonte, Enbaku.",
+  "elemento": "Fumaça Pesada & Asfixia Espiritual",
+  "formatoArma": "Uma espada curta que expele continuamente uma névoa espessa de fumaça cinzenta e pesada que rasteja sobre o terreno.",
+  "poder": "Fumaça Asfixiante: A fumaça drena a concentração de oxigênio e Reiryoku puro ao redor, dificultando a respiração e enfraquecendo feitiços de Hadō disparados através dela.",
+  "bankai": {
+    "nome": "Enbaku — Kaijin Tengai",
+    "kanji": "「煙幕・灰燼天蓋」",
+    "traducao": "Domo das Cinzas Eternas",
+    "nomeCompleto": "Bankai — Enbaku 「煙幕・灰燼天蓋」 (Kaijin Tengai — Domo das Cinzas Eternas)",
+    "comando": "Bankai — Enbaku, Kaijin Tengai!",
+    "formatoArma": "Uma cúpula monumental de cinzas incandescentes cobre toda a arena de combate.",
+    "poder": "Solidificação Instantânea de Fumaça: Toda a fumaça ambiente pode ser condensada instantaneamente em agulhas sólidas afiadas, paredes de contenção ou lâminas de impacto sob o comando do usuário."
+  }
+}, {
+  "id": "zk-20",
+  "numero": "20",
+  "nome": "Garyū",
+  "kanji": "「臥竜」",
+  "traducao": "Dragão Adormecido",
+  "nomeCompleto": "Garyū 「臥竜」— Dragão Adormecido",
+  "espirito": "Um monge sereno sentado sobre a crista de um dragão esculpido em rocha sedimentar milenar que respira poeira de terra.",
+  "comando": "Acorde da montanha, Garyū.",
+  "elemento": "Densidade Sísmica & Massa Inercial",
+  "formatoArma": "Uma espada larga, pesada e de gume rombudo que não possui fio de corte tradicional, mas tem densidade descomunal.",
+  "poder": "Massa Cumulativa: A cada golpe bloqueado com a espada, sua densidade aumenta sem sobrecarregar os braços do portador, esmagando defesas pela pura inércia do impacto.",
+  "bankai": {
+    "nome": "Garyū — Tenhō Chiretsu",
+    "kanji": "「臥竜・天崩地裂」",
+    "traducao": "Colapso do Céu e Fratura da Terra",
+    "nomeCompleto": "Bankai — Garyū 「臥竜・天崩地裂」 (Tenhō Chiretsu — Colapso do Céu e Fratura da Terra)",
+    "comando": "Bankai — Garyū, Tenhō Chiretsu!",
+    "formatoArma": "A carapaça de pedra se parte liberando uma espada titânica de lâmina negra reluzente com aura gravitacional densa.",
+    "poder": "Onda de Ruptura Tectônica: Cada golpe desferido gera uma pressão gravitacional vertical capaz de quebrar o solo em crateras de dezenas de metros e estilhaçar qualquer barreira de Bakudō convencional."
+  }
+}, {
+  "id": "zk-21",
+  "numero": "21",
+  "nome": "Chizome",
+  "kanji": "「血染」",
+  "traducao": "Fios de Sangue",
+  "nomeCompleto": "Chizome 「血染」— Fios de Sangue",
+  "espirito": "Uma nobre vestida com quimono carmesim que costura tapeçarias usando agulhas de osso e fios tingidos de sangue fresco.",
+  "comando": "Tinja o caminho de carmesim, Chizome.",
+  "elemento": "Coagulação Espiritual & Fios Carmesins",
+  "formatoArma": "Uma adaga curva de aço polido com uma ranhura central que atrai e cristaliza fluidos em micro-agulhas afiadas.",
+  "poder": "Cristalização Sanguínea: Permite ao usuário endurecer gotas de sangue no ar ou no chão em agulhas e lâminas cortantes arremessáveis.",
+  "bankai": {
+    "nome": "Chizome — Senshi Senketsukai",
+    "kanji": "「血染・千糸鮮血界」",
+    "traducao": "Mundo dos Mil Fios de Sangue",
+    "nomeCompleto": "Bankai — Chizome 「血染・千糸鮮血界」 (Senshi Senketsukai — Mundo dos Mil Fios de Sangue)",
+    "comando": "Bankai — Chizome, Senshi Senketsukai!",
+    "formatoArma": "O ambiente se cruza com milhares de fios escarlates suspensos que brilham com Reiryoku vivo.",
+    "poder": "Rede Sensora & Guilhotina: Os fios no ar reagem automaticamente a qualquer vibração ou deslocamento veloz, tensionando-se para fatiar quem tentar cruzar a rede em alta velocidade."
+  }
+}, {
+  "id": "zk-22",
+  "numero": "22",
+  "nome": "Kazahana",
+  "kanji": "「風花」",
+  "traducao": "Pétalas da Nevasca",
+  "nomeCompleto": "Kazahana 「風花」— Pétalas da Nevasca",
+  "espirito": "Uma criança vestida de branco que sopra delicadas flores de gelo enquanto caminha descalça sobre a neve virgem.",
+  "comando": "Dance na geada suave, Kazahana.",
+  "elemento": "Gelo Suave & Flocos Entorpecentes",
+  "formatoArma": "Uma katana fina prateada que liberta pequenos flocos hexagonais de gelo que flutuam ao redor da lâmina.",
+  "poder": "Geada Entorpecente: Os flocos de gelo grudam nas roupas e pele do alvo, drenando o calor corporal e reduzindo o tempo de resposta neuromuscular a cada golpe.",
+  "bankai": {
+    "nome": "Kazahana — Byakuya Hanafubuki",
+    "kanji": "「風花・白夜花吹雪」",
+    "traducao": "Nevasca Floral da Noite Branca",
+    "nomeCompleto": "Bankai — Kazahana 「風花・白夜花吹雪」 (Byakuya Hanafubuki — Nevasca Floral da Noite Branca)",
+    "comando": "Bankai — Kazahana, Byakuya Hanafubuki!",
+    "formatoArma": "Um turbilhão colossal de pétalas de gelo cortantes envolve toda a arena sob uma tempestade de frio extremo.",
+    "poder": "Ausência de Atrito & Corte Gélido: As lâminas de gelo cortam o ar anulando o atrito do solo e reduzindo a temperatura a níveis que congelam faíscas de Reiryoku e aprisionam o inimigo em geada perpétua."
+  }
+}, {
+  "id": "zk-23",
+  "numero": "23",
+  "nome": "Bankō",
+  "kanji": "「万綱」",
+  "traducao": "Rede das Profundezas",
+  "nomeCompleto": "Bankō 「万綱」— Rede das Profundezas",
+  "espirito": "Um pescador silencioso em um barco de junco no centro de um oceano infinito coberto por névoa cinzenta.",
+  "comando": "Puxe as amarras do abismo, Bankō.",
+  "elemento": "Cabos de Aço & Tensão de Longo Alcance",
+  "formatoArma": "A lâmina se estende em múltiplos fios de aço flexíveis de altíssima tensão equipados com ganchos farpados nas pontas.",
+  "poder": "Puxão Angulado: Permite laçar membros, armas ou pontos do terreno para projetar o usuário ou desarmar oponentes a longas distâncias.",
+  "bankai": {
+    "nome": "Bankō — Kaitei Bakusamō",
+    "kanji": "「万綱・海底縛鎖網」",
+    "traducao": "Rede de Correntes do Fundo do Oceano",
+    "nomeCompleto": "Bankai — Bankō 「万綱・海底縛鎖網」 (Kaitei Bakusamō — Rede de Correntes do Fundo do Oceano)",
+    "comando": "Bankai — Bankō, Kaitei Bakusamō!",
+    "formatoArma": "Milhares de correntes e cabos de aço cobrem o céu e o solo como uma teia monumental de cerco.",
+    "poder": "Contração & Condução Sísmica: O usuário sente qualquer vibração no campo e pode contrair a teia instantaneamente para esmagar ou aprisionar múltiplos alvos em um cofre de correntes."
+  }
+}, {
+  "id": "zk-24",
+  "numero": "24",
+  "nome": "Shiratama",
+  "kanji": "「白玉」",
+  "traducao": "Esferas de Jade Sagrada",
+  "nomeCompleto": "Shiratama 「白玉」— Esferas de Jade Sagrada",
+  "espirito": "Um sacerdote em estado de iluminação que levita sereno cercado por três esferas peroladas que emitem luz pura.",
+  "comando": "Purifique a mácula, Shiratama.",
+  "elemento": "Luz Sagrada & Absorção Purificadora",
+  "formatoArma": "A espada gera três esferas luminosas de Reiryoku puro que giram em volta da empunhadura e protegem o portador.",
+  "poder": "Orbes de Defesa Absoluta: Cada esfera absorve integralmente um ataque mágico de Kidō ou impacto de energia elemental direta, dissipando-se em seguida (até 3 cargas).",
+  "bankai": {
+    "nome": "Shiratama — Sangai Jōkarin",
+    "kanji": "「白玉・三界浄化輪」",
+    "traducao": "Três Anéis da Purificação Celestial",
+    "nomeCompleto": "Bankai — Shiratama 「白玉・三界浄化輪」 (Sangai Jōkarin — Três Anéis da Purificação Celestial)",
+    "comando": "Bankai — Shiratama, Sangai Jōkarin!",
+    "formatoArma": "As esferas se expandem em três anéis de luz solar gigantescos que descem sobre o campo de batalha.",
+    "poder": "Supressão de Energias Caóticas: Impõe uma zona de purificação contínua onde técnicas de energia impura ou venenos são neutralizados, enquanto recupera o fluxo de Reiryoku do portador."
+  }
+}, {
+  "id": "zk-25",
+  "numero": "25",
+  "nome": "Tsukikage",
+  "kanji": "「月影」",
+  "traducao": "Sombra da Lua",
+  "nomeCompleto": "Tsukikage 「月影」— Sombra da Lua",
+  "espirito": "Uma arqueira de olhar calmo vestida de azul-noite sentada sobre a foice de uma lua prateada brilhando no escuro.",
+  "comando": "Oculte-se no luar, Tsukikage.",
+  "elemento": "Ilusão Óptica & Refração Lunar",
+  "formatoArma": "Uma lâmina curva e fosca cuja borda parece cintilar em ondas de luz prateada.",
+  "poder": "Distorção de Alcance: A refração luminosa ao longo do fio faz a espada parecer mais curta ou mais longa do que realmente é, enganando o tempo de bloqueio do inimigo.",
+  "bankai": {
+    "nome": "Tsukikage — Gengetsu Mueikai",
+    "kanji": "「月影・幻月無影界」",
+    "traducao": "Domínio Sem Sombra da Lua Ilusória",
+    "nomeCompleto": "Bankai — Tsukikage 「月影・幻月無影界」 (Gengetsu Mueikai — Domínio Sem Sombra da Lua Ilusória)",
+    "comando": "Bankai — Tsukikage, Gengetsu Mueikai!",
+    "formatoArma": "A noite desce e a arena é banhada pela luz de uma lua cheia colossal prateada.",
+    "poder": "Ataque por Feixes de Luz: O usuário dissocia seu corpo físico da sua imagem visível, podendo projetar estocadas e cortes reais a partir de qualquer raio de luar refletido no terreno."
+  }
+}, {
+  "id": "zk-26",
+  "numero": "26",
+  "nome": "Jigokubana",
+  "kanji": "「地獄花」",
+  "traducao": "Lírio do Submundo",
+  "nomeCompleto": "Jigokubana 「地獄花」— Lírio do Submundo",
+  "espirito": "Uma mulher com coroa de espinhos negros e lágrimas vermelhas cujos passos no solo fazem brotar flores escarlates de ferro.",
+  "comando": "Enraíze no solo dos mortos, Jigokubana.",
+  "elemento": "Raízes de Ferro & Dreno Telúrico",
+  "formatoArma": "Uma espada cuja ponta, ao tocar o solo, faz brotar raízes afiadas de metal que avançam em direção ao oponente.",
+  "poder": "Espinhos de Solo: Cria fendas subterrâneas com espinhos de Reiryoku que brotam sob os pés do alvo para empalar ou restringir seus passos.",
+  "bankai": {
+    "nome": "Jigokubana — Guren Jukai",
+    "kanji": "「地獄花・紅蓮樹海」",
+    "traducao": "Floresta de Espinhos do Abismo Carmesim",
+    "nomeCompleto": "Bankai — Jigokubana 「地獄花・紅蓮樹海」 (Guren Jukai — Floresta de Espinhos do Abismo Carmesim)",
+    "comando": "Bankai — Jigokubana, Guren Jukai!",
+    "formatoArma": "Uma floresta colossal de videiras espinhosas de ferro carmesim brota cobrindo toda a arena.",
+    "poder": "Domínio Asfixiante de Raízes: As vinhas se movem autonomamente buscando fontes de Reiryoku, estrangulando defesas e drenando energia vital de qualquer um que encostar no solo."
+  }
+}, {
+  "id": "zk-27",
+  "numero": "27",
+  "nome": "Hikariba",
+  "kanji": "「光刃」",
+  "traducao": "Lâmina de Prisma Solar",
+  "nomeCompleto": "Hikariba 「光刃」— Lâmina de Prisma Solar",
+  "espirito": "Um escultor de lentes de cristal puro que lapida raios solares em ângulos geométricos perfeitos.",
+  "comando": "Refrate a chama pura, Hikariba.",
+  "elemento": "Luz Solar Concentrada & Alta Temperatura",
+  "formatoArma": "Uma espada de cristal facetado que concentra a luz ambiente em feixes cortantes de alta temperatura.",
+  "poder": "Feixes Prismáticos: Permite refletir e curvar disparos luminosos em ângulos retos para atingir o oponente em seus pontos cegos.",
+  "bankai": {
+    "nome": "Hikariba — Banshō Shōnetsukai",
+    "kanji": "「光刃・万象焦熱界」",
+    "traducao": "Domínio da Incineração Prismática",
+    "nomeCompleto": "Bankai — Hikariba 「光刃・万象焦熱界」 (Banshō Shōnetsukai — Domínio da Incineração Prismática)",
+    "comando": "Bankai — Hikariba, Banshō Shōnetsukai!",
+    "formatoArma": "Pilares gigantes de cristal facetado cercam o campo de batalha como espelhos monumentais.",
+    "poder": "Feixe Omnidirecional de Incineração: A luz concentrada pelos prismas dispara simultaneamente em dezenas de eixos térmicos, incinerando defesas físicas e barreiras mágicas com calor extremo."
+  }
+}, {
+  "id": "zk-28",
+  "numero": "28",
+  "nome": "Ryūshin",
+  "kanji": "「竜心」",
+  "traducao": "Coração de Dragão",
+  "nomeCompleto": "Ryūshin 「竜心」— Coração de Dragão",
+  "espirito": "Um guerreiro imponente com marcas de escamas ardentes no peito e olhar penetrante de chamas douradas.",
+  "comando": "Queime no pulso da alma, Ryūshin.",
+  "elemento": "Calor Interno & Plasma Espiritual",
+  "formatoArma": "Uma katana de gume avermelhado que absorve o calor do próprio usuário para intensificar o poder de corte.",
+  "poder": "Combustão Contínua: Quanto mais longa a trocação direta de golpes, mais incandescente fica a lâmina, descarregando ondas térmicas a cada balanço.",
+  "bankai": {
+    "nome": "Ryūshin — Gōka Tenshō",
+    "kanji": "「竜心・劫火天衝」",
+    "traducao": "Impacto Celestial do Fogo Cósmico",
+    "nomeCompleto": "Bankai — Ryūshin 「竜心・劫火天衝」 (Gōka Tenshō — Impacto Celestial do Fogo Cósmico)",
+    "comando": "Bankai — Ryūshin, Gōka Tenshō!",
+    "formatoArma": "O portador é envolto em uma armadura dracônica de plasma incandescente com asas de fogo espiritual.",
+    "poder": "Devastação em Plasma Puro: Libera explosões monumentais de calor contínuo que derretem o solo sob os pés dos combatentes e transformam o ar em uma fornalha inescapável."
+  }
+}, {
+  "id": "zk-29",
+  "numero": "29",
+  "nome": "Mumyō",
+  "kanji": "「無明」",
+  "traducao": "Noite da Cegueira",
+  "nomeCompleto": "Mumyō 「無明」— Noite da Cegueira",
+  "espirito": "Um monge ancião de olhos vendados por seda negra que caminha com um cajado de ébano sem emitir vibração alguma.",
+  "comando": "Apague a centelha do olhar, Mumyō.",
+  "elemento": "Privação Sensorial & Penumbra Espiritual",
+  "formatoArma": "Uma espada que absorve o reflexo da luz ao seu redor, criando uma aura de escuridão opaca de 2 metros em torno do usuário.",
+  "poder": "Cegueira Momentânea: Ao cruzar lâminas, a visão periférica do adversário é apagada por 1 segundo, impedindo leitura de contra-ataques imediatos.",
+  "bankai": {
+    "nome": "Mumyō — Tokoyami Meifu",
+    "kanji": "「無明・常闇冥府」",
+    "traducao": "Submundo das Trevas Eternas",
+    "nomeCompleto": "Bankai — Mumyō 「無明・常闇冥府」 (Tokoyami Meifu — Submundo das Trevas Eternas)",
+    "comando": "Bankai — Mumyō, Tokoyami Meifu!",
+    "formatoArma": "Todo o campo de batalha é engolido por uma escuridão absoluta impenetrável.",
+    "poder": "Anulação de Percepção & Detecção: Suprime completamente a visão e a detecção de Reiryoku à distância, forçando o adversário a lutar exclusivamente por sensações táteis imediatas enquanto o usuário se move com precisão instintiva."
+  }
+}, {
+  "id": "zk-30",
+  "numero": "30",
+  "nome": "Haganeito",
+  "kanji": "「鋼糸」",
+  "traducao": "Fios de Aço",
+  "nomeCompleto": "Haganeito 「鋼糸」— Fios de Aço",
+  "espirito": "Um mestre marionetista com feições de porcelana lisa e dedos estendidos em longos filamentos prateados de Reiryoku.",
+  "comando": "Costure os passos do destino, Haganeito.",
+  "elemento": "Microfilamentos & Controle Articular",
+  "formatoArma": "A ponta da espada solta micro-fios de aço quase invisíveis que se prendem às armas e punhos dos adversários.",
+  "poder": "Desvio Tátil: Permite tensionar os filamentos no último instante para puxar ou desviar a lâmina inimiga para fora da rota letal.",
+  "bankai": {
+    "nome": "Haganeito — Kugutsu Gigakan",
+    "kanji": "「鋼糸・傀儡戯画館」",
+    "traducao": "Teatro das Marionetes Espirituais",
+    "nomeCompleto": "Bankai — Haganeito 「鋼糸・傀儡戯画館」 (Kugutsu Gigakan — Teatro das Marionetes Espirituais)",
+    "comando": "Bankai — Haganeito, Kugutsu Gigakan!",
+    "formatoArma": "Uma imensa estrutura de palco celestial se ergue com milhares de fios cruzando o ar.",
+    "poder": "Manipulação de Articulações Inertes: Os fios tomam o controle das armas caídas, escombros e músculos fatigados do adversário, forçando bloqueios imperfeitos ou travando membros inteiros."
+  }
+}, {
+  "id": "zk-31",
+  "numero": "31",
+  "nome": "Mizuchi",
+  "kanji": "「蛟」",
+  "traducao": "Serpente das Torrentes",
+  "nomeCompleto": "Mizuchi 「蛟」— Serpente das Torrentes",
+  "espirito": "Uma serpente d'água albina com chifres prateados repousando serenamente no fundo de um poço cristalino milenar.",
+  "comando": "Transborde em correnteza pura, Mizuchi.",
+  "elemento": "Água Pressurizada & Fluidez Cortante",
+  "formatoArma": "A lâmina de aço se desfaz em um fluxo de água pressurizada contínua de altíssima densidade capaz de cortar rochas.",
+  "poder": "Lâmina Fluida: Pode estender seu alcance instantaneamente ou perder solidez para passar através de defesas antes de se solidificar no corte.",
+  "bankai": {
+    "nome": "Mizuchi — Suiten Daikōzui",
+    "kanji": "「蛟・水天大洪水」",
+    "traducao": "Tsunami do Domínio Celestial das Águas",
+    "nomeCompleto": "Bankai — Mizuchi 「蛟・水天大洪水」 (Suiten Daikōzui — Tsunami do Domínio Celestial das Águas)",
+    "comando": "Bankai — Mizuchi, Suiten Daikōzui!",
+    "formatoArma": "Uma colossal cúpula de água espiritual pura submerge toda a arena de batalha.",
+    "poder": "Hidrodinâmica Perfeita: Dentro do domo aquático, apenas o portador se move com velocidade sem atrito, disparando lâminas de vácuo hidrostático que esmagam o oponente pela pressão da água."
+  }
+}, {
+  "id": "zk-32",
+  "numero": "32",
+  "nome": "Dokuga",
+  "kanji": "「毒蛾」",
+  "traducao": "Mariposa Venenosa",
+  "nomeCompleto": "Dokuga 「毒蛾」— Mariposa Venenosa",
+  "espirito": "Uma mulher graciosa com asas de mariposa aveludadas cobertas por escamas arroxeadas brilhantes que desprendem pólen ao bater.",
+  "comando": "Disperse o sono eterno, Dokuga.",
+  "elemento": "Pólen Tóxico & Entorpecimento Neural",
+  "formatoArma": "Uma lâmina fina e curva com guarda em formato de asas de mariposa que libera uma névoa arroxeada de escamas finas.",
+  "poder": "Pólen Entorpecente: O contato com as escamas entorpece a sensibilidade tátil e a velocidade de resposta reflexa do adversário a cada inalação.",
+  "bankai": {
+    "nome": "Dokuga — Shigettsu Gendokurō",
+    "kanji": "「毒蛾・紫月幻毒牢」",
+    "traducao": "Gaiola do Veneno Ilusório da Lua Púrpura",
+    "nomeCompleto": "Bankai — Dokuga 「毒蛾・紫月幻毒牢」 (Shigettsu Gendokurō — Gaiola do Veneno Ilusório da Lua Púrpura)",
+    "comando": "Bankai — Dokuga, Shigettsu Gendokurō!",
+    "formatoArma": "O céu se torna violeta e uma tempestade contínua de pólen corrosivo envolve a arena.",
+    "poder": "Corrosão de Barreiras & Alucinação Sensorial: O veneno no ar dissolve barreiras de Kidō e induz alucinações visuais e auditivas que impedem o oponente de discernir a posição real do usuário."
+  }
+}, {
+  "id": "zk-33",
+  "numero": "33",
+  "nome": "Tessen",
+  "kanji": "「鉄扇」",
+  "traducao": "Vento da Muralha de Aço",
+  "nomeCompleto": "Tessen 「鉄扇」— Vento da Muralha de Aço",
+  "espirito": "Um nobre cortesão com máscara cerimonial que empunha dois pesados leques metálicos com lâminas afiadas nas dobras.",
+  "comando": "Dobre o sopro do céu, Tessen.",
+  "elemento": "Vento Gravitacional & Deflexão",
+  "formatoArma": "A espada se desdobra em um grande leque de placas de aço afiadas como navalhas.",
+  "poder": "Vento Descendente: Cada balanço do leque gera rajadas de ar comprimido que empurram o adversário para o chão com força gravitacional multiplicada.",
+  "bankai": {
+    "nome": "Tessen — Tenshō Hadanran",
+    "kanji": "「鉄扇・天衝破断嵐」",
+    "traducao": "Vendaval de Ruptura Celestial",
+    "nomeCompleto": "Bankai — Tessen 「鉄扇・天衝破断嵐」 (Tenshō Hadanran — Vendaval de Ruptura Celestial)",
+    "comando": "Bankai — Tessen, Tenshō Hadanran!",
+    "formatoArma": "Dois gigantescos leques de aço flutuam ao lado do usuário gerando ciclones contínuos.",
+    "poder": "Gaiola de Vácuo Cortante: Cria furacões verticais que suspendem o adversário no ar enquanto desferem milhares de cortes de vácuo em alta rotação."
+  }
+}, {
+  "id": "zk-34",
+  "numero": "34",
+  "nome": "Kasumikiri",
+  "kanji": "「霞斬」",
+  "traducao": "Navalha na Bruma",
+  "nomeCompleto": "Kasumikiri 「霞斬」— Navalha na Bruma",
+  "espirito": "Um samurai espectral cujos contornos ondulam e se desfazem como vapor aquecido sob a chuva fina.",
+  "comando": "Desvaneça na bruma da manhã, Kasumikiri.",
+  "elemento": "Intangibilidade Gasosa & Bruma",
+  "formatoArma": "Uma lâmina cujos contornos parecem desfocados e trêmulos como miragem de calor.",
+  "poder": "Corte Osmótico: A lâmina pode passar através de objetos sólidos finos e solidificar-se apenas no instante do contato interno com o alvo.",
+  "bankai": {
+    "nome": "Kasumikiri — Mugen Genmukai",
+    "kanji": "「霞斬・無限幻霧界」",
+    "traducao": "Domínio da Névoa Impenetrável",
+    "nomeCompleto": "Bankai — Kasumikiri 「霞斬・無限幻霧界」 (Mugen Genmukai — Domínio da Névoa Impenetrável)",
+    "comando": "Bankai — Kasumikiri, Mugen Genmukai!",
+    "formatoArma": "Uma névoa branca densa e impenetrável toma conta de todo o cenário de batalha.",
+    "poder": "Dissolução Corpórea & Clones de Vapor: O usuário pode se dissolver completamente na bruma e surgir atrás do inimigo em múltiplos corpos de vapor que alternam solidez conforme atacam."
+  }
+}, {
+  "id": "zk-35",
+  "numero": "35",
+  "nome": "Gōkaku",
+  "kanji": "「剛角」",
+  "traducao": "Chifre Inquebrável",
+  "nomeCompleto": "Gōkaku 「剛角」— Chifre Inquebrável",
+  "espirito": "Uma fera titânica de obsidiana e pedra com dois chifres monumentais capazes de fender montanhas.",
+  "comando": "Esmague sem piedade, Gōkaku.",
+  "elemento": "Obsidiana Pura & Perfuração Pesada",
+  "formatoArma": "A espada ganha o formato de uma pesada lança curta com ponta triangular de obsidiana de dureza extrema.",
+  "poder": "Ponta Inflexível: Golpes desferidos em investida reta possuem poder perfurante multiplicado, atravessando defesas rígidas e armaduras pesadas.",
+  "bankai": {
+    "nome": "Gōkaku — Kongō Saizangeki",
+    "kanji": "「剛角・金剛砕山撃」",
+    "traducao": "Impacto Devastador do Diamante Titânico",
+    "nomeCompleto": "Bankai — Gōkaku 「剛角・金剛砕山撃」 (Kongō Saizangeki — Impacto Devastador do Diamante Titânico)",
+    "comando": "Bankai — Gōkaku, Kongō Saizangeki!",
+    "formatoArma": "Pilares monumentais de rocha sólida e obsidiana emergem do solo ao redor da arena.",
+    "poder": "Bombardeio de Monólitos Cinéticos: O usuário pode disparar e colidir esses blocos gigantescos contra o oponente como meteoros guiados por impacto de Reiryoku concentrado."
+  }
+}, {
+  "id": "zk-36",
+  "numero": "36",
+  "nome": "Hibachi",
+  "kanji": "「火鉢」",
+  "traducao": "Braseiro Ardente",
+  "nomeCompleto": "Hibachi 「火鉢」— Braseiro Ardente",
+  "espirito": "Um anão ferreiro de pele cinzenta que molda brasas e carvão ardente com as próprias mãos desprotegidas.",
+  "comando": "Aqueça o ferro dormente, Hibachi.",
+  "elemento": "Brasas Espirituais & Transferência Térmica",
+  "formatoArma": "Uma lâmina reta que acumula o calor do atrito com o ar e espadas inimigas, mantendo seu fio em brasa constante.",
+  "poder": "Fogo Retido: As brasas da lâmina passam para as armas do oponente, aquecendo os cabos a ponto de queimar as mãos do adversário e forçar o desarmamento.",
+  "bankai": {
+    "nome": "Hibachi — Shōnetsu Shōdojin",
+    "kanji": "「火鉢・焦熱焦土陣」",
+    "traducao": "Matriz do Purgatório em Brasas",
+    "nomeCompleto": "Bankai — Hibachi 「火鉢・焦熱焦土陣」 (Shōnetsu Shōdojin — Matriz do Purgatório em Brasas)",
+    "comando": "Bankai — Hibachi, Shōnetsu Shōdojin!",
+    "formatoArma": "O solo inteiro do campo se transforma em uma grelha incandescente com fissuras de lava espiritual.",
+    "poder": "Gêiseres de Brasas Ocultas: Qualquer passo do oponente sobre o solo incandescente dispara jatos verticais de fogo espiritual que queimam armaduras e consomem o oxigênio ao redor."
+  }
+}, {
+  "id": "zk-37",
+  "numero": "37",
+  "nome": "Oshimaru",
+  "kanji": "「推丸」",
+  "traducao": "Impulso Perfeito",
+  "nomeCompleto": "Oshimaru 「推丸」— Impulso Perfeito",
+  "espirito": "Um atleta divino com braceletes dourados que salta entre as nuvens sem tocar o solo e sem deixar rastros.",
+  "comando": "Devolva a força aplicada, Oshimaru.",
+  "elemento": "Absorção de Recuo & Onda de Choque",
+  "formatoArma": "Uma espada curta com guarda circular pesada que absorve a energia do recuo ao aparar ataques.",
+  "poder": "Vetor Invertido: O recuo de um golpe bloqueado é convertido em velocidade imediata de avanço para o contra-ataque seguinte.",
+  "bankai": {
+    "nome": "Oshimaru — Hakū Suiryokukai",
+    "kanji": "「推丸・破空推力界」",
+    "traducao": "Domínio do Impulso Absoluto",
+    "nomeCompleto": "Bankai — Oshimaru 「推丸・破空推力界」 (Hakū Suiryokukai — Domínio do Impulso Absoluto)",
+    "comando": "Bankai — Oshimaru, Hakū Suiryokukai!",
+    "formatoArma": "Duas manoplas de Reiryoku comprimido com anéis de vácuo nos antebraços.",
+    "poder": "Onda de Choque Cinético: O portador pode emitir ondas massivas de pressão de ar capazes de empurrar fortificações, repelir investidas e anular feitiços de impacto a dezenas de metros."
+  }
+}, {
+  "id": "zk-38",
+  "numero": "38",
+  "nome": "Hōsekiba",
+  "kanji": "「宝石刃」",
+  "traducao": "Lâmina de Joias",
+  "nomeCompleto": "Hōsekiba 「宝石刃」— Lâmina de Joias",
+  "espirito": "Uma rainha de cristal reluzente com lágrimas de pedras preciosas que reflete todas as cores do prisma.",
+  "comando": "Lapide a lâmina eterna, Hōsekiba.",
+  "elemento": "Cristais Preciosos & Lâminas Facetadas",
+  "formatoArma": "A lâmina se decompõe em centenas de pequenos cristais afiados como navalhas que flutuam ao redor da empunhadura.",
+  "poder": "Enxame Facetado: Os cristais podem ser controlados mentalmente em trajetórias cortantes de alta precisão ou formarem pequenos escudos refletores.",
+  "bankai": {
+    "nome": "Hōsekiba — Hyakka Kesshōkyū",
+    "kanji": "「宝石刃・百華結晶宮」",
+    "traducao": "Palácio dos Mil Cristais Reluzentes",
+    "nomeCompleto": "Bankai — Hōsekiba 「宝石刃・百華結晶宮」 (Hyakka Kesshōkyū — Palácio dos Mil Cristais Reluzentes)",
+    "comando": "Bankai — Hōsekiba, Hyakka Kesshōkyū!",
+    "formatoArma": "Monumentais florestas de cristais multicoloridos brotam da terra cobrindo a arena.",
+    "poder": "Prisma de Confinamento: Os cristais gigantes refratam a energia espiritual em feixes convergentes e podem aprisionar o adversário em caixões de cristal com dureza equivalente a diamante."
+  }
+}, {
+  "id": "zk-39",
+  "numero": "39",
+  "nome": "Yamainu",
+  "kanji": "「山狗」",
+  "traducao": "Cão Selvagem da Montanha",
+  "nomeCompleto": "Yamainu 「山狗」— Cão Selvagem da Montanha",
+  "espirito": "Um lobo cinzento ancestral com marcas tribais vermelhas que espreita nas florestas e caça pelo cheiro da alma.",
+  "comando": "Cace no rastro do medo, Yamainu.",
+  "elemento": "Rastreamento de Reiryoku & Presas Serrilhadas",
+  "formatoArma": "Uma lâmina curva e serrilhada que aumenta a sensibilidade do portador ao calor e cheiro de Reiryoku do oponente.",
+  "poder": "Faro Predador: Permite antecipar deslocamentos em Shunpo e detectar oponentes mesmo dentro de ilusões, fumaça ou invisibilidade.",
+  "bankai": {
+    "nome": "Yamainu — Yūmei Rōgagun",
+    "kanji": "「山狗・幽冥狼牙群」",
+    "traducao": "Alcateia dos Lobos Espectrais",
+    "nomeCompleto": "Bankai — Yamainu 「山狗・幽冥狼牙群」 (Yūmei Rōgagun — Alcateia dos Lobos Espectrais)",
+    "comando": "Bankai — Yamainu, Yūmei Rōgagun!",
+    "formatoArma": "Uma matilha de dezenas de lobos gigantescos formados por puro Reiryoku negro cerca os oponentes.",
+    "poder": "Cerco Predatório Coordenado: Os lobos atacam de múltiplos pontos cegos simultaneamente, sincronizando suas investidas com os movimentos da espada do portador."
+  }
+}, {
+  "id": "zk-40",
+  "numero": "40",
+  "nome": "Chiryaku",
+  "kanji": "「地脈」",
+  "traducao": "Pulso da Terra",
+  "nomeCompleto": "Chiryaku 「地脈」— Pulso da Terra",
+  "espirito": "Um monge feito de barro e raízes que encosta o ouvido no solo para escutar as vibrações mais profundas da terra.",
+  "comando": "Faça o chão estremecer, Chiryaku.",
+  "elemento": "Vibrações Sísmicas & Equilíbrio Corporal",
+  "formatoArma": "Uma espada pesada de cabo longo que transmite pulsos sísmicos de baixa frequência ao tocar o solo.",
+  "poder": "Desestabilização Telúrica: Cada impacto no chão gera microfissuras que desequilibram a postura de quem estiver pisando na área de efeito.",
+  "bankai": {
+    "nome": "Chiryaku — Tendō Hōkōchi",
+    "kanji": "「地脈・天動崩落地」",
+    "traducao": "Ruptura das Placas Celestiais",
+    "nomeCompleto": "Bankai — Chiryaku 「地脈・天動崩落地」 (Tendō Hōkōchi — Ruptura das Placas Celestiais)",
+    "comando": "Bankai — Chiryaku, Tendō Hōkōchi!",
+    "formatoArma": "O terreno se racha em imensas placas tectônicas flutuantes sob controle gravitacional do portador.",
+    "poder": "Manipulação de Placas Flutuantes: O usuário pode erguer, inclinar ou colidir as plataformas de rocha em alta velocidade, alterando toda a topografia do campo de batalha."
+  }
+}, {
+  "id": "zk-41",
+  "numero": "41",
+  "nome": "Sōgetsu",
+  "kanji": "「双月」",
+  "traducao": "Luas Gêmeas",
+  "nomeCompleto": "Sōgetsu 「双月」— Luas Gêmeas",
+  "espirito": "Duas sacerdotisas de prata idênticas unidas pelas mãos, uma sob a lua cheia e outra sob a lua nova.",
+  "comando": "Cruzem o horizonte da noite, Sōgetsu.",
+  "elemento": "Foices Curvas & Foco Duplo de Dano",
+  "formatoArma": "A katana se divide em duas foices curvas prateadas unidas por um halo de luz lunar.",
+  "poder": "Corte Sincronizado: Ataques combinados das duas foices convergem no mesmo ponto gerando o dobro de penetração de corte.",
+  "bankai": {
+    "nome": "Sōgetsu — Sōei Nisshokukai",
+    "kanji": "「双月・双影日食界」",
+    "traducao": "Eclipse das Luas Gêmeas",
+    "nomeCompleto": "Bankai — Sōgetsu 「双月・双影日食界」 (Sōei Nisshokukai — Eclipse das Luas Gêmeas)",
+    "comando": "Bankai — Sōgetsu, Sōei Nisshokukai!",
+    "formatoArma": "Duas luas monumentais (uma prateada e uma negra) surgem nos polos opostos do céu.",
+    "poder": "Gravidade Dupla Divergente: Cria dois centros de gravidade opostos que puxam o corpo e a espada do oponente em direções contrárias, desmantelando sua postura defensiva."
+  }
+}, {
+  "id": "zk-42",
+  "numero": "42",
+  "nome": "Kyūketsu",
+  "kanji": "「吸血」",
+  "traducao": "Vórtice Carmesim",
+  "nomeCompleto": "Kyūketsu 「吸血」— Vórtice Carmesim",
+  "espirito": "Um morcego espectral com asas de lâminas polidas e olhos vermelhos brilhantes que caça no escuro.",
+  "comando": "Drene o sopro da vida, Kyūketsu.",
+  "elemento": "Absorção Vital & Lanças Escarlates",
+  "formatoArma": "Uma espada esguia com dentes finos que drena uma fração minúscula de vitalidade ao ferir o alvo para restaurar o fôlego do usuário.",
+  "poder": "Restauração por Corte: Fecha pequenos cortes no próprio corpo do portador à medida que causa danos superficiais no inimigo.",
+  "bankai": {
+    "nome": "Kyūketsu — Senketsu Kyōshikyoku",
+    "kanji": "「吸血・鮮血狂詩曲」",
+    "traducao": "Rapsódia da Sede Carmesim",
+    "nomeCompleto": "Bankai — Kyūketsu 「吸血・鮮血狂詩曲」 (Senketsu Kyōshikyoku — Rapsódia da Sede Carmesim)",
+    "comando": "Bankai — Kyūketsu, Senketsu Kyōshikyoku!",
+    "formatoArma": "Todo o sangue exposto na atmosfera condensa em lanças escarlates flutuantes de Reiryoku puro.",
+    "poder": "Chuva de Lanças Sangrentas: As lanças teleguiadas perseguem o adversário automaticamente com altíssimo poder perfurante e devolvem Reiryoku drenado ao usuário."
+  }
+}, {
+  "id": "zk-43",
+  "numero": "43",
+  "nome": "Raijū",
+  "kanji": "「雷獣」",
+  "traducao": "Tigre dos Raios Azuis",
+  "nomeCompleto": "Raijū 「雷獣」— Tigre dos Raios Azuis",
+  "espirito": "Um tigre de pelos azuis e garras elétricas envolto em arcos de plasma faiscante.",
+  "comando": "Ruge no coração da tempestade, Raijū.",
+  "elemento": "Eletricidade Azul & Arcos Condutores",
+  "formatoArma": "A lâmina se cobre de arcos de plasma azul que saltam para qualquer objeto metálico próximo.",
+  "poder": "Choque Eletrostático: Conduz corrente elétrica através de armas ao cruzar aço, causando espasmos musculares nas mãos do adversário.",
+  "bankai": {
+    "nome": "Raijū — Tenrai Hōkōkai",
+    "kanji": "「雷獣・天雷咆哮界」",
+    "traducao": "Domínio do Rugido do Trovão Primordial",
+    "nomeCompleto": "Bankai — Raijū 「雷獣・天雷咆哮界」 (Tenrai Hōkōkai — Domínio do Rugido do Trovão Primordial)",
+    "comando": "Bankai — Raijū, Tenrai Hōkōkai!",
+    "formatoArma": "O portador se funde a uma armadura colossal de plasma azul vivo com velocidade quase instantânea.",
+    "poder": "Velocidade de Relâmpago Puro: O usuário atinge velocidades extremas em curtos trajetos, desferindo golpes envoltos em ondas de choque capazes de desintegrar defesas rígidas."
+  }
+}, {
+  "id": "zk-44",
+  "numero": "44",
+  "nome": "Suzumechi",
+  "kanji": "「雀千」",
+  "traducao": "Mil Penas Douradas",
+  "nomeCompleto": "Suzumechi 「雀千」— Mil Penas Douradas",
+  "espirito": "Uma nobre vestida com manto de penas douradas que se comunica através do canto de bandos de pássaros luminosos.",
+  "comando": "Alce voo na luz do ouro, Suzumechi.",
+  "elemento": "Penas Metálicas & Enxame Aéreo",
+  "formatoArma": "A espada se dispersa em centenas de pequenas lâminas em formato de penas douradas flutuantes.",
+  "poder": "Revoada de Penas: As penas voam em leque teleguiado e podem se agrupar como uma barreira rotatória esférica.",
+  "bankai": {
+    "nome": "Suzumechi — Senba Ōgonran",
+    "kanji": "「雀千・千羽黄金嵐」",
+    "traducao": "Tempestade das Mil Asas Douradas",
+    "nomeCompleto": "Bankai — Suzumechi 「雀千・千羽黄金嵐」 (Senba Ōgonran — Tempestade das Mil Asas Douradas)",
+    "comando": "Bankai — Suzumechi, Senba Ōgonran!",
+    "formatoArma": "Milhares de lâminas douradas formam um turbilhão cósmico em 360° em volta da arena.",
+    "poder": "Corte Omnidirecional em Enxame: As penas desferem milhares de microcortes simultâneos que atingem todos os pontos cegos do adversário sem deixar rotas de esquiva."
+  }
+}, {
+  "id": "zk-45",
+  "numero": "45",
+  "nome": "Karatake",
+  "kanji": "「唐竹」",
+  "traducao": "Bambu Imortal",
+  "nomeCompleto": "Karatake 「唐竹」— Bambu Imortal",
+  "espirito": "Um lenhador cego de bambu com chapéu cônico que caminha sereno por um bosque verdejante interminável.",
+  "comando": "Flecta sem jamais quebrar, Karatake.",
+  "elemento": "Elasticidade Vegetal & Lâmina Chicote",
+  "formatoArma": "A lâmina ganha a flexibilidade e tenacidade do bambu maduro, curvando-se como um chicote afiado.",
+  "poder": "Elasticidade Cortante: Permite desferir golpes que contornam escudos e defesas retas para atingir os flancos do inimigo.",
+  "bankai": {
+    "nome": "Karatake — Suichiku Senbonrin",
+    "kanji": "「唐竹・翠竹千本林」",
+    "traducao": "Floresta dos Mil Bambus de Jade",
+    "nomeCompleto": "Bankai — Karatake 「唐竹・翠竹千本林」 (Suichiku Senbonrin — Floresta dos Mil Bambus de Jade)",
+    "comando": "Bankai — Karatake, Suichiku Senbonrin!",
+    "formatoArma": "Estacas gigantescas de bambu espiritual verde brotam do solo em centenas de colunas impenetráveis.",
+    "poder": "Empalamento em Floresta Viva: Os bambus crescem em alta velocidade como lanças sob comando do usuário, empalando e encurralando alvos em um labirinto fechado."
+  }
+}, {
+  "id": "zk-46",
+  "numero": "46",
+  "nome": "Hyōga",
+  "kanji": "「氷河」",
+  "traducao": "Geleira Ancestral",
+  "nomeCompleto": "Hyōga 「氷河」— Geleira Ancestral",
+  "espirito": "Um gigante de gelo azul milenar com barba de estalactites e olhar fixo no horizonte gélido do norte.",
+  "comando": "Congele o fluxo dos tempos, Hyōga.",
+  "elemento": "Zero Absoluto & Calota Glacial",
+  "formatoArma": "Uma espada pesada de gelo translúcido que resfria a superfície de qualquer coisa com que entre em contato.",
+  "poder": "Resfriamento por Impacto: Cada colisão forma uma crosta de gelo rígida nas armas inimigas aumentando seu peso e reduzindo a agilidade do atacante.",
+  "bankai": {
+    "nome": "Hyōga — Zettai Reido Tōkai",
+    "kanji": "「氷河・絶対零度凍界」",
+    "traducao": "Mundo Congelado do Zero Absoluto",
+    "nomeCompleto": "Bankai — Hyōga 「氷河・絶対零度凍界」 (Zettai Reido Tōkai — Mundo Congelado do Zero Absoluto)",
+    "comando": "Bankai — Hyōga, Zettai Reido Tōkai!",
+    "formatoArma": "Todo o terreno e o ar se congelam instantaneamente em uma calota sólida inquebrável de gelo puro.",
+    "poder": "Paralisia Molecular & Térmica: O frio extremo anula o fluxo de Reiryoku no ar e desacelera as reações do corpo do oponente, congelando qualquer feitiço em formação."
+  }
+}, {
+  "id": "zk-47",
+  "numero": "47",
+  "nome": "Gen'ō",
+  "kanji": "「幻影」",
+  "traducao": "Monarca das Miragens",
+  "nomeCompleto": "Gen'ō 「幻影」— Monarca das Miragens",
+  "espirito": "Um ilusionista mascarado com capa de veludo púrpura que move peças de xadrez de cristal no ar com gestos sutis.",
+  "comando": "Engane até a própria luz, Gen'ō.",
+  "elemento": "Descompasso Temporal & Ilusão Neural",
+  "formatoArma": "Uma espada de lâmina esguia que altera a percepção do tempo no cérebro do adversário em 0,3 segundo a cada corte raspão.",
+  "poder": "Descompasso Neural: Faz o oponente antecipar ou atrasar suas reações defensivas, errando os tempos de bloqueio e esquiva.",
+  "bankai": {
+    "nome": "Gen'ō — Senjū Kyozōkai",
+    "kanji": "「幻影・千重虚像界」",
+    "traducao": "Domínio dos Mil Cenários Ilusórios",
+    "nomeCompleto": "Bankai — Gen'ō 「幻影・千重虚像界」 (Senjū Kyozōkai — Domínio dos Mil Cenários Ilusórios)",
+    "comando": "Bankai — Gen'ō, Senjū Kyozōkai!",
+    "formatoArma": "O ambiente se estilhaça em milhares de reflexos que projetam cenários de combate simultâneos.",
+    "poder": "Sobrecarga Cognitiva: O cérebro do oponente processa dezenas de combates imaginários ao mesmo tempo enquanto seu corpo físico fica paralisado e vulnerável ao golpe real."
+  }
+}, {
+  "id": "zk-48",
+  "numero": "48",
+  "nome": "Enkō",
+  "kanji": "「円光」",
+  "traducao": "Halo Sagrado",
+  "nomeCompleto": "Enkō 「円光」— Halo Sagrado",
+  "espirito": "Uma entidade budista serena com auréola de chamas douradas flutuando sobre a cabeça e vestes brancas imaculadas.",
+  "comando": "Ilumine o caminho do julgamento, Enkō.",
+  "elemento": "Chamas Solares & Discos Giratórios",
+  "formatoArma": "A espada projeta discos cortantes de fogo solar giratório que ricocheteiam no ar e retornam à mão do usuário.",
+  "poder": "Halos Solares: Dispara anéis de calor extremo de alta velocidade capazes de cortar e queimar barreiras defensivas à distância.",
+  "bankai": {
+    "nome": "Enkō — Dainichi Kinrinjin",
+    "kanji": "「円光・大日金輪陣」",
+    "traducao": "Aliança dos Sete Halos Solares",
+    "nomeCompleto": "Bankai — Enkō 「円光・大日金輪陣」 (Dainichi Kinrinjin — Aliança dos Sete Halos Solares)",
+    "comando": "Bankai — Enkō, Dainichi Kinrinjin!",
+    "formatoArma": "Sete anéis monumentais de fogo dourado descem do céu sobre a arena de combate.",
+    "poder": "Convergência Solar Absoluta: Os sete halos convergem feixes de luz e calor solar no centro do campo, incinerando tudo dentro de seu ponto focal com calor puro."
+  }
+}, {
+  "id": "zk-49",
+  "numero": "49",
+  "nome": "Mugenba",
+  "kanji": "「無限刃」",
+  "traducao": "Forja das Dez Mil Lâminas",
+  "nomeCompleto": "Mugenba 「無限刃」— Forja das Dez Mil Lâminas",
+  "espirito": "Um ferreiro lendário sentado no pico de uma montanha cercado por incontáveis espadas antigas cravadas na terra.",
+  "comando": "Renasça do fio quebrado, Mugenba.",
+  "elemento": "Regeneração de Lâminas & Tempestade de Aço",
+  "formatoArma": "Caso a lâmina se quebre em combate, ela se regenera instantaneamente com um gume novo e mais afiado do que o anterior.",
+  "poder": "Regeneração de Fio: A destruição física da arma fortalece a lâmina subsequente com maior densidade espiritual.",
+  "bankai": {
+    "nome": "Mugenba — Banjinzuka",
+    "kanji": "「無限刃・万刃塚」",
+    "traducao": "Cemitério das Dez Mil Lâminas",
+    "nomeCompleto": "Bankai — Mugenba 「無限刃・万刃塚」 (Banjinzuka — Cemitério das Dez Mil Lâminas)",
+    "comando": "Bankai — Mugenba, Banjinzuka!",
+    "formatoArma": "Milhares de espadas espirituais emergem do solo e flutuam na atmosfera ao redor do portador.",
+    "poder": "Controle Telecinético de Tempestade de Aço: O usuário comanda mentalmente o enxame de milhares de espadas para atacar em rajadas contínuas ou formarem barreiras sólidas de contenção."
+  }
+}, {
+  "id": "zk-50",
+  "numero": "50",
+  "nome": "Kurotsume",
+  "kanji": "「黒爪」",
+  "traducao": "Garras da Pantera Negra",
+  "nomeCompleto": "Kurotsume 「黒爪」— Garras da Pantera Negra",
+  "espirito": "Uma pantera negra com olhos escarlates que se camufla perfeitamente na escuridão entre as árvores sem produzir som.",
+  "comando": "Despedace na penumbra, Kurotsume.",
+  "elemento": "Garras Triplas & Sangramento Contínuo",
+  "formatoArma": "A espada se divide em três garras retráteis de aço negro em cada punho do portador.",
+  "poder": "Ferida Aberta: Os cortes causados pelas garras dificultam a coagulação rápida e retardam a regeneração acelerada por Kaidō básico durante a luta.",
+  "bankai": {
+    "nome": "Kurotsume — An'ya Shuryōkai",
+    "kanji": "「黒爪・暗夜狩猟界」",
+    "traducao": "Território da Caçada na Noite Escura",
+    "nomeCompleto": "Bankai — Kurotsume 「黒爪・暗夜狩猟界」 (An'ya Shuryōkai — Território da Caçada na Noite Escura)",
+    "comando": "Bankai — Kurotsume, An'ya Shuryōkai!",
+    "formatoArma": "A arena inteira mergulha em uma penumbra viva e o portador ganha carapaça predatória de sombras.",
+    "poder": "Caçada Oculta Instantânea: O usuário se funde às sombras do ambiente, atacando com velocidade predatória silenciosa a partir de qualquer ponto escuro sem revelar sua presença."
+  }
+}, {
+  "id": "zk-51",
+  "numero": "51",
+  "nome": "Jinrai",
+  "kanji": "「迅雷」",
+  "traducao": "Clarão do Trovão Instantâneo",
+  "nomeCompleto": "Jinrai 「迅雷」— Clarão do Trovão Instantâneo",
+  "espirito": "Um guerreiro com elmo em formato de raio e pés envoltos em correntes elétricas reluzentes.",
+  "comando": "Corte antes do estrondo, Jinrai.",
+  "elemento": "Sinapses Iônicas & Velocidade Extrema",
+  "formatoArma": "Uma lâmina fina que emite pulsos de microcorrentes acelerando as sinapses nervosas do próprio portador.",
+  "poder": "Sinapse Relâmpago: Multiplica a velocidade de reação e de saque da espada em combates a curta distância.",
+  "bankai": {
+    "nome": "Jinrai — Banrai Shinsokukai",
+    "kanji": "「迅雷・万雷神速界」",
+    "traducao": "Domínio da Velocidade Divina dos Cem Raios",
+    "nomeCompleto": "Bankai — Jinrai 「迅雷・万雷神速界」 (Banrai Shinsokukai — Domínio da Velocidade Divina dos Cem Raios)",
+    "comando": "Bankai — Jinrai, Banrai Shinsokukai!",
+    "formatoArma": "O campo se torna uma câmara selada por arcos voltaicos amarelos e relâmpagos contínuos.",
+    "poder": "Translocação Sônica Contínua: Cada passo do usuário viaja na velocidade do relâmpago, deixando para trás ondas de choque que atordoam o adversário enquanto desfere cortes sucessivos."
+  }
+}, {
+  "id": "zk-52",
+  "numero": "52",
+  "nome": "Senbiki",
+  "kanji": "「千匹」",
+  "traducao": "Ninho das Serpentes de Jade",
+  "nomeCompleto": "Senbiki 「千匹」— Ninho das Serpentes de Jade",
+  "espirito": "Um encantador de serpentes com corpo coberto de escamas esmeralda e olhos reptilianos profundos.",
+  "comando": "Rasteje e dê o bote, Senbiki.",
+  "elemento": "Lâmina Sinuosa & Veneno Corrosivo",
+  "formatoArma": "A lâmina se contorce como uma cobra viva, capaz de esticar e contornar esquinas para morder o alvo.",
+  "poder": "Bote Articulado: Desfere estocadas em trajetórias curvas e sinuosas totalmente imprevisíveis.",
+  "bankai": {
+    "nome": "Senbiki — Banja Dokukutsu",
+    "kanji": "「千匹・万蛇毒窟」",
+    "traducao": "Caverna das Dez Mil Serpentes Venenosas",
+    "nomeCompleto": "Bankai — Senbiki 「千匹・万蛇毒窟」 (Banja Dokukutsu — Caverna das Dez Mil Serpentes Venenosas)",
+    "comando": "Bankai — Senbiki, Banja Dokukutsu!",
+    "formatoArma": "O solo se liquefaz em uma massa viva de serpentes gigantescas de puro Reiryoku verde esmeralda.",
+    "poder": "Estrangulamento & Inoculação Venenosa: As serpentes engolem e asfixiam o oponente inoculando toxinas que corroem armaduras e drenam o fluxo espiritual."
+  }
+}, {
+  "id": "zk-53",
+  "numero": "53",
+  "nome": "Fuenshō",
+  "kanji": "「浮烟」",
+  "traducao": "Fumaça Flutuante",
+  "nomeCompleto": "Fuenshō 「浮烟」— Fumaça Flutuante",
+  "espirito": "Uma donzela de véus de seda branca que sopra cinzas mornas que nunca caem no chão.",
+  "comando": "Disperse o peso do mundo, Fuenshō.",
+  "elemento": "Fumaça Mágica & Amortecimento de Hadō",
+  "formatoArma": "Uma espada que deixa para trás um rastro espesso de fumaça translúcida que dissipa ataques mágicos.",
+  "poder": "Distorção Mágica: Amortece e dissipa a energia de projéteis de Hadō que passem através da fumaça.",
+  "bankai": {
+    "nome": "Fuenshō — Kūgen Shinkirō",
+    "kanji": "「浮烟・空幻蜃気楼」",
+    "traducao": "Miragem Celestial do Céu Vazio",
+    "nomeCompleto": "Bankai — Fuenshō 「浮烟・空幻蜃気楼」 (Kūgen Shinkirō — Miragem Celestial do Céu Vazio)",
+    "comando": "Bankai — Fuenshō, Kūgen Shinkirō!",
+    "formatoArma": "Uma névoa colossal cobre quilômetros de distância criando miragens táteis perfeitas.",
+    "poder": "Refração Mágica & Retorno de Projéteis: Desvia a trajetória de feitiços disparados na névoa, fazendo-os retornarem automaticamente contra os seus próprios conjuradores."
+  }
+}, {
+  "id": "zk-54",
+  "numero": "54",
+  "nome": "Hagakure",
+  "kanji": "「葉隠」",
+  "traducao": "Oculto nas Folhas",
+  "nomeCompleto": "Hagakure 「葉隠」— Oculto nas Folhas",
+  "espirito": "Um shinobi ancestral com manto de folhagem de outono que se funde com os troncos das árvores sem emitir ruído.",
+  "comando": "Desapareça no outono, Hagakure.",
+  "elemento": "Camuflagem Tática & Folhas Cortantes",
+  "formatoArma": "Uma lâmina fosca que adquire a textura e cor do ambiente ao redor ao menor contato com vegetação ou solo.",
+  "poder": "Camuflagem Tática: Anula a presença visual e o calor corporal enquanto o portador estiver encostado em superfícies naturais.",
+  "bankai": {
+    "nome": "Hagakure — Konoha Hyakujin Ranbu",
+    "kanji": "「葉隠・木葉百刃乱舞」",
+    "traducao": "Dança das Mil Lâminas das Folhas de Outono",
+    "nomeCompleto": "Bankai — Hagakure 「葉隠・木葉百刃乱舞」 (Konoha Hyakujin Ranbu — Dança das Mil Lâminas das Folhas de Outono)",
+    "comando": "Bankai — Hagakure, Konoha Hyakujin Ranbu!",
+    "formatoArma": "Todas as folhas e folhagens do ambiente se transformam em navalhas afiadas sob o comando mental do portador.",
+    "poder": "Turbilhão das Folhas Afiadas: As folhas voam em vórtices cortantes que fatiam defesas inimigas enquanto ocultam a posição real do usuário."
+  }
+}, {
+  "id": "zk-55",
+  "numero": "55",
+  "nome": "Tōbaku",
+  "kanji": "「凍縛」",
+  "traducao": "Amarração Glacial",
+  "nomeCompleto": "Tōbaku 「凍縛」— Amarração Glacial",
+  "espirito": "Uma sacerdotisa aprisionada em um caixão de gelo transparente cujos olhos continuam abertos e vigilantes.",
+  "comando": "Aprisione no frio sem fim, Tōbaku.",
+  "elemento": "Congelamento de Pontos de Apoio & Pilares",
+  "formatoArma": "Uma espada curta que congela instantaneamente qualquer umidade ou poça de água tocada pela ponta.",
+  "poder": "Amarração Glacial: Cria laços de gelo ao redor dos pés do adversário assim que ele pisa em solo umedecido pela lâmina.",
+  "bankai": {
+    "nome": "Tōbaku — Hakutei Hyōchūrō",
+    "kanji": "「凍縛・白帝氷柱牢」",
+    "traducao": "Prisão dos Pilares de Gelo do Imperador Branco",
+    "nomeCompleto": "Bankai — Tōbaku 「凍縛・白帝氷柱牢」 (Hakutei Hyōchūrō — Prisão dos Pilares de Gelo do Imperador Branco)",
+    "comando": "Bankai — Tōbaku, Hakutei Hyōchūrō!",
+    "formatoArma": "Pilares monumentais de gelo sólido erguem-se do solo encadeando o oponente.",
+    "poder": "Encarceramento Glacial: Encerra o adversário em uma câmara de pilares de gelo que drenam continuamente o calor corporal e o vigor espiritual."
+  }
+}, {
+  "id": "zk-56",
+  "numero": "56",
+  "nome": "Kaimetsu",
+  "kanji": "「壊滅」",
+  "traducao": "Martelo da Ruína",
+  "nomeCompleto": "Kaimetsu 「壊滅」— Martelo da Ruína",
+  "espirito": "Um titã de armadura rachada e martelo colossal que caminha sobre escombros de cidades antigas.",
+  "comando": "Reduza tudo a escombros, Kaimetsu.",
+  "elemento": "Ondas de Choque Estruturais & Trituração",
+  "formatoArma": "Uma espada pesada de dorso reforçado que transmite vibrações de esmagamento através de defesas e armaduras.",
+  "poder": "Dano Estrutural: Quebra a integridade física de armas e escudos mesmo quando o golpe é bloqueado pelo oponente.",
+  "bankai": {
+    "nome": "Kaimetsu — Tenhō Chimetsukai",
+    "kanji": "「壊滅・天崩地滅壊」",
+    "traducao": "Aniquilação da Ruína do Céu e da Terra",
+    "nomeCompleto": "Bankai — Kaimetsu 「壊滅・天崩地滅壊」 (Tenhō Chimetsukai — Aniquilação da Ruína do Céu e da Terra)",
+    "comando": "Bankai — Kaimetsu, Tenhō Chimetsukai!",
+    "formatoArma": "A lâmina se torna um martelo de guerra colossal de Reiryoku negro comprimido.",
+    "poder": "Colapso Sísmico Estrutural: Cada golpe no solo gera ondas de choque devastadoras que trituram rochas, racham montanhas e anulam defesas rígidas por impacto."
+  }
+}, {
+  "id": "zk-57",
+  "numero": "57",
+  "nome": "Akatsuki",
+  "kanji": "「暁」",
+  "traducao": "Alvorecer Carmesim",
+  "nomeCompleto": "Akatsuki 「暁」— Alvorecer Carmesim",
+  "espirito": "Uma deusa guerreira com vestes douradas e vermelhas segurando uma tocha acesa com o primeiro raio da aurora.",
+  "comando": "Rompa a escuridão do mundo, Akatsuki.",
+  "elemento": "Luz Solar Nascente & Calor Progressivo",
+  "formatoArma": "Uma espada de lâmina avermelhada que brilha com intensidade e calor crescentes conforme o combate se prolonga.",
+  "poder": "Calor Progressivo: Aumenta a temperatura do fio da espada a cada golpe consecutivo desferido.",
+  "bankai": {
+    "nome": "Akatsuki — Guren Kyokujitsushō",
+    "kanji": "「暁・紅蓮旭日昇」",
+    "traducao": "Ascensão do Sol Nascente Carmesim",
+    "nomeCompleto": "Bankai — Akatsuki 「暁・紅蓮旭日昇」 (Guren Kyokujitsushō — Ascensão do Sol Nascente Carmesim)",
+    "comando": "Bankai — Akatsuki, Guren Kyokujitsushō!",
+    "formatoArma": "Um sol nascente carmesim monumental se projeta atrás do portador.",
+    "poder": "Feixe da Aurora Solar: Dispara feixes concentrados de luz e calor solar que purificam e vaporizam obstáculos em linha reta."
+  }
+}, {
+  "id": "zk-58",
+  "numero": "58",
+  "nome": "Yūgure",
+  "kanji": "「夕暮」",
+  "traducao": "Crepúsculo",
+  "nomeCompleto": "Yūgure 「夕暮」— Crepúsculo",
+  "espirito": "Um viajante solitário com um lampião violeta que caminha na estrada no momento exato em que o sol se põe.",
+  "comando": "Desça sobre a luz cansada, Yūgure.",
+  "elemento": "Penumbra Crepuscular & Desfase Temporal",
+  "formatoArma": "Uma espada envolta em uma penumbra violeta que retarda a percepção do tempo de quem estiver próximo.",
+  "poder": "Crepúsculo dos Sentidos: Golpes desferidos na penumbra parecem chegar antes do som da lâmina ser emitido.",
+  "bankai": {
+    "nome": "Yūgure — Tasokare Higankai",
+    "kanji": "「夕暮・黄昏彼岸界」",
+    "traducao": "Fronteira da Penumbra do Outro Mundo",
+    "nomeCompleto": "Bankai — Yūgure 「夕暮・黄昏彼岸界」 (Tasokare Higankai — Fronteira da Penumbra do Outro Mundo)",
+    "comando": "Bankai — Yūgure, Tasokare Higankai!",
+    "formatoArma": "O campo de batalha entra em um crepúsculo perpétuo de luz violeta suave.",
+    "poder": "Intervalo Temporal do Crepúsculo: Os ataques do portador viajam em um intervalo entre o passado imediato e o presente, tornando previsões ou esquivas quase impossíveis."
+  }
+}, {
+  "id": "zk-59",
+  "numero": "59",
+  "nome": "Seirō",
+  "kanji": "「青狼」",
+  "traducao": "Lobo das Chamas Glaciais",
+  "nomeCompleto": "Seirō 「青狼」— Lobo das Chamas Glaciais",
+  "espirito": "Um lobo espectral com cauda de chamas azuis espirituais e presas de gelo translúcido.",
+  "comando": "Uive nas chamas frias, Seirō.",
+  "elemento": "Fogo Azul Gélido & Paralisia Térmica",
+  "formatoArma": "Uma lâmina curva que emite um fogo azul que não queima matéria, mas congela nervos e o fluxo de Reiryoku.",
+  "poder": "Chama Fria: Queima a energia espiritual do alvo na área atingida causando paralisia sem carbonização.",
+  "bankai": {
+    "nome": "Seirō — Sōen Hyōsetsugoku",
+    "kanji": "「青狼・蒼炎氷雪獄」",
+    "traducao": "Inferno de Chamas Azuis e Neve Eterna",
+    "nomeCompleto": "Bankai — Seirō 「青狼・蒼炎氷雪獄」 (Sōen Hyōsetsugoku — Inferno de Chamas Azuis e Neve Eterna)",
+    "comando": "Bankai — Seirō, Sōen Hyōsetsugoku!",
+    "formatoArma": "Uma tempestade monumental de fogo azul e gelo cobre toda a arena de batalha.",
+    "poder": "Incineração Glacial de Reiryoku: As chamas azuis congelam feitiços no ar e drenam o ímpeto e vigor do oponente simultaneamente."
+  }
+}, {
+  "id": "zk-60",
+  "numero": "60",
+  "nome": "Tenbinzuru",
+  "kanji": "「天秤鶴」",
+  "traducao": "Garça da Balança Celestial",
+  "nomeCompleto": "Tenbinzuru 「天秤鶴」— Garça da Balança Celestial",
+  "espirito": "Uma garça branca de penas metálicas polidas pousada serenamente sobre o prato de uma balança dourada.",
+  "comando": "Harmonize o peso das almas, Tenbinzuru.",
+  "elemento": "Equilíbrio Energético & Espelhamento",
+  "formatoArma": "Uma espada prateada com guarda em forma de garça que equilibra o gasto de Reiryoku do usuário com o do adversário.",
+  "poder": "Ressonância Proporcional: Reduz o desgaste energético do usuário em proporção ao esforço exercido pelo inimigo.",
+  "bankai": {
+    "nome": "Tenbinzuru — Gokuraku Jōdo Tenbin",
+    "kanji": "「天秤鶴・極楽浄土天秤」",
+    "traducao": "Balança do Santuário Puro",
+    "nomeCompleto": "Bankai — Tenbinzuru 「天秤鶴・極楽浄土天秤」 (Gokuraku Jōdo Tenbin — Balança do Santuário Puro)",
+    "comando": "Bankai — Tenbinzuru, Gokuraku Jōdo Tenbin!",
+    "formatoArma": "Um santuário celestial inviolável surge no céu com duas balanças monumentais de ouro e prata.",
+    "poder": "Espelhamento de Dano Absoluto: Qualquer dano físico sofrido por um dos lutadores dentro do domínio é espelhado em proporção exata no adversário, forçando uma disputa de precisão cirúrgica e autocontrole."
+  }
+}];
 const AUTORIAL_PREFIXES = ["Gekka", "Enkō", "Raimei", "Kageori", "Senritsu", "Dokugan", "Kōtetsu", "Shippū", "Tenrin", "Kasumibane", "Rengetsu", "Shinbatsu", "Byakko", "Kurogane", "Ryūsei", "Hakuryū", "Suzuran", "Mugen", "Tsukikage", "Hien", "Yatsukahada", "Reisō", "Kourinpou", "Sōun", "Genshō", "Kagayaki", "Yamikiri", "Seiryuu", "Rindō", "Gurenkō", "Kurokaze", "Hōōmaru", "Chirin", "Suikazan"];
 const AUTORIAL_SUFFIXES = ["kiri", "maru", "kiba", "ori", "hime", "zuru", "jin", "kō", "kage", "bane", "tsume", "boshi", "tō", "ken", "ryū", "sō", "ya", "bana", "yari", "kaze", "ren", "shō", "getsu", "sen", "bi", "gumo", "ryo", "dan", "retsu", "ha"];
-const AUTORIAL_COMMANDS = ["Fenda o crepúsculo", "Beba o silêncio da noite", "Enegreça o firmamento", "Rasure a névoa da ilusão", "Desate as amarras da alma", "Queime até a última cinza", "Gele o pulso da terra", "Esmague a gravidade do abismo", "Chore em lâminas de aço", "Desperte dos ossos ancestrais", "Dance sobre a tempestade", "Corroa o sopro vital", "Resplandeça em luz de julgamento", "Perfure a escuridão absoluta", "Dissolva os ecos da dor", "Parta as correntes do destino", "Desate o cântico dos mortos", "Rache o firmamento cósmico"];
+const AUTORIAL_COMMANDS = ["Floresça no silêncio", "Forje aquilo que ainda não existe", "Olhe para si mesmo", "Desperte no céu", "Chore sobre este mundo", "Reflita aquilo que deveria ser esquecido", "Multiplique-se pelo caminho", "Permaneça onde ninguém pode tocar", "Faça o céu responder", "Pese aquilo que existe", "Trace os limites do abismo", "Abandone a forma passageira", "Revele as sombras da vigília", "Toque aquilo que não tem voz", "Prenda-se ao solo", "Estenda a fronteira do ar", "Engrene o tempo que resta", "Ecoa na mente vazia", "Asfixie o horizonte", "Acorde da montanha", "Tinja o caminho de carmesim", "Dance na geada suave", "Puxe as amarras do abismo", "Purifique a mácula"];
 const WEAPON_TYPES = ["Uma nodachi de lâmina enegrecida com fio duplo chanfrado e ranhuras que canalizam Reiryoku pura", "Duas adagas triangulares de aço gravado unidas por uma corrente de elos flutuantes de pura energia", "Uma elegante rapieira de cristal fosco com guarda em prisma triplo que refrata a luz em navalhas", "Uma foice de combate com dorso serrilhado e três sinos espirituais que ressoam frequências desestabilizadoras", "Um cutelo colossal de aço polido reforçado com faixas de seda branca na empunhadura para absorção de impacto", "Uma lança articulada em três segmentos de aço flexível que chicoteia no ar com lâminas retráteis", "Um machado leve de guerra de dois gumes com núcleo oco por onde pulsam arcos de pressão espiritual", "Duas cimitarras curvas de aço rubro brilhante com guarda em formato de meia-lua entrelaçada"];
 const PRIMARY_EFFECTS = ["projeta ondas cortantes de alta densidade capazes de fender barreiras espirituais e terra firme", "congela a circulação de Reiryoku do oponente ao menor corte, reduzindo reflexos e velocidade", "descarrega arcos voltaicos perfurantes que eletrocutam nervos motores causando paralisia instantânea", "permite ao Shinigami deslizar instantaneamente entre as sombras do terreno em ângulos impossíveis", "duplica a massa gravitacional da arma a cada colisão bem-sucedida, quebrando defesas de impacto", "expele uma névoa corrosiva que consome projéteis mágicos de Kidō antes que atinjam o portador", "cria círculos de ressonância no solo que aprisionam o peso corporal do inimigo em alta gravidade", "multiplica a velocidade do Shunpo do usuário gerando clones residuais táteis de pura pressão"];
 const SECONDARY_EFFECTS = ["Além disso, reveste o corpo com um manto defensivo que dissipa feitiços de dano cinético.", "Além disso, cada ataque bem-sucedido recupera uma fração da reserva de Reiatsu da lâmina.", "Além disso, permite disparar feitiços de Hadō canalizados diretamente através do fio da espada.", "Além disso, emite um zumbido subsônico que desorienta a percepção sensorial e equilíbrio do alvo."];
@@ -388,6 +1649,14 @@ function getClaimedZanpakutos(personagens = []) {
     claimedNames,
     claimedPowers
   };
+}
+function shuffleArray(arr) {
+  const array = [...arr];
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 }
 function gerarNomeAutorialUnico(claimedNames, usadosNoMomento) {
   let nome = "";
@@ -415,6 +1684,36 @@ function gerar4OpcoesShikaiAI(nomePersonagem, dbPersonagens = []) {
   const opcoes = [];
   const usadosNoMomento = new Set();
   const elementos = ["Chamas de Ébano & Brasas Solares", "Cristal Glacial & Zero Absoluto", "Relâmpago do Vórtice & Plasma Celeste", "Sombra Abissal & Distorção Dimensional", "Aço Puro & Alta Densidade Gravitacional", "Vento Cortante & Lâminas de Vácuo", "Veneno Espectral & Corrosão de Reiryoku", "Luz & Julgamento do Firmamento"];
+
+  // 1. Prioridade: Pegar do catálogo mestre de 60 Zanpakutōs ricas
+  const disponiveisNoCatalogo = (typeof MASTER_ZANPAKUTO_CATALOG !== 'undefined' ? MASTER_ZANPAKUTO_CATALOG : []).filter(item => {
+    const nomeNorm = item.nome.toLowerCase().trim();
+    return !claimedNames.has(nomeNorm);
+  });
+  const embaralhados = shuffleArray(disponiveisNoCatalogo);
+  for (const item of embaralhados) {
+    if (opcoes.length >= 4) break;
+    const nomeNorm = item.nome.toLowerCase().trim();
+    if (!usadosNoMomento.has(nomeNorm)) {
+      usadosNoMomento.add(nomeNorm);
+      opcoes.push({
+        id: uid(),
+        nome: item.nome,
+        nomeCompleto: item.nomeCompleto || item.nome + " " + item.kanji + " — " + item.traducao,
+        kanji: item.kanji,
+        traducao: item.traducao,
+        espirito: item.espirito,
+        comando: item.comando,
+        elemento: item.elemento,
+        formatoArma: item.formatoArma,
+        poder: item.poder,
+        bankaiPadrao: item.bankai,
+        foto: "assets/ichigo-orange.png"
+      });
+    }
+  }
+
+  // 2. Fallback procedural caso todo o catálogo mestre já esteja reivindicado
   while (opcoes.length < 4) {
     const nomeZk = gerarNomeAutorialUnico(claimedNames, usadosNoMomento);
     const elemento = elementos[opcoes.length % elementos.length];
@@ -427,7 +1726,11 @@ function gerar4OpcoesShikaiAI(nomePersonagem, dbPersonagens = []) {
     opcoes.push({
       id: uid(),
       nome: nomeZk,
-      comando: `${comando}, ${nomeZk}!`,
+      nomeCompleto: nomeZk + " — Lâmina Autoral Desperta",
+      kanji: "「始解」",
+      traducao: "Despertar Ancestral",
+      espirito: "Um espírito guardião envolto em vestes de combate que canaliza a essência de Reiryoku única do usuário.",
+      comando: comando + ", " + nomeZk + "!",
       elemento,
       formatoArma,
       poder: poderDesc,
@@ -443,35 +1746,83 @@ function gerar4OpcoesBankaiAI(nomePersonagem, shikaiAtiva, dbPersonagens = []) {
   } = getClaimedZanpakutos(dbPersonagens);
   const opcoes = [];
   const usadosNoMomento = new Set();
-  const baseNome = shikaiAtiva?.nome || "Gekkakiri";
-  const elemento = shikaiAtiva?.elemento || "Chamas de Ébano & Brasas Solares";
-  const titulosGrandiosos = [`Mugen Tenshō ${baseNome}`, `Taihō Guren ${baseNome} Kaihō`, `Sen'ei Jigokuhō ${baseNome}`, `Tenkū Hōmetsu ${baseNome} Shinryū`, `Hyakka Ryōran ${baseNome}`, `Kyodai Zantetsu ${baseNome} Daizō`, `Hakuryū Kaihō ${baseNome} Setsuna`, `Enma Daiō ${baseNome} Zetsumei`];
-  const formatosBankai = ["O campo de batalha é envolto por um pilar colossal de energia espiritual e a lâmina condensa toda a atmosfera em uma arma translúcida de calor e corte absoluto.", "Materializa uma gigantesca armadura celestial de Reiryoku comprimida com asas de lâminas puras e duas espadas monumentais de alcance estendido.", "O solo do campo de batalha se liquefaz em um oceano de sombra e metal líquido do qual emergem centenas de colunas de lâminas controladas pelo pensamento.", "Uma gigantesca forja celestial de anéis concêntricos gira no céu descarregando pilares de plasma que alteram a densidade molecular do terreno."];
-  const poderesBankai = ["Poder devastador cósmico: nada que toca a aura da Bankai sobrevive sem ser reduzido a cinzas moleculares. Altera o clima da região por quilômetros.", "Congelamento de Zero Absoluto: congela matéria, energia espiritual e reflexos. Uma vez atingido, o oponente tem seus feitiços e movimentos paralisados no tempo.", "Velocidade e perfuração transcendentais: atinge velocidade de relâmpago puro, atravessando qualquer Bakudō de nível supremo como se fosse papel.", "Controle absoluto da gravidade: o oponente é esmagado por peso gravitacional cósmico impedindo qualquer uso de Shunpo ou fuga do campo de batalha."];
-  while (opcoes.length < 4) {
-    const rawTitulo = titulosGrandiosos[opcoes.length % titulosGrandiosos.length];
-    let nomeBankai = `Bankai — ${rawTitulo}`;
-    const lower = nomeBankai.toLowerCase();
-    if (claimedNames.has(lower) || usadosNoMomento.has(lower)) {
-      nomeBankai = `Bankai — ${rawTitulo} ${uid().toUpperCase()}`;
+  const baseNome = shikaiAtiva?.nome || "Kurotsubaki";
+  const elemento = shikaiAtiva?.elemento || "Vácuo Cinético & Pétalas Negras";
+
+  // 1. Procurar Bankai canônico correspondente da Shikai ativa
+  let bankaiCanonico = shikaiAtiva?.bankaiPadrao || null;
+  if (!bankaiCanonico && typeof MASTER_ZANPAKUTO_CATALOG !== 'undefined') {
+    const matched = MASTER_ZANPAKUTO_CATALOG.find(z => z.nome.toLowerCase().trim() === baseNome.toLowerCase().trim());
+    if (matched && matched.bankai) {
+      bankaiCanonico = matched.bankai;
     }
-    usadosNoMomento.add(nomeBankai.toLowerCase());
-    const formatoArma = formatosBankai[opcoes.length % formatosBankai.length];
-    const poderDesc = `Manifestação Colossal: ${formatoArma} Poder Devastador: ${poderesBankai[opcoes.length % poderesBankai.length]}`;
+  }
+  if (bankaiCanonico) {
+    const nomeBk = bankaiCanonico.nomeCompleto || "Bankai — " + bankaiCanonico.nome + " " + (bankaiCanonico.kanji || '') + " (" + (bankaiCanonico.traducao || '') + ")";
+    usadosNoMomento.add(nomeBk.toLowerCase());
     opcoes.push({
       id: uid(),
-      nome: nomeBankai,
-      comando: `${nomeBankai}!`,
+      nome: bankaiCanonico.nome,
+      nomeCompleto: nomeBk,
+      kanji: bankaiCanonico.kanji || "「卍解」",
+      traducao: bankaiCanonico.traducao || "Liberação Completa",
+      comando: bankaiCanonico.comando || "Bankai — " + bankaiCanonico.nome + "!",
       elemento,
-      formatoArma,
-      poder: poderDesc,
+      formatoArma: bankaiCanonico.formatoArma,
+      poder: bankaiCanonico.poder,
+      espirito: shikaiAtiva?.espirito || "Ressonância transcendental entre a alma e o espírito ancestral da lâmina.",
       foto: "assets/ichigo-moon.png"
     });
   }
+
+  // 2. Evoluções temáticas adicionais de altíssima qualidade
+  const evolucoesTematicas = [{
+    sufixo: "Shūen Teien (Jardim do Fim)",
+    kanji: "「終焉庭園」",
+    titulo: "Bankai — " + baseNome + "・Shūen Teien",
+    formato: "O campo de batalha inteiro se transforma no domínio absoluto de " + baseNome + ". Monumentais manifestações espirituais emergem do solo e toda a atmosfera se sintoniza à pressão da lâmina.",
+    poder: "Domínio de Redistribuição Absoluta: Todas as propriedades e acúmulos da Shikai são expandidos para escala territorial. O portador pode transferir instantaneamente qualquer desvantagem do combate em aceleração, dano concentrado ou anulação de técnicas inimigas."
+  }, {
+    sufixo: "Kongō Taihō (Fornalha Celestial do Diamante)",
+    kanji: "「金剛大鵬」",
+    titulo: "Bankai — " + baseNome + "・Kongō Taihō",
+    formato: "O usuário é revestido por uma armadura colossal de Reiryoku comprimida em camadas de diamante e metal espiritual, empunhando duas armas monumentais de alcance estendido.",
+    poder: "Conversão Metabólica Transcendental: Cada choque de combate refina e multiplica a velocidade e a densidade de corte do usuário, concedendo imunidade progressiva a danos cinéticos e rompendo qualquer barreira mágica de Bakudō."
+  }, {
+    sufixo: "Mugen Kairō (Corredor dos Mil Reflexos)",
+    kanji: "「無限回廊」",
+    titulo: "Bankai — " + baseNome + "・Mugen Kairō",
+    formato: "O espaço ao redor se estilhaça em uma câmara dimensional espelhada onde dezenas de réplicas de Reiryoku tangíveis executam movimentos simultâneos.",
+    poder: "Mobilidade & Ataque Omnidirecional: O portador pode translocar-se instantaneamente entre qualquer reflexo ativo, disparando estocadas a partir de múltiplos ângulos cegos enquanto dissipa o impacto de ataques sofridos em cópias residuais."
+  }, {
+    sufixo: "Tenkan Gōtenritsu (Anel da Lei Celestial)",
+    kanji: "「天環・轟天律」",
+    titulo: "Bankai — " + baseNome + "・Tenkan Gōtenritsu",
+    formato: "Anéis de atração gravitacional e relâmpagos cósmicos giram em torno de todo o perímetro da arena, gerando uma zona de alta densidade espiritual.",
+    poder: "Controle Vetorial Absoluto: Todo ataque, feitiço ou combatente que entra no raio de ação da Bankai é submetido à trajetória das órbitas da lâmina, permitindo desviar investidas maciças e impor um ritmo de combate intransponível."
+  }];
+  for (const evo of evolucoesTematicas) {
+    if (opcoes.length >= 4) break;
+    const nomeNorm = evo.titulo.toLowerCase();
+    if (!usadosNoMomento.has(nomeNorm)) {
+      usadosNoMomento.add(nomeNorm);
+      opcoes.push({
+        id: uid(),
+        nome: baseNome + " — " + evo.sufixo,
+        nomeCompleto: evo.titulo + " " + evo.kanji,
+        kanji: evo.kanji,
+        traducao: evo.sufixo,
+        comando: evo.titulo + "!",
+        elemento,
+        formatoArma: evo.formato,
+        poder: evo.poder,
+        espirito: shikaiAtiva?.espirito || "Ressonância transcendental entre Shinigami e Zanpakutō.",
+        foto: "assets/ichigo-moon.png"
+      });
+    }
+  }
   return opcoes;
 }
-
-// Backward compatibility alias
 const gerar3OpcoesBankaiAI = gerar4OpcoesBankaiAI;
 
 // Power Tier Calculator (Baseado no Ponto 8 Oficial do RPG)
@@ -1812,7 +3163,13 @@ function KidosView({
     className: "mt-3 px-4 py-1.5 bg-bleach-panel border border-bleach-border text-xs text-bleach-cream rounded-lg hover:border-bleach-orange transition"
   }, "\uD83D\uDD04 Restaurar Reiatsu da L\xE2mina"))), /*#__PURE__*/React.createElement("div", {
     className: "lg:col-span-2 space-y-4"
-  }, /*#__PURE__*/React.createElement("div", {
+  }, personagem.zanpakuto.shikaiAtiva.espirito && /*#__PURE__*/React.createElement("div", {
+    className: "bg-black/60 border border-cyan-500/40 rounded-xl p-5 shadow-inner"
+  }, /*#__PURE__*/React.createElement("h4", {
+    className: "text-xs font-bold uppercase tracking-wider text-cyan-300 mb-1 flex items-center gap-2"
+  }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDC64"), " Representa\xE7\xE3o do Esp\xEDrito da Zanpakut\u014D"), /*#__PURE__*/React.createElement("p", {
+    className: "text-xs sm:text-sm text-cyan-100/90 italic leading-relaxed whitespace-pre-line"
+  }, "\"", personagem.zanpakuto.shikaiAtiva.espirito, "\"")), /*#__PURE__*/React.createElement("div", {
     className: "bg-bleach-panel2 border border-bleach-border rounded-xl p-4"
   }, /*#__PURE__*/React.createElement("h4", {
     className: "text-xs font-bold uppercase tracking-wider text-bleach-orange mb-2"
@@ -3030,7 +4387,13 @@ function FichaView({
     className: "hidden"
   }))), /*#__PURE__*/React.createElement("div", {
     className: "lg:col-span-2 space-y-4"
-  }, /*#__PURE__*/React.createElement("div", {
+  }, (personagem.zanpakuto.bankaiAtiva.espirito || personagem.zanpakuto.shikaiAtiva?.espirito) && /*#__PURE__*/React.createElement("div", {
+    className: "bg-black/70 border-2 border-purple-500/60 rounded-2xl p-5 shadow-[0_0_20px_rgba(139,111,214,0.3)]"
+  }, /*#__PURE__*/React.createElement("h4", {
+    className: "text-xs font-black uppercase tracking-widest text-purple-300 mb-1 flex items-center gap-2"
+  }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDC64"), " Resson\xE2ncia do Esp\xEDrito & Mundo Interior"), /*#__PURE__*/React.createElement("p", {
+    className: "text-xs sm:text-sm text-purple-100/90 italic leading-relaxed whitespace-pre-line"
+  }, "\"", personagem.zanpakuto.bankaiAtiva.espirito || personagem.zanpakuto.shikaiAtiva?.espirito, "\"")), /*#__PURE__*/React.createElement("div", {
     className: "bg-black/60 border border-blue-500/40 rounded-xl p-5 shadow-inner"
   }, /*#__PURE__*/React.createElement("h4", {
     className: "text-xs font-bold uppercase tracking-wider text-cyan-400 mb-1 flex items-center gap-2"
@@ -3416,7 +4779,13 @@ function FichaView({
     className: "text-[10px] text-bleach-muted uppercase tracking-wider font-bold"
   }, "Comando de Libera\xE7\xE3o Sagrado"), /*#__PURE__*/React.createElement("div", {
     className: `font-mono text-sm sm:text-base italic font-bold mt-0.5 ${aiZkTipo === 'bankai' ? 'text-yellow-200' : 'text-cyan-200'}`
-  }, "\"", revealedCard.comando, "\""))), /*#__PURE__*/React.createElement("div", {
+  }, "\"", revealedCard.comando, "\""))), revealedCard.espirito && /*#__PURE__*/React.createElement("div", {
+    className: "bg-black/80 border border-cyan-500/30 p-4 rounded-2xl shadow-inner"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "text-xs font-bold uppercase tracking-wider text-cyan-300 flex items-center gap-1.5 mb-1"
+  }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDC64"), " Esp\xEDrito da Zanpakut\u014D & Mundo Interior"), /*#__PURE__*/React.createElement("p", {
+    className: "text-xs sm:text-sm text-cyan-100/90 italic leading-relaxed"
+  }, "\"", revealedCard.espirito, "\"")), /*#__PURE__*/React.createElement("div", {
     className: "grid grid-cols-1 md:grid-cols-2 gap-4"
   }, /*#__PURE__*/React.createElement("div", {
     className: "bg-black/70 border border-bleach-border p-4 rounded-2xl space-y-1.5 shadow-inner"

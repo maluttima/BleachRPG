@@ -1,0 +1,150 @@
+{
+  "superAdminSenha": "maximo2026",
+  "superAdminNome": "ADM Máximo (Comandante Supremo)",
+  "subAdms": [
+    {
+      "id": "adm-kisuke",
+      "usuario": "kisuke",
+      "senha": "123",
+      "nome": "Mestre Kisuke",
+      "cargo": "Avaliador de Cenas & Fichas",
+      "charId": "rukia-002"
+    }
+  ],
+  "registrosTarefasAdm": [
+    {
+      "id": "t1",
+      "admNome": "Mestre Kisuke",
+      "tarefa": "Avaliação de Cenas de Arco (+8 pontos)",
+      "pontosGanhos": 8,
+      "data": "21/08/2026 às 14:00"
+    },
+    {
+      "id": "t2",
+      "admNome": "Mestre Kisuke",
+      "tarefa": "Avaliação de 7 Fichas (+3 pontos)",
+      "pontosGanhos": 3,
+      "data": "20/08/2026 às 18:30"
+    }
+  ],
+  "combatesArena": [
+    {
+      "id": "arena-1",
+      "p1Id": "ren-001",
+      "p2Id": "rukia-002",
+      "p1Nome": "Kurosaki Ren",
+      "p2Nome": "Kuchiki Rukia",
+      "p1Estado": "Inteiro",
+      "p2Estado": "Inteiro",
+      "turno": "Turno 2 — Troca de Hadō e Shunpo",
+      "juizLog": "Ren abriu com Hadō #4 Byakurai; Rukia esquivou com Hohō e contra-atacou com Bakudō #61.",
+      "status": "Em Andamento"
+    }
+  ],
+  "iaJulgamentos": [],
+  "rolagensDadosPublicas": [
+    {
+      "id": "r1",
+      "autor": "Mestre Kisuke",
+      "personagem": "Kurosaki Ren",
+      "dado": "d20",
+      "resultado": 18,
+      "categoria": "Positivo (Sucesso Limpo)",
+      "data": "22/08/2026 às 09:30"
+    }
+  ],
+  "personagens": [
+    {
+      "id": "ren-001",
+      "nome": "Kurosaki Ren",
+      "foto": "assets/ichigo-orange.png",
+      "whatsapp": "11999998888",
+      "codigo": "REN-8921",
+      "raca": "Shinigami Ex-Humano",
+      "esquadrao": "11º Esquadrão",
+      "faceclaim": "Ichigo Kurosaki",
+      "idadePlayer": "24",
+      "aniversarioPlayer": "15/07",
+      "idadeChar": "18",
+      "aniversarioChar": "15/07",
+      "pontosDisponiveis": 7,
+      "sorteiosComunsRestantes: 2,
+      "sorteiosEspeciaisRestantes": 1,
+      "sorteiosDrops": [],
+      "atributos": {
+        "pressao": 37,
+        "forca": 28,
+        "velocidade": 48,
+        "resiliencia": 26
+      },
+      "kidosConhecidos": [
+        { "id": "h4", "numero": 4, "nome": "Byakurai", "cat": "Hadō", "custoReiatsu": 3 },
+        { "id": "b1", "numero": 1, "nome": "Sai", "cat": "Bakudō", "custoReiatsu": 2 },
+        { "id": "k1", "numero": 1, "nome": "Kaidō — Tratamento de Tecidos", "cat": "Kaidō", "custoReiatsu": 4 }
+      ],
+      "tecnicas": [
+        { "id": "t1", "nome": "Hadō #4 — Byakurai", "categoria": "Hadō" },
+        { "id": "t2", "nome": "Bakudō #1 — Sai", "categoria": "Bakudō" },
+        { "id": "t3", "nome": "Kaidō — Tratamento Básico", "categoria": "Kaidō" },
+        { "id": "t4", "nome": "Shunpo — Passo Relâmpago", "categoria": "Hohō" }
+      ],
+      "zanpakuto": {
+        "nome": "Zangetsu",
+        "shikai": true,
+        "bankai": false,
+        "notas": "Sente a ressonância do espírito durante combates sob pressão. Shikai despertado em treino de arco."
+      },
+      "estado": "Inteiro",
+      "treinosHoje": 0,
+      "historico": [
+        { "id": "h1", "data": "21/08/2026 às 10:30", "texto": "Treino em ON aprovado pelo ADM: +2 Velocidade" },
+        { "id": "h2", "data": "20/08/2026 às 16:45", "texto": "Missão Principal: +15 Pontos concedidos + 4 Giros Comuns + 1 Especial" }
+      ]
+    },
+    {
+      "id": "rukia-002",
+      "nome": "Kuchiki Rukia",
+      "foto": "assets/ichigo-moon.png",
+      "whatsapp": "11988887777",
+      "codigo": "RUK-3312",
+      "raca": "Shinigami",
+      "esquadrao": "13º Esquadrão",
+      "faceclaim": "Rukia Kuchiki",
+      "idadePlayer": "22",
+      "aniversarioPlayer": "14/01",
+      "idadeChar": "150",
+      "aniversarioChar": "14/01",
+      "pontosDisponiveis": 12,
+      "sorteiosComunsRestantes": 1,
+      "sorteiosEspeciaisRestantes": 0,
+      "sorteiosDrops": [],
+      "atributos": {
+        "pressao": 45,
+        "forca": 18,
+        "velocidade": 42,
+        "resiliencia": 30
+      },
+      "kidosConhecidos": [
+        { "id": "h33", "numero": 33, "nome": "Sōkatsui", "cat": "Hadō", "custoReiatsu": 7 },
+        { "id": "b61", "numero": 61, "nome": "Rikujō Kōrō", "cat": "Bakudō", "custoReiatsu": 12 },
+        { "id": "k2", "numero": 2, "nome": "Kaidō — Revitalização de Reiatsu", "cat": "Kaidō", "custoReiatsu": 7 }
+      ],
+      "tecnicas": [
+        { "id": "t5", "nome": "Hadō #33 — Sōkatsui", "categoria": "Hadō" },
+        { "id": "t6", "nome": "Bakudō #61 — Rikujō Kōrō", "categoria": "Bakudō" },
+        { "id": "t7", "nome": "Kaidō — Restauração de Reiatsu", "categoria": "Kaidō" }
+      ],
+      "zanpakuto": {
+        "nome": "Sode no Shirayuki",
+        "shikai": true,
+        "bankai": false,
+        "notas": "Zanpakutō do tipo gelo mais bela da Sociedade das Almas."
+      },
+      "estado": "Inteiro",
+      "treinosHoje": 0,
+      "historico": [
+        { "id": "h5", "data": "21/08/2026 às 11:15", "texto": "Recompensa de Missão: +15 Pontos disponíveis" }
+      ]
+    }
+  ]
+}
