@@ -2765,7 +2765,7 @@ async function gerar4CaminhosZanpakutoAI_Async(personagem, dbPersonagens = [], d
   return validatedCaminhos;
 }
 
-// Compatibilidade Síncrona
+// Compatibilidade Síncrona para Shikai
 function gerar4CaminhosZanpakutoAI(personagem, dbPersonagens = [], dbZanpakutosVinculadas = [], cenaTexto = "") {
   const {
     claimedNames,
@@ -2773,6 +2773,350 @@ function gerar4CaminhosZanpakutoAI(personagem, dbPersonagens = [], dbZanpakutosV
   } = getClaimedSignatures(dbPersonagens, dbZanpakutosVinculadas);
   const dna = construirDnaEspiritual(personagem, cenaTexto);
   return sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto, claimedNames, claimedElements);
+}
+
+// =========================================================================
+// 6. MÓDULO DE EVOLUÇÃO DE BANKAI (3 CAMINHOS A PARTIR DA SHIKAI ESCOLHIDA)
+// =========================================================================
+
+function construirPromptBankaiEvolucao(personagem, shikai, dna, cenaTexto = "", dbPersonagens = [], dbZanpakutosVinculadas = []) {
+  const existingList = getExistingZanpakutosSummary(dbPersonagens, dbZanpakutosVinculadas);
+  const existingSection = existingList.length > 0 ? `\nZANPAKUTŌS JÁ REGISTRADAS NO SISTEMA (PROIBIDO REPETIR NOMES/PODERES/CONCEITOS):\n${existingList.join('\n')}\n` : "";
+  const sNome = shikai?.nome || "Lâmina Espiritual";
+  const sKanji = shikai?.kanji || "";
+  const sTrad = shikai?.traducao || "Espada da Alma";
+  const sCmd = shikai?.comando || "Libere-se";
+  const sElem = shikai?.elemento || "Reiatsu Puro";
+  const sApar = shikai?.aparencia || shikai?.formatoArma || "Katana cerimonial";
+  const sPod = shikai?.poder || "Emissão de Reiatsu concentrado";
+  const sLim = shikai?.limitacoes || "Consumo moderado de estamina";
+  return `Você é o ZANPAKUTŌ GENESIS ENGINE (V5.0) — MÓDULO DE TRANSCENDÊNCIA DE BANKAI.
+O Shinigami ${personagem.nome} já despertou e vinculou a sua Shikai: "${sNome}" ${sKanji ? `(${sKanji})` : ""}.
+Sua missão é analisar esta Shikai ESCOLHIDA, a personalidade do Shinigami, seus atributos e a cena de despertar, gerando EXATAMENTE 3 OPÇÕES DE BANKAI que sejam evoluções diretas da Shikai.
+
+DADOS DA SHIKAI ESCOLHIDA DO SHINIGAMI:
+- Nome da Shikai: ${sNome} ${sKanji} (Tradução: ${sTrad})
+- Frase de Comando: "${sCmd}"
+- Elemento / Tema: ${sElem}
+- Forma da Shikai: ${sApar}
+- Mecânica & Poder da Shikai: ${sPod}
+- Limitações da Shikai: ${sLim}
+
+PERFIL & DNA ESPIRITUAL DO SHINIGAMI:
+- Nome: ${personagem.nome} | Raça: ${personagem.raca || "Shinigami"} | Esquadrão: ${personagem.esquadrao || "11º Esquadrão"}
+- Atributos: Pressão Espiritual: ${dna.dominante.val}, Força: ${personagem.atributos?.forca || 10}, Velocidade: ${personagem.atributos?.velocidade || 10}, Resiliência: ${personagem.atributos?.resiliencia || 10}
+- Atributo Dominante: ${dna.dominante.label} | Atributo Deficiente: ${dna.deficiente.label}
+- Personalidade Selada: ${dna.textoCompleto}
+- Virtudes: ${dna.virtudes} | Defeitos: ${dna.defeitos}
+- Desejos: ${dna.desejos} | Medos: ${dna.medos} | Conflitos: ${dna.conflitos} | Estilo: ${dna.estilo}
+${cenaTexto ? `- Cena de Despertar de Bankai Narrada pelo Jogador: "${cenaTexto}"` : ""}
+${existingSection}
+REGRAS OBRIGATÓRIAS PARA AS 3 OPÇÕES DE BANKAI (EVOLUÇÕES DIRETAS):
+Você DEVE gerar EXATAMENTE 3 ramificações evolutivas da Shikai "${sNome}":
+
+1. OPÇÃO 1 — EVOLUÇÃO COMPLEMENTAR:
+   - Amplificação e transcendência do princípio central da Shikai "${sNome}".
+   - Quebra o limite de alcance e potência, expandindo o poder para nível territorial ou monumental.
+2. OPÇÃO 2 — EVOLUÇÃO SUPLEMENTAR:
+   - Adiciona uma camada tática de suporte, proteção ou mitigação das fraquezas da Shikai.
+   - O poder básico é sustentado por novas propriedades espirituais (armaduras reativas, controle de terreno, regeneração de estamina).
+3. OPÇÃO 3 — EVOLUÇÃO OPOSTA COMPLEMENTAR:
+   - Inversão ou paradoxo do poder da Shikai, revelando o lado sombrio ou oculto da alma do Shinigami.
+   - O poder atua na antítese surpreendente (ex: fogo vira combustão do vácuo frio; velocidade vira distorção de massa).
+
+CADA UMA DAS 3 BANKAIS DEVE CONTER:
+- Nome em japonês Romaji + Kanji + Tradução em Português
+- Frase monumental de liberação ("Ban-kai! ...")
+- Ponto de Ruptura (Breakpoint - qual limite específico da Shikai foi estilhaçado)
+- Forma Monumental / Manifestação Visual
+- Poder & Mecânica Transcendental com LIMITAÇÕES claras de combate
+- Significado Espiritual
+- Índices de 1 a 10 para Potência, Abrangência, Complexidade, Versatilidade e Custo de Reiatsu.
+
+RESPONDA OBRIGATORIAMENTE EM JSON VÁLIDO no seguinte formato:
+{
+  "bankais": [
+    {
+      "opcaoNumero": 1,
+      "tipoEvolucao": "Evolução Complementar",
+      "subtitulo": "Transcendência Direta & Amplificação Territorial",
+      "nome": "${sNome} — NomeBankaiRomaji",
+      "kanji": "「${sKanji ? sKanji.replace(/[^\\u4e00-\\u9faf]/g, '') : '卍'}・漢字」",
+      "traducao": "Tradução em Português",
+      "comando": "Ban-kai! Frase monumental de liberação",
+      "pontoRuptura": "O limite específico da Shikai superado",
+      "formaMonumental": "Descrição visual da manifestação monumental",
+      "poder": "Mecânica transcendental do poder da Bankai",
+      "limitacoes": "Limitações e custo de desgaste",
+      "significadoEspiritual": "Significado filosófico do domínio",
+      "shikaiBase": "${sNome}",
+      "indices": { "potencia": 10, "abrangencia": 9, "complexidade": 8, "versatilidade": 8, "custo": 8 }
+    },
+    {
+      "opcaoNumero": 2,
+      "tipoEvolucao": "Evolução Suplementar",
+      "subtitulo": "Expansão Tática & Mitigação de Fraquezas",
+      "nome": "${sNome} — NomeBankaiRomaji",
+      "kanji": "「${sKanji ? sKanji.replace(/[^\\u4e00-\\u9faf]/g, '') : '卍'}・漢字」",
+      "traducao": "Tradução em Português",
+      "comando": "Ban-kai! Frase monumental de liberação",
+      "pontoRuptura": "O limite específico da Shikai superado",
+      "formaMonumental": "Descrição visual da manifestação monumental",
+      "poder": "Mecânica transcendental do poder da Bankai",
+      "limitacoes": "Limitações e custo de desgaste",
+      "significadoEspiritual": "Significado filosófico do domínio",
+      "shikaiBase": "${sNome}",
+      "indices": { "potencia": 9, "abrangencia": 8, "complexidade": 9, "versatilidade": 9, "custo": 7 }
+    },
+    {
+      "opcaoNumero": 3,
+      "tipoEvolucao": "Evolução Oposta Complementar",
+      "subtitulo": "Inversão da Realidade & Paradoxo da Sombra",
+      "nome": "${sNome} — NomeBankaiRomaji",
+      "kanji": "「${sKanji ? sKanji.replace(/[^\\u4e00-\\u9faf]/g, '') : '卍'}・漢字」",
+      "traducao": "Tradução em Português",
+      "comando": "Ban-kai! Frase monumental de liberação",
+      "pontoRuptura": "O limite específico da Shikai superado",
+      "formaMonumental": "Descrição visual da manifestação monumental",
+      "poder": "Mecânica transcendental do poder da Bankai",
+      "limitacoes": "Limitações e custo de desgaste",
+      "significadoEspiritual": "Significado filosófico do domínio",
+      "shikaiBase": "${sNome}",
+      "indices": { "potencia": 10, "abrangencia": 9, "complexidade": 10, "versatilidade": 8, "custo": 9 }
+    }
+  ]
+}`;
+}
+
+// Sintetizador Procedural de 3 Bankais para fallback
+function sintetizar3BankaisEvolucaoCognitivo(personagem, shikai, dna, cenaTexto = "") {
+  const sNome = shikai?.nome || "Zanpakutō";
+  const sKanji = shikai?.kanji || "";
+  const sElem = shikai?.elemento || "Energia Espiritual";
+  const sPod = shikai?.poder || "Cortes de alta densidade";
+  return [{
+    opcaoNumero: 1,
+    tipoEvolucao: "Evolução Complementar",
+    subtitulo: "Transcendência Direta & Amplificação Territorial",
+    nome: `${sNome}: Dai-Rinne Kaijin`,
+    kanji: `「${sKanji ? sKanji.replace(/[^\\u4e00-\\u9faf]/g, '') : '卍'}・大輪廻界神」`,
+    traducao: "Grande Roda da Transcendência Divina",
+    comando: `Ban-kai! Desperte em tua glória primordial, ${sNome}!`,
+    pontoRuptura: `Supera o alcance limitado da Shikai: o poder de [${sElem}] agora permeia toda a atmosfera em um raio monumental de 200 metros.`,
+    formaMonumental: `O campo de batalha se transforma em um domínio absoluto onde lâminas monumentais e manifestações puras de ${sElem} emergem do ar.`,
+    poder: `Amplifica a mecânica da Shikai em escala soberana. ${sPod} Cada golpe desferido ressoa instantaneamente em múltiplos vetores simultâneos.`,
+    limitacoes: "Consumo maciço de Reiatsu se mantida por mais de 5 minutos contínuos.",
+    significadoEspiritual: "A união indivisível entre a vontade do Shinigami e a força bruta da sua lâmina.",
+    shikaiBase: sNome,
+    indices: {
+      potencia: 10,
+      abrangencia: 9,
+      complexidade: 8,
+      versatilidade: 8,
+      custo: 9
+    }
+  }, {
+    opcaoNumero: 2,
+    tipoEvolucao: "Evolução Suplementar",
+    subtitulo: "Expansão Tática & Mitigação de Fraquezas",
+    nome: `${sNome}: Shugo Shin’ei`,
+    kanji: `「${sKanji ? sKanji.replace(/[^\\u4e00-\\u9faf]/g, '') : '卍'}・守護神影」`,
+    traducao: "Bastião Protetor da Sombra Divina",
+    comando: `Ban-kai! Erga o manto impenetrável da alma, ${sNome}!`,
+    pontoRuptura: `Elimina a vulnerabilidade física da Shikai, criando um campo de suporte contínuo que absorve e redistribui os impactos recebidos.`,
+    formaMonumental: `Armadura cerimonial de Reishi e uma aura densa de ${sElem} envolvem o Shinigami, gerando barreiras defensivas e esferas de controle tático.`,
+    poder: `Integra propriedades de proteção e controle espacial à Shikai. Permite absorver a Reiatsu inimiga nos impactos e convertê-la em reforço estrutural.`,
+    limitacoes: "Requer concentração tática constante para manter o equilíbrio entre defesa e ataque.",
+    significadoEspiritual: "A maturidade do guerreiro em proteger não apenas sua vida, mas o destino dos seus aliados.",
+    shikaiBase: sNome,
+    indices: {
+      potencia: 9,
+      abrangencia: 8,
+      complexidade: 9,
+      versatilidade: 10,
+      custo: 7
+    }
+  }, {
+    opcaoNumero: 3,
+    tipoEvolucao: "Evolução Oposta Complementar",
+    subtitulo: "Inversão da Realidade & Paradoxo da Sombra",
+    nome: `${sNome}: Muken Paradox`,
+    kanji: `「${sKanji ? sKanji.replace(/[^\\u4e00-\\u9faf]/g, '') : '卍'}・無間反理」`,
+    traducao: "Paradoxo Infinito da Antítese",
+    comando: `Ban-kai! Inverta a verdade e revele o abismo, ${sNome}!`,
+    pontoRuptura: `Inverte a regra básica de funcionamento da Shikai: o que antes causava dano direto agora manipula as causas e consequências no vazio espiritual.`,
+    formaMonumental: `O cenário escurece em tons monocromáticos onde as cores da Reiatsu de ${sElem} se invertem, criando distorções geométricas flutuantes.`,
+    poder: `Manifesta o lado sombrio do poder: em vez do efeito direto da Shikai, impõe uma lei paradoxal onde qualquer resistência do oponente alimenta a dissolução da sua própria postura.`,
+    limitacoes: "Alto grau de instabilidade mental se o Shinigami perder o foco de suas convicções.",
+    significadoEspiritual: "O reconhecimento e domínio da dualidade e da escuridão inerentes ao espírito.",
+    shikaiBase: sNome,
+    indices: {
+      potencia: 10,
+      abrangencia: 9,
+      complexidade: 10,
+      versatilidade: 8,
+      custo: 9
+    }
+  }];
+}
+
+// Função Assíncrona de Geração de 3 Bankais com IA
+async function gerar3BankaisEvolucaoAI_Async(personagem, shikai, dbPersonagens = [], dbZanpakutosVinculadas = [], cenaTexto = "", apiKey = "") {
+  const shikaiBase = shikai || personagem.zanpakuto?.shikaiAtiva || {
+    nome: "Zanpakutō",
+    elemento: "Espiritual"
+  };
+  const dna = construirDnaEspiritual(personagem, cenaTexto);
+  const keyToUse = apiKey || (typeof localStorage !== 'undefined' ? localStorage.getItem("bleach_openai_key") : "") || (typeof window !== 'undefined' ? window.BLEACH_CONFIG?.openaiApiKey : "") || "";
+  let bankaisResultantes = null;
+
+  // 1. Tentar Google Gemini API (gemini-3.6-flash)
+  if (keyToUse && !keyToUse.startsWith("sk-") && keyToUse.length > 20) {
+    try {
+      console.log("Chamando Google Gemini API (gemini-3.6-flash) para geração das 3 Evoluções de Bankai...");
+      const prompt = construirPromptBankaiEvolucao(personagem, shikaiBase, dna, cenaTexto, dbPersonagens, dbZanpakutosVinculadas);
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${encodeURIComponent(keyToUse)}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          contents: [{
+            role: "user",
+            parts: [{
+              text: prompt + "\n\nResponda ESTRITAMENTE em formato JSON válido conforme o esquema de 3 bankais solicitado."
+            }]
+          }],
+          generationConfig: {
+            responseMimeType: "application/json",
+            temperature: 0.85
+          }
+        })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (rawText) {
+          const parsed = JSON.parse(rawText);
+          if (parsed && Array.isArray(parsed.bankais) && parsed.bankais.length >= 3) {
+            console.log("3 Evoluções de Bankai geradas com sucesso pelo Google Gemini!");
+            bankaisResultantes = parsed.bankais.slice(0, 3).map((b, idx) => ({
+              ...b,
+              opcaoNumero: idx + 1,
+              id: uid(),
+              shikaiBase: shikaiBase.nome
+            }));
+          }
+        }
+      }
+    } catch (err) {
+      console.warn("Google Gemini API fetch failed for Bankai, falling back to Cognitive Engine:", err);
+    }
+  }
+
+  // 2. Tentar OpenAI (ChatGPT)
+  if (!bankaisResultantes && keyToUse && keyToUse.startsWith("sk-")) {
+    try {
+      console.log("Chamando OpenAI API (ChatGPT) para geração das 3 Evoluções de Bankai...");
+      const prompt = construirPromptBankaiEvolucao(personagem, shikaiBase, dna, cenaTexto, dbPersonagens, dbZanpakutosVinculadas);
+      const res = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${keyToUse}`
+        },
+        body: JSON.stringify({
+          model: "gpt-4o-mini",
+          messages: [{
+            role: "system",
+            content: "Você é um mestre narrador de Bleach RPG especialista em Bankai e no Zanpakuto Genesis Engine v5.0. Responda APENAS em JSON válido."
+          }, {
+            role: "user",
+            content: prompt
+          }],
+          response_format: {
+            type: "json_object"
+          },
+          temperature: 0.88
+        })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const contentStr = data.choices?.[0]?.message?.content;
+        if (contentStr) {
+          const parsed = JSON.parse(contentStr);
+          if (parsed && Array.isArray(parsed.bankais) && parsed.bankais.length >= 3) {
+            console.log("3 Evoluções de Bankai geradas com sucesso pelo ChatGPT!");
+            bankaisResultantes = parsed.bankais.slice(0, 3).map((b, idx) => ({
+              ...b,
+              opcaoNumero: idx + 1,
+              id: uid(),
+              shikaiBase: shikaiBase.nome
+            }));
+          }
+        }
+      }
+    } catch (err) {
+      console.warn("OpenAI fetch failed for Bankai, falling back to Cognitive Engine:", err);
+    }
+  }
+
+  // 3. Fallback Procedural Cognitivo
+  if (!bankaisResultantes) {
+    console.log("Executando Sintetizador Cognitivo de Bankai ZGE V5.0...");
+    bankaisResultantes = sintetizar3BankaisEvolucaoCognitivo(personagem, shikaiBase, dna, cenaTexto);
+  }
+
+  // Mapeia para o formato de caminhos esperado pelo modal de seleção
+  return bankaisResultantes.map((b, idx) => ({
+    caminhoNumero: idx + 1,
+    tipoCaminho: `Opção ${idx + 1} — ${b.tipoEvolucao}`,
+    subtitulo: b.subtitulo || "Evolução Espiritual da Shikai",
+    tipoEvolucao: b.tipoEvolucao,
+    isBankaiEvolucao: true,
+    shikai: shikaiBase,
+    bankai: b,
+    indiceExclusividade: 100,
+    isExclusivo: true,
+    dnaEspiritual: {
+      dominante: dna.dominante.label,
+      deficiente: dna.deficiente.label,
+      virtudePrincipal: dna.virtudes.split(',')[0],
+      defeitoPrincipal: dna.defeitos.split(',')[0]
+    }
+  }));
+}
+function gerar3BankaisEvolucaoAI(personagem, shikai, dbPersonagens = [], dbZanpakutosVinculadas = [], cenaTexto = "") {
+  const shikaiBase = shikai || personagem.zanpakuto?.shikaiAtiva || {
+    nome: "Zanpakutō",
+    elemento: "Espiritual"
+  };
+  const dna = construirDnaEspiritual(personagem, cenaTexto);
+  const bankais = sintetizar3BankaisEvolucaoCognitivo(personagem, shikaiBase, dna, cenaTexto);
+  return bankais.map((b, idx) => ({
+    caminhoNumero: idx + 1,
+    tipoCaminho: `Opção ${idx + 1} — ${b.tipoEvolucao}`,
+    subtitulo: b.subtitulo,
+    isBankaiEvolucao: true,
+    shikai: shikaiBase,
+    bankai: b,
+    indiceExclusividade: 100,
+    isExclusivo: true
+  }));
+}
+if (typeof window !== 'undefined') {
+  window.gerar4CaminhosZanpakutoAI = gerar4CaminhosZanpakutoAI;
+  window.gerar4CaminhosZanpakutoAI_Async = gerar4CaminhosZanpakutoAI_Async;
+  window.gerar3BankaisEvolucaoAI = gerar3BankaisEvolucaoAI;
+  window.gerar3BankaisEvolucaoAI_Async = gerar3BankaisEvolucaoAI_Async;
+  window.sintetizar3BankaisEvolucaoCognitivo = sintetizar3BankaisEvolucaoCognitivo;
+  window.construirPromptBankaiEvolucao = construirPromptBankaiEvolucao;
+  window.calcularAssinaturaEspiritual = calcularAssinaturaEspiritual;
+  window.calcularIndiceSimilaridade = calcularIndiceSimilaridade;
+  window.getClaimedSignatures = getClaimedSignatures;
+  window.getExistingZanpakutosSummary = getExistingZanpakutosSummary;
+  window.construirDnaEspiritual = construirDnaEspiritual;
+  window.construirPromptChatGPT = construirPromptChatGPT;
 }
 
 // =========================================================================
@@ -2927,7 +3271,7 @@ if (typeof window !== 'undefined') {
   window.AwakeningSceneModal = CenaDespertarModal;
 }
 
-// 3. 4 SPIRITUAL PATHS SELECTION MODAL (COM IA / CHATGPT & PERSONALIZAÇÃO COMPLETA)
+// 3. 4 SPIRITUAL PATHS / 3 BANKAI EVOLUTIONS SELECTION MODAL (COM IA & ANIMAÇÃO CINEMATOGRÁFICA)
 function Zanpakuto4PathsModal({
   open,
   caminhos,
@@ -2938,11 +3282,12 @@ function Zanpakuto4PathsModal({
   onRegenerar
 }) {
   if (!open || !caminhos || caminhos.length === 0) return null;
+  const isBankaiFinal = isBankai || !!caminhos[0]?.isBankaiEvolucao;
   const [caminhoAtivoIdx, setCaminhoAtivoIdx] = useState(0);
-  const [ritualState, setRitualState] = useState("selection"); // "selection" | "charging" | "revealed"
+  const [ritualState, setRitualState] = useState("charging"); // starts in "charging" for epic cinematic animation
   const [caminhoSelecionado, setCaminhoSelecionado] = useState(caminhos[0]);
   const [chargeProgress, setChargeProgress] = useState(0);
-  const [chargeStageText, setChargeStageText] = useState("Canalizando Reiryoku no Mundo Interior...");
+  const [chargeStageText, setChargeStageText] = useState("Sintonizando Pressão Espiritual com o Mundo Interior...");
   const [showConfigApiKey, setShowConfigApiKey] = useState(false);
   const [apiKeyInput, setApiKeyInput] = useState(localStorage.getItem("bleach_openai_key") || "");
   const [salvoKey, setSalvoKey] = useState(false);
@@ -2952,79 +3297,88 @@ function Zanpakuto4PathsModal({
       setCaminhoSelecionado(caminhos[caminhoAtivoIdx] || caminhos[0]);
     }
   }, [caminhos, caminhoAtivoIdx]);
+
+  // Cinematic 5.5s charging animation on entry
   useEffect(() => {
+    if (open) {
+      setRitualState("charging");
+      setChargeProgress(0);
+      setChargeStageText("Sintonizando Pressão Espiritual com o Mundo Interior...");
+      playReiatsuSound(isBankaiFinal ? 'bankai_charge' : 'shikai_charge');
+      let p = 0;
+      if (chargeIntervalRef.current) clearInterval(chargeIntervalRef.current);
+      chargeIntervalRef.current = setInterval(() => {
+        p += 2;
+        setChargeProgress(p);
+        if (p === 26) {
+          setChargeStageText("⚡ TENSÃO DE REIATSU: O corte horizontal rasga o tecido espiritual da alma...");
+          playReiatsuSound(isBankaiFinal ? 'bankai_charge' : 'shikai_charge');
+        } else if (p === 54) {
+          setChargeStageText("💥 VIBRAÇÃO DO AR & ONDAS DE CHOQUE: A lâmina atinge a frequência transcendental!");
+          playReiatsuSound('shatter');
+          playReiatsuSound('crit');
+        } else if (p === 82) {
+          setChargeStageText(isBankaiFinal ? "👑 REIATSU MONUMENTAL: As 3 ramificações evolutivas da Bankai despertam!" : "🗡️ A fenda se abre: As 4 manifestações autênticas da Shikai foram sintetizadas!");
+          playReiatsuSound('shikai_charge');
+        } else if (p >= 100) {
+          clearInterval(chargeIntervalRef.current);
+          chargeIntervalRef.current = null;
+          setRitualState("selection");
+          playReiatsuSound(isBankaiFinal ? 'bankai_reveal' : 'win');
+        }
+      }, 95); // ~5.2 seconds total animation duration
+    }
     return () => {
       if (chargeIntervalRef.current) clearInterval(chargeIntervalRef.current);
     };
-  }, []);
+  }, [open, caminhos]);
   function salvarApiKey(e) {
     e.preventDefault();
     localStorage.setItem("bleach_openai_key", apiKeyInput.trim());
     setSalvoKey(true);
     setTimeout(() => setSalvoKey(false), 3000);
   }
-  function iniciarRitual(caminho) {
-    setCaminhoSelecionado(caminho);
-    setRitualState("charging");
-    setChargeProgress(0);
-    playReiatsuSound(isBankai ? 'bankai_charge' : 'shikai_charge');
-    let p = 0;
-    chargeIntervalRef.current = setInterval(() => {
-      p += 2;
-      setChargeProgress(p);
-      if (p === 24) {
-        setChargeStageText("A barreira do mundo interior está se desfazendo...");
-        playReiatsuSound(isBankai ? 'bankai_charge' : 'shikai_charge');
-      } else if (p === 54) {
-        setChargeStageText("O espírito da Zanpakutō sussurra seu verdadeiro nome...");
-        playReiatsuSound(isBankai ? 'bankai_charge' : 'shikai_charge');
-      } else if (p === 84) {
-        setChargeStageText("Pressão Espiritual crítica! O selo milenar foi destruído!");
-        playReiatsuSound('shatter');
-      } else if (p >= 100) {
-        clearInterval(chargeIntervalRef.current);
-        chargeIntervalRef.current = null;
-        setRitualState("revealed");
-        playReiatsuSound(isBankai ? 'bankai_reveal' : 'shikai_reveal');
-      }
-    }, 45);
-  }
   function pularCarregamento() {
     if (chargeIntervalRef.current) clearInterval(chargeIntervalRef.current);
     chargeIntervalRef.current = null;
     setChargeProgress(100);
+    setRitualState("selection");
+    playReiatsuSound(isBankaiFinal ? 'bankai_reveal' : 'win');
+  }
+  function confirmarEscolhaFinal(caminho) {
+    setCaminhoSelecionado(caminho);
     setRitualState("revealed");
-    playReiatsuSound(isBankai ? 'bankai_reveal' : 'shikai_reveal');
+    playReiatsuSound(isBankaiFinal ? 'bankai_reveal' : 'win');
   }
   return /*#__PURE__*/React.createElement("div", {
     className: "fixed inset-0 bg-black/95 backdrop-blur-xl z-50 flex items-center justify-center p-2 sm:p-4 overflow-y-auto"
   }, /*#__PURE__*/React.createElement("div", {
-    className: `relative w-full max-w-5xl bg-bleach-panel border-2 rounded-2xl p-4 sm:p-6 shadow-2xl text-left transition-all ${isBankai ? "border-yellow-500/80 bankai-supreme-card" : "border-bleach-orange/80 reiatsu-glow"} my-auto`
+    className: `relative w-full max-w-5xl bg-bleach-panel border-2 rounded-2xl p-4 sm:p-6 shadow-2xl text-left transition-all ${isBankaiFinal ? "border-yellow-500/80 bankai-supreme-card" : "border-bleach-orange/80 reiatsu-glow"} my-auto`
   }, /*#__PURE__*/React.createElement("div", {
     className: "flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-bleach-borderSoft pb-4 mb-4"
   }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     className: "flex flex-wrap items-center gap-2"
   }, /*#__PURE__*/React.createElement("span", {
-    className: `text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full border ${isBankai ? "bg-amber-950 border-yellow-400 text-yellow-300" : "bg-orange-950 border-bleach-orange text-bleach-orange"}`
-  }, "\u2728 ZGE V5.0 \u2022 IA DE G\xCANESE ESPIRITUAL"), /*#__PURE__*/React.createElement("span", {
+    className: `text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full border ${isBankaiFinal ? "bg-amber-950 border-yellow-400 text-yellow-300" : "bg-orange-950 border-bleach-orange text-bleach-orange"}`
+  }, isBankaiFinal ? "卍 ZGE V5.0 • TRANSCENDÊNCIA DE BANKAI" : "✨ ZGE V5.0 • GÊNESE DE SHIKAI"), /*#__PURE__*/React.createElement("span", {
     className: "text-xs text-bleach-muted"
   }, "Alma: ", /*#__PURE__*/React.createElement("strong", {
     className: "text-white"
   }, personagem.nome)), /*#__PURE__*/React.createElement("span", {
     className: "text-[10px] bg-green-950 text-green-300 border border-green-500/40 px-2 py-0.5 rounded-full"
-  }, "\u2713 Personalidade Analisada")), /*#__PURE__*/React.createElement("h2", {
+  }, "\u2713 DNA Espiritual Analisado")), /*#__PURE__*/React.createElement("h2", {
     className: "font-title text-2xl sm:text-3xl text-white tracking-wider mt-1"
-  }, isBankai ? "卍 ESCOLHA DO CAMINHO DE BANKAI" : "始解 4 MANIFESTAÇÕES ÚNICAS DA ALMA (SHIKAI)")), /*#__PURE__*/React.createElement("div", {
+  }, isBankaiFinal ? "卍 3 EVOLUÇÕES DIRETAS DA SUA SHIKAI (BANKAI)" : "始解 4 MANIFESTAÇÕES ÚNICAS DA ALMA (SHIKAI)")), /*#__PURE__*/React.createElement("div", {
     className: "flex items-center gap-2"
   }, /*#__PURE__*/React.createElement("button", {
     onClick: () => setShowConfigApiKey(!showConfigApiKey),
     className: "px-3 py-1.5 bg-black/60 border border-white/10 hover:border-yellow-400 text-yellow-300 rounded-lg text-xs font-mono transition",
-    title: "Configurar Chave ChatGPT (OpenAI)"
-  }, "\u2699\uFE0F ChatGPT API"), onRegenerar && /*#__PURE__*/React.createElement("button", {
+    title: "Configurar Chave Google Gemini / ChatGPT"
+  }, "\u2699\uFE0F Chave IA"), onRegenerar && ritualState === "selection" && /*#__PURE__*/React.createElement("button", {
     onClick: onRegenerar,
     className: "px-3 py-1.5 bg-bleach-panel2 border border-bleach-border hover:border-bleach-orange text-bleach-orange rounded-lg text-xs font-bold transition",
-    title: "Gerar 4 novas varia\xE7\xF5es com a IA"
-  }, "\uD83D\uDD04 Novas Varia\xE7\xF5es"), /*#__PURE__*/React.createElement("button", {
+    title: "Gerar novas varia\xE7\xF5es com a IA"
+  }, "\uD83D\uDD04 Re-gerar com IA"), /*#__PURE__*/React.createElement("button", {
     onClick: onClose,
     className: "px-3 py-1.5 bg-bleach-panel2 border border-bleach-border hover:border-white text-bleach-creamDim hover:text-white rounded-lg text-xs font-bold"
   }, "\u2715 Fechar"))), showConfigApiKey && /*#__PURE__*/React.createElement("form", {
@@ -3032,9 +3386,9 @@ function Zanpakuto4PathsModal({
     className: "p-3.5 bg-black/80 border border-yellow-500/40 rounded-xl mb-4 flex flex-wrap gap-2 items-center text-xs"
   }, /*#__PURE__*/React.createElement("span", {
     className: "text-yellow-300 font-bold"
-  }, "Chave OpenAI (ChatGPT):"), /*#__PURE__*/React.createElement("input", {
+  }, "Chave Gemini / ChatGPT:"), /*#__PURE__*/React.createElement("input", {
     type: "password",
-    placeholder: "sk-proj-... (Opcional - caso queira usar sua cota do ChatGPT)",
+    placeholder: "Cole sua chave aqui (Google Gemini ou OpenAI)",
     value: apiKeyInput,
     onChange: e => setApiKeyInput(e.target.value),
     className: "flex-1 min-w-[200px] bg-bleach-panel2 border border-bleach-border rounded p-2 text-white font-mono"
@@ -3043,24 +3397,192 @@ function Zanpakuto4PathsModal({
     className: "px-4 py-2 bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold uppercase rounded shadow"
   }, "Salvar Chave"), salvoKey && /*#__PURE__*/React.createElement("span", {
     className: "text-green-400 font-bold"
-  }, "\u2713 Salvo!")), /*#__PURE__*/React.createElement("div", {
-    className: "grid grid-cols-2 md:grid-cols-4 gap-2 mb-4"
-  }, caminhos.map((c, idx) => /*#__PURE__*/React.createElement("button", {
-    key: idx,
-    onClick: () => {
-      if (ritualState === "selection") setCaminhoAtivoIdx(idx);
-    },
-    disabled: ritualState !== "selection",
-    className: `p-3 rounded-xl border text-left transition ${caminhoAtivoIdx === idx ? isBankai ? "bg-yellow-950/80 border-yellow-400 shadow-[0_0_15px_rgba(255,215,0,0.4)]" : "bg-orange-950/80 border-bleach-orange shadow-[0_0_15px_rgba(255,106,19,0.4)]" : "bg-bleach-panel2 border-bleach-borderSoft opacity-70 hover:opacity-100"}`
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "text-[10px] font-extrabold uppercase block text-bleach-muted"
-  }, "Caminho ", idx + 1), /*#__PURE__*/React.createElement("h4", {
-    className: "font-title text-base sm:text-lg text-white truncate"
-  }, c.shikai.nome), /*#__PURE__*/React.createElement("p", {
-    className: "text-[10px] text-bleach-creamDim truncate"
-  }, c.tipoCaminho.replace(/Opção \d+ — /, ''))))), ritualState === "selection" && /*#__PURE__*/React.createElement("div", {
-    className: "space-y-4"
+  }, "\u2713 Salvo!")), ritualState === "charging" && /*#__PURE__*/React.createElement("div", {
+    className: "py-10 flex flex-col items-center justify-center space-y-6 text-center overflow-hidden relative"
   }, /*#__PURE__*/React.createElement("div", {
+    className: `relative w-full max-w-xl p-8 rounded-2xl bg-black/90 border-2 ${isBankaiFinal ? "border-yellow-500/60" : "border-bleach-orange/60"} shadow-2xl flex flex-col items-center justify-center space-y-5 air-vibration-active`
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "relative w-28 h-28 flex items-center justify-center"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "absolute inset-0 rounded-full border-2 border-dashed border-bleach-orange spin-runes"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "absolute inset-2 rounded-full border border-dotted border-yellow-400 spin-runes-fast"
+  }), /*#__PURE__*/React.createElement("span", {
+    className: "font-title text-6xl kanji-pulse-glow text-white select-none"
+  }, isBankaiFinal ? "卍" : "始")), /*#__PURE__*/React.createElement("div", {
+    className: "w-full relative h-6 flex items-center justify-center overflow-hidden my-2"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "w-full h-1 bg-gradient-to-r from-transparent via-yellow-300 to-transparent slash-horizontal-beam"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "absolute w-24 h-4 bg-bleach-orange/80 blur-md slash-horizontal-beam"
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "space-y-2 w-full"
+  }, /*#__PURE__*/React.createElement("h3", {
+    className: "font-title text-2xl text-white tracking-widest"
+  }, isBankaiFinal ? "卍 TRANSCENDENDO A SHIKAI PARA A BANKAI..." : "🗡️ FORJANDO MANIFESTAÇÕES DA ALMA..."), /*#__PURE__*/React.createElement("p", {
+    className: "text-xs text-yellow-300 font-mono animate-pulse min-h-[32px] px-2 leading-relaxed"
+  }, chargeStageText)), /*#__PURE__*/React.createElement("div", {
+    className: "w-full max-w-md bg-black/80 h-3.5 rounded-full overflow-hidden border border-white/20 p-0.5"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: `h-full rounded-full transition-all duration-100 ${isBankaiFinal ? "bg-gradient-to-r from-yellow-500 via-amber-400 to-red-500 shadow-[0_0_15px_rgba(255,215,0,0.8)]" : "bg-gradient-to-r from-cyan-400 via-bleach-orange to-red-500 shadow-[0_0_15px_rgba(255,106,19,0.8)]"}`,
+    style: {
+      width: `${chargeProgress}%`
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "flex items-center justify-between w-full max-w-md text-[11px] text-bleach-muted pt-1"
+  }, /*#__PURE__*/React.createElement("span", null, "Resson\xE2ncia de Reiatsu: ", /*#__PURE__*/React.createElement("strong", {
+    className: "text-white font-mono"
+  }, chargeProgress, "%")), /*#__PURE__*/React.createElement("button", {
+    onClick: pularCarregamento,
+    className: "px-3 py-1 rounded-lg bg-black border border-white/20 text-xs text-bleach-creamDim hover:text-white hover:border-yellow-400 transition"
+  }, "\u26A1 Pular Anima\xE7\xE3o")))), ritualState === "selection" && /*#__PURE__*/React.createElement("div", {
+    className: "space-y-4 card-pop-reveal"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: `grid gap-2 mb-4 ${isBankaiFinal ? "grid-cols-1 sm:grid-cols-3" : "grid-cols-2 md:grid-cols-4"}`
+  }, caminhos.map((c, idx) => {
+    const isSelected = caminhoAtivoIdx === idx;
+    const bankaiData = c.bankai || c;
+    const shikaiData = c.shikai || {};
+    return /*#__PURE__*/React.createElement("button", {
+      key: idx,
+      onClick: () => setCaminhoAtivoIdx(idx),
+      className: `p-3.5 rounded-xl border text-left transition relative overflow-hidden ${isSelected ? isBankaiFinal ? "bg-gradient-to-r from-yellow-950/90 to-amber-950/90 border-yellow-400 shadow-[0_0_20px_rgba(255,215,0,0.4)] ring-1 ring-yellow-400" : "bg-gradient-to-r from-orange-950/90 to-black border-bleach-orange shadow-[0_0_20px_rgba(255,106,19,0.4)] ring-1 ring-bleach-orange" : "bg-bleach-panel2/90 border-bleach-borderSoft opacity-70 hover:opacity-100"}`
+    }, /*#__PURE__*/React.createElement("span", {
+      className: `text-[10px] font-extrabold uppercase block tracking-wider ${isBankaiFinal ? idx === 0 ? "text-amber-400" : idx === 1 ? "text-cyan-400" : "text-purple-400" : "text-bleach-orange"}`
+    }, isBankaiFinal ? `卍 ${bankaiData.tipoEvolucao || `Opção ${idx + 1}`}` : `Caminho ${idx + 1}`), /*#__PURE__*/React.createElement("h4", {
+      className: "font-title text-lg text-white truncate mt-0.5"
+    }, isBankaiFinal ? bankaiData.nome : shikaiData.nome), /*#__PURE__*/React.createElement("p", {
+      className: "text-[11px] text-bleach-creamDim truncate"
+    }, isBankaiFinal ? bankaiData.subtitulo || bankaiData.traducao : c.tipoCaminho.replace(/Opção \d+ — /, '')));
+  })), isBankaiFinal ? /*#__PURE__*/React.createElement("div", {
+    className: "grid grid-cols-1 lg:grid-cols-12 gap-4"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "lg:col-span-8 bg-black/80 border-2 border-yellow-500/60 rounded-xl p-5 space-y-4 shadow-2xl"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flex flex-wrap items-start justify-between gap-2 border-b border-yellow-500/30 pb-3"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+    className: "text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded bg-yellow-950 border border-yellow-400 text-yellow-300"
+  }, caminhoSelecionado.bankai?.tipoEvolucao || caminhoSelecionado.tipoEvolucao || "Evolução de Bankai"), /*#__PURE__*/React.createElement("h3", {
+    className: "font-title text-3xl text-yellow-300 tracking-wider flex items-center gap-2 mt-1"
+  }, /*#__PURE__*/React.createElement("span", null, caminhoSelecionado.bankai?.nome || caminhoSelecionado.nome), /*#__PURE__*/React.createElement("span", {
+    className: "text-base font-cinzel text-yellow-400 font-normal"
+  }, caminhoSelecionado.bankai?.kanji || caminhoSelecionado.kanji)), /*#__PURE__*/React.createElement("p", {
+    className: "text-xs text-yellow-200 italic mt-0.5"
+  }, "\"", caminhoSelecionado.bankai?.comando || caminhoSelecionado.comando, "\"")), /*#__PURE__*/React.createElement("div", {
+    className: "text-right"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "text-xs text-yellow-400/90 font-mono block"
+  }, "Tradu\xE7\xE3o: ", /*#__PURE__*/React.createElement("strong", null, caminhoSelecionado.bankai?.traducao || caminhoSelecionado.traducao)), /*#__PURE__*/React.createElement("span", {
+    className: "text-[10px] bg-green-950 border border-green-500 text-green-300 px-2 py-0.5 rounded-full inline-block mt-1"
+  }, "\u2726 100% Exclusiva no RPG"))), /*#__PURE__*/React.createElement("div", {
+    className: "p-3.5 bg-gradient-to-r from-amber-950/60 to-black rounded-xl border-2 border-yellow-500/70 space-y-1"
+  }, /*#__PURE__*/React.createElement("strong", {
+    className: "text-yellow-400 block text-xs uppercase tracking-wider flex items-center gap-1.5"
+  }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDCA5"), " PONTO DE RUPTURA (LIMITE DA SHIKAI SUPERADO):"), /*#__PURE__*/React.createElement("p", {
+    className: "text-xs text-bleach-cream leading-relaxed font-sans"
+  }, caminhoSelecionado.bankai?.pontoRuptura || caminhoSelecionado.pontoRuptura)), /*#__PURE__*/React.createElement("div", {
+    className: "grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "p-3.5 bg-bleach-panel2 rounded-xl border border-white/10 space-y-1"
+  }, /*#__PURE__*/React.createElement("strong", {
+    className: "text-yellow-400 block text-xs"
+  }, "\uD83D\uDC51 Dom\xEDnio Territorial & Forma:"), /*#__PURE__*/React.createElement("p", {
+    className: "text-bleach-creamDim text-[11px] leading-relaxed"
+  }, caminhoSelecionado.bankai?.formaMonumental || caminhoSelecionado.formaMonumental)), /*#__PURE__*/React.createElement("div", {
+    className: "p-3.5 bg-bleach-panel2 rounded-xl border border-white/10 space-y-1"
+  }, /*#__PURE__*/React.createElement("strong", {
+    className: "text-cyan-300 block text-xs"
+  }, "\u26A1 Poder Transcendental:"), /*#__PURE__*/React.createElement("p", {
+    className: "text-bleach-creamDim text-[11px] leading-relaxed"
+  }, caminhoSelecionado.bankai?.poder || caminhoSelecionado.poder))), /*#__PURE__*/React.createElement("div", {
+    className: "p-3 bg-black/60 rounded-xl border border-white/10 text-xs space-y-2"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flex flex-wrap gap-x-4 text-[11px]"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "text-red-300"
+  }, /*#__PURE__*/React.createElement("strong", null, "\u26A0\uFE0F Limita\xE7\xF5es & Desgaste:"), " ", caminhoSelecionado.bankai?.limitacoes || caminhoSelecionado.limitacoes)), /*#__PURE__*/React.createElement("p", {
+    className: "text-[11px] text-bleach-muted border-t border-white/5 pt-1.5"
+  }, /*#__PURE__*/React.createElement("strong", null, "Significado Filos\xF3fico:"), " ", /*#__PURE__*/React.createElement("em", {
+    className: "text-yellow-200"
+  }, "\"", caminhoSelecionado.bankai?.significadoEspiritual || caminhoSelecionado.significadoEspiritual, "\""))), (caminhoSelecionado.bankai?.indices || caminhoSelecionado.indices) && /*#__PURE__*/React.createElement("div", {
+    className: "p-3 bg-black/50 rounded-xl border border-white/10 space-y-1.5"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "text-[10px] font-bold uppercase tracking-wider text-bleach-muted block"
+  }, "\xCDndice de Pot\xEAncia & Balan\xE7o Espiritual da Bankai (1 a 10)"), /*#__PURE__*/React.createElement("div", {
+    className: "grid grid-cols-2 sm:grid-cols-5 gap-2 text-[10px]"
+  }, [{
+    label: "Potência",
+    val: (caminhoSelecionado.bankai?.indices || caminhoSelecionado.indices).potencia,
+    color: C.red
+  }, {
+    label: "Abrangência",
+    val: (caminhoSelecionado.bankai?.indices || caminhoSelecionado.indices).abrangencia,
+    color: C.blue
+  }, {
+    label: "Complexidade",
+    val: (caminhoSelecionado.bankai?.indices || caminhoSelecionado.indices).complexidade,
+    color: C.purple
+  }, {
+    label: "Versatilidade",
+    val: (caminhoSelecionado.bankai?.indices || caminhoSelecionado.indices).versatilidade,
+    color: C.green
+  }, {
+    label: "Custo",
+    val: (caminhoSelecionado.bankai?.indices || caminhoSelecionado.indices).custo,
+    color: C.yellow
+  }].map(stat => /*#__PURE__*/React.createElement("div", {
+    key: stat.label,
+    className: "p-1.5 bg-bleach-panel2 rounded border border-white/5 text-center"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "text-bleach-muted block"
+  }, stat.label), /*#__PURE__*/React.createElement("span", {
+    className: "font-mono font-bold text-xs",
+    style: {
+      color: stat.color
+    }
+  }, stat.val, "/10"), /*#__PURE__*/React.createElement("div", {
+    className: "w-full bg-black/60 h-1 rounded-full overflow-hidden mt-1"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "h-full rounded-full",
+    style: {
+      width: `${stat.val * 10}%`,
+      backgroundColor: stat.color
+    }
+  }))))))), /*#__PURE__*/React.createElement("div", {
+    className: "lg:col-span-4 bg-gradient-to-b from-yellow-950/40 via-bleach-panel2 to-black border-2 border-yellow-500/50 rounded-xl p-5 flex flex-col justify-between space-y-4 shadow-xl"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "space-y-3"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "border-b border-white/10 pb-2"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "text-[10px] font-bold uppercase text-cyan-300 block"
+  }, "\u26A1 SHIKAI DE ORIGEM"), /*#__PURE__*/React.createElement("h4", {
+    className: "font-title text-xl text-white"
+  }, caminhoSelecionado.shikai?.nome || personagem.zanpakuto?.shikaiAtiva?.nome || "Zanpakutō"), /*#__PURE__*/React.createElement("p", {
+    className: "text-xs text-bleach-creamDim italic"
+  }, "\"", caminhoSelecionado.shikai?.comando || personagem.zanpakuto?.shikaiAtiva?.comando, "\"")), /*#__PURE__*/React.createElement("div", {
+    className: "p-3 bg-black/60 rounded-lg border border-white/5 text-xs space-y-1.5 text-bleach-creamDim"
+  }, /*#__PURE__*/React.createElement("strong", {
+    className: "text-white block text-[11px]"
+  }, "Evolu\xE7\xE3o de Alma:"), /*#__PURE__*/React.createElement("p", {
+    className: "text-[11px] leading-relaxed"
+  }, "Esta Bankai foi forjada como a transcend\xEAncia aut\xEAntica da sua Shikai, manifestando a maturidade definitiva da sua Reiatsu.")), /*#__PURE__*/React.createElement("div", {
+    className: "p-3 bg-black/60 rounded-lg border border-white/5 text-xs space-y-1 text-bleach-muted"
+  }, /*#__PURE__*/React.createElement("div", null, "Dominante: ", /*#__PURE__*/React.createElement("strong", {
+    className: "text-white"
+  }, caminhoSelecionado.dnaEspiritual?.dominante)), /*#__PURE__*/React.createElement("div", null, "Virtude: ", /*#__PURE__*/React.createElement("strong", {
+    className: "text-green-300"
+  }, caminhoSelecionado.dnaEspiritual?.virtudePrincipal)), /*#__PURE__*/React.createElement("div", null, "Defeito: ", /*#__PURE__*/React.createElement("strong", {
+    className: "text-purple-300"
+  }, caminhoSelecionado.dnaEspiritual?.defeitoPrincipal)))), /*#__PURE__*/React.createElement("div", {
+    className: "pt-3 border-t border-white/10 space-y-2"
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: () => confirmarEscolhaFinal(caminhoSelecionado),
+    className: "w-full py-3.5 bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 text-black font-extrabold text-xs uppercase tracking-widest rounded-xl shadow-2xl hover:brightness-110 transition"
+  }, "\u534D Despertar & Selar Esta Bankai na Alma")))) :
+  /*#__PURE__*/
+  /* SHIKAI 4-PATH DISPLAY */
+  React.createElement("div", {
     className: "grid grid-cols-1 lg:grid-cols-12 gap-4"
   }, /*#__PURE__*/React.createElement("div", {
     className: "lg:col-span-7 bg-black/60 border border-bleach-border rounded-xl p-4 sm:p-5 space-y-4"
@@ -3078,9 +3600,9 @@ function Zanpakuto4PathsModal({
     className: "text-xs text-bleach-creamDim italic mt-0.5"
   }, "\"", caminhoSelecionado.shikai.comando, "\"")), /*#__PURE__*/React.createElement("div", {
     className: "flex flex-wrap items-center gap-2"
-  }, caminhoSelecionado.indiceExclusividade && /*#__PURE__*/React.createElement("span", {
+  }, /*#__PURE__*/React.createElement("span", {
     className: "text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-green-950/80 border border-green-500 text-green-300 tracking-wider"
-  }, "\u2726 ", caminhoSelecionado.indiceExclusividade, "% Exclusiva no RPG"), /*#__PURE__*/React.createElement(Badge, {
+  }, "\u2726 ", caminhoSelecionado.indiceExclusividade || 100, "% Exclusiva no RPG"), /*#__PURE__*/React.createElement(Badge, {
     color: C.blue
   }, caminhoSelecionado.shikai.elemento))), /*#__PURE__*/React.createElement("div", {
     className: "grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs"
@@ -3182,58 +3704,26 @@ function Zanpakuto4PathsModal({
     className: "text-yellow-200"
   }, "\"", caminhoSelecionado.bankai.significadoEspiritual, "\"")))), /*#__PURE__*/React.createElement("div", {
     className: "pt-3 border-t border-white/10 space-y-2"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "text-[10px] text-bleach-muted flex items-center justify-between"
-  }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDD12 Regra de Exclusividade:"), /*#__PURE__*/React.createElement("strong", {
-    className: "text-green-400"
-  }, "Assinatura \xDAnica Registrada")), /*#__PURE__*/React.createElement("button", {
-    onClick: () => iniciarRitual(caminhoSelecionado),
-    className: "w-full py-3 bg-gradient-to-r from-bleach-orange via-bleach-orangeDeep to-red-600 text-black font-extrabold text-xs uppercase tracking-widest rounded-xl shadow-lg hover:brightness-110 transition"
-  }, "\uD83D\uDDE1\uFE0F Despertar & Selar Este Caminho Espiritual"))))), ritualState === "charging" && /*#__PURE__*/React.createElement("div", {
-    className: "py-12 flex flex-col items-center justify-center space-y-6 text-center"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "relative w-36 h-36 flex items-center justify-center"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "absolute inset-0 rounded-full border-2 border-dashed border-bleach-orange spin-runes"
-  }), /*#__PURE__*/React.createElement("div", {
-    className: "absolute inset-2 rounded-full border border-dotted border-yellow-400 spin-runes-fast"
-  }), /*#__PURE__*/React.createElement("div", {
-    className: "text-5xl animate-bounce"
-  }, "\uD83D\uDDE1\uFE0F")), /*#__PURE__*/React.createElement("div", {
-    className: "max-w-md w-full space-y-3"
-  }, /*#__PURE__*/React.createElement("h3", {
-    className: "font-title text-2xl text-white tracking-wider"
-  }, "FORJANDO ASSINATURA DA ALMA..."), /*#__PURE__*/React.createElement("p", {
-    className: "text-xs text-bleach-orange font-mono animate-pulse"
-  }, chargeStageText), /*#__PURE__*/React.createElement("div", {
-    className: "w-full bg-black/80 h-3 rounded-full overflow-hidden border border-white/10 p-0.5"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "h-full rounded-full bg-gradient-to-r from-bleach-orange to-yellow-400 transition-all duration-100",
-    style: {
-      width: `${chargeProgress}%`
-    }
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "pt-2"
   }, /*#__PURE__*/React.createElement("button", {
-    onClick: pularCarregamento,
-    className: "px-4 py-1.5 rounded-lg bg-black border border-white/20 text-xs text-bleach-creamDim hover:text-white"
-  }, "\u26A1 Pular Ritual")))), ritualState === "revealed" && /*#__PURE__*/React.createElement("div", {
+    onClick: () => confirmarEscolhaFinal(caminhoSelecionado),
+    className: "w-full py-3 bg-gradient-to-r from-bleach-orange via-bleach-orangeDeep to-red-600 text-black font-extrabold text-xs uppercase tracking-widest rounded-xl shadow-lg hover:brightness-110 transition"
+  }, "\uD83D\uDDE1\uFE0F Despertar & Selar Este Caminho Espiritual"))))), ritualState === "revealed" && /*#__PURE__*/React.createElement("div", {
     className: "py-8 text-center space-y-6 card-pop-reveal"
   }, /*#__PURE__*/React.createElement("div", {
     className: "text-5xl animate-pulse"
   }, "\u2728"), /*#__PURE__*/React.createElement("div", {
     className: "max-w-lg mx-auto p-6 rounded-2xl bg-black/90 border-2 border-bleach-orange shadow-2xl space-y-4"
   }, /*#__PURE__*/React.createElement("span", {
-    className: "text-[10px] font-extrabold uppercase px-3 py-1 rounded-full bg-orange-950 border border-bleach-orange text-bleach-orange"
-  }, "VINCULA\xC7\xC3O ESPIRITUAL CONFIRMADA"), /*#__PURE__*/React.createElement("h3", {
+    className: `text-[10px] font-extrabold uppercase px-3 py-1 rounded-full border ${isBankaiFinal ? "bg-amber-950 border-yellow-400 text-yellow-300" : "bg-orange-950 border-bleach-orange text-bleach-orange"}`
+  }, isBankaiFinal ? "卍 TRANSCENDÊNCIA DE BANKAI CONCLUÍDA" : "始解 VINCULAÇÃO DE SHIKAI CONFIRMADA"), /*#__PURE__*/React.createElement("h3", {
     className: "font-title text-3xl text-white tracking-wider"
-  }, caminhoSelecionado.shikai.nome), /*#__PURE__*/React.createElement("p", {
+  }, isBankaiFinal ? caminhoSelecionado.bankai?.nome || caminhoSelecionado.nome : caminhoSelecionado.shikai.nome), /*#__PURE__*/React.createElement("p", {
     className: "text-xs text-bleach-orange italic"
-  }, "\"", caminhoSelecionado.shikai.comando, "\""), /*#__PURE__*/React.createElement("p", {
+  }, "\"", isBankaiFinal ? caminhoSelecionado.bankai?.comando || caminhoSelecionado.comando : caminhoSelecionado.shikai.comando, "\""), /*#__PURE__*/React.createElement("p", {
     className: "text-xs text-bleach-creamDim leading-relaxed"
   }, "Esta manifesta\xE7\xE3o espiritual foi vinculada permanentemente ao personagem ", /*#__PURE__*/React.createElement("strong", null, personagem.nome), ". Sua assinatura espiritual foi gravada com exclusividade e nenhuma outra alma poder\xE1 possuir a mesma l\xE2mina."), /*#__PURE__*/React.createElement("button", {
     onClick: () => onEscolherCaminho(caminhoSelecionado),
-    className: "w-full py-3 bg-gradient-to-r from-bleach-orange to-bleach-orangeDeep text-black font-extrabold text-xs uppercase tracking-widest rounded-xl shadow-lg hover:brightness-110 transition"
+    className: "w-full py-3.5 bg-gradient-to-r from-bleach-orange to-yellow-500 text-black font-extrabold text-xs uppercase tracking-widest rounded-xl shadow-lg hover:brightness-110 transition"
   }, "\u2713 Entrar na Sociedade das Almas com sua Zanpakut\u014D")))));
 }
 
@@ -4505,8 +4995,8 @@ function FichaView({
         cenaDespertarBankai: cenaTexto
       }, "📜 Cena de despertar de Bankai registrada na ficha");
       playReiatsuSound('bankai_charge');
-      const caminhos = await gerar4CaminhosZanpakutoAI_Async(personagem, db.personagens, db.zanpakutosVinculadas, cenaTexto);
-      setAiZkOpcoes(caminhos);
+      const bankais = await gerar3BankaisEvolucaoAI_Async(personagem, personagem.zanpakuto?.shikaiAtiva, db.personagens, db.zanpakutosVinculadas, cenaTexto);
+      setAiZkOpcoes(bankais);
       setAiZkTipo("bankai");
       setShowZanpakutoAIModal(true);
     }
@@ -4514,8 +5004,13 @@ function FichaView({
   async function regenerarCaminhosComIA() {
     const cenaTexto = aiZkTipo === "shikai" ? personagem.cenaDespertarShikai || "" : personagem.cenaDespertarBankai || "";
     playReiatsuSound('roll');
-    const novosCaminhos = await gerar4CaminhosZanpakutoAI_Async(personagem, db.personagens, db.zanpakutosVinculadas, cenaTexto + " variação " + Date.now());
-    setAiZkOpcoes(novosCaminhos);
+    if (aiZkTipo === "shikai") {
+      const novosCaminhos = await gerar4CaminhosZanpakutoAI_Async(personagem, db.personagens, db.zanpakutosVinculadas, cenaTexto + " variação " + Date.now());
+      setAiZkOpcoes(novosCaminhos);
+    } else {
+      const novasBankais = await gerar3BankaisEvolucaoAI_Async(personagem, personagem.zanpakuto?.shikaiAtiva, db.personagens, db.zanpakutosVinculadas, cenaTexto + " variação " + Date.now());
+      setAiZkOpcoes(novasBankais);
+    }
   }
   function escolherCaminhoEspiritual(caminhoEscolhido) {
     setShowZanpakutoAIModal(false);

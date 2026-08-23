@@ -260,6 +260,29 @@
       0%, 100% { transform: scale(1); opacity: 0.8; }
       50% { transform: scale(1.1); opacity: 1; }
     }
+
+    /* Horizontal Blade Slash (Getsuga / Cut Vibration) */
+    @keyframes horizontalSlashLine {
+      0% { transform: scaleX(0) translateX(-100%); opacity: 0; }
+      25% { transform: scaleX(1) translateX(0); opacity: 1; filter: drop-shadow(0 0 35px #FF6A13) drop-shadow(0 0 70px #FFD700); }
+      70% { transform: scaleX(1.1) scaleY(3); opacity: 1; filter: drop-shadow(0 0 60px #FFF) drop-shadow(0 0 100px #FF6A13); }
+      100% { transform: scaleX(1.3) scaleY(0); opacity: 0; }
+    }
+    .slash-horizontal-beam {
+      animation: horizontalSlashLine 2.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+    }
+
+    /* Air Vibration & Screen Tremor */
+    @keyframes airVibrationShake {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); filter: blur(0px); }
+      20% { transform: translate(-4px, 3px) rotate(-0.5deg); filter: blur(0.3px); }
+      40% { transform: translate(4px, -3px) rotate(0.5deg); filter: blur(0px); }
+      60% { transform: translate(-3px, -2px) rotate(-0.3deg); filter: blur(0.4px); }
+      80% { transform: translate(3px, 2px) rotate(0.3deg); filter: blur(0px); }
+    }
+    .air-vibration-active {
+      animation: airVibrationShake 0.08s infinite ease-in-out;
+    }
   </style>
 
   <!-- React 18, ReactDOM 18 -->
@@ -292,6 +315,6 @@
   </style>
 
   <!-- Ultra-fast native JS with instant loading and automatic cache-busting -->
-  <script src="app.js?v=1787525378102"></script>
+  <script src="app.js?v=1787526838896"></script>
 </body>
 </html>
