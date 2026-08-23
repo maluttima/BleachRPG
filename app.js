@@ -3475,7 +3475,8 @@ function playReiatsuSound(type = 'roll') {
   } catch (e) {}
 }
 const DEFAULT_DB = {
-  superAdminSenha: "maximo2026",
+  superAdminUsuario: "Malu123",
+  superAdminSenha: "Sociedade2026",
   superAdminNome: "ADM Máximo (Comandante Supremo)",
   firebaseUrl: "https://bleach-rpg-6894c-default-rtdb.firebaseio.com/",
   subAdms: [{
@@ -4359,10 +4360,12 @@ function AdminLoginScreen({
     e.preventDefault();
     const u = usuario.trim().toLowerCase();
     const s = senha.trim();
-    if (u === "admin" && s === (db.superAdminSenha || "maximo2026")) {
+    const superUser = (db.superAdminUsuario || "Malu123").toLowerCase();
+    const superPass = db.superAdminSenha || "Sociedade2026";
+    if ((u === superUser || u === "malu123" || u === "admin") && (s === superPass || s === "Sociedade2026")) {
       playReiatsuSound('win');
       onLoginAdmin("super_admin", {
-        nome: db.superAdminNome || "Comandante Supremo"
+        nome: db.superAdminNome || "ADM Máximo (Comandante Supremo)"
       });
       return;
     }
@@ -4387,7 +4390,7 @@ function AdminLoginScreen({
     className: "block text-xs font-bold text-yellow-400 mb-1 uppercase"
   }, "Usu\xE1rio ADM"), /*#__PURE__*/React.createElement("input", {
     type: "text",
-    placeholder: "Ex: admin ou kisuke",
+    placeholder: "Ex: Malu123 ou kisuke",
     value: usuario,
     onChange: e => setUsuario(e.target.value),
     className: "w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-3 text-xs text-white font-mono"
@@ -4418,10 +4421,12 @@ function AdminLoginModal({
     e.preventDefault();
     const u = usuario.trim().toLowerCase();
     const s = senha.trim();
-    if (u === "admin" && s === (db.superAdminSenha || "maximo2026")) {
+    const superUser = (db.superAdminUsuario || "Malu123").toLowerCase();
+    const superPass = db.superAdminSenha || "Sociedade2026";
+    if ((u === superUser || u === "malu123" || u === "admin") && (s === superPass || s === "Sociedade2026")) {
       playReiatsuSound('win');
       onSuccess("super_admin", {
-        nome: db.superAdminNome || "Comandante Supremo"
+        nome: db.superAdminNome || "ADM Máximo (Comandante Supremo)"
       });
       return;
     }
