@@ -474,43 +474,53 @@ function gerar4OpcoesBankaiAI(nomePersonagem, shikaiAtiva, dbPersonagens = []) {
 // Backward compatibility alias
 const gerar3OpcoesBankaiAI = gerar4OpcoesBankaiAI;
 
-// Power Tier Calculator
-function getPowerTier(totalStats) {
-  if (totalStats <= 40) return {
+// Power Tier Calculator (Baseado no Ponto 8 Oficial do RPG)
+function getPowerTier(statVal) {
+  const val = statVal > 150 ? Math.round(statVal / 4) : statVal;
+  if (val <= 10) return {
     title: "Inexperiente",
+    patamar: "1–10",
     color: C.muted
   };
-  if (totalStats <= 70) return {
+  if (val <= 30) return {
     title: "Iniciante",
+    patamar: "11–30",
     color: C.green
   };
-  if (totalStats <= 120) return {
+  if (val <= 60) return {
     title: "Treinado",
+    patamar: "31–60",
     color: C.blue
   };
-  if (totalStats <= 200) return {
+  if (val <= 100) return {
     title: "Experiente",
+    patamar: "61–100",
     color: C.purple
   };
-  if (totalStats <= 300) return {
+  if (val <= 150) return {
     title: "Elite",
+    patamar: "101–150",
     color: C.orange
   };
-  if (totalStats <= 500) return {
+  if (val <= 250) return {
     title: "Alto Nível",
+    patamar: "151–250",
     color: C.yellow
   };
-  if (totalStats <= 800) return {
+  if (val <= 400) return {
     title: "Monstruoso",
+    patamar: "251–400",
     color: C.red
   };
-  if (totalStats <= 1200) return {
+  if (val <= 600) return {
     title: "Lendário",
+    patamar: "401–600",
     color: C.orangeDeep
   };
   return {
     title: "Transcendente",
-    color: "#E2E8F0"
+    patamar: "601+",
+    color: "#FFFFFF"
   };
 }
 function uid() {
@@ -1116,9 +1126,13 @@ function App() {
     className: "flex items-center gap-2"
   }, /*#__PURE__*/React.createElement("span", {
     className: "font-title tracking-widest text-bleach-orange text-sm"
-  }, "BLEACH RPG"), /*#__PURE__*/React.createElement("span", null, "\u2022 Sociedade das Almas \xA9 2026")), /*#__PURE__*/React.createElement("div", {
+  }, "BLEACH RPG"), /*#__PURE__*/React.createElement("span", null, "\u2022 Sociedade das Almas \xA9 2026"), /*#__PURE__*/React.createElement("span", {
+    onClick: () => setShowAdminLoginModal(true),
+    title: "",
+    className: "opacity-20 hover:opacity-80 transition cursor-pointer text-[11px] font-cinzel ml-1 select-none"
+  }, "\u970A")), /*#__PURE__*/React.createElement("div", {
     className: "text-right"
-  }, /*#__PURE__*/React.createElement("span", null, "Treino em ON (30 linhas) \u2022 Zanpakut\u014D Shikai & Bankai 100% Individuais \u2022 Arena & Rankings")))), showAdminLoginModal && /*#__PURE__*/React.createElement(AdminLoginModal, {
+  }, /*#__PURE__*/React.createElement("span", null, "Treinamento em OFF \u2022 Combate Narrativo sem Excesso de Rolagens (1d6) \u2022 Zanpakut\u014D & Rankings")))), showAdminLoginModal && /*#__PURE__*/React.createElement(AdminLoginModal, {
     db: db,
     onClose: () => setShowAdminLoginModal(false),
     onSuccess: s => {
@@ -1139,6 +1153,7 @@ function TopBar({
   onOpenAdminLogin,
   cloudStatus
 }) {
+  const isAdmin = session?.role === "super_admin" || session?.role === "sub_admin";
   return /*#__PURE__*/React.createElement("header", {
     className: "border-b border-bleach-border bg-bleach-bg2/95 backdrop-blur sticky top-0 z-40 shadow-xl"
   }, /*#__PURE__*/React.createElement("div", {
@@ -1175,9 +1190,9 @@ function TopBar({
   }, /*#__PURE__*/React.createElement("span", null, "\u2694\uFE0F"), /*#__PURE__*/React.createElement("span", null, "Arena")), /*#__PURE__*/React.createElement("button", {
     onClick: () => setView("ficha"),
     className: `px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition whitespace-nowrap flex items-center gap-1.5 ${view === "ficha" ? "bg-bleach-orange/20 text-bleach-orange border border-bleach-orangeDeep shadow-sm" : "text-bleach-creamDim hover:text-white hover:bg-white/5"}`
-  }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDC64"), /*#__PURE__*/React.createElement("span", null, "Minha Ficha")), /*#__PURE__*/React.createElement("button", {
+  }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDC64"), /*#__PURE__*/React.createElement("span", null, "Minha Ficha")), isAdmin && /*#__PURE__*/React.createElement("button", {
     onClick: () => setView("admin"),
-    className: `px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition whitespace-nowrap flex items-center gap-1.5 ${view === "admin" || view === "admin-ficha" ? "bg-bleach-orange/20 text-bleach-orange border border-bleach-orangeDeep shadow-sm" : "text-bleach-creamDim hover:text-white hover:bg-white/5"}`
+    className: `px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition whitespace-nowrap flex items-center gap-1.5 ${view === "admin" || view === "admin-ficha" ? "bg-yellow-500/20 text-yellow-400 border border-yellow-500 shadow-sm" : "text-yellow-400/80 hover:text-yellow-300 hover:bg-white/5"}`
   }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDC51"), /*#__PURE__*/React.createElement("span", null, "Painel ADM"))), /*#__PURE__*/React.createElement("div", {
     className: "flex items-center gap-2"
   }, session ? /*#__PURE__*/React.createElement("div", {
@@ -1191,10 +1206,17 @@ function TopBar({
   }, session.role === "super_admin" ? "Comandante Supremo" : session.role === "sub_admin" ? "Administrador" : "Conectado")), /*#__PURE__*/React.createElement("button", {
     onClick: onLogout,
     className: "px-2.5 py-1 bg-bleach-panel border border-bleach-border text-bleach-creamDim hover:text-red-400 rounded-md text-xs font-medium transition"
-  }, "Sair")) : /*#__PURE__*/React.createElement("button", {
+  }, "Sair")) : /*#__PURE__*/React.createElement("div", {
+    className: "flex items-center gap-2"
+  }, /*#__PURE__*/React.createElement("button", {
     onClick: () => setView("ficha"),
     className: "px-3 py-1.5 bg-gradient-to-r from-bleach-orange to-bleach-orangeDeep text-black font-bold rounded-lg text-xs tracking-wider uppercase hover:brightness-110 transition shadow"
-  }, "Entrar"))));
+  }, "Entrar"), /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    onClick: onOpenAdminLogin,
+    title: "",
+    className: "w-7 h-7 rounded bg-transparent border border-white/5 text-[10px] text-bleach-muted/30 hover:text-bleach-orange/70 hover:border-bleach-border flex items-center justify-center font-cinzel transition cursor-pointer select-none"
+  }, "\u9B42")))));
 }
 
 // CHAIN SVG SEPARATOR
@@ -1374,10 +1396,12 @@ function LoginScreen({
     className: "w-full py-3.5 bg-gradient-to-r from-bleach-orange to-bleach-orangeDeep text-black font-extrabold text-sm uppercase tracking-widest rounded-lg shadow-lg hover:brightness-110 active:scale-[0.99] transition"
   }, "Entrar na Ficha")), /*#__PURE__*/React.createElement("div", {
     className: "mt-6 pt-5 border-t border-bleach-borderSoft flex flex-col gap-2 text-center text-xs text-bleach-muted"
-  }, /*#__PURE__*/React.createElement("p", null, "N\xE3o possui um c\xF3digo de acesso? Solicite com a administra\xE7\xE3o no WhatsApp do RPG."), /*#__PURE__*/React.createElement("button", {
+  }, /*#__PURE__*/React.createElement("p", null, "N\xE3o possui um c\xF3digo de acesso? Solicite com a administra\xE7\xE3o no WhatsApp do RPG."), /*#__PURE__*/React.createElement("div", {
+    className: "mt-1 flex justify-center"
+  }, /*#__PURE__*/React.createElement("span", {
     onClick: onOpenAdminModal,
-    className: "text-bleach-orange hover:underline font-semibold mt-1"
-  }, "\uD83D\uDD10 Sou Administrador (Entrar no Painel ADM)"))));
+    className: "text-[10px] text-bleach-muted/30 hover:text-bleach-muted cursor-pointer transition select-none"
+  }, "Acesso Institucional \u9B42")))));
 }
 
 // ADMIN LOGIN SCREEN & MODAL
@@ -2133,6 +2157,7 @@ function FichaView({
     velocidade: 0,
     resiliencia: 0
   });
+  const [passoDistribuicao, setPassoDistribuicao] = useState(1);
   const [novaTecCat, setNovaTecCat] = useState("Hadō");
   const [novaTecNome, setNovaTecNome] = useState("");
   const [rec, setRec] = useState({
@@ -2767,55 +2792,114 @@ function FichaView({
   }, d.data)))))), (personagem.pontosDisponiveis || 0) > 0 && /*#__PURE__*/React.createElement("div", {
     className: "bg-gradient-to-r from-orange-950/60 via-bleach-panel to-orange-950/40 border-2 border-bleach-orange/60 rounded-xl p-5 shadow-2xl reiatsu-glow"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4"
+    className: "flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4 pb-3 border-b border-bleach-borderSoft"
   }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h4", {
     className: "font-title text-2xl tracking-wider text-bleach-orange flex items-center gap-2"
   }, /*#__PURE__*/React.createElement("span", null, "\u2728"), " PONTOS DISPON\xCDVEIS PARA DISTRIBUIR"), /*#__PURE__*/React.createElement("p", {
     className: "text-xs text-bleach-creamDim"
   }, "Voc\xEA possui ", /*#__PURE__*/React.createElement("strong", {
     className: "text-bleach-orange"
-  }, personagem.pontosDisponiveis), " pontos concedidos pelo mestre/sorteios.")), /*#__PURE__*/React.createElement("div", {
-    className: "text-right"
+  }, personagem.pontosDisponiveis), " pontos livres concedidos pelo mestre/sorteios.")), /*#__PURE__*/React.createElement("div", {
+    className: "flex flex-wrap items-center gap-2"
   }, /*#__PURE__*/React.createElement("span", {
-    className: "text-xs text-bleach-creamDim"
+    className: "text-[11px] font-bold uppercase tracking-wider text-bleach-creamDim"
+  }, "Distribuir por vez:"), /*#__PURE__*/React.createElement("div", {
+    className: "flex bg-black/80 border border-bleach-border rounded-xl p-1 gap-1 shadow-inner"
+  }, [1, 5, 10].map(step => /*#__PURE__*/React.createElement("button", {
+    key: step,
+    type: "button",
+    onClick: () => setPassoDistribuicao(step),
+    className: `px-3 py-1 rounded-lg text-xs font-mono font-black transition ${passoDistribuicao === step ? "bg-gradient-to-r from-bleach-orange to-bleach-orangeDeep text-black shadow-[0_0_10px_#FF6A13]" : "bg-transparent text-bleach-creamDim hover:text-white hover:bg-white/5"}`
+  }, "\xB1", step, " ", step === 1 ? "pt" : "pts"))), /*#__PURE__*/React.createElement("div", {
+    className: "ml-auto md:ml-2 bg-black/60 border border-white/10 px-3 py-1.5 rounded-xl text-right"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "text-[11px] text-bleach-creamDim"
   }, "Restam: "), /*#__PURE__*/React.createElement("span", {
     className: "font-bold text-lg text-bleach-orange font-mono"
-  }, restante))), /*#__PURE__*/React.createElement("div", {
+  }, restante)))), /*#__PURE__*/React.createElement("div", {
     className: "grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4"
-  }, ATTRS.map(a => /*#__PURE__*/React.createElement("div", {
-    key: a.key,
-    className: "bg-black/40 border border-bleach-border rounded-lg p-3 flex items-center justify-between"
-  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
-    className: "text-xs font-semibold uppercase tracking-wider block",
-    style: {
-      color: a.color
-    }
-  }, a.label), /*#__PURE__*/React.createElement("span", {
-    className: "text-xs text-bleach-muted"
-  }, "Atual: ", personagem.atributos[a.key])), /*#__PURE__*/React.createElement("div", {
-    className: "flex items-center gap-2"
-  }, /*#__PURE__*/React.createElement("button", {
-    onClick: () => setPend(p => ({
-      ...p,
-      [a.key]: Math.max(0, p[a.key] - 1)
-    })),
-    disabled: pend[a.key] === 0,
-    className: "w-8 h-8 rounded bg-bleach-panel border border-bleach-border text-white font-bold disabled:opacity-30 disabled:cursor-not-allowed hover:border-bleach-orange transition"
-  }, "\u2212"), /*#__PURE__*/React.createElement("span", {
-    className: "w-8 text-center font-mono font-bold text-bleach-orange text-lg"
-  }, "+", pend[a.key]), /*#__PURE__*/React.createElement("button", {
-    onClick: () => restante > 0 && setPend(p => ({
-      ...p,
-      [a.key]: p[a.key] + 1
-    })),
-    disabled: restante <= 0,
-    className: "w-8 h-8 rounded bg-bleach-panel border border-bleach-border text-white font-bold disabled:opacity-30 disabled:cursor-not-allowed hover:border-bleach-orange transition"
-  }, "+"))))), /*#__PURE__*/React.createElement("div", {
-    className: "flex justify-end"
-  }, /*#__PURE__*/React.createElement("button", {
+  }, ATTRS.map(a => {
+    const decStep = Math.min(passoDistribuicao, pend[a.key]);
+    const incStep = Math.min(passoDistribuicao, restante);
+    return /*#__PURE__*/React.createElement("div", {
+      key: a.key,
+      className: "bg-black/50 border border-bleach-border rounded-xl p-3 flex flex-col justify-between gap-2.5 shadow-sm"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "flex items-center justify-between"
+    }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+      className: "text-xs font-bold uppercase tracking-wider block",
+      style: {
+        color: a.color
+      }
+    }, a.label), /*#__PURE__*/React.createElement("span", {
+      className: "text-[11px] text-bleach-muted"
+    }, "Atual: ", /*#__PURE__*/React.createElement("strong", {
+      className: "text-white"
+    }, personagem.atributos[a.key]), pend[a.key] > 0 && /*#__PURE__*/React.createElement("span", {
+      className: "text-bleach-orange font-mono ml-1 font-bold"
+    }, "\u2192 ", personagem.atributos[a.key] + pend[a.key]))), /*#__PURE__*/React.createElement("div", {
+      className: "flex items-center gap-1.5 bg-black/80 p-1 rounded-xl border border-white/10"
+    }, /*#__PURE__*/React.createElement("button", {
+      type: "button",
+      onClick: () => {
+        const amt = Math.min(passoDistribuicao, pend[a.key]);
+        if (amt > 0) setPend(p => ({
+          ...p,
+          [a.key]: p[a.key] - amt
+        }));
+      },
+      disabled: pend[a.key] === 0,
+      title: `Diminuir ${decStep || passoDistribuicao} ponto(s)`,
+      className: "px-2.5 h-8 rounded-lg bg-bleach-panel border border-bleach-border text-white text-xs font-bold font-mono disabled:opacity-20 disabled:cursor-not-allowed hover:border-bleach-orange hover:bg-bleach-panel2 transition"
+    }, "\u2212", passoDistribuicao > 1 ? passoDistribuicao : ""), /*#__PURE__*/React.createElement("span", {
+      className: "min-w-[42px] text-center font-mono font-black text-bleach-orange text-base"
+    }, "+", pend[a.key]), /*#__PURE__*/React.createElement("button", {
+      type: "button",
+      onClick: () => {
+        const amt = Math.min(passoDistribuicao, restante);
+        if (amt > 0) setPend(p => ({
+          ...p,
+          [a.key]: p[a.key] + amt
+        }));
+      },
+      disabled: restante <= 0,
+      title: `Adicionar ${incStep || passoDistribuicao} ponto(s)`,
+      className: "px-2.5 h-8 rounded-lg bg-bleach-panel border border-bleach-border text-white text-xs font-bold font-mono disabled:opacity-20 disabled:cursor-not-allowed hover:border-bleach-orange hover:bg-bleach-panel2 transition"
+    }, "+", passoDistribuicao > 1 ? passoDistribuicao : ""))), /*#__PURE__*/React.createElement("div", {
+      className: "flex items-center justify-between pt-1 border-t border-white/5 text-[10px]"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "text-bleach-muted"
+    }, "Adi\xE7\xE3o direta:"), /*#__PURE__*/React.createElement("div", {
+      className: "flex items-center gap-1"
+    }, [1, 5, 10].map(quick => /*#__PURE__*/React.createElement("button", {
+      key: quick,
+      type: "button",
+      onClick: () => {
+        const amt = Math.min(quick, restante);
+        if (amt > 0) setPend(p => ({
+          ...p,
+          [a.key]: p[a.key] + amt
+        }));
+      },
+      disabled: restante <= 0,
+      className: "px-2 py-0.5 rounded bg-bleach-panel2 border border-white/10 hover:border-bleach-orange text-bleach-creamDim hover:text-white font-mono font-bold disabled:opacity-30 disabled:cursor-not-allowed transition"
+    }, "+", quick)))));
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "flex flex-col sm:flex-row items-center justify-between gap-3 pt-2"
+  }, pendSum > 0 ? /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    onClick: () => setPend({
+      pressao: 0,
+      forca: 0,
+      velocidade: 0,
+      resiliencia: 0
+    }),
+    className: "text-xs text-bleach-muted hover:text-red-400 underline transition"
+  }, "\uD83D\uDD04 Zerar Distribui\xE7\xE3o Pendente") : /*#__PURE__*/React.createElement("div", null), /*#__PURE__*/React.createElement("button", {
+    type: "button",
     onClick: confirmarDistribuicao,
     disabled: pendSum === 0,
-    className: "px-6 py-2.5 bg-gradient-to-r from-bleach-orange to-bleach-orangeDeep text-black font-extrabold text-xs uppercase tracking-widest rounded-lg shadow-lg hover:brightness-110 disabled:opacity-40 disabled:cursor-not-allowed transition"
+    className: "w-full sm:w-auto px-6 py-2.5 bg-gradient-to-r from-bleach-orange to-bleach-orangeDeep text-black font-extrabold text-xs uppercase tracking-widest rounded-lg shadow-lg hover:brightness-110 disabled:opacity-40 disabled:cursor-not-allowed transition"
   }, "Confirmar Distribui\xE7\xE3o (", pendSum, " pts)"))), /*#__PURE__*/React.createElement(Section, {
     title: "Atributos Espirituais",
     subtitle: "O valor puro do seu poder (sem conversores ou taxas ocultas)"
@@ -4362,44 +4446,498 @@ function AdminPanel({
   }, r.data))))))));
 }
 
-// COMPLETE RPG SYSTEMS & MANUAL VIEW
+// COMPLETE RPG SYSTEMS & MANUAL VIEW (TODOS OS 30 PONTOS OFICIAIS DO SISTEMA)
+const CATEGORIAS_SISTEMAS = [{
+  id: "todos",
+  label: "📋 Todas as 30 Regras"
+}, {
+  id: "geral",
+  label: "📜 Conceito & Power Scaling"
+}, {
+  id: "racas",
+  label: "👤 Raças & Origens"
+}, {
+  id: "kidos",
+  label: "⚡ Kidō & Kaidō"
+}, {
+  id: "combate",
+  label: "⚔️ Combate, Estados & 1d6"
+}, {
+  id: "treino",
+  label: "🏋️ Treinamento & Fadiga"
+}, {
+  id: "missoes",
+  label: "🎯 Missões, Cenas & Gacha"
+}, {
+  id: "zanpakuto",
+  label: "🗡️ Técnicas & Zanpakutō"
+}];
 const SISTEMAS_DATA = [{
   id: "s1",
+  num: 1,
+  cat: "geral",
   t: "1. Conceito do Sistema",
-  c: "O Bleach RPG é focado em narrativa, desenvolvimento de personagem, combate dinâmico e power scaling. O sistema evita o excesso de rolagens desnecessárias: a maior parte dos resultados vem da combinação direta entre Atributos, Técnicas, Experiência, Circunstâncias e Narrativa."
+  c: `O Bleach RPG é focado principalmente em:
+• Narrativa
+• Desenvolvimento de personagem
+• Combate
+• Power scaling
+• Evolução gradual
+
+O sistema deve evitar excesso de rolagens. Dados só aparecem quando existe uma dúvida real.
+
+A maior parte dos resultados é determinada pela combinação de:
+Atributos + Técnicas + Experiência + Circunstâncias + Narrativa`
 }, {
   id: "s2",
-  t: "2. Regra de Treinamento em ON (Obrigatório 30 Linhas)",
-  c: "⚔️ O TREINO É FEITO EM ON!\nPara validar um treinamento, o jogador deve obrigatoriamente produzir uma cena de no mínimo 30 linhas focando em um atributo específico ou dividindo o treino entre mais de um atributo.\n\n• Máximo de 3 treinos por dia (Manhã, Tarde, Noite).\n• 1 Treino: Sem fadiga.\n• 2 Treinos: -5% temporário de fadiga.\n• 3 Treinos: -15% temporário de fadiga e bloqueia Miscelâneas no dia.\nA fadiga é completamente zerada ao descansar (novo dia)."
+  num: 2,
+  cat: "racas",
+  t: "2. Raças Disponíveis",
+  c: `Existem apenas duas opções de raça:
+
+⚔️ SHINIGAMI
+Personagem que já pertence à Sociedade das Almas e possui formação como Shinigami.
+Pode:
+• possuir Zanpakutō;
+• aprender Kidō;
+• aprender Zanjutsu;
+• aprender Hakuda;
+• aprender Hohō;
+• participar de missões;
+• desenvolver técnicas.
+
+👤 SHINIGAMI EX-HUMANO
+Personagem que teve uma vida humana antes de se tornar Shinigami.
+A origem pode influenciar:
+• personalidade;
+• memórias;
+• relações;
+• conhecimentos;
+• motivações;
+• história pessoal.
+
+Porém:
+• Ser Ex-Humano não fornece bônus automático de atributos.
+• A origem é principalmente narrativa.`
 }, {
   id: "s3",
-  t: "3. Evolução Narrativa da Zanpakutō Autoral & Unicidade Absoluta",
-  c: "A evolução da Zanpakutō é estritamente NARRATIVA, AUTORAL e ÚNICA!\nCada Shikai e Bankai é individual: uma vez que um jogador escolhe aquela lâmina, ela se torna exclusiva dele e NUNCA mais aparecerá para nenhum outro jogador no gerador do RPG.\n\n• Shikai: A IA gera 4 opções inéditas sob medida para o jogador.\n• Bankai: A IA gera 3 evoluções supremas exclusivas derivadas da Shikai escolhida!"
+  num: 3,
+  cat: "racas",
+  t: "3. Diferença entre as Origens (Tabela Comparativa)",
+  c: `Tabela de comparação entre Shinigami Nativo e Shinigami Ex-Humano:
+
+• Origem: Sociedade das Almas vs Mundo Humano
+• Vida humana anterior: Não vs Sim
+• Atributos: Iguais vs Iguais
+• Evolução: Igual vs Igual
+• Combate: Igual vs Igual
+• Zanpakutō: Sim vs Sim
+• Kidō: Formação básica (4 iniciais) vs Precisa aprender narrativamente
+• Zanjutsu: Pode aprender vs Pode aprender
+• Hakuda: Pode aprender vs Pode aprender
+• Hohō: Pode aprender vs Pode aprender`
 }, {
   id: "s4",
-  t: "4. Tipos de Atividades e Recompensas Oficiais",
-  c: "• MISCELÂNEAS: Missões que surgem de repente sem fazerem tanta parte do arco principal (+0 a 3 pontos).\n\n• MISSÕES: Narrações que envolvem o arco principal e acontecimentos de grande escala no mundo espiritual.\n\n• CENA DE ARCO: Cenas com no mínimo 90 linhas realizando algo de impacto crucial para a história do personagem, podendo ser feita no presente ou no passado.\n\n🎁 RECOMPENSA GARANTIDA (Cenas de Arco e Missões):\n• +15 Pontos de Atributos para distribuir livremente.\n• 4 Sorteios Gacha Comuns.\n• 1 Sorteio Especial (Prêmios Épicos: Super Bônus de Pontos, Kidō Secreto Proibido ou a cobiçada Missão Narrativa Individual de Despertar de Poder).\n• 3 Kidōs à escolha do jogador."
+  num: 4,
+  cat: "kidos",
+  t: "4. Kidō Inicial & Regras de Cura (Kaidō)",
+  c: `Um personagem que já é Shinigami começa com:
+4 Kidō Básicos (distribuídos livremente pelo jogador).
+
+Categorias disponíveis:
+🔴 HADŌ: Técnicas ofensivas de destruição e ataque.
+🔵 BAKUDŌ: Técnicas de contenção, defesa, barreiras e restrição.
+🟢 KAIDŌ: Técnicas de cura e tratamento espiritual.
+
+Exemplos de distribuição inicial:
+• 2 Hadō + 1 Bakudō + 1 Kaidō
+• 4 Hadō
+• 2 Bakudō + 2 Kaidō
+
+KAIDŌ (Cura Espiritual):
+Kaidō representa técnicas de tratamento e cura espiritual. Pode ser utilizado para tratar ferimentos, estabilizar aliados, aliviar danos e auxiliar na recuperação.
+Porém:
+• Kaidō NÃO substitui descanso nem recuperação narrativa.
+• Ferimentos graves podem exigir técnicas mais avançadas ou tratamento adequado.
+
+EX-HUMANO E KIDŌ:
+Um Ex-Humano recém-transformado não recebe automaticamente os 4 Kidō. Ele pode aprender posteriormente através de treinamento, professores, missões, livros, outros Shinigami ou narrativa.
+(Se a história justificar treinamento prévio, a administração pode liberar conhecimento inicial).`
 }, {
   id: "s5",
-  t: "5. Categorias de Kidō & Sistema de Limite Espiritual",
-  c: "Existem 3 escolas primárias de Kidō:\n🔴 HADŌ (Destruição): Feitiços ofensivos (Ex: Byakurai, Shakkahō, Sōkatsui, Kurohitsugi).\n🔵 BAKUDŌ (Aprisionamento): Feitiços de restrição, selamento e barreira (Ex: Sai, Hainawa, Rikujō Kōrō, Dankū).\n🟢 KAIDŌ (Cura): Técnicas de restauração e regeneração de tecidos e Reiatsu.\n\n💧 LIMITE DE KIDŌS POR CENA:\nIniciantes conseguem usar um número reduzido de Kidōs. Conforme a Pressão Espiritual evolui, a potência e a reserva aumentam, mas há um limite máximo de conjurações por cena para manter a tensão do combate e evitar spam."
+  num: 5,
+  cat: "geral",
+  t: "5. Atributos Fundamentais",
+  c: `Existem quatro atributos no sistema:
+
+🔵 PRESSÃO ESPIRITUAL
+Representa: Reiatsu, poder espiritual, controle de energia espiritual, percepção espiritual, técnicas espirituais e pressão exercida sobre outros seres.
+
+🔴 FORÇA
+Representa: força física, potência dos golpes, Zanjutsu, Hakuda e capacidade física.
+
+🟢 VELOCIDADE
+Representa: deslocamento, reflexos, velocidade de ataque, esquiva, Hohō/Shunpo e capacidade de acompanhar adversários.
+
+🟣 RESILIÊNCIA
+Representa: resistência física, resistência espiritual, resistência à exaustão, capacidade de suportar ataques e capacidade de continuar lutando.`
 }, {
   id: "s6",
-  t: "6. Atributos Fundamentais & Rankings",
-  c: "Existem 4 atributos primários:\n🔵 PRESSÃO ESPIRITUAL: Potência de Reiatsu e controle mágico.\n🔴 FORÇA: Potência física, Zanjutsu e Hakuda.\n🟢 VELOCIDADE: Deslocamento, reflexos e Hohō/Shunpo.\n🟣 RESILIÊNCIA: Resistência a danos físicos e espirituais.\n\n🏆 RANKINGS NO SITE:\n1. Ranking Físico: Média calculada por (Força + Velocidade + Resiliência) ÷ 3.\n2. Ranking de Pressão Espiritual: Pontuação pura de Reiatsu."
+  num: 6,
+  cat: "geral",
+  t: "6. Criação de Atributos (Base 10 + 20 Pontos Livres)",
+  c: `Na criação da ficha:
+• Todos os atributos começam em: 10
+• O jogador recebe: 20 Pontos de Atributo para distribuir livremente.
+• Não existe limite inicial.
+
+Exemplo de distribuição:
+Pressão Espiritual: 10
+Força: 10
+Velocidade: 30 (+20 pontos)
+Resiliência: 10`
 }, {
   id: "s7",
-  t: "7. Raças Disponíveis (Shinigami & Shinigami Ex-Humano)",
-  c: "• SHINIGAMI: Nativo da Sociedade das Almas, formado na Academia Shin'ō. Começa com 4 Kidōs básicos.\n• SHINIGAMI EX-HUMANO: Viveu no Mundo dos Vivos antes de virar Ceifeiro. Atributos iguais, aprendendo Kidōs narrativamente."
+  num: 7,
+  cat: "geral",
+  t: "7. Regra Fundamental dos Atributos",
+  c: `O número da ficha É o atributo.
+
+Não existe:
+• conversão;
+• multiplicador;
+• nível escondido;
+• escala secundária.
+
+Se possui:
+Velocidade 370 e recebe +1 → Velocidade 371
+Recebe +5 → Velocidade 376`
 }, {
   id: "s8",
-  t: "8. Estados de Combate (Sem HP Numérico)",
-  c: "Não há pontos de vida (HP). O lutador transita por 4 estados:\n🟢 INTEIRO: Condição física e espiritual plena.\n🟡 FERIDO: Recebeu golpes, desempenho começa a oscilar.\n🟠 DEBILITADO: Danos graves, grande limitação física e espiritual.\n🔴 DERROTADO: Incapacitado de continuar na batalha."
+  num: 8,
+  cat: "geral",
+  t: "8. Power Scaling Oficial (Escala de Patamares)",
+  c: `Escala oficial de referência narrativa:
+
+• 1–10: Inexperiente
+• 11–30: Iniciante
+• 31–60: Treinado
+• 61–100: Experiente
+• 101–150: Elite
+• 151–250: Alto nível
+• 251–400: Monstruoso
+• 401–600: Lendário
+• 601+: Transcendente
+
+Essas classificações são referências narrativas puras para balanço de poder.`
+}, {
+  id: "s9",
+  num: 9,
+  cat: "geral",
+  t: "9. Diferença entre Atributos (Escala de Vantagem)",
+  c: `Quando dois guerreiros confrontam seus atributos diretamente:
+
+• 0–10 de diferença: Equivalentes
+• 11–30 de diferença: Pequena vantagem
+• 31–75 de diferença: Vantagem clara
+• 76–150 de diferença: Grande vantagem
+• 151–250 de diferença: Abismo
+• 251+ de diferença: Diferença monstruosa
+
+Quanto maior a diferença, mais difícil é superar a inferioridade através de técnica ou estratégia pura.`
+}, {
+  id: "s10",
+  num: 10,
+  cat: "combate",
+  t: "10. Dinâmica de Combate",
+  c: `O combate não possui rolagem para cada ação. O processo segue três etapas:
+
+1. INTENÇÃO: O jogador declara o que pretende fazer em cena.
+2. COMPARAÇÃO: O narrador compara os atributos relevantes e técnicas envolvidas.
+3. CONSEQUÊNCIA: O narrador determina o resultado narrativo do choque.
+
+Se existir uma dúvida real sobre o desfecho: rola-se 1d6.`
+}, {
+  id: "s11",
+  num: 11,
+  cat: "combate",
+  t: "11. O Dado de Decisão (1d6)",
+  c: `Quando há incerteza real na cena, utiliza-se exclusivamente o 1d6:
+
+• 1–2: Falha
+• 3–4: Sucesso parcial (com custo ou revés)
+• 5–6: Sucesso pleno
+
+Uma única rolagem deve resolver a situação, preservando a fluidez da narrativa.`
+}, {
+  id: "s12",
+  num: 12,
+  cat: "combate",
+  t: "12. Estados de Combate (Sem HP Tradicional)",
+  c: `Não existe HP numérico tradicional. O personagem transita por quatro estados:
+
+🟢 INTEIRO: Condição física e espiritual normal.
+🟡 FERIDO: Danos começam a afetar seu desempenho.
+🟠 DEBILITADO: Gravemente prejudicado e exausto.
+🔴 DERROTADO: Não consegue continuar lutando (incapacitado).
+
+A mudança de estado depende da situação, atributos, técnicas e narrativa.`
+}, {
+  id: "s13",
+  num: 13,
+  cat: "combate",
+  t: "13. Confronto de Pressão Espiritual (Reiatsu Clash)",
+  c: `Quando dois personagens liberam Reiatsu, compara-se a Pressão Espiritual:
+
+• 0–10 de diferença: Diferença insignificante.
+• 11–30 de diferença: Presença claramente superior.
+• 31–75 de diferença: Pressão intimidante.
+• 76–150 de diferença: Grande dificuldade para o lutador inferior.
+• 151–250 de diferença: Abismo espiritual.
+• 251+ de diferença: Presença monstruosamente superior.
+
+Isso não significa vitória automática, mas dita a atmosfera e a facilidade de conjuração de Kidōs e técnicas.`
+}, {
+  id: "s14",
+  num: 14,
+  cat: "combate",
+  t: "14. Especialidades Técnicas",
+  c: `Personagens podem desenvolver especialidades como:
+• Zanjutsu (Esgrima de Zanpakutō)
+• Hakuda (Combate corpo a corpo)
+• Hohō (Shunpo e passos rápidos)
+• Kidō (Feitiçaria espiritual)
+• Reiatsu (Controle e emanação de aura)
+• Percepção (Sensoriamento espiritual)
+• Estratégia (Tática e análise em batalha)
+• Combate à distância
+
+Especialidades representam domínio técnico. Elas não aumentam automaticamente os números dos atributos, mas expandem as possibilidades narrativas.`
+}, {
+  id: "s15",
+  num: 15,
+  cat: "treino",
+  t: "15. Treinamento em OFF (3 Períodos Diários)",
+  c: `Treinos são realizados em: OFF.
+
+Cada personagem pode realizar no máximo 3 períodos de treino por dia:
+• 1º período: Manhã
+• 2º período: Manhã → Tarde
+• 3º período: Manhã → Noite`
+}, {
+  id: "s16",
+  num: 16,
+  cat: "treino",
+  t: "16. Recompensa de Treino (0–3 Pontos / Máx 9 pts/dia)",
+  c: `Cada período de treino pode conceder: 0–3 Pontos de Atributo.
+
+Avaliação do Treino:
+• Treino fraco: 0–1 ponto
+• Treino adequado: 1–2 pontos
+• Treino excelente: 2–3 pontos
+
+Máximo normal por dia:
+9 Pontos de Atributo (exige três treinamentos excelentes).
+
+A intenção é impedir evolução absurda em poucos dias e valorizar a consistência.`
+}, {
+  id: "s17",
+  num: 17,
+  cat: "treino",
+  t: "17. Distribuição do Treino",
+  c: `O jogador pode focar um atributo:
+• Treino de Velocidade → todos os pontos em Velocidade.
+
+Ou dividir entre atributos:
+• Força + Velocidade
+
+O administrador determina a distribuição conforme o conteúdo da cena.
+Exemplo: +2 Força e +1 Velocidade.
+Quanto mais atributos forem treinados simultaneamente, mais dividida será a recompensa.`
+}, {
+  id: "s18",
+  num: 18,
+  cat: "treino",
+  t: "18. Sistema de Fadiga",
+  c: `Treinar gera desgaste físico e espiritual:
+
+• 1 TREINO: Nenhuma redução obrigatória. Pode participar normalmente das atividades.
+• 2 TREINOS: −5% temporário nos atributos diretamente treinados.
+• 3 TREINOS: −15% temporário nos atributos diretamente treinados.
+  Além disso: Não pode participar de Miscelâneas com recompensa naquele dia.`
+}, {
+  id: "s19",
+  num: 19,
+  cat: "treino",
+  t: "19. Fadiga em Missões ON",
+  c: `Missões são realizadas em: ON.
+Uma missão pode acontecer mesmo depois de o personagem ter treinado. Se for necessário participar, o personagem participa, porém entra cansado:
+
+• Após 1 treino: Sem penalidade obrigatória.
+• Após 2 treinos: −5% nos atributos treinados.
+• Após 3 treinos: −15% nos atributos treinados.`
+}, {
+  id: "s20",
+  num: 20,
+  cat: "treino",
+  t: "20. Fadiga Não é Perda Permanente",
+  c: `A fadiga é uma redução momentânea de prontidão de combate.
+
+Exemplo:
+• Velocidade na ficha: 100
+• Após treinamento intenso (3 treinos): Velocidade efetiva durante a missão = 85.
+• A ficha continua: Velocidade 100.
+• Depois de descansar: 100 novamente.
+
+Nenhum ponto é perdido da ficha.`
+}, {
+  id: "s21",
+  num: 21,
+  cat: "treino",
+  t: "21. Descanso (Recuperação Diária)",
+  c: `Em condições normais:
+Um novo dia remove completamente a fadiga acumulada do dia anterior.`
+}, {
+  id: "s22",
+  num: 22,
+  cat: "missoes",
+  t: "22. Missões em ON (Recompensas)",
+  c: `Missões são cenas em ON com objetivos claros.
+
+Recompensas conforme a escala:
+• Missão simples: 1–2 pontos
+• Missão normal: 2–4 pontos
+• Missão importante: 3–6 pontos
+• Missão excepcional: 5–8 pontos
+
+A recompensa considera: dificuldade, risco, importância, interpretação, participação e impacto narrativo.`
+}, {
+  id: "s23",
+  num: 23,
+  cat: "missoes",
+  t: "23. Miscelâneas em ON (Cenas Narrativas)",
+  c: `São cenas ON focadas em narrativa, interpretação e cotidiano.
+Exemplos: conversas, relações, investigação, exploração, rotina, interação com NPCs e desenvolvimento pessoal.
+
+Recompensas:
+• Cena simples: 0–1 ponto
+• Cena relevante: 1–2 pontos
+• Cena excepcional: 2–3 pontos
+
+Atenção: Quem realizou 3 treinos no dia NÃO recebe recompensa de Miscelânea naquele dia.`
+}, {
+  id: "s24",
+  num: 24,
+  cat: "missoes",
+  t: "24. Cenas de Arco (90 Linhas / Clímax)",
+  c: `Cenas de Arco envolvem momentos decisivos na trajetória do personagem (mínimo de 90 linhas):
+
+• Cena comum: 1–3 pontos
+• Cena importante: 2–4 pontos
+• Cena decisiva: 4–6 pontos
+
+Também podem desbloquear:
+• novas técnicas;
+• informações cruciais;
+• relações e alianças;
+• desenvolvimento e diálogo com a Zanpakutō;
+• novos objetivos de vida.`
+}, {
+  id: "s25",
+  num: 25,
+  cat: "missoes",
+  t: "25. Combates em ON (Recompensas)",
+  c: `Recompensas por lutas realizadas em ON:
+
+• Combate menor: 1–2 pontos
+• Combate relevante: 2–4 pontos
+• Combate importante: 3–6 pontos
+
+A recompensa não depende simplesmente da vitória: a qualidade da narrativa e superação são valorizadas.`
+}, {
+  id: "s26",
+  num: 26,
+  cat: "missoes",
+  t: "26. Recompensas Aleatórias / Gacha Extra",
+  c: `🎲 Recompensa Extra (Opcional e Não Garantida):
+Pode aparecer após missões, combates, cenas importantes, treinos excepcionais, descobertas e marcos narrativos.
+
+Categorias:
+⚪ Comum: +1–3 atributos ou pequena recompensa narrativa.
+🟢 Incomum: +3–6 atributos, técnica, feitiço ou item.
+🔵 Rara: +5–10 atributos ou grande oportunidade.
+🟣 Épica: +8–15 atributos ou grande evolução espiritual.
+🟡 Lendária: Recompensa excepcional capaz de alterar significativamente o caminho do personagem (como a Missão Narrativa Individual de Despertar).
+
+A recompensa também pode ser: técnica, feitiço, item, conhecimento, contato, treinamento especial ou desenvolvimento da Zanpakutō.`
+}, {
+  id: "s27",
+  num: 27,
+  cat: "missoes",
+  t: "27. Bônus de Participação Semanal",
+  c: `Jogadores muito ativos podem receber, ao final de uma semana de consistência:
++2–3 Pontos de Atributo.
+
+O bônus existe para recompensar a constância na comunidade, mantendo-se moderado para preservar o power scaling.`
+}, {
+  id: "s28",
+  num: 28,
+  cat: "zanpakuto",
+  t: "28. Estrutura Obrigatória de Técnicas",
+  c: `Personagens podem aprender técnicas existentes, desenvolver técnicas próprias, modificar e aperfeiçoar habilidades.
+
+Toda técnica cadastrada na ficha deve conter obrigatoriamente:
+1. Nome
+2. Categoria (Hadō, Bakudō, Kaidō, Zanjutsu, Hakuda, Hohō, Outro)
+3. Conceito
+4. Efeito
+5. Requisitos
+6. Limitações`
+}, {
+  id: "s29",
+  num: 29,
+  cat: "zanpakuto",
+  t: "29. Evolução Narrativa da Zanpakutō",
+  c: `A Zanpakutō evolui estritamente através da narrativa e comunhão de almas:
+
+Possíveis marcos:
+• descoberta do espírito interior;
+• descoberta do nome verdadeiro;
+• liberação inicial (Shikai);
+• novas propriedades e técnicas de lâmina;
+• evolução e aprofundamento do Shikai;
+• liberação suprema (Bankai).
+
+Esses poderes não precisam simplesmente ser comprados com atributos: devem ser conquistados na história!`
+}, {
+  id: "s30",
+  num: 30,
+  cat: "geral",
+  t: "30. Filosofia Geral do Sistema (Os 4 Princípios)",
+  c: `O Bleach RPG segue quatro princípios fundamentais:
+
+1. Números determinam a escala.
+2. Técnicas determinam como o poder é utilizado.
+3. Narrativa determina o contexto.
+4. Dados só aparecem quando existe incerteza real.
+
+E na evolução contínua:
+• Treinar mais = mais progresso.
+• Treinar demais = mais fadiga.
+• Missões não esperam o personagem estar descansado.
+• Narrativa também gera evolução.
+• Sorte pode trazer recompensas extraordinárias.
+• A evolução deve ser lenta e gradual o suficiente para preservar o power scaling.`
 }];
 function SistemasView() {
+  const [catAtiva, setCatAtiva] = useState("todos");
   const [aberto, setAberto] = useState(0);
   const [busca, setBusca] = useState("");
-  const filtrados = SISTEMAS_DATA.filter(s => s.t.toLowerCase().includes(busca.toLowerCase()) || s.c.toLowerCase().includes(busca.toLowerCase()));
+  const filtrados = SISTEMAS_DATA.filter(s => {
+    const matchesCat = catAtiva === "todos" || s.cat === catAtiva;
+    const matchesBusca = s.t.toLowerCase().includes(busca.toLowerCase()) || s.c.toLowerCase().includes(busca.toLowerCase());
+    return matchesCat && matchesBusca;
+  });
   return /*#__PURE__*/React.createElement("div", {
     className: "space-y-6"
   }, /*#__PURE__*/React.createElement("div", {
@@ -4408,31 +4946,58 @@ function SistemasView() {
     className: "relative z-10 max-w-2xl"
   }, /*#__PURE__*/React.createElement("span", {
     className: "px-3 py-1 bg-bleach-orange/20 border border-bleach-orange text-bleach-orange text-xs font-bold rounded-full uppercase tracking-wider"
-  }, "Manual Oficial Atualizado"), /*#__PURE__*/React.createElement("h2", {
+  }, "Regulamento Oficial da Sociedade das Almas"), /*#__PURE__*/React.createElement("h2", {
     className: "font-title text-4xl sm:text-5xl tracking-widest text-bleach-orange mt-3 reiatsu-text-glow"
-  }, "SISTEMAS DA SOCIEDADE DAS ALMAS"), /*#__PURE__*/React.createElement("p", {
+  }, "MANUAL OFICIAL DO SISTEMA"), /*#__PURE__*/React.createElement("p", {
     className: "text-xs sm:text-sm text-bleach-creamDim mt-2 leading-relaxed"
-  }, "Consulte as regras oficiais de combate, treinos em ON (30 linhas), Zanpakut\u014D com IA (4 op\xE7\xF5es de Shikai e 3 de Bankai 100% Individuais e \xDAnicas), recompensas de Cenas de Arco e Miss\xF5es, Kid\u014Ds e Rankings."))), /*#__PURE__*/React.createElement("div", {
+  }, "Consulte todas as ", /*#__PURE__*/React.createElement("strong", null, "30 regras fundamentais"), ": Ra\xE7as, Atributos, Power Scaling Oficial, Combate Narrativo com 1d6, Treinos em OFF (3 per\xEDodos), Sistema de Fadiga, Miss\xF5es, Kid\u014D e Evolu\xE7\xE3o Narrativa da Zanpakut\u014D."))), /*#__PURE__*/React.createElement("div", {
+    className: "flex gap-2 overflow-x-auto pb-2 border-b border-bleach-borderSoft"
+  }, CATEGORIAS_SISTEMAS.map(c => /*#__PURE__*/React.createElement("button", {
+    key: c.id,
+    type: "button",
+    onClick: () => {
+      setCatAtiva(c.id);
+      setAberto(0);
+    },
+    className: `px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition ${catAtiva === c.id ? "bg-bleach-orange text-black font-extrabold shadow-[0_0_15px_rgba(255,106,19,0.3)]" : "bg-bleach-panel2 border border-bleach-border text-bleach-creamDim hover:text-white hover:border-bleach-border/80"}`
+  }, c.label))), /*#__PURE__*/React.createElement("div", {
     className: "relative"
   }, /*#__PURE__*/React.createElement("input", {
     type: "text",
-    placeholder: "\uD83D\uDD0D Pesquisar regras, Treinos em ON, Kid\u014D, Zanpakut\u014D...",
+    placeholder: "\uD83D\uDD0D Pesquisar em todas as 30 regras (ex: fadiga, 1d6, kaid\u014D, patamar, 90 linhas)...",
     value: busca,
     onChange: e => setBusca(e.target.value),
     className: "w-full bg-bleach-panel border border-bleach-border focus:border-bleach-orange rounded-xl px-4 py-3 text-sm text-white placeholder-bleach-muted outline-none shadow-lg transition"
-  })), /*#__PURE__*/React.createElement("div", {
+  }), busca && /*#__PURE__*/React.createElement("button", {
+    onClick: () => setBusca(""),
+    className: "absolute right-3.5 top-3.5 text-xs text-bleach-muted hover:text-white"
+  }, "\u2715 Limpar")), /*#__PURE__*/React.createElement("div", {
+    className: "flex justify-between items-center text-xs text-bleach-muted px-1"
+  }, /*#__PURE__*/React.createElement("span", null, "Exibindo ", /*#__PURE__*/React.createElement("strong", null, filtrados.length), " de 30 regras"), /*#__PURE__*/React.createElement("button", {
+    onClick: () => setAberto(aberto === -999 ? 0 : -999),
+    className: "hover:text-bleach-orange transition text-[11px]"
+  }, aberto === -999 ? "▶ Expandir Primeiro" : "▼ Recolher Todos")), /*#__PURE__*/React.createElement("div", {
     className: "space-y-3"
-  }, filtrados.map((s, idx) => /*#__PURE__*/React.createElement("div", {
-    key: s.id,
-    className: "bg-bleach-panel border border-bleach-border hover:border-bleach-border/80 rounded-xl overflow-hidden shadow-lg transition"
-  }, /*#__PURE__*/React.createElement("button", {
-    onClick: () => setAberto(aberto === idx ? -1 : idx),
-    className: "w-full text-left px-5 py-4 flex items-center justify-between gap-4 font-title text-lg tracking-wider uppercase text-bleach-cream hover:text-bleach-orange transition"
-  }, /*#__PURE__*/React.createElement("span", null, s.t), /*#__PURE__*/React.createElement("span", {
-    className: "text-bleach-orange text-xl font-bold font-mono"
-  }, aberto === idx ? "−" : "+")), aberto === idx && /*#__PURE__*/React.createElement("div", {
-    className: "px-5 pb-5 pt-2 text-xs sm:text-sm text-bleach-creamDim leading-relaxed border-t border-bleach-borderSoft/60 whitespace-pre-line bg-black/20"
-  }, s.c)))));
+  }, filtrados.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "bg-bleach-panel border border-bleach-border rounded-xl p-8 text-center text-bleach-muted text-xs"
+  }, "Nenhuma regra encontrada para a pesquisa \"", busca, "\".") : filtrados.map((s, idx) => {
+    const isOpen = aberto === idx || aberto === -9999;
+    return /*#__PURE__*/React.createElement("div", {
+      key: s.id,
+      className: "bg-bleach-panel border border-bleach-border hover:border-bleach-border/80 rounded-xl overflow-hidden shadow-lg transition"
+    }, /*#__PURE__*/React.createElement("button", {
+      onClick: () => setAberto(aberto === idx ? -1 : idx),
+      className: "w-full text-left px-5 py-4 flex items-center justify-between gap-4 font-title text-lg tracking-wider uppercase text-bleach-cream hover:text-bleach-orange transition"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "flex items-center gap-3"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "w-7 h-7 rounded-lg bg-black/60 border border-white/10 flex items-center justify-center font-mono font-black text-xs text-bleach-orange"
+    }, "#", s.num), /*#__PURE__*/React.createElement("span", null, s.t)), /*#__PURE__*/React.createElement("span", {
+      className: "text-bleach-orange text-xl font-bold font-mono"
+    }, isOpen ? "−" : "+")), isOpen && /*#__PURE__*/React.createElement("div", {
+      className: "px-5 pb-5 pt-3 text-xs sm:text-sm text-bleach-creamDim leading-relaxed border-t border-bleach-borderSoft/60 whitespace-pre-line bg-black/30 font-sans"
+    }, s.c));
+  })));
 }
 
 // RENDER APPLICATION
