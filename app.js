@@ -3354,12 +3354,13 @@ function Zanpakuto4PathsModal({
   // Continuous charging power ritual while AI generates, or direct selection if already saved
   useEffect(() => {
     if (open) {
-      if (!loading && listaCaminhos && listaCaminhos.length > 0 && ritualState === "selection") {
-        setChargeProgress(100);
-        return;
-      }
-      if (!loading && listaCaminhos && listaCaminhos.length > 0 && chargeProgress >= 100) {
+      if (!loading && listaCaminhos && listaCaminhos.length > 0) {
         setRitualState("selection");
+        setChargeProgress(100);
+        if (chargeIntervalRef.current) {
+          clearInterval(chargeIntervalRef.current);
+          chargeIntervalRef.current = null;
+        }
         return;
       }
       setRitualState("charging");
@@ -4991,8 +4992,10 @@ function FichaView({
   const powerTier = getPowerTier(totalStats);
   const temShikai = !!personagem?.zanpakuto?.shikaiAtiva;
   const temBankai = !!personagem?.zanpakuto?.bankaiAtiva;
-  const podeGerarShikai = !!personagem?.permissoes?.shikaiLiberada && !temShikai;
-  const podeGerarBankai = !!personagem?.permissoes?.bankaiLiberada && temShikai && !temBankai;
+  const temOpcoesShikaiSalvas = !!(personagem?.opcoesShikaiPendentes && personagem.opcoesShikaiPendentes.length > 0);
+  const temOpcoesBankaiSalvas = !!(personagem?.opcoesBankaiPendentes && personagem.opcoesBankaiPendentes.length > 0);
+  const podeGerarShikai = !!personagem?.permissoes?.shikaiLiberada && !temShikai && !temOpcoesShikaiSalvas;
+  const podeGerarBankai = !!personagem?.permissoes?.bankaiLiberada && temShikai && !temBankai && !temOpcoesBankaiSalvas;
   const personalidadeSelada = !!personagem?.personalidadeTravada;
   function updateChar(patch, historicoTexto) {
     const personagens = (db.personagens || []).map(p => p.id === personagem.id ? {
@@ -6046,19 +6049,51 @@ function FichaView({
       className: "text-xs text-bleach-creamDim italic leading-relaxed"
     }, "\"", personagem.cenaDespertarBankai, "\"")));
   })() : personagem.opcoesBankaiPendentes && personagem.opcoesBankaiPendentes.length > 0 ? /*#__PURE__*/React.createElement("div", {
-    className: "p-5 bg-gradient-to-r from-amber-950/80 via-black to-amber-950/80 rounded-2xl border-2 border-yellow-500/80 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-2xl"
+    className: "space-y-4 p-5 sm:p-6 bg-gradient-to-b from-amber-950/70 via-black to-bleach-panel rounded-2xl border-2 border-yellow-500/80 shadow-2xl"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "space-y-1 text-center sm:text-left"
-  }, /*#__PURE__*/React.createElement("span", {
+    className: "flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-yellow-500/30 pb-3"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
     className: "text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded bg-yellow-950 text-yellow-300 border border-yellow-400"
-  }, "\u534D 3 EVOLU\xC7\xD5ES DE BANKAI FORJADAS E SALVAS!"), /*#__PURE__*/React.createElement("h4", {
-    className: "font-title text-xl text-yellow-300"
+  }, "\u534D 3 EVOLU\xC7\xD5ES DE BANKAI FORJADAS & SALVAS"), /*#__PURE__*/React.createElement("h4", {
+    className: "font-title text-xl sm:text-2xl text-yellow-300 mt-1"
   }, "Escolha a Transcend\xEAncia da sua Bankai"), /*#__PURE__*/React.createElement("p", {
     className: "text-xs text-bleach-creamDim"
-  }, "As 3 op\xE7\xF5es aut\xEAnticas geradas pela IA est\xE3o salvas na sua alma aguardando sua escolha final.")), /*#__PURE__*/React.createElement("button", {
+  }, "As 3 evolu\xE7\xF5es geradas pela IA est\xE3o permanentemente salvas na sua alma. Analise e sele a que melhor representa sua evolu\xE7\xE3o.")), /*#__PURE__*/React.createElement("button", {
     onClick: () => abrirFluxoDespertar("bankai"),
-    className: "px-6 py-3 bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-lg hover:brightness-110 transition animate-pulse whitespace-nowrap"
-  }, "\u534D Abrir & Escolher Bankai (", personagem.opcoesBankaiPendentes.length, " Salvas)")) : /*#__PURE__*/React.createElement("div", {
+    className: "px-4 py-2 bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold text-xs uppercase rounded-xl shadow whitespace-nowrap"
+  }, "\uD83D\uDD0D Abrir Vis\xE3o em Modal Completo")), /*#__PURE__*/React.createElement("div", {
+    className: "grid grid-cols-1 md:grid-cols-3 gap-3 pt-2"
+  }, personagem.opcoesBankaiPendentes.map((c, idx) => {
+    const b = c.bankai || c;
+    return /*#__PURE__*/React.createElement("div", {
+      key: idx,
+      className: "p-4 rounded-xl bg-black/80 border border-yellow-500/40 hover:border-yellow-400 flex flex-col justify-between space-y-3 transition"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "space-y-2"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "flex items-center justify-between"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "text-[10px] font-extrabold px-2 py-0.5 rounded bg-yellow-950 text-yellow-300 border border-yellow-500/50"
+    }, "Op\xE7\xE3o ", idx + 1, " \u2022 ", b.tipoEvolucao || "Evolução Espiritual")), /*#__PURE__*/React.createElement("h5", {
+      className: "font-title text-lg text-yellow-300 leading-tight"
+    }, b.nome, " ", b.traducao && /*#__PURE__*/React.createElement("span", {
+      className: "text-xs font-normal text-yellow-200/80"
+    }, "(", b.traducao, ")")), /*#__PURE__*/React.createElement("p", {
+      className: "text-xs text-yellow-200 italic"
+    }, "\"", b.comando, "\""), b.pontoRuptura && /*#__PURE__*/React.createElement("div", {
+      className: "p-2 bg-amber-950/40 rounded border border-yellow-500/30 text-[11px] text-yellow-200"
+    }, /*#__PURE__*/React.createElement("strong", {
+      className: "text-yellow-400 block text-[10px] uppercase"
+    }, "\uD83D\uDCA5 Ponto de Ruptura:"), b.pontoRuptura), /*#__PURE__*/React.createElement("p", {
+      className: "text-xs text-bleach-creamDim line-clamp-3"
+    }, b.poder)), /*#__PURE__*/React.createElement("button", {
+      onClick: () => {
+        const confirma = confirm(`Tem certeza que deseja selar definitivamente a Bankai [${b.nome}] na sua alma?`);
+        if (confirma) escolherCaminhoEspiritual(c);
+      },
+      className: "w-full py-2.5 bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-extrabold text-xs uppercase rounded-lg shadow hover:brightness-110 transition"
+    }, "\u534D Selar Esta Bankai"));
+  }))) : /*#__PURE__*/React.createElement("div", {
     className: "p-4 bg-bleach-panel2 rounded-xl border border-yellow-500/30 flex items-center justify-between"
   }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h4", {
     className: "font-title text-lg text-yellow-400"
@@ -6068,17 +6103,49 @@ function FichaView({
     onClick: () => abrirFluxoDespertar("bankai"),
     className: "px-5 py-2.5 bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-extrabold text-xs uppercase rounded-xl shadow"
   }, "\u534D Despertar Bankai"))) : personagem.opcoesShikaiPendentes && personagem.opcoesShikaiPendentes.length > 0 ? /*#__PURE__*/React.createElement("div", {
-    className: "p-6 text-center space-y-4 bg-gradient-to-r from-orange-950/80 via-black to-orange-950/80 rounded-2xl border-2 border-bleach-orange/80 shadow-2xl reiatsu-glow"
+    className: "space-y-4 p-5 sm:p-6 bg-gradient-to-b from-orange-950/70 via-black to-bleach-panel rounded-2xl border-2 border-bleach-orange/80 shadow-2xl"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "text-4xl animate-bounce"
-  }, "\u2694\uFE0F"), /*#__PURE__*/React.createElement("h3", {
-    className: "font-title text-2xl text-bleach-orange"
-  }, "4 MANIFESTA\xC7\xD5ES DA SUA SHIKAI FORJADAS E SALVAS!"), /*#__PURE__*/React.createElement("p", {
-    className: "text-xs text-bleach-creamDim max-w-lg mx-auto leading-relaxed"
-  }, "A sua alma j\xE1 forjou os 4 caminhos espirituais aut\xEAnticos. Voc\xEA pode reabri-los a qualquer momento para analisar os poderes e selar a sua Shikai definitiva na sua ficha."), /*#__PURE__*/React.createElement("button", {
+    className: "flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-bleach-orange/30 pb-3"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+    className: "text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded bg-orange-950 text-bleach-orange border border-bleach-orange"
+  }, "\u2694\uFE0F 4 MANIFESTA\xC7\xD5ES DE SHIKAI FORJADAS & SALVAS"), /*#__PURE__*/React.createElement("h4", {
+    className: "font-title text-xl sm:text-2xl text-bleach-orange mt-1"
+  }, "Escolha a Manifesta\xE7\xE3o da sua Shikai"), /*#__PURE__*/React.createElement("p", {
+    className: "text-xs text-bleach-creamDim"
+  }, "As 4 op\xE7\xF5es geradas pela IA est\xE3o permanentemente salvas na sua alma. Analise os caminhos e sele a sua Shikai aut\xEAntica.")), /*#__PURE__*/React.createElement("button", {
     onClick: () => abrirFluxoDespertar("shikai"),
-    className: "px-6 py-3.5 bg-gradient-to-r from-bleach-orange to-red-600 text-black font-extrabold text-xs uppercase tracking-widest rounded-xl shadow-lg hover:brightness-110 transition animate-pulse"
-  }, "\u2728 Abrir & Escolher Minha Shikai (", personagem.opcoesShikaiPendentes.length, " Op\xE7\xF5es Salvas)")) : /*#__PURE__*/React.createElement("div", {
+    className: "px-4 py-2 bg-bleach-orange hover:bg-orange-500 text-black font-extrabold text-xs uppercase rounded-xl shadow whitespace-nowrap"
+  }, "\uD83D\uDD0D Abrir Vis\xE3o em Modal Completo")), /*#__PURE__*/React.createElement("div", {
+    className: "grid grid-cols-1 md:grid-cols-2 gap-3 pt-2"
+  }, personagem.opcoesShikaiPendentes.map((c, idx) => {
+    const s = c.shikai || c;
+    return /*#__PURE__*/React.createElement("div", {
+      key: idx,
+      className: "p-4 rounded-xl bg-black/80 border border-bleach-orange/40 hover:border-bleach-orange flex flex-col justify-between space-y-3 transition"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "space-y-2"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "flex items-center justify-between"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "text-[10px] font-extrabold px-2 py-0.5 rounded bg-orange-950 text-bleach-orange border border-orange-500/50"
+    }, "Op\xE7\xE3o ", idx + 1, " \u2022 ", s.elemento || "Elemento Espiritual")), /*#__PURE__*/React.createElement("h5", {
+      className: "font-title text-lg text-white leading-tight"
+    }, s.nome, " ", s.traducao && /*#__PURE__*/React.createElement("span", {
+      className: "text-xs font-normal text-bleach-creamDim"
+    }, "(", s.traducao, ")")), /*#__PURE__*/React.createElement("p", {
+      className: "text-xs text-yellow-300 italic"
+    }, "\"", s.comando, "\""), /*#__PURE__*/React.createElement("div", {
+      className: "text-[11px] text-bleach-creamDim space-y-1"
+    }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("strong", null, "\u2694\uFE0F Forma:"), " ", s.formaArma || s.forma), /*#__PURE__*/React.createElement("div", {
+      className: "line-clamp-2"
+    }, /*#__PURE__*/React.createElement("strong", null, "\u26A1 Poder:"), " ", s.poder))), /*#__PURE__*/React.createElement("button", {
+      onClick: () => {
+        const confirma = confirm(`Tem certeza que deseja selar definitivamente a Shikai [${s.nome}] na sua alma?`);
+        if (confirma) escolherCaminhoEspiritual(c);
+      },
+      className: "w-full py-2.5 bg-gradient-to-r from-bleach-orange to-red-600 text-black font-extrabold text-xs uppercase rounded-lg shadow hover:brightness-110 transition"
+    }, "\u2728 Selar Esta Shikai Definitiva"));
+  }))) : /*#__PURE__*/React.createElement("div", {
     className: "p-8 text-center space-y-4 bg-black/60 rounded-2xl border border-bleach-border"
   }, /*#__PURE__*/React.createElement("div", {
     className: "text-5xl"
