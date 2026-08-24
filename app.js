@@ -4960,13 +4960,72 @@ function FichaView({
   const [editEsquadrao, setEditEsquadrao] = useState(personagem?.esquadrao || "11º Esquadrão");
   const [editZkNome, setEditZkNome] = useState(personagem?.zanpakuto?.nome || "");
 
-  // Personalidade Local State
-  const [persTexto, setPersTexto] = useState(personagem?.personalidade?.texto || "");
-  const [persVirtudes, setPersVirtudes] = useState(personagem?.personalidade?.virtudes || "");
-  const [persDefeitos, setPersDefeitos] = useState(personagem?.personalidade?.defeitos || "");
-  const [persDesejos, setPersDesejos] = useState(personagem?.personalidade?.desejos || "");
-  const [persMedos, setPersMedos] = useState(personagem?.personalidade?.medos || "");
-  const [persEstilo, setPersEstilo] = useState(personagem?.personalidade?.estiloCombate || "");
+  // Personalidade Local State with Auto-Draft Recovery
+  const [persTexto, setPersTexto] = useState(() => {
+    try {
+      const draft = localStorage.getItem(`bleach_pers_draft_${personagem?.id}`);
+      if (draft) return JSON.parse(draft).texto ?? (personagem?.personalidade?.texto || "");
+    } catch (e) {}
+    return personagem?.personalidade?.texto || "";
+  });
+  const [persVirtudes, setPersVirtudes] = useState(() => {
+    try {
+      const draft = localStorage.getItem(`bleach_pers_draft_${personagem?.id}`);
+      if (draft) return JSON.parse(draft).virtudes ?? (personagem?.personalidade?.virtudes || "");
+    } catch (e) {}
+    return personagem?.personalidade?.virtudes || "";
+  });
+  const [persDefeitos, setPersDefeitos] = useState(() => {
+    try {
+      const draft = localStorage.getItem(`bleach_pers_draft_${personagem?.id}`);
+      if (draft) return JSON.parse(draft).defeitos ?? (personagem?.personalidade?.defeitos || "");
+    } catch (e) {}
+    return personagem?.personalidade?.defeitos || "";
+  });
+  const [persDesejos, setPersDesejos] = useState(() => {
+    try {
+      const draft = localStorage.getItem(`bleach_pers_draft_${personagem?.id}`);
+      if (draft) return JSON.parse(draft).desejos ?? (personagem?.personalidade?.desejos || "");
+    } catch (e) {}
+    return personagem?.personalidade?.desejos || "";
+  });
+  const [persMedos, setPersMedos] = useState(() => {
+    try {
+      const draft = localStorage.getItem(`bleach_pers_draft_${personagem?.id}`);
+      if (draft) return JSON.parse(draft).medos ?? (personagem?.personalidade?.medos || "");
+    } catch (e) {}
+    return personagem?.personalidade?.medos || "";
+  });
+  const [persEstilo, setPersEstilo] = useState(() => {
+    try {
+      const draft = localStorage.getItem(`bleach_pers_draft_${personagem?.id}`);
+      if (draft) return JSON.parse(draft).estiloCombate ?? (personagem?.personalidade?.estiloCombate || "");
+    } catch (e) {}
+    return personagem?.personalidade?.estiloCombate || "";
+  });
+
+  // Handle personality change with instant auto-save to localStorage
+  function handlePersChange(field, val) {
+    if (field === 'texto') setPersTexto(val);
+    if (field === 'virtudes') setPersVirtudes(val);
+    if (field === 'defeitos') setPersDefeitos(val);
+    if (field === 'desejos') setPersDesejos(val);
+    if (field === 'medos') setPersMedos(val);
+    if (field === 'estilo') setPersEstilo(val);
+    try {
+      const draft = {
+        texto: field === 'texto' ? val : persTexto,
+        virtudes: field === 'virtudes' ? val : persVirtudes,
+        defeitos: field === 'defeitos' ? val : persDefeitos,
+        desejos: field === 'desejos' ? val : persDesejos,
+        medos: field === 'medos' ? val : persMedos,
+        estiloCombate: field === 'estilo' ? val : persEstilo
+      };
+      if (personagem?.id) {
+        localStorage.setItem(`bleach_pers_draft_${personagem.id}`, JSON.stringify(draft));
+      }
+    } catch (e) {}
+  }
 
   // Modais de Sorteio, Cena e Shikai/Bankai
   const [gachaModal, setGachaModal] = useState(null);
@@ -4982,10 +5041,12 @@ function FichaView({
       if (gachaIntervalRef.current) clearInterval(gachaIntervalRef.current);
     };
   }, []);
+  const lastCharIdRef = useRef(null);
 
-  // Synchronize state when character changes
+  // Synchronize state when character changes (only on mount or when switching character ID)
   useEffect(() => {
-    if (personagem) {
+    if (personagem && personagem.id !== lastCharIdRef.current) {
+      lastCharIdRef.current = personagem.id;
       setEditNome(personagem.nome || "");
       setEditWhats(personagem.whatsapp || "");
       setEditCodigo(personagem.codigo || "");
@@ -5000,14 +5061,27 @@ function FichaView({
       setEditRaca(personagem.raca || "Shinigami");
       setEditEsquadrao(personagem.esquadrao || "11º Esquadrão");
       setEditZkNome(personagem.zanpakuto?.nome || "");
-      setPersTexto(personagem.personalidade?.texto || "");
-      setPersVirtudes(personagem.personalidade?.virtudes || "");
-      setPersDefeitos(personagem.personalidade?.defeitos || "");
-      setPersDesejos(personagem.personalidade?.desejos || "");
-      setPersMedos(personagem.personalidade?.medos || "");
-      setPersEstilo(personagem.personalidade?.estiloCombate || "");
+      let initialPers = personagem.personalidade || {};
+      try {
+        const savedDraft = localStorage.getItem(`bleach_pers_draft_${personagem.id}`);
+        if (savedDraft) {
+          const parsed = JSON.parse(savedDraft);
+          if (parsed && typeof parsed === 'object') {
+            initialPers = {
+              ...initialPers,
+              ...parsed
+            };
+          }
+        }
+      } catch (e) {}
+      setPersTexto(initialPers.texto || "");
+      setPersVirtudes(initialPers.virtudes || "");
+      setPersDefeitos(initialPers.defeitos || "");
+      setPersDesejos(initialPers.desejos || "");
+      setPersMedos(initialPers.medos || "");
+      setPersEstilo(initialPers.estiloCombate || "");
     }
-  }, [personagem?.id, personagem?.zanpakuto?.shikaiAtiva, personagem?.zanpakuto?.bankaiAtiva]);
+  }, [personagem?.id]);
   if (!personagem) return /*#__PURE__*/React.createElement("div", {
     className: "text-bleach-muted"
   }, "Ficha n\xE3o encontrada.");
@@ -5065,6 +5139,20 @@ function FichaView({
     }, "🧠 Personalidade e DNA Espiritual selados definitivamente na alma");
     playReiatsuSound('shikai');
     alert("✨ Personalidade selada com sucesso! A sua essência agora servirá como base pura para a geração da sua Zanpakutō.");
+  }
+  function salvarRascunhoPersonalidade() {
+    const novaPersonalidade = {
+      texto: persTexto,
+      virtudes: persVirtudes,
+      defeitos: persDefeitos,
+      desejos: persDesejos,
+      medos: persMedos,
+      estiloCombate: persEstilo
+    };
+    updateChar({
+      personalidade: novaPersonalidade
+    }, "💾 Rascunho de personalidade atualizado");
+    alert("💾 Rascunho de personalidade salvo com sucesso! Você pode continuar digitando ou selar quando quiser.");
   }
   function destravarPersonalidadeAdm() {
     if (!isAdmin) return;
@@ -5765,7 +5853,7 @@ function FichaView({
     rows: 3,
     placeholder: "Descreva o temperamento, valores morais e postura do personagem...",
     value: persTexto,
-    onChange: e => setPersTexto(e.target.value),
+    onChange: e => handlePersChange('texto', e.target.value),
     className: "w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-3 text-white"
   })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", {
     className: "block font-bold text-green-400 mb-1"
@@ -5773,7 +5861,7 @@ function FichaView({
     type: "text",
     placeholder: "Ex: Lealdade extrema, paci\xEAncia t\xE1tica, coragem",
     value: persVirtudes,
-    onChange: e => setPersVirtudes(e.target.value),
+    onChange: e => handlePersChange('virtudes', e.target.value),
     className: "w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-2.5 text-white"
   })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", {
     className: "block font-bold text-purple-400 mb-1"
@@ -5781,7 +5869,7 @@ function FichaView({
     type: "text",
     placeholder: "Ex: Dificuldade de confiar, impulsividade, apego ao passado",
     value: persDefeitos,
-    onChange: e => setPersDefeitos(e.target.value),
+    onChange: e => handlePersChange('defeitos', e.target.value),
     className: "w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-2.5 text-white"
   })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", {
     className: "block font-bold text-cyan-400 mb-1"
@@ -5789,7 +5877,7 @@ function FichaView({
     type: "text",
     placeholder: "Ex: Proteger os companheiros, alcan\xE7ar a liberdade",
     value: persDesejos,
-    onChange: e => setPersDesejos(e.target.value),
+    onChange: e => handlePersChange('desejos', e.target.value),
     className: "w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-2.5 text-white"
   })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", {
     className: "block font-bold text-red-400 mb-1"
@@ -5797,13 +5885,16 @@ function FichaView({
     type: "text",
     placeholder: "Ex: Medo da impot\xEAncia, conflito entre dever e sentimento",
     value: persMedos,
-    onChange: e => setPersMedos(e.target.value),
+    onChange: e => handlePersChange('medos', e.target.value),
     className: "w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-2.5 text-white"
   }))), /*#__PURE__*/React.createElement("div", {
-    className: "pt-2 flex justify-end"
+    className: "pt-3 flex flex-wrap items-center justify-end gap-3 border-t border-white/5"
   }, /*#__PURE__*/React.createElement("button", {
+    onClick: salvarRascunhoPersonalidade,
+    className: "px-5 py-2.5 bg-bleach-panel2 border border-yellow-500/50 hover:border-yellow-400 text-yellow-300 font-bold text-xs uppercase rounded-xl transition"
+  }, "\uD83D\uDCBE Salvar Rascunho"), /*#__PURE__*/React.createElement("button", {
     onClick: selarPersonalidadeDefinitiva,
-    className: "px-6 py-3 bg-gradient-to-r from-bleach-orange to-yellow-500 text-black font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-lg hover:brightness-110 transition"
+    className: "px-6 py-2.5 bg-gradient-to-r from-bleach-orange to-yellow-500 text-black font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-lg hover:brightness-110 transition"
   }, "\uD83D\uDD12 Salvar & Selar Personalidade Definitiva na Alma")))), /*#__PURE__*/React.createElement(Section, {
     title: "Dados Cadastrais & Perfil Biogr\xE1fico",
     subtitle: "Informa\xE7\xF5es biogr\xE1ficas e civis do Shinigami"
