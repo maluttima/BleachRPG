@@ -1374,6 +1374,26 @@ const CATALOGO_KIDOS = [{
   "custoReiatsu": 12
 }];
 const PATCH_NOTES_HISTORY = [{
+  "versao": "5.1",
+  "titulo": "Atributos da Zanpakutō, Revelação de Capacidades & Equilíbrio Força x Resiliência",
+  "data": "24 de Agosto de 2026",
+  "destaque": "5 Atributos próprios da Zanpakutō (Controle, Alcance, Corte, Resiliência, Reiatsu Lâmina), Sistema Progressivo de Revelação de Capacidades Táticas e Simulador Interativo Força vs Resiliência.",
+  "banner": "assets/bleach-banner.png",
+  "resumo": "Uma atualização estrutural no sistema de combate que introduz atributos dedicados para a Zanpakutō calculados dinamicamente a partir dos atributos do Shinigami (Base 100), o sistema de revelação progressiva de capacidades táticas conforme a lâmina evolui, e a modelagem matemática completa da interação de Força contra Resiliência.",
+  "secoes": [{
+    "tipo": "novo",
+    "titulo": "⚔️ 5 Atributos Próprios da Zanpakutō (Base 100)",
+    "itens": ["✦ **Controle**: Define a precisão, maleabilidade e capacidade de moldar a geometria da arma (ex: arco variando flechas pequenas e rápidas, grandes de impacto ou fragmentadas em área).", "✦ **Alcance**: Distância efetiva da Shikai e escala territorial da Bankai (calculado em metros e quilômetros de alcance).", "✦ **Corte**: Poder de penetração/cisalhamento de Reishi para transpassar a Resiliência de defesas e corpos.", "✦ **Resiliência da Lâmina**: Durabilidade física e espiritual da espada contra impactos pesados para não trincar nem quebrar.", "✦ **Reiatsu da Lâmina & Modos Táticos**: A energia espiritual intrínseca da espada pode ser canalizada em **Absorção Espiritual** (buff temporário de Reiatsu para o Shinigami) ou **Ressonância de Impacto** (soma massiva de dano às técnicas)."]
+  }, {
+    "tipo": "novo",
+    "titulo": "👁️ Revelação Progressiva de Capacidades Táticas (Shikai & Bankai)",
+    "itens": ["✦ **Desbloqueio por Evolução de Atributos**: As capacidades não são liberadas instantaneamente, mas sim conforme a média dos atributos da Zanpakutō atinge patamares (100, 200, 400, 700 e 1100+ pts na Shikai; 300, 600, 1100 e 1800+ na Bankai).", "✦ **Aprofundamento Sem Criar Poderes Novos**: As capacidades aprofundam nuances táticas da mesma arma existente (densidade, velocidade, dispersão em curva, microvibração e fluxo instantâneo sem delay de canalização).", "✦ **Modal de Análise Tática**: Visualização gráfica completa com status de desbloqueio, requisitos restantes e recomendações de narração em ON."]
+  }, {
+    "tipo": "regras",
+    "titulo": "🛡️ Dinâmica de Combate: Força X Resiliência",
+    "itens": ["✦ **Regra de Absorção e Mitigação**: A Força do atacante define o impacto destrutivo; a Resiliência do defensor define a densidade de armadura de Reiatsu para sustentar o golpe.", "✦ **Tabela Oficial dos 4 Patamares**: 100%+ (Bloqueio Perfeito / 0-10% dano), 70-99% (Defesa Parcial / Recuo 2-5m / 15-35% dano), 40-69% (Ruptura de Guarda / Dano Severo 40-75% / risco de quebra de arma), <40% (Colapso Físico Devastador / 80-100%+ dano).", "✦ **Simulador Interativo de Impacto**: Ferramenta interativa na aba de Atributos que permite ao jogador testar qualquer valor de Força inimiga contra sua Resiliência atual com presets rápidos (Hollow, Sentinela, Tenente, Capitão, Espada, Comandante)."]
+  }]
+}, {
   "versao": "5.0",
   "titulo": "A Grande Gênese das Almas & Novo Regulamento Seireitei",
   "data": "23 de Agosto de 2026",
@@ -3186,6 +3206,224 @@ function gerar3BankaisEvolucaoAI(personagem, shikai, dbPersonagens = [], dbZanpa
     isExclusivo: true
   }));
 }
+
+// =========================================================================
+// SISTEMA DE ATRIBUTOS DA ZANPAKUTŌ & PROGRESSÃO DE CAPACIDADES TÁTICAS
+// =========================================================================
+
+function calcularAtributosZanpakuto(playerAttrs, isBankai = false) {
+  const p = Math.max(1, Number(playerAttrs?.pressao || 10));
+  const f = Math.max(1, Number(playerAttrs?.forca || 10));
+  const v = Math.max(1, Number(playerAttrs?.velocidade || 10));
+  const r = Math.max(1, Number(playerAttrs?.resiliencia || 10));
+
+  // Fórmulas Base 100
+  let controle = 100 + Math.round(v * 0.4 + p * 0.4 + f * 0.2);
+  let alcance = 100 + Math.round(p * 0.6 + v * 0.4);
+  let corte = 100 + Math.round(f * 0.6 + p * 0.4);
+  let resiliencia = 100 + Math.round(r * 0.7 + f * 0.3);
+  let pressaoEspiritual = 100 + Math.round(p * 0.8 + r * 0.2);
+  if (isBankai) {
+    controle = Math.round(controle * 2.8);
+    alcance = Math.round(alcance * 3.5);
+    corte = Math.round(corte * 3.2);
+    resiliencia = Math.round(resiliencia * 3.0);
+    pressaoEspiritual = Math.round(pressaoEspiritual * 3.5);
+  }
+  const media = Math.round((controle + alcance + corte + resiliencia + pressaoEspiritual) / 5);
+  let alcanceMetros = "10 a 25m (Curto Alcance / Projeção Direta)";
+  if (!isBankai) {
+    if (alcance >= 800) alcanceMetros = `${Math.round(alcance * 0.6)}m (Domínio de Área Expandida)`;else if (alcance >= 450) alcanceMetros = `${Math.round(alcance * 0.45)}m (Longo Alcance / Precisão Tática)`;else if (alcance >= 250) alcanceMetros = `${Math.round(alcance * 0.3)}m (Médio Alcance)`;else alcanceMetros = `${Math.round(alcance * 0.15 + 5)}m (Curto Alcance / Melee Espiritual)`;
+  } else {
+    if (alcance >= 2500) alcanceMetros = `${(alcance / 1000).toFixed(1)} km (Domínio Territorial Absoluto)`;else if (alcance >= 1200) alcanceMetros = `${Math.round(alcance * 0.8)}m (Domínio de Distrito)`;else alcanceMetros = `${Math.round(alcance * 0.5)}m (Domínio de Batalha Monumental)`;
+  }
+
+  // Modos de Pressão Espiritual da Zanpakutō
+  const bonusAbsorcaoReiatsu = Math.round(pressaoEspiritual * (isBankai ? 0.35 : 0.25));
+  const bonusDanoRessonancia = Math.round(pressaoEspiritual * (isBankai ? 0.55 : 0.40));
+  return {
+    controle,
+    alcance,
+    corte,
+    resiliencia,
+    pressaoEspiritual,
+    media,
+    alcanceMetros,
+    bonusAbsorcaoReiatsu,
+    bonusDanoRessonancia,
+    isBankai
+  };
+}
+function gerarCapacidadesTaticasZanpakuto(arma, statsZk, isBankai = false) {
+  const nome = arma?.nome || (isBankai ? "Bankai Soberana" : "Shikai Desperta");
+  const elemento = arma?.elemento || "Espiritual";
+  const formato = (arma?.formatoArma || arma?.aparencia || "").toLowerCase();
+  const poder = arma?.poder || "";
+  const isRanged = formato.includes("arco") || formato.includes("flecha") || formato.includes("disparo") || formato.includes("projétil") || formato.includes("agulha") || formato.includes("pistola") || formato.includes("canhão") || formato.includes("orbe");
+  const isHeavy = formato.includes("machado") || formato.includes("martelo") || formato.includes("nodachi") || formato.includes("pesad") || formato.includes("bastão") || formato.includes("montante");
+  const isFlexible = formato.includes("chicote") || formato.includes("corrente") || formato.includes("fita") || formato.includes("fio") || formato.includes("líquid") || formato.includes("névoa") || formato.includes("vento");
+  const reqShikai = [100, 200, 400, 700, 1100];
+  const reqBankai = [300, 600, 1100, 1800, 2600];
+  const reqs = isBankai ? reqBankai : reqShikai;
+  let niveis = [];
+  if (!isBankai) {
+    // SHIKAI TACTICAL PROGRESSION
+    niveis = [{
+      nivel: 1,
+      titulo: "Nível 1 — Fundamentos da Liberação & Projeção Primária",
+      req: reqs[0],
+      desbloqueado: statsZk.media >= reqs[0],
+      atributoChave: "Controle & Corte",
+      corAtributo: "#4FB3E8",
+      icone: "🗡️",
+      descricao: isRanged ? `Manifestação estável da forma de disparo de ${nome}. Permite projetar projéteis de ${elemento} em trajetória retilínea padrão, sincronizando o consumo de Reishi à cadência de respiração do Shinigami.` : `Canalização do fluxo de ${elemento} ao longo do corpo de ${nome}. Os golpes físicos agora transmitem a assinatura elemental básica, permitindo cortes estabilizados e defesa de postura.`,
+      aplicacaoTatica: isRanged ? "Disparos diretos de média distância com cadência constante. Ideal para sondar defesas e medir reflexos do inimigo." : "Cortes diretos de Zanjutsu fortalecidos com a energia elemental da arma. Mantém a lâmina alinhada sem desvio."
+    }, {
+      nivel: 2,
+      titulo: "Nível 2 — Moldagem Dinâmica & Variação de Densidade",
+      req: reqs[1],
+      desbloqueado: statsZk.media >= reqs[1],
+      atributoChave: "Controle",
+      corAtributo: "#5FA96B",
+      icone: "⚖️",
+      descricao: isRanged ? `Controle refinado da geometria dos disparos de ${nome}. O Shinigami pode modular instantaneamente o tipo de projétil: aumentar a massa da flecha para gerar impacto esmagador de recuo, afilar a ponta para disparos ultrarrápidos de perfuração imediata, ou alterar a velocidade de disparo em combate.` : isFlexible ? `Maleabilidade fluida de ${nome}. O Shinigami altera a rigidez da arma em fração de segundo: enrijece a estrutura para bloquear golpes pesados ou fluidifica para envolver e desarmar lâminas inimigas.` : `Modulação do peso e do gume de ${nome}. Permite alternar entre cortes de impacto denso (maior dano de contusão e choque) e cortes rápidos com fio ultrafino de Reishi para fatiar em alta velocidade.`,
+      aplicacaoTatica: "Alternância entre impacto/atordoamento vs velocidade/precisão dependendo se o oponente é ágil ou resistente."
+    }, {
+      nivel: 3,
+      titulo: "Nível 3 — Manipulação Fracionada & Curvatura Espiritual",
+      req: reqs[2],
+      desbloqueado: statsZk.media >= reqs[2],
+      atributoChave: "Alcance & Controle",
+      corAtributo: "#8B6FD6",
+      icone: "🌀",
+      descricao: isRanged ? `Dispersão multifacetada e curvatura de Reishi. ${nome} pode estilhaçar um único disparo em dezenas de fragmentos letais para cobrir uma área ampla aumentando o alcance, ou curvar a trajetória dos projéteis aproveitando as correntes de Reiatsu para atingir pontos cegos.` : `Extensão súbita e refração de corte. O fio de ${nome} projeta lâminas de ar comprimido com ${elemento}, permitindo golpear alvos fora do campo de visão direto ou criar leques de corte para neutralizar múltiplos agressores simultâneos.`,
+      aplicacaoTatica: "Ataques em curva ao redor de obstáculos e cobertura de área em leque, tornando esquivas lineares ineficazes."
+    }, {
+      nivel: 4,
+      titulo: "Nível 4 — Compressão Extrema & Cisalhamento de Resiliência",
+      req: reqs[3],
+      desbloqueado: statsZk.media >= reqs[3],
+      atributoChave: "Corte & Pressão Espiritual",
+      corAtributo: "#D6483F",
+      icone: "💥",
+      descricao: `Concentração molecular da Reiatsu de ${nome}. As partículas de ${elemento} entram em microvibração de altíssima frequência no ponto de contato. O poder de penetração ultrapassa armaduras de Reiatsu e reduz a eficácia da Resiliência defensiva do alvo pela metade.`,
+      aplicacaoTatica: "Golpe de perfuração crítica contra defesas impenetráveis, barreiras de Bakudō de alto nível ou Hierro resistente."
+    }, {
+      nivel: 5,
+      titulo: "Nível 5 — Harmonização Suprema & Fluxo Contínuo da Alma",
+      req: reqs[4],
+      desbloqueado: statsZk.media >= reqs[4],
+      atributoChave: "Resiliência & Maestria Total",
+      corAtributo: "#E0B34C",
+      icone: "👑",
+      descricao: `Sincronia absoluta entre a mente do Shinigami e o espírito de ${nome}. Não há mais tempo de canalização ou atraso postural: a arma responde na velocidade do pensamento. A lâmina regenera microfissuras instantaneamente e converte parte do choque sofrido em combustível para o próximo golpe.`,
+      aplicacaoTatica: "Transição contínua entre defesa inquebrável e ataque devastador sem brechas para contragolpe inimigo."
+    }];
+  } else {
+    // BANKAI TACTICAL PROGRESSION
+    niveis = [{
+      nivel: 1,
+      titulo: "Nível 1 — Domínio Bruto & Manifestação Macroespacial",
+      req: reqs[0],
+      desbloqueado: statsZk.media >= reqs[0],
+      atributoChave: "Alcance & Pressão Espiritual",
+      corAtributo: "#E0B34C",
+      icone: "卍",
+      descricao: `Liberação colossal da forma soberana de ${nome}. O campo de batalha é completamente submerso na regra e no ambiente de ${elemento}, impondo a presença espiritual da Bankai a todos os combatentes no território.`,
+      aplicacaoTatica: "Controle territorial imediato e intimidação espiritual que força o adversário a lutar sob suas regras de terreno."
+    }, {
+      nivel: 2,
+      titulo: "Nível 2 — Foco de Domínio & Densidade Concentrada",
+      req: reqs[1],
+      desbloqueado: statsZk.media >= reqs[1],
+      atributoChave: "Controle & Corte",
+      corAtributo: "#FF6A13",
+      icone: "🎯",
+      descricao: `Capacidade de concentrar o poder monumental de ${nome} de escala quilométrica em um raio cirúrgico de poucos metros. A densidade da Bankai atinge níveis críticos, multiplicando a letalidade contra alvos individuais sem destruição colateral desmedida.`,
+      aplicacaoTatica: "Colapso de energia em alvo único para neutralizar comandantes e chefes inimigos com potência concentrada."
+    }, {
+      nivel: 3,
+      titulo: "Nível 3 — Manipulação de Regra & Anulação de Brechas",
+      req: reqs[2],
+      desbloqueado: statsZk.media >= reqs[2],
+      atributoChave: "Resiliência & Controle",
+      corAtributo: "#8B6FD6",
+      icone: "🛡️",
+      descricao: `Refinamento da lei espiritual da Bankai ${nome}. O Shinigami elimina os intervalos de recarga e recalibração entre as ativações de poder, prevenindo que adversários perspicazes explorem a brecha estratégica declarada.`,
+      aplicacaoTatica: "Sustentação contínua da Bankai sob ataque cerrado, tornando inúteis as tentativas de contra-ataque rápido no intervalo de manobra."
+    }, {
+      nivel: 4,
+      titulo: "Nível 4 — Transcendência Espiritual & Compressão Final",
+      req: reqs[3],
+      desbloqueado: statsZk.media >= reqs[3],
+      atributoChave: "Pressão Espiritual & Soberania",
+      corAtributo: "#FFD700",
+      icone: "✨",
+      descricao: `Fusão transcendental onde toda a vastidão do território da Bankai é canalizada diretamente para o corpo e o fio da lâmina do Shinigami. Cada movimento distorce o espaço ao redor e manifesta o ápice da arte da espada de ${nome}.`,
+      aplicacaoTatica: "Forma de finalização absoluta. Golpe decisivo de impacto supremo com garantia de aniquilação tática."
+    }];
+  }
+  const desbloqueadosCount = niveis.filter(n => n.desbloqueado).length;
+  const proximoNivel = niveis.find(n => !n.desbloqueado) || null;
+  return {
+    niveis,
+    desbloqueadosCount,
+    totalNiveis: niveis.length,
+    proximoNivel,
+    mediaAtual: statsZk.media
+  };
+}
+function calcularRelacaoForcaResiliencia(forca, resiliencia) {
+  const f = Math.max(1, Number(forca || 10));
+  const r = Math.max(1, Number(resiliencia || 10));
+  const ratio = Number((r / f).toFixed(2));
+  const pct = Math.round(ratio * 100);
+  if (ratio >= 1.0) {
+    return {
+      ratio,
+      pct,
+      categoria: "Bloqueio Perfeito / Absorção Total",
+      cor: "#5FA96B",
+      danoRecebidoStr: "Dano Nulo ou Arranhões Superficiais (0% a 10%)",
+      efeitoPostura: "Postura Inabalável. O Shinigami sustenta o impacto sem recuar nem perder equilíbrio.",
+      riscoArma: "Nenhum risco de dano à lâmina da Zanpakutō.",
+      dicaTatica: "Sua Resiliência é igual ou superior à Força do golpe. É o momento ideal para aparar e emendar um contra-ataque imediato."
+    };
+  } else if (ratio >= 0.70) {
+    return {
+      ratio,
+      pct,
+      categoria: "Defesa Parcial / Dano Moderado",
+      cor: "#E0B34C",
+      danoRecebidoStr: "Dano Leve a Moderado (15% a 35%)",
+      efeitoPostura: "Recuo Forçado (2 a 5 metros). Contusões leves e impacto sentido nos braços.",
+      riscoArma: "Lâminas com baixa resiliência sofrem vibração e choque mecânico.",
+      dicaTatica: "Você mitiga a maior parte da força, mas cede terreno. Bom momento para reposicionamento com Hohō/Shunpo ou recuo estratégico."
+    };
+  } else if (ratio >= 0.40) {
+    return {
+      ratio,
+      pct,
+      categoria: "Ruptura de Guarda / Dano Severo",
+      cor: "#FF6A13",
+      danoRecebidoStr: "Dano Pesado & Crítico (40% a 75%)",
+      efeitoPostura: "Guarda Esmagada. Projeção violenta contra estruturas, trincas ósseas e perda temporária de fôlego.",
+      riscoArma: "Alto risco de trincar a arma ou lascar o fio se a Resiliência da espada for insuficiente.",
+      dicaTatica: "Extremamente arriscado tentar bloquear diretamente. Priorize esquivas acrobáticas, deflexão angular de corte ou Bakudō de barreira."
+    };
+  } else {
+    return {
+      ratio,
+      pct,
+      categoria: "Sobrepujamento Devastador / Colapso Físico",
+      cor: "#D6483F",
+      danoRecebidoStr: "Dano Devastador & Letal (80% a 100%+)",
+      efeitoPostura: "Colapso Defensivo Imediato. Fraturas expostas, concussão grave ou nocaute instantâneo.",
+      riscoArma: "Quebra iminente da Zanpakutō e aniquilação completa de proteções espirituais.",
+      dicaTatica: "Diferencial de força esmagador! Bloqueio frontal é suicídio. O Shinigami deve priorizar fuga tática ou auxílio de aliados."
+    };
+  }
+}
 if (typeof window !== 'undefined') {
   window.gerar4CaminhosZanpakutoAI = gerar4CaminhosZanpakutoAI;
   window.gerar4CaminhosZanpakutoAI_Async = gerar4CaminhosZanpakutoAI_Async;
@@ -3198,6 +3436,9 @@ if (typeof window !== 'undefined') {
   window.sintetizarZanpakutosCognitivo = sintetizarZanpakutosCognitivo;
   window.construirDnaEspiritual = construirDnaEspiritual;
   window.construirPromptChatGPT = construirPromptChatGPT;
+  window.calcularAtributosZanpakuto = calcularAtributosZanpakuto;
+  window.gerarCapacidadesTaticasZanpakuto = gerarCapacidadesTaticasZanpakuto;
+  window.calcularRelacaoForcaResiliencia = calcularRelacaoForcaResiliencia;
 }
 
 // =========================================================================
@@ -3827,6 +4068,103 @@ function Zanpakuto4PathsModal({
     onClick: () => onEscolherCaminho(caminhoSelecionado),
     className: "w-full py-3.5 bg-gradient-to-r from-bleach-orange to-yellow-500 text-black font-extrabold text-xs uppercase tracking-widest rounded-xl shadow-lg hover:brightness-110 transition"
   }, "\u2713 Entrar na Sociedade das Almas com sua Zanpakut\u014D")))));
+}
+
+// 4. MODAL DE REVELAÇÃO PROGRESSIVA DE CAPACIDADES TÁTICAS (SHIKAI & BANKAI)
+function CapacidadesZanpakutoModal({
+  modalData,
+  onClose
+}) {
+  if (!modalData) return null;
+  const {
+    isBankai,
+    arma,
+    statsZk,
+    caps
+  } = modalData;
+  const nomeZk = arma?.nome || (isBankai ? "Bankai Soberana" : "Shikai Desperta");
+  const elemento = arma?.elemento || "Espiritual";
+  return /*#__PURE__*/React.createElement("div", {
+    className: "fixed inset-0 bg-black/90 backdrop-blur-lg z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: `relative w-full max-w-3xl bg-bleach-panel border-2 rounded-2xl p-5 sm:p-7 shadow-2xl space-y-5 my-auto ${isBankai ? "border-yellow-500/80 bankai-supreme-card" : "border-cyan-500/80 reiatsu-glow"}`
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flex items-start justify-between gap-3 border-b border-white/10 pb-4"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "flex flex-wrap items-center gap-2 mb-1.5"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: `text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full border tracking-wider ${isBankai ? "bg-amber-950 text-yellow-300 border-yellow-400" : "bg-blue-950 text-cyan-300 border-cyan-400"}`
+  }, isBankai ? "卍 Domínio & Transcendência de Bankai" : "始解 Capacidades & Maestria Tática de Shikai"), /*#__PURE__*/React.createElement(Badge, {
+    color: isBankai ? C.yellow : C.blue
+  }, elemento)), /*#__PURE__*/React.createElement("h3", {
+    className: "font-title text-2xl sm:text-3xl text-white tracking-wider flex items-center gap-2"
+  }, /*#__PURE__*/React.createElement("span", null, nomeZk), /*#__PURE__*/React.createElement("span", {
+    className: "text-xs font-sans text-bleach-creamDim"
+  }, "(M\xE9dia Zanpakut\u014D: ", /*#__PURE__*/React.createElement("strong", {
+    className: isBankai ? "text-yellow-400 font-mono" : "text-cyan-400 font-mono"
+  }, statsZk?.media || 100, " pts"), ")")), /*#__PURE__*/React.createElement("p", {
+    className: "text-xs text-bleach-creamDim mt-1 leading-relaxed"
+  }, isBankai ? "Conforme a magnitude e a ressonância da Bankai se elevam, novos graus de controle territorial e compressão de regras são desbloqueados." : "Conforme os atributos da Zanpakutō evoluem, o Shinigami domina nuances táticas profundas de moldagem, fragmentação e penetração da lâmina sem alterar o poder base.")), /*#__PURE__*/React.createElement("button", {
+    onClick: onClose,
+    className: "p-2 rounded-xl bg-bleach-panel2 text-bleach-creamDim hover:text-white border border-white/10 hover:border-bleach-orange transition text-sm"
+  }, "\u2715")), /*#__PURE__*/React.createElement("div", {
+    className: "p-3 bg-black/60 rounded-xl border border-white/10 flex flex-wrap items-center justify-between gap-3 text-xs"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flex items-center gap-2"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "text-bleach-muted"
+  }, "Grau de Despertar:"), /*#__PURE__*/React.createElement("span", {
+    className: `font-mono font-extrabold px-2.5 py-0.5 rounded-full text-xs border ${isBankai ? "bg-yellow-950/80 text-yellow-300 border-yellow-400" : "bg-cyan-950/80 text-cyan-300 border-cyan-400"}`
+  }, caps?.desbloqueadosCount || 1, " de ", caps?.totalNiveis || 5, " N\xEDveis Despertados")), caps?.proximoNivel ? /*#__PURE__*/React.createElement("div", {
+    className: "text-[11px] text-amber-300"
+  }, "\uD83D\uDD12 Pr\xF3ximo N\xEDvel (Nv. ", caps.proximoNivel.nivel, "): Necess\xE1rio m\xE9dia de ", /*#__PURE__*/React.createElement("strong", {
+    className: "font-mono"
+  }, caps.proximoNivel.req, " pts"), " (Faltam ", /*#__PURE__*/React.createElement("strong", {
+    className: "font-mono"
+  }, Math.max(0, caps.proximoNivel.req - (statsZk?.media || 0)), " pts"), ")") : /*#__PURE__*/React.createElement("div", {
+    className: "text-[11px] text-green-400 font-bold flex items-center gap-1"
+  }, /*#__PURE__*/React.createElement("span", null, "\u2728"), " MAESTRIA SUPREMA TOTALMENTE CONQUISTADA!")), /*#__PURE__*/React.createElement("div", {
+    className: "space-y-3.5 max-h-[55vh] overflow-y-auto pr-1"
+  }, (caps?.niveis || []).map(n => /*#__PURE__*/React.createElement("div", {
+    key: n.nivel,
+    className: `p-4 rounded-xl border-2 transition ${n.desbloqueado ? isBankai ? "bg-gradient-to-r from-amber-950/40 via-black to-bleach-panel border-yellow-500/60 shadow-lg" : "bg-gradient-to-r from-cyan-950/30 via-black to-bleach-panel border-cyan-500/60 shadow-lg" : "bg-black/50 border-white/10 opacity-60"}`
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-2 mb-2.5"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flex items-center gap-2"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "text-xl"
+  }, n.icone), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h4", {
+    className: `text-sm font-bold tracking-wide ${n.desbloqueado ? "text-white" : "text-bleach-muted"}`
+  }, n.titulo), /*#__PURE__*/React.createElement("div", {
+    className: "flex items-center gap-2 mt-0.5"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "text-[10px] uppercase font-bold",
+    style: {
+      color: n.corAtributo
+    }
+  }, "Atributo Chave: ", n.atributoChave), /*#__PURE__*/React.createElement("span", {
+    className: "text-[10px] text-bleach-muted font-mono"
+  }, "(Requer m\xE9dia ", n.req, " pts)")))), /*#__PURE__*/React.createElement("div", null, n.desbloqueado ? /*#__PURE__*/React.createElement("span", {
+    className: "text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-green-950 text-green-300 border border-green-500 flex items-center gap-1"
+  }, /*#__PURE__*/React.createElement("span", null, "\u2713"), " Desperto") : /*#__PURE__*/React.createElement("span", {
+    className: "text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-red-950/80 text-red-300 border border-red-500/50 flex items-center gap-1"
+  }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDD12"), " Bloqueado (", n.req, " pts)"))), /*#__PURE__*/React.createElement("div", {
+    className: "space-y-2 text-xs"
+  }, /*#__PURE__*/React.createElement("p", {
+    className: "text-bleach-creamDim leading-relaxed"
+  }, n.descricao), /*#__PURE__*/React.createElement("div", {
+    className: "p-2.5 bg-black/70 rounded-lg border border-white/5 space-y-1"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "text-[10px] font-extrabold uppercase text-bleach-orange flex items-center gap-1"
+  }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDCA1"), " Aplica\xE7\xE3o em Combate / Narra\xE7\xE3o em ON:"), /*#__PURE__*/React.createElement("p", {
+    className: "text-[11px] text-bleach-cream leading-snug"
+  }, n.aplicacaoTatica)))))), /*#__PURE__*/React.createElement("div", {
+    className: "flex justify-end pt-2 border-t border-white/10"
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: onClose,
+    className: "px-6 py-2 bg-bleach-panel2 hover:bg-bleach-border text-white text-xs font-bold rounded-xl transition border border-white/10"
+  }, "Fechar Janela"))));
 }
 
 // =========================================================================
@@ -5035,6 +5373,8 @@ function FichaView({
   const [aiZkTipo, setAiZkTipo] = useState("shikai");
   const [aiZkLoading, setAiZkLoading] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
+  const [showCapacidadesModal, setShowCapacidadesModal] = useState(null);
+  const [simForcaInimiga, setSimForcaInimiga] = useState(80);
   const gachaIntervalRef = useRef(null);
   useEffect(() => {
     return () => {
@@ -6061,7 +6401,160 @@ function FichaView({
       className: "text-cyan-300 text-xs uppercase tracking-wider flex items-center gap-1.5"
     }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDCDC"), " Cena de Despertar da Shikai:"), /*#__PURE__*/React.createElement("p", {
       className: "text-xs text-bleach-creamDim italic leading-relaxed"
-    }, "\"", personagem.cenaDespertarShikai, "\"")));
+    }, "\"", personagem.cenaDespertarShikai, "\"")), (() => {
+      const statsZk = calcularAtributosZanpakuto(personagem.atributos, false);
+      const caps = gerarCapacidadesTaticasZanpakuto(s, statsZk, false);
+      return /*#__PURE__*/React.createElement("div", {
+        className: "p-4 sm:p-5 bg-gradient-to-b from-black/90 via-bleach-panel to-black rounded-2xl border-2 border-cyan-500/50 space-y-4 shadow-xl mt-4"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3"
+      }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+        className: "text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-500/60 tracking-wider"
+      }, "\u2726 Atributos Espirituais da Shikai (Base 100)"), /*#__PURE__*/React.createElement("h4", {
+        className: "font-title text-xl text-white mt-1 flex items-center gap-2"
+      }, /*#__PURE__*/React.createElement("span", null, "\u2694\uFE0F"), " For\xE7a & Sintoniza\xE7\xE3o da L\xE2mina"), /*#__PURE__*/React.createElement("p", {
+        className: "text-[11px] text-bleach-creamDim"
+      }, "Escalados dinamicamente com os atributos do Shinigami. M\xE9dia Atual: ", /*#__PURE__*/React.createElement("strong", {
+        className: "text-cyan-400 font-mono"
+      }, statsZk.media, " pts"))), /*#__PURE__*/React.createElement("button", {
+        type: "button",
+        onClick: () => setShowCapacidadesModal({
+          isBankai: false,
+          arma: s,
+          statsZk,
+          caps
+        }),
+        className: "px-4 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-extrabold text-xs rounded-xl shadow-lg transition flex items-center gap-2 border border-cyan-300/40 reiatsu-glow"
+      }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDC41\uFE0F"), " Revelar Capacidades", /*#__PURE__*/React.createElement("span", {
+        className: "px-2 py-0.5 rounded-full bg-black/70 text-cyan-300 font-mono text-[10px] border border-cyan-400"
+      }, caps.desbloqueadosCount, "/", caps.totalNiveis, " Despertas"))), /*#__PURE__*/React.createElement("div", {
+        className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5 text-xs"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "p-3 bg-bleach-panel2 rounded-xl border border-cyan-500/30 flex flex-col justify-between"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "flex items-center justify-between mb-1"
+      }, /*#__PURE__*/React.createElement("span", {
+        className: "text-[11px] font-extrabold uppercase text-cyan-400 flex items-center gap-1"
+      }, /*#__PURE__*/React.createElement("span", null, "\uD83C\uDFAF"), " Controle"), /*#__PURE__*/React.createElement("span", {
+        className: "font-mono font-bold text-sm text-cyan-300"
+      }, statsZk.controle)), /*#__PURE__*/React.createElement("p", {
+        className: "text-[10px] text-bleach-muted mb-2 leading-tight"
+      }, "Moldagem de forma, varia\xE7\xE3o de tamanho, peso e precis\xE3o da t\xE9cnica."), /*#__PURE__*/React.createElement("div", {
+        className: "w-full bg-black/60 h-1.5 rounded-full overflow-hidden"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "h-full bg-cyan-400 rounded-full",
+        style: {
+          width: `${Math.min(100, statsZk.controle / 500 * 100)}%`
+        }
+      }))), /*#__PURE__*/React.createElement("div", {
+        className: "p-3 bg-bleach-panel2 rounded-xl border border-blue-500/30 flex flex-col justify-between"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "flex items-center justify-between mb-1"
+      }, /*#__PURE__*/React.createElement("span", {
+        className: "text-[11px] font-extrabold uppercase text-blue-400 flex items-center gap-1"
+      }, /*#__PURE__*/React.createElement("span", null, "\uD83C\uDFF9"), " Alcance"), /*#__PURE__*/React.createElement("span", {
+        className: "font-mono font-bold text-sm text-blue-300"
+      }, statsZk.alcance)), /*#__PURE__*/React.createElement("p", {
+        className: "text-[10px] text-bleach-muted mb-1 leading-tight"
+      }, "Dist\xE2ncia m\xE1xima da habilidade."), /*#__PURE__*/React.createElement("span", {
+        className: "text-[10px] text-blue-300 font-semibold mb-2 block truncate"
+      }, statsZk.alcanceMetros), /*#__PURE__*/React.createElement("div", {
+        className: "w-full bg-black/60 h-1.5 rounded-full overflow-hidden"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "h-full bg-blue-400 rounded-full",
+        style: {
+          width: `${Math.min(100, statsZk.alcance / 500 * 100)}%`
+        }
+      }))), /*#__PURE__*/React.createElement("div", {
+        className: "p-3 bg-bleach-panel2 rounded-xl border border-red-500/30 flex flex-col justify-between"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "flex items-center justify-between mb-1"
+      }, /*#__PURE__*/React.createElement("span", {
+        className: "text-[11px] font-extrabold uppercase text-red-400 flex items-center gap-1"
+      }, /*#__PURE__*/React.createElement("span", null, "\u2694\uFE0F"), " Corte"), /*#__PURE__*/React.createElement("span", {
+        className: "font-mono font-bold text-sm text-red-300"
+      }, statsZk.corte)), /*#__PURE__*/React.createElement("p", {
+        className: "text-[10px] text-bleach-muted mb-2 leading-tight"
+      }, "Poder de penetra\xE7\xE3o para transpassar a resili\xEAncia de alvos."), /*#__PURE__*/React.createElement("div", {
+        className: "w-full bg-black/60 h-1.5 rounded-full overflow-hidden"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "h-full bg-red-400 rounded-full",
+        style: {
+          width: `${Math.min(100, statsZk.corte / 500 * 100)}%`
+        }
+      }))), /*#__PURE__*/React.createElement("div", {
+        className: "p-3 bg-bleach-panel2 rounded-xl border border-purple-500/30 flex flex-col justify-between"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "flex items-center justify-between mb-1"
+      }, /*#__PURE__*/React.createElement("span", {
+        className: "text-[11px] font-extrabold uppercase text-purple-400 flex items-center gap-1"
+      }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDEE1\uFE0F"), " Resili\xEAncia"), /*#__PURE__*/React.createElement("span", {
+        className: "font-mono font-bold text-sm text-purple-300"
+      }, statsZk.resiliencia)), /*#__PURE__*/React.createElement("p", {
+        className: "text-[10px] text-bleach-muted mb-2 leading-tight"
+      }, "Durabilidade contra impactos pesados para n\xE3o trincar/quebrar."), /*#__PURE__*/React.createElement("div", {
+        className: "w-full bg-black/60 h-1.5 rounded-full overflow-hidden"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "h-full bg-purple-400 rounded-full",
+        style: {
+          width: `${Math.min(100, statsZk.resiliencia / 500 * 100)}%`
+        }
+      }))), /*#__PURE__*/React.createElement("div", {
+        className: "p-3 bg-bleach-panel2 rounded-xl border border-yellow-500/30 flex flex-col justify-between"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "flex items-center justify-between mb-1"
+      }, /*#__PURE__*/React.createElement("span", {
+        className: "text-[11px] font-extrabold uppercase text-yellow-400 flex items-center gap-1"
+      }, /*#__PURE__*/React.createElement("span", null, "\uD83C\uDF0C"), " Reiatsu L\xE2mina"), /*#__PURE__*/React.createElement("span", {
+        className: "font-mono font-bold text-sm text-yellow-300"
+      }, statsZk.pressaoEspiritual)), /*#__PURE__*/React.createElement("p", {
+        className: "text-[10px] text-bleach-muted mb-2 leading-tight"
+      }, "Energia intr\xEDnseca para Absor\xE7\xE3o ou Resson\xE2ncia de Dano."), /*#__PURE__*/React.createElement("div", {
+        className: "w-full bg-black/60 h-1.5 rounded-full overflow-hidden"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "h-full bg-yellow-400 rounded-full",
+        style: {
+          width: `${Math.min(100, statsZk.pressaoEspiritual / 500 * 100)}%`
+        }
+      })))), /*#__PURE__*/React.createElement("div", {
+        className: "p-3.5 bg-black/80 rounded-xl border border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "space-y-1"
+      }, /*#__PURE__*/React.createElement("strong", {
+        className: "text-yellow-400 uppercase tracking-wider flex items-center gap-1.5 text-xs"
+      }, /*#__PURE__*/React.createElement("span", null, "\u26A1"), " Din\xE2mica de Aplica\xE7\xE3o de Reiatsu da Zanpakut\u014D:"), /*#__PURE__*/React.createElement("p", {
+        className: "text-bleach-creamDim text-[11px]"
+      }, "A energia espiritual da l\xE2mina pode ser canalizada em 2 modalidades de combate:")), /*#__PURE__*/React.createElement("div", {
+        className: "flex flex-wrap items-center gap-2"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "p-2 bg-bleach-panel rounded-lg border border-cyan-500/40 text-[11px]"
+      }, /*#__PURE__*/React.createElement("span", {
+        className: "text-cyan-300 font-bold block"
+      }, "\uD83D\uDCAB Absor\xE7\xE3o Espiritual"), /*#__PURE__*/React.createElement("span", {
+        className: "text-bleach-muted"
+      }, "Eleva a Reiatsu do Shinigami em ", /*#__PURE__*/React.createElement("strong", {
+        className: "text-white font-mono"
+      }, "+", statsZk.bonusAbsorcaoReiatsu))), /*#__PURE__*/React.createElement("div", {
+        className: "p-2 bg-bleach-panel rounded-lg border border-red-500/40 text-[11px]"
+      }, /*#__PURE__*/React.createElement("span", {
+        className: "text-red-300 font-bold block"
+      }, "\uD83D\uDCA5 Resson\xE2ncia de Impacto"), /*#__PURE__*/React.createElement("span", {
+        className: "text-bleach-muted"
+      }, "Soma ", /*#__PURE__*/React.createElement("strong", {
+        className: "text-white font-mono"
+      }, "+", statsZk.bonusDanoRessonancia), " de dano \xE0s t\xE9cnicas")))), /*#__PURE__*/React.createElement("div", {
+        className: "p-3 bg-bleach-panel2/60 rounded-xl border border-white/5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "flex items-center gap-2 flex-wrap"
+      }, /*#__PURE__*/React.createElement("span", {
+        className: "text-bleach-muted text-[11px]"
+      }, "Marcos de Capacidade:"), caps.niveis.map(n => /*#__PURE__*/React.createElement("span", {
+        key: n.nivel,
+        className: `px-2 py-0.5 rounded text-[10px] font-mono font-bold flex items-center gap-1 ${n.desbloqueado ? "bg-green-950 text-green-300 border border-green-500/60" : "bg-black/60 text-bleach-muted border border-white/10"}`
+      }, /*#__PURE__*/React.createElement("span", null, n.desbloqueado ? "✓" : "🔒"), " Nv.", n.nivel, " (", n.req, " pts)"))), caps.proximoNivel && /*#__PURE__*/React.createElement("span", {
+        className: "text-[11px] text-amber-300"
+      }, "Pr\xF3ximo Despertar: ", /*#__PURE__*/React.createElement("strong", null, "Nv.", caps.proximoNivel.nivel), " aos ", /*#__PURE__*/React.createElement("strong", null, caps.proximoNivel.req, " pts"), " de m\xE9dia.")));
+    })());
   })(), temBankai ? (() => {
     const b = personagem.zanpakuto.bankaiAtiva;
     return /*#__PURE__*/React.createElement("div", {
@@ -6162,13 +6655,149 @@ function FichaView({
         width: `${(stat.val || 10) * 10}%`,
         backgroundColor: stat.color
       }
-    })))))), /*#__PURE__*/React.createElement(BleachSwordArt, {
-      arma: b,
-      nomeZk: b.nome,
-      isBankai: true,
-      foto: personagem.zanpakuto?.fotoBankai,
-      onUpload: e => handleFotoUpload(e, "bankai")
-    }), personagem.cenaDespertarBankai && /*#__PURE__*/React.createElement("div", {
+    })))))), (() => {
+      const statsZk = calcularAtributosZanpakuto(personagem.atributos, true);
+      const caps = gerarCapacidadesTaticasZanpakuto(b, statsZk, true);
+      return /*#__PURE__*/React.createElement("div", {
+        className: "p-4 sm:p-5 bg-gradient-to-b from-amber-950/40 via-black to-bleach-panel rounded-2xl border-2 border-yellow-500/60 space-y-4 shadow-2xl mt-4"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "flex flex-wrap items-center justify-between gap-2 border-b border-yellow-500/30 pb-3"
+      }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+        className: "text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded bg-amber-950 text-yellow-300 border border-yellow-400 tracking-wider"
+      }, "\u534D Atributos de Dom\xEDnio Transcendental (Escala Bankai)"), /*#__PURE__*/React.createElement("h4", {
+        className: "font-title text-xl text-yellow-300 mt-1 flex items-center gap-2"
+      }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDC51"), " Soberania Espiritual & Magnitude de Territ\xF3rio"), /*#__PURE__*/React.createElement("p", {
+        className: "text-[11px] text-bleach-creamDim"
+      }, "Multiplicador de magnitude can\xF4nica de Bankai. M\xE9dia Transcendental: ", /*#__PURE__*/React.createElement("strong", {
+        className: "text-yellow-400 font-mono"
+      }, statsZk.media, " pts"))), /*#__PURE__*/React.createElement("button", {
+        type: "button",
+        onClick: () => setShowCapacidadesModal({
+          isBankai: true,
+          arma: b,
+          statsZk,
+          caps
+        }),
+        className: "px-4 py-2 bg-gradient-to-r from-amber-600 to-yellow-500 hover:from-amber-500 hover:to-yellow-400 text-black font-extrabold text-xs rounded-xl shadow-lg transition flex items-center gap-2 border border-yellow-300"
+      }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDC41\uFE0F"), " Revelar Capacidades", /*#__PURE__*/React.createElement("span", {
+        className: "px-2 py-0.5 rounded-full bg-black/80 text-yellow-300 font-mono text-[10px] border border-yellow-500"
+      }, caps.desbloqueadosCount, "/", caps.totalNiveis, " Soberanias"))), /*#__PURE__*/React.createElement("div", {
+        className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5 text-xs"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "p-3 bg-bleach-panel2 rounded-xl border border-yellow-500/30 flex flex-col justify-between"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "flex items-center justify-between mb-1"
+      }, /*#__PURE__*/React.createElement("span", {
+        className: "text-[11px] font-extrabold uppercase text-yellow-400 flex items-center gap-1"
+      }, /*#__PURE__*/React.createElement("span", null, "\uD83C\uDFAF"), " Controle Soberano"), /*#__PURE__*/React.createElement("span", {
+        className: "font-mono font-bold text-sm text-yellow-300"
+      }, statsZk.controle)), /*#__PURE__*/React.createElement("p", {
+        className: "text-[10px] text-bleach-muted mb-2 leading-tight"
+      }, "Manipula\xE7\xE3o macrosc\xF3pica de leis e foco concentrado de energia."), /*#__PURE__*/React.createElement("div", {
+        className: "w-full bg-black/60 h-1.5 rounded-full overflow-hidden"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "h-full bg-yellow-400 rounded-full",
+        style: {
+          width: `${Math.min(100, statsZk.controle / 1500 * 100)}%`
+        }
+      }))), /*#__PURE__*/React.createElement("div", {
+        className: "p-3 bg-bleach-panel2 rounded-xl border border-blue-500/30 flex flex-col justify-between"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "flex items-center justify-between mb-1"
+      }, /*#__PURE__*/React.createElement("span", {
+        className: "text-[11px] font-extrabold uppercase text-cyan-400 flex items-center gap-1"
+      }, /*#__PURE__*/React.createElement("span", null, "\uD83C\uDFF9"), " Alcance Territorial"), /*#__PURE__*/React.createElement("span", {
+        className: "font-mono font-bold text-sm text-cyan-300"
+      }, statsZk.alcance)), /*#__PURE__*/React.createElement("p", {
+        className: "text-[10px] text-bleach-muted mb-1 leading-tight"
+      }, "Expans\xE3o espacial da regra."), /*#__PURE__*/React.createElement("span", {
+        className: "text-[10px] text-cyan-300 font-semibold mb-2 block truncate"
+      }, statsZk.alcanceMetros), /*#__PURE__*/React.createElement("div", {
+        className: "w-full bg-black/60 h-1.5 rounded-full overflow-hidden"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "h-full bg-cyan-400 rounded-full",
+        style: {
+          width: `${Math.min(100, statsZk.alcance / 1500 * 100)}%`
+        }
+      }))), /*#__PURE__*/React.createElement("div", {
+        className: "p-3 bg-bleach-panel2 rounded-xl border border-red-500/30 flex flex-col justify-between"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "flex items-center justify-between mb-1"
+      }, /*#__PURE__*/React.createElement("span", {
+        className: "text-[11px] font-extrabold uppercase text-red-400 flex items-center gap-1"
+      }, /*#__PURE__*/React.createElement("span", null, "\u2694\uFE0F"), " Corte Transcendental"), /*#__PURE__*/React.createElement("span", {
+        className: "font-mono font-bold text-sm text-red-300"
+      }, statsZk.corte)), /*#__PURE__*/React.createElement("p", {
+        className: "text-[10px] text-bleach-muted mb-2 leading-tight"
+      }, "Poder de aniquila\xE7\xE3o e ruptura at\xF4mica contra qualquer barreira."), /*#__PURE__*/React.createElement("div", {
+        className: "w-full bg-black/60 h-1.5 rounded-full overflow-hidden"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "h-full bg-red-400 rounded-full",
+        style: {
+          width: `${Math.min(100, statsZk.corte / 1500 * 100)}%`
+        }
+      }))), /*#__PURE__*/React.createElement("div", {
+        className: "p-3 bg-bleach-panel2 rounded-xl border border-purple-500/30 flex flex-col justify-between"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "flex items-center justify-between mb-1"
+      }, /*#__PURE__*/React.createElement("span", {
+        className: "text-[11px] font-extrabold uppercase text-purple-400 flex items-center gap-1"
+      }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDEE1\uFE0F"), " Resili\xEAncia Monumental"), /*#__PURE__*/React.createElement("span", {
+        className: "font-mono font-bold text-sm text-purple-300"
+      }, statsZk.resiliencia)), /*#__PURE__*/React.createElement("p", {
+        className: "text-[10px] text-bleach-muted mb-2 leading-tight"
+      }, "Estrutura praticamente inquebr\xE1vel sustentada por Reishi massivo."), /*#__PURE__*/React.createElement("div", {
+        className: "w-full bg-black/60 h-1.5 rounded-full overflow-hidden"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "h-full bg-purple-400 rounded-full",
+        style: {
+          width: `${Math.min(100, statsZk.resiliencia / 1500 * 100)}%`
+        }
+      }))), /*#__PURE__*/React.createElement("div", {
+        className: "p-3 bg-bleach-panel2 rounded-xl border border-yellow-500/30 flex flex-col justify-between"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "flex items-center justify-between mb-1"
+      }, /*#__PURE__*/React.createElement("span", {
+        className: "text-[11px] font-extrabold uppercase text-yellow-300 flex items-center gap-1"
+      }, /*#__PURE__*/React.createElement("span", null, "\uD83C\uDF0C"), " Reiatsu Soberana"), /*#__PURE__*/React.createElement("span", {
+        className: "font-mono font-bold text-sm text-yellow-200"
+      }, statsZk.pressaoEspiritual)), /*#__PURE__*/React.createElement("p", {
+        className: "text-[10px] text-bleach-muted mb-2 leading-tight"
+      }, "Sobrecarga massiva para finaliza\xE7\xF5es lend\xE1rias e buffs colossais."), /*#__PURE__*/React.createElement("div", {
+        className: "w-full bg-black/60 h-1.5 rounded-full overflow-hidden"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "h-full bg-yellow-300 rounded-full",
+        style: {
+          width: `${Math.min(100, statsZk.pressaoEspiritual / 1500 * 100)}%`
+        }
+      })))), /*#__PURE__*/React.createElement("div", {
+        className: "p-3.5 bg-black/80 rounded-xl border border-yellow-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "space-y-1"
+      }, /*#__PURE__*/React.createElement("strong", {
+        className: "text-yellow-300 uppercase tracking-wider flex items-center gap-1.5 text-xs"
+      }, /*#__PURE__*/React.createElement("span", null, "\u26A1"), " Din\xE2mica de Aplica\xE7\xE3o de Reiatsu da Bankai:"), /*#__PURE__*/React.createElement("p", {
+        className: "text-bleach-creamDim text-[11px]"
+      }, "A densidade espiritual da Bankai confere b\xF4nus de magnitude transcendental:")), /*#__PURE__*/React.createElement("div", {
+        className: "flex flex-wrap items-center gap-2"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "p-2 bg-bleach-panel rounded-lg border border-amber-500/40 text-[11px]"
+      }, /*#__PURE__*/React.createElement("span", {
+        className: "text-amber-300 font-bold block"
+      }, "\uD83D\uDCAB Absor\xE7\xE3o Transcendental"), /*#__PURE__*/React.createElement("span", {
+        className: "text-bleach-muted"
+      }, "Eleva a Reiatsu do Shinigami em ", /*#__PURE__*/React.createElement("strong", {
+        className: "text-white font-mono"
+      }, "+", statsZk.bonusAbsorcaoReiatsu))), /*#__PURE__*/React.createElement("div", {
+        className: "p-2 bg-bleach-panel rounded-lg border border-red-500/40 text-[11px]"
+      }, /*#__PURE__*/React.createElement("span", {
+        className: "text-red-300 font-bold block"
+      }, "\uD83D\uDCA5 Resson\xE2ncia Suprema"), /*#__PURE__*/React.createElement("span", {
+        className: "text-bleach-muted"
+      }, "Soma ", /*#__PURE__*/React.createElement("strong", {
+        className: "text-white font-mono"
+      }, "+", statsZk.bonusDanoRessonancia), " de dano final")))));
+    })(), personagem.cenaDespertarBankai && /*#__PURE__*/React.createElement("div", {
       className: "p-4 bg-black/70 border border-yellow-500/40 rounded-xl space-y-1.5 mt-3"
     }, /*#__PURE__*/React.createElement("strong", {
       className: "text-yellow-400 text-xs uppercase tracking-wider flex items-center gap-1.5"
@@ -6405,7 +7034,177 @@ function FichaView({
         backgroundColor: a.color
       }
     })));
-  })))), subPaginaFicha === "kidos" && /*#__PURE__*/React.createElement("div", {
+  }))), /*#__PURE__*/React.createElement(Section, {
+    title: "\uD83D\uDEE1\uFE0F Equil\xEDbrio T\xE1tico de Combate: For\xE7a X Resili\xEAncia",
+    subtitle: "Regra de impacto, mitiga\xE7\xE3o de choque e integridade f\xEDsica na Sociedade das Almas",
+    className: "border-2 border-purple-500/50"
+  }, (() => {
+    const resilienciaAtual = Number(personagem.atributos?.resiliencia || 10);
+    const forcaAtual = Number(personagem.atributos?.forca || 10);
+    const analiseSimulada = calcularRelacaoForcaResiliencia(simForcaInimiga, resilienciaAtual);
+    return /*#__PURE__*/React.createElement("div", {
+      className: "space-y-5"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "p-4 bg-black/80 rounded-xl border border-white/10 space-y-2"
+    }, /*#__PURE__*/React.createElement("p", {
+      className: "text-xs text-bleach-cream leading-relaxed"
+    }, "Em combate no Bleach RPG, a ", /*#__PURE__*/React.createElement("strong", {
+      className: "text-red-400"
+    }, "For\xE7a"), " do atacante representa a massa cin\xE9tica e a pot\xEAncia f\xEDsica/espiritual descarregadas no golpe, enquanto a ", /*#__PURE__*/React.createElement("strong", {
+      className: "text-purple-400"
+    }, "Resili\xEAncia"), " do defensor define a densidade da sua armadura espiritual natural (Reiatsu) e a resist\xEAncia estrutural do corpo para absorver e anular esse impacto sem sofrer colapso f\xEDsico."), /*#__PURE__*/React.createElement("p", {
+      className: "text-[11px] text-bleach-muted"
+    }, "Para aparar um golpe direto sem sofrer dano consider\xE1vel nem ser lan\xE7ado para tr\xE1s, o Shinigami precisa que sua ", /*#__PURE__*/React.createElement("strong", null, "Resili\xEAncia seja igual ou superior a 100% da For\xE7a"), " do golpe recebido.")), /*#__PURE__*/React.createElement("div", {
+      className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "p-3.5 bg-bleach-panel2 rounded-xl border border-green-500/40 space-y-1.5 flex flex-col justify-between"
+    }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      className: "flex items-center justify-between mb-1"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-green-950 text-green-300 border border-green-500"
+    }, "\uD83D\uDEE1\uFE0F 100%+ da For\xE7a")), /*#__PURE__*/React.createElement("h5", {
+      className: "font-bold text-green-300 text-xs mt-1"
+    }, "Bloqueio Perfeito"), /*#__PURE__*/React.createElement("p", {
+      className: "text-[11px] text-bleach-creamDim mt-1 leading-snug"
+    }, "Dano Nulo ou Apenas Arranh\xF5es (0% a 10%). Postura inabal\xE1vel, sem recuo.")), /*#__PURE__*/React.createElement("div", {
+      className: "text-[10px] text-green-400 font-semibold border-t border-white/5 pt-1.5 mt-2"
+    }, "\u2713 Nenhum risco de trinca na espada.")), /*#__PURE__*/React.createElement("div", {
+      className: "p-3.5 bg-bleach-panel2 rounded-xl border border-yellow-500/40 space-y-1.5 flex flex-col justify-between"
+    }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      className: "flex items-center justify-between mb-1"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-yellow-950 text-yellow-300 border border-yellow-500"
+    }, "\u26A0\uFE0F 70% a 99% da For\xE7a")), /*#__PURE__*/React.createElement("h5", {
+      className: "font-bold text-yellow-300 text-xs mt-1"
+    }, "Defesa Parcial & Recuo"), /*#__PURE__*/React.createElement("p", {
+      className: "text-[11px] text-bleach-creamDim mt-1 leading-snug"
+    }, "Dano Moderado (15% a 35%). Recuo for\xE7ado (2 a 5 metros) e perda moment\xE2nea de terreno.")), /*#__PURE__*/React.createElement("div", {
+      className: "text-[10px] text-yellow-400 font-semibold border-t border-white/5 pt-1.5 mt-2"
+    }, "\u26A0\uFE0F Vibra\xE7\xE3o intensa na l\xE2mina.")), /*#__PURE__*/React.createElement("div", {
+      className: "p-3.5 bg-bleach-panel2 rounded-xl border border-orange-500/40 space-y-1.5 flex flex-col justify-between"
+    }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      className: "flex items-center justify-between mb-1"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-orange-950 text-orange-300 border border-orange-500"
+    }, "\uD83D\uDCA5 40% a 69% da For\xE7a")), /*#__PURE__*/React.createElement("h5", {
+      className: "font-bold text-orange-300 text-xs mt-1"
+    }, "Ruptura de Guarda"), /*#__PURE__*/React.createElement("p", {
+      className: "text-[11px] text-bleach-creamDim mt-1 leading-snug"
+    }, "Dano Severo & Cr\xEDtico (40% a 75%). Trincas \xF3sseas, perda de f\xF4lego e proje\xE7\xE3o violenta.")), /*#__PURE__*/React.createElement("div", {
+      className: "text-[10px] text-orange-400 font-semibold border-t border-white/5 pt-1.5 mt-2"
+    }, "\uD83D\uDCA5 Alto risco de trincar armas.")), /*#__PURE__*/React.createElement("div", {
+      className: "p-3.5 bg-bleach-panel2 rounded-xl border border-red-500/40 space-y-1.5 flex flex-col justify-between"
+    }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      className: "flex items-center justify-between mb-1"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-red-950 text-red-300 border border-red-500"
+    }, "\u2620\uFE0F < 40% da For\xE7a")), /*#__PURE__*/React.createElement("h5", {
+      className: "font-bold text-red-400 text-xs mt-1"
+    }, "Colapso / Letal"), /*#__PURE__*/React.createElement("p", {
+      className: "text-[11px] text-bleach-creamDim mt-1 leading-snug"
+    }, "Dano Devastador (80% a 100%+). Fraturas graves, nocaute ou risco de incapacita\xE7\xE3o fatal.")), /*#__PURE__*/React.createElement("div", {
+      className: "text-[10px] text-red-400 font-semibold border-t border-white/5 pt-1.5 mt-2"
+    }, "\u2620\uFE0F Destrui\xE7\xE3o total da defesa."))), /*#__PURE__*/React.createElement("div", {
+      className: "p-4 sm:p-5 bg-gradient-to-r from-purple-950/40 via-bleach-panel2 to-black rounded-xl border-2 border-purple-500/40 space-y-4 shadow-xl"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-white/10 pb-3"
+    }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h5", {
+      className: "font-title text-xl text-purple-300 flex items-center gap-2"
+    }, /*#__PURE__*/React.createElement("span", null, "\uD83C\uDFAF"), " Simulador Interativo de Impacto do Golpe"), /*#__PURE__*/React.createElement("p", {
+      className: "text-[11px] text-bleach-creamDim"
+    }, "Teste como a Resili\xEAncia de ", /*#__PURE__*/React.createElement("strong", null, personagem.nome), " (", resilienciaAtual, " pts) resiste a diferentes n\xEDveis de For\xE7a inimiga.")), /*#__PURE__*/React.createElement("div", {
+      className: "flex items-center gap-2"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "text-xs text-bleach-muted"
+    }, "For\xE7a do Golpe:"), /*#__PURE__*/React.createElement("input", {
+      type: "number",
+      min: "1",
+      max: "9999",
+      value: simForcaInimiga,
+      onChange: e => setSimForcaInimiga(Math.max(1, Number(e.target.value) || 1)),
+      className: "w-24 px-3 py-1.5 bg-black/80 border border-purple-500/60 rounded-lg text-white font-mono font-bold text-sm text-center focus:outline-none focus:border-purple-400"
+    }), /*#__PURE__*/React.createElement("span", {
+      className: "text-xs font-mono text-purple-400 font-bold"
+    }, "pts"))), /*#__PURE__*/React.createElement("div", {
+      className: "flex items-center gap-1.5 flex-wrap"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "text-[10px] font-bold text-bleach-muted uppercase mr-1"
+    }, "Presets R\xE1pidos:"), [{
+      label: "💀 Hollow Menor",
+      val: 30
+    }, {
+      label: "⚔️ Sentinela",
+      val: 80
+    }, {
+      label: "⚡ Tenente",
+      val: 250
+    }, {
+      label: "👑 Capitão",
+      val: 650
+    }, {
+      label: "🩸 Espada Top 4",
+      val: 1200
+    }, {
+      label: "🌟 Comandante",
+      val: 2500
+    }].map(preset => /*#__PURE__*/React.createElement("button", {
+      key: preset.label,
+      type: "button",
+      onClick: () => setSimForcaInimiga(preset.val),
+      className: `px-2.5 py-1 rounded-lg text-[11px] font-mono transition ${simForcaInimiga === preset.val ? "bg-purple-600 text-white font-bold border border-purple-300 shadow" : "bg-black/60 text-bleach-creamDim hover:text-white border border-white/10"}`
+    }, preset.label, " (", preset.val, ")"))), /*#__PURE__*/React.createElement("div", {
+      className: "p-4 bg-black/90 rounded-xl border-2 space-y-3",
+      style: {
+        borderColor: analiseSimulada.cor
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "flex flex-wrap items-center justify-between gap-2"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "flex items-center gap-2"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "text-[10px] font-extrabold uppercase px-3 py-1 rounded-full text-black",
+      style: {
+        backgroundColor: analiseSimulada.cor
+      }
+    }, analiseSimulada.categoria), /*#__PURE__*/React.createElement("span", {
+      className: "text-xs font-mono text-bleach-creamDim"
+    }, "Resili\xEAncia (", resilienciaAtual, ") / For\xE7a (", simForcaInimiga, ") = ", /*#__PURE__*/React.createElement("strong", {
+      className: "font-bold text-white"
+    }, analiseSimulada.pct, "%"))), /*#__PURE__*/React.createElement("span", {
+      className: "text-xs font-bold font-mono",
+      style: {
+        color: analiseSimulada.cor
+      }
+    }, analiseSimulada.danoRecebidoStr)), /*#__PURE__*/React.createElement("div", {
+      className: "w-full bg-black/60 h-2 rounded-full overflow-hidden border border-white/10"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "h-full rounded-full transition-all duration-500",
+      style: {
+        width: `${Math.min(100, analiseSimulada.pct)}%`,
+        backgroundColor: analiseSimulada.cor
+      }
+    })), /*#__PURE__*/React.createElement("div", {
+      className: "grid grid-cols-1 md:grid-cols-3 gap-3 text-xs pt-1"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "p-2.5 bg-bleach-panel rounded-lg border border-white/5"
+    }, /*#__PURE__*/React.createElement("strong", {
+      className: "text-bleach-muted block text-[10px] uppercase"
+    }, "Efeito de Postura:"), /*#__PURE__*/React.createElement("p", {
+      className: "text-bleach-cream mt-0.5"
+    }, analiseSimulada.efeitoPostura)), /*#__PURE__*/React.createElement("div", {
+      className: "p-2.5 bg-bleach-panel rounded-lg border border-white/5"
+    }, /*#__PURE__*/React.createElement("strong", {
+      className: "text-bleach-muted block text-[10px] uppercase"
+    }, "Risco \xE0 Zanpakut\u014D:"), /*#__PURE__*/React.createElement("p", {
+      className: "text-bleach-cream mt-0.5"
+    }, analiseSimulada.riscoArma)), /*#__PURE__*/React.createElement("div", {
+      className: "p-2.5 bg-bleach-panel rounded-lg border border-white/5"
+    }, /*#__PURE__*/React.createElement("strong", {
+      className: "text-bleach-orange block text-[10px] uppercase"
+    }, "Recomenda\xE7\xE3o T\xE1tica:"), /*#__PURE__*/React.createElement("p", {
+      className: "text-bleach-cream mt-0.5"
+    }, analiseSimulada.dicaTatica))))));
+  })())), subPaginaFicha === "kidos" && /*#__PURE__*/React.createElement("div", {
     className: "space-y-6"
   }, /*#__PURE__*/React.createElement(Section, {
     title: "Kid\u014D e T\xE9cnicas Aprendidas",
@@ -6662,7 +7461,10 @@ function FichaView({
   }, "Cancelar"), /*#__PURE__*/React.createElement("button", {
     onClick: confirmarResetFicha,
     className: "flex-1 py-2.5 bg-red-600 hover:bg-red-500 text-white font-extrabold text-xs uppercase rounded-lg shadow"
-  }, "Sim, Resetar Ficha")))));
+  }, "Sim, Resetar Ficha")))), showCapacidadesModal && /*#__PURE__*/React.createElement(CapacidadesZanpakutoModal, {
+    modalData: showCapacidadesModal,
+    onClose: () => setShowCapacidadesModal(null)
+  }));
 }
 
 // =========================================================================
