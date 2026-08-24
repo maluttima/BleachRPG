@@ -2389,7 +2389,28 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "", claimedN
 
   // 1. CAMINHO 1: ELEMENTAL / TEMPERAMENTO
   const n1 = gerarNomeDinamico(0, "elemental");
-  const elemDominante = dna.dominante.key === "pressao" ? "Plasma Espiritual de Alta Densidade Térmica" : dna.dominante.key === "velocidade" ? "Eletromagnetismo de Frequência Ultra-Sônica" : dna.dominante.key === "forca" ? "Impacto Gravitacional e Fricção de Rocha Vulcânica" : "Cristais de Geada Espiritual e Reishi Refratário";
+  const elemPool = [{
+    el: "Plasma Espiritual & Chamas Carmesim",
+    arma: "Katana com lâmina de borda incandescente e tsuba em flor de lótus de fogo",
+    pod: "Ao brandir a espada, ${personagem.nome} expele ondas de calor comprimido que aumentam a fricção do ar e cortam a armadura de Reishi adversária com estocadas explosivas.",
+    lim: "O calor elevado desgasta o punho e exige pausas de resfriamento entre sequências de golpes intensos."
+  }, {
+    el: "Eletromagnetismo & Relâmpagos Negros",
+    arma: "Chokutō de aço fosco envolta em filamentos de plasma negro cintilante",
+    pod: "A lâmina polariza o ar ao redor do alvo, fazendo com que cada corte dispare descargas cinéticas que aceleram a lâmina em trajetórias angulares imprevisíveis.",
+    lim: "Descargas consecutivas reduzem temporariamente o tempo de reação motora do usuário."
+  }, {
+    el: "Geada Primordial & Cristais Refratários",
+    arma: "Tachi de cristal translúcido com reflexos glaciais que emitem névoa constante",
+    pod: "Solidifica a umidade espiritual do perímetro em espinhos de gelo microscópicos que se alojam nas feridas e drenam o calor cinético do adversário.",
+    lim: "Perde eficácia e alcance em ambientes de calor escaldante ou sem umidade."
+  }, {
+    el: "Vácuo Espiritual & Lâminas de Vento Sônico",
+    arma: "Wakizashi de dois gumes com micro-fendas acústicas na calha central",
+    pod: "Cria bolsas de vácuo pressurizado que viajam na velocidade do som, desferindo múltiplos cortes invisíveis à distância sem produzir ruído sonoro.",
+    lim: "O vento dispersa caso o usuário seja desestabilizado por impactos pesados diretos."
+  }];
+  const elChoice = elemPool[posHash % elemPool.length];
   const c1 = {
     caminhoNumero: 1,
     tipoCaminho: "Opção 1 — Personalidade / Elemental",
@@ -2400,15 +2421,15 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "", claimedN
       nome: n1.nome,
       kanji: n1.kanji,
       traducao: n1.trad,
-      comando: `Rasgue o horizonte e purifique a existência, ${n1.nome}!`,
-      elemento: elemDominante,
-      aparencia: `Katana esguia de lâmina reflexiva com fendas por onde pulsa uma aura constante de ${elemDominante}.`,
-      formatoArma: `Katana de ${elemDominante}`,
-      poder: `Canaliza a intensidade da virtude "${dna.virtudes}" do Shinigami. A cada golpe desferido, a lâmina projeta ondas de ${elemDominante} que multiplicam a pressão exercida nos cortes e quebram barreiras de Reishi.`,
-      limitacoes: `O calor e o consumo contínuo exigem estabilidade do braço e drenam estamina em lutas prolongadas.`,
+      comando: `Incendeie os céus e purifique a existência, ${n1.nome}!`,
+      elemento: elChoice.el,
+      aparencia: elChoice.arma,
+      formatoArma: elChoice.arma,
+      poder: elChoice.pod.replace("${personagem.nome}", personagem.nome),
+      limitacoes: elChoice.lim,
       custoReiatsu: "Médio",
-      relacaoPersonalidade: `Nascida diretamente do temperamento e da virtude central: "${dna.virtudes}".`,
-      relacaoAtributos: `Alimentada pelo atributo dominante ${dna.dominante.label} (${dna.dominante.val} pts).`,
+      relacaoPersonalidade: `Moldada pela virtude "${dna.virtudes}".`,
+      relacaoAtributos: `Potencializada pelo atributo dominante (${dna.dominante.label}: ${dna.dominante.val} pts).`,
       indices: {
         potencia: 9,
         abrangencia: 8,
@@ -2421,16 +2442,33 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "", claimedN
       nome: `${n1.nome}: Gōka Dai-Tenrin`,
       kanji: `「${n1.kanji.replace(/[^\\u4e00-\\u9faf]/g, '')}・業火大天輪」`,
       tipoEvolucao: "Amplificação & Domínio Territorial",
-      formaMonumental: `O campo de batalha inteiro se transforma em um domínio cósmico onde gigantescas lâminas de ${elemDominante} emergem da atmosfera.`,
-      pontoRuptura: `Supera o limite de alcance e foco individual da Shikai, cobrindo um raio monumental de 300 metros sob o controle mental do Shinigami.`,
-      poder: `Converte toda a pressão espiritual do ambiente em lâminas simultâneas teleguiadas, aniquilando qualquer investida adversária com estocadas em cadeia.`,
-      limitacoes: "Se mantida por mais de 5 minutos, impõe sobrecarga física nos circuitos de Reishi.",
-      significadoEspiritual: `A consagração monumental da determinação de ${personagem.nome} em proteger seus ideais.`
+      formaMonumental: `O campo de batalha inteiro se transforma em um domínio cósmico onde gigantescas lâminas de ${elChoice.el} emergem da atmosfera.`,
+      pontoRuptura: `Supera o limite de foco individual da Shikai, cobrindo um raio de 300 metros sob comando mental direto.`,
+      poder: `Converte toda a pressão espiritual do ambiente em lâminas simultâneas teleguiadas que aniquilam investidas adversárias com estocadas em cadeia contínua.`,
+      limitacoes: "Se mantida por mais de 5 minutos, impõe sobrecarga física severa nos circuitos de Reishi.",
+      significadoEspiritual: `A consagração monumental da determinação de ${personagem.nome} em superar todos os obstáculos.`
     }
   };
 
   // 2. CAMINHO 2: CONCEITUAL / PROGRESSIVO / REGRAS
   const n2 = gerarNomeDinamico(1, "conceitual");
+  const conceitualPool = [{
+    el: "Controle de Vetores & Troca de Posição",
+    arma: "Espada de lâmina bifurcada com guarda em compasso astronômico",
+    pod: "Ao cruzar a lâmina com o inimigo, marca o ponto de contato com um vetor de força. O usuário pode inverter instantaneamente a direção cinética de qualquer projétil ou golpe subsequente que atinja a mesma marcação.",
+    lim: "Requer contato prévio de lâminas para estabelecer cada vetor."
+  }, {
+    el: "Contagem de Cadência & Supressão Sequencial",
+    arma: "Lâmina reta graduada com 5 entalhes rúnicos dourados",
+    pod: "Cada impacto consecutivo sem sofrer contra-ataque ativa um dos entalhes. A cada nível ativado, o peso espiritual da espada dobra e reduz o tempo de reação do adversário em 20%.",
+    lim: "Se o usuário sofrer um golpe contundente, todos os entalhes se desfazem e a contagem reinicia."
+  }, {
+    el: "Ressonância Harmônica & Vibração Molecular",
+    arma: "Rapieira com empunhadura em diapasão duplo de prata celestial",
+    pod: "Emite ondas vibratórias em alta frequência que sintonizam com a estrutura de Reishi do oponente, fragmentando defesas rígidas e dissipando barreiras espirituais no instante do choque.",
+    lim: "Exige cálculo contínuo de distância e timing milimétrico para manter a ressonância."
+  }];
+  const conChoice = conceitualPool[(posHash + 1) % conceitualPool.length];
   const c2 = {
     caminhoNumero: 2,
     tipoCaminho: "Opção 2 — Conceitual / Progressivo / Regras",
@@ -2442,14 +2480,14 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "", claimedN
       kanji: n2.kanji,
       traducao: n2.trad,
       comando: `Estabeleça a ordem no caos da alma, ${n2.nome}!`,
-      elemento: "Vetores de Causalidade & Leis de Troca Espiritual",
-      aparencia: `Espada de lâmina reta com ranhuras gravadas com selos numéricos em sânscrito e guarda em formato de relógio cerimonial.`,
-      formatoArma: `Lâmina Cerimonial de Regras`,
-      poder: `Impõe a lei do 'Acúmulo Sequencial': a cada golpe ou choque de lâminas bem-sucedido, o Shinigami grava um selo na Reiatsu do alvo. Ao atingir 3 selos, o próximo impacto ignora completamente a armadura espiritual do inimigo.`,
-      limitacoes: `Se o usuário falhar em conectar um ataque por mais de 10 segundos, a contagem de selos reinicia.`,
+      elemento: conChoice.el,
+      aparencia: conChoice.arma,
+      formatoArma: conChoice.arma,
+      poder: conChoice.pod,
+      limitacoes: conChoice.lim,
       custoReiatsu: "Médio-Baixo",
-      relacaoPersonalidade: `Reflete o pensamento disciplinado e o estilo tático de ${personagem.nome}: "${dna.estilo}".`,
-      relacaoAtributos: `Aproveita a precisão tática e o controle de cadência de combate.`,
+      relacaoPersonalidade: `Reflete a mente calculista e o estilo de combate de ${personagem.nome}.`,
+      relacaoAtributos: `Aproveita a precisão tática e o controle cirúrgico de movimentos.`,
       indices: {
         potencia: 8,
         abrangencia: 6,
@@ -2463,34 +2501,51 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "", claimedN
       kanji: `「${n2.kanji.replace(/[^\\u4e00-\\u9faf]/g, '')}・時空開示十代」`,
       tipoEvolucao: "Imposição Territorial de Leis Absolutas",
       formaMonumental: `O solo se converte em um gigantesco mostrador geométrico de círculos concêntricos de ouro e obsidiana.`,
-      pontoRuptura: `Remove a necessidade de golpear fisicamente o mesmo ponto: as regras de impacto passam a se aplicar a qualquer movimento ou intenção hostil no campo.`,
-      poder: `Qualquer golpe hostil desferido dentro do território sofre uma dilatação de impacto onde o adversário recebe metade do dano que tentou causar como retaliação direta.`,
-      limitacoes: "O próprio usuário deve se submeter à regra e não pode atacar oponentes imóveis sem aviso prévio.",
-      significadoEspiritual: `A vitória conquistada através do intelecto soberano e do respeito às regras da alma.`
+      pontoRuptura: `Remove a necessidade de acertar o mesmo ponto: as regras conceituais passam a vigorar sobre todo o espaço dimensional do domínio.`,
+      poder: `Impõe uma lei onde qualquer hostilidade desferida no território reflete 50% do impacto diretamente contra os canais de Reiatsu do atacante.`,
+      limitacoes: "O próprio usuário está submetido às leis da arena e não pode atacar opositores que cessem o movimento.",
+      significadoEspiritual: `O triunfo da estratégia lúcida sobre o caos cego da guerra.`
     }
   };
 
   // 3. CAMINHO 3: COMPENSATÓRIO / DEFESA DA ALMA
   const n3 = gerarNomeDinamico(2, "compensatorio");
+  const compPool = [{
+    el: "Fricção Gravitacional & Âncoras Cinéticas",
+    arma: "Espada pesada de lâmina larga com placas segmentadas de aço de meteorito",
+    pod: "Cria um campo gravitacional denso ao redor de ${personagem.nome} que desacelera projéteis e ataques de alta velocidade à medida que se aproximam, convertendo a força de colisão em estabilidade postural inabalável.",
+    lim: "Reduz levemente a agilidade de deslocamento aéreo enquanto a âncora está ativada."
+  }, {
+    el: "Prismas de Refração Espiritual & Dispersão de Impacto",
+    arma: "Sabre prateado com tsuba espelhada e lâmina facetada como diamante",
+    pod: "Fragmenta qualquer ataque espiritual recebido em feixes de luz inofensivos, redistribuindo o choque por toda a atmosfera ao redor e curando micro-fissuras no corpo do usuário.",
+    lim: "Apenas dissipa energia espiritual; não anula ataques puramente físicos de massa sólida."
+  }, {
+    el: "Névoa de Reishi Regenerativo & Alívio de Fadiga",
+    arma: "Florete flexível com lâmina transparente e detalhes de pétalas esculpidas",
+    pod: "Libera uma névoa aromática de partículas de cura que cicatriza ferimentos e restaura a estamina de ${personagem.nome} a cada corte bem-sucedido contra o oponente.",
+    lim: "Não regenera órgãos vitais instantaneamente em caso de lesão fatal imediata."
+  }];
+  const compChoice = compPool[(posHash + 2) % compPool.length];
   const c3 = {
     caminhoNumero: 3,
     tipoCaminho: "Opção 3 — Compensatório / Defesa da Alma",
-    subtitulo: "Bastião Protetor e Mitigação do Maior Medo",
+    subtitulo: "Bastião Protetor e Mitigação de Vulnerabilidades",
     indiceExclusividade: 100,
     shikai: {
       id: uid(),
       nome: n3.nome,
       kanji: n3.kanji,
       traducao: n3.trad,
-      comando: `Erga a barreira contra o desespero, ${n3.nome}!`,
-      elemento: "Armadura de Reishi Reativo & Ondas de Absorção Vital",
-      aparencia: `Espada de guarda alargada com placas articuladas de metal prateado que flutuam ao redor da empunhadura.`,
-      formatoArma: `Espada Escudo de Reishi`,
-      poder: `Compensa a maior fraqueza do Shinigami (${dna.deficiente.label}: ${dna.deficiente.val} pts) e protege contra o medo de "${dna.medos}". A lâmina projeta halos reativos que absorvem o impacto dos golpes sofridos e os convertem em blindagem corporal.`,
-      limitacoes: `Não impede ataques com perfuração espiritual muito acima da Pressão base.`,
+      comando: `Erga a barreira inexpugnável da alma, ${n3.nome}!`,
+      elemento: compChoice.el,
+      aparencia: compChoice.arma,
+      formatoArma: compChoice.arma,
+      poder: compChoice.pod.replace("${personagem.nome}", personagem.nome),
+      limitacoes: compChoice.lim,
       custoReiatsu: "Baixo",
-      relacaoPersonalidade: `Criada para erradicar o medo profundo de "${dna.medos}" e compensar a fraqueza de "${dna.defeitos}".`,
-      relacaoAtributos: `Fortalece e amortece o atributo mais vulnerável (${dna.deficiente.label}).`,
+      relacaoPersonalidade: `Fortifica o espírito e ergue proteção inabalável para ${personagem.nome}.`,
+      relacaoAtributos: `Fortalece o atributo mais vulnerável (${dna.deficiente.label}: ${dna.deficiente.val} pts).`,
       indices: {
         potencia: 7,
         abrangencia: 7,
@@ -2503,16 +2558,33 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "", claimedN
       nome: `${n3.nome}: Fuyō Sōki no Aegis`,
       kanji: `「${n3.kanji.replace(/[^\\u4e00-\\u9faf]/g, '')}・不耀蒼輝之金剛」`,
       tipoEvolucao: "Fortaleza & Transcendência Defensiva",
-      formaMonumental: `Uma monumental couraça de asas de aço espiritual e pilares de luz sagrada envolvem o Shinigami e seus aliados.`,
-      pontoRuptura: `Remove a fragilidade física da Shikai: qualquer dano que seria letal é redistribuído e dissipado pelo solo em ondas de choque inofensivas.`,
-      poder: `Ergue um santuário impenetrável onde aliados recuperam o fluxo de Reiatsu enquanto a lâmina contra-ataca investidas automaticamente com concussões de alta densidade.`,
-      limitacoes: "O usuário é o núcleo do bastião e perde mobilidade de esquiva rápida enquanto mantiver a fortaleza ativa.",
-      significadoEspiritual: `A transformação do medo da perda na mais nobre muralha protetora de toda a Soul Society.`
+      formaMonumental: `Uma monumental couraça de asas de aço espiritual e colunas de luz pura envolve ${personagem.nome} e seus aliados.`,
+      pontoRuptura: `Extingue a fragilidade física da Shikai: qualquer dano catastrófico é dissipado em ondas concussivas no solo sem ferir o Shinigami.`,
+      poder: `Ergue um santuário inviolável onde o fluxo de vitalidade é renovado continuamente enquanto a lâmina dispara contra-ataques autônomos de alta densidade.`,
+      limitacoes: "O usuário atua como o pilar da fortaleza e não pode realizar esquivas acrobáticas de longa distância.",
+      significadoEspiritual: `A transformação do dever de proteção na maior muralha inquebrável da Soul Society.`
     }
   };
 
   // 4. CAMINHO 4: OPOSITIVO / ABSTRATO / SOMBRA
   const n4 = gerarNomeDinamico(3, "opositivo");
+  const oposPool = [{
+    el: "Distorção Perceptiva & Espelhos do Vazio",
+    arma: "Wakizashi de dois gumes com fio invertido e lâmina de vidro negro",
+    pod: "Distorce a percepção sensorial do adversário, fazendo-o enxergar o ângulo dos cortes com um desvio angular de 30 graus em relação à trajetória física real.",
+    lim: "Oponentes experientes com sentidos espirituais aguçados podem antecipar pelo som do deslocamento de ar."
+  }, {
+    el: "Inversão de Causalidade & Absorção de Sombra",
+    arma: "Kusarigama com corrente de sombra líquida e lâmina fosca sem brilho",
+    pod: "Converte as sombras projetadas pelos combatentes em lâminas sólidas que atacam de surpresa a partir do chão, ignorando a postura defensiva frontal do alvo.",
+    lim: "Requer fontes de luz no ambiente para que silhuetas e sombras sejam projetadas no solo."
+  }, {
+    el: "Paradoxo Espacial & Supressão de Presença",
+    arma: "Nodachi de lâmina cinzenta que parece vibrar entre duas posições no ar",
+    pod: "Faz com que a espada atravesse defesas sólidas de Reishi como névoa intangível e só adquira massa física sólida no exato instante do corte contra o alvo.",
+    lim: "Demanda serenidade absoluta; qualquer hesitação do usuário torna a espada tangível antes da hora."
+  }];
+  const oposChoice = oposPool[(posHash + 3) % oposPool.length];
   const c4 = {
     caminhoNumero: 4,
     tipoCaminho: "Opção 4 — Opositivo / Abstrato / Sombra",
@@ -2524,13 +2596,13 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "", claimedN
       kanji: n4.kanji,
       traducao: n4.trad,
       comando: `Inverta a verdade e devore o reflexo, ${n4.nome}!`,
-      elemento: "Vácuo de Sombra Ilusória & Inversão de Polaridade",
-      aparencia: `Lâmina curva de obsidiana fosca com corte invertido e reflexo que distorce a luz ao redor.`,
-      formatoArma: `Wakizashi Abstrata das Sombras`,
-      poder: `Canaliza o conflito interno de ${personagem.nome}: "${dna.conflitos}". A espada manifesta cortes intangíveis de sombra que não ferem a carne, mas colapsam temporariamente o equilíbrio de Reiatsu do adversário a cada choque.`,
-      limitacoes: `Exige contato visual e perde precisão em ambientes totalmente iluminados sem sombras projetadas.`,
+      elemento: oposChoice.el,
+      aparencia: oposChoice.arma,
+      formatoArma: oposChoice.arma,
+      poder: oposChoice.pod,
+      limitacoes: oposChoice.lim,
       custoReiatsu: "Alto",
-      relacaoPersonalidade: `Explora a sombra inconsciente e o conflito profundo entre "${dna.conflitos}".`,
+      relacaoPersonalidade: `Explora a sombra inconsciente e a dualidade profunda da alma de ${personagem.nome}.`,
       relacaoAtributos: `Manipula a densidade de Reiatsu em frequências contrárias à percepção comum.`,
       indices: {
         potencia: 10,
@@ -2544,15 +2616,39 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "", claimedN
       nome: `${n4.nome}: Muken Kōjin no Paradox`,
       kanji: `「${n4.kanji.replace(/[^\\u4e00-\\u9faf]/g, '')}・無間皇刃之悖論」`,
       tipoEvolucao: "Inversão da Realidade & Paradoxo",
-      formaMonumental: `O céu e a terra invertem suas cores em uma distorção monocromática onde miragens e sombras ganham massa física tangível.`,
-      pontoRuptura: `Quebra a intangibilidade da Shikai: as sombras agora cortam a própria realidade, invertendo causa e efeito de todo ataque desferido pelo oponente.`,
-      poder: `Toda vez que o adversário tenta esquivar, ele colide com o corte; toda vez que tenta bloquear, a lâmina o atravessa como fumaça e se materializa por trás da sua guarda.`,
-      limitacoes: "Exige serenidade absoluta: se o usuário se desesperar, a distorção pode afetar seu próprio fluxo de passos.",
-      significadoEspiritual: `A dominação plena da dualidade da alma: a luz mais brilhante só existe porque projeta a sombra mais profunda.`
+      formaMonumental: `O cenário inverte suas cores em uma distorção monocromática onde miragens e sombras ganham massa física tangível.`,
+      pontoRuptura: `Supera o limite de intangibilidade da Shikai: as sombras cortam a própria malha do espaço, invertendo causa e efeito no combate.`,
+      poder: `Quando o adversário tenta esquivar, ele colide com o golpe; quando tenta bloquear, a lâmina o atravessa como fumaça e atinge pelas costas.`,
+      limitacoes: "Exige autocontrole supremo para não ser desorientado pela distorção do próprio domínio.",
+      significadoEspiritual: `A dominação plena da dualidade da alma: onde há a maior luz, reside a mais afiada das sombras.`
     }
   };
   return [c1, c2, c3, c4];
 }
+function getValidGeminiApiKey(apiKey = "") {
+  const defaultKey = getDefaultGeminiKey();
+  if (apiKey && apiKey.length > 20 && !apiKey.includes("AQ.Ab8RN6I0r1qN15nnRQd")) {
+    return apiKey;
+  }
+  if (typeof localStorage !== 'undefined') {
+    const local = localStorage.getItem("bleach_openai_key");
+    if (local && local.includes("AQ.Ab8RN6I0r1qN15nnRQd")) {
+      try {
+        localStorage.removeItem("bleach_openai_key");
+      } catch (e) {}
+      return defaultKey;
+    }
+    if (local && local.length > 20 && !local.includes("AQ.Ab8RN6I0r1qN15nnRQd")) {
+      return local;
+    }
+  }
+  if (typeof window !== 'undefined' && window.BLEACH_CONFIG?.openaiApiKey && window.BLEACH_CONFIG.openaiApiKey.length > 20 && !window.BLEACH_CONFIG.openaiApiKey.includes("AQ.Ab8RN6I0r1qN15nnRQd")) {
+    return window.BLEACH_CONFIG.openaiApiKey;
+  }
+  return defaultKey;
+}
+
+// 5. FUNÇÃO CENTRAL ASSÍNCRONA DE GERAÇÃO COM IA (COM AUTO-RETRY E EXCLUSIVIDADE ABSOLUTA)
 async function gerar4CaminhosZanpakutoAI_Async(personagem, dbPersonagens = [], dbZanpakutosVinculadas = [], cenaTexto = "", apiKey = "") {
   const {
     claimed,
@@ -2560,60 +2656,74 @@ async function gerar4CaminhosZanpakutoAI_Async(personagem, dbPersonagens = [], d
     claimedElements
   } = getClaimedSignatures(dbPersonagens, dbZanpakutosVinculadas);
   const dna = construirDnaEspiritual(personagem, cenaTexto);
-  const keyToUse = apiKey || (typeof localStorage !== 'undefined' ? localStorage.getItem("bleach_openai_key") : "") || (typeof window !== 'undefined' ? window.BLEACH_CONFIG?.openaiApiKey : "") || getDefaultGeminiKey();
+  let keyToUse = getValidGeminiApiKey(apiKey);
   let caminhosResultantes = null;
-
-  // 1. Tentar Google Gemini API (gemini-3.6-flash) se a chave for do Google (AQ... ou AIzaSy...)
-  if (keyToUse && !keyToUse.startsWith("sk-") && keyToUse.length > 20) {
-    try {
-      console.log("Chamando Google Gemini API (gemini-3.6-flash) para geração de Zanpakutō com DNA espiritual...");
-      const prompt = construirPromptChatGPT(personagem, dna, cenaTexto, dbPersonagens, dbZanpakutosVinculadas);
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${encodeURIComponent(keyToUse)}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          contents: [{
-            role: "user",
-            parts: [{
-              text: prompt + "\n\nResponda ESTRITAMENTE em formato JSON válido conforme o esquema solicitado."
-            }]
-          }],
-          generationConfig: {
-            responseMimeType: "application/json",
-            temperature: 0.85
-          }
-        })
-      });
-      if (res.ok) {
-        const data = await res.json();
-        const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (rawText) {
-          const parsed = JSON.parse(rawText);
-          if (parsed && Array.isArray(parsed.caminhos) && parsed.caminhos.length >= 4) {
-            console.log("Zanpakutō gerada com sucesso pelo Google Gemini!");
-            caminhosResultantes = parsed.caminhos.slice(0, 4).map((c, idx) => ({
-              ...c,
-              caminhoNumero: idx + 1,
-              shikai: {
-                ...c.shikai,
-                id: uid(),
-                assinaturaEspiritual: calcularAssinaturaEspiritual(c.shikai)
-              }
-            }));
-          }
+  async function callGemini(key) {
+    const prompt = construirPromptChatGPT(personagem, dna, cenaTexto, dbPersonagens, dbZanpakutosVinculadas);
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${encodeURIComponent(key)}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        contents: [{
+          role: "user",
+          parts: [{
+            text: prompt + "\n\nResponda ESTRITAMENTE em formato JSON válido conforme o esquema solicitado."
+          }]
+        }],
+        generationConfig: {
+          responseMimeType: "application/json",
+          temperature: 0.95
+        }
+      })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (rawText) {
+        const parsed = JSON.parse(rawText);
+        if (parsed && Array.isArray(parsed.caminhos) && parsed.caminhos.length >= 4) {
+          return parsed.caminhos.slice(0, 4).map((c, idx) => ({
+            ...c,
+            caminhoNumero: idx + 1,
+            shikai: {
+              ...c.shikai,
+              id: uid(),
+              assinaturaEspiritual: calcularAssinaturaEspiritual(c.shikai)
+            }
+          }));
         }
       }
+    } else {
+      console.warn("Gemini HTTP Error:", res.status, await res.text());
+    }
+    return null;
+  }
+
+  // 1. Tentar Google Gemini API (gemini-3.6-flash)
+  if (keyToUse && !keyToUse.startsWith("sk-")) {
+    try {
+      console.log("Chamando Google Gemini 3.6 Flash para geração de Zanpakutō...");
+      caminhosResultantes = await callGemini(keyToUse);
+      if (!caminhosResultantes && keyToUse !== getDefaultGeminiKey()) {
+        console.log("Tentando novamente com a chave padrão do Gemini...");
+        caminhosResultantes = await callGemini(getDefaultGeminiKey());
+      }
     } catch (err) {
-      console.warn("Google Gemini API fetch failed, falling back to Cognitive Soul Synthesizer:", err);
+      console.warn("Erro ao chamar Google Gemini API:", err);
+      if (keyToUse !== getDefaultGeminiKey()) {
+        try {
+          caminhosResultantes = await callGemini(getDefaultGeminiKey());
+        } catch (e) {}
+      }
     }
   }
 
-  // 2. Tentar ChatGPT / OpenAI se chave for da OpenAI (sk-...)
+  // 2. Tentar OpenAI se chave for da OpenAI
   if (!caminhosResultantes && keyToUse && keyToUse.startsWith("sk-")) {
     try {
-      console.log("Chamando OpenAI API (ChatGPT) para geração de Zanpakutō com verificação estrita de exclusividade...");
+      console.log("Chamando OpenAI GPT-4o-mini...");
       const prompt = construirPromptChatGPT(personagem, dna, cenaTexto, dbPersonagens, dbZanpakutosVinculadas);
       const res = await fetch("https://api.openai.com/v1/chat/completions", {
         method: "POST",
@@ -2625,7 +2735,7 @@ async function gerar4CaminhosZanpakutoAI_Async(personagem, dbPersonagens = [], d
           model: "gpt-4o-mini",
           messages: [{
             role: "system",
-            content: "Você é um mestre narrador de Bleach RPG especialista no Zanpakuto Genesis Engine v5.0. Você NUNCA repete nomes, temas ou mecânicas de Zanpakutōs já registradas no banco de dados. Responda APENAS em JSON válido."
+            content: "Você é um mestre narrador de Bleach RPG especialista no Zanpakuto Genesis Engine v5.0. Responda APENAS em JSON válido."
           }, {
             role: "user",
             content: prompt
@@ -2633,7 +2743,7 @@ async function gerar4CaminhosZanpakutoAI_Async(personagem, dbPersonagens = [], d
           response_format: {
             type: "json_object"
           },
-          temperature: 0.88
+          temperature: 0.95
         })
       });
       if (res.ok) {
@@ -2642,7 +2752,6 @@ async function gerar4CaminhosZanpakutoAI_Async(personagem, dbPersonagens = [], d
         if (contentStr) {
           const parsed = JSON.parse(contentStr);
           if (parsed && Array.isArray(parsed.caminhos) && parsed.caminhos.length >= 4) {
-            console.log("Zanpakutō gerada com sucesso pelo ChatGPT!");
             caminhosResultantes = parsed.caminhos.slice(0, 4).map((c, idx) => ({
               ...c,
               caminhoNumero: idx + 1,
@@ -2656,7 +2765,7 @@ async function gerar4CaminhosZanpakutoAI_Async(personagem, dbPersonagens = [], d
         }
       }
     } catch (err) {
-      console.warn("OpenAI fetch failed, falling back to Cognitive Soul Synthesizer:", err);
+      console.warn("OpenAI fetch falhou:", err);
     }
   }
 
@@ -2902,50 +3011,64 @@ async function gerar3BankaisEvolucaoAI_Async(personagem, shikai, dbPersonagens =
     elemento: "Espiritual"
   };
   const dna = construirDnaEspiritual(personagem, cenaTexto);
-  const keyToUse = apiKey || (typeof localStorage !== 'undefined' ? localStorage.getItem("bleach_openai_key") : "") || (typeof window !== 'undefined' ? window.BLEACH_CONFIG?.openaiApiKey : "") || getDefaultGeminiKey();
+  let keyToUse = getValidGeminiApiKey(apiKey);
   let bankaisResultantes = null;
-
-  // 1. Tentar Google Gemini API (gemini-3.6-flash)
-  if (keyToUse && !keyToUse.startsWith("sk-") && keyToUse.length > 20) {
-    try {
-      console.log("Chamando Google Gemini API (gemini-3.6-flash) para geração das 3 Evoluções de Bankai baseadas na Shikai escolhida...");
-      const prompt = construirPromptBankaiEvolucao(personagem, shikaiBase, dna, cenaTexto, dbPersonagens, dbZanpakutosVinculadas);
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${encodeURIComponent(keyToUse)}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          contents: [{
-            role: "user",
-            parts: [{
-              text: prompt + "\n\nResponda ESTRITAMENTE em formato JSON válido conforme o esquema de 3 bankais solicitado."
-            }]
-          }],
-          generationConfig: {
-            responseMimeType: "application/json",
-            temperature: 0.85
-          }
-        })
-      });
-      if (res.ok) {
-        const data = await res.json();
-        const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (rawText) {
-          const parsed = JSON.parse(rawText);
-          if (parsed && Array.isArray(parsed.bankais) && parsed.bankais.length >= 3) {
-            console.log("3 Evoluções de Bankai geradas com sucesso pelo Google Gemini!");
-            bankaisResultantes = parsed.bankais.slice(0, 3).map((b, idx) => ({
-              ...b,
-              opcaoNumero: idx + 1,
-              id: uid(),
-              shikaiBase: shikaiBase.nome
-            }));
-          }
+  async function callGeminiBankai(key) {
+    const prompt = construirPromptBankaiEvolucao(personagem, shikaiBase, dna, cenaTexto, dbPersonagens, dbZanpakutosVinculadas);
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${encodeURIComponent(key)}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        contents: [{
+          role: "user",
+          parts: [{
+            text: prompt + "\n\nResponda ESTRITAMENTE em formato JSON válido conforme o esquema de 3 bankais solicitado."
+          }]
+        }],
+        generationConfig: {
+          responseMimeType: "application/json",
+          temperature: 0.95
+        }
+      })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (rawText) {
+        const parsed = JSON.parse(rawText);
+        if (parsed && Array.isArray(parsed.bankais) && parsed.bankais.length >= 3) {
+          return parsed.bankais.slice(0, 3).map((b, idx) => ({
+            ...b,
+            opcaoNumero: idx + 1,
+            id: uid(),
+            shikaiBase: shikaiBase.nome
+          }));
         }
       }
+    } else {
+      console.warn("Gemini Bankai HTTP Error:", res.status, await res.text());
+    }
+    return null;
+  }
+
+  // 1. Tentar Google Gemini API (gemini-3.6-flash)
+  if (keyToUse && !keyToUse.startsWith("sk-")) {
+    try {
+      console.log("Chamando Google Gemini API (gemini-3.6-flash) para geração das 3 Evoluções de Bankai...");
+      bankaisResultantes = await callGeminiBankai(keyToUse);
+      if (!bankaisResultantes && keyToUse !== getDefaultGeminiKey()) {
+        console.log("Tentando novamente Bankai com a chave padrão do Gemini...");
+        bankaisResultantes = await callGeminiBankai(getDefaultGeminiKey());
+      }
     } catch (err) {
-      console.warn("Google Gemini API fetch failed for Bankai, falling back to Cognitive Engine:", err);
+      console.warn("Google Gemini API fetch failed for Bankai:", err);
+      if (keyToUse !== getDefaultGeminiKey()) {
+        try {
+          bankaisResultantes = await callGeminiBankai(getDefaultGeminiKey());
+        } catch (e) {}
+      }
     }
   }
 
@@ -3048,8 +3171,7 @@ if (typeof window !== 'undefined') {
   window.construirPromptBankaiEvolucao = construirPromptBankaiEvolucao;
   window.calcularAssinaturaEspiritual = calcularAssinaturaEspiritual;
   window.calcularIndiceSimilaridade = calcularIndiceSimilaridade;
-  window.getClaimedSignatures = getClaimedSignatures;
-  window.getExistingZanpakutosSummary = getExistingZanpakutosSummary;
+  window.sintetizarZanpakutosCognitivo = sintetizarZanpakutosCognitivo;
   window.construirDnaEspiritual = construirDnaEspiritual;
   window.construirPromptChatGPT = construirPromptChatGPT;
 }
