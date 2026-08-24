@@ -3234,12 +3234,7 @@ function SpiritualChestModal({
     style: {
       width: `${Math.min(100, progress)}%`
     }
-  }))), /*#__PURE__*/React.createElement("div", {
-    className: "mt-4"
-  }, /*#__PURE__*/React.createElement("button", {
-    onClick: modal.onSkip,
-    className: "px-4 py-1.5 rounded-lg bg-black/60 border border-white/10 hover:border-white/40 text-bleach-creamDim hover:text-white text-xs font-mono transition"
-  }, "\u26A1 Pular Anima\xE7\xE3o (Revelar J\xE1)"))) :
+  })))) :
   /*#__PURE__*/
   /* Revealed Stage */
   React.createElement("div", {
@@ -3331,18 +3326,19 @@ if (typeof window !== 'undefined') {
 // 3. 4 SPIRITUAL PATHS / 3 BANKAI EVOLUTIONS SELECTION MODAL (COM IA & ANIMAÇÃO CINEMATOGRÁFICA)
 function Zanpakuto4PathsModal({
   open,
-  caminhos,
+  caminhos = [],
   personagem,
   isBankai,
+  loading,
   onClose,
-  onEscolherCaminho,
-  onRegenerar
+  onEscolherCaminho
 }) {
-  if (!open || !caminhos || caminhos.length === 0) return null;
-  const isBankaiFinal = isBankai || !!caminhos[0]?.isBankaiEvolucao;
+  if (!open) return null;
+  const listaCaminhos = Array.isArray(caminhos) ? caminhos : [];
+  const isBankaiFinal = isBankai || !!listaCaminhos[0]?.isBankaiEvolucao;
   const [caminhoAtivoIdx, setCaminhoAtivoIdx] = useState(0);
-  const [ritualState, setRitualState] = useState("charging"); // starts in "charging" for epic cinematic animation
-  const [caminhoSelecionado, setCaminhoSelecionado] = useState(caminhos?.[0] || null);
+  const [ritualState, setRitualState] = useState(loading || listaCaminhos.length === 0 ? "charging" : "selection");
+  const [caminhoSelecionado, setCaminhoSelecionado] = useState(listaCaminhos[0] || null);
   const [chargeProgress, setChargeProgress] = useState(0);
   const [chargeStageText, setChargeStageText] = useState("Sintonizando Pressão Espiritual com o Mundo Interior...");
   const [showConfigApiKey, setShowConfigApiKey] = useState(false);
@@ -3350,18 +3346,20 @@ function Zanpakuto4PathsModal({
   const [salvoKey, setSalvoKey] = useState(false);
   const chargeIntervalRef = useRef(null);
   useEffect(() => {
-    if (caminhos && caminhos.length > 0) {
-      setCaminhoSelecionado(caminhos[caminhoAtivoIdx] || caminhos[0]);
+    if (listaCaminhos && listaCaminhos.length > 0) {
+      setCaminhoSelecionado(listaCaminhos[caminhoAtivoIdx] || listaCaminhos[0]);
     }
-  }, [caminhos, caminhoAtivoIdx]);
+  }, [listaCaminhos, caminhoAtivoIdx]);
 
   // Continuous charging power ritual while AI generates, or direct selection if already saved
   useEffect(() => {
     if (open) {
-      if (!loading && caminhos && caminhos.length > 0) {
-        setRitualState("selection");
+      if (!loading && listaCaminhos && listaCaminhos.length > 0 && ritualState === "selection") {
         setChargeProgress(100);
-        playReiatsuSound(isBankaiFinal ? 'bankai_reveal' : 'win');
+        return;
+      }
+      if (!loading && listaCaminhos && listaCaminhos.length > 0 && chargeProgress >= 100) {
+        setRitualState("selection");
         return;
       }
       setRitualState("charging");
@@ -3371,9 +3369,9 @@ function Zanpakuto4PathsModal({
       let p = 0;
       let stageCounter = 0;
       if (chargeIntervalRef.current) clearInterval(chargeIntervalRef.current);
-      const dynamicStages = isBankaiFinal ? ["Sintonizando a Shikai com a profundidade da alma...", "⚡ TENSÃO DE REIATSU: Quebrando as limitações terrenas da lâmina...", "💥 VIBRAÇÃO DO AR: O corte monumental atravessa as camadas de Reishi...", "👑 FORJANDO AS 3 EVOLUÇÕES TRANSCENDENTAIS DE BANKAI COM A IA...", "卍 A fenda da alma se abre em ressonância absoluta..."] : ["Sintonizando Pressão Espiritual com o Mundo Interior...", "⚡ TENSÃO DE REIATSU: O corte horizontal rasga o tecido espiritual da alma...", "💥 VIBRAÇÃO DO AR & ONDAS DE CHOQUE: A lâmina atinge a frequência transcendental!", "🗡️ FORJANDO AS 4 MANIFESTAÇÕES AUTÊNTICAS DA SHIKAI COM A IA...", "✨ A fenda se abre: Revelando as manifestações únicas da alma..."];
+      const dynamicStages = isBankaiFinal ? ["Sintonizando a Shikai com a profundidade da alma...", "⚡ TENSÃO DE REIATSU: A energia se eleva em chamas monumentais...", "💥 VIBRAÇÃO DO REISHI: Os rastros de aura rasgam o véu entre os mundos...", "👑 FORJANDO AS 3 EVOLUÇÕES TRANSCENDENTAIS DE BANKAI COM A IA...", "卍 A fenda da alma se abre em ressonância absoluta..."] : ["Sintonizando Pressão Espiritual com o Mundo Interior...", "⚡ TENSÃO DE REIATSU: A aura espiritual se eleva em chamas de energia...", "💥 VIBRAÇÃO DO AR & ONDAS DE CHOQUE: Os rastros de Reishi fluem pelo ambiente!", "🗡️ FORJANDO AS 4 MANIFESTAÇÕES AUTÊNTICAS DA SHIKAI COM A IA...", "✨ A fenda se abre: Revelando as manifestações únicas da alma..."];
       chargeIntervalRef.current = setInterval(() => {
-        const isReady = !loading && caminhos && caminhos.length > 0;
+        const isReady = !loading && listaCaminhos && listaCaminhos.length > 0;
         if (!isReady) {
           // Progress smoothly up to 92% and oscillate while AI is computing
           if (p < 92) {
@@ -3408,7 +3406,7 @@ function Zanpakuto4PathsModal({
     return () => {
       if (chargeIntervalRef.current) clearInterval(chargeIntervalRef.current);
     };
-  }, [open, loading, caminhos]);
+  }, [open, loading, listaCaminhos.length]);
   function salvarApiKey(e) {
     e.preventDefault();
     localStorage.setItem("bleach_openai_key", apiKeyInput.trim());
@@ -3422,8 +3420,18 @@ function Zanpakuto4PathsModal({
   }
   return /*#__PURE__*/React.createElement("div", {
     className: "fixed inset-0 bg-black/95 backdrop-blur-xl z-50 flex items-center justify-center p-2 sm:p-4 overflow-y-auto"
+  }, ritualState === "charging" && /*#__PURE__*/React.createElement("div", {
+    className: "fixed inset-0 pointer-events-none overflow-hidden z-0"
   }, /*#__PURE__*/React.createElement("div", {
-    className: `relative w-full max-w-5xl bg-bleach-panel border-2 rounded-2xl p-4 sm:p-6 shadow-2xl text-left transition-all ${isBankaiFinal ? "border-yellow-500/80 bankai-supreme-card" : "border-bleach-orange/80 reiatsu-glow"} my-auto`
+    className: isBankaiFinal ? "aura-flame-surge-bankai" : "aura-flame-surge"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "absolute w-3 h-48 rounded-full bg-gradient-to-t from-transparent via-cyan-400 to-white blur-sm energy-trail-1 shadow-[0_0_25px_#4FB3E8]"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "absolute w-3.5 h-56 rounded-full bg-gradient-to-t from-transparent via-bleach-orange to-yellow-300 blur-sm energy-trail-2 shadow-[0_0_30px_#FF6A13]"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "absolute w-4 h-60 rounded-full bg-gradient-to-t from-transparent via-yellow-400 to-purple-400 blur-sm energy-trail-3 shadow-[0_0_35px_#FFD700]"
+  })), /*#__PURE__*/React.createElement("div", {
+    className: `relative w-full max-w-5xl bg-bleach-panel border-2 rounded-2xl p-4 sm:p-6 shadow-2xl text-left transition-all z-10 ${isBankaiFinal ? "border-yellow-500/80 bankai-supreme-card" : "border-bleach-orange/80 reiatsu-glow"} my-auto`
   }, /*#__PURE__*/React.createElement("div", {
     className: "flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-bleach-borderSoft pb-4 mb-4"
   }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
@@ -3434,7 +3442,7 @@ function Zanpakuto4PathsModal({
     className: "text-xs text-bleach-muted"
   }, "Alma: ", /*#__PURE__*/React.createElement("strong", {
     className: "text-white"
-  }, personagem.nome)), /*#__PURE__*/React.createElement("span", {
+  }, personagem?.nome || "Shinigami")), /*#__PURE__*/React.createElement("span", {
     className: "text-[10px] bg-green-950 text-green-300 border border-green-500/40 px-2 py-0.5 rounded-full"
   }, "\u2713 DNA Espiritual Analisado")), /*#__PURE__*/React.createElement("h2", {
     className: "font-title text-2xl sm:text-3xl text-white tracking-wider mt-1"
@@ -3498,7 +3506,7 @@ function Zanpakuto4PathsModal({
     className: "flex items-center justify-center w-full max-w-md text-[11px] text-bleach-muted pt-1"
   }, /*#__PURE__*/React.createElement("span", null, "Resson\xE2ncia de Reiatsu: ", /*#__PURE__*/React.createElement("strong", {
     className: "text-yellow-400 font-mono"
-  }, chargeProgress, "%"))))), ritualState === "selection" && /*#__PURE__*/React.createElement("div", {
+  }, chargeProgress, "%"))))), ritualState === "selection" && listaCaminhos.length > 0 && /*#__PURE__*/React.createElement("div", {
     className: "space-y-4 card-pop-reveal"
   }, /*#__PURE__*/React.createElement("div", {
     className: `grid gap-2 mb-4 ${isBankaiFinal ? "grid-cols-1 sm:grid-cols-3" : "grid-cols-2 md:grid-cols-4"}`
