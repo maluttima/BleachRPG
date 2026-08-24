@@ -124,19 +124,21 @@ for (const fn of expectedGlobals) {
 
 // 3. Test PowerTier calculation across all levels
 const testTiers = [
-  { val: 5, expected: "Inexperiente" },
-  { val: 25, expected: "Iniciante" },
-  { val: 55, expected: "Treinado" },
-  { val: 85, expected: "Veterano" },
-  { val: 120, expected: "Mestre" },
-  { val: 200, expected: "Mestre" }, // 200 / 4 = 50 -> Treinado / Mestre
-  { val: 800, expected: "Transcendental" }
+  { val: 100, expected: "Inexperiente" },
+  { val: 300, expected: "Iniciante" },
+  { val: 600, expected: "Treinado" },
+  { val: 900, expected: "Experiente" },
+  { val: 1300, expected: "Elite" },
+  { val: 1800, expected: "Alto Nível" },
+  { val: 2300, expected: "Monstruoso" },
+  { val: 2900, expected: "Lendário" },
+  { val: 3500, expected: "Transcendente" }
 ];
 
 testTiers.forEach(t => {
   const res = sandbox.getPowerTier(t.val);
-  if (!res || !res.title) {
-    console.error(`✗ Power tier failed for ${t.val}`);
+  if (!res || res.title !== t.expected) {
+    console.error(`✗ Power tier failed for ${t.val}: expected ${t.expected}, got ${res?.title}`);
     process.exit(1);
   }
 });

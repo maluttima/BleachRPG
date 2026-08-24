@@ -135,13 +135,16 @@ function maskWhats(w) {
 }
 
 function getPowerTier(statVal) {
-  const val = Number(statVal) > 150 ? Math.round(Number(statVal) / 4) : Number(statVal || 0);
-  if (val <= 10) return { title: "Inexperiente", patamar: "1–10", color: C.muted };
-  if (val <= 30) return { title: "Iniciante", patamar: "11–30", color: C.green };
-  if (val <= 60) return { title: "Treinado", patamar: "31–60", color: C.blue };
-  if (val <= 100) return { title: "Veterano", patamar: "61–100", color: C.purple };
-  if (val <= 150) return { title: "Mestre", patamar: "101–150", color: C.yellow };
-  return { title: "Transcendental", patamar: "150+", color: "#FFD700" };
+  const val = Number(statVal || 0);
+  if (val <= 200) return { title: "Inexperiente", patamar: "1–200", color: C.muted };
+  if (val <= 450) return { title: "Iniciante", patamar: "201–450", color: C.green };
+  if (val <= 750) return { title: "Treinado", patamar: "451–750", color: C.blue };
+  if (val <= 1100) return { title: "Experiente", patamar: "751–1100", color: C.purple };
+  if (val <= 1500) return { title: "Elite", patamar: "1101–1500", color: C.yellow };
+  if (val <= 2000) return { title: "Alto Nível", patamar: "1501–2000", color: "#FFA500" };
+  if (val <= 2600) return { title: "Monstruoso", patamar: "2001–2600", color: C.red };
+  if (val <= 3300) return { title: "Lendário", patamar: "2601–3300", color: "#E0B34C" };
+  return { title: "Transcendente", patamar: "3300+", color: "#FFD700" };
 }
 
 // Web Audio API Synthesizer
@@ -627,6 +630,8 @@ function App() {
       personalidadeTravada: !!p.personalidadeTravada,
       cenaDespertarShikai: p.cenaDespertarShikai || "",
       cenaDespertarBankai: p.cenaDespertarBankai || "",
+      opcoesShikaiPendentes: Array.isArray(p.opcoesShikaiPendentes) && p.opcoesShikaiPendentes.length > 0 ? p.opcoesShikaiPendentes : null,
+      opcoesBankaiPendentes: Array.isArray(p.opcoesBankaiPendentes) && p.opcoesBankaiPendentes.length > 0 ? p.opcoesBankaiPendentes : null,
       zanpakuto: p.zanpakuto || {
         nome: "Em despertar",
         fotoShikai: "assets/ichigo-orange.png",
@@ -934,6 +939,9 @@ function App() {
 
         {view === "rankings" && (
           <RankingsView
+            db={db}
+            saveDb={saveDb}
+            session={session}
             rankFisico={rankFisico}
             rankPressao={rankPressao}
             myCharId={myChar?.id}

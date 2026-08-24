@@ -31,6 +31,52 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
   const [dadoTipo, setDadoTipo] = useState("d6");
   const [dadoChar, setDadoChar] = useState(db.personagens?.[0]?.nome || "Geral");
 
+  // Dados de Lançamento de Atividade & Cenas em Lote
+  const [atvCharId, setAtvCharId] = useState(db.personagens?.[0]?.id || "");
+  const [atvBuscaCodigo, setAtvBuscaCodigo] = useState("");
+  const [atvQtdCenas, setAtvQtdCenas] = useState(5);
+  const [atvValorPorCena, setAtvValorPorCena] = useState(100);
+  const [atvMotivo, setAtvMotivo] = useState("");
+
+  function lancarAtividadeCenas(targetCharId, qtd, valPorCena, motivo) {
+    const pId = targetCharId || atvCharId;
+    if (!pId) {
+      alert("Selecione um personagem para lançar as cenas.");
+      return;
+    }
+    const numCenas = Math.max(1, Number(qtd !== undefined ? qtd : atvQtdCenas) || 1);
+    const taxaCena = Number(valPorCena !== undefined ? valPorCena : atvValorPorCena) || 100;
+    const ganhoConhecimento = numCenas * taxaCena;
+
+    let charNome = "";
+    const novosP = (db.personagens || []).map(p => {
+      if (p.id === pId) {
+        charNome = p.nome;
+        return {
+          ...p,
+          codigoAtividade: p.codigoAtividade || getCodigoAtividade(p),
+          cenasSemana: (p.cenasSemana || 0) + numCenas,
+          cenasTotal: (p.cenasTotal || 0) + numCenas,
+          conhecimento: (p.conhecimento || 0) + ganhoConhecimento,
+          historico: [
+            {
+              id: uid(),
+              data: nowStr(),
+              texto: `📊 +${numCenas} cenas no WhatsApp registradas pelo ADM (+${ganhoConhecimento} ₪ Conhecimento)${motivo ? ` — ${motivo}` : ''}`
+            },
+            ...(p.historico || [])
+          ]
+        };
+      }
+      return p;
+    });
+
+    saveDb({ ...db, personagens: novosP });
+    playReiatsuSound('win');
+    alert(`✓ Sucesso! Foram lançadas +${numCenas} cenas para [${charNome}].\n\n+${ganhoConhecimento} de Conhecimento creditado com sucesso!`);
+    setAtvMotivo("");
+  }
+
   function criarPersonagem(e) {
     e.preventDefault();
     if (!novoNome.trim() || !novoCodigo.trim()) {
@@ -38,12 +84,16 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
       return;
     }
 
+    const whatsDigits = novoWhats.trim().replace(/\D/g, "").slice(-4) || String(Math.floor(1000 + Math.random() * 9000));
+    const codAtividade = `ACT-${whatsDigits.padStart(4, '0')}`;
+
     const novoP = {
       id: "char-" + uid(),
       nome: novoNome.trim(),
       foto: "assets/ichigo-orange.png",
       whatsapp: novoWhats.trim(),
       codigo: novoCodigo.trim(),
+      codigoAtividade: codAtividade,
       raca: novoRaca,
       esquadrao: novoEsquadrao,
       faceclaim: novoNome.trim(),
@@ -52,14 +102,17 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
       idadeChar: "18",
       aniversarioChar: "15/07",
       pontosDisponiveis: 20,
+      conhecimento: 200,
+      cenasSemana: 0,
+      cenasTotal: 0,
       sorteiosComunsRestantes: 2,
       sorteiosEspeciaisRestantes: 0,
       sorteiosDrops: [],
       permissoes: { shikaiLiberada: false, bankaiLiberada: false },
       atributos: { pressao: 10, forca: 10, velocidade: 10, resiliencia: 10 },
       kidosConhecidos: [
-        { id: "h4", numero: 4, nome: "Byakurai", cat: "Hadō", custoReiatsu: 3 },
-        { id: "b1", numero: 1, nome: "Sai", cat: "Bakudō", custoReiatsu: 2 }
+        { id: "h4", numero: 4, nome: "Byakurai", cat: "Hadō", custoReiatsu: 3, custoConhecimento: 140, pressaoMinima: 18 },
+        { id: "b1", numero: 1, nome: "Sai", cat: "Bakudō", custoReiatsu: 2, custoConhecimento: 95, pressaoMinima: 12 }
       ],
       tecnicas: [
         { id: uid(), nome: "Hadō #4 — Byakurai", categoria: "Hadō" },
@@ -304,20 +357,214 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
           </div>
 
           <div className="flex flex-wrap gap-2">
-            {["fichas", "novo", "subadms", "dados", "nuvem", "ia"].map(t => (
+            {[
+              { id: "fichas", label: "Fichas" },
+              { id: "atividade", label: "📊 Cenas & Conhecimento" },
+              { id: "novo", label: "+ Criar" },
+              { id: "subadms", label: "Avaliadores" },
+              { id: "dados", label: "Dados" },
+              { id: "nuvem", label: "☁️ Firebase" },
+              { id: "ia", label: "🤖 IA & ChatGPT" }
+            ].map(t => (
               <button
-                key={t}
-                onClick={() => setTabAdm(t)}
+                key={t.id}
+                onClick={() => setTabAdm(t.id)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase transition ${
-                  tabAdm === t ? "bg-yellow-500 text-black font-extrabold shadow" : "bg-black/60 border border-yellow-500/30 text-yellow-200"
+                  tabAdm === t.id ? "bg-yellow-500 text-black font-extrabold shadow" : "bg-black/60 border border-yellow-500/30 text-yellow-200"
                 }`}
               >
-                {t === "fichas" ? "Fichas" : t === "novo" ? "+ Criar" : t === "subadms" ? "Avaliadores" : t === "dados" ? "Dados" : t === "nuvem" ? "☁️ Firebase" : "🤖 IA & ChatGPT"}
+                {t.label}
               </button>
             ))}
           </div>
         </div>
       </div>
+
+      {/* SUBTAB: REGISTRO DE ATIVIDADE & CENAS EM LOTE */}
+      {tabAdm === "atividade" && (
+        <div className="space-y-6">
+          <Section 
+            title="📊 Lançamento de Atividade & Cenas em Lote" 
+            subtitle="Registre as cenas feitas no WhatsApp pelo código do player para somar atividade e creditar Conhecimento semanal"
+            className="border-2 border-yellow-500/60"
+          >
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              
+              {/* Painel do Formulário */}
+              <div className="lg:col-span-1 p-5 bg-black/70 rounded-xl border border-yellow-500/40 space-y-4 shadow-xl">
+                <h4 className="font-title text-base text-yellow-400 border-b border-white/10 pb-2 flex items-center gap-2">
+                  <span>⚡</span> Lançar Cenas para Jogador
+                </h4>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-bleach-creamDim uppercase mb-1">
+                    Selecione o Personagem:
+                  </label>
+                  <select
+                    value={atvCharId}
+                    onChange={(e) => setAtvCharId(e.target.value)}
+                    className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2.5 text-xs text-white"
+                  >
+                    {(db.personagens || []).map(p => (
+                      <option key={p.id} value={p.id}>
+                        {p.nome} — [{getCodigoAtividade(p)}] ({p.cenasSemana || 0} cenas esta semana)
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {(() => {
+                  const selChar = (db.personagens || []).find(p => p.id === atvCharId);
+                  if (!selChar) return null;
+                  const cod = getCodigoAtividade(selChar);
+                  return (
+                    <div className="p-3 bg-bleach-panel rounded-lg border border-white/5 space-y-1 text-xs">
+                      <div className="flex justify-between">
+                        <span className="text-bleach-muted">Código de Atividade:</span>
+                        <strong className="text-yellow-400 font-mono">{cod}</strong>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-bleach-muted">Cenas na Semana:</span>
+                        <strong className="text-white font-mono">{selChar.cenasSemana || 0} cenas</strong>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-bleach-muted">Conhecimento Atual:</span>
+                        <strong className="text-yellow-400 font-mono">{selChar.conhecimento || 0} ₪</strong>
+                      </div>
+                    </div>
+                  );
+                })()}
+
+                <div>
+                  <label className="block text-[11px] font-bold text-bleach-creamDim uppercase mb-1">
+                    Quantidade de Cenas a Lançar:
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="number"
+                      min="1"
+                      value={atvQtdCenas}
+                      onChange={(e) => setAtvQtdCenas(Math.max(1, Number(e.target.value) || 1))}
+                      className="w-24 bg-bleach-panel2 border border-bleach-border rounded-lg p-2 text-white font-mono font-bold text-sm text-center"
+                    />
+                    <div className="flex flex-wrap gap-1 flex-1">
+                      {[1, 2, 3, 5, 10, 20].map(n => (
+                        <button
+                          key={n}
+                          type="button"
+                          onClick={() => setAtvQtdCenas(n)}
+                          className={`px-2 py-1 rounded text-xs font-mono font-bold transition border ${
+                            atvQtdCenas === n ? "bg-yellow-500 text-black border-yellow-400" : "bg-black/60 text-bleach-creamDim border-white/10"
+                          }`}
+                        >
+                          +{n}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-bleach-creamDim uppercase mb-1">
+                    Conhecimento Concedido por Cena:
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    step="10"
+                    value={atvValorPorCena}
+                    onChange={(e) => setAtvValorPorCena(Math.max(0, Number(e.target.value) || 0))}
+                    className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2 text-xs text-yellow-300 font-mono"
+                  />
+                  <span className="text-[10px] text-bleach-muted mt-0.5 block">
+                    Total a creditar: <strong className="text-yellow-400 font-mono">+{atvQtdCenas * atvValorPorCena} ₪ Conhecimento</strong>
+                  </span>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-bleach-creamDim uppercase mb-1">
+                    Motivo / Observação (Opcional):
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Ex: Treino em Karakura com 45 linhas / Missão do 11º Esquadrão"
+                    value={atvMotivo}
+                    onChange={(e) => setAtvMotivo(e.target.value)}
+                    className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2 text-xs text-white"
+                  />
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => lancarAtividadeCenas(atvCharId, atvQtdCenas, atvValorPorCena, atvMotivo)}
+                  className="w-full py-3 bg-gradient-to-r from-yellow-500 to-amber-600 hover:brightness-110 text-black font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-lg transition"
+                >
+                  ✓ Lançar +{atvQtdCenas} Cenas & Creditar Conhecimento
+                </button>
+              </div>
+
+              {/* Tabela Geral de Atividade dos Personagens */}
+              <div className="lg:col-span-2 space-y-3">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-title text-base text-white">
+                    Quadro Semanal de Atividade dos Jogadores ({db.personagens?.length || 0})
+                  </h4>
+                  <span className="text-xs text-bleach-muted">Clique nos botões rápidos para somar cenas instantaneamente</span>
+                </div>
+
+                <div className="space-y-2 max-h-[600px] overflow-y-auto pr-1">
+                  {(db.personagens || []).map((p) => {
+                    const cod = getCodigoAtividade(p);
+                    return (
+                      <div
+                        key={p.id}
+                        className="p-3.5 bg-bleach-panel2 border border-white/10 hover:border-yellow-500/40 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition"
+                      >
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={p.foto || 'assets/ichigo-orange.png'}
+                            className="w-10 h-10 rounded-lg object-cover border border-white/10"
+                          />
+                          <div>
+                            <h5 className="font-bold text-white text-sm">{p.nome}</h5>
+                            <div className="flex items-center gap-2 text-xs font-mono text-bleach-muted">
+                              <span>Código: <strong className="text-yellow-400">{cod}</strong></span>
+                              <span>•</span>
+                              <span>Conhecimento: <strong className="text-yellow-300">{p.conhecimento || 0} ₪</strong></span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-3 justify-between sm:justify-end">
+                          <div className="text-right">
+                            <span className="text-[10px] text-bleach-muted uppercase block">Cenas Semana:</span>
+                            <span className="text-base font-mono font-black text-white">{p.cenasSemana || 0} cenas</span>
+                          </div>
+
+                          <div className="flex gap-1.5">
+                            {[1, 3, 5].map((qtd) => (
+                              <button
+                                key={qtd}
+                                type="button"
+                                onClick={() => lancarAtividadeCenas(p.id, qtd, 100, `Lançamento rápido +${qtd} cenas`)}
+                                className="px-2.5 py-1.5 bg-yellow-950/80 hover:bg-yellow-900 border border-yellow-500 text-yellow-300 text-xs font-bold font-mono rounded-lg transition"
+                                title={`Adicionar +${qtd} cena(s) e +${qtd * 100} Conhecimento`}
+                              >
+                                +{qtd}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+            </div>
+          </Section>
+        </div>
+      )}
 
       {/* SUBTAB: LISTA DE FICHAS */}
       {tabAdm === "fichas" && (
@@ -347,20 +594,35 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
                     {p.personalidadeTravada && <span className="px-2 py-0.5 bg-green-950 text-green-300 rounded">🔒 DNA Selado</span>}
                   </div>
 
-                  <div className="flex gap-2 pt-2 border-t border-white/5">
+                  <div className="space-y-2 pt-2 border-t border-white/5">
                     <button
-                      onClick={() => onAbrirFicha(p.id)}
-                      className="flex-1 py-1.5 bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold text-xs uppercase rounded-lg shadow"
+                      type="button"
+                      onClick={() => {
+                        copiarFichaFormatadaWhatsApp(p, () => {
+                          playReiatsuSound('win');
+                          alert(`📋 Ficha Oficial de ${p.nome} copiada com sucesso para a área de transferência com formato WhatsApp (Made By Malutti)!`);
+                        });
+                      }}
+                      className="w-full py-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:brightness-110 text-white font-extrabold text-[11px] uppercase tracking-wider rounded-lg shadow flex items-center justify-center gap-1.5"
                     >
-                      ✏️ Gerenciar Ficha
+                      <span>📋</span> Copiar Ficha WhatsApp (Malutti)
                     </button>
-                    <button
-                      onClick={() => apagarPersonagem(p.id, p.nome)}
-                      className="px-3 py-1.5 bg-red-950 hover:bg-red-900 border border-red-500 text-red-200 text-xs font-bold rounded-lg"
-                      title="Excluir Ficha"
-                    >
-                      🗑️
-                    </button>
+
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => onAbrirFicha(p.id)}
+                        className="flex-1 py-1.5 bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold text-xs uppercase rounded-lg shadow"
+                      >
+                        ✏️ Gerenciar Ficha
+                      </button>
+                      <button
+                        onClick={() => apagarPersonagem(p.id, p.nome)}
+                        className="px-3 py-1.5 bg-red-950 hover:bg-red-900 border border-red-500 text-red-200 text-xs font-bold rounded-lg"
+                        title="Excluir Ficha"
+                      >
+                        🗑️
+                      </button>
+                    </div>
                   </div>
                 </div>
               );
@@ -859,15 +1121,15 @@ function SistemasView() {
                 <h4 className="font-title text-sm text-bleach-orange uppercase">Escala de Referência</h4>
                 <div className="space-y-1.5">
                   {[
-                    { faixa: "1–10", patamar: "Inexperiente", cor: C.muted },
-                    { faixa: "11–30", patamar: "Iniciante", cor: C.green },
-                    { faixa: "31–60", patamar: "Treinado", cor: C.blue },
-                    { faixa: "61–100", patamar: "Experiente", cor: C.purple },
-                    { faixa: "101–150", patamar: "Elite", cor: C.yellow },
-                    { faixa: "151–250", patamar: "Alto Nível", cor: "#FFA500" },
-                    { faixa: "251–400", patamar: "Monstruoso", cor: C.red },
-                    { faixa: "401–600", patamar: "Lendário", cor: "#E0B34C" },
-                    { faixa: "601+", patamar: "Transcendente", cor: "#FFD700" }
+                    { faixa: "1–200", patamar: "Inexperiente", cor: C.muted },
+                    { faixa: "201–450", patamar: "Iniciante", cor: C.green },
+                    { faixa: "451–750", patamar: "Treinado", cor: C.blue },
+                    { faixa: "751–1100", patamar: "Experiente", cor: C.purple },
+                    { faixa: "1101–1500", patamar: "Elite", cor: C.yellow },
+                    { faixa: "1501–2000", patamar: "Alto Nível", cor: "#FFA500" },
+                    { faixa: "2001–2600", patamar: "Monstruoso", cor: C.red },
+                    { faixa: "2601–3300", patamar: "Lendário", cor: "#E0B34C" },
+                    { faixa: "3300+", patamar: "Transcendente", cor: "#FFD700" }
                   ].map(p => (
                     <div key={p.patamar} className="p-2 bg-bleach-panel2 border border-white/5 rounded-lg flex justify-between">
                       <span className="font-mono font-bold text-white">{p.faixa} pts</span>
@@ -881,12 +1143,12 @@ function SistemasView() {
                 <h4 className="font-title text-sm text-cyan-400 uppercase">Diferença em Combate</h4>
                 <div className="space-y-1.5">
                   {[
-                    { diff: "0–10 pts", desc: "Equivalentes" },
-                    { diff: "11–30 pts", desc: "Pequena vantagem" },
-                    { diff: "31–75 pts", desc: "Vantagem clara" },
-                    { diff: "76–150 pts", desc: "Grande vantagem" },
-                    { diff: "151–250 pts", desc: "Abismo" },
-                    { diff: "251+ pts", desc: "Diferença monstruosa" }
+                    { diff: "0–50 pts", desc: "Equivalentes" },
+                    { diff: "51–150 pts", desc: "Pequena vantagem" },
+                    { diff: "151–300 pts", desc: "Vantagem clara" },
+                    { diff: "301–600 pts", desc: "Grande vantagem" },
+                    { diff: "601–1000 pts", desc: "Abismo de poder" },
+                    { diff: "1001+ pts", desc: "Diferença monstruosa" }
                   ].map(d => (
                     <div key={d.diff} className="p-2 bg-bleach-panel2 border border-white/5 rounded-lg flex justify-between">
                       <span className="font-mono text-bleach-muted">{d.diff}</span>

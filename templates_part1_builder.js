@@ -581,20 +581,108 @@ function AdminLoginModal({ db, onClose, onSuccess }) {
   );
 }
 
-// RANKINGS VIEW
-function RankingsView({ rankFisico, rankPressao, myCharId }) {
+// RANKINGS VIEW WITH PHYSICAL, REIATSU AND WEEKLY ACTIVITY / KNOWLEDGE RANKING
+function RankingsView({ db, saveDb, session, rankFisico, rankPressao, myCharId }) {
   const [tab, setTab] = useState("fisico");
+  const isAdmin = session?.role === "super_admin" || session?.role === "sub_admin";
+
+  const rankAtividade = useMemo(() => {
+    const list = [...(db?.personagens || [])];
+    return list.sort((a, b) => {
+      const diffCenas = (b.cenasSemana || 0) - (a.cenasSemana || 0);
+      if (diffCenas !== 0) return diffCenas;
+      return (b.conhecimento || 0) - (a.conhecimento || 0);
+    });
+  }, [db?.personagens]);
+
+  // Cálculo dinâmico do contador de dias do ciclo semanal (7, 6, 5, 4, 3, 2, 1, Dia da Recompensa)
+  const cicloInfo = useMemo(() => {
+    let baseTime = db?.cicloSemanalInicio ? new Date(db.cicloSemanalInicio).getTime() : 0;
+    if (!baseTime || isNaN(baseTime)) {
+      baseTime = Date.now();
+    }
+    const msDecorridos = Math.max(0, Date.now() - baseTime);
+    const diasPassados = Math.floor(msDecorridos / (1000 * 60 * 60 * 24));
+    const diaNoCiclo = (diasPassados % 7) + 1; // 1 a 7
+    const diasRestantes = 7 - (diasPassados % 7); // 7, 6, 5, 4, 3, 2, 1
+
+    return {
+      diasPassados,
+      diaNoCiclo,
+      diasRestantes,
+      isDiaRecompensa: diasRestantes === 1 || diasRestantes === 7 && diasPassados > 0
+    };
+  }, [db?.cicloSemanalInicio]);
+
+  function finalizarCicloSemanal() {
+    if (!rankAtividade || rankAtividade.length === 0) {
+      alert("Nenhum personagem cadastrado para premiar.");
+      return;
+    }
+
+    const top1 = rankAtividade[0];
+    const top2 = rankAtividade[1];
+    const top3 = rankAtividade[2];
+
+    const confirma = confirm(
+      `🏆 Deseja finalizar o Ciclo Semanal de Atividade e conceder as recompensas?\n\n` +
+      `🥇 1º Lugar (+15 pts livres): ${top1 ? `${top1.nome} (${top1.cenasSemana || 0} cenas)` : 'Nenhum'}\n` +
+      `🥈 2º Lugar (+10 pts livres): ${top2 ? `${top2.nome} (${top2.cenasSemana || 0} cenas)` : 'Nenhum'}\n` +
+      `🥉 3º Lugar (+5 pts livres): ${top3 ? `${top3.nome} (${top3.cenasSemana || 0} cenas)` : 'Nenhum'}\n\n` +
+      `Ao confirmar, os pontos serão creditados e o contador de 7 dias será reiniciado.`
+    );
+    if (!confirma) return;
+
+    const novosPersonagens = (db.personagens || []).map(p => {
+      let bonusPts = 0;
+      let posStr = "";
+
+      if (top1 && p.id === top1.id) {
+        bonusPts = 15;
+        posStr = "1º Lugar no Ranking Semanal de Atividade";
+      } else if (top2 && p.id === top2.id) {
+        bonusPts = 10;
+        posStr = "2º Lugar no Ranking Semanal de Atividade";
+      } else if (top3 && p.id === top3.id) {
+        bonusPts = 5;
+        posStr = "3º Lugar no Ranking Semanal de Atividade";
+      }
+
+      return {
+        ...p,
+        pontosDisponiveis: (p.pontosDisponiveis || 0) + bonusPts,
+        cenasSemana: 0, // Reseta o contador para a nova semana
+        historico: bonusPts > 0 ? [
+          {
+            id: uid(),
+            data: nowStr(),
+            texto: `🏆 PREMIAÇÃO SEMANAL: Conquistou o ${posStr}! (+${bonusPts} Pontos de Atributos Livres creditados)`
+          },
+          ...(p.historico || [])
+        ] : (p.historico || [])
+      };
+    });
+
+    saveDb({
+      ...db,
+      personagens: novosPersonagens,
+      cicloSemanalInicio: new Date().toISOString()
+    });
+
+    playReiatsuSound('win');
+    alert(`🎉 Ciclo Semanal finalizado com sucesso!\n\nRecompensas distribuídas para os Top 3 e contador de 7 dias reiniciado.`);
+  }
 
   return (
     <div className="space-y-6">
       <Section
         title="Quadro Geral de Honra & Classificação"
-        subtitle="Rankings oficiais calculados a partir dos atributos puros dos Shinigamis"
+        subtitle="Rankings oficiais de combate e atividade da Sociedade das Almas"
       >
-        <div className="flex gap-2 mb-6 border-b border-bleach-borderSoft pb-3">
+        <div className="flex gap-2 mb-6 border-b border-bleach-borderSoft pb-3 overflow-x-auto">
           <button
             onClick={() => setTab("fisico")}
-            className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition ${
+            className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition whitespace-nowrap ${
               tab === "fisico"
                 ? "bg-bleach-orange text-black font-extrabold shadow"
                 : "bg-bleach-panel2 border border-bleach-border text-bleach-creamDim hover:text-white"
@@ -604,7 +692,7 @@ function RankingsView({ rankFisico, rankPressao, myCharId }) {
           </button>
           <button
             onClick={() => setTab("pressao")}
-            className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition ${
+            className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition whitespace-nowrap ${
               tab === "pressao"
                 ? "bg-bleach-blue text-black font-extrabold shadow"
                 : "bg-bleach-panel2 border border-bleach-border text-bleach-creamDim hover:text-white"
@@ -612,65 +700,213 @@ function RankingsView({ rankFisico, rankPressao, myCharId }) {
           >
             🌀 Ranking de Pressão Espiritual (Reiatsu)
           </button>
+          <button
+            onClick={() => setTab("atividade")}
+            className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition whitespace-nowrap ${
+              tab === "atividade"
+                ? "bg-gradient-to-r from-yellow-500 to-amber-600 text-black font-extrabold shadow-lg"
+                : "bg-bleach-panel2 border border-yellow-500/40 text-yellow-300 hover:text-white"
+            }`}
+          >
+            📜 Ranking de Conhecimento (Atividade Semanal)
+          </button>
         </div>
 
-        <div className="space-y-3">
-          {(tab === "fisico" ? rankFisico : rankPressao).map((p, idx) => {
-            const isMe = p.id === myCharId;
-            const pos = idx + 1;
-            const isPodium = pos <= 3;
-
-            return (
-              <div
-                key={p.id}
-                className={`p-3.5 rounded-xl border flex items-center justify-between gap-4 transition ${
-                  isMe
-                    ? "bg-orange-950/40 border-bleach-orange shadow-lg"
-                    : isPodium
-                    ? "bg-bleach-panel2 border-white/20"
-                    : "bg-bleach-panel2/60 border-bleach-borderSoft"
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-title text-base font-extrabold ${
-                    pos === 1 ? "bg-yellow-500 text-black shadow-[0_0_10px_#E0B34C]" :
-                    pos === 2 ? "bg-slate-300 text-black" :
-                    pos === 3 ? "bg-amber-700 text-white" : "bg-black text-bleach-muted"
-                  }`}>
-                    {pos === 1 ? "1º" : pos === 2 ? "2º" : pos === 3 ? "3º" : `#${pos}`}
-                  </div>
-
-                  <div className="w-10 h-10 rounded-lg overflow-hidden border border-bleach-border bg-black">
-                    <img src={p.foto || 'assets/ichigo-orange.png'} alt={p.nome} className="w-full h-full object-cover" />
-                  </div>
-
-                  <div>
-                    <h4 className="font-bold text-white text-sm flex items-center gap-2">
-                      <span>{p.nome}</span>
-                      {isMe && <span className="text-[10px] bg-bleach-orange text-black px-1.5 py-0.2 rounded font-bold">VOCÊ</span>}
-                    </h4>
-                    {tab === "fisico" && (
-                      <div className="text-[11px] text-bleach-muted font-mono flex gap-2">
-                        <span>FOR: <strong className="text-red-400">{p.forca}</strong></span>
-                        <span>VEL: <strong className="text-green-400">{p.vel}</strong></span>
-                        <span>RES: <strong className="text-purple-400">{p.res}</strong></span>
-                      </div>
-                    )}
-                  </div>
+        {/* TAB 3: RANKING DE ATIVIDADE & CONHECIMENTO */}
+        {tab === "atividade" ? (
+          <div className="space-y-5">
+            {/* Banner do Ciclo de 7 Dias & Premiações */}
+            <div className="p-5 rounded-2xl bg-gradient-to-r from-amber-950/60 via-black/80 to-yellow-950/60 border-2 border-yellow-500/70 shadow-2xl space-y-4">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-yellow-500/30 pb-4">
+                <div>
+                  <span className="px-3 py-0.5 bg-yellow-950 border border-yellow-500 text-yellow-300 text-[10px] font-extrabold uppercase rounded-full tracking-wider">
+                    Ciclo Semanal de Atividade no WhatsApp • 7 Dias
+                  </span>
+                  <h4 className="font-title text-2xl sm:text-3xl text-yellow-400 mt-1">
+                    CONTADOR DO CICLO DE RECOMPENSAS
+                  </h4>
+                  <p className="text-xs text-bleach-creamDim mt-0.5">
+                    A cada 7 dias de atividade no ON, os 3 Shinigamis com maior produção de cenas são consagrados com pontos de atributos livres!
+                  </p>
                 </div>
 
-                <div className="text-right">
-                  <span className="text-[10px] text-bleach-muted block uppercase">
-                    {tab === "fisico" ? "Média Fís." : "Reiatsu"}
-                  </span>
-                  <span className="font-mono text-lg font-black text-bleach-orange">
-                    {p.score}
-                  </span>
+                {/* Contador de Dias */}
+                <div className="flex items-center gap-3 bg-black/80 border-2 border-yellow-500 rounded-2xl px-5 py-3 shadow-inner">
+                  <span className="text-3xl">⏳</span>
+                  <div>
+                    <span className="text-[10px] text-bleach-muted uppercase font-bold block">Tempo Restante:</span>
+                    <span className="text-xl sm:text-2xl font-title font-black text-yellow-300 tracking-wider">
+                      {cicloInfo.diasRestantes === 1 ? "Último Dia!" : `${cicloInfo.diasRestantes} Dias Restantes`}
+                    </span>
+                  </div>
                 </div>
               </div>
-            );
-          })}
-        </div>
+
+              {/* Grid das Premiações dos 3 Primeiros */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+                <div className="p-3.5 bg-black/60 rounded-xl border-2 border-yellow-500/70 flex items-center gap-3 shadow-lg">
+                  <div className="w-10 h-10 rounded-xl bg-yellow-500 text-black font-title text-xl font-black flex items-center justify-center shadow-[0_0_15px_#E0B34C]">
+                    1º
+                  </div>
+                  <div>
+                    <strong className="text-xs text-yellow-300 uppercase block">1º Lugar Geral</strong>
+                    <span className="text-sm font-mono font-bold text-white">+15 Pontos Livres</span>
+                  </div>
+                </div>
+
+                <div className="p-3.5 bg-black/60 rounded-xl border border-slate-400/60 flex items-center gap-3 shadow">
+                  <div className="w-10 h-10 rounded-xl bg-slate-300 text-black font-title text-xl font-black flex items-center justify-center">
+                    2º
+                  </div>
+                  <div>
+                    <strong className="text-xs text-slate-300 uppercase block">2º Lugar Geral</strong>
+                    <span className="text-sm font-mono font-bold text-white">+10 Pontos Livres</span>
+                  </div>
+                </div>
+
+                <div className="p-3.5 bg-black/60 rounded-xl border border-amber-700/60 flex items-center gap-3 shadow">
+                  <div className="w-10 h-10 rounded-xl bg-amber-700 text-white font-title text-xl font-black flex items-center justify-center">
+                    3º
+                  </div>
+                  <div>
+                    <strong className="text-xs text-amber-400 uppercase block">3º Lugar Geral</strong>
+                    <span className="text-sm font-mono font-bold text-white">+5 Pontos Livres</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Botão para ADMs encerrarem o ciclo */}
+              {isAdmin && (
+                <div className="pt-2 border-t border-yellow-500/20 flex justify-end">
+                  <button
+                    type="button"
+                    onClick={finalizarCicloSemanal}
+                    className="px-5 py-2.5 bg-gradient-to-r from-yellow-500 to-amber-600 hover:brightness-110 text-black font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-lg transition"
+                  >
+                    🏆 Finalizar Ciclo Semanal & Conceder Recompensas (ADM)
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Tabela do Ranking de Atividade */}
+            <div className="space-y-3">
+              {rankAtividade.map((p, idx) => {
+                const isMe = p.id === myCharId;
+                const pos = idx + 1;
+                const isPodium = pos <= 3;
+                const cod = getCodigoAtividade(p);
+
+                return (
+                  <div
+                    key={p.id}
+                    className={`p-3.5 rounded-xl border flex items-center justify-between gap-4 transition ${
+                      isMe
+                        ? "bg-yellow-950/40 border-yellow-500 shadow-lg ring-1 ring-yellow-400/40"
+                        : isPodium
+                        ? "bg-bleach-panel2 border-yellow-500/40"
+                        : "bg-bleach-panel2/60 border-bleach-borderSoft"
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-title text-base font-extrabold ${
+                        pos === 1 ? "bg-yellow-500 text-black shadow-[0_0_10px_#E0B34C]" :
+                        pos === 2 ? "bg-slate-300 text-black" :
+                        pos === 3 ? "bg-amber-700 text-white" : "bg-black text-bleach-muted"
+                      }`}>
+                        {pos === 1 ? "1º" : pos === 2 ? "2º" : pos === 3 ? "3º" : `#${pos}`}
+                      </div>
+
+                      <div className="w-10 h-10 rounded-lg overflow-hidden border border-bleach-border bg-black">
+                        <img src={p.foto || 'assets/ichigo-orange.png'} alt={p.nome} className="w-full h-full object-cover" />
+                      </div>
+
+                      <div>
+                        <h4 className="font-bold text-white text-sm flex items-center gap-2">
+                          <span>{p.nome}</span>
+                          {isMe && <span className="text-[10px] bg-yellow-500 text-black px-1.5 py-0.2 rounded font-bold">VOCÊ</span>}
+                        </h4>
+                        <div className="text-[11px] text-bleach-muted font-mono flex gap-2">
+                          <span>Código: <strong className="text-yellow-400">{cod}</strong></span>
+                          <span>•</span>
+                          <span>Conhecimento: <strong className="text-yellow-300">{p.conhecimento || 0} ₪</strong></span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="text-right">
+                      <span className="text-[10px] text-bleach-muted block uppercase">
+                        Cenas na Semana:
+                      </span>
+                      <span className="font-mono text-lg font-black text-yellow-400">
+                        {p.cenasSemana || 0} <span className="text-xs text-bleach-muted font-sans font-normal">cenas</span>
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ) : (
+          /* TAB 1 & 2: RANKINGS FÍSICO E REIATSU */
+          <div className="space-y-3">
+            {(tab === "fisico" ? rankFisico : rankPressao).map((p, idx) => {
+              const isMe = p.id === myCharId;
+              const pos = idx + 1;
+              const isPodium = pos <= 3;
+
+              return (
+                <div
+                  key={p.id}
+                  className={`p-3.5 rounded-xl border flex items-center justify-between gap-4 transition ${
+                    isMe
+                      ? "bg-orange-950/40 border-bleach-orange shadow-lg"
+                      : isPodium
+                      ? "bg-bleach-panel2 border-white/20"
+                      : "bg-bleach-panel2/60 border-bleach-borderSoft"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-title text-base font-extrabold ${
+                      pos === 1 ? "bg-yellow-500 text-black shadow-[0_0_10px_#E0B34C]" :
+                      pos === 2 ? "bg-slate-300 text-black" :
+                      pos === 3 ? "bg-amber-700 text-white" : "bg-black text-bleach-muted"
+                    }`}>
+                      {pos === 1 ? "1º" : pos === 2 ? "2º" : pos === 3 ? "3º" : `#${pos}`}
+                    </div>
+
+                    <div className="w-10 h-10 rounded-lg overflow-hidden border border-bleach-border bg-black">
+                      <img src={p.foto || 'assets/ichigo-orange.png'} alt={p.nome} className="w-full h-full object-cover" />
+                    </div>
+
+                    <div>
+                      <h4 className="font-bold text-white text-sm flex items-center gap-2">
+                        <span>{p.nome}</span>
+                        {isMe && <span className="text-[10px] bg-bleach-orange text-black px-1.5 py-0.2 rounded font-bold">VOCÊ</span>}
+                      </h4>
+                      {tab === "fisico" && (
+                        <div className="text-[11px] text-bleach-muted font-mono flex gap-2">
+                          <span>FOR: <strong className="text-red-400">{p.forca}</strong></span>
+                          <span>VEL: <strong className="text-green-400">{p.vel}</strong></span>
+                          <span>RES: <strong className="text-purple-400">{p.res}</strong></span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="text-right">
+                    <span className="text-[10px] text-bleach-muted block uppercase">
+                      {tab === "fisico" ? "Média Fís." : "Reiatsu"}
+                    </span>
+                    <span className="font-mono text-lg font-black text-bleach-orange">
+                      {p.score}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </Section>
     </div>
   );
@@ -680,31 +916,34 @@ function RankingsView({ rankFisico, rankPressao, myCharId }) {
 function KidosView({ personagem, isAdmin }) {
   const [categoriaAtiva, setCategoriaAtiva] = useState("Todos");
   const [busca, setBusca] = useState("");
+  const [modalKido, setModalKido] = useState(null);
   
-  const pressaoBase = Number(personagem?.atributos?.pressao || 30);
-  const maxKidosCena = Math.max(3, Math.floor(pressaoBase / 7) + 1);
-  const [kidosUsados, setKidosUsados] = useState(0);
+  const pressaoTotal = Number(personagem?.atributos?.pressao || 30);
+  const [reiatsuGastaCena, setReiatsuGastaCena] = useState(0);
   const [relatoCena, setRelatoCena] = useState("");
   const [registroConjuracoes, setRegistroConjuracoes] = useState([]);
 
-  const restantes = Math.max(0, maxKidosCena - kidosUsados);
-  const pctRestante = Math.round((restantes / maxKidosCena) * 100);
+  const pressaoRestante = Math.max(0, pressaoTotal - reiatsuGastaCena);
+  const pctRestante = Math.round((pressaoRestante / Math.max(1, pressaoTotal)) * 100);
 
-  function conjurarKido(kido) {
-    if (restantes <= 0) {
-      alert("Limite de Kidōs atingido para esta cena! Sua Reiatsu precisa se estabilizar.");
+  function conjurarKidoDireto(kido, custoGasto, poderCalculado, incantado = false) {
+    const custo = custoGasto !== undefined ? custoGasto : calcularCustoKido(kido, pressaoTotal).custoTotal;
+    const poder = poderCalculado !== undefined ? poderCalculado : calcularPoderKido(kido, pressaoTotal, custo, incantado);
+
+    if (pressaoRestante < custo) {
+      alert(`Reiatsu insuficiente nesta cena! O feitiço requer ${custo} pts, mas você possui apenas ${pressaoRestante} pts disponíveis.`);
       return;
     }
     playReiatsuSound('kido');
-    setKidosUsados(prev => prev + 1);
+    setReiatsuGastaCena(prev => prev + custo);
     setRegistroConjuracoes(prev => [
-      { id: uid(), nome: kido.nome, cat: kido.cat, custo: kido.custoReiatsu, hora: new Date().toLocaleTimeString("pt-BR") },
+      { id: uid(), nome: kido.nome, cat: kido.cat, custo, poder, incantado, hora: new Date().toLocaleTimeString("pt-BR") },
       ...prev
     ]);
   }
 
   function resetarReiatsu() {
-    setKidosUsados(0);
+    setReiatsuGastaCena(0);
     setRegistroConjuracoes([]);
   }
 
@@ -728,7 +967,7 @@ function KidosView({ personagem, isAdmin }) {
             COMPÊNDIO SUPREMO DE KIDŌS
           </h2>
           <p className="text-xs sm:text-sm text-bleach-creamDim mt-2 leading-relaxed">
-            Explore o compêndio oficial de <strong>Hadō (Destruição)</strong>, <strong>Bakudō (Aprisionamento & Defesa)</strong> e <strong>Kaidō (Cura & Suporte)</strong>. Gerencie a energia espiritual liberada na sua lâmina através do medidor de Reiatsu interativo abaixo!
+            Explore o compêndio oficial de <strong>Hadō (Destruição)</strong>, <strong>Bakudō (Aprisionamento & Defesa)</strong> e <strong>Kaidō (Cura & Suporte)</strong>. Clique em qualquer Kidō para abrir sua análise tática completa com encantamento poético e simulador de impacto!
           </p>
         </div>
       </div>
@@ -789,9 +1028,9 @@ function KidosView({ personagem, isAdmin }) {
             </div>
 
             <div className="mt-4 text-center">
-              <div className="text-xs text-bleach-muted">Feitiços Restantes na Lâmina:</div>
+              <div className="text-xs text-bleach-muted">Pressão Disponível na Cena:</div>
               <div className="text-2xl font-mono font-bold text-bleach-orange mt-0.5">
-                {restantes} / {maxKidosCena}
+                {pressaoRestante} / {pressaoTotal} <span className="text-xs text-bleach-muted">pts</span>
               </div>
               <button
                 onClick={resetarReiatsu}
@@ -843,8 +1082,15 @@ function KidosView({ personagem, isAdmin }) {
                 <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
                   {registroConjuracoes.map((c) => (
                     <div key={c.id} className="p-2 bg-black/50 border border-white/5 rounded-lg text-xs flex justify-between items-center">
-                      <span className="font-semibold text-cyan-300">⚡ {c.nome}</span>
-                      <span className="text-[10px] text-bleach-muted font-mono">{c.hora}</span>
+                      <span className="font-semibold text-cyan-300">
+                        ⚡ {c.nome} {c.incantado ? '(Eishō)' : ''}
+                      </span>
+                      <div className="flex items-center gap-2 font-mono text-[10px]">
+                        <span className="text-bleach-orange">-{c.custo} Reiatsu</span>
+                        <span className="text-bleach-muted">|</span>
+                        <span className="text-white">Poder: {c.poder}</span>
+                        <span className="text-bleach-muted font-mono">{c.hora}</span>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -855,7 +1101,7 @@ function KidosView({ personagem, isAdmin }) {
       </Section>
 
       {/* CATALOG FILTERS & SPELLS GRID */}
-      <Section title="Grimório de Feitiços de Seireitei" subtitle="Filtre e conjure qualquer magia do catálogo">
+      <Section title="Grimório de Feitiços de Seireitei" subtitle="Clique em qualquer magia para abrir os detalhes completos, encantamento e simulador">
         <div className="flex flex-col sm:flex-row gap-3 mb-6">
           <input
             type="text"
@@ -883,11 +1129,13 @@ function KidosView({ personagem, isAdmin }) {
           {kidosFiltrados.map((k) => {
             const isHado = k.cat === "Hadō";
             const isBakudo = k.cat === "Bakudō";
+            const custo = calcularCustoKido(k, pressaoTotal);
 
             return (
               <div 
                 key={k.id}
-                className={`bg-bleach-panel2 border rounded-xl p-4 flex flex-col justify-between transition-all duration-300 hover:scale-[1.01] ${
+                onClick={() => setModalKido(k)}
+                className={`bg-bleach-panel2 border rounded-xl p-4 flex flex-col justify-between cursor-pointer transition-all duration-300 hover:scale-[1.01] ${
                   isHado 
                     ? "border-red-500/40 hover:border-red-400 hover:shadow-[0_0_20px_rgba(239,68,68,0.2)]" 
                     : isBakudo 
@@ -908,7 +1156,7 @@ function KidosView({ personagem, isAdmin }) {
                     </span>
 
                     <span className="text-[11px] font-mono text-bleach-muted">
-                      Custo: <strong className="text-bleach-orange">{k.custoReiatsu}</strong>
+                      Custo: <strong className="text-bleach-orange font-bold">{custo.custoTotal} pts</strong>
                     </span>
                   </div>
 
@@ -922,27 +1170,58 @@ function KidosView({ personagem, isAdmin }) {
                     </div>
                   )}
 
-                  <p className="text-xs text-bleach-creamDim leading-relaxed">
+                  <p className="text-xs text-bleach-creamDim leading-relaxed line-clamp-3">
                     {k.desc}
                   </p>
                 </div>
 
-                <button
-                  onClick={() => conjurarKido(k)}
-                  disabled={restantes <= 0}
-                  className={`w-full py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition disabled:opacity-40 disabled:cursor-not-allowed ${
-                    isHado ? "bg-gradient-to-r from-red-600 to-orange-600 text-white hover:brightness-110" 
-                    : isBakudo ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:brightness-110" 
-                    : "bg-gradient-to-r from-emerald-600 to-teal-600 text-white hover:brightness-110"
-                  }`}
-                >
-                  ⚡ Conjurar em Cena
-                </button>
+                <div className="space-y-2 pt-2 border-t border-white/5">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setModalKido(k);
+                    }}
+                    className="w-full py-1.5 rounded-lg bg-black/50 border border-white/10 text-xs font-bold text-bleach-creamDim hover:text-white hover:border-bleach-orange transition flex items-center justify-center gap-1.5"
+                  >
+                    <span>👁️</span> Abrir Detalhes & Simulador
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      conjurarKidoDireto(k);
+                    }}
+                    disabled={pressaoRestante < custo.custoTotal}
+                    className={`w-full py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition disabled:opacity-40 disabled:cursor-not-allowed ${
+                      isHado ? "bg-gradient-to-r from-red-600 to-orange-600 text-white hover:brightness-110" 
+                      : isBakudo ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:brightness-110" 
+                      : "bg-gradient-to-r from-emerald-600 to-teal-600 text-white hover:brightness-110"
+                    }`}
+                  >
+                    ⚡ Conjurar Rápido ({custo.custoTotal} pts)
+                  </button>
+                </div>
               </div>
             );
           })}
         </div>
       </Section>
+
+      {/* KIDO DETAIL MODAL */}
+      {modalKido && (
+        <KidoDetailModal
+          kido={modalKido}
+          personagem={personagem}
+          isOpen={!!modalKido}
+          onClose={() => setModalKido(null)}
+          pressaoRestante={pressaoRestante}
+          onConjurar={(kido, custoGasto, poder, incantado) => {
+            conjurarKidoDireto(kido, custoGasto, poder, incantado);
+          }}
+        />
+      )}
     </div>
   );
 }

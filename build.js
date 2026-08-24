@@ -28,6 +28,9 @@ function compileWithBabel(babelCode) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <title>Bleach RPG · Sociedade das Almas</title>
   
   <!-- Google Fonts: Bebas Neue, Cinzel, Outfit -->
@@ -285,6 +288,85 @@ function compileWithBabel(babelCode) {
       0%, 100% { transform: scale(1); opacity: 0.8; }
       50% { transform: scale(1.1); opacity: 1; }
     }
+
+    /* Horizontal Blade Slash (Getsuga / Cut Vibration) */
+    @keyframes horizontalSlashLine {
+      0% { transform: scaleX(0) translateX(-100%); opacity: 0; }
+      25% { transform: scaleX(1) translateX(0); opacity: 1; filter: drop-shadow(0 0 35px #FF6A13) drop-shadow(0 0 70px #FFD700); }
+      70% { transform: scaleX(1.1) scaleY(3); opacity: 1; filter: drop-shadow(0 0 60px #FFF) drop-shadow(0 0 100px #FF6A13); }
+      100% { transform: scaleX(1.3) scaleY(0); opacity: 0; }
+    }
+    .slash-horizontal-beam {
+      animation: horizontalSlashLine 2.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+    }
+
+    /* Air Vibration & Screen Tremor */
+    @keyframes airVibrationShake {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); filter: blur(0px); }
+      20% { transform: translate(-4px, 3px) rotate(-0.5deg); filter: blur(0.3px); }
+      40% { transform: translate(4px, -3px) rotate(0.5deg); filter: blur(0px); }
+      60% { transform: translate(-3px, -2px) rotate(-0.3deg); filter: blur(0.4px); }
+      80% { transform: translate(3px, 2px) rotate(0.3deg); filter: blur(0px); }
+    }
+    .air-vibration-active {
+      animation: airVibrationShake 0.08s infinite ease-in-out;
+    }
+
+    /* Rising Reiatsu Aura Flames (Saindo de baixo para cima) */
+    @keyframes auraRiseFlames {
+      0% { transform: translateY(100%) scaleY(0.4) scaleX(0.8); opacity: 0; filter: blur(12px); }
+      30% { opacity: 0.9; filter: blur(6px); }
+      70% { opacity: 0.7; filter: blur(4px); }
+      100% { transform: translateY(-120%) scaleY(1.4) scaleX(1.2); opacity: 0; filter: blur(16px); }
+    }
+    .aura-flame-surge {
+      position: absolute;
+      bottom: -40px;
+      width: 100%;
+      height: 140%;
+      background: radial-gradient(ellipse at 50% 100%, rgba(255, 106, 19, 0.6) 0%, rgba(255, 215, 0, 0.4) 30%, rgba(79, 179, 232, 0.2) 60%, transparent 85%);
+      animation: auraRiseFlames 2.4s infinite cubic-bezier(0.25, 1, 0.5, 1);
+      pointer-events: none;
+    }
+    .aura-flame-surge-bankai {
+      position: absolute;
+      bottom: -40px;
+      width: 100%;
+      height: 140%;
+      background: radial-gradient(ellipse at 50% 100%, rgba(255, 215, 0, 0.8) 0%, rgba(139, 111, 214, 0.6) 35%, rgba(255, 106, 19, 0.4) 65%, transparent 85%);
+      animation: auraRiseFlames 2s infinite cubic-bezier(0.25, 1, 0.5, 1);
+      pointer-events: none;
+    }
+
+    /* Energy Trails Flowing across the Site (Rastros de Energia pelo Site) */
+    @keyframes energyTrailFlow1 {
+      0% { transform: translateY(100vh) translateX(-30vw) scale(0.6); opacity: 0; }
+      20% { opacity: 0.8; }
+      80% { opacity: 0.8; }
+      100% { transform: translateY(-30vh) translateX(40vw) scale(1.3); opacity: 0; }
+    }
+    @keyframes energyTrailFlow2 {
+      0% { transform: translateY(100vh) translateX(30vw) scale(0.8); opacity: 0; }
+      25% { opacity: 0.9; }
+      75% { opacity: 0.9; }
+      100% { transform: translateY(-40vh) translateX(-35vw) scale(1.4); opacity: 0; }
+    }
+    @keyframes energyTrailFlow3 {
+      0% { transform: translateY(100vh) translateX(0vw) scale(0.5); opacity: 0; }
+      30% { opacity: 1; }
+      70% { opacity: 1; }
+      100% { transform: translateY(-50vh) translateX(15vw) scale(1.6); opacity: 0; }
+    }
+
+    .energy-trail-1 {
+      animation: energyTrailFlow1 3.2s infinite ease-out;
+    }
+    .energy-trail-2 {
+      animation: energyTrailFlow2 2.7s infinite ease-out 0.8s;
+    }
+    .energy-trail-3 {
+      animation: energyTrailFlow3 3.6s infinite ease-out 1.5s;
+    }
   </style>
 
   <!-- React 18, ReactDOM 18 -->
@@ -316,8 +398,8 @@ function compileWithBabel(babelCode) {
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
   </style>
 
-  <!-- Ultra-fast native JS with instant loading -->
-  <script src="app.js"></script>
+  <!-- Ultra-fast native JS with instant loading and automatic cache-busting -->
+  <script src="app.js?v=${Date.now()}"></script>
 </body>
 </html>
 `;

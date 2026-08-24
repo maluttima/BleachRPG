@@ -30,13 +30,78 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
   const [editEsquadrao, setEditEsquadrao] = useState(personagem?.esquadrao || "11º Esquadrão");
   const [editZkNome, setEditZkNome] = useState(personagem?.zanpakuto?.nome || "");
 
-  // Personalidade Local State
-  const [persTexto, setPersTexto] = useState(personagem?.personalidade?.texto || "");
-  const [persVirtudes, setPersVirtudes] = useState(personagem?.personalidade?.virtudes || "");
-  const [persDefeitos, setPersDefeitos] = useState(personagem?.personalidade?.defeitos || "");
-  const [persDesejos, setPersDesejos] = useState(personagem?.personalidade?.desejos || "");
-  const [persMedos, setPersMedos] = useState(personagem?.personalidade?.medos || "");
-  const [persEstilo, setPersEstilo] = useState(personagem?.personalidade?.estiloCombate || "");
+  // Personalidade Local State with Auto-Draft Recovery
+  const [persTexto, setPersTexto] = useState(() => {
+    try {
+      const draft = localStorage.getItem(`bleach_pers_draft_${personagem?.id}`);
+      if (draft) return JSON.parse(draft).texto ?? (personagem?.personalidade?.texto || "");
+    } catch (e) {}
+    return personagem?.personalidade?.texto || "";
+  });
+
+  const [persVirtudes, setPersVirtudes] = useState(() => {
+    try {
+      const draft = localStorage.getItem(`bleach_pers_draft_${personagem?.id}`);
+      if (draft) return JSON.parse(draft).virtudes ?? (personagem?.personalidade?.virtudes || "");
+    } catch (e) {}
+    return personagem?.personalidade?.virtudes || "";
+  });
+
+  const [persDefeitos, setPersDefeitos] = useState(() => {
+    try {
+      const draft = localStorage.getItem(`bleach_pers_draft_${personagem?.id}`);
+      if (draft) return JSON.parse(draft).defeitos ?? (personagem?.personalidade?.defeitos || "");
+    } catch (e) {}
+    return personagem?.personalidade?.defeitos || "";
+  });
+
+  const [persDesejos, setPersDesejos] = useState(() => {
+    try {
+      const draft = localStorage.getItem(`bleach_pers_draft_${personagem?.id}`);
+      if (draft) return JSON.parse(draft).desejos ?? (personagem?.personalidade?.desejos || "");
+    } catch (e) {}
+    return personagem?.personalidade?.desejos || "";
+  });
+
+  const [persMedos, setPersMedos] = useState(() => {
+    try {
+      const draft = localStorage.getItem(`bleach_pers_draft_${personagem?.id}`);
+      if (draft) return JSON.parse(draft).medos ?? (personagem?.personalidade?.medos || "");
+    } catch (e) {}
+    return personagem?.personalidade?.medos || "";
+  });
+
+  const [persEstilo, setPersEstilo] = useState(() => {
+    try {
+      const draft = localStorage.getItem(`bleach_pers_draft_${personagem?.id}`);
+      if (draft) return JSON.parse(draft).estiloCombate ?? (personagem?.personalidade?.estiloCombate || "");
+    } catch (e) {}
+    return personagem?.personalidade?.estiloCombate || "";
+  });
+
+  // Handle personality change with instant auto-save to localStorage
+  function handlePersChange(field, val) {
+    if (field === 'texto') setPersTexto(val);
+    if (field === 'virtudes') setPersVirtudes(val);
+    if (field === 'defeitos') setPersDefeitos(val);
+    if (field === 'desejos') setPersDesejos(val);
+    if (field === 'medos') setPersMedos(val);
+    if (field === 'estilo') setPersEstilo(val);
+
+    try {
+      const draft = {
+        texto: field === 'texto' ? val : persTexto,
+        virtudes: field === 'virtudes' ? val : persVirtudes,
+        defeitos: field === 'defeitos' ? val : persDefeitos,
+        desejos: field === 'desejos' ? val : persDesejos,
+        medos: field === 'medos' ? val : persMedos,
+        estiloCombate: field === 'estilo' ? val : persEstilo
+      };
+      if (personagem?.id) {
+        localStorage.setItem(`bleach_pers_draft_${personagem.id}`, JSON.stringify(draft));
+      }
+    } catch (e) {}
+  }
 
   // Modais de Sorteio, Cena e Shikai/Bankai
   const [gachaModal, setGachaModal] = useState(null);
@@ -44,8 +109,29 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
   const [showZanpakutoAIModal, setShowZanpakutoAIModal] = useState(false);
   const [aiZkOpcoes, setAiZkOpcoes] = useState([]);
   const [aiZkTipo, setAiZkTipo] = useState("shikai");
+  const [aiZkLoading, setAiZkLoading] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
+  const [showCapacidadesModal, setShowCapacidadesModal] = useState(null);
+  const [gastoPressaoForca, setGastoPressaoForca] = useState(0);
+  const [gastoPressaoResiliencia, setGastoPressaoResiliencia] = useState(0);
+  const [simuladorModo, setSimuladorModo] = useState("forca_resiliencia"); // "forca_resiliencia" | "forca_forca" | "velocidade_velocidade" | "pressao_pressao"
+  const [simStatInimigo, setSimStatInimigo] = useState(80);
+  const [kidoModalFicha, setKidoModalFicha] = useState(null);
+  const [showKidoTreeModal, setShowKidoTreeModal] = useState(false);
+  const [showKidoShopModal, setShowKidoShopModal] = useState(false);
+  const [simKidoIndex, setSimKidoIndex] = useState(0);
+  const [simKidoTargetStat, setSimKidoTargetStat] = useState(80);
+  const [simKidoIncantado, setSimKidoIncantado] = useState(false);
+  const [copiadoWhats, setCopiadoWhats] = useState(false);
   const gachaIntervalRef = useRef(null);
+
+  function copiarFichaWhatsApp() {
+    copiarFichaFormatadaWhatsApp(personagem, () => {
+      setCopiadoWhats(true);
+      playReiatsuSound('win');
+      setTimeout(() => setCopiadoWhats(false), 3500);
+    });
+  }
 
   useEffect(() => {
     return () => {
@@ -53,9 +139,12 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
     };
   }, []);
 
-  // Synchronize state when character changes
+  const lastCharIdRef = useRef(null);
+
+  // Synchronize state when character changes (only on mount or when switching character ID)
   useEffect(() => {
-    if (personagem) {
+    if (personagem && personagem.id !== lastCharIdRef.current) {
+      lastCharIdRef.current = personagem.id;
       setEditNome(personagem.nome || "");
       setEditWhats(personagem.whatsapp || "");
       setEditCodigo(personagem.codigo || "");
@@ -70,14 +159,26 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
       setEditRaca(personagem.raca || "Shinigami");
       setEditEsquadrao(personagem.esquadrao || "11º Esquadrão");
       setEditZkNome(personagem.zanpakuto?.nome || "");
-      setPersTexto(personagem.personalidade?.texto || "");
-      setPersVirtudes(personagem.personalidade?.virtudes || "");
-      setPersDefeitos(personagem.personalidade?.defeitos || "");
-      setPersDesejos(personagem.personalidade?.desejos || "");
-      setPersMedos(personagem.personalidade?.medos || "");
-      setPersEstilo(personagem.personalidade?.estiloCombate || "");
+      
+      let initialPers = personagem.personalidade || {};
+      try {
+        const savedDraft = localStorage.getItem(`bleach_pers_draft_${personagem.id}`);
+        if (savedDraft) {
+          const parsed = JSON.parse(savedDraft);
+          if (parsed && typeof parsed === 'object') {
+            initialPers = { ...initialPers, ...parsed };
+          }
+        }
+      } catch (e) {}
+
+      setPersTexto(initialPers.texto || "");
+      setPersVirtudes(initialPers.virtudes || "");
+      setPersDefeitos(initialPers.defeitos || "");
+      setPersDesejos(initialPers.desejos || "");
+      setPersMedos(initialPers.medos || "");
+      setPersEstilo(initialPers.estiloCombate || "");
     }
-  }, [personagem?.id, personagem?.zanpakuto?.shikaiAtiva, personagem?.zanpakuto?.bankaiAtiva]);
+  }, [personagem?.id]);
 
   if (!personagem) return <div className="text-bleach-muted">Ficha não encontrada.</div>;
 
@@ -88,8 +189,10 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
 
   const temShikai = !!personagem?.zanpakuto?.shikaiAtiva;
   const temBankai = !!personagem?.zanpakuto?.bankaiAtiva;
-  const podeGerarShikai = !!personagem?.permissoes?.shikaiLiberada && !temShikai;
-  const podeGerarBankai = !!personagem?.permissoes?.bankaiLiberada && temShikai && !temBankai;
+  const temOpcoesShikaiSalvas = !!(personagem?.opcoesShikaiPendentes && personagem.opcoesShikaiPendentes.length > 0);
+  const temOpcoesBankaiSalvas = !!(personagem?.opcoesBankaiPendentes && personagem.opcoesBankaiPendentes.length > 0);
+  const podeGerarShikai = !!personagem?.permissoes?.shikaiLiberada && !temShikai && !temOpcoesShikaiSalvas;
+  const podeGerarBankai = !!personagem?.permissoes?.bankaiLiberada && temShikai && !temBankai && !temOpcoesBankaiSalvas;
   const personalidadeSelada = !!personagem?.personalidadeTravada;
 
   function updateChar(patch, historicoTexto) {
@@ -134,6 +237,21 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
     alert("✨ Personalidade selada com sucesso! A sua essência agora servirá como base pura para a geração da sua Zanpakutō.");
   }
 
+  function salvarRascunhoPersonalidade() {
+    const novaPersonalidade = {
+      texto: persTexto,
+      virtudes: persVirtudes,
+      defeitos: persDefeitos,
+      desejos: persDesejos,
+      medos: persMedos,
+      estiloCombate: persEstilo
+    };
+    updateChar({
+      personalidade: novaPersonalidade
+    }, "💾 Rascunho de personalidade atualizado");
+    alert("💾 Rascunho de personalidade salvo com sucesso! Você pode continuar digitando ou selar quando quiser.");
+  }
+
   function destravarPersonalidadeAdm() {
     if (!isAdmin) return;
     updateChar({ personalidadeTravada: false }, "🔓 ADM destravou a edição de personalidade da ficha");
@@ -147,35 +265,65 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
       setSubPaginaFicha("perfil");
       return;
     }
+
+    if (tipo === "shikai") {
+      if (personagem.opcoesShikaiPendentes && personagem.opcoesShikaiPendentes.length > 0) {
+        setAiZkOpcoes(personagem.opcoesShikaiPendentes);
+        setAiZkTipo("shikai");
+        setAiZkLoading(false);
+        setShowZanpakutoAIModal(true);
+        return;
+      }
+    } else {
+      if (personagem.opcoesBankaiPendentes && personagem.opcoesBankaiPendentes.length > 0) {
+        setAiZkOpcoes(personagem.opcoesBankaiPendentes);
+        setAiZkTipo("bankai");
+        setAiZkLoading(false);
+        setShowZanpakutoAIModal(true);
+        return;
+      }
+    }
+
     setShowCenaModal(tipo);
   }
 
   async function submeterCenaDespertar(cenaTexto) {
     const tipo = showCenaModal || "shikai";
     setShowCenaModal(null);
+    setAiZkTipo(tipo);
+    setAiZkOpcoes([]);
+    setAiZkLoading(true);
+    setShowZanpakutoAIModal(true);
 
     if (tipo === "shikai") {
-      updateChar({ cenaDespertarShikai: cenaTexto }, "📜 Cena de despertar de Shikai registrada na ficha");
       playReiatsuSound('shikai_charge');
-      const caminhos = await gerar4CaminhosZanpakutoAI_Async(personagem, db.personagens, db.zanpakutosVinculadas, cenaTexto);
-      setAiZkOpcoes(caminhos);
-      setAiZkTipo("shikai");
-      setShowZanpakutoAIModal(true);
+      try {
+        const caminhos = await gerar4CaminhosZanpakutoAI_Async(personagem, db.personagens, db.zanpakutosVinculadas, cenaTexto);
+        setAiZkOpcoes(caminhos);
+        updateChar({
+          cenaDespertarShikai: cenaTexto,
+          opcoesShikaiPendentes: caminhos
+        }, "📜 4 Manifestações de Shikai forjadas e salvas na alma para escolha");
+      } catch (err) {
+        console.error("Erro ao gerar Shikai:", err);
+      } finally {
+        setAiZkLoading(false);
+      }
     } else {
-      updateChar({ cenaDespertarBankai: cenaTexto }, "📜 Cena de despertar de Bankai registrada na ficha");
       playReiatsuSound('bankai_charge');
-      const caminhos = await gerar4CaminhosZanpakutoAI_Async(personagem, db.personagens, db.zanpakutosVinculadas, cenaTexto);
-      setAiZkOpcoes(caminhos);
-      setAiZkTipo("bankai");
-      setShowZanpakutoAIModal(true);
+      try {
+        const bankais = await gerar3BankaisEvolucaoAI_Async(personagem, personagem.zanpakuto?.shikaiAtiva, db.personagens, db.zanpakutosVinculadas, cenaTexto);
+        setAiZkOpcoes(bankais);
+        updateChar({
+          cenaDespertarBankai: cenaTexto,
+          opcoesBankaiPendentes: bankais
+        }, "📜 3 Evoluções de Bankai forjadas e salvas na alma para escolha");
+      } catch (err) {
+        console.error("Erro ao gerar Bankai:", err);
+      } finally {
+        setAiZkLoading(false);
+      }
     }
-  }
-
-  async function regenerarCaminhosComIA() {
-    const cenaTexto = aiZkTipo === "shikai" ? (personagem.cenaDespertarShikai || "") : (personagem.cenaDespertarBankai || "");
-    playReiatsuSound('roll');
-    const novosCaminhos = await gerar4CaminhosZanpakutoAI_Async(personagem, db.personagens, db.zanpakutosVinculadas, cenaTexto + " variação " + Date.now());
-    setAiZkOpcoes(novosCaminhos);
   }
 
   function escolherCaminhoEspiritual(caminhoEscolhido) {
@@ -210,6 +358,7 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
       const personagens = (db.personagens || []).map(p => p.id === personagem.id ? {
         ...p,
         zanpakuto: novoZk,
+        opcoesShikaiPendentes: null,
         permissoes: { ...(p.permissoes || {}), shikaiLiberada: false },
         historico: [{ id: uid(), data: nowStr(), texto: `🗡️ DESPERTOU SHIKAI AUTORAL EXCLUSIVA: [${shikai.nome}] — "${shikai.comando}"` }, ...(p.historico || [])]
       } : p);
@@ -218,7 +367,7 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
       setSubPaginaFicha("shikai");
       alert(`✨ Parabéns! Sua Shikai [${shikai.nome}] foi selada com exclusividade absoluta na sua ficha!`);
     } else {
-      const bankai = caminhoEscolhido.bankai;
+      const bankai = caminhoEscolhido.bankai || caminhoEscolhido;
       const novoZk = {
         ...(personagem.zanpakuto || {}),
         bankaiAtiva: bankai,
@@ -228,13 +377,13 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
       const personagens = (db.personagens || []).map(p => p.id === personagem.id ? {
         ...p,
         zanpakuto: novoZk,
+        opcoesBankaiPendentes: null,
         permissoes: { ...(p.permissoes || {}), bankaiLiberada: false },
         historico: [{ id: uid(), data: nowStr(), texto: `卍 DESPERTOU BANKAI MONUMENTAL: [${bankai.nome}] — "${bankai.comando}"` }, ...(p.historico || [])]
       } : p);
 
       saveDb({ ...db, personagens });
       setSubPaginaFicha("shikai");
-      alert(`✨ TRANSCENDÊNCIA ALCANÇADA! Sua Bankai [${bankai.nome}] foi gravada na sua alma!`);
     }
   }
 
@@ -484,6 +633,34 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
     updateChar({ permissoes: { ...(personagem.permissoes || {}), bankaiLiberada: !atual } }, `Permissão de Bankai ${!atual ? "LIBERADA" : "BLOQUEADA"} pelo ADM`);
   }
 
+  function confirmarResetFicha() {
+    setShowResetModal(false);
+    const charReset = {
+      ...personagem,
+      atributos: { pressao: 10, forca: 10, velocidade: 10, resiliencia: 10 },
+      pontosDisponiveis: 20,
+      sorteiosComunsRestantes: 2,
+      sorteiosEspeciaisRestantes: 0,
+      zanpakuto: {
+        nome: "Lâmina Selada (Asauchi)",
+        shikaiAtiva: null,
+        bankaiAtiva: null
+      },
+      opcoesShikaiPendentes: null,
+      opcoesBankaiPendentes: null,
+      cenaDespertarShikai: "",
+      cenaDespertarBankai: "",
+      personalidadeTravada: false,
+      permissoes: { shikaiLiberada: false, bankaiLiberada: false },
+      historico: [{ id: uid(), data: nowStr(), texto: "🔄 Ficha resetada integralmente para o início." }]
+    };
+
+    const novasVinculadas = (db.zanpakutosVinculadas || []).filter(z => z.charId !== personagem.id);
+    const personagens = (db.personagens || []).map(p => p.id === personagem.id ? charReset : p);
+    saveDb({ ...db, personagens, zanpakutosVinculadas: novasVinculadas });
+    alert("Ficha resetada com sucesso para o estado inicial!");
+  }
+
   // CONCESSÃO DE RECOMPENSA DE ATRIBUTOS PELO ADM (SOMENTE ATRIBUTOS)
   function concederRecompensa() {
     const pontos = Number(rec.pontos) || 0;
@@ -581,6 +758,21 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
               <span>Divisão: <strong>{personagem.esquadrao || "11º Esquadrão"}</strong></span>
               <span>Zanpakutō: <strong className={temShikai ? "text-cyan-400 font-cinzel" : "text-bleach-muted"}>{personagem.zanpakuto?.nome || "Lâmina Selada"}</strong></span>
             </div>
+
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1">
+              <button
+                type="button"
+                onClick={copiarFichaWhatsApp}
+                className={`px-4 py-2 rounded-xl text-xs font-extrabold uppercase tracking-wider transition shadow-lg flex items-center gap-2 ${
+                  copiadoWhats 
+                    ? "bg-green-500 text-black shadow-[0_0_15px_#22c55e]" 
+                    : "bg-gradient-to-r from-emerald-600 to-teal-600 hover:brightness-110 text-white"
+                }`}
+              >
+                <span>{copiadoWhats ? "✓" : "📋"}</span>
+                <span>{copiadoWhats ? "Ficha Copiada para WhatsApp!" : "Copiar Ficha WhatsApp (Made By Malutti)"}</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -610,6 +802,32 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
       {/* SUBPAGE: PERFIL & PERSONALIDADE */}
       {subPaginaFicha === "perfil" && (
         <div className="space-y-6">
+          {/* BANNER DE EXPORTAÇÃO WHATSAPP (MADE BY MALUTTI) */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-emerald-950/60 via-black/80 to-teal-950/60 border border-emerald-500/50 shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="space-y-1 text-center sm:text-left">
+              <div className="flex items-center justify-center sm:justify-start gap-2">
+                <span className="text-xl">📋</span>
+                <h4 className="font-title text-lg text-emerald-300">FICHA OFICIAL FORMATADA PARA WHATSAPP</h4>
+                <span className="text-[10px] px-2 py-0.5 bg-emerald-900/80 border border-emerald-400/40 text-emerald-200 font-mono rounded">Made By Malutti</span>
+              </div>
+              <p className="text-xs text-bleach-creamDim">
+                Copie com 1 clique o molde 100% autoral da Sociedade das Almas pronto para colar e enviar no grupo de WhatsApp com todos os seus atributos, Zanpakutō e dados atualizados!
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={copiarFichaWhatsApp}
+              className={`px-5 py-3 rounded-xl text-xs font-extrabold uppercase tracking-wider transition whitespace-nowrap shadow-xl flex items-center gap-2 ${
+                copiadoWhats 
+                  ? "bg-green-500 text-black shadow-[0_0_20px_#22c55e]" 
+                  : "bg-gradient-to-r from-emerald-500 to-teal-500 hover:brightness-110 text-black font-black"
+              }`}
+            >
+              <span>{copiadoWhats ? "✓" : "📋"}</span>
+              <span>{copiadoWhats ? "Ficha Copiada com Sucesso!" : "Copiar Ficha Agora"}</span>
+            </button>
+          </div>
           {/* PERSONALIDADE & DNA DA ALMA SECTION */}
           <Section
             title="🧠 Personalidade & DNA Espiritual da Alma"
@@ -669,7 +887,7 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
                       rows={3}
                       placeholder="Descreva o temperamento, valores morais e postura do personagem..."
                       value={persTexto}
-                      onChange={(e) => setPersTexto(e.target.value)}
+                      onChange={(e) => handlePersChange('texto', e.target.value)}
                       className="w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-3 text-white"
                     ></textarea>
                   </div>
@@ -679,7 +897,7 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
                       type="text"
                       placeholder="Ex: Lealdade extrema, paciência tática, coragem"
                       value={persVirtudes}
-                      onChange={(e) => setPersVirtudes(e.target.value)}
+                      onChange={(e) => handlePersChange('virtudes', e.target.value)}
                       className="w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-2.5 text-white"
                     />
                   </div>
@@ -689,7 +907,7 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
                       type="text"
                       placeholder="Ex: Dificuldade de confiar, impulsividade, apego ao passado"
                       value={persDefeitos}
-                      onChange={(e) => setPersDefeitos(e.target.value)}
+                      onChange={(e) => handlePersChange('defeitos', e.target.value)}
                       className="w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-2.5 text-white"
                     />
                   </div>
@@ -699,7 +917,7 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
                       type="text"
                       placeholder="Ex: Proteger os companheiros, alcançar a liberdade"
                       value={persDesejos}
-                      onChange={(e) => setPersDesejos(e.target.value)}
+                      onChange={(e) => handlePersChange('desejos', e.target.value)}
                       className="w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-2.5 text-white"
                     />
                   </div>
@@ -709,16 +927,22 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
                       type="text"
                       placeholder="Ex: Medo da impotência, conflito entre dever e sentimento"
                       value={persMedos}
-                      onChange={(e) => setPersMedos(e.target.value)}
+                      onChange={(e) => handlePersChange('medos', e.target.value)}
                       className="w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-2.5 text-white"
                     />
                   </div>
                 </div>
 
-                <div className="pt-2 flex justify-end">
+                <div className="pt-3 flex flex-wrap items-center justify-end gap-3 border-t border-white/5">
+                  <button
+                    onClick={salvarRascunhoPersonalidade}
+                    className="px-5 py-2.5 bg-bleach-panel2 border border-yellow-500/50 hover:border-yellow-400 text-yellow-300 font-bold text-xs uppercase rounded-xl transition"
+                  >
+                    💾 Salvar Rascunho
+                  </button>
                   <button
                     onClick={selarPersonalidadeDefinitiva}
-                    className="px-6 py-3 bg-gradient-to-r from-bleach-orange to-yellow-500 text-black font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-lg hover:brightness-110 transition"
+                    className="px-6 py-2.5 bg-gradient-to-r from-bleach-orange to-yellow-500 text-black font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-lg hover:brightness-110 transition"
                   >
                     🔒 Salvar & Selar Personalidade Definitiva na Alma
                   </button>
@@ -774,98 +998,730 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
             className="border-2 border-bleach-orange/60"
           >
             {temShikai ? (
-              <div className="space-y-4">
-                <div className="p-5 rounded-2xl bg-black/80 border-2 border-cyan-500/80 shadow-2xl space-y-3">
-                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-cyan-500/40 pb-3">
-                    <div>
-                      <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded bg-blue-950 text-cyan-300 border border-cyan-400">
-                        ✓ SHIKAI DESPERTA & VINCULADA
-                      </span>
-                      <h3 className="font-title text-3xl text-white tracking-wider mt-1">
-                        {personagem.zanpakuto.shikaiAtiva.nome}
-                      </h3>
-                      <p className="text-xs text-cyan-300 italic">
-                        "{personagem.zanpakuto.shikaiAtiva.comando}"
-                      </p>
+              <div className="space-y-6">
+                {/* SHIKAI RICH CARD */}
+                {(() => {
+                  const s = personagem.zanpakuto.shikaiAtiva;
+                  return (
+                    <div className="p-5 sm:p-6 rounded-2xl bg-black/85 border-2 border-cyan-500/80 shadow-2xl space-y-4 reiatsu-glow">
+                      {/* Header */}
+                      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-cyan-500/40 pb-4">
+                        <div className="space-y-1">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-blue-950 text-cyan-300 border border-cyan-400 tracking-wider">
+                              ✓ SHIKAI DESPERTA & VINCULADA À ALMA
+                            </span>
+                            <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-green-950/80 border border-green-500 text-green-300 tracking-wider">
+                              ✦ {s.indiceExclusividade || 100}% Exclusiva no RPG
+                            </span>
+                            <Badge color={C.blue}>{s.elemento || "Espiritual"}</Badge>
+                          </div>
+                          <h3 className="font-title text-2xl sm:text-4xl text-white tracking-wider flex items-center gap-2 flex-wrap mt-1">
+                            <span>{s.nome}</span>
+                            {s.kanji && <span className="text-base sm:text-lg font-cinzel text-bleach-orange font-normal">{s.kanji}</span>}
+                            {s.traducao && <span className="text-xs sm:text-sm text-bleach-creamDim font-sans">({s.traducao})</span>}
+                          </h3>
+                          <p className="text-xs sm:text-sm text-cyan-300 italic">
+                            "{s.comando}"
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* 2-Column Grid: Manifestação da Arma & Relação com a Alma */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                        <div className="p-3.5 bg-bleach-panel2/90 rounded-xl border border-white/5 space-y-1">
+                          <strong className="text-bleach-orange block text-xs flex items-center gap-1.5">
+                            <span>⚔️</span> Manifestação da Arma:
+                          </strong>
+                          <p className="text-bleach-creamDim leading-relaxed text-xs">
+                            {s.aparencia || s.formatoArma || "Katana cerimonial de corte espiritual."}
+                          </p>
+                        </div>
+                        <div className="p-3.5 bg-bleach-panel2/90 rounded-xl border border-white/5 space-y-1">
+                          <strong className="text-cyan-400 block text-xs flex items-center gap-1.5">
+                            <span>🧠</span> Relação com a Alma & Temperamento:
+                          </strong>
+                          <p className="text-bleach-creamDim leading-relaxed text-xs">
+                            {s.relacaoPersonalidade || `Manifestação direta da essência e das virtudes de ${personagem.nome}.`}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Highlight Box: Poder & Mecânica Espiritual */}
+                      <div className="p-4 bg-black/90 rounded-xl border-2 border-bleach-orange/40 space-y-2.5 shadow-inner">
+                        <strong className="text-bleach-orange block text-xs uppercase tracking-wider flex items-center gap-1.5">
+                          <span>⚡</span> PODER & MECÂNICA ESPIRITUAL:
+                        </strong>
+                        <p className="text-xs sm:text-sm text-bleach-cream leading-relaxed font-sans">
+                          {s.poder}
+                        </p>
+                        <div className="flex flex-wrap gap-x-5 gap-y-1 text-xs text-bleach-muted pt-2 border-t border-white/10">
+                          <span>Custo: <strong className="text-white">{s.custoReiatsu || "Médio"}</strong></span>
+                          {s.limitacoes && <span>Limitações: <strong className="text-amber-300">{s.limitacoes}</strong></span>}
+                        </div>
+                      </div>
+
+                      {/* Complexity & Balance Indices (1 a 10) */}
+                      {s.indices && (
+                        <div className="p-3.5 bg-black/60 rounded-xl border border-white/10 space-y-2">
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-bleach-muted block">
+                            Índice de Complexidade & Balanço Espiritual (1 a 10)
+                          </span>
+                          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs">
+                            {[
+                              { label: "Potência", val: s.indices.potencia, color: C.red },
+                              { label: "Abrangência", val: s.indices.abrangencia, color: C.blue },
+                              { label: "Complexidade", val: s.indices.complexidade, color: C.purple },
+                              { label: "Versatilidade", val: s.indices.versatilidade, color: C.green },
+                              { label: "Custo", val: s.indices.custo, color: C.yellow },
+                            ].map(stat => (
+                              <div key={stat.label} className="p-2 bg-bleach-panel2 rounded-lg border border-white/5 text-center">
+                                <span className="text-bleach-muted block text-[10px]">{stat.label}</span>
+                                <span className="font-mono font-bold text-xs" style={{ color: stat.color }}>{stat.val || 8}/10</span>
+                                <div className="w-full bg-black/60 h-1.5 rounded-full overflow-hidden mt-1.5">
+                                  <div className="h-full rounded-full" style={{ width: `${(stat.val || 8) * 10}%`, backgroundColor: stat.color }}></div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Sword Art SVG & Upload */}
+                      <BleachSwordArt
+                        arma={s}
+                        nomeZk={s.nome}
+                        isBankai={false}
+                        foto={personagem.zanpakuto?.fotoShikai}
+                        onUpload={(e) => handleFotoUpload(e, "shikai")}
+                      />
+
+                      {/* Cena de Despertar da Shikai */}
+                      {personagem.cenaDespertarShikai && (
+                        <div className="p-4 bg-black/70 border border-cyan-500/40 rounded-xl space-y-1.5 mt-3">
+                          <strong className="text-cyan-300 text-xs uppercase tracking-wider flex items-center gap-1.5">
+                            <span>📜</span> Cena de Despertar da Shikai:
+                          </strong>
+                          <p className="text-xs text-bleach-creamDim italic leading-relaxed">"{personagem.cenaDespertarShikai}"</p>
+                        </div>
+                      )}
+
+                      {/* ESPAÇO DOS ATRIBUTOS DA ZANPAKUTŌ & PROGRESSÃO TÁTICA (SHIKAI) */}
+                      {(() => {
+                        const statsZk = calcularAtributosZanpakuto(personagem.atributos, false);
+                        const caps = gerarCapacidadesTaticasZanpakuto(s, statsZk, false);
+
+                        return (
+                          <div className="p-4 sm:p-5 bg-gradient-to-b from-black/90 via-bleach-panel to-black rounded-2xl border-2 border-cyan-500/50 space-y-4 shadow-xl mt-4">
+                            {/* Header do Espaço de Atributos */}
+                            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
+                              <div>
+                                <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-500/60 tracking-wider">
+                                  ✦ Atributos Espirituais da Shikai (Base 100)
+                                </span>
+                                <h4 className="font-title text-xl text-white mt-1 flex items-center gap-2">
+                                  <span>⚔️</span> Força & Sintonização da Lâmina
+                                </h4>
+                                <p className="text-[11px] text-bleach-creamDim">
+                                  Escalados dinamicamente com os atributos do Shinigami. Média Atual: <strong className="text-cyan-400 font-mono">{statsZk.media} pts</strong>
+                                </p>
+                              </div>
+
+                              {/* Botão Revelar Capacidades Táticas com Badge de Progresso */}
+                              <button
+                                type="button"
+                                onClick={() => setShowCapacidadesModal({ isBankai: false, arma: s, statsZk, caps })}
+                                className="px-4 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-extrabold text-xs rounded-xl shadow-lg transition flex items-center gap-2 border border-cyan-300/40 reiatsu-glow"
+                              >
+                                <span>👁️</span> Revelar Capacidades
+                                <span className="px-2 py-0.5 rounded-full bg-black/70 text-cyan-300 font-mono text-[10px] border border-cyan-400">
+                                  {caps.desbloqueadosCount}/{caps.totalNiveis} Despertas
+                                </span>
+                              </button>
+                            </div>
+
+                            {/* Grid dos 5 Atributos da Zanpakutō */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5 text-xs">
+                              {/* 1. Controle */}
+                              <div className="p-3 bg-bleach-panel2 rounded-xl border border-cyan-500/30 flex flex-col justify-between">
+                                <div className="flex items-center justify-between mb-1">
+                                  <span className="text-[11px] font-extrabold uppercase text-cyan-400 flex items-center gap-1">
+                                    <span>🎯</span> Controle
+                                  </span>
+                                  <span className="font-mono font-bold text-sm text-cyan-300">{statsZk.controle}</span>
+                                </div>
+                                <p className="text-[10px] text-bleach-muted mb-2 leading-tight">
+                                  Moldagem de forma, variação de tamanho, peso e precisão da técnica.
+                                </p>
+                                <div className="w-full bg-black/60 h-1.5 rounded-full overflow-hidden">
+                                  <div className="h-full bg-cyan-400 rounded-full" style={{ width: `${Math.min(100, (statsZk.controle / 500) * 100)}%` }}></div>
+                                </div>
+                              </div>
+
+                              {/* 2. Alcance */}
+                              <div className="p-3 bg-bleach-panel2 rounded-xl border border-blue-500/30 flex flex-col justify-between">
+                                <div className="flex items-center justify-between mb-1">
+                                  <span className="text-[11px] font-extrabold uppercase text-blue-400 flex items-center gap-1">
+                                    <span>🏹</span> Alcance
+                                  </span>
+                                  <span className="font-mono font-bold text-sm text-blue-300">{statsZk.alcance}</span>
+                                </div>
+                                <p className="text-[10px] text-bleach-muted mb-1 leading-tight">
+                                  Distância máxima da habilidade.
+                                </p>
+                                <span className="text-[10px] text-blue-300 font-semibold mb-2 block truncate">
+                                  {statsZk.alcanceMetros}
+                                </span>
+                                <div className="w-full bg-black/60 h-1.5 rounded-full overflow-hidden">
+                                  <div className="h-full bg-blue-400 rounded-full" style={{ width: `${Math.min(100, (statsZk.alcance / 500) * 100)}%` }}></div>
+                                </div>
+                              </div>
+
+                              {/* 3. Corte */}
+                              <div className="p-3 bg-bleach-panel2 rounded-xl border border-red-500/30 flex flex-col justify-between">
+                                <div className="flex items-center justify-between mb-1">
+                                  <span className="text-[11px] font-extrabold uppercase text-red-400 flex items-center gap-1">
+                                    <span>⚔️</span> Corte
+                                  </span>
+                                  <span className="font-mono font-bold text-sm text-red-300">{statsZk.corte}</span>
+                                </div>
+                                <p className="text-[10px] text-bleach-muted mb-2 leading-tight">
+                                  Poder de penetração para transpassar a resiliência de alvos.
+                                </p>
+                                <div className="w-full bg-black/60 h-1.5 rounded-full overflow-hidden">
+                                  <div className="h-full bg-red-400 rounded-full" style={{ width: `${Math.min(100, (statsZk.corte / 500) * 100)}%` }}></div>
+                                </div>
+                              </div>
+
+                              {/* 4. Resiliência */}
+                              <div className="p-3 bg-bleach-panel2 rounded-xl border border-purple-500/30 flex flex-col justify-between">
+                                <div className="flex items-center justify-between mb-1">
+                                  <span className="text-[11px] font-extrabold uppercase text-purple-400 flex items-center gap-1">
+                                    <span>🛡️</span> Resiliência
+                                  </span>
+                                  <span className="font-mono font-bold text-sm text-purple-300">{statsZk.resiliencia}</span>
+                                </div>
+                                <p className="text-[10px] text-bleach-muted mb-2 leading-tight">
+                                  Durabilidade contra impactos pesados para não trincar/quebrar.
+                                </p>
+                                <div className="w-full bg-black/60 h-1.5 rounded-full overflow-hidden">
+                                  <div className="h-full bg-purple-400 rounded-full" style={{ width: `${Math.min(100, (statsZk.resiliencia / 500) * 100)}%` }}></div>
+                                </div>
+                              </div>
+
+                              {/* 5. Pressão Espiritual */}
+                              <div className="p-3 bg-bleach-panel2 rounded-xl border border-yellow-500/30 flex flex-col justify-between">
+                                <div className="flex items-center justify-between mb-1">
+                                  <span className="text-[11px] font-extrabold uppercase text-yellow-400 flex items-center gap-1">
+                                    <span>🌌</span> Reiatsu Lâmina
+                                  </span>
+                                  <span className="font-mono font-bold text-sm text-yellow-300">{statsZk.pressaoEspiritual}</span>
+                                </div>
+                                <p className="text-[10px] text-bleach-muted mb-2 leading-tight">
+                                  Energia intrínseca para Absorção ou Ressonância de Dano.
+                                </p>
+                                <div className="w-full bg-black/60 h-1.5 rounded-full overflow-hidden">
+                                  <div className="h-full bg-yellow-400 rounded-full" style={{ width: `${Math.min(100, (statsZk.pressaoEspiritual / 500) * 100)}%` }}></div>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Caixa Tática de Aplicação da Pressão Espiritual da Zanpakutō */}
+                            <div className="p-3.5 bg-black/80 rounded-xl border border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+                              <div className="space-y-1">
+                                <strong className="text-yellow-400 uppercase tracking-wider flex items-center gap-1.5 text-xs">
+                                  <span>⚡</span> Dinâmica de Aplicação de Reiatsu da Zanpakutō:
+                                </strong>
+                                <p className="text-bleach-creamDim text-[11px]">
+                                  A energia espiritual da lâmina pode ser canalizada em 2 modalidades de combate:
+                                </p>
+                              </div>
+
+                              <div className="flex flex-wrap items-center gap-2">
+                                <div className="p-2 bg-bleach-panel rounded-lg border border-cyan-500/40 text-[11px]">
+                                  <span className="text-cyan-300 font-bold block">💫 Absorção Espiritual</span>
+                                  <span className="text-bleach-muted">Eleva a Reiatsu do Shinigami em <strong className="text-white font-mono">+{statsZk.bonusAbsorcaoReiatsu}</strong></span>
+                                </div>
+                                <div className="p-2 bg-bleach-panel rounded-lg border border-red-500/40 text-[11px]">
+                                  <span className="text-red-300 font-bold block">💥 Ressonância de Impacto</span>
+                                  <span className="text-bleach-muted">Soma <strong className="text-white font-mono">+{statsZk.bonusDanoRessonancia}</strong> de dano às técnicas</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Mini Resumo das Capacidades Desbloqueadas e Próximo Marco */}
+                            <div className="p-3 bg-bleach-panel2/60 rounded-xl border border-white/5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <span className="text-bleach-muted text-[11px]">Marcos de Capacidade:</span>
+                                {caps.niveis.map((n) => (
+                                  <span
+                                    key={n.nivel}
+                                    className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold flex items-center gap-1 ${
+                                      n.desbloqueado
+                                        ? "bg-green-950 text-green-300 border border-green-500/60"
+                                        : "bg-black/60 text-bleach-muted border border-white/10"
+                                    }`}
+                                  >
+                                    <span>{n.desbloqueado ? "✓" : "🔒"}</span> Nv.{n.nivel} ({n.req} pts)
+                                  </span>
+                                ))}
+                              </div>
+
+                              {caps.proximoNivel && (
+                                <span className="text-[11px] text-amber-300">
+                                  Próximo Despertar: <strong>Nv.{caps.proximoNivel.nivel}</strong> aos <strong>{caps.proximoNivel.req} pts</strong> de média.
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })()}
                     </div>
-                    <Badge color={C.blue}>{personagem.zanpakuto.shikaiAtiva.elemento}</Badge>
-                  </div>
+                  );
+                })()}
 
-                  <div className="text-xs space-y-2 text-bleach-creamDim">
-                    <p><strong>Manifestação:</strong> {personagem.zanpakuto.shikaiAtiva.aparencia || personagem.zanpakuto.shikaiAtiva.formatoArma}</p>
-                    <p><strong>Poder Espiritual:</strong> {personagem.zanpakuto.shikaiAtiva.poder}</p>
-                  </div>
-
-                  {/* Sword Art SVG */}
-                  <BleachSwordArt
-                    arma={personagem.zanpakuto.shikaiAtiva}
-                    nomeZk={personagem.zanpakuto.shikaiAtiva.nome}
-                    isBankai={false}
-                    foto={personagem.zanpakuto.fotoShikai}
-                    onUpload={(e) => handleFotoUpload(e, "shikai")}
-                  />
-                </div>
-
-                {/* Bankai Section */}
+                {/* BANKAI SECTION */}
                 {temBankai ? (
-                  <div className="p-5 rounded-2xl bg-black/80 border-2 border-yellow-500/80 bankai-supreme-card shadow-2xl space-y-3">
-                    <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded bg-amber-950 text-yellow-300 border border-yellow-400">
-                      卍 BANKAI DESPERTA & SOBERANA
-                    </span>
-                    <h3 className="font-title text-3xl text-yellow-300 tracking-wider">
-                      {personagem.zanpakuto.bankaiAtiva.nome}
-                    </h3>
-                    <p className="text-xs text-yellow-200 italic">"{personagem.zanpakuto.bankaiAtiva.comando}"</p>
-                    <p className="text-xs text-bleach-creamDim">{personagem.zanpakuto.bankaiAtiva.poder}</p>
+                  (() => {
+                    const b = personagem.zanpakuto.bankaiAtiva;
+                    return (
+                      <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-b from-amber-950/40 via-bleach-panel to-black border-2 border-yellow-500/80 bankai-supreme-card shadow-2xl space-y-4">
+                        {/* Header */}
+                        <div className="flex flex-wrap items-start justify-between gap-3 border-b border-yellow-500/40 pb-4">
+                          <div className="space-y-1">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-amber-950 text-yellow-300 border border-yellow-400 tracking-wider">
+                                卍 BANKAI TRANSCENDENTAL & SOBERANA
+                              </span>
+                              {b.tipoEvolucao && (
+                                <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-yellow-950/80 border border-yellow-500/50 text-yellow-300 tracking-wider">
+                                  ⚡ {b.tipoEvolucao}
+                                </span>
+                              )}
+                            </div>
+                            <h3 className="font-title text-2xl sm:text-4xl text-yellow-300 tracking-wider flex items-center gap-2 flex-wrap mt-1">
+                              <span>{b.nome}</span>
+                              {b.kanji && <span className="text-base sm:text-lg font-cinzel text-yellow-400 font-normal">{b.kanji}</span>}
+                              {b.traducao && <span className="text-xs sm:text-sm text-yellow-200/80 font-sans">({b.traducao})</span>}
+                            </h3>
+                            <p className="text-xs sm:text-sm text-yellow-200 italic">
+                              "{b.comando}"
+                            </p>
+                          </div>
+                        </div>
 
-                    <BleachSwordArt
-                      arma={personagem.zanpakuto.bankaiAtiva}
-                      nomeZk={personagem.zanpakuto.bankaiAtiva.nome}
-                      isBankai={true}
-                      foto={personagem.zanpakuto.fotoBankai}
-                      onUpload={(e) => handleFotoUpload(e, "bankai")}
-                    />
-                  </div>
+                        {/* Breakpoint Box (Ponto de Ruptura da Shikai) */}
+                        {b.pontoRuptura && (
+                          <div className="p-3.5 bg-gradient-to-r from-amber-950/60 to-black rounded-xl border-2 border-yellow-500/70 space-y-1">
+                            <strong className="text-yellow-400 block text-xs uppercase tracking-wider flex items-center gap-1.5">
+                              <span>💥</span> PONTO DE RUPTURA (LIMITE DA SHIKAI SUPERADO):
+                            </strong>
+                            <p className="text-xs sm:text-sm text-bleach-cream leading-relaxed font-sans">
+                              {b.pontoRuptura}
+                            </p>
+                          </div>
+                        )}
+
+                        {/* Ponto Fraco & Brecha Estratégica */}
+                        {b.pontoFraco && (
+                          <div className="p-3.5 bg-gradient-to-r from-red-950/70 via-black to-red-950/50 rounded-xl border-2 border-red-500/70 space-y-1 shadow-lg">
+                            <strong className="text-red-400 block text-xs uppercase tracking-wider flex items-center gap-1.5 font-bold">
+                              <span>🎯</span> BRECHA ESTRATÉGICA & PONTO FRACO (COMO CONTRAGOLPEAR):
+                            </strong>
+                            <p className="text-xs sm:text-sm text-red-200/90 leading-relaxed font-sans">
+                              {b.pontoFraco}
+                            </p>
+                          </div>
+                        )}
+
+                        {/* 2-Column Grid: Domínio & Forma Monumental + Poder Transcendental */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                          <div className="p-3.5 bg-bleach-panel2 rounded-xl border border-white/10 space-y-1">
+                            <strong className="text-yellow-400 block text-xs flex items-center gap-1.5">
+                              <span>👑</span> Domínio Territorial & Forma Monumental:
+                            </strong>
+                            <p className="text-bleach-creamDim text-xs leading-relaxed">
+                              {b.formaMonumental || "Manifestação monumental de Reishi em escala territorial."}
+                            </p>
+                          </div>
+                          <div className="p-3.5 bg-bleach-panel2 rounded-xl border border-white/10 space-y-1">
+                            <strong className="text-cyan-300 block text-xs flex items-center gap-1.5">
+                              <span>⚡</span> Poder Transcendental da Bankai:
+                            </strong>
+                            <p className="text-bleach-creamDim text-xs leading-relaxed">
+                              {b.poder}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Limitações & Significado Filosófico */}
+                        <div className="p-3.5 bg-black/80 rounded-xl border border-white/10 text-xs space-y-2">
+                          {b.limitacoes && (
+                            <div className="text-xs text-red-300">
+                              <strong>⚠️ Limitações & Desgaste:</strong> {b.limitacoes}
+                            </div>
+                          )}
+                          {b.significadoEspiritual && (
+                            <p className="text-xs text-bleach-muted border-t border-white/5 pt-2">
+                              <strong>Significado Filosófico:</strong> <em className="text-yellow-200">"{b.significadoEspiritual}"</em>
+                            </p>
+                          )}
+                        </div>
+
+                        {/* Indices da Bankai */}
+                        {b.indices && (
+                          <div className="p-3.5 bg-black/60 rounded-xl border border-white/10 space-y-2">
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-bleach-muted block">
+                              Índice de Potência & Balanço Espiritual da Bankai (1 a 10)
+                            </span>
+                            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs">
+                              {[
+                                { label: "Potência", val: b.indices.potencia, color: C.red },
+                                { label: "Abrangência", val: b.indices.abrangencia, color: C.blue },
+                                { label: "Complexidade", val: b.indices.complexidade, color: C.purple },
+                                { label: "Versatilidade", val: b.indices.versatilidade, color: C.green },
+                                { label: "Custo", val: b.indices.custo, color: C.yellow },
+                              ].map(stat => (
+                                <div key={stat.label} className="p-2 bg-bleach-panel2 rounded-lg border border-white/5 text-center">
+                                  <span className="text-bleach-muted block text-[10px]">{stat.label}</span>
+                                  <span className="font-mono font-bold text-xs" style={{ color: stat.color }}>{stat.val || 10}/10</span>
+                                  <div className="w-full bg-black/60 h-1.5 rounded-full overflow-hidden mt-1.5">
+                                    <div className="h-full rounded-full" style={{ width: `${(stat.val || 10) * 10}%`, backgroundColor: stat.color }}></div>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                          {/* ESPAÇO DOS ATRIBUTOS DA BANKAI & TRANSCENDÊNCIA */}
+                          {(() => {
+                            const statsZk = calcularAtributosZanpakuto(personagem.atributos, true);
+                            const caps = gerarCapacidadesTaticasZanpakuto(b, statsZk, true);
+
+                            return (
+                              <div className="p-4 sm:p-5 bg-gradient-to-b from-amber-950/40 via-black to-bleach-panel rounded-2xl border-2 border-yellow-500/60 space-y-4 shadow-2xl mt-4">
+                                {/* Header */}
+                                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-yellow-500/30 pb-3">
+                                  <div>
+                                    <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded bg-amber-950 text-yellow-300 border border-yellow-400 tracking-wider">
+                                      卍 Atributos de Domínio Transcendental (Escala Bankai)
+                                    </span>
+                                    <h4 className="font-title text-xl text-yellow-300 mt-1 flex items-center gap-2">
+                                      <span>👑</span> Soberania Espiritual & Magnitude de Território
+                                    </h4>
+                                    <p className="text-[11px] text-bleach-creamDim">
+                                      Multiplicador de magnitude canônica de Bankai. Média Transcendental: <strong className="text-yellow-400 font-mono">{statsZk.media} pts</strong>
+                                    </p>
+                                  </div>
+
+                                  <button
+                                    type="button"
+                                    onClick={() => setShowCapacidadesModal({ isBankai: true, arma: b, statsZk, caps })}
+                                    className="px-4 py-2 bg-gradient-to-r from-amber-600 to-yellow-500 hover:from-amber-500 hover:to-yellow-400 text-black font-extrabold text-xs rounded-xl shadow-lg transition flex items-center gap-2 border border-yellow-300"
+                                  >
+                                    <span>👁️</span> Revelar Capacidades
+                                    <span className="px-2 py-0.5 rounded-full bg-black/80 text-yellow-300 font-mono text-[10px] border border-yellow-500">
+                                      {caps.desbloqueadosCount}/{caps.totalNiveis} Soberanias
+                                    </span>
+                                  </button>
+                                </div>
+
+                                {/* Grid 5 Atributos Bankai */}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5 text-xs">
+                                  {/* Controle Bankai */}
+                                  <div className="p-3 bg-bleach-panel2 rounded-xl border border-yellow-500/30 flex flex-col justify-between">
+                                    <div className="flex items-center justify-between mb-1">
+                                      <span className="text-[11px] font-extrabold uppercase text-yellow-400 flex items-center gap-1">
+                                        <span>🎯</span> Controle Soberano
+                                      </span>
+                                      <span className="font-mono font-bold text-sm text-yellow-300">{statsZk.controle}</span>
+                                    </div>
+                                    <p className="text-[10px] text-bleach-muted mb-2 leading-tight">
+                                      Manipulação macroscópica de leis e foco concentrado de energia.
+                                    </p>
+                                    <div className="w-full bg-black/60 h-1.5 rounded-full overflow-hidden">
+                                      <div className="h-full bg-yellow-400 rounded-full" style={{ width: `${Math.min(100, (statsZk.controle / 1500) * 100)}%` }}></div>
+                                    </div>
+                                  </div>
+
+                                  {/* Alcance Bankai */}
+                                  <div className="p-3 bg-bleach-panel2 rounded-xl border border-blue-500/30 flex flex-col justify-between">
+                                    <div className="flex items-center justify-between mb-1">
+                                      <span className="text-[11px] font-extrabold uppercase text-cyan-400 flex items-center gap-1">
+                                        <span>🏹</span> Alcance Territorial
+                                      </span>
+                                      <span className="font-mono font-bold text-sm text-cyan-300">{statsZk.alcance}</span>
+                                    </div>
+                                    <p className="text-[10px] text-bleach-muted mb-1 leading-tight">
+                                      Expansão espacial da regra.
+                                    </p>
+                                    <span className="text-[10px] text-cyan-300 font-semibold mb-2 block truncate">
+                                      {statsZk.alcanceMetros}
+                                    </span>
+                                    <div className="w-full bg-black/60 h-1.5 rounded-full overflow-hidden">
+                                      <div className="h-full bg-cyan-400 rounded-full" style={{ width: `${Math.min(100, (statsZk.alcance / 1500) * 100)}%` }}></div>
+                                    </div>
+                                  </div>
+
+                                  {/* Corte Bankai */}
+                                  <div className="p-3 bg-bleach-panel2 rounded-xl border border-red-500/30 flex flex-col justify-between">
+                                    <div className="flex items-center justify-between mb-1">
+                                      <span className="text-[11px] font-extrabold uppercase text-red-400 flex items-center gap-1">
+                                        <span>⚔️</span> Corte Transcendental
+                                      </span>
+                                      <span className="font-mono font-bold text-sm text-red-300">{statsZk.corte}</span>
+                                    </div>
+                                    <p className="text-[10px] text-bleach-muted mb-2 leading-tight">
+                                      Poder de aniquilação e ruptura atômica contra qualquer barreira.
+                                    </p>
+                                    <div className="w-full bg-black/60 h-1.5 rounded-full overflow-hidden">
+                                      <div className="h-full bg-red-400 rounded-full" style={{ width: `${Math.min(100, (statsZk.corte / 1500) * 100)}%` }}></div>
+                                    </div>
+                                  </div>
+
+                                  {/* Resiliência Bankai */}
+                                  <div className="p-3 bg-bleach-panel2 rounded-xl border border-purple-500/30 flex flex-col justify-between">
+                                    <div className="flex items-center justify-between mb-1">
+                                      <span className="text-[11px] font-extrabold uppercase text-purple-400 flex items-center gap-1">
+                                        <span>🛡️</span> Resiliência Monumental
+                                      </span>
+                                      <span className="font-mono font-bold text-sm text-purple-300">{statsZk.resiliencia}</span>
+                                    </div>
+                                    <p className="text-[10px] text-bleach-muted mb-2 leading-tight">
+                                      Estrutura praticamente inquebrável sustentada por Reishi massivo.
+                                    </p>
+                                    <div className="w-full bg-black/60 h-1.5 rounded-full overflow-hidden">
+                                      <div className="h-full bg-purple-400 rounded-full" style={{ width: `${Math.min(100, (statsZk.resiliencia / 1500) * 100)}%` }}></div>
+                                    </div>
+                                  </div>
+
+                                  {/* Pressão Espiritual Bankai */}
+                                  <div className="p-3 bg-bleach-panel2 rounded-xl border border-yellow-500/30 flex flex-col justify-between">
+                                    <div className="flex items-center justify-between mb-1">
+                                      <span className="text-[11px] font-extrabold uppercase text-yellow-300 flex items-center gap-1">
+                                        <span>🌌</span> Reiatsu Soberana
+                                      </span>
+                                      <span className="font-mono font-bold text-sm text-yellow-200">{statsZk.pressaoEspiritual}</span>
+                                    </div>
+                                    <p className="text-[10px] text-bleach-muted mb-2 leading-tight">
+                                      Sobrecarga massiva para finalizações lendárias e buffs colossais.
+                                    </p>
+                                    <div className="w-full bg-black/60 h-1.5 rounded-full overflow-hidden">
+                                      <div className="h-full bg-yellow-300 rounded-full" style={{ width: `${Math.min(100, (statsZk.pressaoEspiritual / 1500) * 100)}%` }}></div>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {/* Caixa de Aplicação da Reiatsu Bankai */}
+                                <div className="p-3.5 bg-black/80 rounded-xl border border-yellow-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+                                  <div className="space-y-1">
+                                    <strong className="text-yellow-300 uppercase tracking-wider flex items-center gap-1.5 text-xs">
+                                      <span>⚡</span> Dinâmica de Aplicação de Reiatsu da Bankai:
+                                    </strong>
+                                    <p className="text-bleach-creamDim text-[11px]">
+                                      A densidade espiritual da Bankai confere bônus de magnitude transcendental:
+                                    </p>
+                                  </div>
+
+                                  <div className="flex flex-wrap items-center gap-2">
+                                    <div className="p-2 bg-bleach-panel rounded-lg border border-amber-500/40 text-[11px]">
+                                      <span className="text-amber-300 font-bold block">💫 Absorção Transcendental</span>
+                                      <span className="text-bleach-muted">Eleva a Reiatsu do Shinigami em <strong className="text-white font-mono">+{statsZk.bonusAbsorcaoReiatsu}</strong></span>
+                                    </div>
+                                    <div className="p-2 bg-bleach-panel rounded-lg border border-red-500/40 text-[11px]">
+                                      <span className="text-red-300 font-bold block">💥 Ressonância Suprema</span>
+                                      <span className="text-bleach-muted">Soma <strong className="text-white font-mono">+{statsZk.bonusDanoRessonancia}</strong> de dano final</span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })()}
+
+                        {/* Cena de Despertar da Bankai */}
+                        {personagem.cenaDespertarBankai && (
+                          <div className="p-4 bg-black/70 border border-yellow-500/40 rounded-xl space-y-1.5 mt-3">
+                            <strong className="text-yellow-400 text-xs uppercase tracking-wider flex items-center gap-1.5">
+                              <span>📜</span> Cena de Despertar da Bankai:
+                            </strong>
+                            <p className="text-xs text-bleach-creamDim italic leading-relaxed">"{personagem.cenaDespertarBankai}"</p>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })()
                 ) : (
-                  <div className="p-4 bg-bleach-panel2 rounded-xl border border-yellow-500/30 flex items-center justify-between">
-                    <div>
-                      <h4 className="font-title text-lg text-yellow-400">Bankai (Liberação Total)</h4>
-                      <p className="text-xs text-bleach-creamDim">
-                        {podeGerarBankai ? "🔓 Permissão concedida pelo ADM! Clique para realizar o despertar." : "🔒 Bankai selada. Aguarde autorização da Administração."}
-                      </p>
+                  personagem.opcoesBankaiPendentes && personagem.opcoesBankaiPendentes.length > 0 ? (
+                    <div className="space-y-4 p-5 sm:p-6 bg-gradient-to-b from-amber-950/70 via-black to-bleach-panel rounded-2xl border-2 border-yellow-500/80 shadow-2xl">
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-yellow-500/30 pb-3">
+                        <div>
+                          <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded bg-yellow-950 text-yellow-300 border border-yellow-400">
+                            卍 3 EVOLUÇÕES DE BANKAI FORJADAS & SALVAS
+                          </span>
+                          <h4 className="font-title text-xl sm:text-2xl text-yellow-300 mt-1">Escolha a Transcendência da sua Bankai</h4>
+                          <p className="text-xs text-bleach-creamDim">
+                            As 3 evoluções geradas pela IA estão permanentemente salvas na sua alma. Analise e sele a que melhor representa sua evolução.
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => abrirFluxoDespertar("bankai")}
+                          className="px-4 py-2 bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold text-xs uppercase rounded-xl shadow whitespace-nowrap"
+                        >
+                          🔍 Abrir Visão em Modal Completo
+                        </button>
+                      </div>
+
+                      {/* 3 Bankai Cards Grid */}
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
+                        {personagem.opcoesBankaiPendentes.map((c, idx) => {
+                          const b = c.bankai || c;
+                          return (
+                            <div key={idx} className="p-4 rounded-xl bg-black/80 border border-yellow-500/40 hover:border-yellow-400 flex flex-col justify-between space-y-3 transition">
+                              <div className="space-y-2">
+                                <div className="flex items-center justify-between">
+                                  <span className="text-[10px] font-extrabold px-2 py-0.5 rounded bg-yellow-950 text-yellow-300 border border-yellow-500/50">
+                                    Opção {idx + 1} • {b.tipoEvolucao || "Evolução Espiritual"}
+                                  </span>
+                                </div>
+                                <h5 className="font-title text-lg text-yellow-300 leading-tight">
+                                  {b.nome} {b.traducao && <span className="text-xs font-normal text-yellow-200/80">({b.traducao})</span>}
+                                </h5>
+                                <p className="text-xs text-yellow-200 italic">"{b.comando}"</p>
+
+                                {b.pontoRuptura && (
+                                  <div className="p-2 bg-amber-950/40 rounded border border-yellow-500/30 text-[11px] text-yellow-200">
+                                    <strong className="text-yellow-400 block text-[10px] uppercase">💥 Ponto de Ruptura:</strong>
+                                    {b.pontoRuptura}
+                                  </div>
+                                )}
+
+                                {b.pontoFraco && (
+                                  <div className="p-2 bg-red-950/40 rounded border border-red-500/40 text-[11px] text-red-200">
+                                    <strong className="text-red-400 block text-[10px] uppercase font-bold">🎯 Brecha / Ponto Fraco:</strong>
+                                    {b.pontoFraco}
+                                  </div>
+                                )}
+
+                                <p className="text-xs text-bleach-creamDim line-clamp-3">
+                                  {b.poder}
+                                </p>
+                              </div>
+
+                              <button
+                                onClick={() => {
+                                  const confirma = confirm(`Tem certeza que deseja selar definitivamente a Bankai [${b.nome}] na sua alma?`);
+                                  if (confirma) escolherCaminhoEspiritual(c);
+                                }}
+                                className="w-full py-2.5 bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-extrabold text-xs uppercase rounded-lg shadow hover:brightness-110 transition"
+                              >
+                                卍 Selar Esta Bankai
+                              </button>
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
-                    {podeGerarBankai && (
-                      <button
-                        onClick={() => abrirFluxoDespertar("bankai")}
-                        className="px-5 py-2.5 bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-extrabold text-xs uppercase rounded-xl shadow"
-                      >
-                        卍 Despertar Bankai
-                      </button>
-                    )}
-                  </div>
+                  ) : (
+                    <div className="p-4 bg-bleach-panel2 rounded-xl border border-yellow-500/30 flex items-center justify-between">
+                      <div>
+                        <h4 className="font-title text-lg text-yellow-400">Bankai (Liberação Total)</h4>
+                        <p className="text-xs text-bleach-creamDim">
+                          {podeGerarBankai ? "🔓 Permissão concedida pelo ADM! Clique para realizar o despertar." : "🔒 Bankai selada. Aguarde autorização da Administração."}
+                        </p>
+                      </div>
+                      {podeGerarBankai && (
+                        <button
+                          onClick={() => abrirFluxoDespertar("bankai")}
+                          className="px-5 py-2.5 bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-extrabold text-xs uppercase rounded-xl shadow"
+                        >
+                          卍 Despertar Bankai
+                        </button>
+                      )}
+                    </div>
+                  )
                 )}
               </div>
             ) : (
-              <div className="p-8 text-center space-y-4 bg-black/60 rounded-2xl border border-bleach-border">
-                <div className="text-5xl">🗡️</div>
-                <h3 className="font-title text-2xl text-white">LÂMINA SELADA (ASAUCHI)</h3>
-                <p className="text-xs text-bleach-creamDim max-w-md mx-auto leading-relaxed">
-                  A sua Zanpakutō aguarda a liberação pelo ADM e o registro da cena de despertar para revelar as 4 interpretações autênticas da sua alma.
-                </p>
+              personagem.opcoesShikaiPendentes && personagem.opcoesShikaiPendentes.length > 0 ? (
+                <div className="space-y-4 p-5 sm:p-6 bg-gradient-to-b from-orange-950/70 via-black to-bleach-panel rounded-2xl border-2 border-bleach-orange/80 shadow-2xl">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-bleach-orange/30 pb-3">
+                    <div>
+                      <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded bg-orange-950 text-bleach-orange border border-bleach-orange">
+                        ⚔️ 4 MANIFESTAÇÕES DE SHIKAI FORJADAS & SALVAS
+                      </span>
+                      <h4 className="font-title text-xl sm:text-2xl text-bleach-orange mt-1">Escolha a Manifestação da sua Shikai</h4>
+                      <p className="text-xs text-bleach-creamDim">
+                        As 4 opções geradas pela IA estão permanentemente salvas na sua alma. Analise os caminhos e sele a sua Shikai autêntica.
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => abrirFluxoDespertar("shikai")}
+                      className="px-4 py-2 bg-bleach-orange hover:bg-orange-500 text-black font-extrabold text-xs uppercase rounded-xl shadow whitespace-nowrap"
+                    >
+                      🔍 Abrir Visão em Modal Completo
+                    </button>
+                  </div>
 
-                {podeGerarShikai ? (
-                  <button
-                    onClick={() => abrirFluxoDespertar("shikai")}
-                    className="px-6 py-3 bg-gradient-to-r from-cyan-400 to-blue-600 text-black font-extrabold text-xs uppercase tracking-widest rounded-xl shadow-lg hover:brightness-110 transition animate-pulse"
-                  >
-                    ✨ Iniciar Ritual de Despertar de Shikai (IA)
-                  </button>
-                ) : (
-                  <span className="inline-block px-4 py-2 rounded-lg bg-black text-xs font-mono text-bleach-muted border border-white/10">
-                    🔒 Aguardando liberação de Despertar pelo Administrador
-                  </span>
-                )}
-              </div>
+                  {/* 4 Shikai Cards Grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                    {personagem.opcoesShikaiPendentes.map((c, idx) => {
+                      const s = c.shikai || c;
+                      return (
+                        <div key={idx} className="p-4 rounded-xl bg-black/80 border border-bleach-orange/40 hover:border-bleach-orange flex flex-col justify-between space-y-3 transition">
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                              <span className="text-[10px] font-extrabold px-2 py-0.5 rounded bg-orange-950 text-bleach-orange border border-orange-500/50">
+                                Opção {idx + 1} • {s.elemento || "Elemento Espiritual"}
+                              </span>
+                            </div>
+                            <h5 className="font-title text-lg text-white leading-tight">
+                              {s.nome} {s.traducao && <span className="text-xs font-normal text-bleach-creamDim">({s.traducao})</span>}
+                            </h5>
+                            <p className="text-xs text-yellow-300 italic">"{s.comando}"</p>
+
+                            <div className="text-[11px] text-bleach-creamDim space-y-1">
+                              <div><strong>⚔️ Forma:</strong> {s.formaArma || s.forma}</div>
+                              <div className="line-clamp-2"><strong>⚡ Poder:</strong> {s.poder}</div>
+                            </div>
+                          </div>
+
+                          <button
+                            onClick={() => {
+                              const confirma = confirm(`Tem certeza que deseja selar definitivamente a Shikai [${s.nome}] na sua alma?`);
+                              if (confirma) escolherCaminhoEspiritual(c);
+                            }}
+                            className="w-full py-2.5 bg-gradient-to-r from-bleach-orange to-red-600 text-black font-extrabold text-xs uppercase rounded-lg shadow hover:brightness-110 transition"
+                          >
+                            ✨ Selar Esta Shikai Definitiva
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              ) : (
+                <div className="p-8 text-center space-y-4 bg-black/60 rounded-2xl border border-bleach-border">
+                  <div className="text-5xl">🗡️</div>
+                  <h3 className="font-title text-2xl text-white">LÂMINA SELADA (ASAUCHI)</h3>
+                  <p className="text-xs text-bleach-creamDim max-w-md mx-auto leading-relaxed">
+                    A sua Zanpakutō aguarda a liberação pelo ADM e o registro da cena de despertar para revelar as 4 interpretações autênticas da sua alma.
+                  </p>
+
+                  {podeGerarShikai ? (
+                    <button
+                      onClick={() => abrirFluxoDespertar("shikai")}
+                      className="px-6 py-3 bg-gradient-to-r from-cyan-400 to-blue-600 text-black font-extrabold text-xs uppercase tracking-widest rounded-xl shadow-lg hover:brightness-110 transition animate-pulse"
+                    >
+                      ✨ Iniciar Ritual de Despertar de Shikai (IA)
+                    </button>
+                  ) : (
+                    <span className="inline-block px-4 py-2 rounded-lg bg-black text-xs font-mono text-bleach-muted border border-white/10">
+                      🔒 Aguardando liberação de Despertar pelo Administrador
+                    </span>
+                  )}
+                </div>
+              )
             )}
           </Section>
         </div>
@@ -965,27 +1821,417 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
             </div>
           )}
 
-          {/* ATTR CARDS */}
+          {/* 1. PAINEL DE INFUSÃO DE REIATSU (REIATSU SURGE) */}
+          <Section
+            title="🌀 Infusão Espiritual de Combate (Reiatsu Surge da Cena)"
+            subtitle="Canalize sua Pressão Espiritual temporariamente para amplificar sua Força ou Resiliência em ações decisivas"
+            className="border-2 border-blue-500/50 bg-gradient-to-r from-blue-950/20 via-black to-bleach-panel"
+          >
+            {(() => {
+              const pressaoBase = Number(personagem.atributos?.pressao || 10);
+              const forcaBase = Number(personagem.atributos?.forca || 10);
+              const resilienciaBase = Number(personagem.atributos?.resiliencia || 10);
+
+              const pressaoRestante = Math.max(0, pressaoBase - gastoPressaoForca - gastoPressaoResiliencia);
+              const forcaEfetiva = forcaBase + gastoPressaoForca;
+              const resilienciaEfetiva = resilienciaBase + gastoPressaoResiliencia;
+              const pctPressaoRestante = Math.round((pressaoRestante / Math.max(1, pressaoBase)) * 100);
+
+              function alterarInjecaoForca(qtd) {
+                if (qtd > 0) {
+                  const possivel = Math.min(qtd, pressaoRestante);
+                  setGastoPressaoForca((prev) => prev + possivel);
+                } else {
+                  const remover = Math.min(Math.abs(qtd), gastoPressaoForca);
+                  setGastoPressaoForca((prev) => prev - remover);
+                }
+              }
+
+              function alterarInjecaoResiliencia(qtd) {
+                if (qtd > 0) {
+                  const possivel = Math.min(qtd, pressaoRestante);
+                  setGastoPressaoResiliencia((prev) => prev + possivel);
+                } else {
+                  const remover = Math.min(Math.abs(qtd), gastoPressaoResiliencia);
+                  setGastoPressaoResiliencia((prev) => prev - remover);
+                }
+              }
+
+              function restaurarPressaoCena() {
+                setGastoPressaoForca(0);
+                setGastoPressaoResiliencia(0);
+              }
+
+              return (
+                <div className="space-y-4">
+                  {/* Barra de Pressão Espiritual da Cena */}
+                  <div className="p-4 bg-black/80 rounded-xl border border-blue-500/40 space-y-2">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xl">🌀</span>
+                        <div>
+                          <span className="text-xs font-bold uppercase tracking-wider text-blue-300">
+                            Reserva de Pressão Espiritual na Cena
+                          </span>
+                          <div className="text-[11px] text-bleach-muted">
+                            Total: <strong className="text-white">{pressaoBase} pts</strong> | Disponível: <strong className="text-cyan-300">{pressaoRestante} pts</strong>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        {gastoPressaoForca > 0 && (
+                          <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-red-950 text-red-300 border border-red-500">
+                            +{gastoPressaoForca} em Força
+                          </span>
+                        )}
+                        {gastoPressaoResiliencia > 0 && (
+                          <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-500">
+                            +{gastoPressaoResiliencia} em Resiliência
+                          </span>
+                        )}
+                        <button
+                          type="button"
+                          onClick={restaurarPressaoCena}
+                          disabled={gastoPressaoForca === 0 && gastoPressaoResiliencia === 0}
+                          className="px-3 py-1 bg-bleach-panel border border-white/10 text-xs text-bleach-cream rounded-lg hover:border-bleach-orange disabled:opacity-30 transition"
+                        >
+                          🔄 Restaurar Cena
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Barra Visual */}
+                    <div className="w-full bg-black h-3 rounded-full overflow-hidden border border-white/10 p-0.5">
+                      <div
+                        className="h-full rounded-full transition-all duration-300"
+                        style={{
+                          width: `${pctPressaoRestante}%`,
+                          background: pctPressaoRestante > 50
+                            ? "linear-gradient(90deg, #1E4C63 0%, #4FB3E8 100%)"
+                            : pctPressaoRestante > 20
+                            ? "linear-gradient(90deg, #C94E0A 0%, #FF6A13 100%)"
+                            : "linear-gradient(90deg, #7A1711 0%, #D6483F 100%)"
+                        }}
+                      ></div>
+                    </div>
+                  </div>
+
+                  {/* Controles de Infusão: Força e Resiliência */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Infusão em Força */}
+                    <div className="bg-bleach-panel2 border border-red-500/40 rounded-xl p-4 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="text-xs font-bold uppercase tracking-wider text-red-400 flex items-center gap-1.5">
+                            <span>🗡️</span> Infundir em Força
+                          </h4>
+                          <span className="text-[11px] text-bleach-muted">Potência física, Hakuda e impacto de corte</span>
+                        </div>
+                        <div className="text-right">
+                          <span className="text-xs text-bleach-muted">Efetivo:</span>
+                          <span className="text-xl font-bold font-mono text-red-400 ml-1.5">{forcaEfetiva} pts</span>
+                        </div>
+                      </div>
+
+                      <div className="text-[11px] text-bleach-creamDim font-mono">
+                        Base: {forcaBase} pts + Infundido: <strong className="text-red-300">+{gastoPressaoForca} pts</strong>
+                      </div>
+
+                      {/* Botões de Alocação */}
+                      <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                        <span className="text-[10px] text-bleach-muted font-bold mr-1">Ajuste:</span>
+                        {[-50, -25, -10, 10, 25, 50, 100].map((amt) => (
+                          <button
+                            key={amt}
+                            type="button"
+                            onClick={() => alterarInjecaoForca(amt)}
+                            disabled={amt > 0 ? pressaoRestante < amt : gastoPressaoForca < Math.abs(amt)}
+                            className="px-2 py-1 bg-black/60 border border-white/10 text-white rounded text-[10px] font-mono font-bold hover:border-red-400 disabled:opacity-20 transition"
+                          >
+                            {amt > 0 ? `+${amt}` : amt}
+                          </button>
+                        ))}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (pressaoRestante > 0) alterarInjecaoForca(pressaoRestante);
+                          }}
+                          disabled={pressaoRestante <= 0}
+                          className="px-2 py-1 bg-red-950 text-red-300 border border-red-500 rounded text-[10px] font-bold uppercase disabled:opacity-20 hover:brightness-110"
+                        >
+                          Tudo ({pressaoRestante})
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Infusão em Resiliência */}
+                    <div className="bg-bleach-panel2 border border-purple-500/40 rounded-xl p-4 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="text-xs font-bold uppercase tracking-wider text-purple-400 flex items-center gap-1.5">
+                            <span>🛡️</span> Infundir em Resiliência
+                          </h4>
+                          <span className="text-[11px] text-bleach-muted">Densidade de armadura de Reiatsu e mitigação</span>
+                        </div>
+                        <div className="text-right">
+                          <span className="text-xs text-bleach-muted">Efetivo:</span>
+                          <span className="text-xl font-bold font-mono text-purple-400 ml-1.5">{resilienciaEfetiva} pts</span>
+                        </div>
+                      </div>
+
+                      <div className="text-[11px] text-bleach-creamDim font-mono">
+                        Base: {resilienciaBase} pts + Infundido: <strong className="text-purple-300">+{gastoPressaoResiliencia} pts</strong>
+                      </div>
+
+                      {/* Botões de Alocação */}
+                      <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                        <span className="text-[10px] text-bleach-muted font-bold mr-1">Ajuste:</span>
+                        {[-50, -25, -10, 10, 25, 50, 100].map((amt) => (
+                          <button
+                            key={amt}
+                            type="button"
+                            onClick={() => alterarInjecaoResiliencia(amt)}
+                            disabled={amt > 0 ? pressaoRestante < amt : gastoPressaoResiliencia < Math.abs(amt)}
+                            className="px-2 py-1 bg-black/60 border border-white/10 text-white rounded text-[10px] font-mono font-bold hover:border-purple-400 disabled:opacity-20 transition"
+                          >
+                            {amt > 0 ? `+${amt}` : amt}
+                          </button>
+                        ))}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (pressaoRestante > 0) alterarInjecaoResiliencia(pressaoRestante);
+                          }}
+                          disabled={pressaoRestante <= 0}
+                          className="px-2 py-1 bg-purple-950 text-purple-300 border border-purple-500 rounded text-[10px] font-bold uppercase disabled:opacity-20 hover:brightness-110"
+                        >
+                          Tudo ({pressaoRestante})
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Texto Explicativo de Regra de Cena */}
+                  <div className="p-3 bg-black/60 rounded-xl border border-white/10 text-xs text-bleach-creamDim leading-relaxed space-y-1">
+                    <div className="flex items-center gap-1.5 text-bleach-orange font-bold text-[11px] uppercase">
+                      <span>💡</span> Como Funciona a Infusão de Pressão Espiritual em Combate:
+                    </div>
+                    <p>
+                      Esse recurso permite canalizar momentaneamente a sua <strong>Pressão Espiritual</strong> para somar o valor em seus atributos de <strong>Força</strong> ou <strong>Resiliência</strong> durante uma ação decisiva. 
+                    </p>
+                    <p className="text-[11px] text-amber-200/90 font-medium">
+                      ⚠️ Este aumento é temporário e <strong>dura apenas naquele momento, em uma única cena</strong>. Na cena seguinte, você poderá utilizar o recurso de novo com a Pressão Espiritual que restar (ou restaurar sua reserva completa após um momento de descanso ou nova rodada).
+                    </p>
+                  </div>
+                </div>
+              );
+            })()}
+          </Section>
+
+          {/* 2. CARDS DE ATRIBUTOS ESPIRITUAIS */}
           <Section title="Atributos Espirituais" subtitle="O valor puro do seu poder na Sociedade das Almas">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {ATTRS.map((a) => {
-                const val = Number(personagem.atributos?.[a.key] || 10);
+                const valBase = Number(personagem.atributos?.[a.key] || 10);
+                const bônusSurge = a.key === "forca" ? gastoPressaoForca : a.key === "resiliencia" ? gastoPressaoResiliencia : 0;
+                const valExibido = valBase + bônusSurge;
+
                 return (
                   <div key={a.key} className="bg-bleach-panel2 border border-bleach-borderSoft rounded-xl p-4 flex flex-col justify-between">
                     <div className="flex items-start justify-between mb-2">
                       <div>
-                        <h4 className="text-xs font-bold uppercase tracking-wider" style={{ color: a.color }}>{a.label}</h4>
+                        <h4 className="text-xs font-bold uppercase tracking-wider flex items-center gap-1.5" style={{ color: a.color }}>
+                          {a.label}
+                          {bônusSurge > 0 && (
+                            <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-orange-950 text-orange-300 border border-orange-500">
+                              +{bônusSurge} na cena
+                            </span>
+                          )}
+                        </h4>
                         <p className="text-[11px] text-bleach-muted">{a.desc}</p>
                       </div>
-                      <span className="text-3xl font-extrabold font-mono" style={{ color: a.color }}>{val}</span>
+                      <span className="text-3xl font-extrabold font-mono" style={{ color: a.color }}>
+                        {valExibido}
+                      </span>
                     </div>
                     <div className="w-full bg-black/50 h-2 rounded-full overflow-hidden border border-white/5">
-                      <div className="h-full rounded-full transition-all duration-500" style={{ width: `${Math.min(100, (val / 200) * 100)}%`, backgroundColor: a.color }}></div>
+                      <div className="h-full rounded-full transition-all duration-500" style={{ width: `${Math.min(100, (valExibido / 200) * 100)}%`, backgroundColor: a.color }}></div>
                     </div>
                   </div>
                 );
               })}
             </div>
+          </Section>
+
+          {/* 3. SIMULADOR INTERATIVO DE CONFRONTO DE 4 ATRIBUTOS */}
+          <Section
+            title="🎯 Simulador Interativo de Confronto de Atributos"
+            subtitle="Teste disputas de combate em tempo real segundo o regulamento oficial do Seireitei"
+            className="border-2 border-purple-500/50"
+          >
+            {(() => {
+              const pressaoBase = Number(personagem.atributos?.pressao || 10);
+              const forcaEfetiva = Number(personagem.atributos?.forca || 10) + gastoPressaoForca;
+              const velocidadeBase = Number(personagem.atributos?.velocidade || 10);
+              const resilienciaEfetiva = Number(personagem.atributos?.resiliencia || 10) + gastoPressaoResiliencia;
+
+              let analise = null;
+              let labelStatPlayer = "";
+              let valorStatPlayer = 0;
+              let labelStatInimigo = "";
+
+              if (simuladorModo === "forca_resiliencia") {
+                analise = calcularRelacaoForcaResiliencia(simStatInimigo, resilienciaEfetiva);
+                labelStatPlayer = "Sua Resiliência Efetiva";
+                valorStatPlayer = resilienciaEfetiva;
+                labelStatInimigo = "Força do Golpe Inimigo";
+              } else if (simuladorModo === "forca_forca") {
+                analise = calcularRelacaoForcaForca(forcaEfetiva, simStatInimigo);
+                labelStatPlayer = "Sua Força Efetiva";
+                valorStatPlayer = forcaEfetiva;
+                labelStatInimigo = "Força do Oponente";
+              } else if (simuladorModo === "velocidade_velocidade") {
+                analise = calcularRelacaoVelocidadeVelocidade(velocidadeBase, simStatInimigo);
+                labelStatPlayer = "Sua Velocidade";
+                valorStatPlayer = velocidadeBase;
+                labelStatInimigo = "Velocidade do Oponente";
+              } else {
+                analise = calcularRelacaoPressaoPressao(pressaoBase, simStatInimigo);
+                labelStatPlayer = "Sua Pressão Espiritual";
+                valorStatPlayer = pressaoBase;
+                labelStatInimigo = "Pressão Espiritual do Oponente";
+              }
+
+              return (
+                <div className="space-y-5">
+                  {/* Seletor dos 4 Modos de Confronto */}
+                  <div className="flex gap-2 overflow-x-auto pb-1">
+                    {[
+                      { id: "forca_resiliencia", label: "🛡️ Força X Resiliência", desc: "Mitigação & Absorção do Golpe", cor: "#8B6FD6" },
+                      { id: "forca_forca", label: "⚔️ Força X Força", desc: "Disputa Física & Trava de Espadas", cor: "#D6483F" },
+                      { id: "velocidade_velocidade", label: "⚡ Velocidade X Velocidade", desc: "Shunpo & Flanqueamento", cor: "#5FA96B" },
+                      { id: "pressao_pressao", label: "🌀 Pressão X Pressão", desc: "Supressão de Aura & Choque de Reiatsu", cor: "#4FB3E8" }
+                    ].map((modo) => (
+                      <button
+                        key={modo.id}
+                        type="button"
+                        onClick={() => setSimuladorModo(modo.id)}
+                        className={`px-3.5 py-2 rounded-xl text-xs font-bold transition flex-1 min-w-[170px] text-left border ${
+                          simuladorModo === modo.id
+                            ? "bg-bleach-panel2 text-white border-white shadow-lg"
+                            : "bg-black/60 text-bleach-creamDim border-white/5 hover:border-white/20"
+                        }`}
+                        style={{ borderColor: simuladorModo === modo.id ? modo.cor : undefined }}
+                      >
+                        <div className="font-extrabold text-sm">{modo.label}</div>
+                        <div className="text-[10px] text-bleach-muted mt-0.5">{modo.desc}</div>
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Painel do Modo Selecionado */}
+                  <div className="p-4 sm:p-5 bg-gradient-to-r from-black via-bleach-panel2 to-black rounded-xl border-2 border-white/10 space-y-4 shadow-xl">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
+                      <div>
+                        <h5 className="font-title text-xl text-white flex items-center gap-2">
+                          <span>🎯</span> Disputa: {labelStatPlayer} ({valorStatPlayer} pts) vs {labelStatInimigo}
+                        </h5>
+                        <p className="text-[11px] text-bleach-creamDim">
+                          Simule o resultado narrativo e mecânico com base na comparação oficial dos atributos.
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-bleach-muted">{labelStatInimigo}:</span>
+                        <input
+                          type="number"
+                          min="1"
+                          max="9999"
+                          value={simStatInimigo}
+                          onChange={(e) => setSimStatInimigo(Math.max(1, Number(e.target.value) || 1))}
+                          className="w-24 px-3 py-1.5 bg-black/80 border border-white/30 rounded-lg text-white font-mono font-bold text-sm text-center focus:outline-none focus:border-bleach-orange"
+                        />
+                        <span className="text-xs font-mono text-bleach-orange font-bold">pts</span>
+                      </div>
+                    </div>
+
+                    {/* Presets Rápidos */}
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="text-[10px] font-bold text-bleach-muted uppercase mr-1">Presets Rápidos:</span>
+                      {[
+                        { label: "💀 Hollow Menor", val: 30 },
+                        { label: "⚔️ Sentinela", val: 80 },
+                        { label: "⚡ Tenente", val: 250 },
+                        { label: "👑 Capitão", val: 650 },
+                        { label: "🩸 Espada Top 4", val: 1200 },
+                        { label: "🌟 Comandante", val: 2500 },
+                      ].map((preset) => (
+                        <button
+                          key={preset.label}
+                          type="button"
+                          onClick={() => setSimStatInimigo(preset.val)}
+                          className={`px-2.5 py-1 rounded-lg text-[11px] font-mono transition ${
+                            simStatInimigo === preset.val
+                              ? "bg-bleach-orange text-black font-bold border border-white shadow"
+                              : "bg-black/60 text-bleach-creamDim hover:text-white border border-white/10"
+                          }`}
+                        >
+                          {preset.label} ({preset.val})
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Resultado da Simulação */}
+                    <div className="p-4 bg-black/90 rounded-xl border-2 space-y-3" style={{ borderColor: analise.cor }}>
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <div className="flex items-center gap-2">
+                          <span
+                            className="text-[10px] font-extrabold uppercase px-3 py-1 rounded-full text-black"
+                            style={{ backgroundColor: analise.cor }}
+                          >
+                            {analise.categoria}
+                          </span>
+                          <span className="text-xs font-mono text-bleach-creamDim">
+                            {labelStatPlayer} ({valorStatPlayer}) / Inimigo ({simStatInimigo}) = <strong className="font-bold text-white">{analise.pct}%</strong>
+                          </span>
+                        </div>
+
+                        <span className="text-xs font-bold font-mono" style={{ color: analise.cor }}>
+                          {analise.resultadoStr || analise.danoRecebidoStr}
+                        </span>
+                      </div>
+
+                      {/* Barra de Proporção */}
+                      <div className="w-full bg-black/60 h-2.5 rounded-full overflow-hidden border border-white/10">
+                        <div
+                          className="h-full rounded-full transition-all duration-500"
+                          style={{
+                            width: `${Math.min(100, analise.pct)}%`,
+                            backgroundColor: analise.cor
+                          }}
+                        ></div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs pt-1">
+                        <div className="p-2.5 bg-bleach-panel rounded-lg border border-white/5">
+                          <strong className="text-bleach-muted block text-[10px] uppercase">Efeito de Postura / Movimento:</strong>
+                          <p className="text-bleach-cream mt-0.5">{analise.efeitoPostura}</p>
+                        </div>
+                        <div className="p-2.5 bg-bleach-panel rounded-lg border border-white/5">
+                          <strong className="text-bleach-muted block text-[10px] uppercase">Risco à Zanpakutō / Arma:</strong>
+                          <p className="text-bleach-cream mt-0.5">{analise.riscoArma}</p>
+                        </div>
+                        <div className="p-2.5 bg-bleach-panel rounded-lg border border-white/5">
+                          <strong className="text-bleach-orange block text-[10px] uppercase">Recomendação Tática de Narração:</strong>
+                          <p className="text-bleach-cream mt-0.5">{analise.dicaTatica}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
           </Section>
         </div>
       )}
@@ -993,33 +2239,415 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
       {/* SUBPAGE: KIDOS & TÉCNICAS */}
       {subPaginaFicha === "kidos" && (
         <div className="space-y-6">
-          <Section title="Kidō e Técnicas Aprendidas" subtitle="Feitiços dominados pelo Shinigami">
-            {(personagem.tecnicas || []).length === 0 ? (
-              <p className="text-xs text-bleach-muted">Nenhuma técnica registrada até o momento.</p>
-            ) : (
-              <div className="flex flex-wrap gap-2.5 mb-4">
-                {personagem.tecnicas.map((t) => (
-                  <div key={t.id} className="bg-bleach-panel2 border border-bleach-border px-3 py-1.5 rounded-lg flex items-center gap-2 text-xs">
-                    <span className="px-2 py-0.5 rounded bg-black text-[10px] font-bold text-bleach-orange uppercase">{t.categoria}</span>
-                    <span className="font-semibold text-bleach-cream">{t.nome}</span>
-                    {isAdmin && (
-                      <button onClick={() => removeTecnica(t.id)} className="text-red-400 hover:text-red-300 font-bold ml-1">×</button>
-                    )}
+          
+          {/* 1. BARRAS SUPERIORES: CONHECIMENTO (DINHEIRO DE KIDŌ) & PRESSÃO ESPIRITUAL (REIATSU NA CENA) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            
+            {/* CARD 1: CONHECIMENTO ESPIRITUAL */}
+            <div 
+              onClick={() => setShowKidoTreeModal(true)}
+              className="p-4 bg-gradient-to-r from-amber-950/40 via-black/80 to-yellow-950/40 border-2 border-yellow-500/60 hover:border-yellow-400 rounded-2xl cursor-pointer shadow-xl transition-all duration-300 hover:scale-[1.01] space-y-3"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <span className="w-9 h-9 rounded-xl bg-yellow-500/20 border border-yellow-500 flex items-center justify-center text-lg">
+                    📚
+                  </span>
+                  <div>
+                    <h4 className="font-title text-base text-yellow-400">CONHECIMENTO ESPIRITUAL</h4>
+                    <p className="text-[11px] text-bleach-muted">Moeda de aprendizagem gerada por atividade de cenas</p>
                   </div>
-                ))}
+                </div>
+                <span className="px-2.5 py-0.5 rounded-full bg-yellow-950 border border-yellow-500 text-yellow-300 text-[10px] font-extrabold uppercase">
+                  Saldo Ativo
+                </span>
               </div>
-            )}
 
-            {isAdmin && (
-              <div className="mt-4 pt-4 border-t border-bleach-borderSoft flex flex-wrap gap-2">
-                <select value={novaTecCat} onChange={(e) => setNovaTecCat(e.target.value)} className="bg-bleach-panel2 border border-bleach-border rounded-lg px-3 py-2 text-xs text-white">
-                  {CATEGORIAS_TECNICA.map((c) => <option key={c} value={c}>{c}</option>)}
-                </select>
-                <input type="text" placeholder="Nome da técnica..." value={novaTecNome} onChange={(e) => setNovaTecNome(e.target.value)} className="flex-1 min-w-[180px] bg-bleach-panel2 border border-bleach-border rounded-lg px-3 py-2 text-xs text-white" />
-                <button onClick={addTecnica} className="px-4 py-2 bg-bleach-panel border border-bleach-border text-bleach-cream hover:border-bleach-orange rounded-lg text-xs font-bold uppercase">+ Adicionar</button>
+              <div className="flex items-end justify-between">
+                <div>
+                  <span className="text-[10px] text-bleach-muted block uppercase">Saldo para Feitiços:</span>
+                  <span className="text-2xl font-mono font-black text-yellow-400 tracking-tight">
+                    {personagem.conhecimento || 0} <span className="text-xs text-yellow-200/60 font-sans font-normal">₪ (Conhecimento)</span>
+                  </span>
+                </div>
+
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowKidoTreeModal(true);
+                    }}
+                    className="px-3 py-1.5 bg-yellow-950/80 hover:bg-yellow-900 border border-yellow-500 text-yellow-300 text-xs font-bold rounded-lg transition flex items-center gap-1"
+                  >
+                    <span>🌳</span> Árvore de Habilidades
+                  </button>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowKidoShopModal(true);
+                    }}
+                    className="px-3 py-1.5 bg-gradient-to-r from-yellow-500 to-amber-600 hover:brightness-110 text-black text-xs font-extrabold rounded-lg transition shadow flex items-center gap-1"
+                  >
+                    <span>✨</span> Aprender Kidō
+                  </button>
+                </div>
+              </div>
+
+              <div className="w-full bg-black/60 h-2 rounded-full overflow-hidden border border-white/10">
+                <div 
+                  className="h-full rounded-full bg-gradient-to-r from-yellow-500 to-amber-500 transition-all duration-500"
+                  style={{ width: `${Math.min(100, Math.max(8, ((personagem.conhecimento || 0) / 1000) * 100))}%` }}
+                ></div>
+              </div>
+            </div>
+
+            {/* CARD 2: PRESSÃO ESPIRITUAL NA CENA */}
+            {(() => {
+              const pressaoTotal = Number(personagem.atributos?.pressao || 10);
+              const pressaoRestante = Math.max(0, pressaoTotal - gastoPressaoForca - gastoPressaoResiliencia);
+              const pctReiatsu = Math.round((pressaoRestante / Math.max(1, pressaoTotal)) * 100);
+
+              return (
+                <div className="p-4 bg-gradient-to-r from-blue-950/40 via-black/80 to-cyan-950/40 border-2 border-blue-500/60 rounded-2xl shadow-xl space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2.5">
+                      <span className="w-9 h-9 rounded-xl bg-blue-500/20 border border-blue-500 flex items-center justify-center text-lg">
+                        🌀
+                      </span>
+                      <div>
+                        <h4 className="font-title text-base text-cyan-300">PRESSÃO ESPIRITUAL (REIATSU)</h4>
+                        <p className="text-[11px] text-bleach-muted">Energia disponível para canalização de feitiços nesta cena</p>
+                      </div>
+                    </div>
+                    <span className="px-2.5 py-0.5 rounded-full bg-blue-950 border border-cyan-500 text-cyan-300 text-[10px] font-extrabold uppercase">
+                      {pctReiatsu}% da Lâmina
+                    </span>
+                  </div>
+
+                  <div className="flex items-end justify-between">
+                    <div>
+                      <span className="text-[10px] text-bleach-muted block uppercase">Reserva na Cena:</span>
+                      <span className="text-2xl font-mono font-black text-cyan-400 tracking-tight">
+                        {pressaoRestante} <span className="text-xs text-bleach-muted font-sans font-normal">/ {pressaoTotal} pts</span>
+                      </span>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setGastoPressaoForca(0);
+                        setGastoPressaoResiliencia(0);
+                        playReiatsuSound('win');
+                      }}
+                      className="px-3 py-1.5 bg-blue-950 hover:bg-blue-900 border border-cyan-500 text-cyan-300 text-xs font-bold rounded-lg transition flex items-center gap-1"
+                    >
+                      <span>🔄</span> Restaurar Cena
+                    </button>
+                  </div>
+
+                  <div className="w-full bg-black/60 h-2 rounded-full overflow-hidden border border-white/10">
+                    <div 
+                      className="h-full rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 transition-all duration-500"
+                      style={{ width: `${pctReiatsu}%` }}
+                    ></div>
+                  </div>
+                </div>
+              );
+            })()}
+
+          </div>
+
+          {/* 2. TÉCNICAS E KIDŌS REGISTRADOS NA FICHA */}
+          <Section 
+            title="📜 Kidōs Registrados na Ficha do Shinigami" 
+            subtitle="Feitiços dominados e prontos para uso em combate ou simulação"
+          >
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mb-4">
+              <span className="text-xs text-bleach-creamDim">
+                Total de Feitiços Aprendidos: <strong className="text-white font-mono">{(personagem.kidosConhecidos || []).length}</strong>
+              </span>
+
+              <button
+                type="button"
+                onClick={() => setShowKidoShopModal(true)}
+                className="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-yellow-500 to-amber-600 hover:brightness-110 text-black font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-lg flex items-center justify-center gap-1.5 transition"
+              >
+                <span>✨ 📖</span> Aprender Novos Kidōs (Loja)
+              </button>
+            </div>
+
+            {(!personagem.kidosConhecidos || personagem.kidosConhecidos.length === 0) ? (
+              <div className="p-8 text-center bg-black/50 border border-dashed border-white/20 rounded-2xl space-y-3">
+                <div className="text-3xl">📕</div>
+                <h4 className="font-title text-xl text-yellow-400">Nenhum Kidō registrado na sua ficha ainda</h4>
+                <p className="text-xs text-bleach-creamDim max-w-md mx-auto">
+                  Você pode usar o seu Conhecimento acumulado para aprender feitiços de Hadō, Bakudō e Kaidō na Biblioteca do Seireitei!
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setShowKidoShopModal(true)}
+                  className="px-5 py-2.5 bg-yellow-500 hover:bg-yellow-400 text-black font-black text-xs uppercase tracking-wider rounded-xl shadow"
+                >
+                  Abrir Loja de Kidōs
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+                {personagem.kidosConhecidos.map((k) => {
+                  const isHado = k.cat === "Hadō";
+                  const isBakudo = k.cat === "Bakudō";
+                  const pressaoTotal = Number(personagem.atributos?.pressao || 30);
+                  const pressaoRestante = Math.max(0, pressaoTotal - gastoPressaoForca - gastoPressaoResiliencia);
+                  const custo = calcularCustoKido(k, pressaoTotal);
+                  const poder = calcularPoderKido(k, pressaoTotal, custo.custoTotal, false);
+
+                  return (
+                    <div
+                      key={k.id}
+                      className={`p-4 bg-bleach-panel2 border rounded-xl flex flex-col justify-between space-y-3 transition-all duration-300 ${
+                        isHado
+                          ? "border-red-500/40 hover:border-red-400 hover:shadow-[0_0_20px_rgba(239,68,68,0.2)]"
+                          : isBakudo
+                          ? "border-blue-500/40 hover:border-blue-400 hover:shadow-[0_0_20px_rgba(59,130,246,0.2)]"
+                          : "border-emerald-500/40 hover:border-emerald-400 hover:shadow-[0_0_20px_rgba(16,185,129,0.2)]"
+                      }`}
+                    >
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded border ${
+                            isHado ? "bg-red-950 text-red-300 border-red-500" : isBakudo ? "bg-blue-950 text-cyan-300 border-cyan-500" : "bg-emerald-950 text-emerald-300 border-emerald-500"
+                          }`}>
+                            {k.cat} #{k.numero}
+                          </span>
+                          <span className="text-[11px] font-mono text-bleach-orange font-bold">
+                            Custo: {custo.custoTotal} pts
+                          </span>
+                        </div>
+
+                        <h5 className="font-bold text-white text-sm leading-snug">
+                          {k.nome}
+                        </h5>
+
+                        {k.incant && k.incant !== "—" && (
+                          <div className="p-2 bg-black/60 rounded-lg border border-white/5 text-[10px] text-cyan-200/80 italic line-clamp-2">
+                            "{k.incant}"
+                          </div>
+                        )}
+
+                        <p className="text-[11px] text-bleach-creamDim line-clamp-2 leading-relaxed">
+                          {k.desc}
+                        </p>
+
+                        <div className="text-[10px] font-mono text-bleach-muted flex justify-between">
+                          <span>Poder Básico: <strong className="text-white">{poder} pts</strong></span>
+                          <span>Reiatsu Mínima: <strong className="text-cyan-400">{k.pressaoMinima || 10} pts</strong></span>
+                        </div>
+                      </div>
+
+                      <div className="space-y-2 pt-2 border-t border-white/5">
+                        <button
+                          type="button"
+                          onClick={() => setKidoModalFicha(k)}
+                          className="w-full py-1.5 rounded-lg bg-black/60 border border-white/10 text-xs font-bold text-bleach-cream hover:text-white hover:border-bleach-orange transition flex items-center justify-center gap-1.5"
+                        >
+                          <span>👁️</span> Detalhes & Simulação Completa
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (pressaoRestante < custo.custoTotal) {
+                              alert(`Reiatsu insuficiente na cena! Custo: ${custo.custoTotal} pts | Disponível: ${pressaoRestante} pts.`);
+                              return;
+                            }
+                            playReiatsuSound('kido');
+                            updateChar({}, `⚡ Conjurou [${k.cat} #${k.numero}] ${k.nome} na cena (Gasto: ${custo.custoTotal} pts)`);
+                            alert(`✨ ${k.nome} conjurado na cena com sucesso!\n\n⚡ Poder de Feitiço: ${poder} pts\n🌀 Custo de Reiatsu: ${custo.custoTotal} pts`);
+                          }}
+                          disabled={pressaoRestante < custo.custoTotal}
+                          className={`w-full py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition shadow disabled:opacity-40 disabled:cursor-not-allowed ${
+                            isHado ? "bg-gradient-to-r from-red-600 to-orange-600 text-white hover:brightness-110" 
+                            : isBakudo ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:brightness-110" 
+                            : "bg-gradient-to-r from-emerald-600 to-teal-600 text-white hover:brightness-110"
+                          }`}
+                        >
+                          ⚡ Conjurar em Cena ({custo.custoTotal} pts)
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             )}
           </Section>
+
+          {/* 3. SIMULADOR INTERATIVO DE KIDŌS REGISTRADOS (ESTILO ATRIBUTOS) */}
+          {(personagem.kidosConhecidos && personagem.kidosConhecidos.length > 0) && (
+            <Section
+              title="🎯 Simulador de Confronto de Kidōs Aprendidos"
+              subtitle="Teste o impacto real dos feitiços registrados na sua ficha contra atributos de oponentes"
+              className="border-2 border-bleach-orange/50"
+            >
+              {(() => {
+                const kidos = personagem.kidosConhecidos || [];
+                const kidoAtivo = kidos[Math.min(simKidoIndex, kidos.length - 1)] || kidos[0];
+                if (!kidoAtivo) return null;
+
+                const isHado = kidoAtivo.cat === "Hadō";
+                const isBakudo = kidoAtivo.cat === "Bakudō";
+                const isKaido = kidoAtivo.cat === "Kaidō";
+
+                const pressaoTotal = Number(personagem.atributos?.pressao || 30);
+                const custoInfo = calcularCustoKido(kidoAtivo, pressaoTotal);
+                const poderCalculado = calcularPoderKido(kidoAtivo, pressaoTotal, custoInfo.custoTotal, simKidoIncantado);
+
+                let analise = null;
+                let labelInimigo = isHado ? "Resiliência do Alvo" : isBakudo ? "Força do Alvo" : "Poder Terapêutico";
+
+                if (isHado) {
+                  analise = calcularEfeitoHado(poderCalculado, simKidoTargetStat);
+                } else if (isBakudo) {
+                  analise = calcularEfeitoBakudo(poderCalculado, simKidoTargetStat);
+                } else {
+                  analise = calcularEfeitoKaido(poderCalculado);
+                }
+
+                return (
+                  <div className="space-y-4">
+                    {/* Seletor do Kidō para Simulação */}
+                    <div>
+                      <label className="block text-xs font-bold text-bleach-creamDim uppercase mb-1.5">
+                        Escolha um Kidō Registrado para Simular:
+                      </label>
+                      <div className="flex gap-2 overflow-x-auto pb-1">
+                        {kidos.map((k, idx) => (
+                          <button
+                            key={k.id || idx}
+                            type="button"
+                            onClick={() => setSimKidoIndex(idx)}
+                            className={`px-3 py-2 rounded-xl text-xs font-bold transition flex-shrink-0 border ${
+                              simKidoIndex === idx
+                                ? "bg-bleach-panel2 text-white border-bleach-orange shadow-lg"
+                                : "bg-black/60 text-bleach-creamDim border-white/5 hover:border-white/20"
+                            }`}
+                          >
+                            <span className="text-bleach-orange block text-[10px] uppercase font-bold">{k.cat} #{k.numero}</span>
+                            <span>{k.nome}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Painel do Simulador */}
+                    <div className="p-4 sm:p-5 bg-gradient-to-r from-black via-bleach-panel2 to-black rounded-xl border-2 border-white/10 space-y-4 shadow-xl">
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
+                        <div>
+                          <h5 className="font-title text-xl text-white flex items-center gap-2">
+                            <span>⚡</span> {kidoAtivo.nome} (Poder: {poderCalculado} pts) vs {labelInimigo}
+                          </h5>
+                          <p className="text-[11px] text-bleach-creamDim">
+                            Custo de Reiatsu: <strong className="text-bleach-orange font-mono">{custoInfo.custoTotal} pts</strong> ({custoInfo.custoFlat} flat + {custoInfo.custoPercentual} [% total])
+                          </p>
+                        </div>
+
+                        <div className="flex items-center gap-3">
+                          <label className="flex items-center gap-2 cursor-pointer text-xs text-yellow-300 font-bold bg-yellow-950/60 border border-yellow-500/50 px-2.5 py-1 rounded-lg">
+                            <input
+                              type="checkbox"
+                              checked={simKidoIncantado}
+                              onChange={(e) => setSimKidoIncantado(e.target.checked)}
+                              className="accent-yellow-400"
+                            />
+                            <span>Incantação Completa (+35% Poder)</span>
+                          </label>
+
+                          {!isKaido && (
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs text-bleach-muted">{labelInimigo}:</span>
+                              <input
+                                type="number"
+                                min="1"
+                                max="9999"
+                                value={simKidoTargetStat}
+                                onChange={(e) => setSimKidoTargetStat(Math.max(1, Number(e.target.value) || 1))}
+                                className="w-20 px-2.5 py-1 bg-black/80 border border-white/30 rounded-lg text-white font-mono font-bold text-xs text-center focus:outline-none focus:border-bleach-orange"
+                              />
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Presets Rápidos se não for Kaidō */}
+                      {!isKaido && (
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className="text-[10px] font-bold text-bleach-muted uppercase mr-1">Presets do Alvo:</span>
+                          {[
+                            { label: "💀 Hollow Menor", val: 30 },
+                            { label: "⚔️ Sentinela", val: 80 },
+                            { label: "⚡ Tenente", val: 250 },
+                            { label: "👑 Capitão", val: 650 },
+                            { label: "🩸 Espada Top 4", val: 1200 },
+                          ].map((preset) => (
+                            <button
+                              key={preset.label}
+                              type="button"
+                              onClick={() => setSimKidoTargetStat(preset.val)}
+                              className={`px-2 py-1 rounded-lg text-[11px] font-mono transition ${
+                                simKidoTargetStat === preset.val
+                                  ? "bg-bleach-orange text-black font-bold border border-white shadow"
+                                  : "bg-black/60 text-bleach-creamDim hover:text-white border border-white/10"
+                              }`}
+                            >
+                              {preset.label} ({preset.val})
+                            </button>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Resultado Gráfico da Simulação */}
+                      {analise && (
+                        <div className="p-4 bg-black/90 rounded-xl border-2 space-y-3" style={{ borderColor: analise.cor }}>
+                          <div className="flex flex-wrap items-center justify-between gap-2">
+                            <span
+                              className="text-[10px] font-extrabold uppercase px-3 py-1 rounded-full text-black"
+                              style={{ backgroundColor: analise.cor }}
+                            >
+                              {analise.categoria}
+                            </span>
+                            <span className="text-xs font-mono font-bold" style={{ color: analise.cor }}>
+                              {isHado ? `Dano Efetivo: ${analise.danoRecebidoStr} (Proporção: ${analise.pct}%)`
+                                : isBakudo ? `Contenção: ${analise.duracaoStr} (Proporção: ${analise.pct}%)`
+                                : analise.curaHpStr}
+                            </span>
+                          </div>
+
+                          {!isKaido && (
+                            <div className="w-full bg-black/60 h-2.5 rounded-full overflow-hidden border border-white/10">
+                              <div
+                                className="h-full rounded-full transition-all duration-500"
+                                style={{ width: `${Math.min(100, analise.pct)}%`, backgroundColor: analise.cor }}
+                              ></div>
+                            </div>
+                          )}
+
+                          <div className="text-xs text-bleach-cream leading-relaxed">
+                            {analise.descricao || analise.diagnostico}
+                          </div>
+
+                          <div className="p-2.5 bg-bleach-panel rounded-lg border border-white/5 text-[11px] text-bleach-creamDim">
+                            <strong className="text-bleach-orange">💡 Recomendação Tática de Narração:</strong> {analise.dicaTatica}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })()}
+            </Section>
+          )}
+
         </div>
       )}
 
@@ -1261,12 +2889,10 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
 
       {/* AWAKENING SCENE SUBMISSION MODAL */}
       {showCenaModal && (
-        <AwakeningSceneModal
-          open={!!showCenaModal}
+        <CenaDespertarModal
           tipo={showCenaModal}
-          personagem={personagem}
           onClose={() => setShowCenaModal(null)}
-          onSubmitScene={submeterCenaDespertar}
+          onSubmit={submeterCenaDespertar}
         />
       )}
 
@@ -1276,11 +2902,14 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
           open={showZanpakutoAIModal}
           tipo={aiZkTipo}
           isBankai={aiZkTipo === "bankai"}
+          loading={aiZkLoading}
           caminhos={aiZkOpcoes}
           personagem={personagem}
           onEscolherCaminho={escolherCaminhoEspiritual}
-          onRegenerar={regenerarCaminhosComIA}
-          onClose={() => setShowZanpakutoAIModal(false)}
+          onClose={() => {
+            setShowZanpakutoAIModal(false);
+            setAiZkLoading(false);
+          }}
         />
       )}
 
@@ -1316,6 +2945,52 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
             </div>
           </div>
         </div>
+      )}
+      {/* CAPACIDADES ZANPAKUTO MODAL */}
+      {showCapacidadesModal && (
+        <CapacidadesZanpakutoModal
+          modalData={showCapacidadesModal}
+          onClose={() => setShowCapacidadesModal(null)}
+        />
+      )}
+
+      {/* KIDO DETAIL MODAL IN FICHA */}
+      {kidoModalFicha && (
+        <KidoDetailModal
+          kido={kidoModalFicha}
+          personagem={personagem}
+          isOpen={!!kidoModalFicha}
+          onClose={() => setKidoModalFicha(null)}
+          pressaoRestante={Math.max(0, Number(personagem.atributos?.pressao || 10) - gastoPressaoForca - gastoPressaoResiliencia)}
+          onConjurar={(kido, custoGasto, poder, incantado) => {
+            playReiatsuSound('kido');
+            updateChar({}, `⚡ Conjurou ${kido.nome} em cena (Gasto: ${custoGasto} pts de Reiatsu | Poder: ${poder} pts${incantado ? ' [Eishō]' : ''})`);
+            alert(`✨ ${kido.nome} conjurado na cena com sucesso!\n\n⚡ Poder de Feitiço: ${poder} pts\n🌀 Custo de Reiatsu: ${custoGasto} pts`);
+          }}
+        />
+      )}
+
+      {/* KIDO SKILL TREE MODAL */}
+      {showKidoTreeModal && (
+        <KidoSkillTreeModal
+          isOpen={showKidoTreeModal}
+          onClose={() => setShowKidoTreeModal(false)}
+          personagem={personagem}
+          onAbrirLoja={() => {
+            setShowKidoTreeModal(false);
+            setShowKidoShopModal(true);
+          }}
+        />
+      )}
+
+      {/* KIDO SHOP MODAL */}
+      {showKidoShopModal && (
+        <KidoShopModal
+          isOpen={showKidoShopModal}
+          onClose={() => setShowKidoShopModal(false)}
+          personagem={personagem}
+          updateChar={updateChar}
+        />
       )}
     </div>
   );
