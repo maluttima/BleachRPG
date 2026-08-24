@@ -1529,35 +1529,50 @@ function maskWhats(w) {
   return "•••• " + cleaned.slice(-4);
 }
 function getPowerTier(statVal) {
-  const val = Number(statVal) > 150 ? Math.round(Number(statVal) / 4) : Number(statVal || 0);
-  if (val <= 10) return {
+  const val = Number(statVal || 0);
+  if (val <= 200) return {
     title: "Inexperiente",
-    patamar: "1–10",
+    patamar: "1–200",
     color: C.muted
   };
-  if (val <= 30) return {
+  if (val <= 450) return {
     title: "Iniciante",
-    patamar: "11–30",
+    patamar: "201–450",
     color: C.green
   };
-  if (val <= 60) return {
+  if (val <= 750) return {
     title: "Treinado",
-    patamar: "31–60",
+    patamar: "451–750",
     color: C.blue
   };
-  if (val <= 100) return {
-    title: "Veterano",
-    patamar: "61–100",
+  if (val <= 1100) return {
+    title: "Experiente",
+    patamar: "751–1100",
     color: C.purple
   };
-  if (val <= 150) return {
-    title: "Mestre",
-    patamar: "101–150",
+  if (val <= 1500) return {
+    title: "Elite",
+    patamar: "1101–1500",
     color: C.yellow
   };
+  if (val <= 2000) return {
+    title: "Alto Nível",
+    patamar: "1501–2000",
+    color: "#FFA500"
+  };
+  if (val <= 2600) return {
+    title: "Monstruoso",
+    patamar: "2001–2600",
+    color: C.red
+  };
+  if (val <= 3300) return {
+    title: "Lendário",
+    patamar: "2601–3300",
+    color: "#E0B34C"
+  };
   return {
-    title: "Transcendental",
-    patamar: "150+",
+    title: "Transcendente",
+    patamar: "3300+",
     color: "#FFD700"
   };
 }
@@ -2223,6 +2238,7 @@ RESPONDA OBRIGATORIAMENTE EM JSON VÁLIDO no seguinte formato:
         "formaMonumental": "Forma monumental da Bankai",
         "pontoRuptura": "O limite da Shikai que foi superado",
         "poder": "Poder transcendental da Bankai",
+        "pontoFraco": "Brecha estratégica clara e como um oponente inteligente pode lidar/contragolpear essa Bankai",
         "limitacoes": "Limitações e custos da Bankai",
         "significadoEspiritual": "Significado espiritual do domínio"
       }
@@ -2873,7 +2889,9 @@ CADA UMA DAS 3 BANKAIS DEVE CONTER:
 - Frase monumental de liberação ("Ban-kai! ...")
 - Ponto de Ruptura (Breakpoint - qual limite específico da Shikai foi estilhaçado)
 - Forma Monumental / Manifestação Visual
-- Poder & Mecânica Transcendental com LIMITAÇÕES claras de combate
+- Poder & Mecânica Transcendental
+- Ponto Fraco & Brecha Estratégica: Uma forma lógica e clara de um oponente inteligente lidar/contragolpear essa Bankai (evitando poderes absolutos/invencíveis). Exemplo: se o poder corta quem bloqueia, quem ataca agressivamente sem defender consegue cruzar lâminas.
+- Limitações de combate e custo de desgaste
 - Significado Espiritual
 - Índices de 1 a 10 para Potência, Abrangência, Complexidade, Versatilidade e Custo de Reiatsu.
 
@@ -2891,6 +2909,7 @@ RESPONDA OBRIGATORIAMENTE EM JSON VÁLIDO no seguinte formato:
       "pontoRuptura": "O limite específico da Shikai superado",
       "formaMonumental": "Descrição visual da manifestação monumental",
       "poder": "Mecânica transcendental do poder da Bankai",
+      "pontoFraco": "Como o oponente pode lidar ou contragolpear essa Bankai estrategicamente",
       "limitacoes": "Limitações e custo de desgaste",
       "significadoEspiritual": "Significado filosófico do domínio",
       "shikaiBase": "${sNome}",
@@ -2907,6 +2926,7 @@ RESPONDA OBRIGATORIAMENTE EM JSON VÁLIDO no seguinte formato:
       "pontoRuptura": "O limite específico da Shikai superado",
       "formaMonumental": "Descrição visual da manifestação monumental",
       "poder": "Mecânica transcendental do poder da Bankai",
+      "pontoFraco": "Como o oponente pode lidar ou contragolpear essa Bankai estrategicamente",
       "limitacoes": "Limitações e custo de desgaste",
       "significadoEspiritual": "Significado filosófico do domínio",
       "shikaiBase": "${sNome}",
@@ -2923,6 +2943,7 @@ RESPONDA OBRIGATORIAMENTE EM JSON VÁLIDO no seguinte formato:
       "pontoRuptura": "O limite específico da Shikai superado",
       "formaMonumental": "Descrição visual da manifestação monumental",
       "poder": "Mecânica transcendental do poder da Bankai",
+      "pontoFraco": "Como o oponente pode lidar ou contragolpear essa Bankai estrategicamente",
       "limitacoes": "Limitações e custo de desgaste",
       "significadoEspiritual": "Significado filosófico do domínio",
       "shikaiBase": "${sNome}",
@@ -2949,6 +2970,7 @@ function sintetizar3BankaisEvolucaoCognitivo(personagem, shikai, dna, cenaTexto 
     pontoRuptura: `Supera o limite de alcance e foco da Shikai: a mecânica de [${sElem}] agora permeia toda a atmosfera em um raio monumental de 300 metros sob o comando mental de ${personagem.nome}.`,
     formaMonumental: `O campo de batalha se transforma em um domínio absoluto onde lâminas monumentais e manifestações puras de ${sElem} emergem do ar, respondendo à virtude "${dna.virtudes}".`,
     poder: `Amplifica a mecânica da Shikai em escala soberana. O poder original (${sPod}) agora é projetado em dezenas de ângulos simultâneos sem necessidade de movimento corporal.`,
+    pontoFraco: `Por ser uma manifestação territorial de longo alcance, se o oponente penetrar o perímetro em velocidade pura (Shunpo/Hohō) e lutar colado ao usuário em combate corpo a corpo frenético sem recuar, a densidade dos cortes perde precisão para não ferir o próprio conjurador.`,
     limitacoes: `Consumo massivo de Reiatsu proporcional à Pressão Espiritual (${dna.dominante.val} pts), exigindo foco absoluto para não sobrecarregar os circuitos da alma.`,
     significadoEspiritual: `A consagração definitiva da determinação inabalável de ${personagem.nome} em transcender seus limites.`,
     shikaiBase: sNome,
@@ -2970,6 +2992,7 @@ function sintetizar3BankaisEvolucaoCognitivo(personagem, shikai, dna, cenaTexto 
     pontoRuptura: `Elimina a fraqueza declarada da Shikai ("${sLim}") e ergue um escudo impenetrável contra o maior medo do Shinigami: "${dna.medos}".`,
     formaMonumental: `Armadura cerimonial de Reishi e uma aura densa de ${sElem} envolvem ${personagem.nome}, gerando barreiras defensivas articuladas e esferas de controle tático.`,
     poder: `Integra propriedades de suporte supremo e controle espacial à Shikai. Absorve a Reiatsu dos ataques inimigos recebidos e a converte em regeneração de postura e fortalecimento do atributo ${dna.deficiente.label}.`,
+    pontoFraco: `A barreira defensiva necessita de uma fração de segundo de recalibração após absorver um impacto pesado; se o adversário desferir ataques sequenciais duplos ou contínuos sem pausa, o segundo golpe atinge o corpo antes da barreira se recompor.`,
     limitacoes: "Requer controle tático contínuo para manter a estabilidade entre o ataque ofensivo e a barreira de suporte.",
     significadoEspiritual: `A maturidade espiritual de ${personagem.nome} em proteger não apenas sua vida, mas a honra e o destino de todos ao seu redor.`,
     shikaiBase: sNome,
@@ -2990,7 +3013,8 @@ function sintetizar3BankaisEvolucaoCognitivo(personagem, shikai, dna, cenaTexto 
     comando: `Ban-kai! Inverta a verdade e revele o abismo, ${sNome}!`,
     pontoRuptura: `Inverte a regra básica de funcionamento da Shikai: o que antes dependia de contato ou corte direto agora atua como uma lei cósmica paradoxal atrelada ao conflito interior ("${dna.conflitos}").`,
     formaMonumental: `O cenário escurece em tons monocromáticos onde as cores da Reiatsu de ${sElem} se invertem, criando distorções geométricas flutuantes de sombra e vazio.`,
-    poder: `Manifesta o lado sombrio do poder: em vez do efeito direto da Shikai (${sPod}), impõe uma lei onde qualquer resistência hostil do oponente alimenta a dissolução da sua própria estabilidade de Reishi.`,
+    poder: `Manifesta o lado sombrio do poder: em vez do efeito direto da Shikai (${sPod}), impõe uma lei onde qualquer resistência calculada ou tentativa de defesa do oponente amplifica o dano recebido.`,
+    pontoFraco: `A lei da Bankai é ativada exclusivamente pela intenção de defesa ou cálculo tático do alvo. Se o oponente desligar o raciocínio, agir por puro instinto animal e atacar com intenção irrefletida de destruição mútua sem nunca tentar bloquear, a inversão paradoxal não se ancora.`,
     limitacoes: `Risco de desestabilização da própria mente se o usuário sucumbir ao defeito "${dna.defeitos}".`,
     significadoEspiritual: `O domínio pleno da dualidade: ${personagem.nome} aceita sua sombra interior e a transforma na sua arma mais letal.`,
     shikaiBase: sNome,
@@ -3552,7 +3576,13 @@ function Zanpakuto4PathsModal({
     className: "text-yellow-400 block text-xs uppercase tracking-wider flex items-center gap-1.5"
   }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDCA5"), " PONTO DE RUPTURA (LIMITE DA SHIKAI SUPERADO):"), /*#__PURE__*/React.createElement("p", {
     className: "text-xs text-bleach-cream leading-relaxed font-sans"
-  }, caminhoSelecionado.bankai?.pontoRuptura || caminhoSelecionado.pontoRuptura)), /*#__PURE__*/React.createElement("div", {
+  }, caminhoSelecionado.bankai?.pontoRuptura || caminhoSelecionado.pontoRuptura)), (caminhoSelecionado.bankai?.pontoFraco || caminhoSelecionado.pontoFraco) && /*#__PURE__*/React.createElement("div", {
+    className: "p-3.5 bg-gradient-to-r from-red-950/70 via-black to-red-950/50 rounded-xl border-2 border-red-500/70 space-y-1 shadow-lg"
+  }, /*#__PURE__*/React.createElement("strong", {
+    className: "text-red-400 block text-xs uppercase tracking-wider flex items-center gap-1.5 font-bold"
+  }, /*#__PURE__*/React.createElement("span", null, "\uD83C\uDFAF"), " BRECHA ESTRAT\xC9GICA & PONTO FRACO (COMO CONTRAGOLPEAR):"), /*#__PURE__*/React.createElement("p", {
+    className: "text-xs text-red-200/90 leading-relaxed font-sans"
+  }, caminhoSelecionado.bankai?.pontoFraco || caminhoSelecionado.pontoFraco)), /*#__PURE__*/React.createElement("div", {
     className: "grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs"
   }, /*#__PURE__*/React.createElement("div", {
     className: "p-3.5 bg-bleach-panel2 rounded-xl border border-white/10 space-y-1"
@@ -5969,7 +5999,13 @@ function FichaView({
       className: "text-yellow-400 block text-xs uppercase tracking-wider flex items-center gap-1.5"
     }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDCA5"), " PONTO DE RUPTURA (LIMITE DA SHIKAI SUPERADO):"), /*#__PURE__*/React.createElement("p", {
       className: "text-xs sm:text-sm text-bleach-cream leading-relaxed font-sans"
-    }, b.pontoRuptura)), /*#__PURE__*/React.createElement("div", {
+    }, b.pontoRuptura)), b.pontoFraco && /*#__PURE__*/React.createElement("div", {
+      className: "p-3.5 bg-gradient-to-r from-red-950/70 via-black to-red-950/50 rounded-xl border-2 border-red-500/70 space-y-1 shadow-lg"
+    }, /*#__PURE__*/React.createElement("strong", {
+      className: "text-red-400 block text-xs uppercase tracking-wider flex items-center gap-1.5 font-bold"
+    }, /*#__PURE__*/React.createElement("span", null, "\uD83C\uDFAF"), " BRECHA ESTRAT\xC9GICA & PONTO FRACO (COMO CONTRAGOLPEAR):"), /*#__PURE__*/React.createElement("p", {
+      className: "text-xs sm:text-sm text-red-200/90 leading-relaxed font-sans"
+    }, b.pontoFraco)), /*#__PURE__*/React.createElement("div", {
       className: "grid grid-cols-1 md:grid-cols-2 gap-3 text-xs"
     }, /*#__PURE__*/React.createElement("div", {
       className: "p-3.5 bg-bleach-panel2 rounded-xl border border-white/10 space-y-1"
@@ -6084,7 +6120,11 @@ function FichaView({
       className: "p-2 bg-amber-950/40 rounded border border-yellow-500/30 text-[11px] text-yellow-200"
     }, /*#__PURE__*/React.createElement("strong", {
       className: "text-yellow-400 block text-[10px] uppercase"
-    }, "\uD83D\uDCA5 Ponto de Ruptura:"), b.pontoRuptura), /*#__PURE__*/React.createElement("p", {
+    }, "\uD83D\uDCA5 Ponto de Ruptura:"), b.pontoRuptura), b.pontoFraco && /*#__PURE__*/React.createElement("div", {
+      className: "p-2 bg-red-950/40 rounded border border-red-500/40 text-[11px] text-red-200"
+    }, /*#__PURE__*/React.createElement("strong", {
+      className: "text-red-400 block text-[10px] uppercase font-bold"
+    }, "\uD83C\uDFAF Brecha / Ponto Fraco:"), b.pontoFraco), /*#__PURE__*/React.createElement("p", {
       className: "text-xs text-bleach-creamDim line-clamp-3"
     }, b.poder)), /*#__PURE__*/React.createElement("button", {
       onClick: () => {
@@ -7398,39 +7438,39 @@ function SistemasView() {
   }, "Escala de Refer\xEAncia"), /*#__PURE__*/React.createElement("div", {
     className: "space-y-1.5"
   }, [{
-    faixa: "1–10",
+    faixa: "1–200",
     patamar: "Inexperiente",
     cor: C.muted
   }, {
-    faixa: "11–30",
+    faixa: "201–450",
     patamar: "Iniciante",
     cor: C.green
   }, {
-    faixa: "31–60",
+    faixa: "451–750",
     patamar: "Treinado",
     cor: C.blue
   }, {
-    faixa: "61–100",
+    faixa: "751–1100",
     patamar: "Experiente",
     cor: C.purple
   }, {
-    faixa: "101–150",
+    faixa: "1101–1500",
     patamar: "Elite",
     cor: C.yellow
   }, {
-    faixa: "151–250",
+    faixa: "1501–2000",
     patamar: "Alto Nível",
     cor: "#FFA500"
   }, {
-    faixa: "251–400",
+    faixa: "2001–2600",
     patamar: "Monstruoso",
     cor: C.red
   }, {
-    faixa: "401–600",
+    faixa: "2601–3300",
     patamar: "Lendário",
     cor: "#E0B34C"
   }, {
-    faixa: "601+",
+    faixa: "3300+",
     patamar: "Transcendente",
     cor: "#FFD700"
   }].map(p => /*#__PURE__*/React.createElement("div", {
@@ -7450,22 +7490,22 @@ function SistemasView() {
   }, "Diferen\xE7a em Combate"), /*#__PURE__*/React.createElement("div", {
     className: "space-y-1.5"
   }, [{
-    diff: "0–10 pts",
+    diff: "0–50 pts",
     desc: "Equivalentes"
   }, {
-    diff: "11–30 pts",
+    diff: "51–150 pts",
     desc: "Pequena vantagem"
   }, {
-    diff: "31–75 pts",
+    diff: "151–300 pts",
     desc: "Vantagem clara"
   }, {
-    diff: "76–150 pts",
+    diff: "301–600 pts",
     desc: "Grande vantagem"
   }, {
-    diff: "151–250 pts",
-    desc: "Abismo"
+    diff: "601–1000 pts",
+    desc: "Abismo de poder"
   }, {
-    diff: "251+ pts",
+    diff: "1001+ pts",
     desc: "Diferença monstruosa"
   }].map(d => /*#__PURE__*/React.createElement("div", {
     key: d.diff,
@@ -7746,6 +7786,8 @@ function App() {
       personalidadeTravada: !!p.personalidadeTravada,
       cenaDespertarShikai: p.cenaDespertarShikai || "",
       cenaDespertarBankai: p.cenaDespertarBankai || "",
+      opcoesShikaiPendentes: Array.isArray(p.opcoesShikaiPendentes) && p.opcoesShikaiPendentes.length > 0 ? p.opcoesShikaiPendentes : null,
+      opcoesBankaiPendentes: Array.isArray(p.opcoesBankaiPendentes) && p.opcoesBankaiPendentes.length > 0 ? p.opcoesBankaiPendentes : null,
       zanpakuto: p.zanpakuto || {
         nome: "Em despertar",
         fotoShikai: "assets/ichigo-orange.png",
