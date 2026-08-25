@@ -5,6 +5,42 @@
 
 const PATCH_NOTES_HISTORY = [
   {
+    versao: "6.7",
+    titulo: "Hierarquia de Segurança & Segregação de Poderes da Administração (ADM Máximo vs Sub-ADMs)",
+    data: "25 de Agosto de 2026",
+    destaque: "Redução e blindagem de privilégios para contas de Sub-Administradores (Avaliadores). Acesso restrito a credenciais mestre, proibição de alteração de senha do ADM Máximo, bloqueio de gerenciamento de outros avaliadores e bloqueio de exclusão definitiva de fichas.",
+    banner: "assets/bleach-banner.png",
+    resumo: "Um marco fundamental na governança e integridade da Soul Society. As contas de Sub-Administradores (Avaliadores) foram devidamente segregadas do poder do ADM Máximo (Comandante Supremo). Sub-ADMs agora operam estritamente no escopo de avaliação de fichas, narração de tramas e arcos com IA, lançamento de cenas/atividade semanal, mesa de dados e cadastro de novos jogadores, sendo terminantemente bloqueados de alterar a senha mestre do ADM Máximo, gerenciar outros membros da Staff, apagar personagens do banco de dados ou reconfigurar a nuvem Firebase.",
+    secoes: [
+      {
+        tipo: "regras",
+        titulo: "👑 Blindagem das Credenciais do ADM Máximo",
+        itens: [
+          "✦ **Painel de Segurança Master Exclusivo**: Nova aba de credenciais acessível unicamente pelo ADM Máximo (Comandante Supremo), permitindo alterar o usuário, senha mestre e nome de exibição de forma protegida.",
+          "✦ **Bloqueio Absoluto para Sub-ADMs**: Contas com papel de Sub-ADM não têm visibilidade nem acesso a rotas ou formulários de alteração de credenciais do ADM Máximo."
+        ]
+      },
+      {
+        tipo: "nerf",
+        titulo: "🛡️ Redução de Poderes das Contas de Sub-ADM (Avaliadores)",
+        itens: [
+          "✦ **Proibição de Exclusão de Personagens**: Apenas o ADM Máximo possui autorização para apagar fichas de jogadores permanentemente do banco de dados.",
+          "✦ **Bloqueio de Gestão de Avaliadores**: Sub-ADMs não podem adicionar, editar senhas ou remover outros avaliadores da Staff.",
+          "✦ **Bloqueio de Infraestrutura de Nuvem & IA**: Sub-ADMs não têm permissão para alterar URLs do Firebase, forçar reescrita do banco de dados nem alterar/remover chaves de API globais."
+        ]
+      },
+      {
+        tipo: "buff",
+        titulo: "⚡ Escopo Operacional Pleno Mantido para Avaliadores",
+        itens: [
+          "✦ **Avaliação de Fichas & Recompensas**: Sub-ADMs continuam com acesso completo para avaliar treinos, desbloquear Shikai/Bankai aprovadas e gerenciar a evolução de fichas.",
+          "✦ **Motor de Tramas & Arcos com IA**: Acesso irrestrito ao gerador de tramas individuais e cruzadas com IA para escolher opções narrativas e gerar briefings para o WhatsApp.",
+          "✦ **Lançamento de Atividade & Cenas em Lote**: Permissão completa para validar cenas no ON e creditar Conhecimento semanal."
+        ]
+      }
+    ]
+  },
+  {
     versao: "6.6",
     titulo: "Gerenciador de Tramas & Arcos com IA para ADM, Arcos Cruzados Multi-Player, Nivelamento Justo de Staff & Molde Limpo de WhatsApp",
     data: "24 de Agosto de 2026",

@@ -20,6 +20,12 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
   const [msgNuvem, setMsgNuvem] = useState("");
   const [loadingNuvem, setLoadingNuvem] = useState(false);
 
+  // Super-ADM Master Credentials State (Exclusivo ADM Máximo)
+  const [masterUser, setMasterUser] = useState(() => db?.superAdminUsuario || "Malu123");
+  const [masterPass, setMasterPass] = useState(() => db?.superAdminSenha || "Sociedade2026");
+  const [masterNome, setMasterNome] = useState(() => db?.superAdminNome || "ADM Máximo (Comandante Supremo)");
+  const [msgMasterCreds, setMsgMasterCreds] = useState("");
+
   // Dados para Novo Personagem
   const [novoNome, setNovoNome] = useState("");
   const [novoWhats, setNovoWhats] = useState("");
@@ -37,6 +43,36 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
   const [atvQtdCenas, setAtvQtdCenas] = useState(5);
   const [atvValorPorCena, setAtvValorPorCena] = useState(100);
   const [atvMotivo, setAtvMotivo] = useState("");
+
+  // Auto-correção caso sub-adm tente acessar aba restrita
+  useEffect(() => {
+    if (!isSuper && ["subadms", "nuvem", "ia", "seguranca"].includes(tabAdm)) {
+      setTabAdm("fichas");
+    }
+  }, [isSuper, tabAdm]);
+
+  function salvarCredenciaisMaster(e) {
+    e.preventDefault();
+    if (!isSuper) {
+      alert("⛔ Acesso Negado: Apenas o ADM Máximo (Comandante Supremo) possui autorização para alterar as credenciais mestre.");
+      return;
+    }
+    if (!masterUser.trim() || !masterPass.trim() || !masterNome.trim()) {
+      alert("Por favor, preencha todos os campos das credenciais master!");
+      return;
+    }
+
+    saveDb({
+      ...db,
+      superAdminUsuario: masterUser.trim(),
+      superAdminSenha: masterPass.trim(),
+      superAdminNome: masterNome.trim()
+    });
+
+    playReiatsuSound('win');
+    setMsgMasterCreds("✓ Credenciais do ADM Máximo atualizadas e protegidas com sucesso!");
+    setTimeout(() => setMsgMasterCreds(""), 4500);
+  }
 
   function lancarAtividadeCenas(targetCharId, qtd, valPorCena, motivo) {
     const pId = targetCharId || atvCharId || (db.personagens && db.personagens[0] ? db.personagens[0].id : "");
@@ -65,7 +101,7 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
             {
               id: uid(),
               data: nowStr(),
-              texto: `📊 +${numCenas} cenas no WhatsApp registradas pelo ADM (+${ganhoConhecimento} ₪ Conhecimento)${motivo ? ` — ${motivo}` : ''}`
+              texto: `📊 +${numCenas} cenas no WhatsApp registradas pela Staff (+${ganhoConhecimento} ₪ Conhecimento)${motivo ? ` — ${motivo}` : ''}`
             },
             ...(p.historico || [])
           ]
@@ -144,6 +180,11 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
   }
 
   function apagarPersonagem(charId, charNome) {
+    if (!isSuper) {
+      alert("⛔ Acesso Restrito: Apenas o ADM Máximo (Comandante Supremo) possui autorização para excluir fichas permanentemente.");
+      return;
+    }
+
     const confirma = confirm(`⚠️ Tem certeza absoluta que deseja excluir a ficha de ${charNome}?\n\nIsso apagará todos os dados, revogará qualquer login ativo e liberará a Zanpakutō no banco de dados.`);
     if (!confirma) return;
 
@@ -157,6 +198,10 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
 
   function adicionarSubAdm(e) {
     e.preventDefault();
+    if (!isSuper) {
+      alert("⛔ Acesso Restrito: Apenas o ADM Máximo pode cadastrar ou alterar avaliadores.");
+      return;
+    }
     if (!novoSubUser.trim() || !novoSubPass.trim() || !novoSubNome.trim()) {
       alert("Preencha todos os campos do sub-administrador.");
       return;
@@ -176,6 +221,10 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
   }
 
   function removerSubAdm(subId) {
+    if (!isSuper) {
+      alert("⛔ Acesso Restrito: Apenas o ADM Máximo pode remover avaliadores.");
+      return;
+    }
     if (!confirm("Deseja remover este avaliador?")) return;
     saveDb({ ...db, subAdms: (db.subAdms || []).filter(s => s.id !== subId) });
   }
@@ -196,7 +245,7 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
 
     const rollLog = {
       id: uid(),
-      autor: session?.nome || "ADM",
+      autor: session?.nome || (isSuper ? "ADM Máximo" : "Sub-ADM"),
       personagem: dadoChar,
       dado: dadoTipo,
       resultado: res,
@@ -209,6 +258,10 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
   }
 
   async function salvarUrlFirebase() {
+    if (!isSuper) {
+      alert("⛔ Acesso Restrito: Apenas o ADM Máximo pode reconfigurar os parâmetros do banco de dados em nuvem.");
+      return;
+    }
     const url = urlNuvemInput.trim();
     if (!url) {
       if (confirm("Deseja desconectar a nuvem e operar apenas em modo local?")) {
@@ -246,6 +299,10 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
   }
 
   async function forcarUploadNuvem() {
+    if (!isSuper) {
+      alert("⛔ Acesso Restrito: Apenas o ADM Máximo pode forçar upload global para a nuvem.");
+      return;
+    }
     const url = urlNuvemInput.trim() || activeCloudUrl || db?.firebaseUrl;
     if (!url) {
       alert("Insira a URL do Firebase primeiro!");
@@ -275,6 +332,10 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
   }
 
   async function puxarDadosNuvem() {
+    if (!isSuper) {
+      alert("⛔ Acesso Restrito: Apenas o ADM Máximo pode puxar dados da nuvem.");
+      return;
+    }
     const url = urlNuvemInput.trim() || activeCloudUrl || db?.firebaseUrl;
     if (!url) {
       alert("Insira a URL do Firebase primeiro!");
@@ -306,6 +367,10 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
   }
 
   function baixarBackupJson() {
+    if (!isSuper) {
+      alert("⛔ Acesso Restrito: Apenas o ADM Máximo pode exportar o backup JSON completo.");
+      return;
+    }
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db, null, 2));
     const downloadAnchor = document.createElement('a');
     downloadAnchor.setAttribute("href", dataStr);
@@ -317,6 +382,10 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
   }
 
   function importarBackupJson(e) {
+    if (!isSuper) {
+      alert("⛔ Acesso Restrito: Apenas o ADM Máximo pode restaurar backups JSON.");
+      return;
+    }
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
@@ -337,41 +406,49 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
     reader.readAsText(file);
   }
 
+  // Lista Dinâmica de Abas de Acordo com o Cargo (Super-ADM vs Sub-ADM)
+  const tabsDisponiveis = [
+    { id: "fichas", label: "Fichas", icon: "👤" },
+    { id: "tramas", label: "🎭 Tramas & Arcos (IA)", icon: "🎭" },
+    { id: "atividade", label: "📊 Cenas & Conhecimento", icon: "📊" },
+    { id: "novo", label: "+ Criar Ficha", icon: "✨" },
+    { id: "dados", label: "Mesa de Dados", icon: "🎲" },
+    ...(isSuper ? [
+      { id: "subadms", label: "👥 Avaliadores (Sub-ADMs)", icon: "👥" },
+      { id: "nuvem", label: "☁️ Firebase Nuvem", icon: "☁️" },
+      { id: "ia", label: "🤖 IA & ChatGPT", icon: "🤖" },
+      { id: "seguranca", label: "👑 Credenciais Master", icon: "🔒" }
+    ] : [])
+  ];
+
   return (
     <div className="space-y-6">
       <div className="bg-banner-overlay border-2 border-yellow-500/70 rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
         <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <span className="px-3 py-1 bg-yellow-950 border border-yellow-400 text-yellow-300 text-xs font-bold rounded-full uppercase tracking-wider">
-              👑 Painel Central de Comando • {isSuper ? "Comandante Supremo (ADM Máximo)" : "Avaliador Autorizado"}
+              {isSuper ? "👑 Painel Central de Comando • Comandante Supremo (ADM Máximo)" : "🛡️ Painel de Avaliação & Gestão • Avaliador Autorizado (Sub-ADM)"}
             </span>
             <h2 className="font-title text-3xl sm:text-4xl tracking-widest text-yellow-400 mt-2">
               GERENCIADOR DE FICHAS & NARRATIVA
             </h2>
             <p className="text-xs text-bleach-creamDim mt-1">
-              Crie, gerencie, recompense e fiscalize todas as fichas e combates do RPG.
+              {isSuper
+                ? "Controle supremo irrestrito sobre fichas, arcos narrativos com IA, avaliadores, credenciais master e banco de dados."
+                : "Painel de avaliação de treinos, gestão de tramas com IA, lançamento de cenas e criação de personagens."}
             </p>
           </div>
 
           <div className="flex flex-wrap gap-2">
-            {[
-              { id: "fichas", label: "Fichas" },
-              { id: "tramas", label: "🎭 Tramas & Arcos (IA)" },
-              { id: "atividade", label: "📊 Cenas & Conhecimento" },
-              { id: "novo", label: "+ Criar" },
-              { id: "subadms", label: "Avaliadores" },
-              { id: "dados", label: "Dados" },
-              { id: "nuvem", label: "☁️ Firebase" },
-              { id: "ia", label: "🤖 IA & ChatGPT" }
-            ].map(t => (
+            {tabsDisponiveis.map(t => (
               <button
                 key={t.id}
                 onClick={() => setTabAdm(t.id)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase transition ${
-                  tabAdm === t.id ? "bg-yellow-500 text-black font-extrabold shadow" : "bg-black/60 border border-yellow-500/30 text-yellow-200"
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase transition flex items-center gap-1 ${
+                  tabAdm === t.id ? "bg-yellow-500 text-black font-extrabold shadow" : "bg-black/60 border border-yellow-500/30 text-yellow-200 hover:border-yellow-400"
                 }`}
               >
-                {t.label}
+                <span>{t.label}</span>
               </button>
             ))}
           </div>
@@ -449,24 +526,19 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
                   const targetPId = atvCharId || (db.personagens?.[0]?.id || "");
                   const selChar = (db.personagens || []).find(p => p.id === targetPId);
                   if (!selChar) return null;
-                  const cod = getCodigoAtividade(selChar);
                   return (
-                    <div className="p-3 bg-bleach-panel rounded-lg border border-yellow-500/30 space-y-1 text-xs">
-                      <div className="flex justify-between">
-                        <span className="text-bleach-muted">Personagem Selecionado:</span>
-                        <strong className="text-white font-bold">{selChar.nome}</strong>
+                    <div className="p-3 bg-bleach-panel2 rounded-lg border border-white/5 space-y-1 text-xs font-mono">
+                      <div className="flex justify-between text-bleach-muted">
+                        <span>Código ON:</span>
+                        <strong className="text-yellow-400">{getCodigoAtividade(selChar)}</strong>
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-bleach-muted">Código de Atividade:</span>
-                        <strong className="text-yellow-400 font-mono">{cod}</strong>
+                      <div className="flex justify-between text-bleach-muted">
+                        <span>Cenas na Semana:</span>
+                        <strong className="text-white">{selChar.cenasSemana || 0} cenas</strong>
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-bleach-muted">Cenas na Semana:</span>
-                        <strong className="text-white font-mono">{selChar.cenasSemana || 0} cenas</strong>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-bleach-muted">Conhecimento Atual:</span>
-                        <strong className="text-yellow-400 font-mono">{selChar.conhecimento || 0} ₪</strong>
+                      <div className="flex justify-between text-bleach-muted">
+                        <span>Saldo Conhecimento:</span>
+                        <strong className="text-yellow-300">{selChar.conhecimento || 0} ₪</strong>
                       </div>
                     </div>
                   );
@@ -476,25 +548,24 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
                   <label className="block text-[11px] font-bold text-bleach-creamDim uppercase mb-1">
                     Quantidade de Cenas a Lançar:
                   </label>
-                  <div className="flex gap-2">
+                  <div className="flex items-center gap-2">
                     <input
                       type="number"
                       min="1"
+                      max="100"
                       value={atvQtdCenas}
-                      onChange={(e) => setAtvQtdCenas(Math.max(1, Number(e.target.value) || 1))}
-                      className="w-24 bg-bleach-panel2 border border-bleach-border rounded-lg p-2 text-white font-mono font-bold text-sm text-center"
+                      onChange={(e) => setAtvQtdCenas(Math.max(1, parseInt(e.target.value) || 1))}
+                      className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2 text-xs text-white font-mono"
                     />
-                    <div className="flex flex-wrap gap-1 flex-1">
-                      {[1, 2, 3, 5, 10, 20].map(n => (
+                    <div className="flex gap-1 shrink-0">
+                      {[1, 3, 5, 10].map(val => (
                         <button
-                          key={n}
+                          key={val}
                           type="button"
-                          onClick={() => setAtvQtdCenas(n)}
-                          className={`px-2 py-1 rounded text-xs font-mono font-bold transition border ${
-                            atvQtdCenas === n ? "bg-yellow-500 text-black border-yellow-400" : "bg-black/60 text-bleach-creamDim border-white/10"
-                          }`}
+                          onClick={() => setAtvQtdCenas(val)}
+                          className="px-2 py-1 bg-yellow-950/80 hover:bg-yellow-900 border border-yellow-500/50 text-yellow-300 text-[10px] font-bold rounded"
                         >
-                          +{n}
+                          +{val}
                         </button>
                       ))}
                     </div>
@@ -668,13 +739,15 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
                       >
                         ✏️ Gerenciar Ficha
                       </button>
-                      <button
-                        onClick={() => apagarPersonagem(p.id, p.nome)}
-                        className="px-3 py-1.5 bg-red-950 hover:bg-red-900 border border-red-500 text-red-200 text-xs font-bold rounded-lg"
-                        title="Excluir Ficha"
-                      >
-                        🗑️
-                      </button>
+                      {isSuper && (
+                        <button
+                          onClick={() => apagarPersonagem(p.id, p.nome)}
+                          className="px-3 py-1.5 bg-red-950 hover:bg-red-900 border border-red-500 text-red-200 text-xs font-bold rounded-lg"
+                          title="Excluir Ficha (Exclusivo ADM Máximo)"
+                        >
+                          🗑️
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -714,9 +787,9 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
         </Section>
       )}
 
-      {/* SUBTAB: SUB-ADMS */}
+      {/* SUBTAB: SUB-ADMS (EXCLUSIVO SUPER-ADM) */}
       {tabAdm === "subadms" && isSuper && (
-        <Section title="Gerenciador de Avaliadores & Sub-Administradores" subtitle="Cadastre avaliadores com senhas individuais">
+        <Section title="Gerenciador de Avaliadores & Sub-Administradores" subtitle="Área exclusiva do ADM Máximo para cadastrar avaliadores com senhas individuais">
           <form onSubmit={adicionarSubAdm} className="p-4 bg-black/60 rounded-xl border border-yellow-500/40 grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs mb-6">
             <div>
               <label className="block text-yellow-300 font-bold mb-1">Nome do Avaliador</label>
@@ -788,9 +861,9 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
         </Section>
       )}
 
-      {/* SUBTAB: CONEXÃO FIREBASE & SINCRONIZAÇÃO EM TEMPO REAL */}
-      {tabAdm === "nuvem" && (
-        <Section title="Sincronização em Nuvem — Firebase Realtime Database" subtitle="Configuração de persistência global e sincronização instantânea de fichas">
+      {/* SUBTAB: CONEXÃO FIREBASE & SINCRONIZAÇÃO EM TEMPO REAL (EXCLUSIVO SUPER-ADM) */}
+      {tabAdm === "nuvem" && isSuper && (
+        <Section title="Sincronização em Nuvem — Firebase Realtime Database" subtitle="Configuração de persistência global e sincronização instantânea de fichas (Exclusivo ADM Máximo)">
           <div className="space-y-6">
             <div className="p-5 bg-black/60 border-2 border-yellow-500/50 rounded-2xl space-y-4">
               <div className="flex flex-wrap items-center justify-between gap-3">
@@ -908,9 +981,9 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
         </Section>
       )}
 
-      {/* SUBTAB: CONFIGURAÇÃO IA (GOOGLE GEMINI / CHATGPT) */}
-      {tabAdm === "ia" && (
-        <Section title="Motor de Inteligência Artificial — Google Gemini, ChatGPT & Motor Cognitivo" subtitle="Conecte a API gratuita do Google Gemini, OpenAI ou utilize o Motor Cognitivo autoral">
+      {/* SUBTAB: CONFIGURAÇÃO IA (EXCLUSIVO SUPER-ADM) */}
+      {tabAdm === "ia" && isSuper && (
+        <Section title="Motor de Inteligência Artificial — Google Gemini, ChatGPT & Motor Cognitivo" subtitle="Configuração de chaves de API globais (Exclusivo ADM Máximo)">
           <div className="space-y-6">
             <div className="p-5 bg-black/60 border-2 border-yellow-500/50 rounded-2xl space-y-4">
               <div className="flex flex-wrap items-center justify-between gap-3">
@@ -1031,6 +1104,86 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
           </div>
         </Section>
       )}
+
+      {/* SUBTAB: CREDENCIAIS & SEGURANÇA DO ADM MÁXIMO (EXCLUSIVO SUPER-ADM) */}
+      {tabAdm === "seguranca" && isSuper && (
+        <Section 
+          title="👑 Credenciais de Acesso do ADM Máximo (Comandante Supremo)" 
+          subtitle="Área estritamente restrita para alteração de senha mestre, login e nome do ADM Máximo"
+          className="border-2 border-yellow-500/80 shadow-2xl"
+        >
+          <div className="max-w-2xl mx-auto space-y-6">
+            <div className="p-4 bg-yellow-950/40 border border-yellow-500 rounded-xl space-y-2">
+              <span className="px-2.5 py-0.5 bg-yellow-900 text-yellow-300 border border-yellow-400 text-[10px] font-extrabold uppercase rounded-full">
+                🔒 Nível de Segurança: Autoridade Suprema (Selo da Central 46)
+              </span>
+              <h4 className="font-title text-xl text-yellow-300">
+                Proteção de Credenciais do ADM Máximo
+              </h4>
+              <p className="text-xs text-bleach-creamDim leading-relaxed">
+                Sub-Administradores e Avaliadores <strong>não possuem acesso a este painel</strong> e são tecnicamente impedidos de visualizar ou alterar a senha e o login do ADM Máximo.
+              </p>
+            </div>
+
+            <form onSubmit={salvarCredenciaisMaster} className="p-6 bg-black/80 rounded-2xl border-2 border-yellow-500/50 space-y-4 shadow-xl">
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-yellow-400 uppercase">
+                  Nome de Exibição do ADM Máximo:
+                </label>
+                <input
+                  type="text"
+                  value={masterNome}
+                  onChange={(e) => setMasterNome(e.target.value)}
+                  placeholder="Ex: ADM Máximo (Comandante Supremo)"
+                  className="w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-3 text-xs text-white focus:border-yellow-400 focus:outline-none"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-yellow-400 uppercase">
+                  Usuário de Login do ADM Máximo:
+                </label>
+                <input
+                  type="text"
+                  value={masterUser}
+                  onChange={(e) => setMasterUser(e.target.value)}
+                  placeholder="Ex: Malu123"
+                  className="w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-3 text-xs text-white font-mono focus:border-yellow-400 focus:outline-none"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-yellow-400 uppercase">
+                  Nova Senha Master do ADM Máximo:
+                </label>
+                <input
+                  type="text"
+                  value={masterPass}
+                  onChange={(e) => setMasterPass(e.target.value)}
+                  placeholder="Digite a nova senha master..."
+                  className="w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-3 text-xs text-white font-mono focus:border-yellow-400 focus:outline-none"
+                />
+                <span className="text-[10px] text-bleach-muted">
+                  Dica: Guarde esta senha em local seguro. Ela concede controle irrestrito sobre todo o banco de dados do RPG.
+                </span>
+              </div>
+
+              {msgMasterCreds && (
+                <div className="p-3 bg-green-950/80 border border-green-500 text-green-300 text-xs font-bold rounded-xl text-center shadow">
+                  {msgMasterCreds}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                className="w-full py-3 bg-gradient-to-r from-yellow-500 via-amber-500 to-yellow-600 hover:brightness-110 text-black font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-lg transition"
+              >
+                💾 Salvar Novas Credenciais do ADM Máximo
+              </button>
+            </form>
+          </div>
+        </Section>
+      )}
     </div>
   );
 }
@@ -1048,6 +1201,7 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
   const [novaCenaTitulo, setNovaCenaTitulo] = useState("");
   const [novaCenaTexto, setNovaCenaTexto] = useState("");
   const [gerandoIaIndividual, setGerandoIaIndividual] = useState(false);
+  const [opcaoIndivIndex, setOpcaoIndivIndex] = useState(0);
   const [copiadoMsg, setCopiadoMsg] = useState("");
 
   // Estado para Tramas Conjuntas (Multi-Player)
@@ -1059,6 +1213,7 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
   const [novaCenaConjTitulo, setNovaCenaConjTitulo] = useState("");
   const [novaCenaConjTexto, setNovaCenaConjTexto] = useState("");
   const [gerandoIaConjunta, setGerandoIaConjunta] = useState(false);
+  const [opcaoConjIndex, setOpcaoConjIndex] = useState(0);
 
   const openAiKey = (typeof localStorage !== 'undefined') ? localStorage.getItem("bleach_openai_key") || "" : "";
 
@@ -1135,7 +1290,7 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
     playReiatsuSound('shatter');
   }
 
-  // 3. Sintetizar Trama Individual com IA
+  // 3. Sintetizar Trama Individual com IA (Gera 3 Opções de Trama Possíveis)
   async function handleGerarIaIndividual() {
     if (!activeChar) return;
     setGerandoIaIndividual(true);
@@ -1166,7 +1321,10 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
         novasTramasIndiv.push(updatedTrama);
 
         saveDb({ ...db, tramasIndividuais: novasTramasIndiv });
+        setOpcaoIndivIndex(0);
         playReiatsuSound('bankai_charge');
+        setCopiadoMsg("✨ 3 Opções de Trama geradas com sucesso pela IA a partir das cenas do jogador!");
+        setTimeout(() => setCopiadoMsg(""), 4500);
       }
     } catch (err) {
       alert("Erro ao sintetizar trama individual: " + err.message);
@@ -1175,7 +1333,41 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
     }
   }
 
-  // 4. Criar Nova Ficha de Trama Conjunta (Cruzar 2 ou mais Players)
+  // 4. Remover / Limpar Sugestão de Trama Individual
+  function handleRemoverSugestaoIndividual() {
+    if (!confirm("Deseja remover as sugestões de trama da IA para este jogador? (As cenas de arco cadastradas continuarão salvas)")) return;
+    const updatedTrama = { ...tramaIndivAtual, tramaAtual: null };
+    const novasTramasIndiv = tramasIndividuaisList.map(t => t.charId === activeChar.id ? updatedTrama : t);
+    saveDb({ ...db, tramasIndividuais: novasTramasIndiv });
+    playReiatsuSound('shatter');
+    alert("✓ Sugestão de trama removida com sucesso!");
+  }
+
+  // 5. Adotar Opção Específica de Trama Individual
+  function handleAdotarOpcaoIndividual(idx) {
+    if (!tramaIndivAtual.tramaAtual || !tramaIndivAtual.tramaAtual.opcoesTramas) return;
+    const opEscolhida = tramaIndivAtual.tramaAtual.opcoesTramas[idx];
+    if (!opEscolhida) return;
+
+    const updatedTramaAtual = {
+      ...tramaIndivAtual.tramaAtual,
+      opcaoAtivaId: opEscolhida.id,
+      tituloArco: opEscolhida.tituloArco,
+      ganchoImediato: opEscolhida.focoNarrativo,
+      eventos: opEscolhida.eventos,
+      antagonista: opEscolhida.antagonista,
+      briefingWhatsApp: opEscolhida.briefingWhatsApp
+    };
+
+    const updatedTrama = { ...tramaIndivAtual, tramaAtual: updatedTramaAtual };
+    const novasTramasIndiv = tramasIndividuaisList.map(t => t.charId === activeChar.id ? updatedTrama : t);
+    saveDb({ ...db, tramasIndividuais: novasTramasIndiv });
+    playReiatsuSound('win');
+    setCopiadoMsg("✓ Trama [" + opEscolhida.nomeOpcao + "] adotada como oficial para narração!");
+    setTimeout(() => setCopiadoMsg(""), 3500);
+  }
+
+  // 6. Criar Nova Ficha de Trama Conjunta (Cruzar 2 ou mais Players)
   function handleCriarTramaConjunta(e) {
     e.preventDefault();
     if (conjSelectedCharIds.length < 2) {
@@ -1228,7 +1420,7 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
     alert("✓ Ficha de Trama Conjunta criada com sucesso para [" + nomesDupla + "]!");
   }
 
-  // 5. Adicionar Cena Compartilhada na Trama Conjunta
+  // 7. Adicionar Cena Compartilhada na Trama Conjunta
   function handleAdicionarCenaConjunta(e) {
     e.preventDefault();
     if (!tramaConjAtual) return;
@@ -1258,7 +1450,7 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
     alert("✓ Cena compartilhada registrada na Trama Conjunta!");
   }
 
-  // 6. Sintetizar Trama Cruzada com IA
+  // 8. Sintetizar Trama Cruzada com IA (Gera 3 Opções de Trama Cruzadas)
   async function handleGerarIaConjunta() {
     if (!tramaConjAtual) return;
     setGerandoIaConjunta(true);
@@ -1285,7 +1477,10 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
         };
         const novasConjuntas = tramasConjuntasList.map(c => c.id === tramaConjAtual.id ? updatedConj : c);
         saveDb({ ...db, tramasConjuntas: novasConjuntas });
+        setOpcaoConjIndex(0);
         playReiatsuSound('bankai_charge');
+        setCopiadoMsg("✨ 3 Opções de Trama Cruzada geradas com sucesso para a dupla!");
+        setTimeout(() => setCopiadoMsg(""), 4500);
       }
     } catch (err) {
       alert("Erro ao sintetizar trama conjunta: " + err.message);
@@ -1293,6 +1488,26 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
       setGerandoIaConjunta(false);
     }
   }
+
+  // 9. Remover / Limpar Sugestão de Trama Conjunta
+  function handleRemoverSugestaoConjunta() {
+    if (!confirm("Deseja remover as sugestões de trama conjunta da IA? (As cenas compartilhadas continuarão salvas)")) return;
+    const updatedConj = { ...tramaConjAtual, tramaCruzada: null };
+    const novasConjuntas = tramasConjuntasList.map(c => c.id === tramaConjAtual.id ? updatedConj : c);
+    saveDb({ ...db, tramasConjuntas: novasConjuntas });
+    playReiatsuSound('shatter');
+    alert("✓ Sugestão de trama conjunta removida com sucesso!");
+  }
+
+  // Obter opção de trama individual ativa
+  const opIndivAtiva = (tramaIndivAtual.tramaAtual?.opcoesTramas && tramaIndivAtual.tramaAtual.opcoesTramas[opcaoIndivIndex])
+    ? tramaIndivAtual.tramaAtual.opcoesTramas[opcaoIndivIndex]
+    : tramaIndivAtual.tramaAtual;
+
+  // Obter opção de trama conjunta ativa
+  const opConjAtiva = (tramaConjAtual?.tramaCruzada?.opcoesTramas && tramaConjAtual.tramaCruzada.opcoesTramas[opcaoConjIndex])
+    ? tramaConjAtual.tramaCruzada.opcoesTramas[opcaoConjIndex]
+    : tramaConjAtual?.tramaCruzada;
 
   return (
     <div className="space-y-6">
@@ -1313,7 +1528,7 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
               GERENCIADOR DE TRAMAS & ARCOS COM IA
             </h2>
             <p className="text-xs text-bleach-creamDim mt-1 max-w-3xl leading-relaxed">
-              Armazene as cenas de arco dos jogadores, utilize a inteligência artificial para diagnosticar motivações e forjar trilhas de eventos graduais. Caso a história de um player envolva outro, crie fichas de tramas cruzadas integrando suas narrativas!
+              A IA analisa profundamente as cenas de arco e momentos de impacto narrativo dos jogadores, gerando múltiplas opções de tramas sob medida para o ADM ou Sub-ADM escolher e narrar.
             </p>
           </div>
 
@@ -1348,12 +1563,14 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
         </div>
       )}
 
+      {/* ========================================================================= */}
       {/* SUB-ABA 1: TRAMAS INDIVIDUAIS DE JOGADORES */}
+      {/* ========================================================================= */}
       {subAba === "individuais" && (
         <div className="space-y-6">
           <Section
             title="👤 Dossiê Narrativo & Tramas Individuais por Player"
-            subtitle="Selecione um personagem para registrar suas cenas de arco e acionar a IA para preparar seus eventos e antagonistas"
+            subtitle="Selecione um personagem para registrar suas cenas de arco e acionar a IA para analisar o texto e gerar as opções de tramas para o ADM narrar"
             className="border-2 border-purple-500/50"
           >
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -1499,13 +1716,13 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
                 <div className="p-4 bg-gradient-to-r from-purple-950/60 via-black to-purple-950/40 rounded-xl border-2 border-purple-500/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xl">
                   <div>
                     <span className="text-[10px] uppercase font-extrabold px-2.5 py-0.5 rounded bg-purple-900 border border-purple-400 text-purple-200">
-                      Motor de Narrativa & Análise Cognitiva
+                      Motor de Análise Semântica de Cenas & IA Narrativa
                     </span>
                     <h4 className="font-title text-xl text-white mt-1">
-                      Síntese de Trama & Eventos de Arco com IA
+                      Analisar Cenas & Gerar Tramas Possíveis
                     </h4>
                     <p className="text-xs text-bleach-creamDim">
-                      Analisa o histórico de cenas, o esquadrão e o patamar de <strong>{activeChar?.nome}</strong> para forjar 3 eventos graduais e um antagonista sob medida.
+                      A IA lê o conteúdo das cenas registradas de <strong>{activeChar?.nome}</strong>, identifica inimigos, locais e clímax, e gera <strong>3 opções de tramas</strong> para a Staff escolher e narrar.
                     </p>
                   </div>
 
@@ -1518,12 +1735,12 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
                     {gerandoIaIndividual ? (
                       <>
                         <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                        <span>Sintetizando Arco com IA...</span>
+                        <span>Analisando Cenas com IA...</span>
                       </>
                     ) : (
                       <>
                         <span>🧠</span>
-                        <span>Sintetizar Trama com IA</span>
+                        <span>Analisar Cenas & Gerar Tramas</span>
                       </>
                     )}
                   </button>
@@ -1532,47 +1749,119 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
                 {/* Exibição da Trama Sintetizada com IA */}
                 {tramaIndivAtual.tramaAtual ? (
                   <div className="p-5 bg-black/90 rounded-xl border-2 border-purple-500/60 space-y-4 shadow-2xl">
-                    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-purple-500/20 pb-3">
+                    
+                    {/* Header do Card com Botões de Ação */}
+                    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-purple-500/20 pb-3">
                       <div>
                         <span className="px-2.5 py-0.5 bg-purple-950 text-purple-300 border border-purple-400 text-[10px] font-extrabold uppercase rounded-full tracking-wider">
-                          {tramaIndivAtual.tramaAtual.faseAtual || "Fase 1: Convocação & Premonição"}
+                          ✨ Análise Cognitiva Concluída • {tramaIndivAtual.tramaAtual.opcoesTramas?.length || 3} Opções de Tramas Disponíveis
                         </span>
                         <h3 className="font-title text-2xl text-purple-300 mt-1">
-                          {tramaIndivAtual.tramaAtual.tituloArco}
+                          {opIndivAtiva?.tituloArco || tramaIndivAtual.tramaAtual.tituloArco}
                         </h3>
                       </div>
 
-                      <div className="flex gap-2">
+                      <div className="flex flex-wrap items-center gap-2">
                         <button
                           type="button"
-                          onClick={() => copiarTexto(tramaIndivAtual.tramaAtual.briefingWhatsApp, "✓ Dossiê do WhatsApp copiado!")}
+                          onClick={() => handleAdotarOpcaoIndividual(opcaoIndivIndex)}
+                          className="px-3 py-1.5 bg-yellow-950/90 hover:bg-yellow-900 border border-yellow-500 text-yellow-300 font-bold text-xs rounded-lg transition flex items-center gap-1.5 shadow"
+                          title="Definir esta opção como a trama oficial do personagem"
+                        >
+                          <span>👑</span>
+                          <span>Adotar Esta Trama</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => copiarTexto(opIndivAtiva?.briefingWhatsApp || tramaIndivAtual.tramaAtual.briefingWhatsApp, "✓ Dossiê do WhatsApp copiado!")}
                           className="px-3 py-1.5 bg-green-950 hover:bg-green-900 border border-green-500 text-green-300 font-bold text-xs rounded-lg transition flex items-center gap-1.5 shadow"
                         >
                           <span>📋</span>
-                          <span>Copiar para WhatsApp</span>
+                          <span>Copiar WhatsApp</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={handleRemoverSugestaoIndividual}
+                          className="px-3 py-1.5 bg-red-950/80 hover:bg-red-900 border border-red-500 text-red-300 font-bold text-xs rounded-lg transition flex items-center gap-1.5 shadow"
+                          title="Remover as sugestões de trama da IA"
+                        >
+                          <span>🗑️</span>
+                          <span>Remover Sugestão</span>
                         </button>
                       </div>
                     </div>
 
-                    {/* Diagnóstico Psicológico & Gancho */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-                      <div className="p-3.5 bg-bleach-panel2 rounded-xl border border-white/10 space-y-1">
-                        <strong className="text-purple-300 block text-xs uppercase font-bold">🧠 Diagnóstico Psicológico da Alma:</strong>
-                        <p className="text-bleach-creamDim leading-relaxed">{tramaIndivAtual.tramaAtual.diagnosticoPsicologico}</p>
+                    {/* SELETOR DE OPÇÕES DE TRAMAS GERADAS PELA IA */}
+                    {Array.isArray(tramaIndivAtual.tramaAtual.opcoesTramas) && tramaIndivAtual.tramaAtual.opcoesTramas.length > 0 && (
+                      <div className="p-3 bg-purple-950/30 rounded-xl border border-purple-500/40 space-y-2">
+                        <span className="text-[11px] font-extrabold uppercase text-purple-300 tracking-wider block">
+                          🎯 Escolha a Opção de Trama para Narrar:
+                        </span>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                          {tramaIndivAtual.tramaAtual.opcoesTramas.map((op, idx) => (
+                            <button
+                              key={op.id || idx}
+                              type="button"
+                              onClick={() => setOpcaoIndivIndex(idx)}
+                              className={"p-2.5 rounded-lg border text-left text-xs font-bold transition " + (
+                                opcaoIndivIndex === idx
+                                  ? "bg-purple-600 border-purple-300 text-white shadow-[0_0_12px_rgba(168,85,247,0.7)]"
+                                  : "bg-black/60 border-white/10 text-bleach-creamDim hover:border-purple-400"
+                              )}
+                            >
+                              <span className="text-[10px] text-purple-300 block uppercase font-mono">Opção {idx + 1}</span>
+                              <span className="block truncate">{op.nomeOpcao || ("Opção " + (idx + 1))}</span>
+                            </button>
+                          ))}
+                        </div>
                       </div>
-                      <div className="p-3.5 bg-bleach-panel2 rounded-xl border border-white/10 space-y-1">
-                        <strong className="text-yellow-400 block text-xs uppercase font-bold">⚡ Gancho Narrativo Imediato (ON):</strong>
-                        <p className="text-bleach-creamDim leading-relaxed">{tramaIndivAtual.tramaAtual.ganchoImediato}</p>
+                    )}
+
+                    {/* Box de Diagnóstico Semântico da Cena */}
+                    {tramaIndivAtual.tramaAtual.analiseCenas && (
+                      <div className="p-3.5 bg-bleach-panel2 rounded-xl border border-cyan-500/30 text-xs space-y-1.5">
+                        <div className="flex items-center justify-between text-cyan-300 font-bold uppercase text-[10px]">
+                          <span>🔍 Elementos Extraídos das Cenas do Jogador:</span>
+                          <span>{tramaIndivAtual.tramaAtual.analiseCenas.qtdCenas} cena(s) analisada(s)</span>
+                        </div>
+                        <div className="flex flex-wrap gap-1.5 text-[10px] font-mono">
+                          <span className="px-2 py-0.5 bg-red-950/80 border border-red-500 text-red-300 rounded">
+                            💀 Inimigo: {tramaIndivAtual.tramaAtual.analiseCenas.oponentePrincipal}
+                          </span>
+                          <span className="px-2 py-0.5 bg-blue-950/80 border border-blue-500 text-blue-300 rounded">
+                            📍 Local: {tramaIndivAtual.tramaAtual.analiseCenas.localPrincipal}
+                          </span>
+                          {(tramaIndivAtual.tramaAtual.analiseCenas.elementosDetectados || []).slice(0, 2).map((elem, eIdx) => (
+                            <span key={eIdx} className="px-2 py-0.5 bg-purple-950/80 border border-purple-500 text-purple-300 rounded">
+                              ⚡ {elem}
+                            </span>
+                          ))}
+                        </div>
+                        <p className="text-bleach-creamDim text-[11px] leading-relaxed pt-1 border-t border-white/5">
+                          <strong>Momento Chave Analisado:</strong> "{tramaIndivAtual.tramaAtual.analiseCenas.momentoChave}"
+                        </p>
                       </div>
+                    )}
+
+                    {/* Foco Narrativo da Opção Selecionada */}
+                    <div className="p-3.5 bg-bleach-panel2 rounded-xl border border-white/10 space-y-1 text-xs">
+                      <strong className="text-yellow-400 block text-xs uppercase font-bold">
+                        ⚡ Sinopse & Gancho Narrativo ({opIndivAtiva?.nomeOpcao || "Opção Selecionada"}):
+                      </strong>
+                      <p className="text-bleach-creamDim leading-relaxed font-sans">
+                        {opIndivAtiva?.focoNarrativo || opIndivAtiva?.ganchoImediato || tramaIndivAtual.tramaAtual.ganchoImediato}
+                      </p>
                     </div>
 
                     {/* Trilha dos 3 Eventos Planejados */}
                     <div className="space-y-3 pt-2">
                       <h5 className="font-title text-base text-purple-300 flex items-center gap-1.5">
-                        <span>⚔️</span> Trilha de Eventos Planejados para o Arco ({tramaIndivAtual.tramaAtual.eventos?.length || 3} Etapas):
+                        <span>⚔️</span> Trilha de Eventos Planejados para o Arco ({opIndivAtiva?.eventos?.length || 3} Etapas):
                       </h5>
                       <div className="grid grid-cols-1 gap-3">
-                        {(tramaIndivAtual.tramaAtual.eventos || []).map((ev, idx) => (
+                        {(opIndivAtiva?.eventos || tramaIndivAtual.tramaAtual.eventos || []).map((ev, idx) => (
                           <div key={idx} className="p-3.5 bg-purple-950/20 border border-purple-500/30 rounded-xl space-y-2">
                             <div className="flex items-center justify-between gap-2">
                               <span className="px-2 py-0.5 bg-purple-900 text-purple-300 border border-purple-500 font-mono font-bold text-[10px] rounded uppercase">
@@ -1591,26 +1880,26 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
                     </div>
 
                     {/* Antagonista Desenvolvido Sob Medida */}
-                    {tramaIndivAtual.tramaAtual.antagonista && (
+                    {(opIndivAtiva?.antagonista || tramaIndivAtual.tramaAtual.antagonista) && (
                       <div className="p-4 bg-red-950/30 border border-red-500/40 rounded-xl space-y-2">
                         <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-red-900 border border-red-500 text-red-200">
                           Antagonista / Força Opositora
                         </span>
                         <h5 className="font-title text-lg text-red-400">
-                          {tramaIndivAtual.tramaAtual.antagonista.nome} — <span className="text-xs text-bleach-muted">{tramaIndivAtual.tramaAtual.antagonista.titulo}</span>
+                          {(opIndivAtiva?.antagonista || tramaIndivAtual.tramaAtual.antagonista).nome} — <span className="text-xs text-bleach-muted">{(opIndivAtiva?.antagonista || tramaIndivAtual.tramaAtual.antagonista).titulo}</span>
                         </h5>
                         <p className="text-xs text-bleach-creamDim leading-relaxed">
-                          <strong>Motivação:</strong> {tramaIndivAtual.tramaAtual.antagonista.motivacao}
+                          <strong>Motivação:</strong> {(opIndivAtiva?.antagonista || tramaIndivAtual.tramaAtual.antagonista).motivacao}
                         </p>
                         <p className="text-xs text-red-300">
-                          <strong>Brecha / Ponto Fraco:</strong> {tramaIndivAtual.tramaAtual.antagonista.fraquezaChave}
+                          <strong>Brecha / Ponto Fraco:</strong> {(opIndivAtiva?.antagonista || tramaIndivAtual.tramaAtual.antagonista).fraquezaChave}
                         </p>
                       </div>
                     )}
 
                     {/* Recompensa Nivelada */}
                     <div className="p-3 bg-yellow-950/30 border border-yellow-500/40 rounded-lg flex items-center justify-between text-xs text-yellow-300">
-                      <span><strong>🎁 Recompensa Nivelada ao Concluir o Arco:</strong> {tramaIndivAtual.tramaAtual.recompensaArco || '15 Pontos de Atributo + 2 Giros Comuns + 1 Especial'}</span>
+                      <span><strong>🎁 Recompensa Nivelada ao Concluir o Arco:</strong> 15 Pontos de Atributo + 2 Giros Comuns + 1 Especial</span>
                       <span className="font-mono text-[10px] text-bleach-muted">Garantido Oficial</span>
                     </div>
                   </div>
@@ -1619,7 +1908,7 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
                     <span className="text-3xl block">📖</span>
                     <p className="text-sm font-bold text-white">Nenhuma trama individual sintetizada para {activeChar?.nome} ainda.</p>
                     <p className="text-xs text-bleach-creamDim max-w-md mx-auto">
-                      Registre as cenas de arco do jogador e clique no botão acima para a IA analisar a essência do personagem e gerar a trilha de eventos.
+                      Registre as cenas de arco do jogador e clique no botão acima para a IA analisar a narrativa e gerar as 3 opções de tramas.
                     </p>
                   </div>
                 )}
@@ -1671,7 +1960,9 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
         </div>
       )}
 
+      {/* ========================================================================= */}
       {/* SUB-ABA 2: TRAMAS CONJUNTAS & ARCOS CRUZADOS (MULTI-PLAYER) */}
+      {/* ========================================================================= */}
       {subAba === "conjuntas" && (
         <div className="space-y-6">
           <Section
@@ -1705,7 +1996,10 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
                         <button
                           key={c.id}
                           type="button"
-                          onClick={() => setSelectedConjId(c.id)}
+                          onClick={() => {
+                            setSelectedConjId(c.id);
+                            setOpcaoConjIndex(0);
+                          }}
                           className={"w-full p-3 rounded-xl border text-left transition " + (
                             tramaConjAtual?.id === c.id
                               ? "bg-indigo-950/80 border-indigo-400 text-white shadow"
@@ -1814,12 +2108,12 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
                         {gerandoIaConjunta ? (
                           <>
                             <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                            <span>Gerando Trama Cruzada...</span>
+                            <span>Gerando Opções de Trama Cruzada...</span>
                           </>
                         ) : (
                           <>
                             <span>⚡</span>
-                            <span>Gerar Trama Cruzada com IA</span>
+                            <span>Analisar Cenas & Gerar Tramas Cruzadas</span>
                           </>
                         )}
                       </button>
@@ -1828,34 +2122,69 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
                     {/* Exibição da Trama Cruzada Gerada */}
                     {tramaConjAtual.tramaCruzada ? (
                       <div className="p-5 bg-black/90 rounded-xl border-2 border-indigo-500/60 space-y-4 shadow-2xl">
-                        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-indigo-500/20 pb-3">
+                        
+                        {/* Header com Ações */}
+                        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-indigo-500/20 pb-3">
                           <div>
                             <span className="px-2.5 py-0.5 bg-indigo-950 text-indigo-300 border border-indigo-400 text-[10px] font-extrabold uppercase rounded-full">
-                              {tramaConjAtual.tramaCruzada.dinamicaDupla || "Aliança de Esquadrões"}
+                              {opConjAtiva?.dinamicaDupla || tramaConjAtual.tramaCruzada.dinamicaDupla || "Aliança de Esquadrões"}
                             </span>
                             <h3 className="font-title text-2xl text-indigo-300 mt-1">
-                              {tramaConjAtual.tramaCruzada.tituloArco}
+                              {opConjAtiva?.tituloArco || tramaConjAtual.tramaCruzada.tituloArco}
                             </h3>
                           </div>
 
-                          <button
-                            type="button"
-                            onClick={() => copiarTexto(tramaConjAtual.tramaCruzada.briefingWhatsApp, "✓ Briefing conjunto copiado!")}
-                            className="px-3 py-1.5 bg-green-950 hover:bg-green-900 border border-green-500 text-green-300 font-bold text-xs rounded-lg transition flex items-center gap-1.5 shadow"
-                          >
-                            <span>📋</span>
-                            <span>Copiar Briefing para WhatsApp</span>
-                          </button>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => copiarTexto(opConjAtiva?.briefingWhatsApp || tramaConjAtual.tramaCruzada.briefingWhatsApp, "✓ Briefing conjunto copiado!")}
+                              className="px-3 py-1.5 bg-green-950 hover:bg-green-900 border border-green-500 text-green-300 font-bold text-xs rounded-lg transition flex items-center gap-1.5 shadow"
+                            >
+                              <span>📋</span>
+                              <span>Copiar WhatsApp</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={handleRemoverSugestaoConjunta}
+                              className="px-3 py-1.5 bg-red-950/80 hover:bg-red-900 border border-red-500 text-red-300 font-bold text-xs rounded-lg transition flex items-center gap-1.5 shadow"
+                              title="Remover as sugestões de trama conjunta da IA"
+                            >
+                              <span>🗑️</span>
+                              <span>Remover Sugestão</span>
+                            </button>
+                          </div>
                         </div>
+
+                        {/* SELETOR DE OPÇÕES DE TRAMAS CONJUNTAS */}
+                        {Array.isArray(tramaConjAtual.tramaCruzada.opcoesTramas) && tramaConjAtual.tramaCruzada.opcoesTramas.length > 0 && (
+                          <div className="p-3 bg-indigo-950/30 rounded-xl border border-indigo-500/40 space-y-2">
+                            <span className="text-[11px] font-extrabold uppercase text-indigo-300 tracking-wider block">
+                              🎯 Escolha a Opção de Trama Cruzada para Narrar:
+                            </span>
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                              {tramaConjAtual.tramaCruzada.opcoesTramas.map((op, idx) => (
+                                <button
+                                  key={op.id || idx}
+                                  type="button"
+                                  onClick={() => setOpcaoConjIndex(idx)}
+                                  className={"p-2.5 rounded-lg border text-left text-xs font-bold transition " + (
+                                    opcaoConjIndex === idx
+                                      ? "bg-indigo-600 border-indigo-300 text-white shadow-[0_0_12px_rgba(99,102,241,0.7)]"
+                                      : "bg-black/60 border-white/10 text-bleach-creamDim hover:border-indigo-400"
+                                  )}
+                                >
+                                  <span className="text-[10px] text-indigo-300 block uppercase font-mono">Opção {idx + 1}</span>
+                                  <span className="block truncate">{op.nomeOpcao || ("Opção " + (idx + 1))}</span>
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
 
                         <div className="p-3.5 bg-bleach-panel2 rounded-xl border border-white/10 space-y-1 text-xs">
                           <strong className="text-indigo-300 block text-xs uppercase font-bold">📖 Sinopse da Trama Compartilhada:</strong>
-                          <p className="text-bleach-cream leading-relaxed">{tramaConjAtual.tramaCruzada.sinopse}</p>
-                          {tramaConjAtual.tramaCruzada.conflitoCentral && (
-                            <p className="text-yellow-300 pt-1 border-t border-white/5">
-                              <strong>Conflito Central:</strong> {tramaConjAtual.tramaCruzada.conflitoCentral}
-                            </p>
-                          )}
+                          <p className="text-bleach-cream leading-relaxed">{opConjAtiva?.sinopse || tramaConjAtual.tramaCruzada.sinopse}</p>
                         </div>
 
                         {/* Fases Cruzadas */}
@@ -1864,7 +2193,7 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
                             <span>⚔️</span> Fases da Provação Cruzada (Ações Interdependentes):
                           </h5>
                           <div className="grid grid-cols-1 gap-3">
-                            {(tramaConjAtual.tramaCruzada.eventosCruzados || []).map((fase, idx) => (
+                            {(opConjAtiva?.eventosCruzados || tramaConjAtual.tramaCruzada.eventosCruzados || []).map((fase, idx) => (
                               <div key={idx} className="p-3.5 bg-indigo-950/20 border border-indigo-500/30 rounded-xl space-y-2">
                                 <span className="px-2 py-0.5 bg-indigo-900 text-indigo-300 border border-indigo-500 font-mono font-bold text-[10px] rounded uppercase">
                                   {fase.fase || ("Fase " + (idx + 1))}
@@ -1880,11 +2209,11 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
                         </div>
 
                         {/* Ameaça Comum */}
-                        {tramaConjAtual.tramaCruzada.ameacaComum && (
+                        {(opConjAtiva?.ameacaComum || tramaConjAtual.tramaCruzada.ameacaComum) && (
                           <div className="p-3.5 bg-red-950/30 border border-red-500/40 rounded-xl text-xs space-y-1">
                             <strong className="text-red-400 block text-xs uppercase font-bold">💀 Ameaça / Chefe Coletivo:</strong>
-                            <p className="text-white font-bold">{tramaConjAtual.tramaCruzada.ameacaComum.nome}</p>
-                            <p className="text-bleach-creamDim">{tramaConjAtual.tramaCruzada.ameacaComum.perigo}</p>
+                            <p className="text-white font-bold">{(opConjAtiva?.ameacaComum || tramaConjAtual.tramaCruzada.ameacaComum).nome}</p>
+                            <p className="text-bleach-creamDim">{(opConjAtiva?.ameacaComum || tramaConjAtual.tramaCruzada.ameacaComum).perigo}</p>
                           </div>
                         )}
                       </div>
@@ -1893,7 +2222,7 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
                         <span className="text-3xl block">⚡</span>
                         <p className="text-sm font-bold text-white">Nenhum arco compartilhado gerado com IA para esta dupla ainda.</p>
                         <p className="text-xs text-bleach-creamDim max-w-md mx-auto">
-                          Clique no botão "Gerar Trama Cruzada com IA" para entrelaçar as histórias dos jogadores selecionados.
+                          Clique no botão "Analisar Cenas & Gerar Tramas Cruzadas" para entrelaçar as histórias dos jogadores selecionados.
                         </p>
                       </div>
                     )}
@@ -1942,7 +2271,9 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
         </div>
       )}
 
+      {/* ========================================================================= */}
       {/* SUB-ABA 3: VISÃO GERAL DE FICHAS DOS PLAYERS */}
+      {/* ========================================================================= */}
       {subAba === "fichas" && (
         <div className="space-y-6">
           <Section
@@ -2027,7 +2358,9 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
         </div>
       )}
 
+      {/* ========================================================================= */}
       {/* SUB-ABA 4: NIVELAMENTO JUSTO DE RECOMPENSAS ADM / SUB-ADM */}
+      {/* ========================================================================= */}
       {subAba === "nivelamento" && (
         <div className="space-y-6">
           <Section
@@ -2091,7 +2424,9 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
         </div>
       )}
 
+      {/* ========================================================================= */}
       {/* MODAL: CRIAR NOVA TRAMA CONJUNTA */}
+      {/* ========================================================================= */}
       {modalCriarConj && (
         <div className="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
           <div className="relative w-full max-w-lg bg-bleach-panel border-2 border-indigo-500 rounded-2xl p-6 shadow-2xl space-y-4">

@@ -1441,6 +1441,42 @@ const CATALOGO_KIDOS = [
 ];
 const PATCH_NOTES_HISTORY = [
   {
+    "versao": "6.7",
+    "titulo": "Hierarquia de Segurança & Segregação de Poderes da Administração (ADM Máximo vs Sub-ADMs)",
+    "data": "25 de Agosto de 2026",
+    "destaque": "Redução e blindagem de privilégios para contas de Sub-Administradores (Avaliadores). Acesso restrito a credenciais mestre, proibição de alteração de senha do ADM Máximo, bloqueio de gerenciamento de outros avaliadores e bloqueio de exclusão definitiva de fichas.",
+    "banner": "assets/bleach-banner.png",
+    "resumo": "Um marco fundamental na governança e integridade da Soul Society. As contas de Sub-Administradores (Avaliadores) foram devidamente segregadas do poder do ADM Máximo (Comandante Supremo). Sub-ADMs agora operam estritamente no escopo de avaliação de fichas, narração de tramas e arcos com IA, lançamento de cenas/atividade semanal, mesa de dados e cadastro de novos jogadores, sendo terminantemente bloqueados de alterar a senha mestre do ADM Máximo, gerenciar outros membros da Staff, apagar personagens do banco de dados ou reconfigurar a nuvem Firebase.",
+    "secoes": [
+      {
+        "tipo": "regras",
+        "titulo": "👑 Blindagem das Credenciais do ADM Máximo",
+        "itens": [
+          "✦ **Painel de Segurança Master Exclusivo**: Nova aba de credenciais acessível unicamente pelo ADM Máximo (Comandante Supremo), permitindo alterar o usuário, senha mestre e nome de exibição de forma protegida.",
+          "✦ **Bloqueio Absoluto para Sub-ADMs**: Contas com papel de Sub-ADM não têm visibilidade nem acesso a rotas ou formulários de alteração de credenciais do ADM Máximo."
+        ]
+      },
+      {
+        "tipo": "nerf",
+        "titulo": "🛡️ Redução de Poderes das Contas de Sub-ADM (Avaliadores)",
+        "itens": [
+          "✦ **Proibição de Exclusão de Personagens**: Apenas o ADM Máximo possui autorização para apagar fichas de jogadores permanentemente do banco de dados.",
+          "✦ **Bloqueio de Gestão de Avaliadores**: Sub-ADMs não podem adicionar, editar senhas ou remover outros avaliadores da Staff.",
+          "✦ **Bloqueio de Infraestrutura de Nuvem & IA**: Sub-ADMs não têm permissão para alterar URLs do Firebase, forçar reescrita do banco de dados nem alterar/remover chaves de API globais."
+        ]
+      },
+      {
+        "tipo": "buff",
+        "titulo": "⚡ Escopo Operacional Pleno Mantido para Avaliadores",
+        "itens": [
+          "✦ **Avaliação de Fichas & Recompensas**: Sub-ADMs continuam com acesso completo para avaliar treinos, desbloquear Shikai/Bankai aprovadas e gerenciar a evolução de fichas.",
+          "✦ **Motor de Tramas & Arcos com IA**: Acesso irrestrito ao gerador de tramas individuais e cruzadas com IA para escolher opções narrativas e gerar briefings para o WhatsApp.",
+          "✦ **Lançamento de Atividade & Cenas em Lote**: Permissão completa para validar cenas no ON e creditar Conhecimento semanal."
+        ]
+      }
+    ]
+  },
+  {
     "versao": "6.6",
     "titulo": "Gerenciador de Tramas & Arcos com IA para ADM, Arcos Cruzados Multi-Player, Nivelamento Justo de Staff & Molde Limpo de WhatsApp",
     "data": "24 de Agosto de 2026",
@@ -4478,157 +4514,476 @@ function getCapacidadeKidos(pressaoTotal) {
 
 
 // =========================================================================
-// AI PLOT & STORY ARC GENERATION ENGINE (INDIVIDUAL & JOINT TRAMAS)
+// DEEP SEMANTIC SCENE ANALYZER & AI PLOT GENERATION ENGINE (MULTI-BRANCH)
 // =========================================================================
 
-function sintetizarTramaIndividualHeuristica(player, cenas = []) {
+function analisarCenaSemanticaBleach(cenas, player) {
+  const cList = Array.isArray(cenas) ? cenas : [];
+  const textoGeral = cList.map(c => (c.titulo || '') + " " + (c.texto || '')).join(" \n ");
+  const textoLower = textoGeral.toLowerCase();
+
+  // 1. Oponentes e Ameaças Detectados
+  const oponentes = [];
+  if (textoLower.includes("vasto lorde")) oponentes.push("Vasto Lorde (Hollow Supremo)");
+  else if (textoLower.includes("adjuchas")) oponentes.push("Adjuchas (Predador de Almas)");
+  else if (textoLower.includes("gillian") || textoLower.includes("menos grande")) oponentes.push("Menos Grande / Gillian");
+  else if (textoLower.includes("hollow")) oponentes.push("Hollow Mascarado com Reishi Anormal");
+
+  if (textoLower.includes("quincy") || textoLower.includes("sternritter") || textoLower.includes("wandenreich") || textoLower.includes("arco espiritual")) {
+    oponentes.push("Quincy / Soldado do Império das Sombras");
+  }
+  if (textoLower.includes("arrancar") || textoLower.includes("espada") || textoLower.includes("ressurreição")) {
+    oponentes.push("Arrancar de Lâmina Selada");
+  }
+  if (textoLower.includes("desertor") || textoLower.includes("traidor") || textoLower.includes("renegado")) {
+    oponentes.push("Shinigami Desertor do Seireitei");
+  }
+  if (textoLower.includes("nobre") || textoLower.includes("conspira") || textoLower.includes("central 46")) {
+    oponentes.push("Conspirador da Nobreza de Seireitei");
+  }
+  if (oponentes.length === 0) {
+    oponentes.push("Entidade Espiritual Corrompida de Alto Calibre");
+  }
+
+  // 2. Locais Detectados
+  const locais = [];
+  if (textoLower.includes("karakura") || textoLower.includes("mundo humano") || textoLower.includes("escola") || textoLower.includes("cidade")) {
+    locais.push("Karakura (Mundo dos Vivos)");
+  }
+  if (textoLower.includes("zaraki") || textoLower.includes("distrito 80") || textoLower.includes("distrito 7") || textoLower.includes("rukongai") || textoLower.includes("vila")) {
+    locais.push("Rukongai (Distritos Periféricos)");
+  }
+  if (textoLower.includes("seireitei") || textoLower.includes("quartel") || textoLower.includes("divisão") || textoLower.includes("esquadrão") || textoLower.includes("academia")) {
+    locais.push("Seireitei (Corte dos Shinigamis)");
+  }
+  if (textoLower.includes("hueco mundo") || textoLower.includes("las noches") || textoLower.includes("deserto branco")) {
+    locais.push("Hueco Mundo (Deserto Branco & Las Noches)");
+  }
+  if (textoLower.includes("dangai") || textoLower.includes("senkaimon") || textoLower.includes("garganta")) {
+    locais.push("Travessia Espiritual (Senkaimon & Dangai)");
+  }
+  if (locais.length === 0) {
+    locais.push("Limiar entre o Seireitei e Rukongai");
+  }
+
+  // 3. Elementos, Feitiços e Técnicas
+  const elementos = [];
+  if (textoLower.includes("fogo") || textoLower.includes("chama") || textoLower.includes("queimar") || textoLower.includes("cinzas")) elementos.push("Fogo & Chamas");
+  if (textoLower.includes("gelo") || textoLower.includes("congelar") || textoLower.includes("geada")) elementos.push("Gelo & Cristal");
+  if (textoLower.includes("relâmpago") || textoLower.includes("trovão") || textoLower.includes("raio")) elementos.push("Trovão & Relâmpago");
+  if (textoLower.includes("trevas") || textoLower.includes("sombra") || textoLower.includes("obscur")) elementos.push("Trevas & Sombras");
+  if (textoLower.includes("vento") || textoLower.includes("lâmina de ar")) elementos.push("Vento Cortante");
+  if (textoLower.includes("veneno") || textoLower.includes("toxina") || textoLower.includes("corros")) elementos.push("Veneno & Corrosão");
+  if (textoLower.includes("ilusão") || textoLower.includes("espelho") || textoLower.includes("névoa")) elementos.push("Ilusão & Miragem");
+  if (textoLower.includes("aço") || textoLower.includes("corte") || textoLower.includes("lâmina") || textoLower.includes("espada")) elementos.push("Corte de Aço Puro");
+  if (textoLower.includes("hadō") || textoLower.includes("bakudō") || textoLower.includes("kaidō")) elementos.push("Kidō & Encantamentos");
+  if (elementos.length === 0) elementos.push("Reishi Puro & Impacto Cortante");
+
+  // 4. Clímax e Sentença de Destaque
+  const frases = textoGeral.split(/[.!?\n]+/).map(f => f.trim()).filter(f => f.length > 15);
+  const momentoChave = frases.length > 0 ? frases[frases.length - 1] : ("O guerreiro " + (player?.nome || 'Shinigami') + " concluiu a ação com postura marcial inabalável.");
+
+  return {
+    qtdCenas: cList.length,
+    oponentePrincipal: oponentes[0],
+    localPrincipal: locais[0],
+    elementosDetectados: elementos,
+    momentoChave: momentoChave,
+    resumoCenas: cList.map((c, i) => "[" + (i + 1) + "] " + (c.titulo || 'Cena') + ": " + (c.texto || '').slice(0, 100) + "...").join(' | ')
+  };
+}
+
+function sintetizarTramaIndividualHeuristica(player, cenas) {
+  const cList = Array.isArray(cenas) ? cenas : [];
   const pNome = player?.nome || "Guerreiro Espiritual";
   const pRaca = player?.raca || "Shinigami";
   const pEsq = player?.esquadrao || "11º Esquadrão";
-  const pPatamar = (typeof getPowerTier === 'function') 
-    ? getPowerTier(Object.values(player?.atributos || {}).reduce((a, b) => a + b, 0)).title 
-    : "Treinado";
+  const pAtributos = player?.atributos || { pressao: 10, forca: 10, velocidade: 10, resiliencia: 10 };
+  const total = Object.values(pAtributos).reduce((a, b) => a + b, 0);
+  const pPatamar = (typeof getPowerTier === 'function') ? getPowerTier(total).title : "Shinigami Treinado";
   const zkNome = player?.zanpakuto?.shikaiAtiva?.nome || player?.zanpakuto?.nome || "Zanpakutō Interior";
-  const numCenas = cenas.length;
+  const zkCmd = player?.zanpakuto?.shikaiAtiva?.comando || "Desperte";
+  const codAtiv = (typeof getCodigoAtividade === 'function') ? getCodigoAtividade(player) : (player?.codigoAtividade || 'ACT-0000');
 
-  const temasPorEsquadrao = {
-    "1º Esquadrão": { foco: "Dever Absoluto & Ordens da Central 46", antag: "Um conspirador nobre da Soul Society", local: "Seireitei - Sala dos Julgamentos" },
-    "2º Esquadrão": { foco: "Infiltração das Sombras & Assassinato Silencioso", antag: "Um desertor do Onmitsukidō com Shunpo veloz", local: "Distrito Secreto de Rukongai" },
-    "3º Esquadrão": { foco: "O Peso do Desespero & Conflito Moral", antag: "Um ex-oficial tomado por amargura e vingança", local: "Ruínas do 80º Distrito de Zaraki" },
-    "4º Esquadrão": { foco: "Juramento Médico & O Preço da Cura", antag: "Um Hollow que corrompe meridianos e canais de Kaidō", local: "Enfermaria de Quarentena do Seireitei" },
-    "5º Esquadrão": { foco: "Conspiração de Reishi & Ambição Proibida", antag: "Um pesquisador renegado de ilusões espirituais", local: "Laboratório Subterrâneo Oculto" },
-    "6º Esquadrão": { foco: "A Lei Inflexível vs Laços de Sangue", antag: "Um parente da nobreza que violou os éditos sagrados", local: "Mansão do Clã Kuchiki / Portão do Seireitei" },
-    "7º Esquadrão": { foco: "A Honra Inabalável & Proteção dos Inocentes", antag: "Um bando de saqueadores espirituais impiedosos", local: "Vila Periférica de Rukongai" },
-    "8º Esquadrão": { foco: "Informações Críticas & Blefes Fatais", antag: "Um mercenário do submundo que negocia segredos", local: "Casas de Chá de Karakura / Rukongai" },
-    "9º Esquadrão": { foco: "Justiça Distorcida & A Verdade Silenciada", antag: "Um líder revolucionário que distorceu os ideais de justiça", local: "Arquivos Sagrados da Soul Society" },
-    "10º Esquadrão": { foco: "Patrulhas no Mundo Humano & Proteção de Karakura", antag: "Um Hollow de Classe Menos que ataca no mundo dos vivos", local: "Karakura - Distrito de Negócios" },
-    "11º Esquadrão": { foco: "O Clímax do Combate & Sangue na Lâmina", antag: "Um guerreiro brutal que busca morrer em duelo contra o mais forte", local: "Arena Abandonada do Rukongai" },
-    "12º Esquadrão": { foco: "Experimentos Perigosos & Anomalias de Reishi", antag: "Uma criatura artificial de laboratório que perdeu o controle", local: "Setor 46 de Desenvolvimento Tecnológico" },
-    "13º Esquadrão": { foco: "Defesa dos Desamparados & Conexão de Almas", antag: "Um espírito corrompido que assombra o portal Senkaimon", local: "Travessia do Senkaimon" }
-  };
+  // Semantic Scene Analysis
+  const analise = analisarCenaSemanticaBleach(cList, player);
+  const opPrincipal = analise.oponentePrincipal;
+  const locPrincipal = analise.localPrincipal;
+  const momChave = analise.momentoChave;
 
-  const tema = temasPorEsquadrao[pEsq] || { foco: "Ascensão Espiritual & Rompimento de Limites", antag: "Um Hollow evoluído com ressonância espiritual", local: "Limiar entre Seireitei e Karakura" };
+  const analiseDiagnostico = "A análise das cenas de " + pNome + " (" + pEsq + ", " + pPatamar + ") revela um confronto direto contra " + opPrincipal + " em " + locPrincipal + ". A narrativa evidenciou o impacto de '" + momChave + "', demonstrando que " + pNome + " está à beira de uma ruptura de poder com sua lâmina (" + zkNome + ").";
 
-  const ultimasCenasResumo = cenas.slice(-3).map((c, i) => `• Cena ${i + 1} (${c.titulo || 'Treino/Arco'}): ${(c.texto || '').slice(0, 120)}...`).join('\n');
-
-  return {
-    tituloArco: `Arco de ${pNome}: A Provação de ${zkNome}`,
-    faseAtual: numCenas === 0 ? "Fase 1: Convocação & Premonição" : numCenas <= 2 ? "Fase 2: O Conflito Crescente" : "Fase 3: O Ponto de Ruptura & Clímax",
-    diagnosticoPsicologico: `${pNome} (${pRaca}, ${pEsq}, Patamar ${pPatamar}) carrega um forte conflito entre a disciplina militar do Seireitei e a busca pelo domínio pleno de sua lâmina (${zkNome}). Suas ações recentes em ON demonstram determinação crescente, mas revelam brechas táticas que serão testadas neste arco.`,
-    ganchoImediato: `Estruturas de Reishi anormais foram detectadas em ${tema.local}. Relatos indicam a presença de ${tema.antag}, cuja assinatura espiritual desafia diretamente a postura de ${pNome}.`,
+  // OPÇÃO 1: COMBATE DECISIVO (PROVAÇÃO MARCIAL)
+  const opcao1 = {
+    id: "opcao_1",
+    tipo: "combate",
+    nomeOpcao: "⚔️ Opção 1: Caminho do Confronto Direto (Provação Marcial)",
+    tituloArco: "Arco de " + pNome + " — O Veredito de Sangue em " + locPrincipal,
+    focoNarrativo: "O combate anterior contra " + opPrincipal + " foi apenas o prelúdio. O inimigo retornará com uma força esmagadora, exigindo que " + pNome + " supere seus limites físicos e marciais no campo de batalha.",
     eventos: [
       {
         numero: 1,
-        fase: "Evento 1: O Teste de Convicção (ON)",
-        titulo: `Incidente em ${tema.local}`,
-        descricao: `${pNome} é despachado(a) para investigar anomalias em ${tema.local}. Ao chegar, depara-se com armadilhas espirituais e é provocado(a) verbalmente e taticamente pelo opositor.`,
-        objetivoCena: "Investigar o local, conter o pânico e demonstrar postura marcial na primeira interação de ON.",
-        desafioSugerido: "Superar emboscada inicial sem revelar todas as cartas de sua Zanpakutō."
+        fase: "Evento 1: O Rastro da Batalha (Investigação & Emboscada)",
+        titulo: "Caçada em " + locPrincipal,
+        descricao: pNome + " segue os vestígios deixados na cena anterior. Em meio aos escombros, é emboscado por batedores e precisa manter a compostura marcial.",
+        objetivoCena: "Investigar os rastros da última batalha, conter a emboscada sem hesitar e identificar o ponto fraco do bando inimigo.",
+        desafioSugerido: "Superar armadilhas de terreno usando velocidade (Shunpo) e cortes precisos de Zanpakutō."
       },
       {
         numero: 2,
-        fase: "Evento 2: A Sombra da Dúvida & Conflito Espiritual (ON)",
-        titulo: "Ressonância Rompida",
-        descricao: `O confronto direto com ${tema.antag} coloca em xeque a ideologia de ${pNome} (${tema.foco}). A pressão espiritual do ambiente começa a desestabilizar o fluxo de Reishi.`,
-        objetivoCena: "Resistir à pressão moral/física do antagonista e encontrar o ponto de equilíbrio com sua própria lâmina.",
-        desafioSugerido: "Uso estratégico de Kidōs, Shunpo ou técnicas de espada para neutralizar a vantagem do terreno."
+        fase: "Evento 2: A Fúria Desencadeada (Duelo Intermediário)",
+        titulo: "Choque de Titãs: " + zkNome + " vs " + opPrincipal,
+        descricao: "O confronto direto explode. O oponente tenta anular os movimentos de " + pNome + " usando técnicas corruptas de Reishi.",
+        objetivoCena: "Manter a postura marcial, sincronizar o comando '" + zkCmd + "' e contra-atacar sob pressão extrema.",
+        desafioSugerido: "Uso estratégico de Kidōs de suporte ou combinação de força e velocidade para quebrar a guarda inimiga."
       },
       {
         numero: 3,
-        fase: "Evento 3: O Clímax & Quebra de Limites (ON)",
-        titulo: `O Veredito da Lâmina: ${zkNome}`,
-        descricao: `Batalha decisiva onde ${pNome} deve dar tudo de si. O vilão ativa sua forma final forçando uma cena de narração épica onde apenas a evolução da alma garantirá a vitória.`,
-        objetivoCena: "Executar o golpe final, proteger os aliados ou selar o inimigo de forma honrosa.",
-        desafioSugerido: "Aplicação da Shikai/Bankai ou combinação definitiva de atributos para fechar o arco com maestria."
+        fase: "Evento 3: O Clímax & Golpe Final",
+        titulo: "A Lâmina Suprema de " + pNome,
+        descricao: "A batalha atinge o ápice com o oponente liberando sua forma máxima. " + pNome + " executa sua técnica definitiva em uma narração épica.",
+        objetivoCena: "Desferir o golpe decisivo de liberação da Zanpakutō e proteger os aliados/civis do Seireitei.",
+        desafioSugerido: "Conclusão épica com descrição detalhada do impacto visual e espiritual do golpe de misericórdia."
       }
     ],
     antagonista: {
-      nome: tema.antag,
-      titulo: `O Flagelo de ${tema.local}`,
-      origem: `Nascido dos desvios espirituais e segredos de ${pEsq}`,
-      motivacao: `Provar que os métodos de ${pNome} são fracos e corromper sua convicção.`,
-      fraquezaChave: "Vulnerabilidade a golpes de velocidade pura e Kidōs de contenção rápida."
+      nome: opPrincipal,
+      titulo: "O Algoz de " + locPrincipal,
+      origem: "Gerado pelas cicatrizes de batalha e perturbações de Reishi em " + locPrincipal + ".",
+      motivacao: "Destruir a honra de " + pNome + " e provar a fragilidade dos guerreiros do " + pEsq + ".",
+      fraquezaChave: "Vulnerável a ataques frontais de alta velocidade e liberação sincronizada de " + zkNome + "."
     },
+    briefingWhatsApp: "```ㅤㅤ```ㅤㅤㅤ```ㅤㅤ```\n" +
+      "👑 𝗗𝗢𝗦𝗦𝗜𝗘̂ 𝗗𝗘 𝗔𝗥𝗖𝗢 • 𝗢𝗣𝗖̧𝗔̃𝗢 𝟭: 𝗖𝗢𝗠𝗕𝗔𝗧𝗘 𝗗𝗜𝗥𝗘𝗧𝗢\n" +
+      "✶ „ Jogador: " + pNome + " [" + codAtiv + "]\n" +
+      "✶ „ Esquadrão: " + pEsq + " • Patamar: " + pPatamar + "\n" +
+      "✶ „ Título: Arco de " + pNome + " — O Veredito de Sangue em " + locPrincipal + "\n" +
+      "✶ „ Foco: Provação Marcial & Duelo contra " + opPrincipal + "\n\n" +
+      "📋 𝗦𝗜𝗡𝗢𝗣𝗦𝗘 𝗗𝗔 𝗠𝗜𝗦𝗦𝗔̃𝗢 (𝗢𝗡):\n" +
+      "Após o clímax da cena anterior onde \"" + momChave + "\", " + pNome + " é convocado para conter o avanço devastador de " + opPrincipal + " em " + locPrincipal + ". O confronto exigirá maestria absoluta no uso de " + zkNome + "!\n\n" +
+      "🎯 𝗢𝗕𝗝𝗘𝗧𝗜𝗩𝗢 𝗗𝗔 𝗣𝗥𝗢́𝗫𝗜𝗠𝗔 𝗖𝗘𝗡𝗔:\n" +
+      "1. Dirigir-se a " + locPrincipal + " e narrar sua prontidão de combate (mínimo 30 linhas treino / 90 linhas arco).\n" +
+      "2. Investigar os escombros da última batalha e travar o primeiro duelo de lâminas!\n\n" +
+      "✧ Recompensa Garantida: 15 Pontos de Atributo + 2 Giros Comuns + 1 Especial!\n" +
+      "```ㅤㅤ```ㅤㅤㅤ```ㅤㅤ```"
+  };
+
+  // OPÇÃO 2: CONSPIRAÇÃO OCULTA (INVESTIGAÇÃO & MISTÉRIO)
+  const opcao2 = {
+    id: "opcao_2",
+    tipo: "misterio",
+    nomeOpcao: "🕵️ Opção 2: Caminho da Conspiração Oculta (Mistério & Blefe)",
+    tituloArco: "Arco de " + pNome + " — A Sombra nos Bastidores do Seireitei",
+    focoNarrativo: "O ataque ocorrido na cena anterior não foi um evento isolado, mas parte de uma conspiração maior que envolve traição e segredos ocultos nos registros da Soul Society.",
+    eventos: [
+      {
+        numero: 1,
+        fase: "Evento 1: O Enigma nos Escombros (Infiltração)",
+        titulo: "Pistas Silenciosas",
+        descricao: pNome + " recolhe fragmentos de Reishi corrompido deixados pelo inimigo e descobre que as armas foram forjadas secretamente no Seireitei.",
+        objetivoCena: "Interrogar informantes em Rukongai e infiltrar-se em arquivos proibidos sem alertar os traidores.",
+        desafioSugerido: "Uso de furtividade, percepção espiritual e Bakudōs de silenciamento."
+      },
+      {
+        numero: 2,
+        fase: "Evento 2: O Jogo de Blefes & Armadilha Psicológica",
+        titulo: "Traição Desmascarada",
+        descricao: "O conspirador tenta subornar ou chantagear " + pNome + ", forçando-o a um jogo tenso de blefes e armadilhas de ilusão.",
+        objetivoCena: "Resistir à manipulação psicológica e desmascarar a identidade do traidor perante o esquadrão.",
+        desafioSugerido: "Superar ilusões de Kidō e manter a integridade mental sob pressão."
+      },
+      {
+        numero: 3,
+        fase: "Evento 3: O Julgamento de Aço",
+        titulo: "A Queda da Conspiração",
+        descricao: "Batalha final contra o mentor da conspiração nos limites do Seireitei, selando o plano sombrio de vez.",
+        objetivoCena: "Neutralizar o traidor, recuperar os registros roubados e restaurar a ordem na Soul Society.",
+        desafioSugerido: "Execução de um selamento tático com Kidō ou corte decisivo de Zanpakutō."
+      }
+    ],
+    antagonista: {
+      nome: "O Mestre das Sombras (Oficial Desertor)",
+      titulo: "O Arquiteto da Traição",
+      origem: "Infiltrado nos setores burocráticos do Seireitei manipulando eventos de bastidores.",
+      motivacao: "Desestabilizar a hierarquia dos capitães e tomar o controle das rotas espirituais.",
+      fraquezaChave: "Insegurança em combates corpo a corpo quando suas ilusões são dissipadas."
+    },
+    briefingWhatsApp: "```ㅤㅤ```ㅤㅤㅤ```ㅤㅤ```\n" +
+      "👑 𝗗𝗢𝗦𝗦𝗜𝗘̂ 𝗗𝗘 𝗔𝗥𝗖𝗢 • 𝗢𝗣𝗖̧𝗔̃𝗢 𝟮: 𝗖𝗢𝗡𝗦𝗣𝗜𝗥𝗔𝗖̧𝗔̃𝗢 𝗢𝗖𝗨𝗟𝗧𝗔\n" +
+      "✶ „ Jogador: " + pNome + " [" + codAtiv + "]\n" +
+      "✶ „ Esquadrão: " + pEsq + " • Patamar: " + pPatamar + "\n" +
+      "✶ „ Título: Arco de " + pNome + " — A Sombra nos Bastidores do Seireitei\n" +
+      "✶ „ Foco: Investigação, Blefe & Desmascarar Conspiração\n\n" +
+      "📋 𝗦𝗜𝗡𝗢𝗣𝗦𝗘 𝗗𝗔 𝗠𝗜𝗦𝗦𝗔̃𝗢 (𝗢𝗡):\n" +
+      "A cena onde \"" + momChave + "\" revelou pistas perturbadoras. O ataque foi arquitetado por conspiradores infiltrados. " + pNome + " deve seguir o rastro das pistas antes que o traidor execute seu plano maior!\n\n" +
+      "🎯 𝗢𝗕𝗝𝗘𝗧𝗜𝗩𝗢 𝗗𝗔 𝗣𝗥𝗢́𝗫𝗜𝗠𝗔 𝗖𝗘𝗡𝗔:\n" +
+      "1. Iniciar a investigação em Rukongai/Seireitei (mínimo 30 linhas treino / 90 linhas arco).\n" +
+      "2. Rastrear o selo do conspirador e desarmar a primeira armadilha de bastidores!\n\n" +
+      "✧ Recompensa Garantida: 15 Pontos de Atributo + 2 Giros Comuns + 1 Especial!\n" +
+      "```ㅤㅤ```ㅤㅤㅤ```ㅤㅤ```"
+  };
+
+  // OPÇÃO 3: DILEMA MORAL & DESPERTAR ESPIRITUAL
+  const opcao3 = {
+    id: "opcao_3",
+    tipo: "despertar",
+    nomeOpcao: "⚖️ Opção 3: Caminho do Despertar da Alma (Ressonância da Zanpakutō)",
+    tituloArco: "Arco de " + pNome + " — O Despertar da Alma & A Provação de " + zkNome,
+    focoNarrativo: "O choque narrativo da última cena fez a Zanpakutō " + zkNome + " silenciar ou exigir uma evolução espiritual profunda de seu portador, forçando um teste de convicção e limites.",
+    eventos: [
+      {
+        numero: 1,
+        fase: "Evento 1: O Silêncio da Lâmina (Conflito Interior)",
+        titulo: "O Eco do Mundo Interior",
+        descricao: pNome + " entra em meditação profunda (Jinzen). A alma da Zanpakutō recusa-se a obedecer até que o guerreiro encare seu maior medo/hesitação.",
+        objetivoCena: "Dialogar e duelar contra a manifestação espiritual de sua própria lâmina no mundo interior.",
+        desafioSugerido: "Narração psicológica rica detalhando o ambiente mental e a filosofia de sua arma."
+      },
+      {
+        numero: 2,
+        fase: "Evento 2: A Provação do Sacrifício",
+        titulo: "O Teste de Sangue & Honra",
+        descricao: "Enquanto medita, uma ameaça repentina ataca os inocentes sob sua vigília. " + pNome + " precisa lutar com Reishi limitado para provar sua determinação.",
+        objetivoCena: "Proteger os aliados sem depender apenas de poder bruto, demonstrando maturidade tática.",
+        desafioSugerido: "Uso engenhoso de combate básico, esquivas perfeitas e resiliência espiritual."
+      },
+      {
+        numero: 3,
+        fase: "Evento 3: A Fusão de Convicções (Despertar Lendário)",
+        titulo: "A Dança Harmoniosa de " + zkNome,
+        descricao: "A lâmina reconhece a verdadeira vontade de " + pNome + ". O Reishi explode em harmonia absoluta, culminando em uma liberação majestosa.",
+        objetivoCena: "Executar a liberação definitiva em harmonia com a Zanpakutō e aniquilar a ameaça restante.",
+        desafioSugerido: "Liberação triunfante com narração da ressonância espiritual entre portador e lâmina."
+      }
+    ],
+    antagonista: {
+      nome: "A Sombra da Dúvida (Avatar Espiritual Interior)",
+      titulo: "O Reflexo da Hesitação",
+      origem: "Manifestado das dúvidas e memórias não resolvidas no coração do guerreiro.",
+      motivacao: "Testar se o guerreiro é digno de empunhar a lâmina sem hesitação.",
+      fraquezaChave: "Desaparece quando confrontado com determinação inabalável e auto-aceitação."
+    },
+    briefingWhatsApp: "```ㅤㅤ```ㅤㅤㅤ```ㅤㅤ```\n" +
+      "👑 𝗗𝗢𝗦𝗦𝗜𝗘̂ 𝗗𝗘 𝗔𝗥𝗖𝗢 • 𝗢𝗣𝗖̧𝗔̃𝗢 𝟯: 𝗗𝗘𝗦𝗣𝗘𝗥𝗧𝗔𝗥 𝗗𝗔 𝗔𝗟𝗠𝗔\n" +
+      "✶ „ Jogador: " + pNome + " [" + codAtiv + "]\n" +
+      "✶ „ Esquadrão: " + pEsq + " • Patamar: " + pPatamar + "\n" +
+      "✶ „ Título: Arco de " + pNome + " — O Despertar da Alma & A Provação de " + zkNome + "\n" +
+      "✶ „ Foco: Conexão Espiritual & Provação da Zanpakutō\n\n" +
+      "📋 𝗦𝗜𝗡𝗢𝗣𝗦𝗘 𝗗𝗔 𝗠𝗜𝗦𝗦𝗔̃𝗢 (𝗢𝗡):\n" +
+      "Diante dos acontecimentos onde \"" + momChave + "\", " + zkNome + " clama por uma evolução espiritual definitiva. " + pNome + " deve enfrentar o teste de sua própria lâmina para desbloquear o próximo patamar de maestria!\n\n" +
+      "🎯 𝗢𝗕𝗝𝗘𝗧𝗜𝗩𝗢 𝗗𝗔 𝗣𝗥𝗢́𝗫𝗜𝗠𝗔 𝗖𝗘𝗡𝗔:\n" +
+      "1. Narrar a entrada no Mundo Interior / Meditação Jinzen (mínimo 30 linhas treino / 90 linhas arco).\n" +
+      "2. Confrontar a manifestação de " + zkNome + " e provar a pureza de sua convicção marcial!\n\n" +
+      "✧ Recompensa Garantida: 15 Pontos de Atributo + 2 Giros Comuns + 1 Especial!\n" +
+      "```ㅤㅤ```ㅤㅤㅤ```ㅤㅤ```"
+  };
+
+  return {
+    analiseCenas: {
+      qtdCenas: cList.length,
+      oponentePrincipal: opPrincipal,
+      localPrincipal: locPrincipal,
+      elementosDetectados: analise.elementosDetectados,
+      momentoChave: momChave,
+      diagnostico: analiseDiagnostico
+    },
+    opcoesTramas: [opcao1, opcao2, opcao3],
+    opcaoAtivaId: "opcao_1",
+    tituloArco: opcao1.tituloArco,
+    faseAtual: "Fase 1: Convocação & Premonição",
+    diagnosticoPsicologico: analiseDiagnostico,
+    ganchoImediato: opcao1.focoNarrativo,
+    eventos: opcao1.eventos,
+    antagonista: opcao1.antagonista,
     recompensaArco: "Garantido de 15 Pontos de Atributo + 2 Giros de Sorteio Comum + 1 Giro Especial de Seireitei",
-    briefingWhatsApp: `\`\`\`ㅤㅤ\`\`\`ㅤㅤㅤ\`\`\`ㅤㅤ\`\`\`
-👑 𝗗𝗢𝗦𝗦𝗜𝗘̂ 𝗗𝗘 𝗔𝗥𝗖𝗢 𝗜𝗡𝗗𝗜𝗩𝗜𝗗𝗨𝗔𝗟 • 𝗦𝗢𝗨𝗟 𝗦𝗢𝗖𝗜𝗘𝗧𝗬
-✶ „ Jogador: ${pNome} [${player?.codigoAtividade || 'ACT-0000'}]
-✶ „ Esquadrão & Patamar: ${pEsq} • ${pPatamar}
-✶ „ Título do Arco: Arco de ${pNome} — A Provação de ${zkNome}
-✶ „ Local de Ação: ${tema.local}
-
-📋 𝗦𝗜𝗡𝗢𝗣𝗦𝗘 & 𝗚𝗔𝗡𝗖𝗛𝗢 𝗣𝗔𝗥𝗔 𝗢 𝗢𝗡:
-${tema.foco}. ${pNome} é convocado(a) para enfrentar ${tema.antag}. A missão exigirá precisão marcial e postura espiritual inabalável.
-
-🎯 𝗢𝗕𝗝𝗘𝗧𝗜𝗩𝗢 𝗗𝗔 𝗣𝗥𝗢́𝗫𝗜𝗠𝗔 𝗖𝗘𝗡𝗔:
-1. Ir até ${tema.local} e registrar sua entrada em ON (mínimo 30 linhas para treino / 90 linhas para arco).
-2. Investigar a anomalia e reagir ao primeiro confronto tático!
-
-✧ Recompensa ao Concluir: 15 Pontos Livres + 2 Giros Comuns + 1 Especial!
-\`\`\`ㅤㅤ\`\`\`ㅤㅤㅤ\`\`\`ㅤㅤ\`\`\``
+    briefingWhatsApp: opcao1.briefingWhatsApp
   };
 }
 
-function sintetizarTramaConjuntaHeuristica(players = [], cenasConjuntas = []) {
-  const p1 = players[0] || { nome: "Guerreiro 1", esquadrao: "11º Esquadrão", codigoAtividade: "ACT-0001" };
-  const p2 = players[1] || { nome: "Guerreiro 2", esquadrao: "4º Esquadrão", codigoAtividade: "ACT-0002" };
+function sintetizarTramaConjuntaHeuristica(players, cenasConjuntas) {
+  const pList = Array.isArray(players) ? players : [];
+  const cList = Array.isArray(cenasConjuntas) ? cenasConjuntas : [];
+  const p1 = pList[0] || { nome: "Guerreiro 1", esquadrao: "11º Esquadrão", codigoAtividade: "ACT-0001" };
+  const p2 = pList[1] || { nome: "Guerreiro 2", esquadrao: "4º Esquadrão", codigoAtividade: "ACT-0002" };
 
-  const nomesStr = players.map(p => p.nome).join(" & ");
-  const codigosStr = players.map(p => p.codigoAtividade || getCodigoAtividade(p)).join(" / ");
+  const nomesStr = pList.map(p => p.nome).join(" & ");
+  const codigosStr = pList.map(p => (typeof getCodigoAtividade === 'function' ? getCodigoAtividade(p) : (p.codigoAtividade || 'ACT-0000'))).join(" / ");
 
-  return {
-    tituloArco: `Arco Cruzado: A Aliança das Almas (${nomesStr})`,
-    dinamicaDupla: `Cooperação Tática & Choque de Filosofias (${p1.esquadrao} ⚔️ ${p2.esquadrao})`,
-    sinopse: `Um incidente de proporções críticas interliga os destinos de ${p1.nome} e ${p2.nome}. Uma fenda dimensional no Mundo Humano ameaça romper a barreira do Senkaimon, exigindo que ambos superem suas divergências de esquadrão para operar como uma unidade marcial coesa.`,
-    conflitoCentral: `Enquanto ${p1.nome} prioriza a ofensiva e a erradicação do perigo, ${p2.nome} analisa a preservação dos inocentes e o equilíbrio de Reishi. A missão forçará ambos a confiarem a retaguarda um no outro.`,
+  const analise = analisarCenaSemanticaBleach(cList, p1);
+  const opPrincipal = analise.oponentePrincipal || "Menos Grande Híbrido";
+  const locPrincipal = analise.localPrincipal || "Distritos Periféricos de Rukongai";
+
+  const opcaoConj1 = {
+    id: "conj_opcao_1",
+    nomeOpcao: "⚔️ Opção 1: Aliança de Sangue (Combate Cooperativo Sincronizado)",
+    tituloArco: "Arco Cruzado: A Queda do Titã em " + locPrincipal + " (" + nomesStr + ")",
+    dinamicaDupla: "Cooperação Tática & União de Forças (" + p1.esquadrao + " ⚔️ " + p2.esquadrao + ")",
+    sinopse: "Um incidente em " + locPrincipal + " une " + p1.nome + " e " + p2.nome + " contra uma ameaça que nenhum guerreiro pode derrotar isoladamente (" + opPrincipal + "). Ambos devem intercalar ataques e defesas sincronizadas no ON.",
     eventosCruzados: [
       {
         fase: "Fase 1: O Choque Inicial & Convocação Conjunta (ON)",
-        descricao: `${p1.nome} e ${p2.nome} são designados conjuntamente pelo Comando Central. Uma emboscada de Hollows intermediários força os dois a combinarem suas habilidades de combate imediatamente.`,
-        papelPlayer1: `Abrir brecha na vanguarda usando sua força/velocidade (${p1.nome}).`,
-        papelPlayer2: `Fornecer suporte tático, controle de área com Kidō ou cura (${p2.nome}).`,
-        ganchoWhats: `Primeira cena no ON onde ${p1.nome} e ${p2.nome} dialogam e executam um ataque combinado.`
+        descricao: p1.nome + " e " + p2.nome + " são emboscados em " + locPrincipal + ". A força de Reishi do monstro obriga os dois a unirem suas lâminas.",
+        papelPlayer1: "Abrir brecha na vanguarda (" + p1.nome + ").",
+        papelPlayer2: "Suporte tático, barreira ou cura (" + p2.nome + ").",
+        ganchoWhats: "Primeira cena no ON com diálogo e ataque combinado de " + p1.nome + " e " + p2.nome + "."
       },
       {
         fase: "Fase 2: A Provação Cruzada (Ação de um afeta o outro)",
-        descricao: `O inimigo divide o campo de batalha com uma barreira espiritual opressiva. Para que ${p1.nome} sobreviva ao ataque mortal, ${p2.nome} precisará decifrar o ponto fraco da barreira a tempo.`,
-        papelPlayer1: `Segurar a investida do monstro sob dano constante.`,
-        papelPlayer2: `Interromper a conjuração do feitiço proibido com extrema precisão.`,
-        ganchoWhats: "Cena de alta tensão onde cada linha de roleplay influencia o estado do parceiro."
+        descricao: "O monstro isola os dois em domínios de Reishi. Para que " + p1.nome + " sobreviva, " + p2.nome + " precisará neutralizar a fonte de energia a tempo.",
+        papelPlayer1: "Conter o dano devastador da criatura.",
+        papelPlayer2: "Executar técnica de anulação ou quebra de selo.",
+        ganchoWhats: "Interação contínua onde a rolagem/narração de um altera o estado do parceiro."
       },
       {
         fase: "Fase 3: Batalha Cooperativa Decisiva (Clímax)",
-        descricao: `O confronto final contra o líder da anomalia. Um ataque sincronizado combinando a liberação de suas Zanpakutōs sela a fenda e consolida um vínculo lendário no Seireitei.`,
-        papelPlayer1: `Golpe de finalização de alta potência.`,
-        papelPlayer2: `Selo de contenção / cura de emergência final.`,
-        ganchoWhats: "Conclusão épica do arco conjunto com narrativa compartilhada no grupo."
+        descricao: "Ataque simultâneo com liberação de Zanpakutōs em sincronia perfeita, selando o inimigo.",
+        papelPlayer1: "Golpe de impacto supremo.",
+        papelPlayer2: "Selo de contenção / cura final.",
+        ganchoWhats: "Conclusão épica compartilhada no grupo de roleplay."
       }
     ],
     ameacaComum: {
-      nome: "Menos Grande Híbrido & Conspiradores Renegados",
-      perigo: "Capacidade de anular ataques isolados; vulnerável apenas a ataques combinados sincronizados.",
-      mecanicaEspecial: "Exige que ambos os jogadores rolem dados ou intercalem turnos narrativos contínuos."
+      nome: opPrincipal,
+      perigo: "Anula danos isolados; só é vulnerável a ataques intercalados de dois guerreiros.",
+      mecanicaEspecial: "Exige intercalação de turnos narrativos contínuos no WhatsApp."
     },
-    briefingWhatsApp: `\`\`\`ㅤㅤ\`\`\`ㅤㅤㅤ\`\`\`ㅤㅤ\`\`\`
-👑 𝗗𝗢𝗦𝗦𝗜𝗘̂ 𝗗𝗘 𝗧𝗥𝗔𝗠𝗔 𝗖𝗢𝗡𝗝𝗨𝗡𝗧𝗔 • 𝗦𝗢𝗨𝗟 𝗦𝗢𝗖𝗜𝗘𝗧𝗬
-✶ „ Jogadores Envolvidos: ${nomesStr}
-✶ „ Códigos de Atividade: ${codigosStr}
-✶ „ Título do Arco: Arco Cruzado — A Aliança das Almas
-✶ „ Dinâmica: ${p1.esquadrao} ⚔️ ${p2.esquadrao}
+    briefingWhatsApp: "```ㅤㅤ```ㅤㅤㅤ```ㅤㅤ```\n" +
+      "👑 𝗗𝗢𝗦𝗦𝗜𝗘̂ 𝗗𝗘 𝗧𝗥𝗔𝗠𝗔 𝗖𝗢𝗡𝗝𝗨𝗡𝗧𝗔 • 𝗢𝗣𝗖̧𝗔̃𝗢 𝟭: 𝗔𝗟𝗜𝗔𝗡𝗖̧𝗔 𝗗𝗘 𝗦𝗔𝗡𝗚𝗨𝗘\n" +
+      "✶ „ Jogadores Envolvidos: " + nomesStr + "\n" +
+      "✶ „ Códigos de Atividade: " + codigosStr + "\n" +
+      "✶ „ Título: Arco Cruzado — A Queda do Titã em " + locPrincipal + "\n" +
+      "✶ „ Dinâmica: " + p1.esquadrao + " ⚔️ " + p2.esquadrao + "\n\n" +
+      "📋 𝗦𝗜𝗡𝗢𝗣𝗦𝗘 𝗖𝗢𝗠𝗣𝗔𝗥𝗧𝗜𝗟𝗛𝗔𝗗𝗔:\n" +
+      "Uma anomalia de extrema gravidade em " + locPrincipal + " exige a colaboração imediata de " + p1.nome + " e " + p2.nome + ". A ameaça " + opPrincipal + " só poderá ser contida com sincronia total de Reishi!\n\n" +
+      "🎯 𝗜𝗡𝗦𝗧𝗥𝗨𝗖̧𝗢̃𝗘𝗦 𝗣𝗔𝗥𝗔 𝗢𝗦 𝗝𝗢𝗚𝗔𝗗𝗢𝗥𝗘𝗦:\n" +
+      "1. Cenar juntos em interação contínua no grupo (mínimo 30 a 90 linhas conjuntas).\n" +
+      "2. Intercalar ações combinando suas técnicas e liberando suas Zanpakutōs em sincronia.\n\n" +
+      "✧ Recompensa Garantida para Ambos: 15 Pontos de Atributo + 2 Giros Comuns + 1 Giro Especial cada!\n" +
+      "```ㅤㅤ```ㅤㅤㅤ```ㅤㅤ```"
+  };
 
-📋 𝗦𝗜𝗡𝗢𝗣𝗦𝗘 𝗖𝗢𝗠𝗣𝗔𝗥𝗧𝗜𝗟𝗛𝗔𝗗𝗔:
-Uma anomalia de alta gravidade une os destinos de ${p1.nome} e ${p2.nome}. Uma ameaça que não pode ser derrotada individualmente exigirá sincronia absoluta entre ambos no ON!
+  const opcaoConj2 = {
+    id: "conj_opcao_2",
+    nomeOpcao: "⚖️ Opção 2: Choque Ideológico & Provação Cruzada (Conflito de Honra)",
+    tituloArco: "Arco Cruzado: O Julgamento de Honra em " + locPrincipal + " (" + nomesStr + ")",
+    dinamicaDupla: "Divergência de Métodos & Respeito Mútuo (" + p1.esquadrao + " vs " + p2.esquadrao + ")",
+    sinopse: "Enquanto " + p1.nome + " busca aniquilar o alvo custe o que custar, " + p2.nome + " defende a preservação das leis e dos civis. O confronto forçará os dois a aprenderem com os ideais um do outro.",
+    eventosCruzados: [
+      {
+        fase: "Fase 1: O Choque de Ordens",
+        descricao: "Ambos recebem ordens conflitantes da Central 46 e dos seus respectivos Capitães.",
+        papelPlayer1: "Investir na ofensiva imediata.",
+        papelPlayer2: "Montar perímetro de contenção e resgate.",
+        ganchoWhats: "Debate e duelo verbal com primeiras demonstrações de postura marcial."
+      },
+      {
+        fase: "Fase 2: A Provação do Meio-Termo",
+        descricao: "Uma armadilha mortal coloca ambos em risco, provando que nenhum dos métodos isolados funciona.",
+        papelPlayer1: "Reconhecer o valor da contenção tática.",
+        papelPlayer2: "Liberar a ferocidade de combate necessária.",
+        ganchoWhats: "Cooperação relutante que se transforma em confiança inquebrável."
+      },
+      {
+        fase: "Fase 3: O Veredito de Honra",
+        descricao: "Superação mútua e derrota definitiva do conspirador responsável pelo caos.",
+        papelPlayer1: "Finalização combinada.",
+        papelPlayer2: "Proteção total da Soul Society.",
+        ganchoWhats: "Finalização com respeito mútuo consagrado."
+      }
+    ],
+    ameacaComum: {
+      nome: "Conspirador de Guerra & Desertores Armados",
+      perigo: "Explora divisões ideológicas entre esquadrões para semear discórdia.",
+      mecanicaEspecial: "Requer reconciliação tática no roleplay para abrir brecha no escudo inimigo."
+    },
+    briefingWhatsApp: "```ㅤㅤ```ㅤㅤㅤ```ㅤㅤ```\n" +
+      "👑 𝗗𝗢𝗦𝗦𝗜𝗘̂ 𝗗𝗘 𝗧𝗥𝗔𝗠𝗔 𝗖𝗢𝗡𝗝𝗨𝗡𝗧𝗔 • 𝗢𝗣𝗖̧𝗔̃𝗢 𝟮: 𝗖𝗛𝗢𝗤𝗨𝗘 𝗜𝗗𝗘𝗢𝗟𝗢́𝗚𝗜𝗖𝗢\n" +
+      "✶ „ Jogadores Envolvidos: " + nomesStr + "\n" +
+      "✶ „ Códigos de Atividade: " + codigosStr + "\n" +
+      "✶ „ Título: Arco Cruzado — O Julgamento de Honra em " + locPrincipal + "\n" +
+      "✶ „ Dinâmica: Choque de Métodos (" + p1.esquadrao + " vs " + p2.esquadrao + ")\n\n" +
+      "📋 𝗦𝗜𝗡𝗢𝗣𝗦𝗘 𝗖𝗢𝗠𝗣𝗔𝗥𝗧𝗜𝗟𝗛𝗔𝗗𝗔:\n" +
+      "Um dilema de honra coloca " + p1.nome + " e " + p2.nome + " em teste. Para superar a armadilha em " + locPrincipal + ", ambos precisarão conciliar a força bruta com a sabedoria tática!\n\n" +
+      "🎯 𝗜𝗡𝗦𝗧𝗥𝗨𝗖̧𝗢̃𝗘𝗦 𝗣𝗔𝗥𝗔 𝗢𝗦 𝗝𝗢𝗚𝗔𝗗𝗢𝗥𝗘𝗦:\n" +
+      "1. Dialogar e contrapor suas filosofias de esquadrão no ON (mínimo 30 a 90 linhas).\n" +
+      "2. Superar a discórdia e executar uma estratégia mista impecável.\n\n" +
+      "✧ Recompensa Garantida para Ambos: 15 Pontos de Atributo + 2 Giros Comuns + 1 Especial cada!\n" +
+      "```ㅤㅤ```ㅤㅤㅤ```ㅤㅤ```"
+  };
 
-🎯 𝗜𝗡𝗦𝗧𝗥𝗨𝗖̧𝗢̃𝗘𝗦 𝗣𝗔𝗥𝗔 𝗢𝗦 𝗝𝗢𝗚𝗔𝗗𝗢𝗥𝗘𝗦:
-1. Cenar juntos em interação contínua (mínimo de 30 a 90 linhas conjuntas).
-2. Intercalar ações combinando suas técnicas e liberando suas Zanpakutōs em sincronia.
+  const opcaoConj3 = {
+    id: "conj_opcao_3",
+    nomeOpcao: "🕵️ Opção 3: Operação de Infiltração & Resgate de Alto Risco",
+    tituloArco: "Arco Cruzado: Resgate nas Sombras de " + locPrincipal + " (" + nomesStr + ")",
+    dinamicaDupla: "Infiltração Furtiva & Ataque Cirúrgico",
+    sinopse: "Um oficial do Gotei 13 foi capturado em " + locPrincipal + ". " + p1.nome + " e " + p2.nome + " formam a equipe de extração secreta que deve agir antes da execução do prisioneiro.",
+    eventosCruzados: [
+      {
+        fase: "Fase 1: Infiltração Silenciosa",
+        descricao: "Penetrar na fortaleza inimiga desarmando sentinelas com discrição.",
+        papelPlayer1: "Neutralização rápida de sentinelas.",
+        papelPlayer2: "Ocultação de Reishi e desarmamento de alarmes de Kidō.",
+        ganchoWhats: "Cena de tensão furtiva no ON."
+      },
+      {
+        fase: "Fase 2: A Fuga Crítica",
+        descricao: "O alarme soa e o resgate se transforma em uma perseguição de tirar o fôlego.",
+        papelPlayer1: "Retaguarda e contenção de vagas de inimigos.",
+        papelPlayer2: "Estabilização médica do ferido e rota de fuga.",
+        ganchoWhats: "Cena de perseguição e proteção sob fogo cruzado."
+      },
+      {
+        fase: "Fase 3: O Confronto no Portão",
+        descricao: "Duelo final no ponto de extração para abrir o Senkaimon e garantir a fuga.",
+        papelPlayer1: "Ataque destruidor para abrir caminho.",
+        papelPlayer2: "Abertura e estabilização do portal dimensional.",
+        ganchoWhats: "Finalização épica com missão cumprida com louvor."
+      }
+    ],
+    ameacaComum: {
+      nome: "Guarda de Elite dos Renegados",
+      perigo: "Defesas impenetráveis que exigem infiltração sincronizada.",
+      mecanicaEspecial: "Sucesso depende de coordenação contínua de ações."
+    },
+    briefingWhatsApp: "```ㅤㅤ```ㅤㅤㅤ```ㅤㅤ```\n" +
+      "👑 𝗗𝗢𝗦𝗦𝗜𝗘̂ 𝗗𝗘 𝗧𝗥𝗔𝗠𝗔 𝗖𝗢𝗡𝗝𝗨𝗡𝗧𝗔 • 𝗢𝗣𝗖̧𝗔̃𝗢 𝟯: 𝗢𝗣𝗘𝗥𝗔𝗖̧𝗔̃𝗢 𝗗𝗘 𝗥𝗘𝗦𝗚𝗔𝗧𝗘\n" +
+      "✶ „ Jogadores Envolvidos: " + nomesStr + "\n" +
+      "✶ „ Códigos de Atividade: " + codigosStr + "\n" +
+      "✶ „ Título: Arco Cruzado — Resgate nas Sombras de " + locPrincipal + "\n" +
+      "✶ „ Dinâmica: Infiltração Furtiva & Ataque Cirúrgico\n\n" +
+      "📋 𝗦𝗜𝗡𝗢𝗣𝗦𝗘 𝗖𝗢𝗠𝗣𝗔𝗥𝗧𝗜𝗟𝗛𝗔𝗗𝗔:\n" +
+      "Uma missão de alta espionagem em " + locPrincipal + ". " + p1.nome + " e " + p2.nome + " devem extrair o alvo e romper o cerco inimigo antes que o portal Senkaimon se feche!\n\n" +
+      "🎯 𝗜𝗡𝗦𝗧𝗥𝗨𝗖̧𝗢̃𝗘𝗦 𝗣𝗔𝗥𝗔 𝗢𝗦 𝗝𝗢𝗚𝗔𝗗𝗢𝗥𝗘𝗦:\n" +
+      "1. Cenar a infiltração e resgate coordenado (mínimo 30 a 90 linhas conjuntas).\n" +
+      "2. Dividir tarefas de ataque e cobertura defensiva no ON.\n\n" +
+      "✧ Recompensa Garantida para Ambos: 15 Pontos de Atributo + 2 Giros Comuns + 1 Especial cada!\n" +
+      "```ㅤㅤ```ㅤㅤㅤ```ㅤㅤ```"
+  };
 
-✧ Recompensa Garantida para Ambos: 15 Pontos de Atributo + 2 Giros Comuns + 1 Giro Especial cada!
-\`\`\`ㅤㅤ\`\`\`ㅤㅤㅤ\`\`\`ㅤㅤ\`\`\``
+  return {
+    analiseCenas: {
+      qtdCenas: cList.length,
+      oponentePrincipal: opPrincipal,
+      localPrincipal: locPrincipal,
+      elementosDetectados: analise.elementosDetectados,
+      momentoChave: analise.momentoChave
+    },
+    opcoesTramas: [opcaoConj1, opcaoConj2, opcaoConj3],
+    opcaoAtivaId: "conj_opcao_1",
+    tituloArco: opcaoConj1.tituloArco,
+    dinamicaDupla: opcaoConj1.dinamicaDupla,
+    sinopse: opcaoConj1.sinopse,
+    conflitoCentral: opcaoConj1.sinopse,
+    eventosCruzados: opcaoConj1.eventosCruzados,
+    ameacaComum: opcaoConj1.ameacaComum,
+    briefingWhatsApp: opcaoConj1.briefingWhatsApp
   };
 }
 
-async function gerarTramaIndividualAI({ player, cenas = [], openAiKey = "" }) {
+async function gerarTramaIndividualAI(params) {
+  const player = params?.player;
+  const cenas = params?.cenas || [];
+  const openAiKey = params?.openAiKey || "";
   const heuristicResult = sintetizarTramaIndividualHeuristica(player, cenas);
   const apiKey = (openAiKey || (typeof localStorage !== 'undefined' ? localStorage.getItem("bleach_openai_key") || "" : "")).trim();
 
@@ -4637,38 +4992,37 @@ async function gerarTramaIndividualAI({ player, cenas = [], openAiKey = "" }) {
   }
 
   try {
-    const prompt = `Você é o Mestre Narrador Principal do BLEACH RPG (Soul Society / Seireitei).
-Analise o seguinte jogador e suas cenas de arco para gerar uma Trama Individual profunda, dramática e desafiadora:
-
-DADOS DO JOGADOR:
-- Nome: ${player?.nome || 'Shinigami'}
-- Raça: ${player?.raca || 'Shinigami'}
-- Esquadrão: ${player?.esquadrao || '11º Esquadrão'}
-- Patamar: ${heuristicResult.diagnosticoPsicologico}
-- Zanpakutō: ${player?.zanpakuto?.shikaiAtiva?.nome || player?.zanpakuto?.nome || 'Despertar'}
-- Histórico de Cenas: ${cenas.map(c => `[${c.titulo}]: ${c.texto.slice(0, 150)}`).join(' | ') || 'Nenhuma cena registrada ainda.'}
-
-Responda APENAS em formato JSON válido com as chaves:
-{
-  "tituloArco": string,
-  "faseAtual": string,
-  "diagnosticoPsicologico": string,
-  "ganchoImediato": string,
-  "eventos": [
-    { "numero": 1, "fase": "...", "titulo": "...", "descricao": "...", "objetivoCena": "...", "desafioSugerido": "..." },
-    { "numero": 2, "fase": "...", "titulo": "...", "descricao": "...", "objetivoCena": "...", "desafioSugerido": "..." },
-    { "numero": 3, "fase": "...", "titulo": "...", "descricao": "...", "objetivoCena": "...", "desafioSugerido": "..." }
-  ],
-  "antagonista": { "nome": "...", "titulo": "...", "origem": "...", "motivacao": "...", "fraquezaChave": "..." },
-  "recompensaArco": string,
-  "briefingWhatsApp": string
-}`;
+    const prompt = "Você é o Mestre Narrador Principal do BLEACH RPG (Soul Society / Seireitei).\n" +
+      "Analise o seguinte jogador e suas cenas de arco para gerar 3 Opções de Tramas Individuais com base nas ações e acontecimentos narrados no ON:\n\n" +
+      "DADOS DO JOGADOR:\n" +
+      "- Nome: " + (player?.nome || 'Shinigami') + "\n" +
+      "- Raça: " + (player?.raca || 'Shinigami') + "\n" +
+      "- Esquadrão: " + (player?.esquadrao || '11º Esquadrão') + "\n" +
+      "- Patamar: " + heuristicResult.diagnosticoPsicologico + "\n" +
+      "- Zanpakutō: " + (player?.zanpakuto?.shikaiAtiva?.nome || player?.zanpakuto?.nome || 'Despertar') + "\n" +
+      "- Histórico de Cenas: " + cenas.map(c => "[" + c.titulo + "]: " + c.texto).join(' | ') + "\n\n" +
+      "Responda APENAS em formato JSON válido com as 3 opções de tramas:\n" +
+      JSON.stringify({
+        opcoesTramas: [
+          {
+            id: "opcao_1",
+            nomeOpcao: "⚔️ Opção 1: Caminho do Confronto Direto (Provação Marcial)",
+            tituloArco: "string",
+            focoNarrativo: "string",
+            eventos: [
+              { numero: 1, fase: "...", titulo: "...", descricao: "...", objetivoCena: "...", desafioSugerido: "..." }
+            ],
+            antagonista: { nome: "...", titulo: "...", origem: "...", motivacao: "...", fraquezaChave: "..." },
+            briefingWhatsApp: "string"
+          }
+        ]
+      }, null, 2);
 
     const res = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${apiKey}`
+        "Authorization": "Bearer " + apiKey
       },
       body: JSON.stringify({
         model: "gpt-4o-mini",
@@ -4683,17 +5037,31 @@ Responda APENAS em formato JSON válido com as chaves:
       const content = data?.choices?.[0]?.message?.content;
       if (content) {
         const parsed = JSON.parse(content);
-        return { ...heuristicResult, ...parsed };
+        if (Array.isArray(parsed.opcoesTramas) && parsed.opcoesTramas.length > 0) {
+          const op1 = parsed.opcoesTramas[0];
+          return {
+            ...heuristicResult,
+            opcoesTramas: parsed.opcoesTramas,
+            tituloArco: op1.tituloArco || heuristicResult.tituloArco,
+            ganchoImediato: op1.focoNarrativo || heuristicResult.ganchoImediato,
+            eventos: op1.eventos || heuristicResult.eventos,
+            antagonista: op1.antagonista || heuristicResult.antagonista,
+            briefingWhatsApp: op1.briefingWhatsApp || heuristicResult.briefingWhatsApp
+          };
+        }
       }
     }
   } catch (err) {
-    console.warn("OpenAI API call failed, falling back to heuristic lore engine:", err);
+    console.warn("OpenAI API call failed, falling back to cognitive semantic engine:", err);
   }
 
   return heuristicResult;
 }
 
-async function gerarTramaConjuntaAI({ players = [], cenasConjuntas = [], openAiKey = "" }) {
+async function gerarTramaConjuntaAI(params) {
+  const players = params?.players || [];
+  const cenasConjuntas = params?.cenasConjuntas || [];
+  const openAiKey = params?.openAiKey || "";
   const heuristicResult = sintetizarTramaConjuntaHeuristica(players, cenasConjuntas);
   const apiKey = (openAiKey || (typeof localStorage !== 'undefined' ? localStorage.getItem("bleach_openai_key") || "" : "")).trim();
 
@@ -4702,35 +5070,35 @@ async function gerarTramaConjuntaAI({ players = [], cenasConjuntas = [], openAiK
   }
 
   try {
-    const prompt = `Você é o Mestre Narrador Principal do BLEACH RPG.
-Crie um Arco Compartilhado (Trama Conjunta) para os seguintes jogadores cooperarem ou rivalizarem no ON:
-
-JOGADORES:
-${players.map(p => `- ${p.nome} (${p.raca}, ${p.esquadrao}, Atributos: ${JSON.stringify(p.atributos)})`).join('\n')}
-
-CENAS ARMAZENADAS:
-${cenasConjuntas.map(c => `[${c.autorNome || 'Cena'} - ${c.titulo}]: ${(c.texto || '').slice(0, 150)}`).join('\n') || 'Início de arco conjunto.'}
-
-Responda APENAS em formato JSON válido com as chaves:
-{
-  "tituloArco": string,
-  "dinamicaDupla": string,
-  "sinopse": string,
-  "conflitoCentral": string,
-  "eventosCruzados": [
-    { "fase": "...", "descricao": "...", "papelPlayer1": "...", "papelPlayer2": "...", "ganchoWhats": "..." },
-    { "fase": "...", "descricao": "...", "papelPlayer1": "...", "papelPlayer2": "...", "ganchoWhats": "..." },
-    { "fase": "...", "descricao": "...", "papelPlayer1": "...", "papelPlayer2": "...", "ganchoWhats": "..." }
-  ],
-  "ameacaComum": { "nome": "...", "perigo": "...", "mecanicaEspecial": "..." },
-  "briefingWhatsApp": string
-}`;
+    const prompt = "Você é o Mestre Narrador Principal do BLEACH RPG.\n" +
+      "Analise as cenas dos seguintes jogadores e crie 3 Opções de Tramas Cruzadas / Arcos Compartilhados:\n\n" +
+      "JOGADORES:\n" +
+      players.map(p => "- " + p.nome + " (" + p.raca + ", " + p.esquadrao + ")").join('\n') + "\n\n" +
+      "CENAS ARMAZENADAS:\n" +
+      cenasConjuntas.map(c => "[" + (c.autorNome || 'Cena') + " - " + c.titulo + "]: " + c.texto).join('\n') + "\n\n" +
+      "Responda APENAS em formato JSON com as 3 opções de tramas:\n" +
+      JSON.stringify({
+        opcoesTramas: [
+          {
+            id: "conj_opcao_1",
+            nomeOpcao: "⚔️ Opção 1: Aliança de Sangue (Combate Cooperativo Sincronizado)",
+            tituloArco: "string",
+            dinamicaDupla: "string",
+            sinopse: "string",
+            eventosCruzados: [
+              { fase: "...", descricao: "...", papelPlayer1: "...", papelPlayer2: "...", ganchoWhats: "..." }
+            ],
+            ameacaComum: { nome: "...", perigo: "...", mecanicaEspecial: "..." },
+            briefingWhatsApp: "string"
+          }
+        ]
+      }, null, 2);
 
     const res = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${apiKey}`
+        "Authorization": "Bearer " + apiKey
       },
       body: JSON.stringify({
         model: "gpt-4o-mini",
@@ -4745,11 +5113,23 @@ Responda APENAS em formato JSON válido com as chaves:
       const content = data?.choices?.[0]?.message?.content;
       if (content) {
         const parsed = JSON.parse(content);
-        return { ...heuristicResult, ...parsed };
+        if (Array.isArray(parsed.opcoesTramas) && parsed.opcoesTramas.length > 0) {
+          const op1 = parsed.opcoesTramas[0];
+          return {
+            ...heuristicResult,
+            opcoesTramas: parsed.opcoesTramas,
+            tituloArco: op1.tituloArco || heuristicResult.tituloArco,
+            dinamicaDupla: op1.dinamicaDupla || heuristicResult.dinamicaDupla,
+            sinopse: op1.sinopse || heuristicResult.sinopse,
+            eventosCruzados: op1.eventosCruzados || heuristicResult.eventosCruzados,
+            ameacaComum: op1.ameacaComum || heuristicResult.ameacaComum,
+            briefingWhatsApp: op1.briefingWhatsApp || heuristicResult.briefingWhatsApp
+          };
+        }
       }
     }
   } catch (err) {
-    console.warn("OpenAI joint arc call failed, falling back to heuristic engine:", err);
+    console.warn("OpenAI joint arc call failed, falling back to cognitive semantic engine:", err);
   }
 
   return heuristicResult;
@@ -11830,6 +12210,12 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
   const [msgNuvem, setMsgNuvem] = useState("");
   const [loadingNuvem, setLoadingNuvem] = useState(false);
 
+  // Super-ADM Master Credentials State (Exclusivo ADM Máximo)
+  const [masterUser, setMasterUser] = useState(() => db?.superAdminUsuario || "Malu123");
+  const [masterPass, setMasterPass] = useState(() => db?.superAdminSenha || "Sociedade2026");
+  const [masterNome, setMasterNome] = useState(() => db?.superAdminNome || "ADM Máximo (Comandante Supremo)");
+  const [msgMasterCreds, setMsgMasterCreds] = useState("");
+
   // Dados para Novo Personagem
   const [novoNome, setNovoNome] = useState("");
   const [novoWhats, setNovoWhats] = useState("");
@@ -11847,6 +12233,36 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
   const [atvQtdCenas, setAtvQtdCenas] = useState(5);
   const [atvValorPorCena, setAtvValorPorCena] = useState(100);
   const [atvMotivo, setAtvMotivo] = useState("");
+
+  // Auto-correção caso sub-adm tente acessar aba restrita
+  useEffect(() => {
+    if (!isSuper && ["subadms", "nuvem", "ia", "seguranca"].includes(tabAdm)) {
+      setTabAdm("fichas");
+    }
+  }, [isSuper, tabAdm]);
+
+  function salvarCredenciaisMaster(e) {
+    e.preventDefault();
+    if (!isSuper) {
+      alert("⛔ Acesso Negado: Apenas o ADM Máximo (Comandante Supremo) possui autorização para alterar as credenciais mestre.");
+      return;
+    }
+    if (!masterUser.trim() || !masterPass.trim() || !masterNome.trim()) {
+      alert("Por favor, preencha todos os campos das credenciais master!");
+      return;
+    }
+
+    saveDb({
+      ...db,
+      superAdminUsuario: masterUser.trim(),
+      superAdminSenha: masterPass.trim(),
+      superAdminNome: masterNome.trim()
+    });
+
+    playReiatsuSound('win');
+    setMsgMasterCreds("✓ Credenciais do ADM Máximo atualizadas e protegidas com sucesso!");
+    setTimeout(() => setMsgMasterCreds(""), 4500);
+  }
 
   function lancarAtividadeCenas(targetCharId, qtd, valPorCena, motivo) {
     const pId = targetCharId || atvCharId || (db.personagens && db.personagens[0] ? db.personagens[0].id : "");
@@ -11875,7 +12291,7 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
             {
               id: uid(),
               data: nowStr(),
-              texto: `📊 +${numCenas} cenas no WhatsApp registradas pelo ADM (+${ganhoConhecimento} ₪ Conhecimento)${motivo ? ` — ${motivo}` : ''}`
+              texto: `📊 +${numCenas} cenas no WhatsApp registradas pela Staff (+${ganhoConhecimento} ₪ Conhecimento)${motivo ? ` — ${motivo}` : ''}`
             },
             ...(p.historico || [])
           ]
@@ -11954,6 +12370,11 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
   }
 
   function apagarPersonagem(charId, charNome) {
+    if (!isSuper) {
+      alert("⛔ Acesso Restrito: Apenas o ADM Máximo (Comandante Supremo) possui autorização para excluir fichas permanentemente.");
+      return;
+    }
+
     const confirma = confirm(`⚠️ Tem certeza absoluta que deseja excluir a ficha de ${charNome}?\n\nIsso apagará todos os dados, revogará qualquer login ativo e liberará a Zanpakutō no banco de dados.`);
     if (!confirma) return;
 
@@ -11967,6 +12388,10 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
 
   function adicionarSubAdm(e) {
     e.preventDefault();
+    if (!isSuper) {
+      alert("⛔ Acesso Restrito: Apenas o ADM Máximo pode cadastrar ou alterar avaliadores.");
+      return;
+    }
     if (!novoSubUser.trim() || !novoSubPass.trim() || !novoSubNome.trim()) {
       alert("Preencha todos os campos do sub-administrador.");
       return;
@@ -11986,6 +12411,10 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
   }
 
   function removerSubAdm(subId) {
+    if (!isSuper) {
+      alert("⛔ Acesso Restrito: Apenas o ADM Máximo pode remover avaliadores.");
+      return;
+    }
     if (!confirm("Deseja remover este avaliador?")) return;
     saveDb({ ...db, subAdms: (db.subAdms || []).filter(s => s.id !== subId) });
   }
@@ -12006,7 +12435,7 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
 
     const rollLog = {
       id: uid(),
-      autor: session?.nome || "ADM",
+      autor: session?.nome || (isSuper ? "ADM Máximo" : "Sub-ADM"),
       personagem: dadoChar,
       dado: dadoTipo,
       resultado: res,
@@ -12019,6 +12448,10 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
   }
 
   async function salvarUrlFirebase() {
+    if (!isSuper) {
+      alert("⛔ Acesso Restrito: Apenas o ADM Máximo pode reconfigurar os parâmetros do banco de dados em nuvem.");
+      return;
+    }
     const url = urlNuvemInput.trim();
     if (!url) {
       if (confirm("Deseja desconectar a nuvem e operar apenas em modo local?")) {
@@ -12056,6 +12489,10 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
   }
 
   async function forcarUploadNuvem() {
+    if (!isSuper) {
+      alert("⛔ Acesso Restrito: Apenas o ADM Máximo pode forçar upload global para a nuvem.");
+      return;
+    }
     const url = urlNuvemInput.trim() || activeCloudUrl || db?.firebaseUrl;
     if (!url) {
       alert("Insira a URL do Firebase primeiro!");
@@ -12085,6 +12522,10 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
   }
 
   async function puxarDadosNuvem() {
+    if (!isSuper) {
+      alert("⛔ Acesso Restrito: Apenas o ADM Máximo pode puxar dados da nuvem.");
+      return;
+    }
     const url = urlNuvemInput.trim() || activeCloudUrl || db?.firebaseUrl;
     if (!url) {
       alert("Insira a URL do Firebase primeiro!");
@@ -12116,6 +12557,10 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
   }
 
   function baixarBackupJson() {
+    if (!isSuper) {
+      alert("⛔ Acesso Restrito: Apenas o ADM Máximo pode exportar o backup JSON completo.");
+      return;
+    }
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db, null, 2));
     const downloadAnchor = document.createElement('a');
     downloadAnchor.setAttribute("href", dataStr);
@@ -12127,6 +12572,10 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
   }
 
   function importarBackupJson(e) {
+    if (!isSuper) {
+      alert("⛔ Acesso Restrito: Apenas o ADM Máximo pode restaurar backups JSON.");
+      return;
+    }
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
@@ -12147,41 +12596,49 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
     reader.readAsText(file);
   }
 
+  // Lista Dinâmica de Abas de Acordo com o Cargo (Super-ADM vs Sub-ADM)
+  const tabsDisponiveis = [
+    { id: "fichas", label: "Fichas", icon: "👤" },
+    { id: "tramas", label: "🎭 Tramas & Arcos (IA)", icon: "🎭" },
+    { id: "atividade", label: "📊 Cenas & Conhecimento", icon: "📊" },
+    { id: "novo", label: "+ Criar Ficha", icon: "✨" },
+    { id: "dados", label: "Mesa de Dados", icon: "🎲" },
+    ...(isSuper ? [
+      { id: "subadms", label: "👥 Avaliadores (Sub-ADMs)", icon: "👥" },
+      { id: "nuvem", label: "☁️ Firebase Nuvem", icon: "☁️" },
+      { id: "ia", label: "🤖 IA & ChatGPT", icon: "🤖" },
+      { id: "seguranca", label: "👑 Credenciais Master", icon: "🔒" }
+    ] : [])
+  ];
+
   return (
     <div className="space-y-6">
       <div className="bg-banner-overlay border-2 border-yellow-500/70 rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
         <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <span className="px-3 py-1 bg-yellow-950 border border-yellow-400 text-yellow-300 text-xs font-bold rounded-full uppercase tracking-wider">
-              👑 Painel Central de Comando • {isSuper ? "Comandante Supremo (ADM Máximo)" : "Avaliador Autorizado"}
+              {isSuper ? "👑 Painel Central de Comando • Comandante Supremo (ADM Máximo)" : "🛡️ Painel de Avaliação & Gestão • Avaliador Autorizado (Sub-ADM)"}
             </span>
             <h2 className="font-title text-3xl sm:text-4xl tracking-widest text-yellow-400 mt-2">
               GERENCIADOR DE FICHAS & NARRATIVA
             </h2>
             <p className="text-xs text-bleach-creamDim mt-1">
-              Crie, gerencie, recompense e fiscalize todas as fichas e combates do RPG.
+              {isSuper
+                ? "Controle supremo irrestrito sobre fichas, arcos narrativos com IA, avaliadores, credenciais master e banco de dados."
+                : "Painel de avaliação de treinos, gestão de tramas com IA, lançamento de cenas e criação de personagens."}
             </p>
           </div>
 
           <div className="flex flex-wrap gap-2">
-            {[
-              { id: "fichas", label: "Fichas" },
-              { id: "tramas", label: "🎭 Tramas & Arcos (IA)" },
-              { id: "atividade", label: "📊 Cenas & Conhecimento" },
-              { id: "novo", label: "+ Criar" },
-              { id: "subadms", label: "Avaliadores" },
-              { id: "dados", label: "Dados" },
-              { id: "nuvem", label: "☁️ Firebase" },
-              { id: "ia", label: "🤖 IA & ChatGPT" }
-            ].map(t => (
+            {tabsDisponiveis.map(t => (
               <button
                 key={t.id}
                 onClick={() => setTabAdm(t.id)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase transition ${
-                  tabAdm === t.id ? "bg-yellow-500 text-black font-extrabold shadow" : "bg-black/60 border border-yellow-500/30 text-yellow-200"
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase transition flex items-center gap-1 ${
+                  tabAdm === t.id ? "bg-yellow-500 text-black font-extrabold shadow" : "bg-black/60 border border-yellow-500/30 text-yellow-200 hover:border-yellow-400"
                 }`}
               >
-                {t.label}
+                <span>{t.label}</span>
               </button>
             ))}
           </div>
@@ -12259,24 +12716,19 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
                   const targetPId = atvCharId || (db.personagens?.[0]?.id || "");
                   const selChar = (db.personagens || []).find(p => p.id === targetPId);
                   if (!selChar) return null;
-                  const cod = getCodigoAtividade(selChar);
                   return (
-                    <div className="p-3 bg-bleach-panel rounded-lg border border-yellow-500/30 space-y-1 text-xs">
-                      <div className="flex justify-between">
-                        <span className="text-bleach-muted">Personagem Selecionado:</span>
-                        <strong className="text-white font-bold">{selChar.nome}</strong>
+                    <div className="p-3 bg-bleach-panel2 rounded-lg border border-white/5 space-y-1 text-xs font-mono">
+                      <div className="flex justify-between text-bleach-muted">
+                        <span>Código ON:</span>
+                        <strong className="text-yellow-400">{getCodigoAtividade(selChar)}</strong>
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-bleach-muted">Código de Atividade:</span>
-                        <strong className="text-yellow-400 font-mono">{cod}</strong>
+                      <div className="flex justify-between text-bleach-muted">
+                        <span>Cenas na Semana:</span>
+                        <strong className="text-white">{selChar.cenasSemana || 0} cenas</strong>
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-bleach-muted">Cenas na Semana:</span>
-                        <strong className="text-white font-mono">{selChar.cenasSemana || 0} cenas</strong>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-bleach-muted">Conhecimento Atual:</span>
-                        <strong className="text-yellow-400 font-mono">{selChar.conhecimento || 0} ₪</strong>
+                      <div className="flex justify-between text-bleach-muted">
+                        <span>Saldo Conhecimento:</span>
+                        <strong className="text-yellow-300">{selChar.conhecimento || 0} ₪</strong>
                       </div>
                     </div>
                   );
@@ -12286,25 +12738,24 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
                   <label className="block text-[11px] font-bold text-bleach-creamDim uppercase mb-1">
                     Quantidade de Cenas a Lançar:
                   </label>
-                  <div className="flex gap-2">
+                  <div className="flex items-center gap-2">
                     <input
                       type="number"
                       min="1"
+                      max="100"
                       value={atvQtdCenas}
-                      onChange={(e) => setAtvQtdCenas(Math.max(1, Number(e.target.value) || 1))}
-                      className="w-24 bg-bleach-panel2 border border-bleach-border rounded-lg p-2 text-white font-mono font-bold text-sm text-center"
+                      onChange={(e) => setAtvQtdCenas(Math.max(1, parseInt(e.target.value) || 1))}
+                      className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2 text-xs text-white font-mono"
                     />
-                    <div className="flex flex-wrap gap-1 flex-1">
-                      {[1, 2, 3, 5, 10, 20].map(n => (
+                    <div className="flex gap-1 shrink-0">
+                      {[1, 3, 5, 10].map(val => (
                         <button
-                          key={n}
+                          key={val}
                           type="button"
-                          onClick={() => setAtvQtdCenas(n)}
-                          className={`px-2 py-1 rounded text-xs font-mono font-bold transition border ${
-                            atvQtdCenas === n ? "bg-yellow-500 text-black border-yellow-400" : "bg-black/60 text-bleach-creamDim border-white/10"
-                          }`}
+                          onClick={() => setAtvQtdCenas(val)}
+                          className="px-2 py-1 bg-yellow-950/80 hover:bg-yellow-900 border border-yellow-500/50 text-yellow-300 text-[10px] font-bold rounded"
                         >
-                          +{n}
+                          +{val}
                         </button>
                       ))}
                     </div>
@@ -12478,13 +12929,15 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
                       >
                         ✏️ Gerenciar Ficha
                       </button>
-                      <button
-                        onClick={() => apagarPersonagem(p.id, p.nome)}
-                        className="px-3 py-1.5 bg-red-950 hover:bg-red-900 border border-red-500 text-red-200 text-xs font-bold rounded-lg"
-                        title="Excluir Ficha"
-                      >
-                        🗑️
-                      </button>
+                      {isSuper && (
+                        <button
+                          onClick={() => apagarPersonagem(p.id, p.nome)}
+                          className="px-3 py-1.5 bg-red-950 hover:bg-red-900 border border-red-500 text-red-200 text-xs font-bold rounded-lg"
+                          title="Excluir Ficha (Exclusivo ADM Máximo)"
+                        >
+                          🗑️
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -12524,9 +12977,9 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
         </Section>
       )}
 
-      {/* SUBTAB: SUB-ADMS */}
+      {/* SUBTAB: SUB-ADMS (EXCLUSIVO SUPER-ADM) */}
       {tabAdm === "subadms" && isSuper && (
-        <Section title="Gerenciador de Avaliadores & Sub-Administradores" subtitle="Cadastre avaliadores com senhas individuais">
+        <Section title="Gerenciador de Avaliadores & Sub-Administradores" subtitle="Área exclusiva do ADM Máximo para cadastrar avaliadores com senhas individuais">
           <form onSubmit={adicionarSubAdm} className="p-4 bg-black/60 rounded-xl border border-yellow-500/40 grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs mb-6">
             <div>
               <label className="block text-yellow-300 font-bold mb-1">Nome do Avaliador</label>
@@ -12598,9 +13051,9 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
         </Section>
       )}
 
-      {/* SUBTAB: CONEXÃO FIREBASE & SINCRONIZAÇÃO EM TEMPO REAL */}
-      {tabAdm === "nuvem" && (
-        <Section title="Sincronização em Nuvem — Firebase Realtime Database" subtitle="Configuração de persistência global e sincronização instantânea de fichas">
+      {/* SUBTAB: CONEXÃO FIREBASE & SINCRONIZAÇÃO EM TEMPO REAL (EXCLUSIVO SUPER-ADM) */}
+      {tabAdm === "nuvem" && isSuper && (
+        <Section title="Sincronização em Nuvem — Firebase Realtime Database" subtitle="Configuração de persistência global e sincronização instantânea de fichas (Exclusivo ADM Máximo)">
           <div className="space-y-6">
             <div className="p-5 bg-black/60 border-2 border-yellow-500/50 rounded-2xl space-y-4">
               <div className="flex flex-wrap items-center justify-between gap-3">
@@ -12718,9 +13171,9 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
         </Section>
       )}
 
-      {/* SUBTAB: CONFIGURAÇÃO IA (GOOGLE GEMINI / CHATGPT) */}
-      {tabAdm === "ia" && (
-        <Section title="Motor de Inteligência Artificial — Google Gemini, ChatGPT & Motor Cognitivo" subtitle="Conecte a API gratuita do Google Gemini, OpenAI ou utilize o Motor Cognitivo autoral">
+      {/* SUBTAB: CONFIGURAÇÃO IA (EXCLUSIVO SUPER-ADM) */}
+      {tabAdm === "ia" && isSuper && (
+        <Section title="Motor de Inteligência Artificial — Google Gemini, ChatGPT & Motor Cognitivo" subtitle="Configuração de chaves de API globais (Exclusivo ADM Máximo)">
           <div className="space-y-6">
             <div className="p-5 bg-black/60 border-2 border-yellow-500/50 rounded-2xl space-y-4">
               <div className="flex flex-wrap items-center justify-between gap-3">
@@ -12841,6 +13294,86 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
           </div>
         </Section>
       )}
+
+      {/* SUBTAB: CREDENCIAIS & SEGURANÇA DO ADM MÁXIMO (EXCLUSIVO SUPER-ADM) */}
+      {tabAdm === "seguranca" && isSuper && (
+        <Section 
+          title="👑 Credenciais de Acesso do ADM Máximo (Comandante Supremo)" 
+          subtitle="Área estritamente restrita para alteração de senha mestre, login e nome do ADM Máximo"
+          className="border-2 border-yellow-500/80 shadow-2xl"
+        >
+          <div className="max-w-2xl mx-auto space-y-6">
+            <div className="p-4 bg-yellow-950/40 border border-yellow-500 rounded-xl space-y-2">
+              <span className="px-2.5 py-0.5 bg-yellow-900 text-yellow-300 border border-yellow-400 text-[10px] font-extrabold uppercase rounded-full">
+                🔒 Nível de Segurança: Autoridade Suprema (Selo da Central 46)
+              </span>
+              <h4 className="font-title text-xl text-yellow-300">
+                Proteção de Credenciais do ADM Máximo
+              </h4>
+              <p className="text-xs text-bleach-creamDim leading-relaxed">
+                Sub-Administradores e Avaliadores <strong>não possuem acesso a este painel</strong> e são tecnicamente impedidos de visualizar ou alterar a senha e o login do ADM Máximo.
+              </p>
+            </div>
+
+            <form onSubmit={salvarCredenciaisMaster} className="p-6 bg-black/80 rounded-2xl border-2 border-yellow-500/50 space-y-4 shadow-xl">
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-yellow-400 uppercase">
+                  Nome de Exibição do ADM Máximo:
+                </label>
+                <input
+                  type="text"
+                  value={masterNome}
+                  onChange={(e) => setMasterNome(e.target.value)}
+                  placeholder="Ex: ADM Máximo (Comandante Supremo)"
+                  className="w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-3 text-xs text-white focus:border-yellow-400 focus:outline-none"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-yellow-400 uppercase">
+                  Usuário de Login do ADM Máximo:
+                </label>
+                <input
+                  type="text"
+                  value={masterUser}
+                  onChange={(e) => setMasterUser(e.target.value)}
+                  placeholder="Ex: Malu123"
+                  className="w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-3 text-xs text-white font-mono focus:border-yellow-400 focus:outline-none"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-yellow-400 uppercase">
+                  Nova Senha Master do ADM Máximo:
+                </label>
+                <input
+                  type="text"
+                  value={masterPass}
+                  onChange={(e) => setMasterPass(e.target.value)}
+                  placeholder="Digite a nova senha master..."
+                  className="w-full bg-bleach-panel2 border border-bleach-border rounded-xl p-3 text-xs text-white font-mono focus:border-yellow-400 focus:outline-none"
+                />
+                <span className="text-[10px] text-bleach-muted">
+                  Dica: Guarde esta senha em local seguro. Ela concede controle irrestrito sobre todo o banco de dados do RPG.
+                </span>
+              </div>
+
+              {msgMasterCreds && (
+                <div className="p-3 bg-green-950/80 border border-green-500 text-green-300 text-xs font-bold rounded-xl text-center shadow">
+                  {msgMasterCreds}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                className="w-full py-3 bg-gradient-to-r from-yellow-500 via-amber-500 to-yellow-600 hover:brightness-110 text-black font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-lg transition"
+              >
+                💾 Salvar Novas Credenciais do ADM Máximo
+              </button>
+            </form>
+          </div>
+        </Section>
+      )}
     </div>
   );
 }
@@ -12858,6 +13391,7 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
   const [novaCenaTitulo, setNovaCenaTitulo] = useState("");
   const [novaCenaTexto, setNovaCenaTexto] = useState("");
   const [gerandoIaIndividual, setGerandoIaIndividual] = useState(false);
+  const [opcaoIndivIndex, setOpcaoIndivIndex] = useState(0);
   const [copiadoMsg, setCopiadoMsg] = useState("");
 
   // Estado para Tramas Conjuntas (Multi-Player)
@@ -12869,6 +13403,7 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
   const [novaCenaConjTitulo, setNovaCenaConjTitulo] = useState("");
   const [novaCenaConjTexto, setNovaCenaConjTexto] = useState("");
   const [gerandoIaConjunta, setGerandoIaConjunta] = useState(false);
+  const [opcaoConjIndex, setOpcaoConjIndex] = useState(0);
 
   const openAiKey = (typeof localStorage !== 'undefined') ? localStorage.getItem("bleach_openai_key") || "" : "";
 
@@ -12945,7 +13480,7 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
     playReiatsuSound('shatter');
   }
 
-  // 3. Sintetizar Trama Individual com IA
+  // 3. Sintetizar Trama Individual com IA (Gera 3 Opções de Trama Possíveis)
   async function handleGerarIaIndividual() {
     if (!activeChar) return;
     setGerandoIaIndividual(true);
@@ -12976,7 +13511,10 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
         novasTramasIndiv.push(updatedTrama);
 
         saveDb({ ...db, tramasIndividuais: novasTramasIndiv });
+        setOpcaoIndivIndex(0);
         playReiatsuSound('bankai_charge');
+        setCopiadoMsg("✨ 3 Opções de Trama geradas com sucesso pela IA a partir das cenas do jogador!");
+        setTimeout(() => setCopiadoMsg(""), 4500);
       }
     } catch (err) {
       alert("Erro ao sintetizar trama individual: " + err.message);
@@ -12985,7 +13523,41 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
     }
   }
 
-  // 4. Criar Nova Ficha de Trama Conjunta (Cruzar 2 ou mais Players)
+  // 4. Remover / Limpar Sugestão de Trama Individual
+  function handleRemoverSugestaoIndividual() {
+    if (!confirm("Deseja remover as sugestões de trama da IA para este jogador? (As cenas de arco cadastradas continuarão salvas)")) return;
+    const updatedTrama = { ...tramaIndivAtual, tramaAtual: null };
+    const novasTramasIndiv = tramasIndividuaisList.map(t => t.charId === activeChar.id ? updatedTrama : t);
+    saveDb({ ...db, tramasIndividuais: novasTramasIndiv });
+    playReiatsuSound('shatter');
+    alert("✓ Sugestão de trama removida com sucesso!");
+  }
+
+  // 5. Adotar Opção Específica de Trama Individual
+  function handleAdotarOpcaoIndividual(idx) {
+    if (!tramaIndivAtual.tramaAtual || !tramaIndivAtual.tramaAtual.opcoesTramas) return;
+    const opEscolhida = tramaIndivAtual.tramaAtual.opcoesTramas[idx];
+    if (!opEscolhida) return;
+
+    const updatedTramaAtual = {
+      ...tramaIndivAtual.tramaAtual,
+      opcaoAtivaId: opEscolhida.id,
+      tituloArco: opEscolhida.tituloArco,
+      ganchoImediato: opEscolhida.focoNarrativo,
+      eventos: opEscolhida.eventos,
+      antagonista: opEscolhida.antagonista,
+      briefingWhatsApp: opEscolhida.briefingWhatsApp
+    };
+
+    const updatedTrama = { ...tramaIndivAtual, tramaAtual: updatedTramaAtual };
+    const novasTramasIndiv = tramasIndividuaisList.map(t => t.charId === activeChar.id ? updatedTrama : t);
+    saveDb({ ...db, tramasIndividuais: novasTramasIndiv });
+    playReiatsuSound('win');
+    setCopiadoMsg("✓ Trama [" + opEscolhida.nomeOpcao + "] adotada como oficial para narração!");
+    setTimeout(() => setCopiadoMsg(""), 3500);
+  }
+
+  // 6. Criar Nova Ficha de Trama Conjunta (Cruzar 2 ou mais Players)
   function handleCriarTramaConjunta(e) {
     e.preventDefault();
     if (conjSelectedCharIds.length < 2) {
@@ -13038,7 +13610,7 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
     alert("✓ Ficha de Trama Conjunta criada com sucesso para [" + nomesDupla + "]!");
   }
 
-  // 5. Adicionar Cena Compartilhada na Trama Conjunta
+  // 7. Adicionar Cena Compartilhada na Trama Conjunta
   function handleAdicionarCenaConjunta(e) {
     e.preventDefault();
     if (!tramaConjAtual) return;
@@ -13068,7 +13640,7 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
     alert("✓ Cena compartilhada registrada na Trama Conjunta!");
   }
 
-  // 6. Sintetizar Trama Cruzada com IA
+  // 8. Sintetizar Trama Cruzada com IA (Gera 3 Opções de Trama Cruzadas)
   async function handleGerarIaConjunta() {
     if (!tramaConjAtual) return;
     setGerandoIaConjunta(true);
@@ -13095,7 +13667,10 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
         };
         const novasConjuntas = tramasConjuntasList.map(c => c.id === tramaConjAtual.id ? updatedConj : c);
         saveDb({ ...db, tramasConjuntas: novasConjuntas });
+        setOpcaoConjIndex(0);
         playReiatsuSound('bankai_charge');
+        setCopiadoMsg("✨ 3 Opções de Trama Cruzada geradas com sucesso para a dupla!");
+        setTimeout(() => setCopiadoMsg(""), 4500);
       }
     } catch (err) {
       alert("Erro ao sintetizar trama conjunta: " + err.message);
@@ -13103,6 +13678,26 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
       setGerandoIaConjunta(false);
     }
   }
+
+  // 9. Remover / Limpar Sugestão de Trama Conjunta
+  function handleRemoverSugestaoConjunta() {
+    if (!confirm("Deseja remover as sugestões de trama conjunta da IA? (As cenas compartilhadas continuarão salvas)")) return;
+    const updatedConj = { ...tramaConjAtual, tramaCruzada: null };
+    const novasConjuntas = tramasConjuntasList.map(c => c.id === tramaConjAtual.id ? updatedConj : c);
+    saveDb({ ...db, tramasConjuntas: novasConjuntas });
+    playReiatsuSound('shatter');
+    alert("✓ Sugestão de trama conjunta removida com sucesso!");
+  }
+
+  // Obter opção de trama individual ativa
+  const opIndivAtiva = (tramaIndivAtual.tramaAtual?.opcoesTramas && tramaIndivAtual.tramaAtual.opcoesTramas[opcaoIndivIndex])
+    ? tramaIndivAtual.tramaAtual.opcoesTramas[opcaoIndivIndex]
+    : tramaIndivAtual.tramaAtual;
+
+  // Obter opção de trama conjunta ativa
+  const opConjAtiva = (tramaConjAtual?.tramaCruzada?.opcoesTramas && tramaConjAtual.tramaCruzada.opcoesTramas[opcaoConjIndex])
+    ? tramaConjAtual.tramaCruzada.opcoesTramas[opcaoConjIndex]
+    : tramaConjAtual?.tramaCruzada;
 
   return (
     <div className="space-y-6">
@@ -13123,7 +13718,7 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
               GERENCIADOR DE TRAMAS & ARCOS COM IA
             </h2>
             <p className="text-xs text-bleach-creamDim mt-1 max-w-3xl leading-relaxed">
-              Armazene as cenas de arco dos jogadores, utilize a inteligência artificial para diagnosticar motivações e forjar trilhas de eventos graduais. Caso a história de um player envolva outro, crie fichas de tramas cruzadas integrando suas narrativas!
+              A IA analisa profundamente as cenas de arco e momentos de impacto narrativo dos jogadores, gerando múltiplas opções de tramas sob medida para o ADM ou Sub-ADM escolher e narrar.
             </p>
           </div>
 
@@ -13158,12 +13753,14 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
         </div>
       )}
 
+      {/* ========================================================================= */}
       {/* SUB-ABA 1: TRAMAS INDIVIDUAIS DE JOGADORES */}
+      {/* ========================================================================= */}
       {subAba === "individuais" && (
         <div className="space-y-6">
           <Section
             title="👤 Dossiê Narrativo & Tramas Individuais por Player"
-            subtitle="Selecione um personagem para registrar suas cenas de arco e acionar a IA para preparar seus eventos e antagonistas"
+            subtitle="Selecione um personagem para registrar suas cenas de arco e acionar a IA para analisar o texto e gerar as opções de tramas para o ADM narrar"
             className="border-2 border-purple-500/50"
           >
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -13309,13 +13906,13 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
                 <div className="p-4 bg-gradient-to-r from-purple-950/60 via-black to-purple-950/40 rounded-xl border-2 border-purple-500/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xl">
                   <div>
                     <span className="text-[10px] uppercase font-extrabold px-2.5 py-0.5 rounded bg-purple-900 border border-purple-400 text-purple-200">
-                      Motor de Narrativa & Análise Cognitiva
+                      Motor de Análise Semântica de Cenas & IA Narrativa
                     </span>
                     <h4 className="font-title text-xl text-white mt-1">
-                      Síntese de Trama & Eventos de Arco com IA
+                      Analisar Cenas & Gerar Tramas Possíveis
                     </h4>
                     <p className="text-xs text-bleach-creamDim">
-                      Analisa o histórico de cenas, o esquadrão e o patamar de <strong>{activeChar?.nome}</strong> para forjar 3 eventos graduais e um antagonista sob medida.
+                      A IA lê o conteúdo das cenas registradas de <strong>{activeChar?.nome}</strong>, identifica inimigos, locais e clímax, e gera <strong>3 opções de tramas</strong> para a Staff escolher e narrar.
                     </p>
                   </div>
 
@@ -13328,12 +13925,12 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
                     {gerandoIaIndividual ? (
                       <>
                         <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                        <span>Sintetizando Arco com IA...</span>
+                        <span>Analisando Cenas com IA...</span>
                       </>
                     ) : (
                       <>
                         <span>🧠</span>
-                        <span>Sintetizar Trama com IA</span>
+                        <span>Analisar Cenas & Gerar Tramas</span>
                       </>
                     )}
                   </button>
@@ -13342,47 +13939,119 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
                 {/* Exibição da Trama Sintetizada com IA */}
                 {tramaIndivAtual.tramaAtual ? (
                   <div className="p-5 bg-black/90 rounded-xl border-2 border-purple-500/60 space-y-4 shadow-2xl">
-                    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-purple-500/20 pb-3">
+                    
+                    {/* Header do Card com Botões de Ação */}
+                    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-purple-500/20 pb-3">
                       <div>
                         <span className="px-2.5 py-0.5 bg-purple-950 text-purple-300 border border-purple-400 text-[10px] font-extrabold uppercase rounded-full tracking-wider">
-                          {tramaIndivAtual.tramaAtual.faseAtual || "Fase 1: Convocação & Premonição"}
+                          ✨ Análise Cognitiva Concluída • {tramaIndivAtual.tramaAtual.opcoesTramas?.length || 3} Opções de Tramas Disponíveis
                         </span>
                         <h3 className="font-title text-2xl text-purple-300 mt-1">
-                          {tramaIndivAtual.tramaAtual.tituloArco}
+                          {opIndivAtiva?.tituloArco || tramaIndivAtual.tramaAtual.tituloArco}
                         </h3>
                       </div>
 
-                      <div className="flex gap-2">
+                      <div className="flex flex-wrap items-center gap-2">
                         <button
                           type="button"
-                          onClick={() => copiarTexto(tramaIndivAtual.tramaAtual.briefingWhatsApp, "✓ Dossiê do WhatsApp copiado!")}
+                          onClick={() => handleAdotarOpcaoIndividual(opcaoIndivIndex)}
+                          className="px-3 py-1.5 bg-yellow-950/90 hover:bg-yellow-900 border border-yellow-500 text-yellow-300 font-bold text-xs rounded-lg transition flex items-center gap-1.5 shadow"
+                          title="Definir esta opção como a trama oficial do personagem"
+                        >
+                          <span>👑</span>
+                          <span>Adotar Esta Trama</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => copiarTexto(opIndivAtiva?.briefingWhatsApp || tramaIndivAtual.tramaAtual.briefingWhatsApp, "✓ Dossiê do WhatsApp copiado!")}
                           className="px-3 py-1.5 bg-green-950 hover:bg-green-900 border border-green-500 text-green-300 font-bold text-xs rounded-lg transition flex items-center gap-1.5 shadow"
                         >
                           <span>📋</span>
-                          <span>Copiar para WhatsApp</span>
+                          <span>Copiar WhatsApp</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={handleRemoverSugestaoIndividual}
+                          className="px-3 py-1.5 bg-red-950/80 hover:bg-red-900 border border-red-500 text-red-300 font-bold text-xs rounded-lg transition flex items-center gap-1.5 shadow"
+                          title="Remover as sugestões de trama da IA"
+                        >
+                          <span>🗑️</span>
+                          <span>Remover Sugestão</span>
                         </button>
                       </div>
                     </div>
 
-                    {/* Diagnóstico Psicológico & Gancho */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-                      <div className="p-3.5 bg-bleach-panel2 rounded-xl border border-white/10 space-y-1">
-                        <strong className="text-purple-300 block text-xs uppercase font-bold">🧠 Diagnóstico Psicológico da Alma:</strong>
-                        <p className="text-bleach-creamDim leading-relaxed">{tramaIndivAtual.tramaAtual.diagnosticoPsicologico}</p>
+                    {/* SELETOR DE OPÇÕES DE TRAMAS GERADAS PELA IA */}
+                    {Array.isArray(tramaIndivAtual.tramaAtual.opcoesTramas) && tramaIndivAtual.tramaAtual.opcoesTramas.length > 0 && (
+                      <div className="p-3 bg-purple-950/30 rounded-xl border border-purple-500/40 space-y-2">
+                        <span className="text-[11px] font-extrabold uppercase text-purple-300 tracking-wider block">
+                          🎯 Escolha a Opção de Trama para Narrar:
+                        </span>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                          {tramaIndivAtual.tramaAtual.opcoesTramas.map((op, idx) => (
+                            <button
+                              key={op.id || idx}
+                              type="button"
+                              onClick={() => setOpcaoIndivIndex(idx)}
+                              className={"p-2.5 rounded-lg border text-left text-xs font-bold transition " + (
+                                opcaoIndivIndex === idx
+                                  ? "bg-purple-600 border-purple-300 text-white shadow-[0_0_12px_rgba(168,85,247,0.7)]"
+                                  : "bg-black/60 border-white/10 text-bleach-creamDim hover:border-purple-400"
+                              )}
+                            >
+                              <span className="text-[10px] text-purple-300 block uppercase font-mono">Opção {idx + 1}</span>
+                              <span className="block truncate">{op.nomeOpcao || ("Opção " + (idx + 1))}</span>
+                            </button>
+                          ))}
+                        </div>
                       </div>
-                      <div className="p-3.5 bg-bleach-panel2 rounded-xl border border-white/10 space-y-1">
-                        <strong className="text-yellow-400 block text-xs uppercase font-bold">⚡ Gancho Narrativo Imediato (ON):</strong>
-                        <p className="text-bleach-creamDim leading-relaxed">{tramaIndivAtual.tramaAtual.ganchoImediato}</p>
+                    )}
+
+                    {/* Box de Diagnóstico Semântico da Cena */}
+                    {tramaIndivAtual.tramaAtual.analiseCenas && (
+                      <div className="p-3.5 bg-bleach-panel2 rounded-xl border border-cyan-500/30 text-xs space-y-1.5">
+                        <div className="flex items-center justify-between text-cyan-300 font-bold uppercase text-[10px]">
+                          <span>🔍 Elementos Extraídos das Cenas do Jogador:</span>
+                          <span>{tramaIndivAtual.tramaAtual.analiseCenas.qtdCenas} cena(s) analisada(s)</span>
+                        </div>
+                        <div className="flex flex-wrap gap-1.5 text-[10px] font-mono">
+                          <span className="px-2 py-0.5 bg-red-950/80 border border-red-500 text-red-300 rounded">
+                            💀 Inimigo: {tramaIndivAtual.tramaAtual.analiseCenas.oponentePrincipal}
+                          </span>
+                          <span className="px-2 py-0.5 bg-blue-950/80 border border-blue-500 text-blue-300 rounded">
+                            📍 Local: {tramaIndivAtual.tramaAtual.analiseCenas.localPrincipal}
+                          </span>
+                          {(tramaIndivAtual.tramaAtual.analiseCenas.elementosDetectados || []).slice(0, 2).map((elem, eIdx) => (
+                            <span key={eIdx} className="px-2 py-0.5 bg-purple-950/80 border border-purple-500 text-purple-300 rounded">
+                              ⚡ {elem}
+                            </span>
+                          ))}
+                        </div>
+                        <p className="text-bleach-creamDim text-[11px] leading-relaxed pt-1 border-t border-white/5">
+                          <strong>Momento Chave Analisado:</strong> "{tramaIndivAtual.tramaAtual.analiseCenas.momentoChave}"
+                        </p>
                       </div>
+                    )}
+
+                    {/* Foco Narrativo da Opção Selecionada */}
+                    <div className="p-3.5 bg-bleach-panel2 rounded-xl border border-white/10 space-y-1 text-xs">
+                      <strong className="text-yellow-400 block text-xs uppercase font-bold">
+                        ⚡ Sinopse & Gancho Narrativo ({opIndivAtiva?.nomeOpcao || "Opção Selecionada"}):
+                      </strong>
+                      <p className="text-bleach-creamDim leading-relaxed font-sans">
+                        {opIndivAtiva?.focoNarrativo || opIndivAtiva?.ganchoImediato || tramaIndivAtual.tramaAtual.ganchoImediato}
+                      </p>
                     </div>
 
                     {/* Trilha dos 3 Eventos Planejados */}
                     <div className="space-y-3 pt-2">
                       <h5 className="font-title text-base text-purple-300 flex items-center gap-1.5">
-                        <span>⚔️</span> Trilha de Eventos Planejados para o Arco ({tramaIndivAtual.tramaAtual.eventos?.length || 3} Etapas):
+                        <span>⚔️</span> Trilha de Eventos Planejados para o Arco ({opIndivAtiva?.eventos?.length || 3} Etapas):
                       </h5>
                       <div className="grid grid-cols-1 gap-3">
-                        {(tramaIndivAtual.tramaAtual.eventos || []).map((ev, idx) => (
+                        {(opIndivAtiva?.eventos || tramaIndivAtual.tramaAtual.eventos || []).map((ev, idx) => (
                           <div key={idx} className="p-3.5 bg-purple-950/20 border border-purple-500/30 rounded-xl space-y-2">
                             <div className="flex items-center justify-between gap-2">
                               <span className="px-2 py-0.5 bg-purple-900 text-purple-300 border border-purple-500 font-mono font-bold text-[10px] rounded uppercase">
@@ -13401,26 +14070,26 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
                     </div>
 
                     {/* Antagonista Desenvolvido Sob Medida */}
-                    {tramaIndivAtual.tramaAtual.antagonista && (
+                    {(opIndivAtiva?.antagonista || tramaIndivAtual.tramaAtual.antagonista) && (
                       <div className="p-4 bg-red-950/30 border border-red-500/40 rounded-xl space-y-2">
                         <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-red-900 border border-red-500 text-red-200">
                           Antagonista / Força Opositora
                         </span>
                         <h5 className="font-title text-lg text-red-400">
-                          {tramaIndivAtual.tramaAtual.antagonista.nome} — <span className="text-xs text-bleach-muted">{tramaIndivAtual.tramaAtual.antagonista.titulo}</span>
+                          {(opIndivAtiva?.antagonista || tramaIndivAtual.tramaAtual.antagonista).nome} — <span className="text-xs text-bleach-muted">{(opIndivAtiva?.antagonista || tramaIndivAtual.tramaAtual.antagonista).titulo}</span>
                         </h5>
                         <p className="text-xs text-bleach-creamDim leading-relaxed">
-                          <strong>Motivação:</strong> {tramaIndivAtual.tramaAtual.antagonista.motivacao}
+                          <strong>Motivação:</strong> {(opIndivAtiva?.antagonista || tramaIndivAtual.tramaAtual.antagonista).motivacao}
                         </p>
                         <p className="text-xs text-red-300">
-                          <strong>Brecha / Ponto Fraco:</strong> {tramaIndivAtual.tramaAtual.antagonista.fraquezaChave}
+                          <strong>Brecha / Ponto Fraco:</strong> {(opIndivAtiva?.antagonista || tramaIndivAtual.tramaAtual.antagonista).fraquezaChave}
                         </p>
                       </div>
                     )}
 
                     {/* Recompensa Nivelada */}
                     <div className="p-3 bg-yellow-950/30 border border-yellow-500/40 rounded-lg flex items-center justify-between text-xs text-yellow-300">
-                      <span><strong>🎁 Recompensa Nivelada ao Concluir o Arco:</strong> {tramaIndivAtual.tramaAtual.recompensaArco || '15 Pontos de Atributo + 2 Giros Comuns + 1 Especial'}</span>
+                      <span><strong>🎁 Recompensa Nivelada ao Concluir o Arco:</strong> 15 Pontos de Atributo + 2 Giros Comuns + 1 Especial</span>
                       <span className="font-mono text-[10px] text-bleach-muted">Garantido Oficial</span>
                     </div>
                   </div>
@@ -13429,7 +14098,7 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
                     <span className="text-3xl block">📖</span>
                     <p className="text-sm font-bold text-white">Nenhuma trama individual sintetizada para {activeChar?.nome} ainda.</p>
                     <p className="text-xs text-bleach-creamDim max-w-md mx-auto">
-                      Registre as cenas de arco do jogador e clique no botão acima para a IA analisar a essência do personagem e gerar a trilha de eventos.
+                      Registre as cenas de arco do jogador e clique no botão acima para a IA analisar a narrativa e gerar as 3 opções de tramas.
                     </p>
                   </div>
                 )}
@@ -13481,7 +14150,9 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
         </div>
       )}
 
+      {/* ========================================================================= */}
       {/* SUB-ABA 2: TRAMAS CONJUNTAS & ARCOS CRUZADOS (MULTI-PLAYER) */}
+      {/* ========================================================================= */}
       {subAba === "conjuntas" && (
         <div className="space-y-6">
           <Section
@@ -13515,7 +14186,10 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
                         <button
                           key={c.id}
                           type="button"
-                          onClick={() => setSelectedConjId(c.id)}
+                          onClick={() => {
+                            setSelectedConjId(c.id);
+                            setOpcaoConjIndex(0);
+                          }}
                           className={"w-full p-3 rounded-xl border text-left transition " + (
                             tramaConjAtual?.id === c.id
                               ? "bg-indigo-950/80 border-indigo-400 text-white shadow"
@@ -13624,12 +14298,12 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
                         {gerandoIaConjunta ? (
                           <>
                             <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                            <span>Gerando Trama Cruzada...</span>
+                            <span>Gerando Opções de Trama Cruzada...</span>
                           </>
                         ) : (
                           <>
                             <span>⚡</span>
-                            <span>Gerar Trama Cruzada com IA</span>
+                            <span>Analisar Cenas & Gerar Tramas Cruzadas</span>
                           </>
                         )}
                       </button>
@@ -13638,34 +14312,69 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
                     {/* Exibição da Trama Cruzada Gerada */}
                     {tramaConjAtual.tramaCruzada ? (
                       <div className="p-5 bg-black/90 rounded-xl border-2 border-indigo-500/60 space-y-4 shadow-2xl">
-                        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-indigo-500/20 pb-3">
+                        
+                        {/* Header com Ações */}
+                        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-indigo-500/20 pb-3">
                           <div>
                             <span className="px-2.5 py-0.5 bg-indigo-950 text-indigo-300 border border-indigo-400 text-[10px] font-extrabold uppercase rounded-full">
-                              {tramaConjAtual.tramaCruzada.dinamicaDupla || "Aliança de Esquadrões"}
+                              {opConjAtiva?.dinamicaDupla || tramaConjAtual.tramaCruzada.dinamicaDupla || "Aliança de Esquadrões"}
                             </span>
                             <h3 className="font-title text-2xl text-indigo-300 mt-1">
-                              {tramaConjAtual.tramaCruzada.tituloArco}
+                              {opConjAtiva?.tituloArco || tramaConjAtual.tramaCruzada.tituloArco}
                             </h3>
                           </div>
 
-                          <button
-                            type="button"
-                            onClick={() => copiarTexto(tramaConjAtual.tramaCruzada.briefingWhatsApp, "✓ Briefing conjunto copiado!")}
-                            className="px-3 py-1.5 bg-green-950 hover:bg-green-900 border border-green-500 text-green-300 font-bold text-xs rounded-lg transition flex items-center gap-1.5 shadow"
-                          >
-                            <span>📋</span>
-                            <span>Copiar Briefing para WhatsApp</span>
-                          </button>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => copiarTexto(opConjAtiva?.briefingWhatsApp || tramaConjAtual.tramaCruzada.briefingWhatsApp, "✓ Briefing conjunto copiado!")}
+                              className="px-3 py-1.5 bg-green-950 hover:bg-green-900 border border-green-500 text-green-300 font-bold text-xs rounded-lg transition flex items-center gap-1.5 shadow"
+                            >
+                              <span>📋</span>
+                              <span>Copiar WhatsApp</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={handleRemoverSugestaoConjunta}
+                              className="px-3 py-1.5 bg-red-950/80 hover:bg-red-900 border border-red-500 text-red-300 font-bold text-xs rounded-lg transition flex items-center gap-1.5 shadow"
+                              title="Remover as sugestões de trama conjunta da IA"
+                            >
+                              <span>🗑️</span>
+                              <span>Remover Sugestão</span>
+                            </button>
+                          </div>
                         </div>
+
+                        {/* SELETOR DE OPÇÕES DE TRAMAS CONJUNTAS */}
+                        {Array.isArray(tramaConjAtual.tramaCruzada.opcoesTramas) && tramaConjAtual.tramaCruzada.opcoesTramas.length > 0 && (
+                          <div className="p-3 bg-indigo-950/30 rounded-xl border border-indigo-500/40 space-y-2">
+                            <span className="text-[11px] font-extrabold uppercase text-indigo-300 tracking-wider block">
+                              🎯 Escolha a Opção de Trama Cruzada para Narrar:
+                            </span>
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                              {tramaConjAtual.tramaCruzada.opcoesTramas.map((op, idx) => (
+                                <button
+                                  key={op.id || idx}
+                                  type="button"
+                                  onClick={() => setOpcaoConjIndex(idx)}
+                                  className={"p-2.5 rounded-lg border text-left text-xs font-bold transition " + (
+                                    opcaoConjIndex === idx
+                                      ? "bg-indigo-600 border-indigo-300 text-white shadow-[0_0_12px_rgba(99,102,241,0.7)]"
+                                      : "bg-black/60 border-white/10 text-bleach-creamDim hover:border-indigo-400"
+                                  )}
+                                >
+                                  <span className="text-[10px] text-indigo-300 block uppercase font-mono">Opção {idx + 1}</span>
+                                  <span className="block truncate">{op.nomeOpcao || ("Opção " + (idx + 1))}</span>
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
 
                         <div className="p-3.5 bg-bleach-panel2 rounded-xl border border-white/10 space-y-1 text-xs">
                           <strong className="text-indigo-300 block text-xs uppercase font-bold">📖 Sinopse da Trama Compartilhada:</strong>
-                          <p className="text-bleach-cream leading-relaxed">{tramaConjAtual.tramaCruzada.sinopse}</p>
-                          {tramaConjAtual.tramaCruzada.conflitoCentral && (
-                            <p className="text-yellow-300 pt-1 border-t border-white/5">
-                              <strong>Conflito Central:</strong> {tramaConjAtual.tramaCruzada.conflitoCentral}
-                            </p>
-                          )}
+                          <p className="text-bleach-cream leading-relaxed">{opConjAtiva?.sinopse || tramaConjAtual.tramaCruzada.sinopse}</p>
                         </div>
 
                         {/* Fases Cruzadas */}
@@ -13674,7 +14383,7 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
                             <span>⚔️</span> Fases da Provação Cruzada (Ações Interdependentes):
                           </h5>
                           <div className="grid grid-cols-1 gap-3">
-                            {(tramaConjAtual.tramaCruzada.eventosCruzados || []).map((fase, idx) => (
+                            {(opConjAtiva?.eventosCruzados || tramaConjAtual.tramaCruzada.eventosCruzados || []).map((fase, idx) => (
                               <div key={idx} className="p-3.5 bg-indigo-950/20 border border-indigo-500/30 rounded-xl space-y-2">
                                 <span className="px-2 py-0.5 bg-indigo-900 text-indigo-300 border border-indigo-500 font-mono font-bold text-[10px] rounded uppercase">
                                   {fase.fase || ("Fase " + (idx + 1))}
@@ -13690,11 +14399,11 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
                         </div>
 
                         {/* Ameaça Comum */}
-                        {tramaConjAtual.tramaCruzada.ameacaComum && (
+                        {(opConjAtiva?.ameacaComum || tramaConjAtual.tramaCruzada.ameacaComum) && (
                           <div className="p-3.5 bg-red-950/30 border border-red-500/40 rounded-xl text-xs space-y-1">
                             <strong className="text-red-400 block text-xs uppercase font-bold">💀 Ameaça / Chefe Coletivo:</strong>
-                            <p className="text-white font-bold">{tramaConjAtual.tramaCruzada.ameacaComum.nome}</p>
-                            <p className="text-bleach-creamDim">{tramaConjAtual.tramaCruzada.ameacaComum.perigo}</p>
+                            <p className="text-white font-bold">{(opConjAtiva?.ameacaComum || tramaConjAtual.tramaCruzada.ameacaComum).nome}</p>
+                            <p className="text-bleach-creamDim">{(opConjAtiva?.ameacaComum || tramaConjAtual.tramaCruzada.ameacaComum).perigo}</p>
                           </div>
                         )}
                       </div>
@@ -13703,7 +14412,7 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
                         <span className="text-3xl block">⚡</span>
                         <p className="text-sm font-bold text-white">Nenhum arco compartilhado gerado com IA para esta dupla ainda.</p>
                         <p className="text-xs text-bleach-creamDim max-w-md mx-auto">
-                          Clique no botão "Gerar Trama Cruzada com IA" para entrelaçar as histórias dos jogadores selecionados.
+                          Clique no botão "Analisar Cenas & Gerar Tramas Cruzadas" para entrelaçar as histórias dos jogadores selecionados.
                         </p>
                       </div>
                     )}
@@ -13752,7 +14461,9 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
         </div>
       )}
 
+      {/* ========================================================================= */}
       {/* SUB-ABA 3: VISÃO GERAL DE FICHAS DOS PLAYERS */}
+      {/* ========================================================================= */}
       {subAba === "fichas" && (
         <div className="space-y-6">
           <Section
@@ -13837,7 +14548,9 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
         </div>
       )}
 
+      {/* ========================================================================= */}
       {/* SUB-ABA 4: NIVELAMENTO JUSTO DE RECOMPENSAS ADM / SUB-ADM */}
+      {/* ========================================================================= */}
       {subAba === "nivelamento" && (
         <div className="space-y-6">
           <Section
@@ -13901,7 +14614,9 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
         </div>
       )}
 
+      {/* ========================================================================= */}
       {/* MODAL: CRIAR NOVA TRAMA CONJUNTA */}
+      {/* ========================================================================= */}
       {modalCriarConj && (
         <div className="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
           <div className="relative w-full max-w-lg bg-bleach-panel border-2 border-indigo-500 rounded-2xl p-6 shadow-2xl space-y-4">
