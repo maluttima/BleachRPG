@@ -518,14 +518,17 @@ const DEFAULT_DB = {
       idadeChar: "18",
       aniversarioChar: "15/07",
       pontosDisponiveis: 5,
+      conhecimento: 500,
+      cenasSemana: 5,
+      cenasTotal: 5,
       sorteiosComunsRestantes: 2,
       sorteiosEspeciaisRestantes: 1,
       sorteiosDrops: [],
       permissoes: { shikaiLiberada: true, bankaiLiberada: false },
       atributos: { pressao: 45, forca: 30, velocidade: 60, resiliencia: 25 },
       kidosConhecidos: [
-        { id: "h4", numero: 4, nome: "Byakurai", cat: "Hadō", custoReiatsu: 3 },
-        { id: "b1", numero: 1, nome: "Sai", cat: "Bakudō", custoReiatsu: 2 }
+        { id: "h4", numero: 4, nome: "Byakurai", cat: "Hadō", custoReiatsu: 3, custoConhecimento: 140, pressaoMinima: 18 },
+        { id: "b1", numero: 1, nome: "Sai", cat: "Bakudō", custoReiatsu: 2, custoConhecimento: 95, pressaoMinima: 12 }
       ],
       tecnicas: [
         { id: "t-byak", nome: "Hadō #4 — Byakurai", categoria: "Hadō" },
@@ -609,6 +612,12 @@ function App() {
       idadeChar: p.idadeChar || "18",
       aniversarioChar: p.aniversarioChar || "15/07",
       pontosDisponiveis: Number(p.pontosDisponiveis || 0),
+      conhecimento: p.conhecimento !== undefined
+        ? Number(p.conhecimento)
+        : (p.raca === "Shinigami" ? 450 : 150),
+      cenasSemana: Number(p.cenasSemana || 0),
+      cenasTotal: Number(p.cenasTotal || 0),
+      codigoAtividade: p.codigoAtividade || ((typeof getCodigoAtividade === 'function') ? getCodigoAtividade(p) : 'ACT-0000'),
       sorteiosComunsRestantes: Number(p.sorteiosComunsRestantes || 0),
       sorteiosEspeciaisRestantes: Number(p.sorteiosEspeciaisRestantes || 0),
       sorteiosDrops: Array.isArray(p.sorteiosDrops) ? p.sorteiosDrops : [],
@@ -731,7 +740,7 @@ function App() {
     initDb();
   }, []);
 
-  // Periodic background cloud sync
+  // Periodic background cloud sync with smart conflict resolution
   useEffect(() => {
     if (!activeCloudUrl || cloudStatus !== "connected") return;
     const interval = setInterval(async () => {
@@ -742,15 +751,32 @@ function App() {
         if (res.ok) {
           const cloudData = await res.json();
           if (cloudData && typeof cloudData === 'object' && Array.isArray(cloudData.personagens)) {
-            setDb(prev => ({
-              ...prev,
-              ...cloudData,
-              personagens: cloudData.personagens.map(sanitizeChar).filter(Boolean)
-            }));
+            setDb(prev => {
+              if (!prev || !Array.isArray(prev.personagens)) return prev;
+              const merged = cloudData.personagens.map(cp => {
+                const lp = prev.personagens.find(p => p.id === cp.id);
+                if (!lp) return sanitizeChar(cp);
+                // Keep local values if local has active unsaved progression or higher knowledge/scenes
+                return sanitizeChar({
+                  ...cp,
+                  ...lp,
+                  conhecimento: lp.conhecimento !== undefined ? lp.conhecimento : cp.conhecimento,
+                  cenasSemana: Math.max(Number(lp.cenasSemana || 0), Number(cp.cenasSemana || 0)),
+                  cenasTotal: Math.max(Number(lp.cenasTotal || 0), Number(cp.cenasTotal || 0)),
+                  kidosConhecidos: (lp.kidosConhecidos && lp.kidosConhecidos.length >= (cp.kidosConhecidos?.length || 0)) ? lp.kidosConhecidos : (cp.kidosConhecidos || lp.kidosConhecidos)
+                });
+              }).filter(Boolean);
+
+              return {
+                ...prev,
+                ...cloudData,
+                personagens: merged
+              };
+            });
           }
         }
       } catch (e) {}
-    }, 10000);
+    }, 15000);
     return () => clearInterval(interval);
   }, [activeCloudUrl, cloudStatus]);
 

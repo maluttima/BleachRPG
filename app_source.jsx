@@ -798,7 +798,7 @@ const CATALOGO_KIDOS = [
     "desc": "Dispara uma pequena explosão de energia espiritual concentrada na ponta dos dedos.",
     "custoReiatsu": 1,
     "custoConhecimento": 95,
-    "pressaoMinima": 12
+    "pressaoMinima": 10
   },
   {
     "id": "h2-rekka",
@@ -809,7 +809,7 @@ const CATALOGO_KIDOS = [
     "desc": "Projeta uma lâmina de energia flamejante que corta a média distância.",
     "custoReiatsu": 2,
     "custoConhecimento": 110,
-    "pressaoMinima": 14
+    "pressaoMinima": 10
   },
   {
     "id": "h3-shoge",
@@ -820,7 +820,7 @@ const CATALOGO_KIDOS = [
     "desc": "Dispara uma onda curta e densa de pressão espiritual de impacto cinético.",
     "custoReiatsu": 2,
     "custoConhecimento": 125,
-    "pressaoMinima": 16
+    "pressaoMinima": 10
   },
   {
     "id": "h4-raiko",
@@ -831,7 +831,7 @@ const CATALOGO_KIDOS = [
     "desc": "Dispara um feixe concentrado e perfurante de energia elétrica em linha reta a partir do dedo indicador.",
     "custoReiatsu": 3,
     "custoConhecimento": 140,
-    "pressaoMinima": 18
+    "pressaoMinima": 10
   },
   {
     "id": "h5-kazan",
@@ -842,7 +842,7 @@ const CATALOGO_KIDOS = [
     "desc": "Projeta uma explosão ascendente de energia a partir do solo sob os pés do alvo.",
     "custoReiatsu": 3,
     "custoConhecimento": 155,
-    "pressaoMinima": 20
+    "pressaoMinima": 10
   },
   {
     "id": "h6-getsumen",
@@ -853,7 +853,7 @@ const CATALOGO_KIDOS = [
     "desc": "Dispara uma lâmina curva e cortante de pura energia espiritual.",
     "custoReiatsu": 4,
     "custoConhecimento": 170,
-    "pressaoMinima": 22
+    "pressaoMinima": 15
   },
   {
     "id": "h7-enko",
@@ -863,8 +863,8 @@ const CATALOGO_KIDOS = [
     "incant": "Fogo que dança no ar, siga meu gesto e avance.",
     "desc": "Cria uma rajada curva e envolvente de energia flamejante.",
     "custoReiatsu": 4,
-    "custoConhecimento": 185,
-    "pressaoMinima": 24
+    "custoConhecimento": 190,
+    "pressaoMinima": 15
   },
   {
     "id": "h8-retsufu",
@@ -874,8 +874,8 @@ const CATALOGO_KIDOS = [
     "incant": "Ar que dorme, desperte. Céu que observa, desça.",
     "desc": "Dispara uma rajada concentrada de vento espiritual comprimido capaz de arremessar inimigos.",
     "custoReiatsu": 4,
-    "custoConhecimento": 200,
-    "pressaoMinima": 26
+    "custoConhecimento": 210,
+    "pressaoMinima": 15
   },
   {
     "id": "h9-raimeisen",
@@ -885,8 +885,8 @@ const CATALOGO_KIDOS = [
     "incant": "Entre céu e terra existe apenas um instante. Atravesse-o.",
     "desc": "Dispara uma linha extremamente rápida e relampejante de energia elétrica contínua.",
     "custoReiatsu": 5,
-    "custoConhecimento": 215,
-    "pressaoMinima": 28
+    "custoConhecimento": 230,
+    "pressaoMinima": 15
   },
   {
     "id": "h10-gekka",
@@ -896,8 +896,8 @@ const CATALOGO_KIDOS = [
     "incant": "Abra suas pétalas na escuridão e faça a noite florescer.",
     "desc": "Cria vários projéteis espirituais que se espalham pelo ar e convergem sobre o alvo como pétalas.",
     "custoReiatsu": 5,
-    "custoConhecimento": 230,
-    "pressaoMinima": 30
+    "custoConhecimento": 250,
+    "pressaoMinima": 15
   },
   {
     "id": "h11-tsuzuri",
@@ -907,8 +907,8 @@ const CATALOGO_KIDOS = [
     "incant": "Corrente que flui no metal, percorra o fio e eletrifique a existência.",
     "desc": "Conduz uma corrente elétrica potente através de qualquer objeto condutor ou arma empunhada.",
     "custoReiatsu": 5,
-    "custoConhecimento": 280,
-    "pressaoMinima": 34
+    "custoConhecimento": 315,
+    "pressaoMinima": 33
   },
   {
     "id": "h12-fushibi",
@@ -918,8 +918,8 @@ const CATALOGO_KIDOS = [
     "incant": "Fios invisíveis que tecem o solo, inflamem-se no momento da colisão.",
     "desc": "Cria uma rede oculta de linhas de Reishi que se incendeia subitamente em uma armadilha explosiva.",
     "custoReiatsu": 6,
-    "custoConhecimento": 310,
-    "pressaoMinima": 38
+    "custoConhecimento": 350,
+    "pressaoMinima": 36
   },
   {
     "id": "h20-fumi",
@@ -929,8 +929,8 @@ const CATALOGO_KIDOS = [
     "incant": "Pise no abismo e faça o solo ribombar.",
     "desc": "Descarrega um choque de impacto no chão que gera ondas elétricas concussivas em 360 graus.",
     "custoReiatsu": 6,
-    "custoConhecimento": 550,
-    "pressaoMinima": 70
+    "custoConhecimento": 630,
+    "pressaoMinima": 60
   },
   {
     "id": "h31-shakkaho",
@@ -940,8 +940,8 @@ const CATALOGO_KIDOS = [
     "incant": "Ó senhor! Máscara de carne e osso, toda a criação, o bater de asas, aquele que ostenta o nome do Homem! Na parede de chamas escarlates, grave o grande lótus no topo dos céus ardentes!",
     "desc": "Dispara uma esfera massiva de chamas carmesim altamente destrutiva contra o alvo.",
     "custoReiatsu": 7,
-    "custoConhecimento": 905,
-    "pressaoMinima": 118
+    "custoConhecimento": 1005,
+    "pressaoMinima": 95
   },
   {
     "id": "h32-okisen",
@@ -951,8 +951,8 @@ const CATALOGO_KIDOS = [
     "incant": "Luz amarela que rasga o horizonte, faça brilhar a tempestade solar.",
     "desc": "Dispara uma lâmina horizontal em forma de arco dourado de alta velocidade e poder de cisalhamento.",
     "custoReiatsu": 7,
-    "custoConhecimento": 960,
-    "pressaoMinima": 126
+    "custoConhecimento": 1060,
+    "pressaoMinima": 100
   },
   {
     "id": "h33-sokatsui",
@@ -962,8 +962,8 @@ const CATALOGO_KIDOS = [
     "incant": "Ó senhor! Máscara de carne e osso, toda a criação, o bater de asas, aquele que ostenta o nome do Homem! Verdade e temperança, sobre as paredes do pecado sem culpa, solte tuas garras!",
     "desc": "Dispara uma poderosa torrente torrencial de chamas azuis com amplo raio de destruição em cone.",
     "custoReiatsu": 8,
-    "custoConhecimento": 1015,
-    "pressaoMinima": 134
+    "custoConhecimento": 1115,
+    "pressaoMinima": 105
   },
   {
     "id": "h40-shinren",
@@ -973,8 +973,8 @@ const CATALOGO_KIDOS = [
     "incant": "Queime a ilusão e revele a essência do espírito.",
     "desc": "Manifesta três orbes concêntricos de fogo espiritual que colidem em cadeia provocando combustão contínua.",
     "custoReiatsu": 8,
-    "custoConhecimento": 1400,
-    "pressaoMinima": 190
+    "custoConhecimento": 1500,
+    "pressaoMinima": 140
   },
   {
     "id": "h54-haien",
@@ -984,8 +984,8 @@ const CATALOGO_KIDOS = [
     "incant": "Queime até que nada reste, nem mesmo as cinzas do nome.",
     "desc": "Dispara uma chama roxa obliviante que incinera completamente a matéria e a energia do alvo em contato.",
     "custoReiatsu": 9,
-    "custoConhecimento": 2170,
-    "pressaoMinima": 302
+    "custoConhecimento": 2270,
+    "pressaoMinima": 210
   },
   {
     "id": "h58-tenran",
@@ -995,8 +995,8 @@ const CATALOGO_KIDOS = [
     "incant": "Gire, furacão dos céus, e devore tudo à sua frente.",
     "desc": "Gera um tornado devastador em vórtice cônico a partir da Zanpakutō que arremessa e dilacera estruturas.",
     "custoReiatsu": 9,
-    "custoConhecimento": 2390,
-    "pressaoMinima": 334
+    "custoConhecimento": 2490,
+    "pressaoMinima": 230
   },
   {
     "id": "h63-raikoho",
@@ -1006,8 +1006,8 @@ const CATALOGO_KIDOS = [
     "incant": "Salpique nos ossos da besta! Torre afiada, cristal vermelho, anel de aço. Mova-se e torne-se o vento, pare e torne-se a calma. O som das lanças que se chocam enche o castelo vazio!",
     "desc": "Dispara uma gigantesca e ensurdecedora coluna de eletricidade dourada de poder catastrófico.",
     "custoReiatsu": 10,
-    "custoConhecimento": 2800,
-    "pressaoMinima": 395
+    "custoConhecimento": 2900,
+    "pressaoMinima": 274
   },
   {
     "id": "h73-soren-sokatsui",
@@ -1017,8 +1017,8 @@ const CATALOGO_KIDOS = [
     "incant": "Máscara de carne e osso, toda criação, o bater de asas, aquele que ostenta o nome do Homem! Na parede de chamas azuis, una a coroa dupla nos céus do abismo!",
     "desc": "Versão duplicada e exponencial do Sōkatsui, disparada com ambas as mãos em uma onda colossal de fogo azul.",
     "custoReiatsu": 12,
-    "custoConhecimento": 3800,
-    "pressaoMinima": 545
+    "custoConhecimento": 3900,
+    "pressaoMinima": 354
   },
   {
     "id": "h78-zangerin",
@@ -1028,8 +1028,8 @@ const CATALOGO_KIDOS = [
     "incant": "Lâminas concêntricas da destruição, girem até cortar o próprio espaço.",
     "desc": "Gera e arremessa dezenas de anéis de energia cortante altamente afiados que despedaçam defesas sólidas.",
     "custoReiatsu": 13,
-    "custoConhecimento": 4300,
-    "pressaoMinima": 620
+    "custoConhecimento": 4400,
+    "pressaoMinima": 394
   },
   {
     "id": "h88-hiryu",
@@ -1039,8 +1039,8 @@ const CATALOGO_KIDOS = [
     "incant": "Dragão dos céus relampejantes, desça com a fúria da tempestade primordial e engula a terra!",
     "desc": "Dispara um feixe colossal de energia elétrica pura com a forma de um dragão que desintegra defesas em escala de montanha.",
     "custoReiatsu": 15,
-    "custoConhecimento": 5300,
-    "pressaoMinima": 770
+    "custoConhecimento": 5400,
+    "pressaoMinima": 474
   },
   {
     "id": "h90-kurohitsugi",
@@ -1051,7 +1051,7 @@ const CATALOGO_KIDOS = [
     "desc": "Cria uma imensa caixa negra de gravidade distorcida que empala o inimigo com centenas de lanças de Reishi em um colapso gravitacional.",
     "custoReiatsu": 18,
     "custoConhecimento": 5500,
-    "pressaoMinima": 800
+    "pressaoMinima": 500
   },
   {
     "id": "h91-senju",
@@ -1062,7 +1062,7 @@ const CATALOGO_KIDOS = [
     "desc": "Gera dez pontas de lança de energia pura ao redor do conjurador que convergem em uma saraivada aniquiladora sobre o alvo.",
     "custoReiatsu": 20,
     "custoConhecimento": 5950,
-    "pressaoMinima": 950
+    "pressaoMinima": 550
   },
   {
     "id": "h96-itto-kaso",
@@ -1073,7 +1073,7 @@ const CATALOGO_KIDOS = [
     "desc": "Uma pilar titânico de chamas vermelhas em forma de lâmina de katana que se ergue do solo incinerando tudo em seu rastro.",
     "custoReiatsu": 25,
     "custoConhecimento": 8200,
-    "pressaoMinima": 1700
+    "pressaoMinima": 800
   },
   {
     "id": "h99-goryutenbo",
@@ -1084,7 +1084,7 @@ const CATALOGO_KIDOS = [
     "desc": "Invoca cinco gigantescos dragões de pura energia espiritual que emergem da terra devorando toda a Reiatsu do ambiente e aniquilando exércitos.",
     "custoReiatsu": 30,
     "custoConhecimento": 9550,
-    "pressaoMinima": 2150
+    "pressaoMinima": 950
   },
   {
     "id": "b1-sai",
@@ -1095,7 +1095,7 @@ const CATALOGO_KIDOS = [
     "desc": "Imobiliza os braços do oponente atrás das costas com uma força invisível de Reishi comprimido.",
     "custoReiatsu": 1,
     "custoConhecimento": 95,
-    "pressaoMinima": 12
+    "pressaoMinima": 10
   },
   {
     "id": "b4-hainawa",
@@ -1106,7 +1106,7 @@ const CATALOGO_KIDOS = [
     "desc": "Lança uma corda de energia luminosa e flexível que se enrola firmemente nos membros do oponente.",
     "custoReiatsu": 2,
     "custoConhecimento": 140,
-    "pressaoMinima": 18
+    "pressaoMinima": 10
   },
   {
     "id": "b8-seki",
@@ -1116,8 +1116,8 @@ const CATALOGO_KIDOS = [
     "incant": "Escudo circular, rejeite o toque e empurre a ameaça.",
     "desc": "Gera um escudo redondo de energia no punho que repele ataques físicos e atordoa o atacante.",
     "custoReiatsu": 2,
-    "custoConhecimento": 200,
-    "pressaoMinima": 26
+    "custoConhecimento": 210,
+    "pressaoMinima": 15
   },
   {
     "id": "b9-geki",
@@ -1127,8 +1127,8 @@ const CATALOGO_KIDOS = [
     "incant": "Desintegre-se, cão negro de Rondanini! Olhe para si mesmo com pavor e rasgue a própria garganta!",
     "desc": "Envolve o alvo em uma aura vermelha brilhante que paralisa completamente suas articulações e sistema nervoso.",
     "custoReiatsu": 3,
-    "custoConhecimento": 215,
-    "pressaoMinima": 28
+    "custoConhecimento": 230,
+    "pressaoMinima": 15
   },
   {
     "id": "b9-horin",
@@ -1138,8 +1138,8 @@ const CATALOGO_KIDOS = [
     "incant": "Desintegre-se, cão negro de Rondanini! Torne-se a corda da prisão!",
     "desc": "Dispara uma teia de feixes de luz laranja a partir dos dedos que prende e eletrocuta o alvo com Reishi condensado.",
     "custoReiatsu": 3,
-    "custoConhecimento": 215,
-    "pressaoMinima": 28
+    "custoConhecimento": 230,
+    "pressaoMinima": 15
   },
   {
     "id": "b21-sekienton",
@@ -1149,8 +1149,8 @@ const CATALOGO_KIDOS = [
     "incant": "Fumaça carmesim, cubra a visão e apague o rastro.",
     "desc": "Dispara uma densa cortina de fumaça vermelha espiritual do solo que mascara presença e cega os arredores.",
     "custoReiatsu": 4,
-    "custoConhecimento": 580,
-    "pressaoMinima": 74
+    "custoConhecimento": 665,
+    "pressaoMinima": 63
   },
   {
     "id": "b26-kyokko",
@@ -1160,8 +1160,8 @@ const CATALOGO_KIDOS = [
     "incant": "Curve a luz ao redor da forma e esconda a essência.",
     "desc": "Refrata a luz ao redor do usuário, tornando-o completamente invisível a olhos nus e camuflando sua assinatura de Reiatsu.",
     "custoReiatsu": 5,
-    "custoConhecimento": 730,
-    "pressaoMinima": 94
+    "custoConhecimento": 840,
+    "pressaoMinima": 78
   },
   {
     "id": "b30-shitotsu",
@@ -1171,8 +1171,8 @@ const CATALOGO_KIDOS = [
     "incant": "Grave os três cantos do triângulo e tranque o movimento.",
     "desc": "Dispara três estacas afiadas de luz que prendem os braços e o tronco do alvo contra paredes ou o solo em formato triangular.",
     "custoReiatsu": 6,
-    "custoConhecimento": 850,
-    "pressaoMinima": 110
+    "custoConhecimento": 980,
+    "pressaoMinima": 90
   },
   {
     "id": "b37-tsuriboshi",
@@ -1182,8 +1182,8 @@ const CATALOGO_KIDOS = [
     "incant": "Estrela do firmamento, estenda teus laços e sustente o peso.",
     "desc": "Cria uma rede elástica de Reishi em forma de estrela ancorada em seis pontos capaz de amortecer quedas de grande impacto.",
     "custoReiatsu": 6,
-    "custoConhecimento": 1235,
-    "pressaoMinima": 166
+    "custoConhecimento": 1335,
+    "pressaoMinima": 125
   },
   {
     "id": "b39-enkosen",
@@ -1193,8 +1193,8 @@ const CATALOGO_KIDOS = [
     "incant": "Gire, disco de Reishi, e bloqueie o corte que se aproxima.",
     "desc": "Materializa um escudo circular condensado e translúcido de energia espiritual diante do usuário capaz de bloquear golpes pesados.",
     "custoReiatsu": 7,
-    "custoConhecimento": 1345,
-    "pressaoMinima": 182
+    "custoConhecimento": 1445,
+    "pressaoMinima": 135
   },
   {
     "id": "b58-kakushitsujaku",
@@ -1204,8 +1204,8 @@ const CATALOGO_KIDOS = [
     "incant": "Coração do sul, olho do norte, dedo do leste, calcanhar do oeste. Reúnam-se e alcancem o horizonte!",
     "desc": "Rastreia e localiza a assinatura exata de Reiatsu de qualquer indivíduo em um raio de dezenas de quilômetros.",
     "custoReiatsu": 8,
-    "custoConhecimento": 2390,
-    "pressaoMinima": 334
+    "custoConhecimento": 2490,
+    "pressaoMinima": 230
   },
   {
     "id": "b61-rikujokoro",
@@ -1215,8 +1215,8 @@ const CATALOGO_KIDOS = [
     "incant": "Carruagem do trovão, ponte da roda giratória, com luz divida isto em seis!",
     "desc": "Invoca seis feixes de luz rígidos e brilhantes que cravam na cintura do alvo, paralisando completamente seus movimentos e fluxo de Reishi.",
     "custoReiatsu": 9,
-    "custoConhecimento": 2600,
-    "pressaoMinima": 365
+    "custoConhecimento": 2700,
+    "pressaoMinima": 258
   },
   {
     "id": "b62-hyapporankan",
@@ -1226,8 +1226,8 @@ const CATALOGO_KIDOS = [
     "incant": "Multiplique-se em cem pontas e crave a terra sem deixar fresta!",
     "desc": "O usuário arremessa uma haste luminosa que se divide em uma chuva de cem estacas de contenção prendendo o alvo no solo.",
     "custoReiatsu": 9,
-    "custoConhecimento": 2700,
-    "pressaoMinima": 380
+    "custoConhecimento": 2800,
+    "pressaoMinima": 266
   },
   {
     "id": "b63-sajo-sabaku",
@@ -1237,8 +1237,8 @@ const CATALOGO_KIDOS = [
     "incant": "Correntes de ferro espiritual, apertem o corpo e restrinjam a alma.",
     "desc": "Materializa grossas correntes douradas de Reishi que envolvem o corpo do inimigo do pescoço aos pés impedindo qualquer reação física.",
     "custoReiatsu": 10,
-    "custoConhecimento": 2800,
-    "pressaoMinima": 395
+    "custoConhecimento": 2900,
+    "pressaoMinima": 274
   },
   {
     "id": "b73-tozansho",
@@ -1248,8 +1248,8 @@ const CATALOGO_KIDOS = [
     "incant": "Erga os quatro cantos e sele o espaço sob a cúpula inviolável.",
     "desc": "Gera uma gigantesca barreira em formato de pirâmide invertida para proteção de grupos ou contenção de explosões de alta intensidade.",
     "custoReiatsu": 11,
-    "custoConhecimento": 3800,
-    "pressaoMinima": 545
+    "custoConhecimento": 3900,
+    "pressaoMinima": 354
   },
   {
     "id": "b75-gochutekkan",
@@ -1259,8 +1259,8 @@ const CATALOGO_KIDOS = [
     "incant": "Paredes de areia de ferro, torre de cinco andares, fumaça ardente. Cinco pilares de aço, desçam e prendam o dragão!",
     "desc": "Invoca cinco colossais pilares de ferro espiritual ligados por correntes pesadas que caem do céu esmagando e imobilizando o alvo.",
     "custoReiatsu": 12,
-    "custoConhecimento": 4000,
-    "pressaoMinima": 575
+    "custoConhecimento": 4100,
+    "pressaoMinima": 370
   },
   {
     "id": "b77-tenteikura",
@@ -1270,8 +1270,8 @@ const CATALOGO_KIDOS = [
     "incant": "Rede preta e branca! Vinte e dois canais! Cinquenta e sete anéis de ferro! Sons que ecoam na escuridão, transmitam a mensagem para além do horizonte!",
     "desc": "Conecta telepaticamente a mente do conjurador a múltiplos alvos simultâneos transmitindo mensagens de voz e coordenadas táticas.",
     "custoReiatsu": 12,
-    "custoConhecimento": 4200,
-    "pressaoMinima": 605
+    "custoConhecimento": 4300,
+    "pressaoMinima": 386
   },
   {
     "id": "b79-kuyo-shibari",
@@ -1281,8 +1281,8 @@ const CATALOGO_KIDOS = [
     "incant": "Nove sóis do firmamento, cerquem o vazio e tranquem a respiração.",
     "desc": "Manifesta nove orbes de buracos negros de Reishi que cercam o oponente em 360 graus travando toda a sua musculatura e circulação espiritual.",
     "custoReiatsu": 14,
-    "custoConhecimento": 4400,
-    "pressaoMinima": 635
+    "custoConhecimento": 4500,
+    "pressaoMinima": 402
   },
   {
     "id": "b81-danku",
@@ -1292,8 +1292,8 @@ const CATALOGO_KIDOS = [
     "incant": "Parede translúcida que separa os mundos. Nenhuma destruição abaixo de oitenta e nove tocará este espaço.",
     "desc": "Cria uma parede retangular de energia que bloqueia e anula completamente qualquer Hadō de nível 89 ou inferior.",
     "custoReiatsu": 15,
-    "custoConhecimento": 4600,
-    "pressaoMinima": 665
+    "custoConhecimento": 4700,
+    "pressaoMinima": 418
   },
   {
     "id": "b99-kin",
@@ -1304,7 +1304,7 @@ const CATALOGO_KIDOS = [
     "desc": "Prende os braços do oponente com tiras de tecido espiritual reforçadas por estacas de ferro nos membros.",
     "custoReiatsu": 20,
     "custoConhecimento": 9550,
-    "pressaoMinima": 2150
+    "pressaoMinima": 950
   },
   {
     "id": "b99-bankin",
@@ -1315,7 +1315,7 @@ const CATALOGO_KIDOS = [
     "desc": "O ápice do aprisionamento: envolve o alvo em faixas mágicas, crava cem parafusos de aço espiritual e esmaga o ser sob um monólito titânico.",
     "custoReiatsu": 25,
     "custoConhecimento": 9550,
-    "pressaoMinima": 2150
+    "pressaoMinima": 950
   },
   {
     "id": "k1-chiyaku",
@@ -1325,8 +1325,8 @@ const CATALOGO_KIDOS = [
     "incant": "Acalme a respiração e tranquilize a agitação do espírito.",
     "desc": "Restaura o fôlego espiritual e ameniza dores leves de combate superficial.",
     "custoReiatsu": 2,
-    "custoConhecimento": 110,
-    "pressaoMinima": 18
+    "custoConhecimento": 105,
+    "pressaoMinima": 10
   },
   {
     "id": "k6-seika",
@@ -1336,8 +1336,8 @@ const CATALOGO_KIDOS = [
     "incant": "Aquilo que não pertence ao corpo, deixe-o. Aquilo que pertence, permaneça.",
     "desc": "Remove toxinas, venenos e impurezas espirituais retidas nos tecidos.",
     "custoReiatsu": 4,
-    "custoConhecimento": 210,
-    "pressaoMinima": 33
+    "custoConhecimento": 195,
+    "pressaoMinima": 15
   },
   {
     "id": "k9-kekkai-seimei",
@@ -1348,7 +1348,7 @@ const CATALOGO_KIDOS = [
     "desc": "Cria um selo estéril ao redor do ferimento, estancando hemorragias e impedindo infecções.",
     "custoReiatsu": 5,
     "custoConhecimento": 270,
-    "pressaoMinima": 42
+    "pressaoMinima": 15
   },
   {
     "id": "k10-chiyu",
@@ -1358,8 +1358,8 @@ const CATALOGO_KIDOS = [
     "incant": "Corpo ferido, espírito cansado. Reúna aquilo que ainda permanece.",
     "desc": "Acelera significativamente a regeneração de ferimentos moderados e lacerações de lâmina.",
     "custoReiatsu": 5,
-    "custoConhecimento": 290,
-    "pressaoMinima": 45
+    "custoConhecimento": 295,
+    "pressaoMinima": 15
   },
   {
     "id": "k15-meimei",
@@ -1369,8 +1369,8 @@ const CATALOGO_KIDOS = [
     "incant": "Enquanto houver chama, haverá caminho. Enquanto houver espírito, haverá retorno.",
     "desc": "Estabiliza emergencialmente pacientes à beira da derrota ou inconsciência reanimando o fluxo do Hakusui.",
     "custoReiatsu": 7,
-    "custoConhecimento": 645,
-    "pressaoMinima": 110
+    "custoConhecimento": 620,
+    "pressaoMinima": 60
   },
   {
     "id": "k16-hikari-ito",
@@ -1380,8 +1380,8 @@ const CATALOGO_KIDOS = [
     "incant": "Fios de luz, atravessem a ferida. Unam aquilo que foi separado.",
     "desc": "Tecelagem cirúrgica de Reishi que sutura músculos, vasos sanguíneos e tendões rompidos.",
     "custoReiatsu": 8,
-    "custoConhecimento": 710,
-    "pressaoMinima": 122
+    "custoConhecimento": 680,
+    "pressaoMinima": 65
   },
   {
     "id": "k20-shomei",
@@ -1391,8 +1391,8 @@ const CATALOGO_KIDOS = [
     "incant": "Luz que atravessa corpo e alma, encontre aquilo que ainda pode ser salvo.",
     "desc": "Regenera tecidos profundos e fraturas ósseas estabilizando ferimentos graves.",
     "custoReiatsu": 10,
-    "custoConhecimento": 970,
-    "pressaoMinima": 170
+    "custoConhecimento": 920,
+    "pressaoMinima": 85
   },
   {
     "id": "k30-sosho",
@@ -1402,8 +1402,8 @@ const CATALOGO_KIDOS = [
     "incant": "Fluxo verdejante da alma, reconstrua a carne e purifique as cicatrizes.",
     "desc": "Restaura grandes perdas musculares e queimaduras espirituais severas restaurando a mobilidade do combatente.",
     "custoReiatsu": 12,
-    "custoConhecimento": 1800,
-    "pressaoMinima": 280
+    "custoConhecimento": 1600,
+    "pressaoMinima": 140
   },
   {
     "id": "k50-hansho",
@@ -1413,8 +1413,8 @@ const CATALOGO_KIDOS = [
     "incant": "Desperte a semente do espírito nos confins do corpo exausto.",
     "desc": "Restaura membros paralisados por veneno ou choque de Reiatsu restabelecendo 60% da vitalidade total.",
     "custoReiatsu": 15,
-    "custoConhecimento": 3200,
-    "pressaoMinima": 480
+    "custoConhecimento": 2800,
+    "pressaoMinima": 240
   },
   {
     "id": "k70-saisei",
@@ -1424,8 +1424,8 @@ const CATALOGO_KIDOS = [
     "incant": "Fonte eterna do Seireitei, regenere a fibra da alma e feche o abismo da morte.",
     "desc": "Regenera órgãos internos e repara danos críticos de Bankai ou perfurações fatais.",
     "custoReiatsu": 18,
-    "custoConhecimento": 4800,
-    "pressaoMinima": 780
+    "custoConhecimento": 4400,
+    "pressaoMinima": 410
   },
   {
     "id": "k90-shokatsu",
@@ -1435,11 +1435,192 @@ const CATALOGO_KIDOS = [
     "incant": "Ápice supremo do Kaidō. Transcendência médica da 4ª Divisão. A vida sobrepuja o fim.",
     "desc": "Restaura completamente o paciente do estado 'Derrotado' ou 'Debilitado' para 'Inteiro', reconstituindo circulação e tecido espiritual por completo.",
     "custoReiatsu": 24,
-    "custoConhecimento": 8000,
-    "pressaoMinima": 1450
+    "custoConhecimento": 7300,
+    "pressaoMinima": 900
   }
 ];
 const PATCH_NOTES_HISTORY = [
+  {
+    "versao": "6.4",
+    "titulo": "Simulador de Kaidō na Aba de Kidōs, Bônus de 30% por Encantamento (Eishō) & Loja por Conhecimento",
+    "data": "24 de Agosto de 2026",
+    "destaque": "Sub-aba dedicada de Kaidō na Ficha, bônus de +30% da Pressão Espiritual ao recitar o encantamento completo (Eishō), injeção livre de Pressão Extra nos feitiços, aquisição na Loja exclusivamente por Conhecimento e blindagem contra reset de dados.",
+    "banner": "assets/bleach-banner.png",
+    "resumo": "Uma atualização definitiva para o sistema de magia e cura da Sociedade das Almas. Os Kidōs agora contam com o bônus canônico de +30% da Pressão Espiritual do conjurador quando o encantamento poético (Eishō) é recitado, a aba de Kidōs da ficha agora possui uma sub-aba exclusiva e dedicada para o Simulador de Kaidō do 4º Esquadrão, a compra de feitiços passa a custar exclusivamente Conhecimento (sem travas de Pressão mínima para a compra) e o sistema de sincronização foi blindado contra resets indesejados.",
+    "secoes": [
+      {
+        "tipo": "novo",
+        "titulo": "🌿 Sub-Aba Dedicada de Kaidō & Simulação de Cura na Ficha de Kidōs",
+        "itens": [
+          "✦ **Navegação Direta na Ficha**: A aba de Kidōs agora possui duas seções intuitivas: `💥 Feitiços & Combate (Hadō / Bakudō)` e `🌿 Kaidō & Simulação de Cura (4º Esquadrão)`.",
+          "✦ **Simulação Médica Completa**: Escolha o estado do paciente (💀 Derrotado, 🩸 Debilitado, 🩹 Ferido), ative a recitação do encantamento e veja o tempo exato de tratamento no ON (1 a 4 cenas contínuas no WhatsApp), a evolução vital do aliado e o roteiro narrativo oficial."
+        ]
+      },
+      {
+        "tipo": "buff",
+        "titulo": "📖 Bônus de +30% de Pressão Espiritual por Encantamento Completo (Eishō)",
+        "itens": [
+          "✦ **Potencialização Canônica**: Recitar o encantamento poético adiciona **+30% da Pressão Espiritual Total do Conjurador** diretamente ao poder final de qualquer Hadō, Bakudō ou Kaidō.",
+          "✦ **Comparativo Visual Instantâneo**: Todos os modais e simuladores exibem lado a lado a potência do disparo rápido sem encantamento vs a potência devastadora com encantamento recitado."
+        ]
+      },
+      {
+        "tipo": "novo",
+        "titulo": "🌀 Injeção de Pressão Espiritual Extra no Feitiço",
+        "itens": [
+          "✦ **Canalização Livre de Reishi**: O conjurador pode escolher injetar +10, +25, +50 ou +100 pts de Pressão Espiritual adicional no feitiço para amplificar seu impacto de combate ou acelerar a cura de ferimentos mortais."
+        ]
+      },
+      {
+        "tipo": "regras",
+        "titulo": "📚 Aquisição na Loja Exclusivamente por Conhecimento (₪)",
+        "itens": [
+          "✦ **Fim da Trava de Pressão para Compra**: Para aprender um feitiço na Biblioteca do Seireitei, o único custo é o Conhecimento (₪) e o espaço de slots de feitiço do seu Patamar.",
+          "✦ **Blindagem Anti-Reset na Nuvem**: Corrigida a sincronização periódica em segundo plano para proteger os saldos de Conhecimento e cenas contra sobreposições de dados desatualizados."
+        ]
+      }
+    ]
+  },
+  {
+    "versao": "6.3",
+    "titulo": "Simulador Médico Universal de Kaidō & Cálculo de Cenas de Cura",
+    "data": "24 de Agosto de 2026",
+    "destaque": "Simulador de Kaidō integrado diretamente na aba de Atributos da Ficha e na Central Geral de Kidōs, com cálculo exato de Cenas no WhatsApp, evolução vital (Derrotado ➔ Inteiro), restauração de HP e Roteiro Passo a Passo por Cena.",
+    "banner": "assets/bleach-banner.png",
+    "resumo": "Uma atualização definitiva para o sistema de medicina espiritual do 4º Esquadrão. O Simulador de Cura de Kaidō agora está disponível em todos os pontos do sistema (Aba de Atributos como o 5º Modo Oficial de Aplicação, Aba de Kidōs da Ficha e Compêndio Supremo de Magias), calculando dinamicamente a duração em cenas que o curandeiro precisa manter o feitiço ativo no ON para recuperar totalmente seus aliados.",
+    "secoes": [
+      {
+        "tipo": "novo",
+        "titulo": "🌿 5º Modo Oficial no Simulador de Atributos: Kaidō & Cura Médica",
+        "itens": [
+          "✦ **Integração na Aba de Atributos**: Ao lado de Força X Resiliência, Força X Força, Velocidade X Velocidade e Pressão X Pressão, agora existe o modo **🌿 Kaidō & Cura Médica**, permitindo testar a eficácia da Pressão Espiritual na cura de aliados.",
+          "✦ **Seletor de Estado do Paciente**: Escolha entre 💀 **Derrotado** (Crítico/Coma), 🩸 **Debilitado** (Fraturas/Hemorragias graves) e 🩹 **Ferido** (Cortes/Moderado).",
+          "✦ **Cálculo de Cenas no WhatsApp**: Revela se a recuperação exige 1, 2, 3 ou 4 cenas contínuas no ON.",
+          "✦ **Roteiro Narrativo por Cena**: Orienta o jogador exatamente sobre como descrever a evolução médica em cada cena no grupo do WhatsApp."
+        ]
+      },
+      {
+        "tipo": "regras",
+        "titulo": "📖 Central Geral de Kidōs com Simulador de Kaidō Integrado",
+        "itens": [
+          "✦ **Simulador Aberto no Grimório**: Jogadores e mestres agora podem simular tratamentos médicos na aba geral de Kidōs do menu superior, sem necessidade de possuir a ficha aberta.",
+          "✦ **Ajuste de Requisitos para Iniciantes**: Feitiços básicos de cura (#1 ao #5) calibrados para a Pressão Espiritual inicial (10 pts), permitindo que qualquer recém-formado do 4º Esquadrão pratique Kaidō."
+        ]
+      }
+    ]
+  },
+  {
+    "versao": "6.2",
+    "titulo": "Fundo Inicial Shinigami, Sincronização Automática de Cenas & Limite Escalonado de Feitiços",
+    "data": "24 de Agosto de 2026",
+    "destaque": "Fundo Inicial de 450 ₪ de Conhecimento para Shinigamis (Escolha Livre de 4 Kidōs), Sincronização Direta de Cenas no WhatsApp (1 cena = 100 ₪), Limite e Capacidade Escalonada de Feitiços por Patamar Espiritual e Barra de Gestão Rápida de ADM.",
+    "banner": "assets/bleach-banner.png",
+    "resumo": "Uma atualização estrutural no equilíbrio místico que concede liberdade inicial aos Shinigamis através de uma reserva de 450 ₪ de Conhecimento para escolherem seus 4 primeiros Kidōs na loja, vincula a geração de Conhecimento à produção de cenas no WhatsApp de forma automatizada e estabelece o teto de feitiços ativos de acordo com o Patamar de Pressão Espiritual do personagem.",
+    "secoes": [
+      {
+        "tipo": "novo",
+        "titulo": "📚 Fundo Inicial de Conhecimento Shinigami (450 ₪)",
+        "itens": [
+          "✦ **Fim dos Feitiços Fixos Obrigatórios**: Shinigamis recém-criados ou resetados não recebem mais magias fixas pré-definidas. Em vez disso, recebem um **Fundo de Conhecimento de 450 ₪** para irem até a Loja do Seireitei e escolherem livremente seus 4 feitiços básicos favoritos de Hadō, Bakudō ou Kaidō.",
+          "✦ **Sincronização de Cenas com Conhecimento**: Cada cena no WhatsApp lançada pela Administração gera automaticamente **+100 ₪ de Conhecimento**, mantendo a progressão contínua da alma alinhada à sua atividade ON."
+        ]
+      },
+      {
+        "tipo": "regras",
+        "titulo": "⚖️ Capacidade Mística por Patamar (Power Scaling de Kidō)",
+        "itens": [
+          "✦ **Iniciante / Inexperiente (<31 PE)**: Capacidade de até **4 Feitiços Iniciais** (#1 a #19). Impede que novatos acumulem dezenas de feitiços de alto escalão sem evoluir seus atributos.",
+          "✦ **Treinado (31–60 PE)**: Até **6 Feitiços** (#1 a #29).",
+          "✦ **Experiente (61–150 PE)**: Até **8 Feitiços** (#1 a #49).",
+          "✦ **Alto Nível / Tenente (151–250 PE)**: Até **12 Feitiços** (#1 a #69).",
+          "✦ **Monstruoso / Capitão (251–400 PE)**: Até **16 Feitiços** (#1 a #89).",
+          "✦ **Lendário / Capitão Sênior (401–600 PE)**: Até **24 Feitiços** (#1 a #99).",
+          "✦ **Transcendente (601+ PE)**: Ilimitado (Mestria Plena do Reishi)."
+        ]
+      },
+      {
+        "tipo": "social",
+        "titulo": "👑 Gestão de ADM Otimizada na Ficha & Painel",
+        "itens": [
+          "✦ **Barra Dourada de Gestão de ADM**: Ao acessar a aba de Kidōs de qualquer personagem, o ADM conta com atalhos de `+100 ₪`, `+500 ₪`, `+1000 ₪`, `+5 Cenas (+500 ₪)` e `✏️ Saldo Manual` com atualização instantânea na tela.",
+          "✦ **Busca Rápida de Atividade**: Campo no painel de cenas que filtra simultaneamente por nome do personagem ou pelo código oficial `ACT-XXXX`."
+        ]
+      }
+    ]
+  },
+  {
+    "versao": "6.1",
+    "titulo": "O Compêndio Médico do 4º Esquadrão & Simulador de Cenas de Kaidō",
+    "data": "24 de Agosto de 2026",
+    "destaque": "Simulador Avançado de Kaidō com cálculo exato de Cenas no ON, Evolução de Estado do Aliado (Derrotado ➔ Debilitado ➔ Ferido ➔ Inteiro), Roteiro de Narração por Cena para o WhatsApp e Molde Oficial Otimizado.",
+    "banner": "assets/bleach-banner.png",
+    "resumo": "Uma atualização focada no aprofundamento do roleplay médico do 4º Esquadrão e da mecânica de suporte em combate. Introduz o simulador de Kaidō que calcula a quantidade exata de cenas contínuas que o curandeiro precisa manter o feitiço ativo no WhatsApp para salvar ou reabilitar seus aliados, acompanhado da evolução de estados vitais e roteiro narrativo por cena, além da simplificação do molde oficial de ficha do WhatsApp.",
+    "secoes": [
+      {
+        "tipo": "novo",
+        "titulo": "🌿 Simulador de Cura & Cenas de Kaidō",
+        "itens": [
+          "✦ **Seletor de Estado Inicial do Aliado**: Permite selecionar a gravidade do paciente entre 💀 **Derrotado** (Crítico/Coma), 🩸 **Debilitado** (Fraturas/Hemorragias graves) e 🩹 **Ferido** (Cortes/Moderado).",
+          "✦ **Cálculo de Cenas no ON**: Com base na Pressão Espiritual investida e nível do Kaidō, calcula se a cura exige 1, 2, 3 ou 4 cenas contínuas no WhatsApp.",
+          "✦ **Evolução de Estado Vital**: Mostra a transição do estado do guerreiro (ex: `Derrotado ➔ Inteiro` ou `Debilitado ➔ Ferido`) e a porcentagem de vitalidade restaurada.",
+          "✦ **Roteiro de Narração Passo-a-Passo**: Fornece instruções detalhadas para cada cena no WhatsApp (ex: Cena 1: Estabilização de emergência e hemostasia; Cena 2: Recomposição de tecidos e reinfusão de Reishi).",
+          "✦ **Diagnóstico do 4º Esquadrão**: Recomendações e diretrizes táticas para mestres curandeiros e socorristas de campo."
+        ]
+      },
+      {
+        "tipo": "regras",
+        "titulo": "📋 Otimização do Molde Oficial WhatsApp",
+        "itens": [
+          "✦ **Molde Direto e Focado**: Removidas seções extensas de Shikai/Bankai e Kidōs do molde de exportação rápida, mantendo apenas Dados do Participante, Dados do Personagem, Código de Atividade (ON) e Atributos Espirituais.",
+          "✦ **Selo de Autenticidade**: Preservada a assinatura e diagramação visual oficial ✧ 𝗠𝗮𝗱𝗲 𝗕𝘆 𝗠𝗮𝗹𝘂𝘁𝘁𝗶 ✧ com suporte a cópia em 1 clique."
+        ]
+      }
+    ]
+  },
+  {
+    "versao": "6.0",
+    "titulo": "A Economia do Conhecimento, Grimório de Kidōs & Ranking Semanal de Atividade",
+    "data": "24 de Agosto de 2026",
+    "destaque": "Moeda de Conhecimento (₪), Árvore de Aprendizagem de Kidōs em 3 Trilhas, Loja Dinâmica do Seireitei, Código Identificador de Atividade único (ACT-XXXX), Ranking Semanal com Ciclo de 7 Dias e Lançamento de Cenas em Lote no ADM.",
+    "banner": "assets/bleach-banner.png",
+    "resumo": "A maior expansão de progressão e economia espiritual do RPG! Apresenta o sistema de Conhecimento obtido por atividade no WhatsApp, a Árvore de Aprendizagem de Kidōs com graduações de maestria, a Loja Dinâmica de Feitiços com destaque dourado para compras disponíveis, códigos identificadores para todos os personagens, ranking semanal com premiações (+15, +10 e +5 pontos livres para o Top 3) e ferramentas de gestão em lote para a Administração.",
+    "secoes": [
+      {
+        "tipo": "novo",
+        "titulo": "📚 Economia de Conhecimento & Loja de Kidōs",
+        "itens": [
+          "✦ **Moeda de Conhecimento (₪)**: Moeda ganha através da produção de cenas no WhatsApp, utilizada para adquirir feitiços na Biblioteca do Seireitei.",
+          "✦ **Árvore de Aprendizagem RPG**: Modal em 3 trilhas elementais (Hadō, Bakudō e Kaidō) com explicação do sistema de Conhecimento e 4 Tiers de maestria.",
+          "✦ **Loja Dinâmica do Seireitei**: Kidōs que o Shinigami já pode comprar brilham em dourado com animação pulsante; feitiços com requisitos faltantes permanecem apagados com indicação clara do que falta (Conhecimento ou Pressão Espiritual mínima).",
+          "✦ **Ficha Focada em Kidōs Aprendidos**: A aba de Kidōs da ficha agora exibe apenas os feitiços dominados pelo jogador, com botões para abrir detalhes e conjurar em cena."
+        ]
+      },
+      {
+        "tipo": "social",
+        "titulo": "🆔 Código de Atividade (ON) & Lançamento em Lote ADM",
+        "itens": [
+          "✦ **Código Identificador Único**: Cada personagem recebe um código fixo (ex: `ACT-5476`) para colocar no contador de cenas do WhatsApp.",
+          "✦ **Lançamento em Lote no Painel ADM**: Nova aba para os avaliadores lançarem a quantidade de cenas do dia de uma vez só (+1, +2, +5, +10, +20), creditando Conhecimento automaticamente sem precisar registrar de 1 em 1."
+        ]
+      },
+      {
+        "tipo": "regras",
+        "titulo": "🏆 Ranking Semanal de Atividade (Ciclo de 7 Dias)",
+        "itens": [
+          "✦ **Contador Regressivo de 7 Dias**: Contador dinâmico que atualiza a cada dia (7, 6, 5, 4, 3, 2, 1, Dia da Recompensa!).",
+          "✦ **Premiações Oficiais dos Top 3**: 🥇 1º Lugar: **+15 Pontos de Atributos Livres** | 🥈 2º Lugar: **+10 Pontos de Atributos Livres** | 🥉 3º Lugar: **+5 Pontos de Atributos Livres**.",
+          "✦ **Distribuição em 1 Clique**: Botão administrativo para encerrar a rodada, creditar os pontos nos vencedores e iniciar um novo ciclo de 7 dias."
+        ]
+      },
+      {
+        "tipo": "buffs",
+        "titulo": "📕 Grimório de Kidōs Ampliado",
+        "itens": [
+          "✦ **Mais de 50 Feitiços Canônicos**: Hadō #1 a #99, Bakudō #1 a #99 e Kaidō #1 a #90 balanceados com requisitos mínimos de Pressão Espiritual e custos de Conhecimento."
+        ]
+      }
+    ]
+  },
   {
     "versao": "5.2",
     "titulo": "Infusão de Pressão Espiritual (Reiatsu Surge), 4 Modos de Confronto & Grimório Interativo de Kidōs",
@@ -2149,14 +2330,17 @@ const DEFAULT_DB = {
       idadeChar: "18",
       aniversarioChar: "15/07",
       pontosDisponiveis: 5,
+      conhecimento: 500,
+      cenasSemana: 5,
+      cenasTotal: 5,
       sorteiosComunsRestantes: 2,
       sorteiosEspeciaisRestantes: 1,
       sorteiosDrops: [],
       permissoes: { shikaiLiberada: true, bankaiLiberada: false },
       atributos: { pressao: 45, forca: 30, velocidade: 60, resiliencia: 25 },
       kidosConhecidos: [
-        { id: "h4", numero: 4, nome: "Byakurai", cat: "Hadō", custoReiatsu: 3 },
-        { id: "b1", numero: 1, nome: "Sai", cat: "Bakudō", custoReiatsu: 2 }
+        { id: "h4", numero: 4, nome: "Byakurai", cat: "Hadō", custoReiatsu: 3, custoConhecimento: 140, pressaoMinima: 18 },
+        { id: "b1", numero: 1, nome: "Sai", cat: "Bakudō", custoReiatsu: 2, custoConhecimento: 95, pressaoMinima: 12 }
       ],
       tecnicas: [
         { id: "t-byak", nome: "Hadō #4 — Byakurai", categoria: "Hadō" },
@@ -3657,30 +3841,46 @@ function calcularCustoKido(kido, pressaoTotal, extraReiatsu = 0) {
   };
 }
 
-function calcularPoderKido(kido, pressaoEfetiva, custoGasto = 0, incantado = false) {
+function calcularPoderKido(kido, pressaoEfetiva, custoGasto = 0, incantado = false, extraPressao = 0) {
   const num = Number(kido?.numero || 1);
   const pEf = Math.max(10, Number(pressaoEfetiva || 30));
+  const pExtra = Math.max(0, Number(extraPressao || 0));
+  const pTotal = pEf + pExtra;
   const gasto = Math.max(0, Number(custoGasto || 0));
   const cat = kido?.cat || "Hadō";
 
   let multiplicadorNum = 1 + (num / 100);
-  let pesoGasto = 1.2;
+  let pesoGasto = 0.5;
 
   if (cat === "Bakudō") {
     multiplicadorNum = 1 + (num / 90);
-    pesoGasto = 1.3;
+    pesoGasto = 0.6;
   } else if (cat === "Kaidō") {
     multiplicadorNum = 1 + (num / 80);
-    pesoGasto = 1.5;
+    pesoGasto = 0.8;
   }
 
-  let poderBase = Math.round((pEf * multiplicadorNum) + (gasto * pesoGasto));
+  const poderSemEncanto = Math.round((pTotal * multiplicadorNum) + (gasto * pesoGasto));
+  // O encantamento concede exatamente +30% da Pressão Espiritual do jogador ao poder final do feitiço
+  const bonusEncantamento = Math.round(pTotal * 0.30);
+  const poderComEncanto = poderSemEncanto + bonusEncantamento;
+  const poderFinal = incantado ? poderComEncanto : poderSemEncanto;
 
-  if (incantado) {
-    poderBase = Math.round(poderBase * 1.35); // +35% de potência com incantação poética
-  }
+  const resObj = {
+    poderFinal: Math.max(1, poderFinal),
+    poderSemEncanto: Math.max(1, poderSemEncanto),
+    poderComEncanto: Math.max(1, poderComEncanto),
+    bonusEncantamento,
+    pressaoTotalUtilizada: pTotal,
+    pressaoExtra: pExtra,
+    incantado: !!incantado,
+    multiplicadorNum,
+    // Enable direct numeric comparisons
+    valueOf: () => Math.max(1, poderFinal),
+    toString: () => String(Math.max(1, poderFinal))
+  };
 
-  return Math.max(1, poderBase);
+  return resObj;
 }
 
 function calcularEfeitoHado(poderHado, resilienciaInimiga) {
@@ -3781,46 +3981,154 @@ function calcularEfeitoBakudo(poderBakudo, forcaInimiga) {
   }
 }
 
-function calcularEfeitoKaido(poderKaido) {
+function calcularEfeitoKaido(poderKaido, estadoInicial = "Debilitado") {
   const pK = Math.max(1, Number(poderKaido || 10));
+  const est = estadoInicial || "Debilitado";
+
+  let nivel = "Básico";
+  let cor = "#C9C1AF";
+  let categoria = "";
+  let estadoFinal = "Inteiro";
+  let cenasNecessarias = 1;
+  let curaHpStr = "";
+  let diagnostico = "";
+  let dicaTatica = "";
+  let roteiroCenas = [];
 
   if (pK >= 1200) {
-    return {
-      nivel: "Supremo",
-      categoria: "Restauração Milagrosa & Regeneração Celular Total",
-      cor: "#FFD700",
-      diagnostico: "Reconstitui tecidos dilacerados, reconecta fibras nervosas e regenera órgãos internos. Remove os estados 'Derrotado' ou 'Debilitado' restaurando a condição para 'Inteiro'.",
-      curaHpStr: "Recuperação de 90% a 100% da Vitalidade",
-      dicaTatica: "Nível de mestre médico do 4º Esquadrão (Capitã Unohana). Capaz de reverter ferimentos quase fatais em combate."
-    };
+    nivel = "Supremo";
+    cor = "#FFD700";
+    categoria = "Restauração Milagrosa & Regeneração Celular Total";
+    curaHpStr = "Recuperação de 95% a 100% da Vitalidade";
+    diagnostico = "Reconstitui tecidos dilacerados, regenera órgãos vitais e restaura o fluxo de Reiryoku instantaneamente.";
+    
+    if (est === "Derrotado") {
+      cenasNecessarias = 1;
+      estadoFinal = "Inteiro";
+      roteiroCenas = [
+        "Cena 1: Concentração máxima de Kaidō verde-dourado nos pontos vitais. Reanimação imediata e fechamento de todas as feridas mortais (Derrotado ➔ Inteiro)."
+      ];
+    } else if (est === "Debilitado") {
+      cenasNecessarias = 1;
+      estadoFinal = "Inteiro";
+      roteiroCenas = [
+        "Cena 1: Consolidação óssea e celular imediata. O guerreiro recupera 100% de mobilidade para lutar na mesma cena (Debilitado ➔ Inteiro)."
+      ];
+    } else {
+      cenasNecessarias = 1;
+      estadoFinal = "Inteiro";
+      roteiroCenas = [
+        "Cena 1: Purificação e cicatrização instantânea sem deixar marcas (Ferido ➔ Inteiro)."
+      ];
+    }
+    dicaTatica = "Nível Supremo do 4º Esquadrão (Capitã Unohana / Divisão Zero). O aliado é completamente curado para o estado 'Inteiro' em apenas 1 cena contínua de tratamento no WhatsApp!";
   } else if (pK >= 600) {
-    return {
-      nivel: "Avançado",
-      categoria: "Regeneração Profunda de Órgãos & Consolidação Óssea",
-      cor: "#5FA96B",
-      diagnostico: "Cura fraturas ósseas, repara grandes lesões musculares e estanca hemorragias internas graves. Remove o estado 'Debilitado' para 'Ferido' ou 'Inteiro'.",
-      curaHpStr: "Recuperação de 50% a 80% da Vitalidade",
-      dicaTatica: "Tratamento médico de alta precisão. Devolve a capacidade plena de movimento e combate ao guerreiro ferido."
-    };
+    nivel = "Avançado";
+    cor = "#5FA96B";
+    categoria = "Regeneração Profunda de Órgãos & Consolidação Óssea";
+    curaHpStr = "Recuperação de 60% a 85% da Vitalidade";
+    diagnostico = "Cura fraturas ósseas graves, estanca hemorragias arteriais e sutura músculos lacerados.";
+
+    if (est === "Derrotado") {
+      cenasNecessarias = 2;
+      estadoFinal = "Inteiro";
+      roteiroCenas = [
+        "Cena 1: Estabilização de emergência dos sinais vitais e hemostasia (Derrotado ➔ Debilitado).",
+        "Cena 2: Recomposição de tecidos e reinfusão de Reishi (Debilitado ➔ Inteiro)."
+      ];
+      dicaTatica = "Necessário 2 cenas contínuas no WhatsApp: a 1ª cena para tirar o aliado do risco de morte e a 2ª cena para restabelecer a integridade completa (Inteiro).";
+    } else if (est === "Debilitado") {
+      cenasNecessarias = 1;
+      estadoFinal = "Inteiro";
+      roteiroCenas = [
+        "Cena 1: Tratamento cirúrgico de alta precisão canalizado. Restaura fraturas e regenera o aliado direto para 'Inteiro'."
+      ];
+      dicaTatica = "Graças ao alto poder de Kaidō, 1 cena detalhada no WhatsApp é suficiente para curar de 'Debilitado' direto para 'Inteiro'.";
+    } else {
+      cenasNecessarias = 1;
+      estadoFinal = "Inteiro";
+      roteiroCenas = [
+        "Cena 1: Alívio de contusões e fechamento de cortes médios em poucos instantes (Ferido ➔ Inteiro)."
+      ];
+      dicaTatica = "Cura rápida de 1 cena. O aliado volta a 100% de prontidão no ON.";
+    }
   } else if (pK >= 250) {
-    return {
-      nivel: "Intermediário",
-      categoria: "Estancamento de Hemorragias & Alívio Crítico",
-      cor: "#4FB3E8",
-      diagnostico: "Fecha lacerações de lâmina, estanca sangramentos ativos e ameniza dores e contusões. Remove o estado 'Ferido' para 'Inteiro'.",
-      curaHpStr: "Recuperação de 25% a 45% da Vitalidade",
-      dicaTatica: "Cura tática de campo. Permite que combatentes feridos continuem lutando sem perder sangue ou fôlego."
-    };
+    nivel = "Intermediário";
+    cor = "#4FB3E8";
+    categoria = "Estancamento de Hemorragias & Alívio Crítico";
+    curaHpStr = "Recuperação de 35% a 55% da Vitalidade";
+    diagnostico = "Fecha cortes de lâmina, estanca sangramentos ativos, realinha microfraturas e ameniza dores incapacitantes.";
+
+    if (est === "Derrotado") {
+      cenasNecessarias = 3;
+      estadoFinal = "Inteiro";
+      roteiroCenas = [
+        "Cena 1: Ressuscitação e estancamento de sangramentos graves (Derrotado ➔ Debilitado).",
+        "Cena 2: Cicatrização de lacerações e reanimação física (Debilitado ➔ Ferido).",
+        "Cena 3: Restauração de fôlego e cicatrização final (Ferido ➔ Inteiro)."
+      ];
+      dicaTatica = "O paciente está em estado crítico: necessita manter o Kaidō ativo por 3 cenas no WhatsApp para cura completa (ou 1 cena para apenas sair do coma).";
+    } else if (est === "Debilitado") {
+      cenasNecessarias = 2;
+      estadoFinal = "Inteiro";
+      roteiroCenas = [
+        "Cena 1: Imobilização e sutura de cortes profundos (Debilitado ➔ Ferido).",
+        "Cena 2: Recuperação de mobilidade e reabsorção de hematomas (Ferido ➔ Inteiro)."
+      ];
+      dicaTatica = "Requer manter o Kaidō ativo por 2 cenas no ON: a 1ª cena reduz a gravidade para 'Ferido' e a 2ª cena recupera para 'Inteiro'.";
+    } else {
+      cenasNecessarias = 1;
+      estadoFinal = "Inteiro";
+      roteiroCenas = [
+        "Cena 1: Fechamento de escoriações e alívio da dor do combate em 1 cena (Ferido ➔ Inteiro)."
+      ];
+      dicaTatica = "Tratamento de 1 cena rápida no WhatsApp. O aliado recupera o estado 'Inteiro'.";
+    }
   } else {
-    return {
-      nivel: "Básico",
-      categoria: "Tratamento Básico de Reanimação & Microlesões",
-      cor: "#C9C1AF",
-      diagnostico: "Revigora o fôlego espiritual, alivia escoriações superficiais e anestesia dores leves.",
-      curaHpStr: "Recuperação de 10% a 20% da Vitalidade",
-      dicaTatica: "Primeiros socorros rápidos. Ideal para estabilizar a respiração após trocas breves de golpes."
-    };
+    nivel = "Básico";
+    cor = "#C9C1AF";
+    categoria = "Primeiros Socorros & Microlesões";
+    curaHpStr = "Recuperação de 15% a 30% da Vitalidade";
+    diagnostico = "Revigora o fôlego espiritual básico, estanca pequenos sangramentos e alivia contusões superficiais.";
+
+    if (est === "Derrotado") {
+      cenasNecessarias = 4;
+      estadoFinal = "Ferido";
+      roteiroCenas = [
+        "Cena 1 e 2: Triagem médica exaustiva para estabilizar respiração (Derrotado ➔ Debilitado).",
+        "Cena 3 e 4: Fechamento gradual de lacerações e suturas leves (Debilitado ➔ Ferido)."
+      ];
+      dicaTatica = "Kaidō com Pressão Espiritual básica em paciente crítico: exige manter o feitiço por 4 cenas no WhatsApp e atinge no máximo o estado 'Ferido' (necessita de suporte avançado para ficar 'Inteiro').";
+    } else if (est === "Debilitado") {
+      cenasNecessarias = 2;
+      estadoFinal = "Ferido";
+      roteiroCenas = [
+        "Cena 1: Estancamento superficial de hemorragia.",
+        "Cena 2: Repouso médico e estabilização para o estado 'Ferido' (Debilitado ➔ Ferido)."
+      ];
+      dicaTatica = "Necessita manter o Kaidō ativo por 2 cenas no ON para transformar 'Debilitado' em 'Ferido'.";
+    } else {
+      cenasNecessarias = 1;
+      estadoFinal = "Inteiro";
+      roteiroCenas = [
+        "Cena 1: Primeiros socorros leves para estancar arranhões e recuperar fôlego (Ferido ➔ Inteiro)."
+      ];
+      dicaTatica = "Cura básica de 1 cena no WhatsApp para pequenos ferimentos.";
+    }
   }
+
+  return {
+    nivel,
+    categoria,
+    cor,
+    estadoInicial: est,
+    estadoFinal,
+    cenasNecessarias,
+    curaHpStr,
+    diagnostico,
+    dicaTatica,
+    roteiroCenas
+  };
 }
 
 // =========================================================================
@@ -3852,22 +4160,6 @@ function gerarFichaFormatadaMalutti(p) {
   const playerNome = pNome.split(" ")[0] || "Jogador";
   const playerNasc = p.aniversarioPlayer ? `${p.aniversarioPlayer}` : "01/01/2000";
 
-  const temShikai = !!p.zanpakuto?.shikaiAtiva;
-  const temBankai = !!p.zanpakuto?.bankaiAtiva;
-  const zkNome = p.zanpakuto?.nome || (temShikai ? p.zanpakuto?.shikaiAtiva?.nome : "Lâmina Selada (Asauchi)");
-  const zkStatus = temBankai ? "Bankai Desperta (卍)" : temShikai ? "Shikai Desperta (🗡️)" : "Lâmina Selada (Asauchi)";
-
-  const zkStats = (typeof calcularAtributosZanpakuto === 'function') 
-    ? calcularAtributosZanpakuto(p.atributos, temBankai)
-    : { controle: 100, alcance: 100, corte: 100, resiliencia: 100, pressaoEspiritual: 100, media: 100, alcanceMetros: "28m" };
-
-  const shikaiInfo = temShikai ? p.zanpakuto.shikaiAtiva : null;
-  const bankaiInfo = temBankai ? p.zanpakuto.bankaiAtiva : null;
-
-  const tecnicasLista = (p.tecnicas && p.tecnicas.length > 0)
-    ? p.tecnicas.map(t => `           ⎯  ${t.categoria}: ${t.nome}`).join("\n")
-    : "           ⎯  Hadō #4 — Byakurai\n           ⎯  Bakudō #1 — Sai";
-
   const pers = p.personalidade || {};
 
   return `\`\`\`ㅤㅤ\`\`\`ㅤㅤㅤ\`\`\`ㅤㅤ\`\`\`
@@ -3886,7 +4178,7 @@ function gerarFichaFormatadaMalutti(p) {
                           ︶ ͝     ︶꒷꒦︶                        
          
                   ⊹    /   𝙫ocê é um shinigɑmi
-                toɾne-se   𝓛𝐞𝐧𝐝𝐚́𝐫𝐢𝐨  ・・・
+                toɾne-se   𝓛𝐞𝐧𝐝𝗮́𝗿𝗶𝗼  ・・・
                                          ﹀                                   
             ͛  𝒇𝒊𝒄𝒉𝒂 𝒅𝒆   :   𝕾𝗛𝗜𝗡𝗜𝗚𝗔𝗠𝗜  „                        
       ɑpɾesentɑmos ɑ fichɑ que dɑɾɑ́ vidɑ 
@@ -3922,30 +4214,6 @@ function gerarFichaFormatadaMalutti(p) {
            ✶  „  pɑtɑmɑɾ no seı́ɾeı́teı́ .ᐟ
            ⎯  ${tier.title} (${totalAtributos} pts acumulados)
 
-            \`﹙ 𝗭𝗔𝗡𝗣𝗔𝗞𝗨𝗧𝗢̄ & 𝗔𝗥𝗧𝗘 𝗗𝗔 𝗘𝗦𝗣𝗔𝗗𝗔 ﹚\` 
-           ✶  „  no͟me dɑ lɑ̂minɑ .ᐟ
-           ⎯  ${zkNome}
-           ✶  „  stɑtus de libeɾɑçɑ̃o .ᐟ
-           ⎯  ${zkStatus}
-${shikaiInfo ? `           ✶  „  fɾɑse de libeɾɑçɑ̃o (shikɑi) .ᐟ
-           ⎯  "${shikaiInfo.comando || 'Desperte, ' + zkNome}"
-           ✶  „  foɾmɑ & elemento .ᐟ
-           ⎯  ${shikaiInfo.elemento || 'Energia Espiritual Primordial'}
-           ⎯  Mecânica: ${shikaiInfo.poder || shikaiInfo.desc || 'Manipulação de Reishi'}
-` : `           ✶  „  fɾɑse de libeɾɑçɑ̃o (shikɑi) .ᐟ
-           ⎯  Em processo de despertar espiritual (Asauchi)
-`}
-${bankaiInfo ? `           ✶  „  bɑnkɑi sobeɾɑnɑ .ᐟ
-           ⎯  ${bankaiInfo.nome}
-           ⎯  Comando: "${bankaiInfo.comando || 'Ban-kai!'}"
-           ⎯  Domínio: ${bankaiInfo.tipo || 'Transcendência Territorial'}
-` : ''}           ✶  „  ɑtɾibutos dɑ zɑnpɑkutō (bɑse 100) .ᐟ
-           ⎯  Controle: ${zkStats.controle} pts
-           ⎯  Alcance: ${zkStats.alcance} pts (${zkStats.alcanceMetros || '28m'})
-           ⎯  Corte: ${zkStats.corte} pts
-           ⎯  Resiliência da Lâmina: ${zkStats.resiliencia} pts
-           ⎯  Reiatsu da Lâmina: ${zkStats.pressaoEspiritual} pts
-
             \`﹙ 𝗔𝗧𝗥𝗜𝗕𝗨𝗧𝗢𝗦 𝗘𝗦𝗣𝗜𝗥𝗜𝗧𝗨𝗔𝗜𝗦 ﹚\`              
            ✶  „ distɾibuiçɑ̃o de reiryoku .ᐟ
            ⎯  pɾessɑ̃o espı́ɾituɑl: ${p.atributos?.pressao || 10}
@@ -3954,9 +4222,6 @@ ${bankaiInfo ? `           ✶  „  bɑnkɑi sobeɾɑnɑ .ᐟ
            ⎯  ɾesiliênciɑ: ${p.atributos?.resiliencia || 10}
            ✶  „ totɑl geɾɑl .ᐟ
            ⎯  ${totalAtributos} pts (Patamar: ${tier.title})
-
-            \`﹙ 𝗚𝗥𝗜𝗠𝗢́𝗥𝗜𝗢 𝗗𝗘 𝗞𝗜𝗗𝗢̄𝗦 & 𝗧𝗘́𝗖𝗡𝗜𝗖𝗔𝗦 ﹚\` 
-${tecnicasLista}
 
 ${(pers.texto || pers.virtudes || pers.estiloCombate) ? `            \`﹙ 𝗣𝗘𝗥𝗦𝗢𝗡𝗔𝗟𝗜𝗗𝗔𝗗𝗘 & 𝗗𝗡𝗔 𝗗𝗔 𝗔𝗟𝗠𝗔 ﹚\` 
 ${pers.texto ? `           ✶  „  essênciɑ psicológicɑ .ᐟ\n           ⎯  ${pers.texto.trim()}\n` : ''}${pers.virtudes ? `           ✶  „  viɾtudes & quɑlidɑdes .ᐟ\n           ⎯  ${pers.virtudes.trim()}\n` : ''}${pers.defeitos ? `           ✶  „  defeitos & fɑlhɑs .ᐟ\n           ⎯  ${pers.defeitos.trim()}\n` : ''}${pers.desejos ? `           ✶  „  desejos & ɑmbições .ᐟ\n           ⎯  ${pers.desejos.trim()}\n` : ''}${pers.medos ? `           ✶  „  medos & pesɑdelos .ᐟ\n           ⎯  ${pers.medos.trim()}\n` : ''}${pers.estiloCombate ? `           ✶  „  estilo de combɑte .ᐟ\n           ⎯  ${pers.estiloCombate.trim()}\n` : ''}` : ''}
@@ -4000,6 +4265,75 @@ function copiarFichaFormatadaWhatsApp(p, onCopied) {
   return texto;
 }
 
+function getCapacidadeKidos(pressaoTotal) {
+  const pressao = Math.max(1, Number(pressaoTotal || 10));
+
+  if (pressao >= 601) {
+    return {
+      tierNome: "Transcendente / Divisão Zero",
+      limiteMaximo: 99,
+      limiteEquipadosStr: "Ilimitado (Mestria Plena)",
+      nivelMaximoFeitico: 99,
+      descricao: "Mestria absoluta do Reishi. Acesso irrestrito a todos os feitiços do Grimório e magias proibidas.",
+      cor: "#FFD700"
+    };
+  } else if (pressao >= 401) {
+    return {
+      tierNome: "Lendário / Capitão Sênior",
+      limiteMaximo: 24,
+      limiteEquipadosStr: "Até 24 Feitiços",
+      nivelMaximoFeitico: 99,
+      descricao: "Compreensão suprema das artes de Kidō. Acesso liberado aos feitiços destruidores da casa dos 90.",
+      cor: "#A855F7"
+    };
+  } else if (pressao >= 251) {
+    return {
+      tierNome: "Monstruoso / Nível Capitão",
+      limiteMaximo: 16,
+      limiteEquipadosStr: "Até 16 Feitiços",
+      nivelMaximoFeitico: 89,
+      descricao: "Domínio de alto calibre em Kidōs avançados de destruição, barreiras pesadas e Kaidō cirúrgico.",
+      cor: "#EF4444"
+    };
+  } else if (pressao >= 151) {
+    return {
+      tierNome: "Alto Nível / Tenente Veterano",
+      limiteMaximo: 12,
+      limiteEquipadosStr: "Até 12 Feitiços",
+      nivelMaximoFeitico: 69,
+      descricao: "Ampla versatilidade tática com feitiços intermediários de suporte, contenção e dano.",
+      cor: "#F97316"
+    };
+  } else if (pressao >= 61) {
+    return {
+      tierNome: "Experiente / Oficial de Esquadrão",
+      limiteMaximo: 8,
+      limiteEquipadosStr: "Até 8 Feitiços",
+      nivelMaximoFeitico: 49,
+      descricao: "Conhecimento prático das magias fundamentais de combate do Gotei 13.",
+      cor: "#EAB308"
+    };
+  } else if (pressao >= 31) {
+    return {
+      tierNome: "Treinado / Shinigami Formado",
+      limiteMaximo: 6,
+      limiteEquipadosStr: "Até 6 Feitiços",
+      nivelMaximoFeitico: 29,
+      descricao: "Capacidade padrão de recém-graduado da Academia Shin'ō.",
+      cor: "#3B82F6"
+    };
+  } else {
+    return {
+      tierNome: "Iniciante / Inexperiente",
+      limiteMaximo: 4,
+      limiteEquipadosStr: "Até 4 Feitiços Iniciais",
+      nivelMaximoFeitico: 19,
+      descricao: "Em fase de iniciação espiritual. Pode adquirir até 4 feitiços básicos com seu Conhecimento inicial.",
+      cor: "#10B981"
+    };
+  }
+}
+
 if (typeof window !== 'undefined') {
   window.gerar4CaminhosZanpakutoAI = gerar4CaminhosZanpakutoAI;
   window.gerar4CaminhosZanpakutoAI_Async = gerar4CaminhosZanpakutoAI_Async;
@@ -4023,6 +4357,7 @@ if (typeof window !== 'undefined') {
   window.calcularEfeitoHado = calcularEfeitoHado;
   window.calcularEfeitoBakudo = calcularEfeitoBakudo;
   window.calcularEfeitoKaido = calcularEfeitoKaido;
+  window.getCapacidadeKidos = getCapacidadeKidos;
   window.gerarFichaFormatadaMalutti = gerarFichaFormatadaMalutti;
   window.copiarFichaFormatadaWhatsApp = copiarFichaFormatadaWhatsApp;
   window.getCodigoAtividade = getCodigoAtividade;
@@ -4996,10 +5331,15 @@ function KidoDetailModal({ kido, personagem, isOpen, onClose, onConjurar, pressa
   const [incantado, setIncantado] = useState(false);
   const [extraReiatsu, setExtraReiatsu] = useState(0);
   const [simTargetStat, setSimTargetStat] = useState(80);
+  const [simEstadoInicial, setSimEstadoInicial] = useState("Debilitado");
 
   const pressaoTotal = Number(personagem?.atributos?.pressao || 30);
   const custoInfo = calcularCustoKido(kido, pressaoTotal, extraReiatsu);
-  const poderCalculado = calcularPoderKido(kido, pressaoTotal, custoInfo.custoTotal, incantado);
+  const poderCalculadoObj = calcularPoderKido(kido, pressaoTotal, custoInfo.custoTotal, incantado, extraReiatsu);
+  const poderCalculado = poderCalculadoObj.poderFinal || poderCalculadoObj;
+  const poderSemEncanto = poderCalculadoObj.poderSemEncanto || Math.round(poderCalculado / 1.3);
+  const poderComEncanto = poderCalculadoObj.poderComEncanto || (poderSemEncanto + Math.round((pressaoTotal + extraReiatsu) * 0.30));
+  const bonusEncantamento = poderCalculadoObj.bonusEncantamento || Math.round((pressaoTotal + extraReiatsu) * 0.30);
 
   const isHado = kido.cat === "Hadō";
   const isBakudo = kido.cat === "Bakudō";
@@ -5007,7 +5347,7 @@ function KidoDetailModal({ kido, personagem, isOpen, onClose, onConjurar, pressa
 
   const efeitoHado = isHado ? calcularEfeitoHado(poderCalculado, simTargetStat) : null;
   const efeitoBakudo = isBakudo ? calcularEfeitoBakudo(poderCalculado, simTargetStat) : null;
-  const efeitoKaido = isKaido ? calcularEfeitoKaido(poderCalculado) : null;
+  const efeitoKaido = isKaido ? calcularEfeitoKaido(poderCalculado, simEstadoInicial) : null;
 
   const podeConjurar = pressaoRestante >= custoInfo.custoTotal;
 
@@ -5096,18 +5436,18 @@ function KidoDetailModal({ kido, personagem, isOpen, onClose, onConjurar, pressa
                 </div>
                 {extraReiatsu > 0 && (
                   <div className="flex justify-between text-yellow-300">
-                    <span>• Injeção Extra de Reishi:</span>
+                    <span>• Pressão Extra Investida:</span>
                     <span>+{extraReiatsu} pts</span>
                   </div>
                 )}
               </div>
 
               <div className="text-[10px] text-bleach-muted/80 leading-tight pt-1">
-                ⚙️ O feitiço consome uma fração proporcional da sua Reiatsu Total ({pressaoTotal} pts) para balanceamento tático anti-spam.
+                ⚙️ O feitiço consome uma fração proporcional da sua Reiatsu Total ({pressaoTotal} pts).
               </div>
             </div>
 
-            {/* Cartão de Poder Espiritual */}
+            {/* Cartão de Poder Espiritual com e sem Encantamento */}
             <div className={`p-3.5 bg-black/80 rounded-xl border space-y-2 ${
               isHado ? "border-red-500/40" : isBakudo ? "border-blue-500/40" : "border-emerald-500/40"
             }`}>
@@ -5118,6 +5458,17 @@ function KidoDetailModal({ kido, personagem, isOpen, onClose, onConjurar, pressa
                 </span>
               </div>
 
+              <div className="space-y-1 text-[10px] font-mono text-bleach-creamDim border-t border-white/5 pt-1.5">
+                <div className="flex justify-between items-center">
+                  <span>Sem Encantamento:</span>
+                  <span className="text-white font-bold">{poderSemEncanto} pts</span>
+                </div>
+                <div className="flex justify-between items-center text-yellow-300">
+                  <span>Com Encantamento (+30% PE):</span>
+                  <span className="font-bold">{poderComEncanto} pts (+{bonusEncantamento})</span>
+                </div>
+              </div>
+
               <div className="space-y-1.5 pt-1">
                 <label className="flex items-center gap-2 cursor-pointer select-none bg-black/50 p-1.5 rounded-lg border border-white/5 hover:border-white/20 transition">
                   <input
@@ -5126,16 +5477,16 @@ function KidoDetailModal({ kido, personagem, isOpen, onClose, onConjurar, pressa
                     onChange={(e) => setIncantado(e.target.checked)}
                     className="accent-orange-500 w-4 h-4 rounded"
                   />
-                  <span className="text-[11px] text-bleach-cream font-semibold">
-                    Incantação Completa (+35% Poder)
+                  <span className="text-[11px] text-yellow-300 font-bold">
+                    Recitar Encantamento (+30% Pressão Espiritual)
                   </span>
                 </label>
 
-                {/* Slider / Injeção de Reiatsu Extra */}
+                {/* Slider / Injeção de Pressão Extra */}
                 <div className="flex items-center justify-between gap-2 pt-1">
-                  <span className="text-[10px] text-bleach-muted font-bold">Extra:</span>
+                  <span className="text-[10px] text-bleach-muted font-bold">Pressão Extra:</span>
                   <div className="flex gap-1">
-                    {[0, 10, 25, 50].map((v) => (
+                    {[0, 10, 25, 50, 100].map((v) => (
                       <button
                         key={v}
                         type="button"
@@ -5252,7 +5603,7 @@ function KidoDetailModal({ kido, personagem, isOpen, onClose, onConjurar, pressa
 
             {/* Resultado do Kaidō */}
             {isKaido && efeitoKaido && (
-              <div className="p-3 bg-black/90 rounded-xl border space-y-2" style={{ borderColor: efeitoKaido.cor }}>
+              <div className="p-3.5 bg-black/90 rounded-xl border space-y-3" style={{ borderColor: efeitoKaido.cor }}>
                 <div className="flex items-center justify-between flex-wrap gap-2">
                   <span
                     className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full text-black"
@@ -5264,7 +5615,73 @@ function KidoDetailModal({ kido, personagem, isOpen, onClose, onConjurar, pressa
                     {efeitoKaido.curaHpStr}
                   </span>
                 </div>
-                <div className="text-xs text-bleach-cream leading-relaxed">{efeitoKaido.diagnostico}</div>
+
+                {/* Seletor do Estado do Aliado */}
+                <div className="p-2.5 bg-bleach-panel rounded-lg border border-white/10 space-y-2">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <span className="text-[11px] font-bold text-bleach-creamDim uppercase">
+                      Estado Atual do Aliado:
+                    </span>
+                    <div className="flex gap-1 flex-wrap">
+                      {[
+                        { id: "Derrotado", label: "💀 Derrotado", desc: "Crítico" },
+                        { id: "Debilitado", label: "🩸 Debilitado", desc: "Grave" },
+                        { id: "Ferido", label: "🩹 Ferido", desc: "Moderado" }
+                      ].map(st => (
+                        <button
+                          key={st.id}
+                          type="button"
+                          onClick={() => setSimEstadoInicial(st.id)}
+                          className={`px-2.5 py-1 rounded-lg text-xs font-bold transition border ${
+                            simEstadoInicial === st.id
+                              ? "bg-emerald-500 text-black border-white shadow-lg font-black"
+                              : "bg-black/60 text-bleach-creamDim border-white/10 hover:border-white/30"
+                          }`}
+                        >
+                          {st.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Diagnóstico de Cenas e Evolução do Estado */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                    <div className="p-2.5 bg-black/70 rounded-lg border border-emerald-500/50 flex items-center gap-2.5">
+                      <span className="text-2xl">⏳</span>
+                      <div>
+                        <span className="text-[10px] text-bleach-muted uppercase block font-bold">Cenas Necessárias no ON:</span>
+                        <strong className="text-emerald-300 font-mono text-sm font-black">
+                          {efeitoKaido.cenasNecessarias} {efeitoKaido.cenasNecessarias === 1 ? "Cena Contínua" : "Cenas de Tratamento"}
+                        </strong>
+                      </div>
+                    </div>
+
+                    <div className="p-2.5 bg-black/70 rounded-lg border border-white/10 flex items-center gap-2.5">
+                      <span className="text-2xl">✨</span>
+                      <div>
+                        <span className="text-[10px] text-bleach-muted uppercase block font-bold">Evolução do Estado:</span>
+                        <strong className="text-white text-xs font-bold">
+                          {efeitoKaido.estadoInicial} ➔ <span className="text-emerald-400 font-black">{efeitoKaido.estadoFinal}</span>
+                        </strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Roteiro de Narração por Cena */}
+                {efeitoKaido.roteiroCenas && efeitoKaido.roteiroCenas.length > 0 && (
+                  <div className="p-2.5 bg-black/60 rounded-lg border border-white/5 space-y-1.5 text-xs">
+                    <strong className="text-emerald-300 block text-[11px] uppercase">
+                      📋 Roteiro de Narração para o WhatsApp:
+                    </strong>
+                    {efeitoKaido.roteiroCenas.map((r, rIdx) => (
+                      <p key={rIdx} className="text-bleach-cream leading-relaxed pl-2 border-l-2 border-emerald-500">
+                        {r}
+                      </p>
+                    ))}
+                  </div>
+                )}
+
                 <div className="p-2 bg-bleach-panel rounded-lg border border-white/5 text-[11px] text-bleach-creamDim">
                   <strong className="text-emerald-400">🌿 Diagnóstico do 4º Esquadrão:</strong> {efeitoKaido.dicaTatica}
                 </div>
@@ -5536,6 +5953,7 @@ function KidoShopModal({ isOpen, onClose, personagem, updateChar }) {
   const conhecimento = Number(personagem?.conhecimento || 0);
   const pressao = Number(personagem?.atributos?.pressao || 10);
   const kidosAprendidos = personagem?.kidosConhecidos || [];
+  const capacidade = (typeof getCapacidadeKidos === 'function') ? getCapacidadeKidos(pressao) : { limiteMaximo: 4, tierNome: "Iniciante", limiteEquipadosStr: "Até 4 Feitiços", cor: "#10B981" };
 
   function comprarKido(kido) {
     const jaPossui = kidosAprendidos.some(k => k.id === kido.id || k.nome === kido.nome || (k.numero === kido.numero && k.cat === kido.cat));
@@ -5544,24 +5962,24 @@ function KidoShopModal({ isOpen, onClose, personagem, updateChar }) {
       return;
     }
 
+    if (kidosAprendidos.length >= capacidade.limiteMaximo) {
+      alert(`⚠️ Limite de feitiços atingido para o seu Patamar (${kidosAprendidos.length}/${capacidade.limiteMaximo} feitiços)!\n\nPatamar Atual: ${capacidade.tierNome}\nCapacidade: ${capacidade.limiteEquipadosStr}\n\nPara desbloquear novos slots de Kidō, aumente sua Pressão Espiritual!`);
+      return;
+    }
+
     if (conhecimento < kido.custoConhecimento) {
       alert(`Conhecimento insuficiente! Você possui ${conhecimento} ₪, mas o feitiço exige ${kido.custoConhecimento} ₪.`);
       return;
     }
 
-    if (pressao < kido.pressaoMinima) {
-      alert(`Pressão Espiritual insuficiente! Sua Reiatsu é de ${pressao} pts, mas a complexidade deste Kidō exige no mínimo ${kido.pressaoMinima} pts de Pressão Espiritual.`);
-      return;
-    }
-
-    const confirma = confirm(`Deseja aprender "${kido.nome}" por ${kido.custoConhecimento} de Conhecimento?\n\nSaldo Atual: ${conhecimento} ₪\nSaldo Após Compra: ${conhecimento - kido.custoConhecimento} ₪`);
+    const confirma = confirm(`Deseja aprender "${kido.nome}" por ${kido.custoConhecimento} de Conhecimento?\n\nSaldo Atual: ${conhecimento} ₪\nSaldo Após Compra: ${conhecimento - kido.custoConhecimento} ₪\nSlots Utilizados: ${kidosAprendidos.length + 1} de ${capacidade.limiteMaximo}`);
     if (!confirma) return;
 
     const novosConhecidos = [...kidosAprendidos, kido];
     const novasTecnicas = [...(personagem.tecnicas || []), { id: uid(), nome: kido.nome, categoria: kido.cat }];
 
     updateChar({
-      conhecimento: conhecimento - kido.custoConhecimento,
+      conhecimento: Math.max(0, conhecimento - kido.custoConhecimento),
       kidosConhecidos: novosConhecidos,
       tecnicas: novasTecnicas
     }, `📖 Aprendeu [${kido.cat} #${kido.numero}] ${kido.nome} por ${kido.custoConhecimento} de Conhecimento`);
@@ -5572,7 +5990,9 @@ function KidoShopModal({ isOpen, onClose, personagem, updateChar }) {
 
   const kidosFiltrados = CATALOGO_KIDOS.filter(k => {
     const jaPossui = kidosAprendidos.some(ap => ap.id === k.id || ap.nome === k.nome || (ap.numero === k.numero && ap.cat === k.cat));
-    const podeComprar = !jaPossui && conhecimento >= k.custoConhecimento && pressao >= k.pressaoMinima;
+    const temCapacidade = kidosAprendidos.length < capacidade.limiteMaximo;
+    const temConhecimento = conhecimento >= k.custoConhecimento;
+    const podeComprar = !jaPossui && temCapacidade && temConhecimento;
 
     if (apenasDisponiveis && !podeComprar) return false;
     if (categoria !== "Todos" && k.cat !== categoria) return false;
@@ -5598,7 +6018,7 @@ function KidoShopModal({ isOpen, onClose, personagem, updateChar }) {
               <span>📖</span> Biblioteca de Kidōs & Feitiços
             </h3>
             <p className="text-xs text-bleach-creamDim mt-1">
-              Adquira e registre novos feitiços na sua ficha usando seu <strong>Conhecimento</strong>. Feitiços que você já pode comprar estão <strong>brilhando em destaque</strong>!
+              Adquira e registre novos feitiços na sua ficha usando <strong>exclusivamente seu Conhecimento (₪)</strong>. Recitar o encantamento (+30% PE) potencializa todos os feitiços!
             </p>
           </div>
           <button
@@ -5626,8 +6046,8 @@ function KidoShopModal({ isOpen, onClose, personagem, updateChar }) {
               🌀
             </div>
             <div>
-              <span className="text-[10px] text-bleach-muted block uppercase font-bold">Sua Pressão Espiritual:</span>
-              <span className="text-lg font-mono font-black text-cyan-400">{pressao} pts</span>
+              <span className="text-[10px] text-bleach-muted block uppercase font-bold">Pressão & Patamar:</span>
+              <span className="text-sm font-mono font-black text-cyan-400 block">{pressao} pts ({capacidade.tierNome.split('/')[0].trim()})</span>
             </div>
           </div>
 
@@ -5636,8 +6056,10 @@ function KidoShopModal({ isOpen, onClose, personagem, updateChar }) {
               📜
             </div>
             <div>
-              <span className="text-[10px] text-bleach-muted block uppercase font-bold">Kidōs Registrados:</span>
-              <span className="text-lg font-mono font-black text-emerald-400">{kidosAprendidos.length} feitiços</span>
+              <span className="text-[10px] text-bleach-muted block uppercase font-bold">Capacidade de Feitiços:</span>
+              <span className="text-sm font-mono font-black text-emerald-400 block">
+                {kidosAprendidos.length} / {capacidade.limiteMaximo} <span className="text-[11px] font-sans font-normal text-bleach-muted">({capacidade.limiteEquipadosStr})</span>
+              </span>
             </div>
           </div>
         </div>
@@ -5683,8 +6105,8 @@ function KidoShopModal({ isOpen, onClose, personagem, updateChar }) {
           {kidosFiltrados.map((k) => {
             const jaPossui = kidosAprendidos.some(ap => ap.id === k.id || ap.nome === k.nome || (ap.numero === k.numero && ap.cat === k.cat));
             const temConhecimento = conhecimento >= k.custoConhecimento;
-            const temPressao = pressao >= k.pressaoMinima;
-            const podeComprar = !jaPossui && temConhecimento && temPressao;
+            const temCapacidade = kidosAprendidos.length < capacidade.limiteMaximo;
+            const podeComprar = !jaPossui && temConhecimento && temCapacidade;
 
             const isHado = k.cat === "Hadō";
             const isBakudo = k.cat === "Bakudō";
@@ -5736,15 +6158,13 @@ function KidoShopModal({ isOpen, onClose, personagem, updateChar }) {
                     <div className="p-2 bg-black/60 rounded-lg border border-white/5 text-[11px] space-y-1">
                       <div className="flex justify-between items-center">
                         <span className="text-bleach-muted">Custo em Conhecimento:</span>
-                        <strong className={temConhecimento ? "text-yellow-400 font-mono" : "text-red-400 font-mono"}>
-                          {k.custoConhecimento} ₪ {temConhecimento ? "✓" : `(Faltam ${k.custoConhecimento - conhecimento})`}
+                        <strong className={temConhecimento ? "text-yellow-400 font-mono font-bold" : "text-red-400 font-mono font-bold"}>
+                          {k.custoConhecimento} ₪ {temConhecimento ? "✓ (Disponível)" : `(Faltam ${k.custoConhecimento - conhecimento} ₪)`}
                         </strong>
                       </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-bleach-muted">Pressão Mínima:</span>
-                        <strong className={temPressao ? "text-cyan-400 font-mono" : "text-red-400 font-mono"}>
-                          {k.pressaoMinima} pts {temPressao ? "✓" : `(Você tem ${pressao})`}
-                        </strong>
+                      <div className="flex justify-between items-center text-[10px] text-bleach-muted border-t border-white/5 pt-1">
+                        <span>Bônus de Encantamento:</span>
+                        <span className="text-cyan-300 font-mono font-bold">+30% da sua Pressão</span>
                       </div>
                     </div>
                   )}
@@ -5774,7 +6194,7 @@ function KidoShopModal({ isOpen, onClose, personagem, updateChar }) {
                           : "bg-bleach-panel border border-white/10 text-bleach-muted"
                       }`}
                     >
-                      {podeComprar ? `✨ Aprender Feitiço (${k.custoConhecimento} ₪)` : "🔒 Requisitos Insuficientes"}
+                      {podeComprar ? `✨ Aprender Feitiço (${k.custoConhecimento} ₪)` : (!temCapacidade ? `🔒 Limite de Slots (${capacidade.limiteMaximo})` : `🔒 Faltam ${k.custoConhecimento - conhecimento} ₪`)}
                     </button>
                   )}
                 </div>
@@ -6719,6 +7139,7 @@ function KidosView({ personagem, isAdmin }) {
   const [categoriaAtiva, setCategoriaAtiva] = useState("Todos");
   const [busca, setBusca] = useState("");
   const [modalKido, setModalKido] = useState(null);
+  const [kaidoSimEstado, setKaidoSimEstado] = useState("Debilitado");
   
   const pressaoTotal = Number(personagem?.atributos?.pressao || 30);
   const [reiatsuGastaCena, setReiatsuGastaCena] = useState(0);
@@ -6901,6 +7322,122 @@ function KidosView({ personagem, isAdmin }) {
           </div>
         </div>
       </Section>
+
+      {/* SEÇÃO DEDICADA: SIMULADOR DE KAIDŌ & CENAS DE TRATAMENTO */}
+      {(() => {
+        const analiseKaido = (typeof calcularEfeitoKaido === 'function')
+          ? calcularEfeitoKaido(pressaoRestante, kaidoSimEstado)
+          : { categoria: "Tratamento Tático", cor: "#10B981", cenasNecessarias: 2, curaHpStr: "Recuperação de 70%", estadoFinal: "Inteiro", diagnostico: "Estabilizado", dicaTatica: "Manter canalização", roteiroCenas: [] };
+
+        return (
+          <Section
+            title="🌿 Simulador Médico de Kaidō & Cenas de Tratamento no ON"
+            subtitle="Calcule exatamente quantas cenas no WhatsApp são necessárias para curar um aliado com base na sua Pressão Espiritual"
+            className="border-2 border-emerald-500/40"
+          >
+            <div className="p-4 sm:p-6 bg-gradient-to-b from-emerald-950/30 via-bleach-panel2 to-black rounded-xl border-2 border-emerald-500/50 space-y-5 shadow-2xl">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-emerald-500/20 pb-4">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="px-2.5 py-0.5 bg-emerald-950 text-emerald-300 border border-emerald-500 text-[10px] font-extrabold uppercase rounded-full tracking-wider">
+                      Hospital Geral do 4º Esquadrão • Cálculo de Cenas
+                    </span>
+                    <span className="text-xs font-mono text-cyan-400 font-bold">
+                      Reiatsu Disponível: {pressaoRestante} / {pressaoTotal} pts
+                    </span>
+                  </div>
+                  <h4 className="font-title text-2xl text-emerald-400 mt-1 flex items-center gap-2">
+                    <span>💚</span> Simulação de Tratamento & Evolução Vital
+                  </h4>
+                  <p className="text-xs text-bleach-creamDim">
+                    Selecione a gravidade do paciente para visualizar o tempo de cura exigido no WhatsApp e o roteiro de narração por cena.
+                  </p>
+                </div>
+
+                {/* Seletor de Estado Inicial */}
+                <div className="bg-black/70 p-2.5 rounded-xl border border-emerald-500/30 space-y-1">
+                  <label className="text-[10px] text-bleach-muted uppercase font-bold block">
+                    Estado Inicial do Paciente:
+                  </label>
+                  <div className="flex gap-1.5">
+                    {[
+                      { id: "Derrotado", label: "💀 Derrotado", cor: "#EF4444" },
+                      { id: "Debilitado", label: "🩸 Debilitado", cor: "#F97316" },
+                      { id: "Ferido", label: "🩹 Ferido", cor: "#EAB308" }
+                    ].map((est) => (
+                      <button
+                        key={est.id}
+                        type="button"
+                        onClick={() => setKaidoSimEstado(est.id)}
+                        className={`px-2.5 py-1 rounded-lg text-xs font-bold transition border ${
+                          kaidoSimEstado === est.id
+                            ? "bg-emerald-500 text-black border-white shadow"
+                            : "bg-black/60 text-bleach-creamDim border-white/10 hover:border-emerald-400"
+                        }`}
+                      >
+                        {est.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Cartões de Métricas de Cura */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                <div className="p-3.5 bg-black/70 rounded-xl border border-emerald-500/40 text-center">
+                  <span className="text-[10px] text-bleach-muted uppercase font-bold block">Tempo de Tratamento no ON:</span>
+                  <span className="text-2xl font-mono font-black text-emerald-400 block mt-0.5">
+                    ⏳ {analiseKaido.cenasNecessarias} {analiseKaido.cenasNecessarias === 1 ? 'Cena' : 'Cenas'}
+                  </span>
+                  <span className="text-[11px] text-emerald-200/70">Manutenção contínua de Reiki</span>
+                </div>
+
+                <div className="p-3.5 bg-black/70 rounded-xl border border-emerald-500/40 text-center">
+                  <span className="text-[10px] text-bleach-muted uppercase font-bold block">Evolução do Paciente:</span>
+                  <span className="text-base font-extrabold text-white block mt-1">
+                    {analiseKaido.estadoInicial || kaidoSimEstado} ➔ <span className="text-emerald-400">{analiseKaido.estadoFinal}</span>
+                  </span>
+                  <span className="text-[11px] text-yellow-300/80 font-mono">{analiseKaido.curaHpStr}</span>
+                </div>
+
+                <div className="p-3.5 bg-black/70 rounded-xl border border-emerald-500/40 text-center">
+                  <span className="text-[10px] text-bleach-muted uppercase font-bold block">Classificação Médica:</span>
+                  <span className="text-sm font-extrabold text-emerald-300 block mt-1">
+                    {analiseKaido.categoria}
+                  </span>
+                  <span className="text-[10px] text-bleach-muted">{analiseKaido.diagnostico}</span>
+                </div>
+              </div>
+
+              {/* Roteiro Narrativo Passo a Passo por Cena */}
+              <div className="p-4 bg-black/80 rounded-xl border border-emerald-500/30 space-y-3">
+                <h6 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                  <span>📋</span> Roteiro Passo-a-Passo de Narração para o WhatsApp ({analiseKaido.cenasNecessarias} Cenas):
+                </h6>
+                <div className="space-y-2">
+                  {(analiseKaido.roteiroCenas || []).map((passo, idx) => (
+                    <div key={idx} className="p-2.5 bg-emerald-950/20 border border-emerald-500/20 rounded-lg flex items-start gap-2.5">
+                      <span className="px-2 py-0.5 bg-emerald-900/80 text-emerald-300 border border-emerald-500 font-mono font-bold text-[10px] rounded shrink-0">
+                        Cena {passo.cena}
+                      </span>
+                      <div>
+                        <strong className="text-white text-xs block">{passo.fase}</strong>
+                        <p className="text-xs text-bleach-creamDim mt-0.5">{passo.instrucao}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Recomendação de Roleplay */}
+              <div className="p-3 bg-bleach-panel rounded-xl border border-white/10 text-xs">
+                <strong className="text-emerald-400 block text-[10px] uppercase font-bold">Instrução Tática do 4º Esquadrão:</strong>
+                <p className="text-bleach-cream mt-0.5 leading-relaxed">{analiseKaido.dicaTatica}</p>
+              </div>
+            </div>
+          </Section>
+        );
+      })()}
 
       {/* CATALOG FILTERS & SPELLS GRID */}
       <Section title="Grimório de Feitiços de Seireitei" subtitle="Clique em qualquer magia para abrir os detalhes completos, encantamento e simulador">
@@ -7448,14 +7985,19 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
   const [showCapacidadesModal, setShowCapacidadesModal] = useState(null);
   const [gastoPressaoForca, setGastoPressaoForca] = useState(0);
   const [gastoPressaoResiliencia, setGastoPressaoResiliencia] = useState(0);
-  const [simuladorModo, setSimuladorModo] = useState("forca_resiliencia"); // "forca_resiliencia" | "forca_forca" | "velocidade_velocidade" | "pressao_pressao"
+  const [simuladorModo, setSimuladorModo] = useState("forca_resiliencia");
   const [simStatInimigo, setSimStatInimigo] = useState(80);
   const [kidoModalFicha, setKidoModalFicha] = useState(null);
   const [showKidoTreeModal, setShowKidoTreeModal] = useState(false);
   const [showKidoShopModal, setShowKidoShopModal] = useState(false);
+  const [subAbaKido, setSubAbaKido] = useState("magias"); // "magias" | "kaido"
   const [simKidoIndex, setSimKidoIndex] = useState(0);
-  const [simKidoTargetStat, setSimKidoTargetStat] = useState(80);
+  const [simKidoTargetStat, setSimTargetStat] = useState(80);
   const [simKidoIncantado, setSimKidoIncantado] = useState(false);
+  const [simKidoExtraPressao, setSimKidoExtraPressao] = useState(0);
+  const [simKaidoEstado, setSimKaidoEstado] = useState("Debilitado");
+  const [simKaidoExtraPressao, setSimKaidoExtraPressao] = useState(0);
+  const [simKaidoIncantado, setSimKaidoIncantado] = useState(false);
   const [copiadoWhats, setCopiadoWhats] = useState(false);
   const gachaIntervalRef = useRef(null);
 
@@ -7868,18 +8410,15 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
       ...personagem,
       atributos: { pressao: 10, forca: 10, velocidade: 10, resiliencia: 10 },
       pontosDisponiveis: 20,
+      conhecimento: 450,
+      cenasSemana: 0,
+      cenasTotal: 0,
       sorteiosComunsRestantes: 2,
       sorteiosEspeciaisRestantes: 0,
       sorteiosDrops: [],
       permissoes: { shikaiLiberada: false, bankaiLiberada: false },
-      kidosConhecidos: [
-        { id: "h4", numero: 4, nome: "Byakurai", cat: "Hadō", custoReiatsu: 3 },
-        { id: "b1", numero: 1, nome: "Sai", cat: "Bakudō", custoReiatsu: 2 }
-      ],
-      tecnicas: [
-        { id: uid(), nome: "Hadō #4 — Byakurai", categoria: "Hadō" },
-        { id: uid(), nome: "Bakudō #1 — Sai", categoria: "Bakudō" }
-      ],
+      kidosConhecidos: [],
+      tecnicas: [],
       personalidade: { texto: "", virtudes: "", defeitos: "", desejos: "", medos: "", conflitos: "", estiloCombate: "" },
       personalidadeTravada: false,
       cenaDespertarShikai: "",
@@ -7973,8 +8512,13 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
       ...personagem,
       atributos: { pressao: 10, forca: 10, velocidade: 10, resiliencia: 10 },
       pontosDisponiveis: 20,
+      conhecimento: 450,
+      cenasSemana: 0,
+      cenasTotal: 0,
       sorteiosComunsRestantes: 2,
       sorteiosEspeciaisRestantes: 0,
+      kidosConhecidos: [],
+      tecnicas: [],
       zanpakuto: {
         nome: "Lâmina Selada (Asauchi)",
         shikaiAtiva: null,
@@ -7995,7 +8539,7 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
     alert("Ficha resetada com sucesso para o estado inicial!");
   }
 
-  // CONCESSÃO DE RECOMPENSA DE ATRIBUTOS PELO ADM (SOMENTE ATRIBUTOS)
+  // CONCESSÃO DE RECOMPENSA DE ATRIBUTOS, CONHECIMENTO & CENAS PELO ADM
   function concederRecompensa() {
     const pontos = Number(rec.pontos) || 0;
     if (pontos <= 0) {
@@ -8006,7 +8550,20 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
     let patch = {};
     let texto = `[${rec.tipo}]`;
 
-    if (rec.atributo && rec.atributo !== "pontosDisponiveis") {
+    if (rec.atributo === "conhecimento") {
+      const valorAtual = Number(personagem.conhecimento || 0);
+      patch.conhecimento = valorAtual + pontos;
+      texto += ` +${pontos} ₪ de Conhecimento Espiritual`;
+    } else if (rec.atributo === "cenas") {
+      const cenasSem = Number(personagem.cenasSemana || 0);
+      const cenasTot = Number(personagem.cenasTotal || 0);
+      const conAtual = Number(personagem.conhecimento || 0);
+      const ganhoCon = pontos * 100;
+      patch.cenasSemana = cenasSem + pontos;
+      patch.cenasTotal = cenasTot + pontos;
+      patch.conhecimento = conAtual + ganhoCon;
+      texto += ` +${pontos} cenas no WhatsApp registradas (+${ganhoCon} ₪ Conhecimento)`;
+    } else if (rec.atributo && rec.atributo !== "pontosDisponiveis") {
       const valorAtual = Number(personagem.atributos?.[rec.atributo] || 10);
       patch.atributos = {
         ...(personagem.atributos || { pressao: 10, forca: 10, velocidade: 10, resiliencia: 10 }),
@@ -8022,7 +8579,7 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
 
     updateChar(patch, texto);
     playReiatsuSound('win');
-    alert(`Recompensa de +${pontos} ponto(s) de atributo concedida com sucesso para ${personagem.nome}!`);
+    alert(`✓ Recompensa concedida com sucesso para ${personagem.nome}!\n\n${texto}`);
     setRec({ tipo: "Recompensa de Atributos", pontos: 1, atributo: "", motivo: "" });
   }
 
@@ -9430,6 +9987,13 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
                 labelStatPlayer = "Sua Velocidade";
                 valorStatPlayer = velocidadeBase;
                 labelStatInimigo = "Velocidade do Oponente";
+              } else if (simuladorModo === "kaido_cura") {
+                analise = (typeof calcularEfeitoKaido === 'function')
+                  ? calcularEfeitoKaido(pressaoBase, simKaidoEstado)
+                  : { categoria: "Tratamento Tático", cor: "#10B981", cenasNecessarias: 2, curaHpStr: "Recuperação de 70%", estadoFinal: "Inteiro", diagnostico: "Estabilizado", dicaTatica: "Manter canalização", roteiroCenas: [] };
+                labelStatPlayer = "Sua Pressão Espiritual (Kaidō)";
+                valorStatPlayer = pressaoBase;
+                labelStatInimigo = "Estado Inicial do Paciente";
               } else {
                 analise = calcularRelacaoPressaoPressao(pressaoBase, simStatInimigo);
                 labelStatPlayer = "Sua Pressão Espiritual";
@@ -9439,19 +10003,20 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
 
               return (
                 <div className="space-y-5">
-                  {/* Seletor dos 4 Modos de Confronto */}
+                  {/* Seletor dos 5 Modos de Confronto & Aplicação Espiritual */}
                   <div className="flex gap-2 overflow-x-auto pb-1">
                     {[
-                      { id: "forca_resiliencia", label: "🛡️ Força X Resiliência", desc: "Mitigação & Absorção do Golpe", cor: "#8B6FD6" },
-                      { id: "forca_forca", label: "⚔️ Força X Força", desc: "Disputa Física & Trava de Espadas", cor: "#D6483F" },
+                      { id: "forca_resiliencia", label: "🛡️ Força X Resiliência", desc: "Mitigação & Absorção", cor: "#8B6FD6" },
+                      { id: "forca_forca", label: "⚔️ Força X Força", desc: "Disputa & Trava de Espadas", cor: "#D6483F" },
                       { id: "velocidade_velocidade", label: "⚡ Velocidade X Velocidade", desc: "Shunpo & Flanqueamento", cor: "#5FA96B" },
-                      { id: "pressao_pressao", label: "🌀 Pressão X Pressão", desc: "Supressão de Aura & Choque de Reiatsu", cor: "#4FB3E8" }
+                      { id: "pressao_pressao", label: "🌀 Pressão X Pressão", desc: "Supressão de Aura & Choque", cor: "#4FB3E8" },
+                      { id: "kaido_cura", label: "🌿 Kaidō & Cura Médica", desc: "Pressão vs Cenas de Tratamento", cor: "#10B981" }
                     ].map((modo) => (
                       <button
                         key={modo.id}
                         type="button"
                         onClick={() => setSimuladorModo(modo.id)}
-                        className={`px-3.5 py-2 rounded-xl text-xs font-bold transition flex-1 min-w-[170px] text-left border ${
+                        className={`px-3.5 py-2 rounded-xl text-xs font-bold transition flex-1 min-w-[150px] text-left border ${
                           simuladorModo === modo.id
                             ? "bg-bleach-panel2 text-white border-white shadow-lg"
                             : "bg-black/60 text-bleach-creamDim border-white/5 hover:border-white/20"
@@ -9465,104 +10030,207 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
                   </div>
 
                   {/* Painel do Modo Selecionado */}
-                  <div className="p-4 sm:p-5 bg-gradient-to-r from-black via-bleach-panel2 to-black rounded-xl border-2 border-white/10 space-y-4 shadow-xl">
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
-                      <div>
-                        <h5 className="font-title text-xl text-white flex items-center gap-2">
-                          <span>🎯</span> Disputa: {labelStatPlayer} ({valorStatPlayer} pts) vs {labelStatInimigo}
-                        </h5>
-                        <p className="text-[11px] text-bleach-creamDim">
-                          Simule o resultado narrativo e mecânico com base na comparação oficial dos atributos.
-                        </p>
+                  {simuladorModo === "kaido_cura" ? (
+                    <div className="p-4 sm:p-6 bg-gradient-to-b from-emerald-950/30 via-bleach-panel2 to-black rounded-xl border-2 border-emerald-500/50 space-y-5 shadow-2xl">
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-emerald-500/20 pb-4">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="px-2.5 py-0.5 bg-emerald-950 text-emerald-300 border border-emerald-500 text-[10px] font-extrabold uppercase rounded-full tracking-wider">
+                              Hospital Geral do 4º Esquadrão
+                            </span>
+                            <span className="text-xs font-mono text-cyan-400 font-bold">
+                              Pressão Aplicada: {pressaoBase} pts
+                            </span>
+                          </div>
+                          <h5 className="font-title text-2xl text-emerald-400 mt-1 flex items-center gap-2">
+                            <span>🌿</span> Simulador de Kaidō & Cenas de Cura
+                          </h5>
+                          <p className="text-xs text-bleach-creamDim">
+                            Calcule quantas cenas você precisa manter o Kaidō ativo no WhatsApp e a evolução do estado do aliado.
+                          </p>
+                        </div>
+
+                        {/* Seletor de Estado Inicial do Aliado */}
+                        <div className="bg-black/70 p-2.5 rounded-xl border border-emerald-500/30 space-y-1">
+                          <label className="text-[10px] text-bleach-muted uppercase font-bold block">
+                            Estado Inicial do Paciente:
+                          </label>
+                          <div className="flex gap-1.5">
+                            {[
+                              { id: "Derrotado", label: "💀 Derrotado", cor: "#EF4444" },
+                              { id: "Debilitado", label: "🩸 Debilitado", cor: "#F97316" },
+                              { id: "Ferido", label: "🩹 Ferido", cor: "#EAB308" }
+                            ].map((est) => (
+                              <button
+                                key={est.id}
+                                type="button"
+                                onClick={() => setSimKaidoEstado(est.id)}
+                                className={`px-2.5 py-1 rounded-lg text-xs font-bold transition border ${
+                                  simKaidoEstado === est.id
+                                    ? "bg-emerald-500 text-black border-white shadow"
+                                    : "bg-black/60 text-bleach-creamDim border-white/10 hover:border-emerald-400"
+                                }`}
+                              >
+                                {est.label}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
                       </div>
 
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs text-bleach-muted">{labelStatInimigo}:</span>
-                        <input
-                          type="number"
-                          min="1"
-                          max="9999"
-                          value={simStatInimigo}
-                          onChange={(e) => setSimStatInimigo(Math.max(1, Number(e.target.value) || 1))}
-                          className="w-24 px-3 py-1.5 bg-black/80 border border-white/30 rounded-lg text-white font-mono font-bold text-sm text-center focus:outline-none focus:border-bleach-orange"
-                        />
-                        <span className="text-xs font-mono text-bleach-orange font-bold">pts</span>
-                      </div>
-                    </div>
+                      {/* Cartões de Métricas de Cura */}
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                        <div className="p-3.5 bg-black/70 rounded-xl border border-emerald-500/40 text-center">
+                          <span className="text-[10px] text-bleach-muted uppercase font-bold block">Tempo de Tratamento no ON:</span>
+                          <span className="text-2xl font-mono font-black text-emerald-400 block mt-0.5">
+                            ⏳ {analise.cenasNecessarias} {analise.cenasNecessarias === 1 ? 'Cena' : 'Cenas'}
+                          </span>
+                          <span className="text-[11px] text-emerald-200/70">Manutenção contínua de Reiki</span>
+                        </div>
 
-                    {/* Presets Rápidos */}
-                    <div className="flex items-center gap-1.5 flex-wrap">
-                      <span className="text-[10px] font-bold text-bleach-muted uppercase mr-1">Presets Rápidos:</span>
-                      {[
-                        { label: "💀 Hollow Menor", val: 30 },
-                        { label: "⚔️ Sentinela", val: 80 },
-                        { label: "⚡ Tenente", val: 250 },
-                        { label: "👑 Capitão", val: 650 },
-                        { label: "🩸 Espada Top 4", val: 1200 },
-                        { label: "🌟 Comandante", val: 2500 },
-                      ].map((preset) => (
-                        <button
-                          key={preset.label}
-                          type="button"
-                          onClick={() => setSimStatInimigo(preset.val)}
-                          className={`px-2.5 py-1 rounded-lg text-[11px] font-mono transition ${
-                            simStatInimigo === preset.val
-                              ? "bg-bleach-orange text-black font-bold border border-white shadow"
-                              : "bg-black/60 text-bleach-creamDim hover:text-white border border-white/10"
-                          }`}
-                        >
-                          {preset.label} ({preset.val})
-                        </button>
-                      ))}
-                    </div>
+                        <div className="p-3.5 bg-black/70 rounded-xl border border-emerald-500/40 text-center">
+                          <span className="text-[10px] text-bleach-muted uppercase font-bold block">Evolução do Paciente:</span>
+                          <span className="text-base font-extrabold text-white block mt-1">
+                            {analise.estadoInicial || simKaidoEstado} ➔ <span className="text-emerald-400">{analise.estadoFinal}</span>
+                          </span>
+                          <span className="text-[11px] text-yellow-300/80 font-mono">{analise.curaHpStr}</span>
+                        </div>
 
-                    {/* Resultado da Simulação */}
-                    <div className="p-4 bg-black/90 rounded-xl border-2 space-y-3" style={{ borderColor: analise.cor }}>
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <div className="flex items-center gap-2">
-                          <span
-                            className="text-[10px] font-extrabold uppercase px-3 py-1 rounded-full text-black"
-                            style={{ backgroundColor: analise.cor }}
-                          >
+                        <div className="p-3.5 bg-black/70 rounded-xl border border-emerald-500/40 text-center">
+                          <span className="text-[10px] text-bleach-muted uppercase font-bold block">Classificação Médica:</span>
+                          <span className="text-sm font-extrabold text-emerald-300 block mt-1">
                             {analise.categoria}
                           </span>
-                          <span className="text-xs font-mono text-bleach-creamDim">
-                            {labelStatPlayer} ({valorStatPlayer}) / Inimigo ({simStatInimigo}) = <strong className="font-bold text-white">{analise.pct}%</strong>
+                          <span className="text-[10px] text-bleach-muted">{analise.diagnostico}</span>
+                        </div>
+                      </div>
+
+                      {/* Roteiro Narrativo Passo a Passo por Cena */}
+                      <div className="p-4 bg-black/80 rounded-xl border border-emerald-500/30 space-y-3">
+                        <h6 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                          <span>📋</span> Roteiro Passo-a-Passo de Narração para o WhatsApp ({analise.cenasNecessarias} Cenas):
+                        </h6>
+                        <div className="space-y-2">
+                          {(analise.roteiroCenas || []).map((passo, idx) => (
+                            <div key={idx} className="p-2.5 bg-emerald-950/20 border border-emerald-500/20 rounded-lg flex items-start gap-2.5">
+                              <span className="px-2 py-0.5 bg-emerald-900/80 text-emerald-300 border border-emerald-500 font-mono font-bold text-[10px] rounded shrink-0">
+                                Cena {passo.cena}
+                              </span>
+                              <div>
+                                <strong className="text-white text-xs block">{passo.fase}</strong>
+                                <p className="text-xs text-bleach-creamDim mt-0.5">{passo.instrucao}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Recomendação de Roleplay */}
+                      <div className="p-3 bg-bleach-panel rounded-xl border border-white/10 text-xs">
+                        <strong className="text-emerald-400 block text-[10px] uppercase font-bold">Instrução Tática do 4º Esquadrão:</strong>
+                        <p className="text-bleach-cream mt-0.5 leading-relaxed">{analise.dicaTatica}</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="p-4 sm:p-5 bg-gradient-to-r from-black via-bleach-panel2 to-black rounded-xl border-2 border-white/10 space-y-4 shadow-xl">
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
+                        <div>
+                          <h5 className="font-title text-xl text-white flex items-center gap-2">
+                            <span>🎯</span> Disputa: {labelStatPlayer} ({valorStatPlayer} pts) vs {labelStatInimigo}
+                          </h5>
+                          <p className="text-[11px] text-bleach-creamDim">
+                            Simule o resultado narrativo e mecânico com base na comparação oficial dos atributos.
+                          </p>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs text-bleach-muted">{labelStatInimigo}:</span>
+                          <input
+                            type="number"
+                            min="1"
+                            max="9999"
+                            value={simStatInimigo}
+                            onChange={(e) => setSimStatInimigo(Math.max(1, Number(e.target.value) || 1))}
+                            className="w-24 px-3 py-1.5 bg-black/80 border border-white/30 rounded-lg text-white font-mono font-bold text-sm text-center focus:outline-none focus:border-bleach-orange"
+                          />
+                          <span className="text-xs font-mono text-bleach-orange font-bold">pts</span>
+                        </div>
+                      </div>
+
+                      {/* Presets Rápidos */}
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="text-[10px] font-bold text-bleach-muted uppercase mr-1">Presets Rápidos:</span>
+                        {[
+                          { label: "💀 Hollow Menor", val: 30 },
+                          { label: "⚔️ Sentinela", val: 80 },
+                          { label: "⚡ Tenente", val: 250 },
+                          { label: "👑 Capitão", val: 650 },
+                          { label: "🩸 Espada Top 4", val: 1200 },
+                          { label: "🌟 Comandante", val: 2500 },
+                        ].map((preset) => (
+                          <button
+                            key={preset.label}
+                            type="button"
+                            onClick={() => setSimStatInimigo(preset.val)}
+                            className={`px-2.5 py-1 rounded-lg text-[11px] font-mono transition ${
+                              simStatInimigo === preset.val
+                                ? "bg-bleach-orange text-black font-bold border border-white shadow"
+                                : "bg-black/60 text-bleach-creamDim hover:text-white border border-white/10"
+                            }`}
+                          >
+                            {preset.label} ({preset.val})
+                          </button>
+                        ))}
+                      </div>
+
+                      {/* Resultado da Simulação */}
+                      <div className="p-4 bg-black/90 rounded-xl border-2 space-y-3" style={{ borderColor: analise.cor }}>
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <div className="flex items-center gap-2">
+                            <span
+                              className="text-[10px] font-extrabold uppercase px-3 py-1 rounded-full text-black"
+                              style={{ backgroundColor: analise.cor }}
+                            >
+                              {analise.categoria}
+                            </span>
+                            <span className="text-xs font-mono text-bleach-creamDim">
+                              {labelStatPlayer} ({valorStatPlayer}) / Inimigo ({simStatInimigo}) = <strong className="font-bold text-white">{analise.pct}%</strong>
+                            </span>
+                          </div>
+
+                          <span className="text-xs font-bold font-mono" style={{ color: analise.cor }}>
+                            {analise.resultadoStr || analise.danoRecebidoStr}
                           </span>
                         </div>
 
-                        <span className="text-xs font-bold font-mono" style={{ color: analise.cor }}>
-                          {analise.resultadoStr || analise.danoRecebidoStr}
-                        </span>
-                      </div>
-
-                      {/* Barra de Proporção */}
-                      <div className="w-full bg-black/60 h-2.5 rounded-full overflow-hidden border border-white/10">
-                        <div
-                          className="h-full rounded-full transition-all duration-500"
-                          style={{
-                            width: `${Math.min(100, analise.pct)}%`,
-                            backgroundColor: analise.cor
-                          }}
-                        ></div>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs pt-1">
-                        <div className="p-2.5 bg-bleach-panel rounded-lg border border-white/5">
-                          <strong className="text-bleach-muted block text-[10px] uppercase">Efeito de Postura / Movimento:</strong>
-                          <p className="text-bleach-cream mt-0.5">{analise.efeitoPostura}</p>
+                        {/* Barra de Proporção */}
+                        <div className="w-full bg-black/60 h-2.5 rounded-full overflow-hidden border border-white/10">
+                          <div
+                            className="h-full rounded-full transition-all duration-500"
+                            style={{
+                              width: `${Math.min(100, analise.pct)}%`,
+                              backgroundColor: analise.cor
+                            }}
+                          ></div>
                         </div>
-                        <div className="p-2.5 bg-bleach-panel rounded-lg border border-white/5">
-                          <strong className="text-bleach-muted block text-[10px] uppercase">Risco à Zanpakutō / Arma:</strong>
-                          <p className="text-bleach-cream mt-0.5">{analise.riscoArma}</p>
-                        </div>
-                        <div className="p-2.5 bg-bleach-panel rounded-lg border border-white/5">
-                          <strong className="text-bleach-orange block text-[10px] uppercase">Recomendação Tática de Narração:</strong>
-                          <p className="text-bleach-cream mt-0.5">{analise.dicaTatica}</p>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs pt-1">
+                          <div className="p-2.5 bg-bleach-panel rounded-lg border border-white/5">
+                            <strong className="text-bleach-muted block text-[10px] uppercase">Efeito de Postura / Movimento:</strong>
+                            <p className="text-bleach-cream mt-0.5">{analise.efeitoPostura}</p>
+                          </div>
+                          <div className="p-2.5 bg-bleach-panel rounded-lg border border-white/5">
+                            <strong className="text-bleach-muted block text-[10px] uppercase">Risco à Zanpakutō / Arma:</strong>
+                            <p className="text-bleach-cream mt-0.5">{analise.riscoArma}</p>
+                          </div>
+                          <div className="p-2.5 bg-bleach-panel rounded-lg border border-white/5">
+                            <strong className="text-bleach-orange block text-[10px] uppercase">Recomendação Tática de Narração:</strong>
+                            <p className="text-bleach-cream mt-0.5">{analise.dicaTatica}</p>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               );
             })()}
@@ -9573,6 +10241,90 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
       {/* SUBPAGE: KIDOS & TÉCNICAS */}
       {subPaginaFicha === "kidos" && (
         <div className="space-y-6">
+          
+          {/* BARRA DE ADMIN: AJUSTES RÁPIDOS DE CONHECIMENTO & CENAS */}
+          {isAdmin && (
+            <div className="p-3.5 bg-gradient-to-r from-yellow-950/60 via-black/90 to-amber-950/60 border-2 border-yellow-500/70 rounded-2xl shadow-xl flex flex-wrap items-center justify-between gap-3 text-xs animate-fade-in">
+              <div className="flex items-center gap-2">
+                <span className="w-7 h-7 rounded-lg bg-yellow-500/20 border border-yellow-500 flex items-center justify-center text-sm">
+                  👑
+                </span>
+                <div>
+                  <span className="font-title text-sm text-yellow-400 block">Gestão de Conhecimento ADM ({personagem.nome})</span>
+                  <span className="text-[11px] text-bleach-creamDim">
+                    Saldo: <strong className="text-yellow-400 font-mono">{personagem.conhecimento || 0} ₪</strong> | Cenas Semana: <strong className="text-white font-mono">{personagem.cenasSemana || 0}</strong>
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const atual = Number(personagem.conhecimento || 0);
+                    updateChar({ conhecimento: atual + 100 }, "+100 ₪ de Conhecimento creditado pelo ADM");
+                    playReiatsuSound('win');
+                  }}
+                  className="px-2.5 py-1 bg-yellow-500 text-black font-extrabold rounded-lg hover:brightness-110 shadow text-xs transition"
+                >
+                  +100 ₪
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const atual = Number(personagem.conhecimento || 0);
+                    updateChar({ conhecimento: atual + 500 }, "+500 ₪ de Conhecimento creditado pelo ADM");
+                    playReiatsuSound('win');
+                  }}
+                  className="px-2.5 py-1 bg-yellow-500 text-black font-extrabold rounded-lg hover:brightness-110 shadow text-xs transition"
+                >
+                  +500 ₪
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const atual = Number(personagem.conhecimento || 0);
+                    updateChar({ conhecimento: atual + 1000 }, "+1000 ₪ de Conhecimento creditado pelo ADM");
+                    playReiatsuSound('win');
+                  }}
+                  className="px-2.5 py-1 bg-yellow-500 text-black font-extrabold rounded-lg hover:brightness-110 shadow text-xs transition"
+                >
+                  +1000 ₪
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const sem = Number(personagem.cenasSemana || 0);
+                    const tot = Number(personagem.cenasTotal || 0);
+                    const con = Number(personagem.conhecimento || 0);
+                    updateChar({
+                      cenasSemana: sem + 5,
+                      cenasTotal: tot + 5,
+                      conhecimento: con + 500
+                    }, "📊 +5 cenas no WhatsApp (+500 ₪ Conhecimento) lançadas pelo ADM");
+                    playReiatsuSound('win');
+                  }}
+                  className="px-2.5 py-1 bg-gradient-to-r from-orange-500 to-amber-600 text-black font-extrabold rounded-lg hover:brightness-110 shadow text-xs transition"
+                >
+                  +5 Cenas (+500 ₪)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const val = prompt(`Definir saldo exato de Conhecimento para [${personagem.nome}]:`, String(personagem.conhecimento || 0));
+                    if (val !== null && !isNaN(Number(val))) {
+                      const novoCon = Math.max(0, Number(val));
+                      updateChar({ conhecimento: novoCon }, `Saldo de Conhecimento ajustado para ${novoCon} ₪ pelo ADM`);
+                      playReiatsuSound('win');
+                    }
+                  }}
+                  className="px-2.5 py-1 bg-black/80 border border-white/20 text-white font-bold rounded-lg hover:border-yellow-400 text-xs transition"
+                >
+                  ✏️ Saldo Manual
+                </button>
+              </div>
+            </div>
+          )}
           
           {/* 1. BARRAS SUPERIORES: CONHECIMENTO (DINHEIRO DE KIDŌ) & PRESSÃO ESPIRITUAL (REIATSU NA CENA) */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -9693,293 +10445,365 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
 
           </div>
 
-          {/* 2. TÉCNICAS E KIDŌS REGISTRADOS NA FICHA */}
-          <Section 
-            title="📜 Kidōs Registrados na Ficha do Shinigami" 
-            subtitle="Feitiços dominados e prontos para uso em combate ou simulação"
-          >
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mb-4">
-              <span className="text-xs text-bleach-creamDim">
-                Total de Feitiços Aprendidos: <strong className="text-white font-mono">{(personagem.kidosConhecidos || []).length}</strong>
-              </span>
+          {/* SELETOR DE SUB-ABAS DE KIDŌ */}
+          <div className="flex gap-2 border-b border-white/10 pb-3 flex-wrap">
+            <button
+              type="button"
+              onClick={() => setSubAbaKido("magias")}
+              className={`px-4 py-2.5 rounded-xl text-xs font-extrabold uppercase tracking-wider transition flex items-center gap-2 border ${
+                subAbaKido === "magias"
+                  ? "bg-bleach-orange text-black border-white shadow-lg"
+                  : "bg-black/60 text-bleach-creamDim border-white/10 hover:border-white/30"
+              }`}
+            >
+              <span>💥</span> Feitiços & Combate (Hadō / Bakudō)
+            </button>
+            <button
+              type="button"
+              onClick={() => setSubAbaKido("kaido")}
+              className={`px-4 py-2.5 rounded-xl text-xs font-extrabold uppercase tracking-wider transition flex items-center gap-2 border ${
+                subAbaKido === "kaido"
+                  ? "bg-emerald-500 text-black border-white shadow-lg font-black"
+                  : "bg-black/60 text-emerald-300 border-emerald-500/30 hover:border-emerald-400"
+              }`}
+            >
+              <span>🌿</span> Kaidō & Simulação de Cura (4º Esquadrão)
+            </button>
+          </div>
 
-              <button
-                type="button"
-                onClick={() => setShowKidoShopModal(true)}
-                className="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-yellow-500 to-amber-600 hover:brightness-110 text-black font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-lg flex items-center justify-center gap-1.5 transition"
+          {/* SUB-ABA 1: FEITIÇOS & COMBATE */}
+          {subAbaKido === "magias" && (
+            <div className="space-y-6">
+              {/* 2. TÉCNICAS E KIDŌS REGISTRADOS NA FICHA */}
+              <Section 
+                title="📜 Kidōs Registrados na Ficha do Shinigami" 
+                subtitle="Feitiços dominados e prontos para uso em combate ou simulação"
               >
-                <span>✨ 📖</span> Aprender Novos Kidōs (Loja)
-              </button>
-            </div>
-
-            {(!personagem.kidosConhecidos || personagem.kidosConhecidos.length === 0) ? (
-              <div className="p-8 text-center bg-black/50 border border-dashed border-white/20 rounded-2xl space-y-3">
-                <div className="text-3xl">📕</div>
-                <h4 className="font-title text-xl text-yellow-400">Nenhum Kidō registrado na sua ficha ainda</h4>
-                <p className="text-xs text-bleach-creamDim max-w-md mx-auto">
-                  Você pode usar o seu Conhecimento acumulado para aprender feitiços de Hadō, Bakudō e Kaidō na Biblioteca do Seireitei!
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setShowKidoShopModal(true)}
-                  className="px-5 py-2.5 bg-yellow-500 hover:bg-yellow-400 text-black font-black text-xs uppercase tracking-wider rounded-xl shadow"
-                >
-                  Abrir Loja de Kidōs
-                </button>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
-                {personagem.kidosConhecidos.map((k) => {
-                  const isHado = k.cat === "Hadō";
-                  const isBakudo = k.cat === "Bakudō";
-                  const pressaoTotal = Number(personagem.atributos?.pressao || 30);
-                  const pressaoRestante = Math.max(0, pressaoTotal - gastoPressaoForca - gastoPressaoResiliencia);
-                  const custo = calcularCustoKido(k, pressaoTotal);
-                  const poder = calcularPoderKido(k, pressaoTotal, custo.custoTotal, false);
-
+                {(() => {
+                  const pressaoTotal = Number(personagem.atributos?.pressao || 10);
+                  const cap = (typeof getCapacidadeKidos === 'function') ? getCapacidadeKidos(pressaoTotal) : { limiteMaximo: 4, tierNome: "Iniciante", limiteEquipadosStr: "Até 4 Feitiços", cor: "#10B981", descricao: "Em fase de iniciação espiritual." };
+                  const totalAprendidos = (personagem.kidosConhecidos || []).length;
+                  
                   return (
-                    <div
-                      key={k.id}
-                      className={`p-4 bg-bleach-panel2 border rounded-xl flex flex-col justify-between space-y-3 transition-all duration-300 ${
-                        isHado
-                          ? "border-red-500/40 hover:border-red-400 hover:shadow-[0_0_20px_rgba(239,68,68,0.2)]"
-                          : isBakudo
-                          ? "border-blue-500/40 hover:border-blue-400 hover:shadow-[0_0_20px_rgba(59,130,246,0.2)]"
-                          : "border-emerald-500/40 hover:border-emerald-400 hover:shadow-[0_0_20px_rgba(16,185,129,0.2)]"
-                      }`}
-                    >
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                          <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded border ${
-                            isHado ? "bg-red-950 text-red-300 border-red-500" : isBakudo ? "bg-blue-950 text-cyan-300 border-cyan-500" : "bg-emerald-950 text-emerald-300 border-emerald-500"
-                          }`}>
-                            {k.cat} #{k.numero}
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 p-3.5 bg-black/70 rounded-xl border border-white/10">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-xs text-bleach-cream">
+                            Slots de Magia Utilizados: <strong className="text-yellow-400 font-mono text-sm">{totalAprendidos} / {cap.limiteMaximo}</strong>
                           </span>
-                          <span className="text-[11px] font-mono text-bleach-orange font-bold">
-                            Custo: {custo.custoTotal} pts
+                          <span
+                            className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full text-black font-mono shadow"
+                            style={{ backgroundColor: cap.cor }}
+                          >
+                            {cap.tierNome}
                           </span>
                         </div>
-
-                        <h5 className="font-bold text-white text-sm leading-snug">
-                          {k.nome}
-                        </h5>
-
-                        {k.incant && k.incant !== "—" && (
-                          <div className="p-2 bg-black/60 rounded-lg border border-white/5 text-[10px] text-cyan-200/80 italic line-clamp-2">
-                            "{k.incant}"
-                          </div>
-                        )}
-
-                        <p className="text-[11px] text-bleach-creamDim line-clamp-2 leading-relaxed">
-                          {k.desc}
+                        <p className="text-[11px] text-bleach-muted">
+                          {cap.descricao} ‹ <strong>{cap.limiteEquipadosStr}</strong> ›
                         </p>
-
-                        <div className="text-[10px] font-mono text-bleach-muted flex justify-between">
-                          <span>Poder Básico: <strong className="text-white">{poder} pts</strong></span>
-                          <span>Reiatsu Mínima: <strong className="text-cyan-400">{k.pressaoMinima || 10} pts</strong></span>
-                        </div>
                       </div>
 
-                      <div className="space-y-2 pt-2 border-t border-white/5">
-                        <button
-                          type="button"
-                          onClick={() => setKidoModalFicha(k)}
-                          className="w-full py-1.5 rounded-lg bg-black/60 border border-white/10 text-xs font-bold text-bleach-cream hover:text-white hover:border-bleach-orange transition flex items-center justify-center gap-1.5"
-                        >
-                          <span>👁️</span> Detalhes & Simulação Completa
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() => {
-                            if (pressaoRestante < custo.custoTotal) {
-                              alert(`Reiatsu insuficiente na cena! Custo: ${custo.custoTotal} pts | Disponível: ${pressaoRestante} pts.`);
-                              return;
-                            }
-                            playReiatsuSound('kido');
-                            updateChar({}, `⚡ Conjurou [${k.cat} #${k.numero}] ${k.nome} na cena (Gasto: ${custo.custoTotal} pts)`);
-                            alert(`✨ ${k.nome} conjurado na cena com sucesso!\n\n⚡ Poder de Feitiço: ${poder} pts\n🌀 Custo de Reiatsu: ${custo.custoTotal} pts`);
-                          }}
-                          disabled={pressaoRestante < custo.custoTotal}
-                          className={`w-full py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition shadow disabled:opacity-40 disabled:cursor-not-allowed ${
-                            isHado ? "bg-gradient-to-r from-red-600 to-orange-600 text-white hover:brightness-110" 
-                            : isBakudo ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:brightness-110" 
-                            : "bg-gradient-to-r from-emerald-600 to-teal-600 text-white hover:brightness-110"
-                          }`}
-                        >
-                          ⚡ Conjurar em Cena ({custo.custoTotal} pts)
-                        </button>
-                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setShowKidoShopModal(true)}
+                        className="w-full sm:w-auto px-4 py-2.5 bg-gradient-to-r from-yellow-500 to-amber-600 hover:brightness-110 text-black font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-lg flex items-center justify-center gap-1.5 transition"
+                      >
+                        <span>✨ 📖</span> Aprender Novos Kidōs (Loja)
+                      </button>
                     </div>
                   );
-                })}
-              </div>
-            )}
-          </Section>
+                })()}
 
-          {/* 3. SIMULADOR INTERATIVO DE KIDŌS REGISTRADOS (ESTILO ATRIBUTOS) */}
-          {(personagem.kidosConhecidos && personagem.kidosConhecidos.length > 0) && (
-            <Section
-              title="🎯 Simulador de Confronto de Kidōs Aprendidos"
-              subtitle="Teste o impacto real dos feitiços registrados na sua ficha contra atributos de oponentes"
-              className="border-2 border-bleach-orange/50"
-            >
-              {(() => {
-                const kidos = personagem.kidosConhecidos || [];
-                const kidoAtivo = kidos[Math.min(simKidoIndex, kidos.length - 1)] || kidos[0];
-                if (!kidoAtivo) return null;
-
-                const isHado = kidoAtivo.cat === "Hadō";
-                const isBakudo = kidoAtivo.cat === "Bakudō";
-                const isKaido = kidoAtivo.cat === "Kaidō";
-
-                const pressaoTotal = Number(personagem.atributos?.pressao || 30);
-                const custoInfo = calcularCustoKido(kidoAtivo, pressaoTotal);
-                const poderCalculado = calcularPoderKido(kidoAtivo, pressaoTotal, custoInfo.custoTotal, simKidoIncantado);
-
-                let analise = null;
-                let labelInimigo = isHado ? "Resiliência do Alvo" : isBakudo ? "Força do Alvo" : "Poder Terapêutico";
-
-                if (isHado) {
-                  analise = calcularEfeitoHado(poderCalculado, simKidoTargetStat);
-                } else if (isBakudo) {
-                  analise = calcularEfeitoBakudo(poderCalculado, simKidoTargetStat);
-                } else {
-                  analise = calcularEfeitoKaido(poderCalculado);
-                }
-
-                return (
-                  <div className="space-y-4">
-                    {/* Seletor do Kidō para Simulação */}
-                    <div>
-                      <label className="block text-xs font-bold text-bleach-creamDim uppercase mb-1.5">
-                        Escolha um Kidō Registrado para Simular:
-                      </label>
-                      <div className="flex gap-2 overflow-x-auto pb-1">
-                        {kidos.map((k, idx) => (
-                          <button
-                            key={k.id || idx}
-                            type="button"
-                            onClick={() => setSimKidoIndex(idx)}
-                            className={`px-3 py-2 rounded-xl text-xs font-bold transition flex-shrink-0 border ${
-                              simKidoIndex === idx
-                                ? "bg-bleach-panel2 text-white border-bleach-orange shadow-lg"
-                                : "bg-black/60 text-bleach-creamDim border-white/5 hover:border-white/20"
-                            }`}
-                          >
-                            <span className="text-bleach-orange block text-[10px] uppercase font-bold">{k.cat} #{k.numero}</span>
-                            <span>{k.nome}</span>
-                          </button>
-                        ))}
-                      </div>
+                {(!personagem.kidosConhecidos || personagem.kidosConhecidos.length === 0) ? (
+                  <div className="p-8 text-center bg-gradient-to-b from-yellow-950/20 to-black/80 border-2 border-dashed border-yellow-500/40 rounded-2xl space-y-3 shadow-xl">
+                    <div className="text-4xl">📚✨</div>
+                    <h4 className="font-title text-xl text-yellow-400">Escolha seus 4 Kidōs Iniciais na Loja!</h4>
+                    <p className="text-xs text-bleach-creamDim max-w-lg mx-auto leading-relaxed">
+                      Como Shinigami, você possui <strong className="text-yellow-400 font-mono font-bold">{personagem.conhecimento || 450} ₪</strong> de Conhecimento inicial para escolher livremente até <strong>4 feitiços básicos</strong> de Hadō, Bakudō e Kaidō na Biblioteca do Seireitei!
+                    </p>
+                    <div className="pt-2">
+                      <button
+                        type="button"
+                        onClick={() => setShowKidoShopModal(true)}
+                        className="px-6 py-3 bg-gradient-to-r from-yellow-500 to-amber-600 hover:brightness-110 text-black font-black text-xs uppercase tracking-wider rounded-xl shadow-xl transition"
+                      >
+                        📖 Abrir Loja & Escolher Meus 4 Feitiços
+                      </button>
                     </div>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+                    {personagem.kidosConhecidos.map((k) => {
+                      const isHado = k.cat === "Hadō";
+                      const isBakudo = k.cat === "Bakudō";
+                      const pressaoTotal = Number(personagem.atributos?.pressao || 30);
+                      const pressaoRestante = Math.max(0, pressaoTotal - gastoPressaoForca - gastoPressaoResiliencia);
+                      const custo = calcularCustoKido(k, pressaoTotal);
+                      const poderObj = calcularPoderKido(k, pressaoTotal, custo.custoTotal, false);
+                      const poder = poderObj.poderFinal || poderObj;
 
-                    {/* Painel do Simulador */}
-                    <div className="p-4 sm:p-5 bg-gradient-to-r from-black via-bleach-panel2 to-black rounded-xl border-2 border-white/10 space-y-4 shadow-xl">
-                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
-                        <div>
-                          <h5 className="font-title text-xl text-white flex items-center gap-2">
-                            <span>⚡</span> {kidoAtivo.nome} (Poder: {poderCalculado} pts) vs {labelInimigo}
-                          </h5>
-                          <p className="text-[11px] text-bleach-creamDim">
-                            Custo de Reiatsu: <strong className="text-bleach-orange font-mono">{custoInfo.custoTotal} pts</strong> ({custoInfo.custoFlat} flat + {custoInfo.custoPercentual} [% total])
-                          </p>
-                        </div>
-
-                        <div className="flex items-center gap-3">
-                          <label className="flex items-center gap-2 cursor-pointer text-xs text-yellow-300 font-bold bg-yellow-950/60 border border-yellow-500/50 px-2.5 py-1 rounded-lg">
-                            <input
-                              type="checkbox"
-                              checked={simKidoIncantado}
-                              onChange={(e) => setSimKidoIncantado(e.target.checked)}
-                              className="accent-yellow-400"
-                            />
-                            <span>Incantação Completa (+35% Poder)</span>
-                          </label>
-
-                          {!isKaido && (
-                            <div className="flex items-center gap-2">
-                              <span className="text-xs text-bleach-muted">{labelInimigo}:</span>
-                              <input
-                                type="number"
-                                min="1"
-                                max="9999"
-                                value={simKidoTargetStat}
-                                onChange={(e) => setSimKidoTargetStat(Math.max(1, Number(e.target.value) || 1))}
-                                className="w-20 px-2.5 py-1 bg-black/80 border border-white/30 rounded-lg text-white font-mono font-bold text-xs text-center focus:outline-none focus:border-bleach-orange"
-                              />
+                      return (
+                        <div
+                          key={k.id}
+                          className={`p-4 bg-bleach-panel2 border rounded-xl flex flex-col justify-between space-y-3 transition-all duration-300 ${
+                            isHado
+                              ? "border-red-500/40 hover:border-red-400 hover:shadow-[0_0_20px_rgba(239,68,68,0.2)]"
+                              : isBakudo
+                              ? "border-blue-500/40 hover:border-blue-400 hover:shadow-[0_0_20px_rgba(59,130,246,0.2)]"
+                              : "border-emerald-500/40 hover:border-emerald-400 hover:shadow-[0_0_20px_rgba(16,185,129,0.2)]"
+                          }`}
+                        >
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                              <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded border ${
+                                isHado ? "bg-red-950 text-red-300 border-red-500" : isBakudo ? "bg-blue-950 text-cyan-300 border-cyan-500" : "bg-emerald-950 text-emerald-300 border-emerald-500"
+                              }`}>
+                                {k.cat} #{k.numero}
+                              </span>
+                              <span className="text-[11px] font-mono text-bleach-orange font-bold">
+                                Custo: {custo.custoTotal} pts
+                              </span>
                             </div>
-                          )}
-                        </div>
-                      </div>
 
-                      {/* Presets Rápidos se não for Kaidō */}
-                      {!isKaido && (
-                        <div className="flex items-center gap-1.5 flex-wrap">
-                          <span className="text-[10px] font-bold text-bleach-muted uppercase mr-1">Presets do Alvo:</span>
-                          {[
-                            { label: "💀 Hollow Menor", val: 30 },
-                            { label: "⚔️ Sentinela", val: 80 },
-                            { label: "⚡ Tenente", val: 250 },
-                            { label: "👑 Capitão", val: 650 },
-                            { label: "🩸 Espada Top 4", val: 1200 },
-                          ].map((preset) => (
-                            <button
-                              key={preset.label}
-                              type="button"
-                              onClick={() => setSimKidoTargetStat(preset.val)}
-                              className={`px-2 py-1 rounded-lg text-[11px] font-mono transition ${
-                                simKidoTargetStat === preset.val
-                                  ? "bg-bleach-orange text-black font-bold border border-white shadow"
-                                  : "bg-black/60 text-bleach-creamDim hover:text-white border border-white/10"
-                              }`}
-                            >
-                              {preset.label} ({preset.val})
-                            </button>
-                          ))}
-                        </div>
-                      )}
+                            <h5 className="font-bold text-white text-sm leading-snug">
+                              {k.nome}
+                            </h5>
 
-                      {/* Resultado Gráfico da Simulação */}
-                      {analise && (
-                        <div className="p-4 bg-black/90 rounded-xl border-2 space-y-3" style={{ borderColor: analise.cor }}>
-                          <div className="flex flex-wrap items-center justify-between gap-2">
-                            <span
-                              className="text-[10px] font-extrabold uppercase px-3 py-1 rounded-full text-black"
-                              style={{ backgroundColor: analise.cor }}
-                            >
-                              {analise.categoria}
-                            </span>
-                            <span className="text-xs font-mono font-bold" style={{ color: analise.cor }}>
-                              {isHado ? `Dano Efetivo: ${analise.danoRecebidoStr} (Proporção: ${analise.pct}%)`
-                                : isBakudo ? `Contenção: ${analise.duracaoStr} (Proporção: ${analise.pct}%)`
-                                : analise.curaHpStr}
-                            </span>
+                            {k.incant && k.incant !== "—" && (
+                              <div className="p-2 bg-black/60 rounded-lg border border-white/5 text-[10px] text-cyan-200/80 italic line-clamp-2">
+                                "{k.incant}"
+                              </div>
+                            )}
+
+                            <p className="text-[11px] text-bleach-creamDim line-clamp-2 leading-relaxed">
+                              {k.desc}
+                            </p>
+
+                            <div className="text-[10px] font-mono text-bleach-muted flex justify-between">
+                              <span>Poder Base: <strong className="text-white">{poder} pts</strong></span>
+                              <span className="text-cyan-300">Encanto: <strong>+30% PE</strong></span>
+                            </div>
                           </div>
 
-                          {!isKaido && (
+                          <div className="space-y-2 pt-2 border-t border-white/5">
+                            <button
+                              type="button"
+                              onClick={() => setKidoModalFicha(k)}
+                              className="w-full py-1.5 rounded-lg bg-black/60 border border-white/10 text-xs font-bold text-bleach-cream hover:text-white hover:border-bleach-orange transition flex items-center justify-center gap-1.5"
+                            >
+                              <span>👁️</span> Detalhes & Simulação
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (pressaoRestante < custo.custoTotal) {
+                                  alert(`Reiatsu insuficiente na cena! Custo: ${custo.custoTotal} pts | Disponível: ${pressaoRestante} pts.`);
+                                  return;
+                                }
+                                playReiatsuSound('kido');
+                                updateChar({}, `⚡ Conjurou [${k.cat} #${k.numero}] ${k.nome} na cena (Gasto: ${custo.custoTotal} pts)`);
+                                alert(`✨ ${k.nome} conjurado na cena com sucesso!\n\n⚡ Poder de Feitiço: ${poder} pts\n🌀 Custo de Reiatsu: ${custo.custoTotal} pts`);
+                              }}
+                              disabled={pressaoRestante < custo.custoTotal}
+                              className={`w-full py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition shadow disabled:opacity-40 disabled:cursor-not-allowed ${
+                                isHado ? "bg-gradient-to-r from-red-600 to-orange-600 text-white hover:brightness-110" 
+                                : isBakudo ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:brightness-110" 
+                                : "bg-gradient-to-r from-emerald-600 to-teal-600 text-white hover:brightness-110"
+                              }`}
+                            >
+                              ⚡ Conjurar em Cena ({custo.custoTotal} pts)
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </Section>
+
+              {/* 3. SIMULADOR INTERATIVO DE CONFRONTO DE HADŌ / BAKUDŌ */}
+              {(personagem.kidosConhecidos && personagem.kidosConhecidos.length > 0) && (
+                <Section
+                  title="🎯 Simulador de Confronto de Kidōs Aprendidos"
+                  subtitle="Teste o impacto real dos feitiços registrados na sua ficha contra atributos de oponentes"
+                  className="border-2 border-bleach-orange/50"
+                >
+                  {(() => {
+                    const kidos = (personagem.kidosConhecidos || []).filter(k => k.cat !== "Kaidō");
+                    const kidoAtivo = kidos[Math.min(simKidoIndex, Math.max(0, kidos.length - 1))] || (personagem.kidosConhecidos || [])[0];
+                    if (!kidoAtivo) return null;
+
+                    const isHado = kidoAtivo.cat === "Hadō";
+                    const pressaoTotal = Number(personagem.atributos?.pressao || 30);
+                    const custoInfo = calcularCustoKido(kidoAtivo, pressaoTotal, simKidoExtraPressao);
+                    const poderCalculadoObj = calcularPoderKido(kidoAtivo, pressaoTotal, custoInfo.custoTotal, simKidoIncantado, simKidoExtraPressao);
+                    const poderCalculado = poderCalculadoObj.poderFinal || poderCalculadoObj;
+                    const bonusEncantamento = poderCalculadoObj.bonusEncantamento || Math.round((pressaoTotal + simKidoExtraPressao) * 0.30);
+
+                    let analise = isHado ? calcularEfeitoHado(poderCalculado, simKidoTargetStat) : calcularEfeitoBakudo(poderCalculado, simKidoTargetStat);
+                    let labelInimigo = isHado ? "Resiliência do Alvo" : "Força do Alvo";
+
+                    return (
+                      <div className="space-y-4">
+                        {/* Seletor do Kidō para Simulação */}
+                        <div>
+                          <label className="block text-xs font-bold text-bleach-creamDim uppercase mb-1.5">
+                            Escolha um Feitiço de Combate para Simular:
+                          </label>
+                          <div className="flex gap-2 overflow-x-auto pb-1">
+                            {kidos.map((k, idx) => (
+                              <button
+                                key={k.id || idx}
+                                type="button"
+                                onClick={() => setSimKidoIndex(idx)}
+                                className={`px-3 py-2 rounded-xl text-xs font-bold transition flex-shrink-0 border ${
+                                  simKidoIndex === idx
+                                    ? "bg-bleach-panel2 text-white border-bleach-orange shadow-lg"
+                                    : "bg-black/60 text-bleach-creamDim border-white/5 hover:border-white/20"
+                                }`}
+                              >
+                                <span className="text-bleach-orange block text-[10px] uppercase font-bold">{k.cat} #{k.numero}</span>
+                                <span>{k.nome}</span>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Painel do Simulador */}
+                        <div className="p-4 sm:p-5 bg-gradient-to-r from-black via-bleach-panel2 to-black rounded-xl border-2 border-white/10 space-y-4 shadow-xl">
+                          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
+                            <div>
+                              <h5 className="font-title text-xl text-white flex items-center gap-2">
+                                <span>⚡</span> {kidoAtivo.nome} (Poder: {poderCalculado} pts) vs {labelInimigo}
+                              </h5>
+                              <p className="text-[11px] text-bleach-creamDim">
+                                Custo de Reiatsu: <strong className="text-bleach-orange font-mono">{custoInfo.custoTotal} pts</strong> ({custoInfo.custoFlat} flat + {custoInfo.custoPercentual} [% total])
+                              </p>
+                            </div>
+
+                            <div className="flex items-center gap-3 flex-wrap">
+                              <label className="flex items-center gap-2 cursor-pointer text-xs text-yellow-300 font-bold bg-yellow-950/60 border border-yellow-500/50 px-2.5 py-1 rounded-lg">
+                                <input
+                                  type="checkbox"
+                                  checked={simKidoIncantado}
+                                  onChange={(e) => setSimKidoIncantado(e.target.checked)}
+                                  className="accent-yellow-400"
+                                />
+                                <span>Recitar Encantamento (+30% PE: +{bonusEncantamento} pts)</span>
+                              </label>
+
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs text-bleach-muted">{labelInimigo}:</span>
+                                <input
+                                  type="number"
+                                  min="1"
+                                  max="9999"
+                                  value={simKidoTargetStat}
+                                  onChange={(e) => setSimTargetStat(Math.max(1, Number(e.target.value) || 1))}
+                                  className="w-20 px-2.5 py-1 bg-black/80 border border-white/30 rounded-lg text-white font-mono font-bold text-xs text-center focus:outline-none focus:border-bleach-orange"
+                                />
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Seletor de Pressão Extra */}
+                          <div className="flex items-center justify-between p-2.5 bg-black/60 rounded-xl border border-white/5">
+                            <span className="text-xs text-bleach-creamDim">
+                              Investir Pressão Espiritual Extra neste Feitiço:
+                            </span>
+                            <div className="flex gap-1.5">
+                              {[0, 10, 25, 50, 100].map((pe) => (
+                                <button
+                                  key={pe}
+                                  type="button"
+                                  onClick={() => setSimKidoExtraPressao(pe)}
+                                  className={`px-2.5 py-1 rounded-lg text-xs font-mono font-bold transition border ${
+                                    simKidoExtraPressao === pe
+                                      ? "bg-bleach-orange text-black border-white shadow"
+                                      : "bg-black/50 text-bleach-muted border-white/10 hover:text-white"
+                                  }`}
+                                >
+                                  +{pe} PE
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Presets Rápidos do Alvo */}
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span className="text-[10px] font-bold text-bleach-muted uppercase mr-1">Presets do Alvo:</span>
+                            {[
+                              { label: "💀 Hollow Menor", val: 30 },
+                              { label: "⚔️ Sentinela", val: 80 },
+                              { label: "⚡ Tenente", val: 250 },
+                              { label: "👑 Capitão", val: 650 },
+                              { label: "🩸 Espada Top 4", val: 1200 },
+                            ].map((preset) => (
+                              <button
+                                key={preset.label}
+                                type="button"
+                                onClick={() => setSimTargetStat(preset.val)}
+                                className={`px-2 py-1 rounded-lg text-[11px] font-mono transition ${
+                                  simKidoTargetStat === preset.val
+                                    ? "bg-bleach-orange text-black font-bold border border-white shadow"
+                                    : "bg-black/60 text-bleach-creamDim hover:text-white border border-white/10"
+                                }`}
+                              >
+                                {preset.label} ({preset.val})
+                              </button>
+                            ))}
+                          </div>
+
+                          {/* Resultado do Impacto */}
+                          <div className="p-4 bg-black/90 rounded-xl border-2 space-y-3" style={{ borderColor: analise.cor }}>
+                            <div className="flex flex-wrap items-center justify-between gap-2">
+                              <div className="flex items-center gap-2">
+                                <span
+                                  className="text-[10px] font-extrabold uppercase px-3 py-1 rounded-full text-black"
+                                  style={{ backgroundColor: analise.cor }}
+                                >
+                                  {analise.categoria}
+                                </span>
+                                <span className="text-xs font-mono text-bleach-creamDim">
+                                  Poder ({poderCalculado}) / Alvo ({simKidoTargetStat}) = <strong className="font-bold text-white">{analise.pct}%</strong>
+                                </span>
+                              </div>
+
+                              <span className="text-xs font-bold font-mono" style={{ color: analise.cor }}>
+                                {analise.danoStr || analise.duracaoStr}
+                              </span>
+                            </div>
+
                             <div className="w-full bg-black/60 h-2.5 rounded-full overflow-hidden border border-white/10">
                               <div
                                 className="h-full rounded-full transition-all duration-500"
-                                style={{ width: `${Math.min(100, analise.pct)}%`, backgroundColor: analise.cor }}
+                                style={{
+                                  width: `${Math.min(100, analise.pct)}%`,
+                                  backgroundColor: analise.cor
+                                }}
                               ></div>
                             </div>
-                          )}
 
-                          <div className="text-xs text-bleach-cream leading-relaxed">
-                            {analise.descricao || analise.diagnostico}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs pt-1">
+                              <div className="p-2.5 bg-bleach-panel rounded-lg border border-white/5">
+                                <strong className="text-bleach-muted block text-[10px] uppercase">Efeito no Adversário:</strong>
+                                <p className="text-bleach-cream mt-0.5">{analise.descricao}</p>
+                              </div>
+                              <div className="p-2.5 bg-bleach-panel rounded-lg border border-white/5">
+                                <strong className="text-bleach-orange block text-[10px] uppercase">Recomendação Tática:</strong>
+                                <p className="text-bleach-cream mt-0.5">{analise.dicaTatica}</p>
+                              </div>
+                            </div>
                           </div>
 
-                          <div className="p-2.5 bg-bleach-panel rounded-lg border border-white/5 text-[11px] text-bleach-creamDim">
-                            <strong className="text-bleach-orange">💡 Recomendação Tática de Narração:</strong> {analise.dicaTatica}
-                          </div>
                         </div>
-                      )}
-                    </div>
-                  </div>
-                );
-              })()}
-            </Section>
+                      </div>
+                    );
+                  })()}
+                </Section>
+              )}
+            </div>
           )}
 
         </div>
@@ -10091,6 +10915,8 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
                     className="w-full bg-black border border-bleach-border rounded-lg p-2 text-white"
                   >
                     <option value="">✨ Pontos Livres (Distribuição do Jogador)</option>
+                    <option value="conhecimento">📚 Conhecimento Espiritual (₪)</option>
+                    <option value="cenas">📊 Cenas de Atividade no WhatsApp (1 cena = 100 ₪)</option>
                     <option value="pressao">🌀 Pressão Espiritual (Reiatsu)</option>
                     <option value="forca">⚔️ Força (Zanjutsu & Dano)</option>
                     <option value="velocidade">⚡ Velocidade (Shunpo & Hohō)</option>
@@ -10365,14 +11191,14 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
   const [dadoChar, setDadoChar] = useState(db.personagens?.[0]?.nome || "Geral");
 
   // Dados de Lançamento de Atividade & Cenas em Lote
-  const [atvCharId, setAtvCharId] = useState(db.personagens?.[0]?.id || "");
+  const [atvCharId, setAtvCharId] = useState("");
   const [atvBuscaCodigo, setAtvBuscaCodigo] = useState("");
   const [atvQtdCenas, setAtvQtdCenas] = useState(5);
   const [atvValorPorCena, setAtvValorPorCena] = useState(100);
   const [atvMotivo, setAtvMotivo] = useState("");
 
   function lancarAtividadeCenas(targetCharId, qtd, valPorCena, motivo) {
-    const pId = targetCharId || atvCharId;
+    const pId = targetCharId || atvCharId || (db.personagens && db.personagens[0] ? db.personagens[0].id : "");
     if (!pId) {
       alert("Selecione um personagem para lançar as cenas.");
       return;
@@ -10385,12 +11211,15 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
     const novosP = (db.personagens || []).map(p => {
       if (p.id === pId) {
         charNome = p.nome;
+        const cSem = Number(p.cenasSemana) || 0;
+        const cTot = Number(p.cenasTotal) || 0;
+        const conAtual = Number(p.conhecimento) || 0;
         return {
           ...p,
           codigoAtividade: p.codigoAtividade || getCodigoAtividade(p),
-          cenasSemana: (p.cenasSemana || 0) + numCenas,
-          cenasTotal: (p.cenasTotal || 0) + numCenas,
-          conhecimento: (p.conhecimento || 0) + ganhoConhecimento,
+          cenasSemana: cSem + numCenas,
+          cenasTotal: cTot + numCenas,
+          conhecimento: conAtual + ganhoConhecimento,
           historico: [
             {
               id: uid(),
@@ -10406,7 +11235,7 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
 
     saveDb({ ...db, personagens: novosP });
     playReiatsuSound('win');
-    alert(`✓ Sucesso! Foram lançadas +${numCenas} cenas para [${charNome}].\n\n+${ganhoConhecimento} de Conhecimento creditado com sucesso!`);
+    alert(`✓ Sucesso! Foram lançadas +${numCenas} cenas para [${charNome}].\n\n+${ganhoConhecimento} ₪ de Conhecimento creditado com sucesso!`);
     setAtvMotivo("");
   }
 
@@ -10435,7 +11264,7 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
       idadeChar: "18",
       aniversarioChar: "15/07",
       pontosDisponiveis: 20,
-      conhecimento: 200,
+      conhecimento: novoRaca === "Shinigami" ? 450 : 150,
       cenasSemana: 0,
       cenasTotal: 0,
       sorteiosComunsRestantes: 2,
@@ -10443,14 +11272,8 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
       sorteiosDrops: [],
       permissoes: { shikaiLiberada: false, bankaiLiberada: false },
       atributos: { pressao: 10, forca: 10, velocidade: 10, resiliencia: 10 },
-      kidosConhecidos: [
-        { id: "h4", numero: 4, nome: "Byakurai", cat: "Hadō", custoReiatsu: 3, custoConhecimento: 140, pressaoMinima: 18 },
-        { id: "b1", numero: 1, nome: "Sai", cat: "Bakudō", custoReiatsu: 2, custoConhecimento: 95, pressaoMinima: 12 }
-      ],
-      tecnicas: [
-        { id: uid(), nome: "Hadō #4 — Byakurai", categoria: "Hadō" },
-        { id: uid(), nome: "Bakudō #1 — Sai", categoria: "Bakudō" }
-      ],
+      kidosConhecidos: [],
+      tecnicas: [],
       personalidade: { texto: "", virtudes: "", defeitos: "", desejos: "", medos: "", conflitos: "", estiloCombate: "" },
       personalidadeTravada: false,
       cenaDespertarShikai: "",
@@ -10729,29 +11552,58 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
                   <span>⚡</span> Lançar Cenas para Jogador
                 </h4>
 
+                {/* Busca Rápida */}
+                <div className="space-y-1">
+                  <label className="block text-[11px] font-bold text-bleach-creamDim uppercase">
+                    🔍 Buscar por Nome ou Código (ON):
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Ex: Ichigo ou ACT-4321..."
+                    value={atvBuscaCodigo}
+                    onChange={(e) => {
+                      const q = e.target.value;
+                      setAtvBuscaCodigo(q);
+                      if (q.trim()) {
+                        const found = (db.personagens || []).find(p => 
+                          p.nome.toLowerCase().includes(q.toLowerCase()) || 
+                          getCodigoAtividade(p).toLowerCase().includes(q.toLowerCase())
+                        );
+                        if (found) setAtvCharId(found.id);
+                      }
+                    }}
+                    className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2 text-xs text-white placeholder:text-bleach-muted focus:border-yellow-400 focus:outline-none"
+                  />
+                </div>
+
                 <div>
                   <label className="block text-[11px] font-bold text-bleach-creamDim uppercase mb-1">
                     Selecione o Personagem:
                   </label>
                   <select
-                    value={atvCharId}
+                    value={atvCharId || (db.personagens?.[0]?.id || "")}
                     onChange={(e) => setAtvCharId(e.target.value)}
-                    className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2.5 text-xs text-white"
+                    className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2.5 text-xs text-white focus:border-yellow-400 focus:outline-none"
                   >
                     {(db.personagens || []).map(p => (
                       <option key={p.id} value={p.id}>
-                        {p.nome} — [{getCodigoAtividade(p)}] ({p.cenasSemana || 0} cenas esta semana)
+                        {p.nome} — [{getCodigoAtividade(p)}] ({p.cenasSemana || 0} cenas • {p.conhecimento || 0} ₪)
                       </option>
                     ))}
                   </select>
                 </div>
 
                 {(() => {
-                  const selChar = (db.personagens || []).find(p => p.id === atvCharId);
+                  const targetPId = atvCharId || (db.personagens?.[0]?.id || "");
+                  const selChar = (db.personagens || []).find(p => p.id === targetPId);
                   if (!selChar) return null;
                   const cod = getCodigoAtividade(selChar);
                   return (
-                    <div className="p-3 bg-bleach-panel rounded-lg border border-white/5 space-y-1 text-xs">
+                    <div className="p-3 bg-bleach-panel rounded-lg border border-yellow-500/30 space-y-1 text-xs">
+                      <div className="flex justify-between">
+                        <span className="text-bleach-muted">Personagem Selecionado:</span>
+                        <strong className="text-white font-bold">{selChar.nome}</strong>
+                      </div>
                       <div className="flex justify-between">
                         <span className="text-bleach-muted">Código de Atividade:</span>
                         <strong className="text-yellow-400 font-mono">{cod}</strong>
@@ -10874,7 +11726,7 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
                             <span className="text-base font-mono font-black text-white">{p.cenasSemana || 0} cenas</span>
                           </div>
 
-                          <div className="flex gap-1.5">
+                          <div className="flex items-center gap-1.5">
                             {[1, 3, 5].map((qtd) => (
                               <button
                                 key={qtd}
@@ -10886,6 +11738,22 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
                                 +{qtd}
                               </button>
                             ))}
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const val = prompt(`Definir saldo exato de Conhecimento (₪) para [${p.nome}]:`, String(p.conhecimento || 0));
+                                if (val !== null && !isNaN(Number(val))) {
+                                  const novoCon = Math.max(0, Number(val));
+                                  const novosP = (db.personagens || []).map(cp => cp.id === p.id ? { ...cp, conhecimento: novoCon } : cp);
+                                  saveDb({ ...db, personagens: novosP });
+                                  playReiatsuSound('win');
+                                }
+                              }}
+                              className="px-2 py-1.5 bg-black/80 border border-white/10 hover:border-yellow-400 text-bleach-cream text-xs rounded-lg transition"
+                              title="Editar saldo de Conhecimento manualmente"
+                            >
+                              ✏️ ₪
+                            </button>
                           </div>
                         </div>
                       </div>
@@ -11762,6 +12630,12 @@ function App() {
       idadeChar: p.idadeChar || "18",
       aniversarioChar: p.aniversarioChar || "15/07",
       pontosDisponiveis: Number(p.pontosDisponiveis || 0),
+      conhecimento: p.conhecimento !== undefined
+        ? Number(p.conhecimento)
+        : (p.raca === "Shinigami" ? 450 : 150),
+      cenasSemana: Number(p.cenasSemana || 0),
+      cenasTotal: Number(p.cenasTotal || 0),
+      codigoAtividade: p.codigoAtividade || ((typeof getCodigoAtividade === 'function') ? getCodigoAtividade(p) : 'ACT-0000'),
       sorteiosComunsRestantes: Number(p.sorteiosComunsRestantes || 0),
       sorteiosEspeciaisRestantes: Number(p.sorteiosEspeciaisRestantes || 0),
       sorteiosDrops: Array.isArray(p.sorteiosDrops) ? p.sorteiosDrops : [],
@@ -11884,7 +12758,7 @@ function App() {
     initDb();
   }, []);
 
-  // Periodic background cloud sync
+  // Periodic background cloud sync with smart conflict resolution
   useEffect(() => {
     if (!activeCloudUrl || cloudStatus !== "connected") return;
     const interval = setInterval(async () => {
@@ -11895,15 +12769,32 @@ function App() {
         if (res.ok) {
           const cloudData = await res.json();
           if (cloudData && typeof cloudData === 'object' && Array.isArray(cloudData.personagens)) {
-            setDb(prev => ({
-              ...prev,
-              ...cloudData,
-              personagens: cloudData.personagens.map(sanitizeChar).filter(Boolean)
-            }));
+            setDb(prev => {
+              if (!prev || !Array.isArray(prev.personagens)) return prev;
+              const merged = cloudData.personagens.map(cp => {
+                const lp = prev.personagens.find(p => p.id === cp.id);
+                if (!lp) return sanitizeChar(cp);
+                // Keep local values if local has active unsaved progression or higher knowledge/scenes
+                return sanitizeChar({
+                  ...cp,
+                  ...lp,
+                  conhecimento: lp.conhecimento !== undefined ? lp.conhecimento : cp.conhecimento,
+                  cenasSemana: Math.max(Number(lp.cenasSemana || 0), Number(cp.cenasSemana || 0)),
+                  cenasTotal: Math.max(Number(lp.cenasTotal || 0), Number(cp.cenasTotal || 0)),
+                  kidosConhecidos: (lp.kidosConhecidos && lp.kidosConhecidos.length >= (cp.kidosConhecidos?.length || 0)) ? lp.kidosConhecidos : (cp.kidosConhecidos || lp.kidosConhecidos)
+                });
+              }).filter(Boolean);
+
+              return {
+                ...prev,
+                ...cloudData,
+                personagens: merged
+              };
+            });
           }
         }
       } catch (e) {}
-    }, 10000);
+    }, 15000);
     return () => clearInterval(interval);
   }, [activeCloudUrl, cloudStatus]);
 

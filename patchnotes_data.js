@@ -5,6 +5,187 @@
 
 const PATCH_NOTES_HISTORY = [
   {
+    versao: "6.4",
+    titulo: "Simulador de Kaidō na Aba de Kidōs, Bônus de 30% por Encantamento (Eishō) & Loja por Conhecimento",
+    data: "24 de Agosto de 2026",
+    destaque: "Sub-aba dedicada de Kaidō na Ficha, bônus de +30% da Pressão Espiritual ao recitar o encantamento completo (Eishō), injeção livre de Pressão Extra nos feitiços, aquisição na Loja exclusivamente por Conhecimento e blindagem contra reset de dados.",
+    banner: "assets/bleach-banner.png",
+    resumo: "Uma atualização definitiva para o sistema de magia e cura da Sociedade das Almas. Os Kidōs agora contam com o bônus canônico de +30% da Pressão Espiritual do conjurador quando o encantamento poético (Eishō) é recitado, a aba de Kidōs da ficha agora possui uma sub-aba exclusiva e dedicada para o Simulador de Kaidō do 4º Esquadrão, a compra de feitiços passa a custar exclusivamente Conhecimento (sem travas de Pressão mínima para a compra) e o sistema de sincronização foi blindado contra resets indesejados.",
+    secoes: [
+      {
+        tipo: "novo",
+        titulo: "🌿 Sub-Aba Dedicada de Kaidō & Simulação de Cura na Ficha de Kidōs",
+        itens: [
+          "✦ **Navegação Direta na Ficha**: A aba de Kidōs agora possui duas seções intuitivas: `💥 Feitiços & Combate (Hadō / Bakudō)` e `🌿 Kaidō & Simulação de Cura (4º Esquadrão)`.",
+          "✦ **Simulação Médica Completa**: Escolha o estado do paciente (💀 Derrotado, 🩸 Debilitado, 🩹 Ferido), ative a recitação do encantamento e veja o tempo exato de tratamento no ON (1 a 4 cenas contínuas no WhatsApp), a evolução vital do aliado e o roteiro narrativo oficial."
+        ]
+      },
+      {
+        tipo: "buff",
+        titulo: "📖 Bônus de +30% de Pressão Espiritual por Encantamento Completo (Eishō)",
+        itens: [
+          "✦ **Potencialização Canônica**: Recitar o encantamento poético adiciona **+30% da Pressão Espiritual Total do Conjurador** diretamente ao poder final de qualquer Hadō, Bakudō ou Kaidō.",
+          "✦ **Comparativo Visual Instantâneo**: Todos os modais e simuladores exibem lado a lado a potência do disparo rápido sem encantamento vs a potência devastadora com encantamento recitado."
+        ]
+      },
+      {
+        tipo: "novo",
+        titulo: "🌀 Injeção de Pressão Espiritual Extra no Feitiço",
+        itens: [
+          "✦ **Canalização Livre de Reishi**: O conjurador pode escolher injetar +10, +25, +50 ou +100 pts de Pressão Espiritual adicional no feitiço para amplificar seu impacto de combate ou acelerar a cura de ferimentos mortais."
+        ]
+      },
+      {
+        tipo: "regras",
+        titulo: "📚 Aquisição na Loja Exclusivamente por Conhecimento (₪)",
+        itens: [
+          "✦ **Fim da Trava de Pressão para Compra**: Para aprender um feitiço na Biblioteca do Seireitei, o único custo é o Conhecimento (₪) e o espaço de slots de feitiço do seu Patamar.",
+          "✦ **Blindagem Anti-Reset na Nuvem**: Corrigida a sincronização periódica em segundo plano para proteger os saldos de Conhecimento e cenas contra sobreposições de dados desatualizados."
+        ]
+      }
+    ]
+  },
+  {
+    versao: "6.3",
+    titulo: "Simulador Médico Universal de Kaidō & Cálculo de Cenas de Cura",
+    data: "24 de Agosto de 2026",
+    destaque: "Simulador de Kaidō integrado diretamente na aba de Atributos da Ficha e na Central Geral de Kidōs, com cálculo exato de Cenas no WhatsApp, evolução vital (Derrotado ➔ Inteiro), restauração de HP e Roteiro Passo a Passo por Cena.",
+    banner: "assets/bleach-banner.png",
+    resumo: "Uma atualização definitiva para o sistema de medicina espiritual do 4º Esquadrão. O Simulador de Cura de Kaidō agora está disponível em todos os pontos do sistema (Aba de Atributos como o 5º Modo Oficial de Aplicação, Aba de Kidōs da Ficha e Compêndio Supremo de Magias), calculando dinamicamente a duração em cenas que o curandeiro precisa manter o feitiço ativo no ON para recuperar totalmente seus aliados.",
+    secoes: [
+      {
+        tipo: "novo",
+        titulo: "🌿 5º Modo Oficial no Simulador de Atributos: Kaidō & Cura Médica",
+        itens: [
+          "✦ **Integração na Aba de Atributos**: Ao lado de Força X Resiliência, Força X Força, Velocidade X Velocidade e Pressão X Pressão, agora existe o modo **🌿 Kaidō & Cura Médica**, permitindo testar a eficácia da Pressão Espiritual na cura de aliados.",
+          "✦ **Seletor de Estado do Paciente**: Escolha entre 💀 **Derrotado** (Crítico/Coma), 🩸 **Debilitado** (Fraturas/Hemorragias graves) e 🩹 **Ferido** (Cortes/Moderado).",
+          "✦ **Cálculo de Cenas no WhatsApp**: Revela se a recuperação exige 1, 2, 3 ou 4 cenas contínuas no ON.",
+          "✦ **Roteiro Narrativo por Cena**: Orienta o jogador exatamente sobre como descrever a evolução médica em cada cena no grupo do WhatsApp."
+        ]
+      },
+      {
+        tipo: "regras",
+        titulo: "📖 Central Geral de Kidōs com Simulador de Kaidō Integrado",
+        itens: [
+          "✦ **Simulador Aberto no Grimório**: Jogadores e mestres agora podem simular tratamentos médicos na aba geral de Kidōs do menu superior, sem necessidade de possuir a ficha aberta.",
+          "✦ **Ajuste de Requisitos para Iniciantes**: Feitiços básicos de cura (#1 ao #5) calibrados para a Pressão Espiritual inicial (10 pts), permitindo que qualquer recém-formado do 4º Esquadrão pratique Kaidō."
+        ]
+      }
+    ]
+  },
+  {
+    versao: "6.2",
+    titulo: "Fundo Inicial Shinigami, Sincronização Automática de Cenas & Limite Escalonado de Feitiços",
+    data: "24 de Agosto de 2026",
+    destaque: "Fundo Inicial de 450 ₪ de Conhecimento para Shinigamis (Escolha Livre de 4 Kidōs), Sincronização Direta de Cenas no WhatsApp (1 cena = 100 ₪), Limite e Capacidade Escalonada de Feitiços por Patamar Espiritual e Barra de Gestão Rápida de ADM.",
+    banner: "assets/bleach-banner.png",
+    resumo: "Uma atualização estrutural no equilíbrio místico que concede liberdade inicial aos Shinigamis através de uma reserva de 450 ₪ de Conhecimento para escolherem seus 4 primeiros Kidōs na loja, vincula a geração de Conhecimento à produção de cenas no WhatsApp de forma automatizada e estabelece o teto de feitiços ativos de acordo com o Patamar de Pressão Espiritual do personagem.",
+    secoes: [
+      {
+        tipo: "novo",
+        titulo: "📚 Fundo Inicial de Conhecimento Shinigami (450 ₪)",
+        itens: [
+          "✦ **Fim dos Feitiços Fixos Obrigatórios**: Shinigamis recém-criados ou resetados não recebem mais magias fixas pré-definidas. Em vez disso, recebem um **Fundo de Conhecimento de 450 ₪** para irem até a Loja do Seireitei e escolherem livremente seus 4 feitiços básicos favoritos de Hadō, Bakudō ou Kaidō.",
+          "✦ **Sincronização de Cenas com Conhecimento**: Cada cena no WhatsApp lançada pela Administração gera automaticamente **+100 ₪ de Conhecimento**, mantendo a progressão contínua da alma alinhada à sua atividade ON."
+        ]
+      },
+      {
+        tipo: "regras",
+        titulo: "⚖️ Capacidade Mística por Patamar (Power Scaling de Kidō)",
+        itens: [
+          "✦ **Iniciante / Inexperiente (<31 PE)**: Capacidade de até **4 Feitiços Iniciais** (#1 a #19). Impede que novatos acumulem dezenas de feitiços de alto escalão sem evoluir seus atributos.",
+          "✦ **Treinado (31–60 PE)**: Até **6 Feitiços** (#1 a #29).",
+          "✦ **Experiente (61–150 PE)**: Até **8 Feitiços** (#1 a #49).",
+          "✦ **Alto Nível / Tenente (151–250 PE)**: Até **12 Feitiços** (#1 a #69).",
+          "✦ **Monstruoso / Capitão (251–400 PE)**: Até **16 Feitiços** (#1 a #89).",
+          "✦ **Lendário / Capitão Sênior (401–600 PE)**: Até **24 Feitiços** (#1 a #99).",
+          "✦ **Transcendente (601+ PE)**: Ilimitado (Mestria Plena do Reishi)."
+        ]
+      },
+      {
+        tipo: "social",
+        titulo: "👑 Gestão de ADM Otimizada na Ficha & Painel",
+        itens: [
+          "✦ **Barra Dourada de Gestão de ADM**: Ao acessar a aba de Kidōs de qualquer personagem, o ADM conta com atalhos de `+100 ₪`, `+500 ₪`, `+1000 ₪`, `+5 Cenas (+500 ₪)` e `✏️ Saldo Manual` com atualização instantânea na tela.",
+          "✦ **Busca Rápida de Atividade**: Campo no painel de cenas que filtra simultaneamente por nome do personagem ou pelo código oficial `ACT-XXXX`."
+        ]
+      }
+    ]
+  },
+  {
+    versao: "6.1",
+    titulo: "O Compêndio Médico do 4º Esquadrão & Simulador de Cenas de Kaidō",
+    data: "24 de Agosto de 2026",
+    destaque: "Simulador Avançado de Kaidō com cálculo exato de Cenas no ON, Evolução de Estado do Aliado (Derrotado ➔ Debilitado ➔ Ferido ➔ Inteiro), Roteiro de Narração por Cena para o WhatsApp e Molde Oficial Otimizado.",
+    banner: "assets/bleach-banner.png",
+    resumo: "Uma atualização focada no aprofundamento do roleplay médico do 4º Esquadrão e da mecânica de suporte em combate. Introduz o simulador de Kaidō que calcula a quantidade exata de cenas contínuas que o curandeiro precisa manter o feitiço ativo no WhatsApp para salvar ou reabilitar seus aliados, acompanhado da evolução de estados vitais e roteiro narrativo por cena, além da simplificação do molde oficial de ficha do WhatsApp.",
+    secoes: [
+      {
+        tipo: "novo",
+        titulo: "🌿 Simulador de Cura & Cenas de Kaidō",
+        itens: [
+          "✦ **Seletor de Estado Inicial do Aliado**: Permite selecionar a gravidade do paciente entre 💀 **Derrotado** (Crítico/Coma), 🩸 **Debilitado** (Fraturas/Hemorragias graves) e 🩹 **Ferido** (Cortes/Moderado).",
+          "✦ **Cálculo de Cenas no ON**: Com base na Pressão Espiritual investida e nível do Kaidō, calcula se a cura exige 1, 2, 3 ou 4 cenas contínuas no WhatsApp.",
+          "✦ **Evolução de Estado Vital**: Mostra a transição do estado do guerreiro (ex: `Derrotado ➔ Inteiro` ou `Debilitado ➔ Ferido`) e a porcentagem de vitalidade restaurada.",
+          "✦ **Roteiro de Narração Passo-a-Passo**: Fornece instruções detalhadas para cada cena no WhatsApp (ex: Cena 1: Estabilização de emergência e hemostasia; Cena 2: Recomposição de tecidos e reinfusão de Reishi).",
+          "✦ **Diagnóstico do 4º Esquadrão**: Recomendações e diretrizes táticas para mestres curandeiros e socorristas de campo."
+        ]
+      },
+      {
+        tipo: "regras",
+        titulo: "📋 Otimização do Molde Oficial WhatsApp",
+        itens: [
+          "✦ **Molde Direto e Focado**: Removidas seções extensas de Shikai/Bankai e Kidōs do molde de exportação rápida, mantendo apenas Dados do Participante, Dados do Personagem, Código de Atividade (ON) e Atributos Espirituais.",
+          "✦ **Selo de Autenticidade**: Preservada a assinatura e diagramação visual oficial ✧ 𝗠𝗮𝗱𝗲 𝗕𝘆 𝗠𝗮𝗹𝘂𝘁𝘁𝗶 ✧ com suporte a cópia em 1 clique."
+        ]
+      }
+    ]
+  },
+  {
+    versao: "6.0",
+    titulo: "A Economia do Conhecimento, Grimório de Kidōs & Ranking Semanal de Atividade",
+    data: "24 de Agosto de 2026",
+    destaque: "Moeda de Conhecimento (₪), Árvore de Aprendizagem de Kidōs em 3 Trilhas, Loja Dinâmica do Seireitei, Código Identificador de Atividade único (ACT-XXXX), Ranking Semanal com Ciclo de 7 Dias e Lançamento de Cenas em Lote no ADM.",
+    banner: "assets/bleach-banner.png",
+    resumo: "A maior expansão de progressão e economia espiritual do RPG! Apresenta o sistema de Conhecimento obtido por atividade no WhatsApp, a Árvore de Aprendizagem de Kidōs com graduações de maestria, a Loja Dinâmica de Feitiços com destaque dourado para compras disponíveis, códigos identificadores para todos os personagens, ranking semanal com premiações (+15, +10 e +5 pontos livres para o Top 3) e ferramentas de gestão em lote para a Administração.",
+    secoes: [
+      {
+        tipo: "novo",
+        titulo: "📚 Economia de Conhecimento & Loja de Kidōs",
+        itens: [
+          "✦ **Moeda de Conhecimento (₪)**: Moeda ganha através da produção de cenas no WhatsApp, utilizada para adquirir feitiços na Biblioteca do Seireitei.",
+          "✦ **Árvore de Aprendizagem RPG**: Modal em 3 trilhas elementais (Hadō, Bakudō e Kaidō) com explicação do sistema de Conhecimento e 4 Tiers de maestria.",
+          "✦ **Loja Dinâmica do Seireitei**: Kidōs que o Shinigami já pode comprar brilham em dourado com animação pulsante; feitiços com requisitos faltantes permanecem apagados com indicação clara do que falta (Conhecimento ou Pressão Espiritual mínima).",
+          "✦ **Ficha Focada em Kidōs Aprendidos**: A aba de Kidōs da ficha agora exibe apenas os feitiços dominados pelo jogador, com botões para abrir detalhes e conjurar em cena."
+        ]
+      },
+      {
+        tipo: "social",
+        titulo: "🆔 Código de Atividade (ON) & Lançamento em Lote ADM",
+        itens: [
+          "✦ **Código Identificador Único**: Cada personagem recebe um código fixo (ex: `ACT-5476`) para colocar no contador de cenas do WhatsApp.",
+          "✦ **Lançamento em Lote no Painel ADM**: Nova aba para os avaliadores lançarem a quantidade de cenas do dia de uma vez só (+1, +2, +5, +10, +20), creditando Conhecimento automaticamente sem precisar registrar de 1 em 1."
+        ]
+      },
+      {
+        tipo: "regras",
+        titulo: "🏆 Ranking Semanal de Atividade (Ciclo de 7 Dias)",
+        itens: [
+          "✦ **Contador Regressivo de 7 Dias**: Contador dinâmico que atualiza a cada dia (7, 6, 5, 4, 3, 2, 1, Dia da Recompensa!).",
+          "✦ **Premiações Oficiais dos Top 3**: 🥇 1º Lugar: **+15 Pontos de Atributos Livres** | 🥈 2º Lugar: **+10 Pontos de Atributos Livres** | 🥉 3º Lugar: **+5 Pontos de Atributos Livres**.",
+          "✦ **Distribuição em 1 Clique**: Botão administrativo para encerrar a rodada, creditar os pontos nos vencedores e iniciar um novo ciclo de 7 dias."
+        ]
+      },
+      {
+        tipo: "buffs",
+        titulo: "📕 Grimório de Kidōs Ampliado",
+        itens: [
+          "✦ **Mais de 50 Feitiços Canônicos**: Hadō #1 a #99, Bakudō #1 a #99 e Kaidō #1 a #90 balanceados com requisitos mínimos de Pressão Espiritual e custos de Conhecimento."
+        ]
+      }
+    ]
+  },
+  {
     versao: "5.2",
     titulo: "Infusão de Pressão Espiritual (Reiatsu Surge), 4 Modos de Confronto & Grimório Interativo de Kidōs",
     data: "24 de Agosto de 2026",

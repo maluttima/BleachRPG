@@ -32,14 +32,14 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
   const [dadoChar, setDadoChar] = useState(db.personagens?.[0]?.nome || "Geral");
 
   // Dados de Lançamento de Atividade & Cenas em Lote
-  const [atvCharId, setAtvCharId] = useState(db.personagens?.[0]?.id || "");
+  const [atvCharId, setAtvCharId] = useState("");
   const [atvBuscaCodigo, setAtvBuscaCodigo] = useState("");
   const [atvQtdCenas, setAtvQtdCenas] = useState(5);
   const [atvValorPorCena, setAtvValorPorCena] = useState(100);
   const [atvMotivo, setAtvMotivo] = useState("");
 
   function lancarAtividadeCenas(targetCharId, qtd, valPorCena, motivo) {
-    const pId = targetCharId || atvCharId;
+    const pId = targetCharId || atvCharId || (db.personagens && db.personagens[0] ? db.personagens[0].id : "");
     if (!pId) {
       alert("Selecione um personagem para lançar as cenas.");
       return;
@@ -52,12 +52,15 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
     const novosP = (db.personagens || []).map(p => {
       if (p.id === pId) {
         charNome = p.nome;
+        const cSem = Number(p.cenasSemana) || 0;
+        const cTot = Number(p.cenasTotal) || 0;
+        const conAtual = Number(p.conhecimento) || 0;
         return {
           ...p,
           codigoAtividade: p.codigoAtividade || getCodigoAtividade(p),
-          cenasSemana: (p.cenasSemana || 0) + numCenas,
-          cenasTotal: (p.cenasTotal || 0) + numCenas,
-          conhecimento: (p.conhecimento || 0) + ganhoConhecimento,
+          cenasSemana: cSem + numCenas,
+          cenasTotal: cTot + numCenas,
+          conhecimento: conAtual + ganhoConhecimento,
           historico: [
             {
               id: uid(),
@@ -73,7 +76,7 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
 
     saveDb({ ...db, personagens: novosP });
     playReiatsuSound('win');
-    alert(`✓ Sucesso! Foram lançadas +${numCenas} cenas para [${charNome}].\n\n+${ganhoConhecimento} de Conhecimento creditado com sucesso!`);
+    alert(`✓ Sucesso! Foram lançadas +${numCenas} cenas para [${charNome}].\n\n+${ganhoConhecimento} ₪ de Conhecimento creditado com sucesso!`);
     setAtvMotivo("");
   }
 
@@ -102,7 +105,7 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
       idadeChar: "18",
       aniversarioChar: "15/07",
       pontosDisponiveis: 20,
-      conhecimento: 200,
+      conhecimento: novoRaca === "Shinigami" ? 450 : 150,
       cenasSemana: 0,
       cenasTotal: 0,
       sorteiosComunsRestantes: 2,
@@ -110,14 +113,8 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
       sorteiosDrops: [],
       permissoes: { shikaiLiberada: false, bankaiLiberada: false },
       atributos: { pressao: 10, forca: 10, velocidade: 10, resiliencia: 10 },
-      kidosConhecidos: [
-        { id: "h4", numero: 4, nome: "Byakurai", cat: "Hadō", custoReiatsu: 3, custoConhecimento: 140, pressaoMinima: 18 },
-        { id: "b1", numero: 1, nome: "Sai", cat: "Bakudō", custoReiatsu: 2, custoConhecimento: 95, pressaoMinima: 12 }
-      ],
-      tecnicas: [
-        { id: uid(), nome: "Hadō #4 — Byakurai", categoria: "Hadō" },
-        { id: uid(), nome: "Bakudō #1 — Sai", categoria: "Bakudō" }
-      ],
+      kidosConhecidos: [],
+      tecnicas: [],
       personalidade: { texto: "", virtudes: "", defeitos: "", desejos: "", medos: "", conflitos: "", estiloCombate: "" },
       personalidadeTravada: false,
       cenaDespertarShikai: "",
@@ -396,29 +393,58 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
                   <span>⚡</span> Lançar Cenas para Jogador
                 </h4>
 
+                {/* Busca Rápida */}
+                <div className="space-y-1">
+                  <label className="block text-[11px] font-bold text-bleach-creamDim uppercase">
+                    🔍 Buscar por Nome ou Código (ON):
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Ex: Ichigo ou ACT-4321..."
+                    value={atvBuscaCodigo}
+                    onChange={(e) => {
+                      const q = e.target.value;
+                      setAtvBuscaCodigo(q);
+                      if (q.trim()) {
+                        const found = (db.personagens || []).find(p => 
+                          p.nome.toLowerCase().includes(q.toLowerCase()) || 
+                          getCodigoAtividade(p).toLowerCase().includes(q.toLowerCase())
+                        );
+                        if (found) setAtvCharId(found.id);
+                      }
+                    }}
+                    className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2 text-xs text-white placeholder:text-bleach-muted focus:border-yellow-400 focus:outline-none"
+                  />
+                </div>
+
                 <div>
                   <label className="block text-[11px] font-bold text-bleach-creamDim uppercase mb-1">
                     Selecione o Personagem:
                   </label>
                   <select
-                    value={atvCharId}
+                    value={atvCharId || (db.personagens?.[0]?.id || "")}
                     onChange={(e) => setAtvCharId(e.target.value)}
-                    className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2.5 text-xs text-white"
+                    className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2.5 text-xs text-white focus:border-yellow-400 focus:outline-none"
                   >
                     {(db.personagens || []).map(p => (
                       <option key={p.id} value={p.id}>
-                        {p.nome} — [{getCodigoAtividade(p)}] ({p.cenasSemana || 0} cenas esta semana)
+                        {p.nome} — [{getCodigoAtividade(p)}] ({p.cenasSemana || 0} cenas • {p.conhecimento || 0} ₪)
                       </option>
                     ))}
                   </select>
                 </div>
 
                 {(() => {
-                  const selChar = (db.personagens || []).find(p => p.id === atvCharId);
+                  const targetPId = atvCharId || (db.personagens?.[0]?.id || "");
+                  const selChar = (db.personagens || []).find(p => p.id === targetPId);
                   if (!selChar) return null;
                   const cod = getCodigoAtividade(selChar);
                   return (
-                    <div className="p-3 bg-bleach-panel rounded-lg border border-white/5 space-y-1 text-xs">
+                    <div className="p-3 bg-bleach-panel rounded-lg border border-yellow-500/30 space-y-1 text-xs">
+                      <div className="flex justify-between">
+                        <span className="text-bleach-muted">Personagem Selecionado:</span>
+                        <strong className="text-white font-bold">{selChar.nome}</strong>
+                      </div>
                       <div className="flex justify-between">
                         <span className="text-bleach-muted">Código de Atividade:</span>
                         <strong className="text-yellow-400 font-mono">{cod}</strong>
@@ -541,7 +567,7 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
                             <span className="text-base font-mono font-black text-white">{p.cenasSemana || 0} cenas</span>
                           </div>
 
-                          <div className="flex gap-1.5">
+                          <div className="flex items-center gap-1.5">
                             {[1, 3, 5].map((qtd) => (
                               <button
                                 key={qtd}
@@ -553,6 +579,22 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
                                 +{qtd}
                               </button>
                             ))}
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const val = prompt(`Definir saldo exato de Conhecimento (₪) para [${p.nome}]:`, String(p.conhecimento || 0));
+                                if (val !== null && !isNaN(Number(val))) {
+                                  const novoCon = Math.max(0, Number(val));
+                                  const novosP = (db.personagens || []).map(cp => cp.id === p.id ? { ...cp, conhecimento: novoCon } : cp);
+                                  saveDb({ ...db, personagens: novosP });
+                                  playReiatsuSound('win');
+                                }
+                              }}
+                              className="px-2 py-1.5 bg-black/80 border border-white/10 hover:border-yellow-400 text-bleach-cream text-xs rounded-lg transition"
+                              title="Editar saldo de Conhecimento manualmente"
+                            >
+                              ✏️ ₪
+                            </button>
                           </div>
                         </div>
                       </div>

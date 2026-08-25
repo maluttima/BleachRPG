@@ -114,14 +114,19 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
   const [showCapacidadesModal, setShowCapacidadesModal] = useState(null);
   const [gastoPressaoForca, setGastoPressaoForca] = useState(0);
   const [gastoPressaoResiliencia, setGastoPressaoResiliencia] = useState(0);
-  const [simuladorModo, setSimuladorModo] = useState("forca_resiliencia"); // "forca_resiliencia" | "forca_forca" | "velocidade_velocidade" | "pressao_pressao"
+  const [simuladorModo, setSimuladorModo] = useState("forca_resiliencia");
   const [simStatInimigo, setSimStatInimigo] = useState(80);
   const [kidoModalFicha, setKidoModalFicha] = useState(null);
   const [showKidoTreeModal, setShowKidoTreeModal] = useState(false);
   const [showKidoShopModal, setShowKidoShopModal] = useState(false);
+  const [subAbaKido, setSubAbaKido] = useState("magias"); // "magias" | "kaido"
   const [simKidoIndex, setSimKidoIndex] = useState(0);
-  const [simKidoTargetStat, setSimKidoTargetStat] = useState(80);
+  const [simKidoTargetStat, setSimTargetStat] = useState(80);
   const [simKidoIncantado, setSimKidoIncantado] = useState(false);
+  const [simKidoExtraPressao, setSimKidoExtraPressao] = useState(0);
+  const [simKaidoEstado, setSimKaidoEstado] = useState("Debilitado");
+  const [simKaidoExtraPressao, setSimKaidoExtraPressao] = useState(0);
+  const [simKaidoIncantado, setSimKaidoIncantado] = useState(false);
   const [copiadoWhats, setCopiadoWhats] = useState(false);
   const gachaIntervalRef = useRef(null);
 
@@ -534,18 +539,15 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
       ...personagem,
       atributos: { pressao: 10, forca: 10, velocidade: 10, resiliencia: 10 },
       pontosDisponiveis: 20,
+      conhecimento: 450,
+      cenasSemana: 0,
+      cenasTotal: 0,
       sorteiosComunsRestantes: 2,
       sorteiosEspeciaisRestantes: 0,
       sorteiosDrops: [],
       permissoes: { shikaiLiberada: false, bankaiLiberada: false },
-      kidosConhecidos: [
-        { id: "h4", numero: 4, nome: "Byakurai", cat: "Hadō", custoReiatsu: 3 },
-        { id: "b1", numero: 1, nome: "Sai", cat: "Bakudō", custoReiatsu: 2 }
-      ],
-      tecnicas: [
-        { id: uid(), nome: "Hadō #4 — Byakurai", categoria: "Hadō" },
-        { id: uid(), nome: "Bakudō #1 — Sai", categoria: "Bakudō" }
-      ],
+      kidosConhecidos: [],
+      tecnicas: [],
       personalidade: { texto: "", virtudes: "", defeitos: "", desejos: "", medos: "", conflitos: "", estiloCombate: "" },
       personalidadeTravada: false,
       cenaDespertarShikai: "",
@@ -639,8 +641,13 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
       ...personagem,
       atributos: { pressao: 10, forca: 10, velocidade: 10, resiliencia: 10 },
       pontosDisponiveis: 20,
+      conhecimento: 450,
+      cenasSemana: 0,
+      cenasTotal: 0,
       sorteiosComunsRestantes: 2,
       sorteiosEspeciaisRestantes: 0,
+      kidosConhecidos: [],
+      tecnicas: [],
       zanpakuto: {
         nome: "Lâmina Selada (Asauchi)",
         shikaiAtiva: null,
@@ -661,7 +668,7 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
     alert("Ficha resetada com sucesso para o estado inicial!");
   }
 
-  // CONCESSÃO DE RECOMPENSA DE ATRIBUTOS PELO ADM (SOMENTE ATRIBUTOS)
+  // CONCESSÃO DE RECOMPENSA DE ATRIBUTOS, CONHECIMENTO & CENAS PELO ADM
   function concederRecompensa() {
     const pontos = Number(rec.pontos) || 0;
     if (pontos <= 0) {
@@ -672,7 +679,20 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
     let patch = {};
     let texto = `[${rec.tipo}]`;
 
-    if (rec.atributo && rec.atributo !== "pontosDisponiveis") {
+    if (rec.atributo === "conhecimento") {
+      const valorAtual = Number(personagem.conhecimento || 0);
+      patch.conhecimento = valorAtual + pontos;
+      texto += ` +${pontos} ₪ de Conhecimento Espiritual`;
+    } else if (rec.atributo === "cenas") {
+      const cenasSem = Number(personagem.cenasSemana || 0);
+      const cenasTot = Number(personagem.cenasTotal || 0);
+      const conAtual = Number(personagem.conhecimento || 0);
+      const ganhoCon = pontos * 100;
+      patch.cenasSemana = cenasSem + pontos;
+      patch.cenasTotal = cenasTot + pontos;
+      patch.conhecimento = conAtual + ganhoCon;
+      texto += ` +${pontos} cenas no WhatsApp registradas (+${ganhoCon} ₪ Conhecimento)`;
+    } else if (rec.atributo && rec.atributo !== "pontosDisponiveis") {
       const valorAtual = Number(personagem.atributos?.[rec.atributo] || 10);
       patch.atributos = {
         ...(personagem.atributos || { pressao: 10, forca: 10, velocidade: 10, resiliencia: 10 }),
@@ -688,7 +708,7 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
 
     updateChar(patch, texto);
     playReiatsuSound('win');
-    alert(`Recompensa de +${pontos} ponto(s) de atributo concedida com sucesso para ${personagem.nome}!`);
+    alert(`✓ Recompensa concedida com sucesso para ${personagem.nome}!\n\n${texto}`);
     setRec({ tipo: "Recompensa de Atributos", pontos: 1, atributo: "", motivo: "" });
   }
 
@@ -2096,6 +2116,13 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
                 labelStatPlayer = "Sua Velocidade";
                 valorStatPlayer = velocidadeBase;
                 labelStatInimigo = "Velocidade do Oponente";
+              } else if (simuladorModo === "kaido_cura") {
+                analise = (typeof calcularEfeitoKaido === 'function')
+                  ? calcularEfeitoKaido(pressaoBase, simKaidoEstado)
+                  : { categoria: "Tratamento Tático", cor: "#10B981", cenasNecessarias: 2, curaHpStr: "Recuperação de 70%", estadoFinal: "Inteiro", diagnostico: "Estabilizado", dicaTatica: "Manter canalização", roteiroCenas: [] };
+                labelStatPlayer = "Sua Pressão Espiritual (Kaidō)";
+                valorStatPlayer = pressaoBase;
+                labelStatInimigo = "Estado Inicial do Paciente";
               } else {
                 analise = calcularRelacaoPressaoPressao(pressaoBase, simStatInimigo);
                 labelStatPlayer = "Sua Pressão Espiritual";
@@ -2105,19 +2132,20 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
 
               return (
                 <div className="space-y-5">
-                  {/* Seletor dos 4 Modos de Confronto */}
+                  {/* Seletor dos 5 Modos de Confronto & Aplicação Espiritual */}
                   <div className="flex gap-2 overflow-x-auto pb-1">
                     {[
-                      { id: "forca_resiliencia", label: "🛡️ Força X Resiliência", desc: "Mitigação & Absorção do Golpe", cor: "#8B6FD6" },
-                      { id: "forca_forca", label: "⚔️ Força X Força", desc: "Disputa Física & Trava de Espadas", cor: "#D6483F" },
+                      { id: "forca_resiliencia", label: "🛡️ Força X Resiliência", desc: "Mitigação & Absorção", cor: "#8B6FD6" },
+                      { id: "forca_forca", label: "⚔️ Força X Força", desc: "Disputa & Trava de Espadas", cor: "#D6483F" },
                       { id: "velocidade_velocidade", label: "⚡ Velocidade X Velocidade", desc: "Shunpo & Flanqueamento", cor: "#5FA96B" },
-                      { id: "pressao_pressao", label: "🌀 Pressão X Pressão", desc: "Supressão de Aura & Choque de Reiatsu", cor: "#4FB3E8" }
+                      { id: "pressao_pressao", label: "🌀 Pressão X Pressão", desc: "Supressão de Aura & Choque", cor: "#4FB3E8" },
+                      { id: "kaido_cura", label: "🌿 Kaidō & Cura Médica", desc: "Pressão vs Cenas de Tratamento", cor: "#10B981" }
                     ].map((modo) => (
                       <button
                         key={modo.id}
                         type="button"
                         onClick={() => setSimuladorModo(modo.id)}
-                        className={`px-3.5 py-2 rounded-xl text-xs font-bold transition flex-1 min-w-[170px] text-left border ${
+                        className={`px-3.5 py-2 rounded-xl text-xs font-bold transition flex-1 min-w-[150px] text-left border ${
                           simuladorModo === modo.id
                             ? "bg-bleach-panel2 text-white border-white shadow-lg"
                             : "bg-black/60 text-bleach-creamDim border-white/5 hover:border-white/20"
@@ -2131,104 +2159,207 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
                   </div>
 
                   {/* Painel do Modo Selecionado */}
-                  <div className="p-4 sm:p-5 bg-gradient-to-r from-black via-bleach-panel2 to-black rounded-xl border-2 border-white/10 space-y-4 shadow-xl">
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
-                      <div>
-                        <h5 className="font-title text-xl text-white flex items-center gap-2">
-                          <span>🎯</span> Disputa: {labelStatPlayer} ({valorStatPlayer} pts) vs {labelStatInimigo}
-                        </h5>
-                        <p className="text-[11px] text-bleach-creamDim">
-                          Simule o resultado narrativo e mecânico com base na comparação oficial dos atributos.
-                        </p>
+                  {simuladorModo === "kaido_cura" ? (
+                    <div className="p-4 sm:p-6 bg-gradient-to-b from-emerald-950/30 via-bleach-panel2 to-black rounded-xl border-2 border-emerald-500/50 space-y-5 shadow-2xl">
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-emerald-500/20 pb-4">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="px-2.5 py-0.5 bg-emerald-950 text-emerald-300 border border-emerald-500 text-[10px] font-extrabold uppercase rounded-full tracking-wider">
+                              Hospital Geral do 4º Esquadrão
+                            </span>
+                            <span className="text-xs font-mono text-cyan-400 font-bold">
+                              Pressão Aplicada: {pressaoBase} pts
+                            </span>
+                          </div>
+                          <h5 className="font-title text-2xl text-emerald-400 mt-1 flex items-center gap-2">
+                            <span>🌿</span> Simulador de Kaidō & Cenas de Cura
+                          </h5>
+                          <p className="text-xs text-bleach-creamDim">
+                            Calcule quantas cenas você precisa manter o Kaidō ativo no WhatsApp e a evolução do estado do aliado.
+                          </p>
+                        </div>
+
+                        {/* Seletor de Estado Inicial do Aliado */}
+                        <div className="bg-black/70 p-2.5 rounded-xl border border-emerald-500/30 space-y-1">
+                          <label className="text-[10px] text-bleach-muted uppercase font-bold block">
+                            Estado Inicial do Paciente:
+                          </label>
+                          <div className="flex gap-1.5">
+                            {[
+                              { id: "Derrotado", label: "💀 Derrotado", cor: "#EF4444" },
+                              { id: "Debilitado", label: "🩸 Debilitado", cor: "#F97316" },
+                              { id: "Ferido", label: "🩹 Ferido", cor: "#EAB308" }
+                            ].map((est) => (
+                              <button
+                                key={est.id}
+                                type="button"
+                                onClick={() => setSimKaidoEstado(est.id)}
+                                className={`px-2.5 py-1 rounded-lg text-xs font-bold transition border ${
+                                  simKaidoEstado === est.id
+                                    ? "bg-emerald-500 text-black border-white shadow"
+                                    : "bg-black/60 text-bleach-creamDim border-white/10 hover:border-emerald-400"
+                                }`}
+                              >
+                                {est.label}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
                       </div>
 
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs text-bleach-muted">{labelStatInimigo}:</span>
-                        <input
-                          type="number"
-                          min="1"
-                          max="9999"
-                          value={simStatInimigo}
-                          onChange={(e) => setSimStatInimigo(Math.max(1, Number(e.target.value) || 1))}
-                          className="w-24 px-3 py-1.5 bg-black/80 border border-white/30 rounded-lg text-white font-mono font-bold text-sm text-center focus:outline-none focus:border-bleach-orange"
-                        />
-                        <span className="text-xs font-mono text-bleach-orange font-bold">pts</span>
-                      </div>
-                    </div>
+                      {/* Cartões de Métricas de Cura */}
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                        <div className="p-3.5 bg-black/70 rounded-xl border border-emerald-500/40 text-center">
+                          <span className="text-[10px] text-bleach-muted uppercase font-bold block">Tempo de Tratamento no ON:</span>
+                          <span className="text-2xl font-mono font-black text-emerald-400 block mt-0.5">
+                            ⏳ {analise.cenasNecessarias} {analise.cenasNecessarias === 1 ? 'Cena' : 'Cenas'}
+                          </span>
+                          <span className="text-[11px] text-emerald-200/70">Manutenção contínua de Reiki</span>
+                        </div>
 
-                    {/* Presets Rápidos */}
-                    <div className="flex items-center gap-1.5 flex-wrap">
-                      <span className="text-[10px] font-bold text-bleach-muted uppercase mr-1">Presets Rápidos:</span>
-                      {[
-                        { label: "💀 Hollow Menor", val: 30 },
-                        { label: "⚔️ Sentinela", val: 80 },
-                        { label: "⚡ Tenente", val: 250 },
-                        { label: "👑 Capitão", val: 650 },
-                        { label: "🩸 Espada Top 4", val: 1200 },
-                        { label: "🌟 Comandante", val: 2500 },
-                      ].map((preset) => (
-                        <button
-                          key={preset.label}
-                          type="button"
-                          onClick={() => setSimStatInimigo(preset.val)}
-                          className={`px-2.5 py-1 rounded-lg text-[11px] font-mono transition ${
-                            simStatInimigo === preset.val
-                              ? "bg-bleach-orange text-black font-bold border border-white shadow"
-                              : "bg-black/60 text-bleach-creamDim hover:text-white border border-white/10"
-                          }`}
-                        >
-                          {preset.label} ({preset.val})
-                        </button>
-                      ))}
-                    </div>
+                        <div className="p-3.5 bg-black/70 rounded-xl border border-emerald-500/40 text-center">
+                          <span className="text-[10px] text-bleach-muted uppercase font-bold block">Evolução do Paciente:</span>
+                          <span className="text-base font-extrabold text-white block mt-1">
+                            {analise.estadoInicial || simKaidoEstado} ➔ <span className="text-emerald-400">{analise.estadoFinal}</span>
+                          </span>
+                          <span className="text-[11px] text-yellow-300/80 font-mono">{analise.curaHpStr}</span>
+                        </div>
 
-                    {/* Resultado da Simulação */}
-                    <div className="p-4 bg-black/90 rounded-xl border-2 space-y-3" style={{ borderColor: analise.cor }}>
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <div className="flex items-center gap-2">
-                          <span
-                            className="text-[10px] font-extrabold uppercase px-3 py-1 rounded-full text-black"
-                            style={{ backgroundColor: analise.cor }}
-                          >
+                        <div className="p-3.5 bg-black/70 rounded-xl border border-emerald-500/40 text-center">
+                          <span className="text-[10px] text-bleach-muted uppercase font-bold block">Classificação Médica:</span>
+                          <span className="text-sm font-extrabold text-emerald-300 block mt-1">
                             {analise.categoria}
                           </span>
-                          <span className="text-xs font-mono text-bleach-creamDim">
-                            {labelStatPlayer} ({valorStatPlayer}) / Inimigo ({simStatInimigo}) = <strong className="font-bold text-white">{analise.pct}%</strong>
+                          <span className="text-[10px] text-bleach-muted">{analise.diagnostico}</span>
+                        </div>
+                      </div>
+
+                      {/* Roteiro Narrativo Passo a Passo por Cena */}
+                      <div className="p-4 bg-black/80 rounded-xl border border-emerald-500/30 space-y-3">
+                        <h6 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                          <span>📋</span> Roteiro Passo-a-Passo de Narração para o WhatsApp ({analise.cenasNecessarias} Cenas):
+                        </h6>
+                        <div className="space-y-2">
+                          {(analise.roteiroCenas || []).map((passo, idx) => (
+                            <div key={idx} className="p-2.5 bg-emerald-950/20 border border-emerald-500/20 rounded-lg flex items-start gap-2.5">
+                              <span className="px-2 py-0.5 bg-emerald-900/80 text-emerald-300 border border-emerald-500 font-mono font-bold text-[10px] rounded shrink-0">
+                                Cena {passo.cena}
+                              </span>
+                              <div>
+                                <strong className="text-white text-xs block">{passo.fase}</strong>
+                                <p className="text-xs text-bleach-creamDim mt-0.5">{passo.instrucao}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Recomendação de Roleplay */}
+                      <div className="p-3 bg-bleach-panel rounded-xl border border-white/10 text-xs">
+                        <strong className="text-emerald-400 block text-[10px] uppercase font-bold">Instrução Tática do 4º Esquadrão:</strong>
+                        <p className="text-bleach-cream mt-0.5 leading-relaxed">{analise.dicaTatica}</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="p-4 sm:p-5 bg-gradient-to-r from-black via-bleach-panel2 to-black rounded-xl border-2 border-white/10 space-y-4 shadow-xl">
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
+                        <div>
+                          <h5 className="font-title text-xl text-white flex items-center gap-2">
+                            <span>🎯</span> Disputa: {labelStatPlayer} ({valorStatPlayer} pts) vs {labelStatInimigo}
+                          </h5>
+                          <p className="text-[11px] text-bleach-creamDim">
+                            Simule o resultado narrativo e mecânico com base na comparação oficial dos atributos.
+                          </p>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs text-bleach-muted">{labelStatInimigo}:</span>
+                          <input
+                            type="number"
+                            min="1"
+                            max="9999"
+                            value={simStatInimigo}
+                            onChange={(e) => setSimStatInimigo(Math.max(1, Number(e.target.value) || 1))}
+                            className="w-24 px-3 py-1.5 bg-black/80 border border-white/30 rounded-lg text-white font-mono font-bold text-sm text-center focus:outline-none focus:border-bleach-orange"
+                          />
+                          <span className="text-xs font-mono text-bleach-orange font-bold">pts</span>
+                        </div>
+                      </div>
+
+                      {/* Presets Rápidos */}
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="text-[10px] font-bold text-bleach-muted uppercase mr-1">Presets Rápidos:</span>
+                        {[
+                          { label: "💀 Hollow Menor", val: 30 },
+                          { label: "⚔️ Sentinela", val: 80 },
+                          { label: "⚡ Tenente", val: 250 },
+                          { label: "👑 Capitão", val: 650 },
+                          { label: "🩸 Espada Top 4", val: 1200 },
+                          { label: "🌟 Comandante", val: 2500 },
+                        ].map((preset) => (
+                          <button
+                            key={preset.label}
+                            type="button"
+                            onClick={() => setSimStatInimigo(preset.val)}
+                            className={`px-2.5 py-1 rounded-lg text-[11px] font-mono transition ${
+                              simStatInimigo === preset.val
+                                ? "bg-bleach-orange text-black font-bold border border-white shadow"
+                                : "bg-black/60 text-bleach-creamDim hover:text-white border border-white/10"
+                            }`}
+                          >
+                            {preset.label} ({preset.val})
+                          </button>
+                        ))}
+                      </div>
+
+                      {/* Resultado da Simulação */}
+                      <div className="p-4 bg-black/90 rounded-xl border-2 space-y-3" style={{ borderColor: analise.cor }}>
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <div className="flex items-center gap-2">
+                            <span
+                              className="text-[10px] font-extrabold uppercase px-3 py-1 rounded-full text-black"
+                              style={{ backgroundColor: analise.cor }}
+                            >
+                              {analise.categoria}
+                            </span>
+                            <span className="text-xs font-mono text-bleach-creamDim">
+                              {labelStatPlayer} ({valorStatPlayer}) / Inimigo ({simStatInimigo}) = <strong className="font-bold text-white">{analise.pct}%</strong>
+                            </span>
+                          </div>
+
+                          <span className="text-xs font-bold font-mono" style={{ color: analise.cor }}>
+                            {analise.resultadoStr || analise.danoRecebidoStr}
                           </span>
                         </div>
 
-                        <span className="text-xs font-bold font-mono" style={{ color: analise.cor }}>
-                          {analise.resultadoStr || analise.danoRecebidoStr}
-                        </span>
-                      </div>
-
-                      {/* Barra de Proporção */}
-                      <div className="w-full bg-black/60 h-2.5 rounded-full overflow-hidden border border-white/10">
-                        <div
-                          className="h-full rounded-full transition-all duration-500"
-                          style={{
-                            width: `${Math.min(100, analise.pct)}%`,
-                            backgroundColor: analise.cor
-                          }}
-                        ></div>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs pt-1">
-                        <div className="p-2.5 bg-bleach-panel rounded-lg border border-white/5">
-                          <strong className="text-bleach-muted block text-[10px] uppercase">Efeito de Postura / Movimento:</strong>
-                          <p className="text-bleach-cream mt-0.5">{analise.efeitoPostura}</p>
+                        {/* Barra de Proporção */}
+                        <div className="w-full bg-black/60 h-2.5 rounded-full overflow-hidden border border-white/10">
+                          <div
+                            className="h-full rounded-full transition-all duration-500"
+                            style={{
+                              width: `${Math.min(100, analise.pct)}%`,
+                              backgroundColor: analise.cor
+                            }}
+                          ></div>
                         </div>
-                        <div className="p-2.5 bg-bleach-panel rounded-lg border border-white/5">
-                          <strong className="text-bleach-muted block text-[10px] uppercase">Risco à Zanpakutō / Arma:</strong>
-                          <p className="text-bleach-cream mt-0.5">{analise.riscoArma}</p>
-                        </div>
-                        <div className="p-2.5 bg-bleach-panel rounded-lg border border-white/5">
-                          <strong className="text-bleach-orange block text-[10px] uppercase">Recomendação Tática de Narração:</strong>
-                          <p className="text-bleach-cream mt-0.5">{analise.dicaTatica}</p>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs pt-1">
+                          <div className="p-2.5 bg-bleach-panel rounded-lg border border-white/5">
+                            <strong className="text-bleach-muted block text-[10px] uppercase">Efeito de Postura / Movimento:</strong>
+                            <p className="text-bleach-cream mt-0.5">{analise.efeitoPostura}</p>
+                          </div>
+                          <div className="p-2.5 bg-bleach-panel rounded-lg border border-white/5">
+                            <strong className="text-bleach-muted block text-[10px] uppercase">Risco à Zanpakutō / Arma:</strong>
+                            <p className="text-bleach-cream mt-0.5">{analise.riscoArma}</p>
+                          </div>
+                          <div className="p-2.5 bg-bleach-panel rounded-lg border border-white/5">
+                            <strong className="text-bleach-orange block text-[10px] uppercase">Recomendação Tática de Narração:</strong>
+                            <p className="text-bleach-cream mt-0.5">{analise.dicaTatica}</p>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               );
             })()}
@@ -2239,6 +2370,90 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
       {/* SUBPAGE: KIDOS & TÉCNICAS */}
       {subPaginaFicha === "kidos" && (
         <div className="space-y-6">
+          
+          {/* BARRA DE ADMIN: AJUSTES RÁPIDOS DE CONHECIMENTO & CENAS */}
+          {isAdmin && (
+            <div className="p-3.5 bg-gradient-to-r from-yellow-950/60 via-black/90 to-amber-950/60 border-2 border-yellow-500/70 rounded-2xl shadow-xl flex flex-wrap items-center justify-between gap-3 text-xs animate-fade-in">
+              <div className="flex items-center gap-2">
+                <span className="w-7 h-7 rounded-lg bg-yellow-500/20 border border-yellow-500 flex items-center justify-center text-sm">
+                  👑
+                </span>
+                <div>
+                  <span className="font-title text-sm text-yellow-400 block">Gestão de Conhecimento ADM ({personagem.nome})</span>
+                  <span className="text-[11px] text-bleach-creamDim">
+                    Saldo: <strong className="text-yellow-400 font-mono">{personagem.conhecimento || 0} ₪</strong> | Cenas Semana: <strong className="text-white font-mono">{personagem.cenasSemana || 0}</strong>
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const atual = Number(personagem.conhecimento || 0);
+                    updateChar({ conhecimento: atual + 100 }, "+100 ₪ de Conhecimento creditado pelo ADM");
+                    playReiatsuSound('win');
+                  }}
+                  className="px-2.5 py-1 bg-yellow-500 text-black font-extrabold rounded-lg hover:brightness-110 shadow text-xs transition"
+                >
+                  +100 ₪
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const atual = Number(personagem.conhecimento || 0);
+                    updateChar({ conhecimento: atual + 500 }, "+500 ₪ de Conhecimento creditado pelo ADM");
+                    playReiatsuSound('win');
+                  }}
+                  className="px-2.5 py-1 bg-yellow-500 text-black font-extrabold rounded-lg hover:brightness-110 shadow text-xs transition"
+                >
+                  +500 ₪
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const atual = Number(personagem.conhecimento || 0);
+                    updateChar({ conhecimento: atual + 1000 }, "+1000 ₪ de Conhecimento creditado pelo ADM");
+                    playReiatsuSound('win');
+                  }}
+                  className="px-2.5 py-1 bg-yellow-500 text-black font-extrabold rounded-lg hover:brightness-110 shadow text-xs transition"
+                >
+                  +1000 ₪
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const sem = Number(personagem.cenasSemana || 0);
+                    const tot = Number(personagem.cenasTotal || 0);
+                    const con = Number(personagem.conhecimento || 0);
+                    updateChar({
+                      cenasSemana: sem + 5,
+                      cenasTotal: tot + 5,
+                      conhecimento: con + 500
+                    }, "📊 +5 cenas no WhatsApp (+500 ₪ Conhecimento) lançadas pelo ADM");
+                    playReiatsuSound('win');
+                  }}
+                  className="px-2.5 py-1 bg-gradient-to-r from-orange-500 to-amber-600 text-black font-extrabold rounded-lg hover:brightness-110 shadow text-xs transition"
+                >
+                  +5 Cenas (+500 ₪)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const val = prompt(`Definir saldo exato de Conhecimento para [${personagem.nome}]:`, String(personagem.conhecimento || 0));
+                    if (val !== null && !isNaN(Number(val))) {
+                      const novoCon = Math.max(0, Number(val));
+                      updateChar({ conhecimento: novoCon }, `Saldo de Conhecimento ajustado para ${novoCon} ₪ pelo ADM`);
+                      playReiatsuSound('win');
+                    }
+                  }}
+                  className="px-2.5 py-1 bg-black/80 border border-white/20 text-white font-bold rounded-lg hover:border-yellow-400 text-xs transition"
+                >
+                  ✏️ Saldo Manual
+                </button>
+              </div>
+            </div>
+          )}
           
           {/* 1. BARRAS SUPERIORES: CONHECIMENTO (DINHEIRO DE KIDŌ) & PRESSÃO ESPIRITUAL (REIATSU NA CENA) */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -2359,293 +2574,365 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
 
           </div>
 
-          {/* 2. TÉCNICAS E KIDŌS REGISTRADOS NA FICHA */}
-          <Section 
-            title="📜 Kidōs Registrados na Ficha do Shinigami" 
-            subtitle="Feitiços dominados e prontos para uso em combate ou simulação"
-          >
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mb-4">
-              <span className="text-xs text-bleach-creamDim">
-                Total de Feitiços Aprendidos: <strong className="text-white font-mono">{(personagem.kidosConhecidos || []).length}</strong>
-              </span>
+          {/* SELETOR DE SUB-ABAS DE KIDŌ */}
+          <div className="flex gap-2 border-b border-white/10 pb-3 flex-wrap">
+            <button
+              type="button"
+              onClick={() => setSubAbaKido("magias")}
+              className={`px-4 py-2.5 rounded-xl text-xs font-extrabold uppercase tracking-wider transition flex items-center gap-2 border ${
+                subAbaKido === "magias"
+                  ? "bg-bleach-orange text-black border-white shadow-lg"
+                  : "bg-black/60 text-bleach-creamDim border-white/10 hover:border-white/30"
+              }`}
+            >
+              <span>💥</span> Feitiços & Combate (Hadō / Bakudō)
+            </button>
+            <button
+              type="button"
+              onClick={() => setSubAbaKido("kaido")}
+              className={`px-4 py-2.5 rounded-xl text-xs font-extrabold uppercase tracking-wider transition flex items-center gap-2 border ${
+                subAbaKido === "kaido"
+                  ? "bg-emerald-500 text-black border-white shadow-lg font-black"
+                  : "bg-black/60 text-emerald-300 border-emerald-500/30 hover:border-emerald-400"
+              }`}
+            >
+              <span>🌿</span> Kaidō & Simulação de Cura (4º Esquadrão)
+            </button>
+          </div>
 
-              <button
-                type="button"
-                onClick={() => setShowKidoShopModal(true)}
-                className="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-yellow-500 to-amber-600 hover:brightness-110 text-black font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-lg flex items-center justify-center gap-1.5 transition"
+          {/* SUB-ABA 1: FEITIÇOS & COMBATE */}
+          {subAbaKido === "magias" && (
+            <div className="space-y-6">
+              {/* 2. TÉCNICAS E KIDŌS REGISTRADOS NA FICHA */}
+              <Section 
+                title="📜 Kidōs Registrados na Ficha do Shinigami" 
+                subtitle="Feitiços dominados e prontos para uso em combate ou simulação"
               >
-                <span>✨ 📖</span> Aprender Novos Kidōs (Loja)
-              </button>
-            </div>
-
-            {(!personagem.kidosConhecidos || personagem.kidosConhecidos.length === 0) ? (
-              <div className="p-8 text-center bg-black/50 border border-dashed border-white/20 rounded-2xl space-y-3">
-                <div className="text-3xl">📕</div>
-                <h4 className="font-title text-xl text-yellow-400">Nenhum Kidō registrado na sua ficha ainda</h4>
-                <p className="text-xs text-bleach-creamDim max-w-md mx-auto">
-                  Você pode usar o seu Conhecimento acumulado para aprender feitiços de Hadō, Bakudō e Kaidō na Biblioteca do Seireitei!
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setShowKidoShopModal(true)}
-                  className="px-5 py-2.5 bg-yellow-500 hover:bg-yellow-400 text-black font-black text-xs uppercase tracking-wider rounded-xl shadow"
-                >
-                  Abrir Loja de Kidōs
-                </button>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
-                {personagem.kidosConhecidos.map((k) => {
-                  const isHado = k.cat === "Hadō";
-                  const isBakudo = k.cat === "Bakudō";
-                  const pressaoTotal = Number(personagem.atributos?.pressao || 30);
-                  const pressaoRestante = Math.max(0, pressaoTotal - gastoPressaoForca - gastoPressaoResiliencia);
-                  const custo = calcularCustoKido(k, pressaoTotal);
-                  const poder = calcularPoderKido(k, pressaoTotal, custo.custoTotal, false);
-
+                {(() => {
+                  const pressaoTotal = Number(personagem.atributos?.pressao || 10);
+                  const cap = (typeof getCapacidadeKidos === 'function') ? getCapacidadeKidos(pressaoTotal) : { limiteMaximo: 4, tierNome: "Iniciante", limiteEquipadosStr: "Até 4 Feitiços", cor: "#10B981", descricao: "Em fase de iniciação espiritual." };
+                  const totalAprendidos = (personagem.kidosConhecidos || []).length;
+                  
                   return (
-                    <div
-                      key={k.id}
-                      className={`p-4 bg-bleach-panel2 border rounded-xl flex flex-col justify-between space-y-3 transition-all duration-300 ${
-                        isHado
-                          ? "border-red-500/40 hover:border-red-400 hover:shadow-[0_0_20px_rgba(239,68,68,0.2)]"
-                          : isBakudo
-                          ? "border-blue-500/40 hover:border-blue-400 hover:shadow-[0_0_20px_rgba(59,130,246,0.2)]"
-                          : "border-emerald-500/40 hover:border-emerald-400 hover:shadow-[0_0_20px_rgba(16,185,129,0.2)]"
-                      }`}
-                    >
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                          <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded border ${
-                            isHado ? "bg-red-950 text-red-300 border-red-500" : isBakudo ? "bg-blue-950 text-cyan-300 border-cyan-500" : "bg-emerald-950 text-emerald-300 border-emerald-500"
-                          }`}>
-                            {k.cat} #{k.numero}
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 p-3.5 bg-black/70 rounded-xl border border-white/10">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-xs text-bleach-cream">
+                            Slots de Magia Utilizados: <strong className="text-yellow-400 font-mono text-sm">{totalAprendidos} / {cap.limiteMaximo}</strong>
                           </span>
-                          <span className="text-[11px] font-mono text-bleach-orange font-bold">
-                            Custo: {custo.custoTotal} pts
+                          <span
+                            className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full text-black font-mono shadow"
+                            style={{ backgroundColor: cap.cor }}
+                          >
+                            {cap.tierNome}
                           </span>
                         </div>
-
-                        <h5 className="font-bold text-white text-sm leading-snug">
-                          {k.nome}
-                        </h5>
-
-                        {k.incant && k.incant !== "—" && (
-                          <div className="p-2 bg-black/60 rounded-lg border border-white/5 text-[10px] text-cyan-200/80 italic line-clamp-2">
-                            "{k.incant}"
-                          </div>
-                        )}
-
-                        <p className="text-[11px] text-bleach-creamDim line-clamp-2 leading-relaxed">
-                          {k.desc}
+                        <p className="text-[11px] text-bleach-muted">
+                          {cap.descricao} ‹ <strong>{cap.limiteEquipadosStr}</strong> ›
                         </p>
-
-                        <div className="text-[10px] font-mono text-bleach-muted flex justify-between">
-                          <span>Poder Básico: <strong className="text-white">{poder} pts</strong></span>
-                          <span>Reiatsu Mínima: <strong className="text-cyan-400">{k.pressaoMinima || 10} pts</strong></span>
-                        </div>
                       </div>
 
-                      <div className="space-y-2 pt-2 border-t border-white/5">
-                        <button
-                          type="button"
-                          onClick={() => setKidoModalFicha(k)}
-                          className="w-full py-1.5 rounded-lg bg-black/60 border border-white/10 text-xs font-bold text-bleach-cream hover:text-white hover:border-bleach-orange transition flex items-center justify-center gap-1.5"
-                        >
-                          <span>👁️</span> Detalhes & Simulação Completa
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() => {
-                            if (pressaoRestante < custo.custoTotal) {
-                              alert(`Reiatsu insuficiente na cena! Custo: ${custo.custoTotal} pts | Disponível: ${pressaoRestante} pts.`);
-                              return;
-                            }
-                            playReiatsuSound('kido');
-                            updateChar({}, `⚡ Conjurou [${k.cat} #${k.numero}] ${k.nome} na cena (Gasto: ${custo.custoTotal} pts)`);
-                            alert(`✨ ${k.nome} conjurado na cena com sucesso!\n\n⚡ Poder de Feitiço: ${poder} pts\n🌀 Custo de Reiatsu: ${custo.custoTotal} pts`);
-                          }}
-                          disabled={pressaoRestante < custo.custoTotal}
-                          className={`w-full py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition shadow disabled:opacity-40 disabled:cursor-not-allowed ${
-                            isHado ? "bg-gradient-to-r from-red-600 to-orange-600 text-white hover:brightness-110" 
-                            : isBakudo ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:brightness-110" 
-                            : "bg-gradient-to-r from-emerald-600 to-teal-600 text-white hover:brightness-110"
-                          }`}
-                        >
-                          ⚡ Conjurar em Cena ({custo.custoTotal} pts)
-                        </button>
-                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setShowKidoShopModal(true)}
+                        className="w-full sm:w-auto px-4 py-2.5 bg-gradient-to-r from-yellow-500 to-amber-600 hover:brightness-110 text-black font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-lg flex items-center justify-center gap-1.5 transition"
+                      >
+                        <span>✨ 📖</span> Aprender Novos Kidōs (Loja)
+                      </button>
                     </div>
                   );
-                })}
-              </div>
-            )}
-          </Section>
+                })()}
 
-          {/* 3. SIMULADOR INTERATIVO DE KIDŌS REGISTRADOS (ESTILO ATRIBUTOS) */}
-          {(personagem.kidosConhecidos && personagem.kidosConhecidos.length > 0) && (
-            <Section
-              title="🎯 Simulador de Confronto de Kidōs Aprendidos"
-              subtitle="Teste o impacto real dos feitiços registrados na sua ficha contra atributos de oponentes"
-              className="border-2 border-bleach-orange/50"
-            >
-              {(() => {
-                const kidos = personagem.kidosConhecidos || [];
-                const kidoAtivo = kidos[Math.min(simKidoIndex, kidos.length - 1)] || kidos[0];
-                if (!kidoAtivo) return null;
-
-                const isHado = kidoAtivo.cat === "Hadō";
-                const isBakudo = kidoAtivo.cat === "Bakudō";
-                const isKaido = kidoAtivo.cat === "Kaidō";
-
-                const pressaoTotal = Number(personagem.atributos?.pressao || 30);
-                const custoInfo = calcularCustoKido(kidoAtivo, pressaoTotal);
-                const poderCalculado = calcularPoderKido(kidoAtivo, pressaoTotal, custoInfo.custoTotal, simKidoIncantado);
-
-                let analise = null;
-                let labelInimigo = isHado ? "Resiliência do Alvo" : isBakudo ? "Força do Alvo" : "Poder Terapêutico";
-
-                if (isHado) {
-                  analise = calcularEfeitoHado(poderCalculado, simKidoTargetStat);
-                } else if (isBakudo) {
-                  analise = calcularEfeitoBakudo(poderCalculado, simKidoTargetStat);
-                } else {
-                  analise = calcularEfeitoKaido(poderCalculado);
-                }
-
-                return (
-                  <div className="space-y-4">
-                    {/* Seletor do Kidō para Simulação */}
-                    <div>
-                      <label className="block text-xs font-bold text-bleach-creamDim uppercase mb-1.5">
-                        Escolha um Kidō Registrado para Simular:
-                      </label>
-                      <div className="flex gap-2 overflow-x-auto pb-1">
-                        {kidos.map((k, idx) => (
-                          <button
-                            key={k.id || idx}
-                            type="button"
-                            onClick={() => setSimKidoIndex(idx)}
-                            className={`px-3 py-2 rounded-xl text-xs font-bold transition flex-shrink-0 border ${
-                              simKidoIndex === idx
-                                ? "bg-bleach-panel2 text-white border-bleach-orange shadow-lg"
-                                : "bg-black/60 text-bleach-creamDim border-white/5 hover:border-white/20"
-                            }`}
-                          >
-                            <span className="text-bleach-orange block text-[10px] uppercase font-bold">{k.cat} #{k.numero}</span>
-                            <span>{k.nome}</span>
-                          </button>
-                        ))}
-                      </div>
+                {(!personagem.kidosConhecidos || personagem.kidosConhecidos.length === 0) ? (
+                  <div className="p-8 text-center bg-gradient-to-b from-yellow-950/20 to-black/80 border-2 border-dashed border-yellow-500/40 rounded-2xl space-y-3 shadow-xl">
+                    <div className="text-4xl">📚✨</div>
+                    <h4 className="font-title text-xl text-yellow-400">Escolha seus 4 Kidōs Iniciais na Loja!</h4>
+                    <p className="text-xs text-bleach-creamDim max-w-lg mx-auto leading-relaxed">
+                      Como Shinigami, você possui <strong className="text-yellow-400 font-mono font-bold">{personagem.conhecimento || 450} ₪</strong> de Conhecimento inicial para escolher livremente até <strong>4 feitiços básicos</strong> de Hadō, Bakudō e Kaidō na Biblioteca do Seireitei!
+                    </p>
+                    <div className="pt-2">
+                      <button
+                        type="button"
+                        onClick={() => setShowKidoShopModal(true)}
+                        className="px-6 py-3 bg-gradient-to-r from-yellow-500 to-amber-600 hover:brightness-110 text-black font-black text-xs uppercase tracking-wider rounded-xl shadow-xl transition"
+                      >
+                        📖 Abrir Loja & Escolher Meus 4 Feitiços
+                      </button>
                     </div>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+                    {personagem.kidosConhecidos.map((k) => {
+                      const isHado = k.cat === "Hadō";
+                      const isBakudo = k.cat === "Bakudō";
+                      const pressaoTotal = Number(personagem.atributos?.pressao || 30);
+                      const pressaoRestante = Math.max(0, pressaoTotal - gastoPressaoForca - gastoPressaoResiliencia);
+                      const custo = calcularCustoKido(k, pressaoTotal);
+                      const poderObj = calcularPoderKido(k, pressaoTotal, custo.custoTotal, false);
+                      const poder = poderObj.poderFinal || poderObj;
 
-                    {/* Painel do Simulador */}
-                    <div className="p-4 sm:p-5 bg-gradient-to-r from-black via-bleach-panel2 to-black rounded-xl border-2 border-white/10 space-y-4 shadow-xl">
-                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
-                        <div>
-                          <h5 className="font-title text-xl text-white flex items-center gap-2">
-                            <span>⚡</span> {kidoAtivo.nome} (Poder: {poderCalculado} pts) vs {labelInimigo}
-                          </h5>
-                          <p className="text-[11px] text-bleach-creamDim">
-                            Custo de Reiatsu: <strong className="text-bleach-orange font-mono">{custoInfo.custoTotal} pts</strong> ({custoInfo.custoFlat} flat + {custoInfo.custoPercentual} [% total])
-                          </p>
-                        </div>
-
-                        <div className="flex items-center gap-3">
-                          <label className="flex items-center gap-2 cursor-pointer text-xs text-yellow-300 font-bold bg-yellow-950/60 border border-yellow-500/50 px-2.5 py-1 rounded-lg">
-                            <input
-                              type="checkbox"
-                              checked={simKidoIncantado}
-                              onChange={(e) => setSimKidoIncantado(e.target.checked)}
-                              className="accent-yellow-400"
-                            />
-                            <span>Incantação Completa (+35% Poder)</span>
-                          </label>
-
-                          {!isKaido && (
-                            <div className="flex items-center gap-2">
-                              <span className="text-xs text-bleach-muted">{labelInimigo}:</span>
-                              <input
-                                type="number"
-                                min="1"
-                                max="9999"
-                                value={simKidoTargetStat}
-                                onChange={(e) => setSimKidoTargetStat(Math.max(1, Number(e.target.value) || 1))}
-                                className="w-20 px-2.5 py-1 bg-black/80 border border-white/30 rounded-lg text-white font-mono font-bold text-xs text-center focus:outline-none focus:border-bleach-orange"
-                              />
+                      return (
+                        <div
+                          key={k.id}
+                          className={`p-4 bg-bleach-panel2 border rounded-xl flex flex-col justify-between space-y-3 transition-all duration-300 ${
+                            isHado
+                              ? "border-red-500/40 hover:border-red-400 hover:shadow-[0_0_20px_rgba(239,68,68,0.2)]"
+                              : isBakudo
+                              ? "border-blue-500/40 hover:border-blue-400 hover:shadow-[0_0_20px_rgba(59,130,246,0.2)]"
+                              : "border-emerald-500/40 hover:border-emerald-400 hover:shadow-[0_0_20px_rgba(16,185,129,0.2)]"
+                          }`}
+                        >
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                              <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded border ${
+                                isHado ? "bg-red-950 text-red-300 border-red-500" : isBakudo ? "bg-blue-950 text-cyan-300 border-cyan-500" : "bg-emerald-950 text-emerald-300 border-emerald-500"
+                              }`}>
+                                {k.cat} #{k.numero}
+                              </span>
+                              <span className="text-[11px] font-mono text-bleach-orange font-bold">
+                                Custo: {custo.custoTotal} pts
+                              </span>
                             </div>
-                          )}
-                        </div>
-                      </div>
 
-                      {/* Presets Rápidos se não for Kaidō */}
-                      {!isKaido && (
-                        <div className="flex items-center gap-1.5 flex-wrap">
-                          <span className="text-[10px] font-bold text-bleach-muted uppercase mr-1">Presets do Alvo:</span>
-                          {[
-                            { label: "💀 Hollow Menor", val: 30 },
-                            { label: "⚔️ Sentinela", val: 80 },
-                            { label: "⚡ Tenente", val: 250 },
-                            { label: "👑 Capitão", val: 650 },
-                            { label: "🩸 Espada Top 4", val: 1200 },
-                          ].map((preset) => (
-                            <button
-                              key={preset.label}
-                              type="button"
-                              onClick={() => setSimKidoTargetStat(preset.val)}
-                              className={`px-2 py-1 rounded-lg text-[11px] font-mono transition ${
-                                simKidoTargetStat === preset.val
-                                  ? "bg-bleach-orange text-black font-bold border border-white shadow"
-                                  : "bg-black/60 text-bleach-creamDim hover:text-white border border-white/10"
-                              }`}
-                            >
-                              {preset.label} ({preset.val})
-                            </button>
-                          ))}
-                        </div>
-                      )}
+                            <h5 className="font-bold text-white text-sm leading-snug">
+                              {k.nome}
+                            </h5>
 
-                      {/* Resultado Gráfico da Simulação */}
-                      {analise && (
-                        <div className="p-4 bg-black/90 rounded-xl border-2 space-y-3" style={{ borderColor: analise.cor }}>
-                          <div className="flex flex-wrap items-center justify-between gap-2">
-                            <span
-                              className="text-[10px] font-extrabold uppercase px-3 py-1 rounded-full text-black"
-                              style={{ backgroundColor: analise.cor }}
-                            >
-                              {analise.categoria}
-                            </span>
-                            <span className="text-xs font-mono font-bold" style={{ color: analise.cor }}>
-                              {isHado ? `Dano Efetivo: ${analise.danoRecebidoStr} (Proporção: ${analise.pct}%)`
-                                : isBakudo ? `Contenção: ${analise.duracaoStr} (Proporção: ${analise.pct}%)`
-                                : analise.curaHpStr}
-                            </span>
+                            {k.incant && k.incant !== "—" && (
+                              <div className="p-2 bg-black/60 rounded-lg border border-white/5 text-[10px] text-cyan-200/80 italic line-clamp-2">
+                                "{k.incant}"
+                              </div>
+                            )}
+
+                            <p className="text-[11px] text-bleach-creamDim line-clamp-2 leading-relaxed">
+                              {k.desc}
+                            </p>
+
+                            <div className="text-[10px] font-mono text-bleach-muted flex justify-between">
+                              <span>Poder Base: <strong className="text-white">{poder} pts</strong></span>
+                              <span className="text-cyan-300">Encanto: <strong>+30% PE</strong></span>
+                            </div>
                           </div>
 
-                          {!isKaido && (
+                          <div className="space-y-2 pt-2 border-t border-white/5">
+                            <button
+                              type="button"
+                              onClick={() => setKidoModalFicha(k)}
+                              className="w-full py-1.5 rounded-lg bg-black/60 border border-white/10 text-xs font-bold text-bleach-cream hover:text-white hover:border-bleach-orange transition flex items-center justify-center gap-1.5"
+                            >
+                              <span>👁️</span> Detalhes & Simulação
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (pressaoRestante < custo.custoTotal) {
+                                  alert(`Reiatsu insuficiente na cena! Custo: ${custo.custoTotal} pts | Disponível: ${pressaoRestante} pts.`);
+                                  return;
+                                }
+                                playReiatsuSound('kido');
+                                updateChar({}, `⚡ Conjurou [${k.cat} #${k.numero}] ${k.nome} na cena (Gasto: ${custo.custoTotal} pts)`);
+                                alert(`✨ ${k.nome} conjurado na cena com sucesso!\n\n⚡ Poder de Feitiço: ${poder} pts\n🌀 Custo de Reiatsu: ${custo.custoTotal} pts`);
+                              }}
+                              disabled={pressaoRestante < custo.custoTotal}
+                              className={`w-full py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition shadow disabled:opacity-40 disabled:cursor-not-allowed ${
+                                isHado ? "bg-gradient-to-r from-red-600 to-orange-600 text-white hover:brightness-110" 
+                                : isBakudo ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:brightness-110" 
+                                : "bg-gradient-to-r from-emerald-600 to-teal-600 text-white hover:brightness-110"
+                              }`}
+                            >
+                              ⚡ Conjurar em Cena ({custo.custoTotal} pts)
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </Section>
+
+              {/* 3. SIMULADOR INTERATIVO DE CONFRONTO DE HADŌ / BAKUDŌ */}
+              {(personagem.kidosConhecidos && personagem.kidosConhecidos.length > 0) && (
+                <Section
+                  title="🎯 Simulador de Confronto de Kidōs Aprendidos"
+                  subtitle="Teste o impacto real dos feitiços registrados na sua ficha contra atributos de oponentes"
+                  className="border-2 border-bleach-orange/50"
+                >
+                  {(() => {
+                    const kidos = (personagem.kidosConhecidos || []).filter(k => k.cat !== "Kaidō");
+                    const kidoAtivo = kidos[Math.min(simKidoIndex, Math.max(0, kidos.length - 1))] || (personagem.kidosConhecidos || [])[0];
+                    if (!kidoAtivo) return null;
+
+                    const isHado = kidoAtivo.cat === "Hadō";
+                    const pressaoTotal = Number(personagem.atributos?.pressao || 30);
+                    const custoInfo = calcularCustoKido(kidoAtivo, pressaoTotal, simKidoExtraPressao);
+                    const poderCalculadoObj = calcularPoderKido(kidoAtivo, pressaoTotal, custoInfo.custoTotal, simKidoIncantado, simKidoExtraPressao);
+                    const poderCalculado = poderCalculadoObj.poderFinal || poderCalculadoObj;
+                    const bonusEncantamento = poderCalculadoObj.bonusEncantamento || Math.round((pressaoTotal + simKidoExtraPressao) * 0.30);
+
+                    let analise = isHado ? calcularEfeitoHado(poderCalculado, simKidoTargetStat) : calcularEfeitoBakudo(poderCalculado, simKidoTargetStat);
+                    let labelInimigo = isHado ? "Resiliência do Alvo" : "Força do Alvo";
+
+                    return (
+                      <div className="space-y-4">
+                        {/* Seletor do Kidō para Simulação */}
+                        <div>
+                          <label className="block text-xs font-bold text-bleach-creamDim uppercase mb-1.5">
+                            Escolha um Feitiço de Combate para Simular:
+                          </label>
+                          <div className="flex gap-2 overflow-x-auto pb-1">
+                            {kidos.map((k, idx) => (
+                              <button
+                                key={k.id || idx}
+                                type="button"
+                                onClick={() => setSimKidoIndex(idx)}
+                                className={`px-3 py-2 rounded-xl text-xs font-bold transition flex-shrink-0 border ${
+                                  simKidoIndex === idx
+                                    ? "bg-bleach-panel2 text-white border-bleach-orange shadow-lg"
+                                    : "bg-black/60 text-bleach-creamDim border-white/5 hover:border-white/20"
+                                }`}
+                              >
+                                <span className="text-bleach-orange block text-[10px] uppercase font-bold">{k.cat} #{k.numero}</span>
+                                <span>{k.nome}</span>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Painel do Simulador */}
+                        <div className="p-4 sm:p-5 bg-gradient-to-r from-black via-bleach-panel2 to-black rounded-xl border-2 border-white/10 space-y-4 shadow-xl">
+                          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
+                            <div>
+                              <h5 className="font-title text-xl text-white flex items-center gap-2">
+                                <span>⚡</span> {kidoAtivo.nome} (Poder: {poderCalculado} pts) vs {labelInimigo}
+                              </h5>
+                              <p className="text-[11px] text-bleach-creamDim">
+                                Custo de Reiatsu: <strong className="text-bleach-orange font-mono">{custoInfo.custoTotal} pts</strong> ({custoInfo.custoFlat} flat + {custoInfo.custoPercentual} [% total])
+                              </p>
+                            </div>
+
+                            <div className="flex items-center gap-3 flex-wrap">
+                              <label className="flex items-center gap-2 cursor-pointer text-xs text-yellow-300 font-bold bg-yellow-950/60 border border-yellow-500/50 px-2.5 py-1 rounded-lg">
+                                <input
+                                  type="checkbox"
+                                  checked={simKidoIncantado}
+                                  onChange={(e) => setSimKidoIncantado(e.target.checked)}
+                                  className="accent-yellow-400"
+                                />
+                                <span>Recitar Encantamento (+30% PE: +{bonusEncantamento} pts)</span>
+                              </label>
+
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs text-bleach-muted">{labelInimigo}:</span>
+                                <input
+                                  type="number"
+                                  min="1"
+                                  max="9999"
+                                  value={simKidoTargetStat}
+                                  onChange={(e) => setSimTargetStat(Math.max(1, Number(e.target.value) || 1))}
+                                  className="w-20 px-2.5 py-1 bg-black/80 border border-white/30 rounded-lg text-white font-mono font-bold text-xs text-center focus:outline-none focus:border-bleach-orange"
+                                />
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Seletor de Pressão Extra */}
+                          <div className="flex items-center justify-between p-2.5 bg-black/60 rounded-xl border border-white/5">
+                            <span className="text-xs text-bleach-creamDim">
+                              Investir Pressão Espiritual Extra neste Feitiço:
+                            </span>
+                            <div className="flex gap-1.5">
+                              {[0, 10, 25, 50, 100].map((pe) => (
+                                <button
+                                  key={pe}
+                                  type="button"
+                                  onClick={() => setSimKidoExtraPressao(pe)}
+                                  className={`px-2.5 py-1 rounded-lg text-xs font-mono font-bold transition border ${
+                                    simKidoExtraPressao === pe
+                                      ? "bg-bleach-orange text-black border-white shadow"
+                                      : "bg-black/50 text-bleach-muted border-white/10 hover:text-white"
+                                  }`}
+                                >
+                                  +{pe} PE
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Presets Rápidos do Alvo */}
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span className="text-[10px] font-bold text-bleach-muted uppercase mr-1">Presets do Alvo:</span>
+                            {[
+                              { label: "💀 Hollow Menor", val: 30 },
+                              { label: "⚔️ Sentinela", val: 80 },
+                              { label: "⚡ Tenente", val: 250 },
+                              { label: "👑 Capitão", val: 650 },
+                              { label: "🩸 Espada Top 4", val: 1200 },
+                            ].map((preset) => (
+                              <button
+                                key={preset.label}
+                                type="button"
+                                onClick={() => setSimTargetStat(preset.val)}
+                                className={`px-2 py-1 rounded-lg text-[11px] font-mono transition ${
+                                  simKidoTargetStat === preset.val
+                                    ? "bg-bleach-orange text-black font-bold border border-white shadow"
+                                    : "bg-black/60 text-bleach-creamDim hover:text-white border border-white/10"
+                                }`}
+                              >
+                                {preset.label} ({preset.val})
+                              </button>
+                            ))}
+                          </div>
+
+                          {/* Resultado do Impacto */}
+                          <div className="p-4 bg-black/90 rounded-xl border-2 space-y-3" style={{ borderColor: analise.cor }}>
+                            <div className="flex flex-wrap items-center justify-between gap-2">
+                              <div className="flex items-center gap-2">
+                                <span
+                                  className="text-[10px] font-extrabold uppercase px-3 py-1 rounded-full text-black"
+                                  style={{ backgroundColor: analise.cor }}
+                                >
+                                  {analise.categoria}
+                                </span>
+                                <span className="text-xs font-mono text-bleach-creamDim">
+                                  Poder ({poderCalculado}) / Alvo ({simKidoTargetStat}) = <strong className="font-bold text-white">{analise.pct}%</strong>
+                                </span>
+                              </div>
+
+                              <span className="text-xs font-bold font-mono" style={{ color: analise.cor }}>
+                                {analise.danoStr || analise.duracaoStr}
+                              </span>
+                            </div>
+
                             <div className="w-full bg-black/60 h-2.5 rounded-full overflow-hidden border border-white/10">
                               <div
                                 className="h-full rounded-full transition-all duration-500"
-                                style={{ width: `${Math.min(100, analise.pct)}%`, backgroundColor: analise.cor }}
+                                style={{
+                                  width: `${Math.min(100, analise.pct)}%`,
+                                  backgroundColor: analise.cor
+                                }}
                               ></div>
                             </div>
-                          )}
 
-                          <div className="text-xs text-bleach-cream leading-relaxed">
-                            {analise.descricao || analise.diagnostico}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs pt-1">
+                              <div className="p-2.5 bg-bleach-panel rounded-lg border border-white/5">
+                                <strong className="text-bleach-muted block text-[10px] uppercase">Efeito no Adversário:</strong>
+                                <p className="text-bleach-cream mt-0.5">{analise.descricao}</p>
+                              </div>
+                              <div className="p-2.5 bg-bleach-panel rounded-lg border border-white/5">
+                                <strong className="text-bleach-orange block text-[10px] uppercase">Recomendação Tática:</strong>
+                                <p className="text-bleach-cream mt-0.5">{analise.dicaTatica}</p>
+                              </div>
+                            </div>
                           </div>
 
-                          <div className="p-2.5 bg-bleach-panel rounded-lg border border-white/5 text-[11px] text-bleach-creamDim">
-                            <strong className="text-bleach-orange">💡 Recomendação Tática de Narração:</strong> {analise.dicaTatica}
-                          </div>
                         </div>
-                      )}
-                    </div>
-                  </div>
-                );
-              })()}
-            </Section>
+                      </div>
+                    );
+                  })()}
+                </Section>
+              )}
+            </div>
           )}
 
         </div>
@@ -2757,6 +3044,8 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
                     className="w-full bg-black border border-bleach-border rounded-lg p-2 text-white"
                   >
                     <option value="">✨ Pontos Livres (Distribuição do Jogador)</option>
+                    <option value="conhecimento">📚 Conhecimento Espiritual (₪)</option>
+                    <option value="cenas">📊 Cenas de Atividade no WhatsApp (1 cena = 100 ₪)</option>
                     <option value="pressao">🌀 Pressão Espiritual (Reiatsu)</option>
                     <option value="forca">⚔️ Força (Zanjutsu & Dano)</option>
                     <option value="velocidade">⚡ Velocidade (Shunpo & Hohō)</option>

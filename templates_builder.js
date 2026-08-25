@@ -964,10 +964,15 @@ function KidoDetailModal({ kido, personagem, isOpen, onClose, onConjurar, pressa
   const [incantado, setIncantado] = useState(false);
   const [extraReiatsu, setExtraReiatsu] = useState(0);
   const [simTargetStat, setSimTargetStat] = useState(80);
+  const [simEstadoInicial, setSimEstadoInicial] = useState("Debilitado");
 
   const pressaoTotal = Number(personagem?.atributos?.pressao || 30);
   const custoInfo = calcularCustoKido(kido, pressaoTotal, extraReiatsu);
-  const poderCalculado = calcularPoderKido(kido, pressaoTotal, custoInfo.custoTotal, incantado);
+  const poderCalculadoObj = calcularPoderKido(kido, pressaoTotal, custoInfo.custoTotal, incantado, extraReiatsu);
+  const poderCalculado = poderCalculadoObj.poderFinal || poderCalculadoObj;
+  const poderSemEncanto = poderCalculadoObj.poderSemEncanto || Math.round(poderCalculado / 1.3);
+  const poderComEncanto = poderCalculadoObj.poderComEncanto || (poderSemEncanto + Math.round((pressaoTotal + extraReiatsu) * 0.30));
+  const bonusEncantamento = poderCalculadoObj.bonusEncantamento || Math.round((pressaoTotal + extraReiatsu) * 0.30);
 
   const isHado = kido.cat === "Hadō";
   const isBakudo = kido.cat === "Bakudō";
@@ -975,7 +980,7 @@ function KidoDetailModal({ kido, personagem, isOpen, onClose, onConjurar, pressa
 
   const efeitoHado = isHado ? calcularEfeitoHado(poderCalculado, simTargetStat) : null;
   const efeitoBakudo = isBakudo ? calcularEfeitoBakudo(poderCalculado, simTargetStat) : null;
-  const efeitoKaido = isKaido ? calcularEfeitoKaido(poderCalculado) : null;
+  const efeitoKaido = isKaido ? calcularEfeitoKaido(poderCalculado, simEstadoInicial) : null;
 
   const podeConjurar = pressaoRestante >= custoInfo.custoTotal;
 
@@ -1064,18 +1069,18 @@ function KidoDetailModal({ kido, personagem, isOpen, onClose, onConjurar, pressa
                 </div>
                 {extraReiatsu > 0 && (
                   <div className="flex justify-between text-yellow-300">
-                    <span>• Injeção Extra de Reishi:</span>
+                    <span>• Pressão Extra Investida:</span>
                     <span>+{extraReiatsu} pts</span>
                   </div>
                 )}
               </div>
 
               <div className="text-[10px] text-bleach-muted/80 leading-tight pt-1">
-                ⚙️ O feitiço consome uma fração proporcional da sua Reiatsu Total ({pressaoTotal} pts) para balanceamento tático anti-spam.
+                ⚙️ O feitiço consome uma fração proporcional da sua Reiatsu Total ({pressaoTotal} pts).
               </div>
             </div>
 
-            {/* Cartão de Poder Espiritual */}
+            {/* Cartão de Poder Espiritual com e sem Encantamento */}
             <div className={`p-3.5 bg-black/80 rounded-xl border space-y-2 ${
               isHado ? "border-red-500/40" : isBakudo ? "border-blue-500/40" : "border-emerald-500/40"
             }`}>
@@ -1086,6 +1091,17 @@ function KidoDetailModal({ kido, personagem, isOpen, onClose, onConjurar, pressa
                 </span>
               </div>
 
+              <div className="space-y-1 text-[10px] font-mono text-bleach-creamDim border-t border-white/5 pt-1.5">
+                <div className="flex justify-between items-center">
+                  <span>Sem Encantamento:</span>
+                  <span className="text-white font-bold">{poderSemEncanto} pts</span>
+                </div>
+                <div className="flex justify-between items-center text-yellow-300">
+                  <span>Com Encantamento (+30% PE):</span>
+                  <span className="font-bold">{poderComEncanto} pts (+{bonusEncantamento})</span>
+                </div>
+              </div>
+
               <div className="space-y-1.5 pt-1">
                 <label className="flex items-center gap-2 cursor-pointer select-none bg-black/50 p-1.5 rounded-lg border border-white/5 hover:border-white/20 transition">
                   <input
@@ -1094,16 +1110,16 @@ function KidoDetailModal({ kido, personagem, isOpen, onClose, onConjurar, pressa
                     onChange={(e) => setIncantado(e.target.checked)}
                     className="accent-orange-500 w-4 h-4 rounded"
                   />
-                  <span className="text-[11px] text-bleach-cream font-semibold">
-                    Incantação Completa (+35% Poder)
+                  <span className="text-[11px] text-yellow-300 font-bold">
+                    Recitar Encantamento (+30% Pressão Espiritual)
                   </span>
                 </label>
 
-                {/* Slider / Injeção de Reiatsu Extra */}
+                {/* Slider / Injeção de Pressão Extra */}
                 <div className="flex items-center justify-between gap-2 pt-1">
-                  <span className="text-[10px] text-bleach-muted font-bold">Extra:</span>
+                  <span className="text-[10px] text-bleach-muted font-bold">Pressão Extra:</span>
                   <div className="flex gap-1">
-                    {[0, 10, 25, 50].map((v) => (
+                    {[0, 10, 25, 50, 100].map((v) => (
                       <button
                         key={v}
                         type="button"
@@ -1220,7 +1236,7 @@ function KidoDetailModal({ kido, personagem, isOpen, onClose, onConjurar, pressa
 
             {/* Resultado do Kaidō */}
             {isKaido && efeitoKaido && (
-              <div className="p-3 bg-black/90 rounded-xl border space-y-2" style={{ borderColor: efeitoKaido.cor }}>
+              <div className="p-3.5 bg-black/90 rounded-xl border space-y-3" style={{ borderColor: efeitoKaido.cor }}>
                 <div className="flex items-center justify-between flex-wrap gap-2">
                   <span
                     className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full text-black"
@@ -1232,7 +1248,73 @@ function KidoDetailModal({ kido, personagem, isOpen, onClose, onConjurar, pressa
                     {efeitoKaido.curaHpStr}
                   </span>
                 </div>
-                <div className="text-xs text-bleach-cream leading-relaxed">{efeitoKaido.diagnostico}</div>
+
+                {/* Seletor do Estado do Aliado */}
+                <div className="p-2.5 bg-bleach-panel rounded-lg border border-white/10 space-y-2">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <span className="text-[11px] font-bold text-bleach-creamDim uppercase">
+                      Estado Atual do Aliado:
+                    </span>
+                    <div className="flex gap-1 flex-wrap">
+                      {[
+                        { id: "Derrotado", label: "💀 Derrotado", desc: "Crítico" },
+                        { id: "Debilitado", label: "🩸 Debilitado", desc: "Grave" },
+                        { id: "Ferido", label: "🩹 Ferido", desc: "Moderado" }
+                      ].map(st => (
+                        <button
+                          key={st.id}
+                          type="button"
+                          onClick={() => setSimEstadoInicial(st.id)}
+                          className={`px-2.5 py-1 rounded-lg text-xs font-bold transition border ${
+                            simEstadoInicial === st.id
+                              ? "bg-emerald-500 text-black border-white shadow-lg font-black"
+                              : "bg-black/60 text-bleach-creamDim border-white/10 hover:border-white/30"
+                          }`}
+                        >
+                          {st.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Diagnóstico de Cenas e Evolução do Estado */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                    <div className="p-2.5 bg-black/70 rounded-lg border border-emerald-500/50 flex items-center gap-2.5">
+                      <span className="text-2xl">⏳</span>
+                      <div>
+                        <span className="text-[10px] text-bleach-muted uppercase block font-bold">Cenas Necessárias no ON:</span>
+                        <strong className="text-emerald-300 font-mono text-sm font-black">
+                          {efeitoKaido.cenasNecessarias} {efeitoKaido.cenasNecessarias === 1 ? "Cena Contínua" : "Cenas de Tratamento"}
+                        </strong>
+                      </div>
+                    </div>
+
+                    <div className="p-2.5 bg-black/70 rounded-lg border border-white/10 flex items-center gap-2.5">
+                      <span className="text-2xl">✨</span>
+                      <div>
+                        <span className="text-[10px] text-bleach-muted uppercase block font-bold">Evolução do Estado:</span>
+                        <strong className="text-white text-xs font-bold">
+                          {efeitoKaido.estadoInicial} ➔ <span className="text-emerald-400 font-black">{efeitoKaido.estadoFinal}</span>
+                        </strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Roteiro de Narração por Cena */}
+                {efeitoKaido.roteiroCenas && efeitoKaido.roteiroCenas.length > 0 && (
+                  <div className="p-2.5 bg-black/60 rounded-lg border border-white/5 space-y-1.5 text-xs">
+                    <strong className="text-emerald-300 block text-[11px] uppercase">
+                      📋 Roteiro de Narração para o WhatsApp:
+                    </strong>
+                    {efeitoKaido.roteiroCenas.map((r, rIdx) => (
+                      <p key={rIdx} className="text-bleach-cream leading-relaxed pl-2 border-l-2 border-emerald-500">
+                        {r}
+                      </p>
+                    ))}
+                  </div>
+                )}
+
                 <div className="p-2 bg-bleach-panel rounded-lg border border-white/5 text-[11px] text-bleach-creamDim">
                   <strong className="text-emerald-400">🌿 Diagnóstico do 4º Esquadrão:</strong> {efeitoKaido.dicaTatica}
                 </div>
@@ -1504,6 +1586,7 @@ function KidoShopModal({ isOpen, onClose, personagem, updateChar }) {
   const conhecimento = Number(personagem?.conhecimento || 0);
   const pressao = Number(personagem?.atributos?.pressao || 10);
   const kidosAprendidos = personagem?.kidosConhecidos || [];
+  const capacidade = (typeof getCapacidadeKidos === 'function') ? getCapacidadeKidos(pressao) : { limiteMaximo: 4, tierNome: "Iniciante", limiteEquipadosStr: "Até 4 Feitiços", cor: "#10B981" };
 
   function comprarKido(kido) {
     const jaPossui = kidosAprendidos.some(k => k.id === kido.id || k.nome === kido.nome || (k.numero === kido.numero && k.cat === kido.cat));
@@ -1512,24 +1595,24 @@ function KidoShopModal({ isOpen, onClose, personagem, updateChar }) {
       return;
     }
 
+    if (kidosAprendidos.length >= capacidade.limiteMaximo) {
+      alert(`⚠️ Limite de feitiços atingido para o seu Patamar (${kidosAprendidos.length}/${capacidade.limiteMaximo} feitiços)!\n\nPatamar Atual: ${capacidade.tierNome}\nCapacidade: ${capacidade.limiteEquipadosStr}\n\nPara desbloquear novos slots de Kidō, aumente sua Pressão Espiritual!`);
+      return;
+    }
+
     if (conhecimento < kido.custoConhecimento) {
       alert(`Conhecimento insuficiente! Você possui ${conhecimento} ₪, mas o feitiço exige ${kido.custoConhecimento} ₪.`);
       return;
     }
 
-    if (pressao < kido.pressaoMinima) {
-      alert(`Pressão Espiritual insuficiente! Sua Reiatsu é de ${pressao} pts, mas a complexidade deste Kidō exige no mínimo ${kido.pressaoMinima} pts de Pressão Espiritual.`);
-      return;
-    }
-
-    const confirma = confirm(`Deseja aprender "${kido.nome}" por ${kido.custoConhecimento} de Conhecimento?\n\nSaldo Atual: ${conhecimento} ₪\nSaldo Após Compra: ${conhecimento - kido.custoConhecimento} ₪`);
+    const confirma = confirm(`Deseja aprender "${kido.nome}" por ${kido.custoConhecimento} de Conhecimento?\n\nSaldo Atual: ${conhecimento} ₪\nSaldo Após Compra: ${conhecimento - kido.custoConhecimento} ₪\nSlots Utilizados: ${kidosAprendidos.length + 1} de ${capacidade.limiteMaximo}`);
     if (!confirma) return;
 
     const novosConhecidos = [...kidosAprendidos, kido];
     const novasTecnicas = [...(personagem.tecnicas || []), { id: uid(), nome: kido.nome, categoria: kido.cat }];
 
     updateChar({
-      conhecimento: conhecimento - kido.custoConhecimento,
+      conhecimento: Math.max(0, conhecimento - kido.custoConhecimento),
       kidosConhecidos: novosConhecidos,
       tecnicas: novasTecnicas
     }, `📖 Aprendeu [${kido.cat} #${kido.numero}] ${kido.nome} por ${kido.custoConhecimento} de Conhecimento`);
@@ -1540,7 +1623,9 @@ function KidoShopModal({ isOpen, onClose, personagem, updateChar }) {
 
   const kidosFiltrados = CATALOGO_KIDOS.filter(k => {
     const jaPossui = kidosAprendidos.some(ap => ap.id === k.id || ap.nome === k.nome || (ap.numero === k.numero && ap.cat === k.cat));
-    const podeComprar = !jaPossui && conhecimento >= k.custoConhecimento && pressao >= k.pressaoMinima;
+    const temCapacidade = kidosAprendidos.length < capacidade.limiteMaximo;
+    const temConhecimento = conhecimento >= k.custoConhecimento;
+    const podeComprar = !jaPossui && temCapacidade && temConhecimento;
 
     if (apenasDisponiveis && !podeComprar) return false;
     if (categoria !== "Todos" && k.cat !== categoria) return false;
@@ -1566,7 +1651,7 @@ function KidoShopModal({ isOpen, onClose, personagem, updateChar }) {
               <span>📖</span> Biblioteca de Kidōs & Feitiços
             </h3>
             <p className="text-xs text-bleach-creamDim mt-1">
-              Adquira e registre novos feitiços na sua ficha usando seu <strong>Conhecimento</strong>. Feitiços que você já pode comprar estão <strong>brilhando em destaque</strong>!
+              Adquira e registre novos feitiços na sua ficha usando <strong>exclusivamente seu Conhecimento (₪)</strong>. Recitar o encantamento (+30% PE) potencializa todos os feitiços!
             </p>
           </div>
           <button
@@ -1594,8 +1679,8 @@ function KidoShopModal({ isOpen, onClose, personagem, updateChar }) {
               🌀
             </div>
             <div>
-              <span className="text-[10px] text-bleach-muted block uppercase font-bold">Sua Pressão Espiritual:</span>
-              <span className="text-lg font-mono font-black text-cyan-400">{pressao} pts</span>
+              <span className="text-[10px] text-bleach-muted block uppercase font-bold">Pressão & Patamar:</span>
+              <span className="text-sm font-mono font-black text-cyan-400 block">{pressao} pts ({capacidade.tierNome.split('/')[0].trim()})</span>
             </div>
           </div>
 
@@ -1604,8 +1689,10 @@ function KidoShopModal({ isOpen, onClose, personagem, updateChar }) {
               📜
             </div>
             <div>
-              <span className="text-[10px] text-bleach-muted block uppercase font-bold">Kidōs Registrados:</span>
-              <span className="text-lg font-mono font-black text-emerald-400">{kidosAprendidos.length} feitiços</span>
+              <span className="text-[10px] text-bleach-muted block uppercase font-bold">Capacidade de Feitiços:</span>
+              <span className="text-sm font-mono font-black text-emerald-400 block">
+                {kidosAprendidos.length} / {capacidade.limiteMaximo} <span className="text-[11px] font-sans font-normal text-bleach-muted">({capacidade.limiteEquipadosStr})</span>
+              </span>
             </div>
           </div>
         </div>
@@ -1651,8 +1738,8 @@ function KidoShopModal({ isOpen, onClose, personagem, updateChar }) {
           {kidosFiltrados.map((k) => {
             const jaPossui = kidosAprendidos.some(ap => ap.id === k.id || ap.nome === k.nome || (ap.numero === k.numero && ap.cat === k.cat));
             const temConhecimento = conhecimento >= k.custoConhecimento;
-            const temPressao = pressao >= k.pressaoMinima;
-            const podeComprar = !jaPossui && temConhecimento && temPressao;
+            const temCapacidade = kidosAprendidos.length < capacidade.limiteMaximo;
+            const podeComprar = !jaPossui && temConhecimento && temCapacidade;
 
             const isHado = k.cat === "Hadō";
             const isBakudo = k.cat === "Bakudō";
@@ -1704,15 +1791,13 @@ function KidoShopModal({ isOpen, onClose, personagem, updateChar }) {
                     <div className="p-2 bg-black/60 rounded-lg border border-white/5 text-[11px] space-y-1">
                       <div className="flex justify-between items-center">
                         <span className="text-bleach-muted">Custo em Conhecimento:</span>
-                        <strong className={temConhecimento ? "text-yellow-400 font-mono" : "text-red-400 font-mono"}>
-                          {k.custoConhecimento} ₪ {temConhecimento ? "✓" : `(Faltam ${k.custoConhecimento - conhecimento})`}
+                        <strong className={temConhecimento ? "text-yellow-400 font-mono font-bold" : "text-red-400 font-mono font-bold"}>
+                          {k.custoConhecimento} ₪ {temConhecimento ? "✓ (Disponível)" : `(Faltam ${k.custoConhecimento - conhecimento} ₪)`}
                         </strong>
                       </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-bleach-muted">Pressão Mínima:</span>
-                        <strong className={temPressao ? "text-cyan-400 font-mono" : "text-red-400 font-mono"}>
-                          {k.pressaoMinima} pts {temPressao ? "✓" : `(Você tem ${pressao})`}
-                        </strong>
+                      <div className="flex justify-between items-center text-[10px] text-bleach-muted border-t border-white/5 pt-1">
+                        <span>Bônus de Encantamento:</span>
+                        <span className="text-cyan-300 font-mono font-bold">+30% da sua Pressão</span>
                       </div>
                     </div>
                   )}
@@ -1742,7 +1827,7 @@ function KidoShopModal({ isOpen, onClose, personagem, updateChar }) {
                           : "bg-bleach-panel border border-white/10 text-bleach-muted"
                       }`}
                     >
-                      {podeComprar ? `✨ Aprender Feitiço (${k.custoConhecimento} ₪)` : "🔒 Requisitos Insuficientes"}
+                      {podeComprar ? `✨ Aprender Feitiço (${k.custoConhecimento} ₪)` : (!temCapacidade ? `🔒 Limite de Slots (${capacidade.limiteMaximo})` : `🔒 Faltam ${k.custoConhecimento - conhecimento} ₪`)}
                     </button>
                   )}
                 </div>

@@ -5,43 +5,49 @@
 
 function getKidoRequisitos(cat, num) {
   let custoConhecimento = 100;
-  let pressaoMinima = 15;
+  let pressaoMinima = 10;
 
   if (cat === "Hadō" || cat === "Bakudō") {
-    if (num <= 10) {
-      custoConhecimento = 80 + num * 15;
-      pressaoMinima = 10 + num * 2;
+    if (num <= 5) {
+      custoConhecimento = 80 + num * 15; // 95 to 155 ₪ (Fits comfortably in 450 ₪ fund)
+      pressaoMinima = 10; // Accessible with base initial 10 Reiatsu
+    } else if (num <= 10) {
+      custoConhecimento = 150 + (num - 5) * 20; // 170 to 250 ₪
+      pressaoMinima = 15;
     } else if (num <= 30) {
-      custoConhecimento = 250 + (num - 10) * 30;
-      pressaoMinima = 30 + (num - 10) * 4;
+      custoConhecimento = 280 + (num - 10) * 35;
+      pressaoMinima = 30 + (num - 10) * 3;
     } else if (num <= 60) {
-      custoConhecimento = 850 + (num - 30) * 55;
-      pressaoMinima = 110 + (num - 30) * 8;
+      custoConhecimento = 950 + (num - 30) * 55;
+      pressaoMinima = 90 + (num - 30) * 5;
     } else if (num <= 89) {
-      custoConhecimento = 2500 + (num - 60) * 100;
-      pressaoMinima = 350 + (num - 60) * 15;
+      custoConhecimento = 2600 + (num - 60) * 100;
+      pressaoMinima = 250 + (num - 60) * 8;
     } else {
       // 90 to 99 (Supreme & Forbidden Spells)
       custoConhecimento = 5500 + (num - 90) * 450;
-      pressaoMinima = 800 + (num - 90) * 150;
+      pressaoMinima = 500 + (num - 90) * 50;
     }
   } else {
     // Kaidō Healing
-    if (num <= 10) {
-      custoConhecimento = 90 + num * 20;
-      pressaoMinima = 15 + num * 3;
+    if (num <= 5) {
+      custoConhecimento = 90 + num * 15; // 105 to 165 ₪
+      pressaoMinima = 10; // Accessible with base initial 10 Reiatsu
+    } else if (num <= 10) {
+      custoConhecimento = 170 + (num - 5) * 25;
+      pressaoMinima = 15;
     } else if (num <= 20) {
-      custoConhecimento = 320 + (num - 10) * 65;
-      pressaoMinima = 50 + (num - 10) * 12;
+      custoConhecimento = 320 + (num - 10) * 60;
+      pressaoMinima = 35 + (num - 10) * 5;
     } else if (num <= 50) {
-      custoConhecimento = 1100 + (num - 20) * 70;
-      pressaoMinima = 180 + (num - 20) * 10;
+      custoConhecimento = 1000 + (num - 20) * 60;
+      pressaoMinima = 90 + (num - 20) * 5;
     } else if (num <= 80) {
-      custoConhecimento = 3200 + (num - 50) * 80;
-      pressaoMinima = 480 + (num - 50) * 15;
+      custoConhecimento = 2800 + (num - 50) * 80;
+      pressaoMinima = 250 + (num - 50) * 8;
     } else {
-      custoConhecimento = 6000 + (num - 80) * 200;
-      pressaoMinima = 950 + (num - 80) * 50;
+      custoConhecimento = 5500 + (num - 80) * 180;
+      pressaoMinima = 500 + (num - 80) * 40;
     }
   }
 

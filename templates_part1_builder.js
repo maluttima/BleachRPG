@@ -917,6 +917,7 @@ function KidosView({ personagem, isAdmin }) {
   const [categoriaAtiva, setCategoriaAtiva] = useState("Todos");
   const [busca, setBusca] = useState("");
   const [modalKido, setModalKido] = useState(null);
+  const [kaidoSimEstado, setKaidoSimEstado] = useState("Debilitado");
   
   const pressaoTotal = Number(personagem?.atributos?.pressao || 30);
   const [reiatsuGastaCena, setReiatsuGastaCena] = useState(0);
@@ -1099,6 +1100,122 @@ function KidosView({ personagem, isAdmin }) {
           </div>
         </div>
       </Section>
+
+      {/* SEÇÃO DEDICADA: SIMULADOR DE KAIDŌ & CENAS DE TRATAMENTO */}
+      {(() => {
+        const analiseKaido = (typeof calcularEfeitoKaido === 'function')
+          ? calcularEfeitoKaido(pressaoRestante, kaidoSimEstado)
+          : { categoria: "Tratamento Tático", cor: "#10B981", cenasNecessarias: 2, curaHpStr: "Recuperação de 70%", estadoFinal: "Inteiro", diagnostico: "Estabilizado", dicaTatica: "Manter canalização", roteiroCenas: [] };
+
+        return (
+          <Section
+            title="🌿 Simulador Médico de Kaidō & Cenas de Tratamento no ON"
+            subtitle="Calcule exatamente quantas cenas no WhatsApp são necessárias para curar um aliado com base na sua Pressão Espiritual"
+            className="border-2 border-emerald-500/40"
+          >
+            <div className="p-4 sm:p-6 bg-gradient-to-b from-emerald-950/30 via-bleach-panel2 to-black rounded-xl border-2 border-emerald-500/50 space-y-5 shadow-2xl">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-emerald-500/20 pb-4">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="px-2.5 py-0.5 bg-emerald-950 text-emerald-300 border border-emerald-500 text-[10px] font-extrabold uppercase rounded-full tracking-wider">
+                      Hospital Geral do 4º Esquadrão • Cálculo de Cenas
+                    </span>
+                    <span className="text-xs font-mono text-cyan-400 font-bold">
+                      Reiatsu Disponível: {pressaoRestante} / {pressaoTotal} pts
+                    </span>
+                  </div>
+                  <h4 className="font-title text-2xl text-emerald-400 mt-1 flex items-center gap-2">
+                    <span>💚</span> Simulação de Tratamento & Evolução Vital
+                  </h4>
+                  <p className="text-xs text-bleach-creamDim">
+                    Selecione a gravidade do paciente para visualizar o tempo de cura exigido no WhatsApp e o roteiro de narração por cena.
+                  </p>
+                </div>
+
+                {/* Seletor de Estado Inicial */}
+                <div className="bg-black/70 p-2.5 rounded-xl border border-emerald-500/30 space-y-1">
+                  <label className="text-[10px] text-bleach-muted uppercase font-bold block">
+                    Estado Inicial do Paciente:
+                  </label>
+                  <div className="flex gap-1.5">
+                    {[
+                      { id: "Derrotado", label: "💀 Derrotado", cor: "#EF4444" },
+                      { id: "Debilitado", label: "🩸 Debilitado", cor: "#F97316" },
+                      { id: "Ferido", label: "🩹 Ferido", cor: "#EAB308" }
+                    ].map((est) => (
+                      <button
+                        key={est.id}
+                        type="button"
+                        onClick={() => setKaidoSimEstado(est.id)}
+                        className={`px-2.5 py-1 rounded-lg text-xs font-bold transition border ${
+                          kaidoSimEstado === est.id
+                            ? "bg-emerald-500 text-black border-white shadow"
+                            : "bg-black/60 text-bleach-creamDim border-white/10 hover:border-emerald-400"
+                        }`}
+                      >
+                        {est.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Cartões de Métricas de Cura */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                <div className="p-3.5 bg-black/70 rounded-xl border border-emerald-500/40 text-center">
+                  <span className="text-[10px] text-bleach-muted uppercase font-bold block">Tempo de Tratamento no ON:</span>
+                  <span className="text-2xl font-mono font-black text-emerald-400 block mt-0.5">
+                    ⏳ {analiseKaido.cenasNecessarias} {analiseKaido.cenasNecessarias === 1 ? 'Cena' : 'Cenas'}
+                  </span>
+                  <span className="text-[11px] text-emerald-200/70">Manutenção contínua de Reiki</span>
+                </div>
+
+                <div className="p-3.5 bg-black/70 rounded-xl border border-emerald-500/40 text-center">
+                  <span className="text-[10px] text-bleach-muted uppercase font-bold block">Evolução do Paciente:</span>
+                  <span className="text-base font-extrabold text-white block mt-1">
+                    {analiseKaido.estadoInicial || kaidoSimEstado} ➔ <span className="text-emerald-400">{analiseKaido.estadoFinal}</span>
+                  </span>
+                  <span className="text-[11px] text-yellow-300/80 font-mono">{analiseKaido.curaHpStr}</span>
+                </div>
+
+                <div className="p-3.5 bg-black/70 rounded-xl border border-emerald-500/40 text-center">
+                  <span className="text-[10px] text-bleach-muted uppercase font-bold block">Classificação Médica:</span>
+                  <span className="text-sm font-extrabold text-emerald-300 block mt-1">
+                    {analiseKaido.categoria}
+                  </span>
+                  <span className="text-[10px] text-bleach-muted">{analiseKaido.diagnostico}</span>
+                </div>
+              </div>
+
+              {/* Roteiro Narrativo Passo a Passo por Cena */}
+              <div className="p-4 bg-black/80 rounded-xl border border-emerald-500/30 space-y-3">
+                <h6 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                  <span>📋</span> Roteiro Passo-a-Passo de Narração para o WhatsApp ({analiseKaido.cenasNecessarias} Cenas):
+                </h6>
+                <div className="space-y-2">
+                  {(analiseKaido.roteiroCenas || []).map((passo, idx) => (
+                    <div key={idx} className="p-2.5 bg-emerald-950/20 border border-emerald-500/20 rounded-lg flex items-start gap-2.5">
+                      <span className="px-2 py-0.5 bg-emerald-900/80 text-emerald-300 border border-emerald-500 font-mono font-bold text-[10px] rounded shrink-0">
+                        Cena {passo.cena}
+                      </span>
+                      <div>
+                        <strong className="text-white text-xs block">{passo.fase}</strong>
+                        <p className="text-xs text-bleach-creamDim mt-0.5">{passo.instrucao}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Recomendação de Roleplay */}
+              <div className="p-3 bg-bleach-panel rounded-xl border border-white/10 text-xs">
+                <strong className="text-emerald-400 block text-[10px] uppercase font-bold">Instrução Tática do 4º Esquadrão:</strong>
+                <p className="text-bleach-cream mt-0.5 leading-relaxed">{analiseKaido.dicaTatica}</p>
+              </div>
+            </div>
+          </Section>
+        );
+      })()}
 
       {/* CATALOG FILTERS & SPELLS GRID */}
       <Section title="Grimório de Feitiços de Seireitei" subtitle="Clique em qualquer magia para abrir os detalhes completos, encantamento e simulador">

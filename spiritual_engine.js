@@ -1447,30 +1447,46 @@ function calcularCustoKido(kido, pressaoTotal, extraReiatsu = 0) {
   };
 }
 
-function calcularPoderKido(kido, pressaoEfetiva, custoGasto = 0, incantado = false) {
+function calcularPoderKido(kido, pressaoEfetiva, custoGasto = 0, incantado = false, extraPressao = 0) {
   const num = Number(kido?.numero || 1);
   const pEf = Math.max(10, Number(pressaoEfetiva || 30));
+  const pExtra = Math.max(0, Number(extraPressao || 0));
+  const pTotal = pEf + pExtra;
   const gasto = Math.max(0, Number(custoGasto || 0));
   const cat = kido?.cat || "Hadō";
 
   let multiplicadorNum = 1 + (num / 100);
-  let pesoGasto = 1.2;
+  let pesoGasto = 0.5;
 
   if (cat === "Bakudō") {
     multiplicadorNum = 1 + (num / 90);
-    pesoGasto = 1.3;
+    pesoGasto = 0.6;
   } else if (cat === "Kaidō") {
     multiplicadorNum = 1 + (num / 80);
-    pesoGasto = 1.5;
+    pesoGasto = 0.8;
   }
 
-  let poderBase = Math.round((pEf * multiplicadorNum) + (gasto * pesoGasto));
+  const poderSemEncanto = Math.round((pTotal * multiplicadorNum) + (gasto * pesoGasto));
+  // O encantamento concede exatamente +30% da Pressão Espiritual do jogador ao poder final do feitiço
+  const bonusEncantamento = Math.round(pTotal * 0.30);
+  const poderComEncanto = poderSemEncanto + bonusEncantamento;
+  const poderFinal = incantado ? poderComEncanto : poderSemEncanto;
 
-  if (incantado) {
-    poderBase = Math.round(poderBase * 1.35); // +35% de potência com incantação poética
-  }
+  const resObj = {
+    poderFinal: Math.max(1, poderFinal),
+    poderSemEncanto: Math.max(1, poderSemEncanto),
+    poderComEncanto: Math.max(1, poderComEncanto),
+    bonusEncantamento,
+    pressaoTotalUtilizada: pTotal,
+    pressaoExtra: pExtra,
+    incantado: !!incantado,
+    multiplicadorNum,
+    // Enable direct numeric comparisons
+    valueOf: () => Math.max(1, poderFinal),
+    toString: () => String(Math.max(1, poderFinal))
+  };
 
-  return Math.max(1, poderBase);
+  return resObj;
 }
 
 function calcularEfeitoHado(poderHado, resilienciaInimiga) {
@@ -1571,46 +1587,154 @@ function calcularEfeitoBakudo(poderBakudo, forcaInimiga) {
   }
 }
 
-function calcularEfeitoKaido(poderKaido) {
+function calcularEfeitoKaido(poderKaido, estadoInicial = "Debilitado") {
   const pK = Math.max(1, Number(poderKaido || 10));
+  const est = estadoInicial || "Debilitado";
+
+  let nivel = "Básico";
+  let cor = "#C9C1AF";
+  let categoria = "";
+  let estadoFinal = "Inteiro";
+  let cenasNecessarias = 1;
+  let curaHpStr = "";
+  let diagnostico = "";
+  let dicaTatica = "";
+  let roteiroCenas = [];
 
   if (pK >= 1200) {
-    return {
-      nivel: "Supremo",
-      categoria: "Restauração Milagrosa & Regeneração Celular Total",
-      cor: "#FFD700",
-      diagnostico: "Reconstitui tecidos dilacerados, reconecta fibras nervosas e regenera órgãos internos. Remove os estados 'Derrotado' ou 'Debilitado' restaurando a condição para 'Inteiro'.",
-      curaHpStr: "Recuperação de 90% a 100% da Vitalidade",
-      dicaTatica: "Nível de mestre médico do 4º Esquadrão (Capitã Unohana). Capaz de reverter ferimentos quase fatais em combate."
-    };
+    nivel = "Supremo";
+    cor = "#FFD700";
+    categoria = "Restauração Milagrosa & Regeneração Celular Total";
+    curaHpStr = "Recuperação de 95% a 100% da Vitalidade";
+    diagnostico = "Reconstitui tecidos dilacerados, regenera órgãos vitais e restaura o fluxo de Reiryoku instantaneamente.";
+    
+    if (est === "Derrotado") {
+      cenasNecessarias = 1;
+      estadoFinal = "Inteiro";
+      roteiroCenas = [
+        "Cena 1: Concentração máxima de Kaidō verde-dourado nos pontos vitais. Reanimação imediata e fechamento de todas as feridas mortais (Derrotado ➔ Inteiro)."
+      ];
+    } else if (est === "Debilitado") {
+      cenasNecessarias = 1;
+      estadoFinal = "Inteiro";
+      roteiroCenas = [
+        "Cena 1: Consolidação óssea e celular imediata. O guerreiro recupera 100% de mobilidade para lutar na mesma cena (Debilitado ➔ Inteiro)."
+      ];
+    } else {
+      cenasNecessarias = 1;
+      estadoFinal = "Inteiro";
+      roteiroCenas = [
+        "Cena 1: Purificação e cicatrização instantânea sem deixar marcas (Ferido ➔ Inteiro)."
+      ];
+    }
+    dicaTatica = "Nível Supremo do 4º Esquadrão (Capitã Unohana / Divisão Zero). O aliado é completamente curado para o estado 'Inteiro' em apenas 1 cena contínua de tratamento no WhatsApp!";
   } else if (pK >= 600) {
-    return {
-      nivel: "Avançado",
-      categoria: "Regeneração Profunda de Órgãos & Consolidação Óssea",
-      cor: "#5FA96B",
-      diagnostico: "Cura fraturas ósseas, repara grandes lesões musculares e estanca hemorragias internas graves. Remove o estado 'Debilitado' para 'Ferido' ou 'Inteiro'.",
-      curaHpStr: "Recuperação de 50% a 80% da Vitalidade",
-      dicaTatica: "Tratamento médico de alta precisão. Devolve a capacidade plena de movimento e combate ao guerreiro ferido."
-    };
+    nivel = "Avançado";
+    cor = "#5FA96B";
+    categoria = "Regeneração Profunda de Órgãos & Consolidação Óssea";
+    curaHpStr = "Recuperação de 60% a 85% da Vitalidade";
+    diagnostico = "Cura fraturas ósseas graves, estanca hemorragias arteriais e sutura músculos lacerados.";
+
+    if (est === "Derrotado") {
+      cenasNecessarias = 2;
+      estadoFinal = "Inteiro";
+      roteiroCenas = [
+        "Cena 1: Estabilização de emergência dos sinais vitais e hemostasia (Derrotado ➔ Debilitado).",
+        "Cena 2: Recomposição de tecidos e reinfusão de Reishi (Debilitado ➔ Inteiro)."
+      ];
+      dicaTatica = "Necessário 2 cenas contínuas no WhatsApp: a 1ª cena para tirar o aliado do risco de morte e a 2ª cena para restabelecer a integridade completa (Inteiro).";
+    } else if (est === "Debilitado") {
+      cenasNecessarias = 1;
+      estadoFinal = "Inteiro";
+      roteiroCenas = [
+        "Cena 1: Tratamento cirúrgico de alta precisão canalizado. Restaura fraturas e regenera o aliado direto para 'Inteiro'."
+      ];
+      dicaTatica = "Graças ao alto poder de Kaidō, 1 cena detalhada no WhatsApp é suficiente para curar de 'Debilitado' direto para 'Inteiro'.";
+    } else {
+      cenasNecessarias = 1;
+      estadoFinal = "Inteiro";
+      roteiroCenas = [
+        "Cena 1: Alívio de contusões e fechamento de cortes médios em poucos instantes (Ferido ➔ Inteiro)."
+      ];
+      dicaTatica = "Cura rápida de 1 cena. O aliado volta a 100% de prontidão no ON.";
+    }
   } else if (pK >= 250) {
-    return {
-      nivel: "Intermediário",
-      categoria: "Estancamento de Hemorragias & Alívio Crítico",
-      cor: "#4FB3E8",
-      diagnostico: "Fecha lacerações de lâmina, estanca sangramentos ativos e ameniza dores e contusões. Remove o estado 'Ferido' para 'Inteiro'.",
-      curaHpStr: "Recuperação de 25% a 45% da Vitalidade",
-      dicaTatica: "Cura tática de campo. Permite que combatentes feridos continuem lutando sem perder sangue ou fôlego."
-    };
+    nivel = "Intermediário";
+    cor = "#4FB3E8";
+    categoria = "Estancamento de Hemorragias & Alívio Crítico";
+    curaHpStr = "Recuperação de 35% a 55% da Vitalidade";
+    diagnostico = "Fecha cortes de lâmina, estanca sangramentos ativos, realinha microfraturas e ameniza dores incapacitantes.";
+
+    if (est === "Derrotado") {
+      cenasNecessarias = 3;
+      estadoFinal = "Inteiro";
+      roteiroCenas = [
+        "Cena 1: Ressuscitação e estancamento de sangramentos graves (Derrotado ➔ Debilitado).",
+        "Cena 2: Cicatrização de lacerações e reanimação física (Debilitado ➔ Ferido).",
+        "Cena 3: Restauração de fôlego e cicatrização final (Ferido ➔ Inteiro)."
+      ];
+      dicaTatica = "O paciente está em estado crítico: necessita manter o Kaidō ativo por 3 cenas no WhatsApp para cura completa (ou 1 cena para apenas sair do coma).";
+    } else if (est === "Debilitado") {
+      cenasNecessarias = 2;
+      estadoFinal = "Inteiro";
+      roteiroCenas = [
+        "Cena 1: Imobilização e sutura de cortes profundos (Debilitado ➔ Ferido).",
+        "Cena 2: Recuperação de mobilidade e reabsorção de hematomas (Ferido ➔ Inteiro)."
+      ];
+      dicaTatica = "Requer manter o Kaidō ativo por 2 cenas no ON: a 1ª cena reduz a gravidade para 'Ferido' e a 2ª cena recupera para 'Inteiro'.";
+    } else {
+      cenasNecessarias = 1;
+      estadoFinal = "Inteiro";
+      roteiroCenas = [
+        "Cena 1: Fechamento de escoriações e alívio da dor do combate em 1 cena (Ferido ➔ Inteiro)."
+      ];
+      dicaTatica = "Tratamento de 1 cena rápida no WhatsApp. O aliado recupera o estado 'Inteiro'.";
+    }
   } else {
-    return {
-      nivel: "Básico",
-      categoria: "Tratamento Básico de Reanimação & Microlesões",
-      cor: "#C9C1AF",
-      diagnostico: "Revigora o fôlego espiritual, alivia escoriações superficiais e anestesia dores leves.",
-      curaHpStr: "Recuperação de 10% a 20% da Vitalidade",
-      dicaTatica: "Primeiros socorros rápidos. Ideal para estabilizar a respiração após trocas breves de golpes."
-    };
+    nivel = "Básico";
+    cor = "#C9C1AF";
+    categoria = "Primeiros Socorros & Microlesões";
+    curaHpStr = "Recuperação de 15% a 30% da Vitalidade";
+    diagnostico = "Revigora o fôlego espiritual básico, estanca pequenos sangramentos e alivia contusões superficiais.";
+
+    if (est === "Derrotado") {
+      cenasNecessarias = 4;
+      estadoFinal = "Ferido";
+      roteiroCenas = [
+        "Cena 1 e 2: Triagem médica exaustiva para estabilizar respiração (Derrotado ➔ Debilitado).",
+        "Cena 3 e 4: Fechamento gradual de lacerações e suturas leves (Debilitado ➔ Ferido)."
+      ];
+      dicaTatica = "Kaidō com Pressão Espiritual básica em paciente crítico: exige manter o feitiço por 4 cenas no WhatsApp e atinge no máximo o estado 'Ferido' (necessita de suporte avançado para ficar 'Inteiro').";
+    } else if (est === "Debilitado") {
+      cenasNecessarias = 2;
+      estadoFinal = "Ferido";
+      roteiroCenas = [
+        "Cena 1: Estancamento superficial de hemorragia.",
+        "Cena 2: Repouso médico e estabilização para o estado 'Ferido' (Debilitado ➔ Ferido)."
+      ];
+      dicaTatica = "Necessita manter o Kaidō ativo por 2 cenas no ON para transformar 'Debilitado' em 'Ferido'.";
+    } else {
+      cenasNecessarias = 1;
+      estadoFinal = "Inteiro";
+      roteiroCenas = [
+        "Cena 1: Primeiros socorros leves para estancar arranhões e recuperar fôlego (Ferido ➔ Inteiro)."
+      ];
+      dicaTatica = "Cura básica de 1 cena no WhatsApp para pequenos ferimentos.";
+    }
   }
+
+  return {
+    nivel,
+    categoria,
+    cor,
+    estadoInicial: est,
+    estadoFinal,
+    cenasNecessarias,
+    curaHpStr,
+    diagnostico,
+    dicaTatica,
+    roteiroCenas
+  };
 }
 
 // =========================================================================
@@ -1642,22 +1766,6 @@ function gerarFichaFormatadaMalutti(p) {
   const playerNome = pNome.split(" ")[0] || "Jogador";
   const playerNasc = p.aniversarioPlayer ? `${p.aniversarioPlayer}` : "01/01/2000";
 
-  const temShikai = !!p.zanpakuto?.shikaiAtiva;
-  const temBankai = !!p.zanpakuto?.bankaiAtiva;
-  const zkNome = p.zanpakuto?.nome || (temShikai ? p.zanpakuto?.shikaiAtiva?.nome : "Lâmina Selada (Asauchi)");
-  const zkStatus = temBankai ? "Bankai Desperta (卍)" : temShikai ? "Shikai Desperta (🗡️)" : "Lâmina Selada (Asauchi)";
-
-  const zkStats = (typeof calcularAtributosZanpakuto === 'function') 
-    ? calcularAtributosZanpakuto(p.atributos, temBankai)
-    : { controle: 100, alcance: 100, corte: 100, resiliencia: 100, pressaoEspiritual: 100, media: 100, alcanceMetros: "28m" };
-
-  const shikaiInfo = temShikai ? p.zanpakuto.shikaiAtiva : null;
-  const bankaiInfo = temBankai ? p.zanpakuto.bankaiAtiva : null;
-
-  const tecnicasLista = (p.tecnicas && p.tecnicas.length > 0)
-    ? p.tecnicas.map(t => `           ⎯  ${t.categoria}: ${t.nome}`).join("\n")
-    : "           ⎯  Hadō #4 — Byakurai\n           ⎯  Bakudō #1 — Sai";
-
   const pers = p.personalidade || {};
 
   return `\`\`\`ㅤㅤ\`\`\`ㅤㅤㅤ\`\`\`ㅤㅤ\`\`\`
@@ -1676,7 +1784,7 @@ function gerarFichaFormatadaMalutti(p) {
                           ︶ ͝     ︶꒷꒦︶                        
          
                   ⊹    /   𝙫ocê é um shinigɑmi
-                toɾne-se   𝓛𝐞𝐧𝐝𝐚́𝐫𝐢𝐨  ・・・
+                toɾne-se   𝓛𝐞𝐧𝐝𝗮́𝗿𝗶𝗼  ・・・
                                          ﹀                                   
             ͛  𝒇𝒊𝒄𝒉𝒂 𝒅𝒆   :   𝕾𝗛𝗜𝗡𝗜𝗚𝗔𝗠𝗜  „                        
       ɑpɾesentɑmos ɑ fichɑ que dɑɾɑ́ vidɑ 
@@ -1712,30 +1820,6 @@ function gerarFichaFormatadaMalutti(p) {
            ✶  „  pɑtɑmɑɾ no seı́ɾeı́teı́ .ᐟ
            ⎯  ${tier.title} (${totalAtributos} pts acumulados)
 
-            \`﹙ 𝗭𝗔𝗡𝗣𝗔𝗞𝗨𝗧𝗢̄ & 𝗔𝗥𝗧𝗘 𝗗𝗔 𝗘𝗦𝗣𝗔𝗗𝗔 ﹚\` 
-           ✶  „  no͟me dɑ lɑ̂minɑ .ᐟ
-           ⎯  ${zkNome}
-           ✶  „  stɑtus de libeɾɑçɑ̃o .ᐟ
-           ⎯  ${zkStatus}
-${shikaiInfo ? `           ✶  „  fɾɑse de libeɾɑçɑ̃o (shikɑi) .ᐟ
-           ⎯  "${shikaiInfo.comando || 'Desperte, ' + zkNome}"
-           ✶  „  foɾmɑ & elemento .ᐟ
-           ⎯  ${shikaiInfo.elemento || 'Energia Espiritual Primordial'}
-           ⎯  Mecânica: ${shikaiInfo.poder || shikaiInfo.desc || 'Manipulação de Reishi'}
-` : `           ✶  „  fɾɑse de libeɾɑçɑ̃o (shikɑi) .ᐟ
-           ⎯  Em processo de despertar espiritual (Asauchi)
-`}
-${bankaiInfo ? `           ✶  „  bɑnkɑi sobeɾɑnɑ .ᐟ
-           ⎯  ${bankaiInfo.nome}
-           ⎯  Comando: "${bankaiInfo.comando || 'Ban-kai!'}"
-           ⎯  Domínio: ${bankaiInfo.tipo || 'Transcendência Territorial'}
-` : ''}           ✶  „  ɑtɾibutos dɑ zɑnpɑkutō (bɑse 100) .ᐟ
-           ⎯  Controle: ${zkStats.controle} pts
-           ⎯  Alcance: ${zkStats.alcance} pts (${zkStats.alcanceMetros || '28m'})
-           ⎯  Corte: ${zkStats.corte} pts
-           ⎯  Resiliência da Lâmina: ${zkStats.resiliencia} pts
-           ⎯  Reiatsu da Lâmina: ${zkStats.pressaoEspiritual} pts
-
             \`﹙ 𝗔𝗧𝗥𝗜𝗕𝗨𝗧𝗢𝗦 𝗘𝗦𝗣𝗜𝗥𝗜𝗧𝗨𝗔𝗜𝗦 ﹚\`              
            ✶  „ distɾibuiçɑ̃o de reiryoku .ᐟ
            ⎯  pɾessɑ̃o espı́ɾituɑl: ${p.atributos?.pressao || 10}
@@ -1744,9 +1828,6 @@ ${bankaiInfo ? `           ✶  „  bɑnkɑi sobeɾɑnɑ .ᐟ
            ⎯  ɾesiliênciɑ: ${p.atributos?.resiliencia || 10}
            ✶  „ totɑl geɾɑl .ᐟ
            ⎯  ${totalAtributos} pts (Patamar: ${tier.title})
-
-            \`﹙ 𝗚𝗥𝗜𝗠𝗢́𝗥𝗜𝗢 𝗗𝗘 𝗞𝗜𝗗𝗢̄𝗦 & 𝗧𝗘́𝗖𝗡𝗜𝗖𝗔𝗦 ﹚\` 
-${tecnicasLista}
 
 ${(pers.texto || pers.virtudes || pers.estiloCombate) ? `            \`﹙ 𝗣𝗘𝗥𝗦𝗢𝗡𝗔𝗟𝗜𝗗𝗔𝗗𝗘 & 𝗗𝗡𝗔 𝗗𝗔 𝗔𝗟𝗠𝗔 ﹚\` 
 ${pers.texto ? `           ✶  „  essênciɑ psicológicɑ .ᐟ\n           ⎯  ${pers.texto.trim()}\n` : ''}${pers.virtudes ? `           ✶  „  viɾtudes & quɑlidɑdes .ᐟ\n           ⎯  ${pers.virtudes.trim()}\n` : ''}${pers.defeitos ? `           ✶  „  defeitos & fɑlhɑs .ᐟ\n           ⎯  ${pers.defeitos.trim()}\n` : ''}${pers.desejos ? `           ✶  „  desejos & ɑmbições .ᐟ\n           ⎯  ${pers.desejos.trim()}\n` : ''}${pers.medos ? `           ✶  „  medos & pesɑdelos .ᐟ\n           ⎯  ${pers.medos.trim()}\n` : ''}${pers.estiloCombate ? `           ✶  „  estilo de combɑte .ᐟ\n           ⎯  ${pers.estiloCombate.trim()}\n` : ''}` : ''}
@@ -1790,6 +1871,75 @@ function copiarFichaFormatadaWhatsApp(p, onCopied) {
   return texto;
 }
 
+function getCapacidadeKidos(pressaoTotal) {
+  const pressao = Math.max(1, Number(pressaoTotal || 10));
+
+  if (pressao >= 601) {
+    return {
+      tierNome: "Transcendente / Divisão Zero",
+      limiteMaximo: 99,
+      limiteEquipadosStr: "Ilimitado (Mestria Plena)",
+      nivelMaximoFeitico: 99,
+      descricao: "Mestria absoluta do Reishi. Acesso irrestrito a todos os feitiços do Grimório e magias proibidas.",
+      cor: "#FFD700"
+    };
+  } else if (pressao >= 401) {
+    return {
+      tierNome: "Lendário / Capitão Sênior",
+      limiteMaximo: 24,
+      limiteEquipadosStr: "Até 24 Feitiços",
+      nivelMaximoFeitico: 99,
+      descricao: "Compreensão suprema das artes de Kidō. Acesso liberado aos feitiços destruidores da casa dos 90.",
+      cor: "#A855F7"
+    };
+  } else if (pressao >= 251) {
+    return {
+      tierNome: "Monstruoso / Nível Capitão",
+      limiteMaximo: 16,
+      limiteEquipadosStr: "Até 16 Feitiços",
+      nivelMaximoFeitico: 89,
+      descricao: "Domínio de alto calibre em Kidōs avançados de destruição, barreiras pesadas e Kaidō cirúrgico.",
+      cor: "#EF4444"
+    };
+  } else if (pressao >= 151) {
+    return {
+      tierNome: "Alto Nível / Tenente Veterano",
+      limiteMaximo: 12,
+      limiteEquipadosStr: "Até 12 Feitiços",
+      nivelMaximoFeitico: 69,
+      descricao: "Ampla versatilidade tática com feitiços intermediários de suporte, contenção e dano.",
+      cor: "#F97316"
+    };
+  } else if (pressao >= 61) {
+    return {
+      tierNome: "Experiente / Oficial de Esquadrão",
+      limiteMaximo: 8,
+      limiteEquipadosStr: "Até 8 Feitiços",
+      nivelMaximoFeitico: 49,
+      descricao: "Conhecimento prático das magias fundamentais de combate do Gotei 13.",
+      cor: "#EAB308"
+    };
+  } else if (pressao >= 31) {
+    return {
+      tierNome: "Treinado / Shinigami Formado",
+      limiteMaximo: 6,
+      limiteEquipadosStr: "Até 6 Feitiços",
+      nivelMaximoFeitico: 29,
+      descricao: "Capacidade padrão de recém-graduado da Academia Shin'ō.",
+      cor: "#3B82F6"
+    };
+  } else {
+    return {
+      tierNome: "Iniciante / Inexperiente",
+      limiteMaximo: 4,
+      limiteEquipadosStr: "Até 4 Feitiços Iniciais",
+      nivelMaximoFeitico: 19,
+      descricao: "Em fase de iniciação espiritual. Pode adquirir até 4 feitiços básicos com seu Conhecimento inicial.",
+      cor: "#10B981"
+    };
+  }
+}
+
 if (typeof window !== 'undefined') {
   window.gerar4CaminhosZanpakutoAI = gerar4CaminhosZanpakutoAI;
   window.gerar4CaminhosZanpakutoAI_Async = gerar4CaminhosZanpakutoAI_Async;
@@ -1813,6 +1963,7 @@ if (typeof window !== 'undefined') {
   window.calcularEfeitoHado = calcularEfeitoHado;
   window.calcularEfeitoBakudo = calcularEfeitoBakudo;
   window.calcularEfeitoKaido = calcularEfeitoKaido;
+  window.getCapacidadeKidos = getCapacidadeKidos;
   window.gerarFichaFormatadaMalutti = gerarFichaFormatadaMalutti;
   window.copiarFichaFormatadaWhatsApp = copiarFichaFormatadaWhatsApp;
   window.getCodigoAtividade = getCodigoAtividade;
@@ -1844,6 +1995,7 @@ if (typeof module !== 'undefined' && module.exports) {
     calcularEfeitoHado,
     calcularEfeitoBakudo,
     calcularEfeitoKaido,
+    getCapacidadeKidos,
     gerarFichaFormatadaMalutti,
     copiarFichaFormatadaWhatsApp,
     getCodigoAtividade
