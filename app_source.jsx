@@ -1441,6 +1441,76 @@ const CATALOGO_KIDOS = [
 ];
 const PATCH_NOTES_HISTORY = [
   {
+    "versao": "6.6",
+    "titulo": "Gerenciador de Tramas & Arcos com IA para ADM, Arcos Cruzados Multi-Player, Nivelamento Justo de Staff & Molde Limpo de WhatsApp",
+    "data": "24 de Agosto de 2026",
+    "destaque": "Novo painel exclusivo de Tramas & Arcos com IA para Mestres/ADMs, armazenamento de cenas de arco por player, criação de Fichas de Tramas Cruzadas (Multi-Player) com roteiros interligados, nivelamento sagrado de recompensas para ADMs/Sub-ADMs e molde oficial do WhatsApp sem bloco de personalidade.",
+    "banner": "assets/bleach-banner.png",
+    "resumo": "Uma atualização monumental voltada para a gestão de narrativa e equilíbrio sagrado do RPG. A Administração agora conta com um Gerenciador de Tramas & Arcos integrado com Inteligência Artificial capaz de estruturar trilhas de 3 eventos graduais e antagonistas sob medida para cada jogador com base em suas cenas registradas. Além disso, ao cruzar o destino de dois ou mais jogadores, o sistema cria automaticamente uma Ficha de Trama Conjunta com narrativa cooperativa/rival. A Staff tem suas recompensas niveladas estritamente com os players (garantido apenas por narração de missão principal e cenas de arco), e o molde de ficha do WhatsApp foi purificado.",
+    "secoes": [
+      {
+        "tipo": "novo",
+        "titulo": "🎭 Gerenciador de Tramas, Arcos & Narrativa com IA (Exclusivo ADM)",
+        "itens": [
+          "✦ **Armazenamento de Cenas de Arco**: Aba dedicada para registrar e gerenciar todas as cenas de arco e treinos de cada jogador, mantendo um histórico narrativo completo.",
+          "✦ **Síntese de Tramas Individuais com IA**: O motor cognitivo / ChatGPT analisa a essência do personagem e forja 3 eventos graduais, diagnóstico psicológico, ganchos de ON e antagonistas personalizados.",
+          "✦ **Exportação Instantânea para WhatsApp**: Botão de 1 clique para copiar o dossiê da missão pronto para ser enviado nos grupos de roleplay."
+        ]
+      },
+      {
+        "tipo": "novo",
+        "titulo": "🔗 Tramas Conjuntas & Arcos Cruzados (Multi-Player)",
+        "itens": [
+          "✦ **Fusão de Histórias**: Ao cruzar dois ou mais jogadores, o sistema cria uma Nova Ficha de Trama Conjunta integrando as cenas de ambos.",
+          "✦ **Narrativa Compartilhada com IA**: Gera dinâmicas de dupla (rivalidade, aliança de esquadrões, choque de honra), eventos com ações interdependentes e ameaças coletivas."
+        ]
+      },
+      {
+        "tipo": "regras",
+        "titulo": "⚖️ Nivelamento Sagrado de Recompensas de ADM e Sub-ADM",
+        "itens": [
+          "✦ **Paridade Absoluta com Jogadores**: Como a Staff pode cenar no ON e realizar os mesmos treinos, não há mais pontos concedidos por micro-tarefas administrativas, impedindo que escalem de forma desproporcional.",
+          "✦ **Recompensa Padronizada**: ADMs e Sub-ADMs recebem atributos exclusivamente através da Narração da Missão Principal (15 pts + Giros) e da Análise/Conclusão de Cenas de Arco (15 pts + Giros)."
+        ]
+      },
+      {
+        "tipo": "ajuste",
+        "titulo": "📋 Molde Oficial de Ficha para WhatsApp Simplificado",
+        "itens": [
+          "✦ **Remoção da Seção de Personalidade**: O molde exportado para o WhatsApp agora contém exclusivamente os dados do participante, dados do personagem, atributos e termo de consentimento, mantendo o padrão visual limpo da Malutti."
+        ]
+      }
+    ]
+  },
+  {
+    "versao": "6.5",
+    "titulo": "Redução Dinâmica de Cenas por Infusão de Reiatsu no Kaidō & Desintoxicação de Venenos",
+    "data": "24 de Agosto de 2026",
+    "destaque": "Imbuir mais Pressão Espiritual e recitar o encantamento acelera expressivamente a cura, purificação e desintoxicação, reduzindo diretamente as cenas necessárias no WhatsApp (Debilitado curado em 1 Cena com sobrecarga de Reishi!).",
+    "banner": "assets/bleach-banner.png",
+    "resumo": "Uma evolução cirúrgica no sistema médico do 4º Esquadrão. A canalização intensiva de Reiatsu (Pressão Espiritual Extra + Encantamento +30%) agora reduz diretamente o número de cenas e turnos exigidos no ON para curar aliados e purificar venenos. Além disso, feitiços especializados como o Kaidō #6 Seika (Purificação) passam a gerar roteiros narrativos e diagnósticos focados em neutralização química e expulsão de toxinas.",
+    "secoes": [
+      {
+        "tipo": "buff",
+        "titulo": "⚡ Redução de Turnos e Cenas por Injeção de Reiatsu",
+        "itens": [
+          "✦ **Cura Acelerada de 'Debilitado' em 1 Cena**: Ao injetar Pressão Extra (+50/+100 PE) ou recitar o encantamento completo, o tempo de cura de um aliado 'Debilitado' cai de 2 cenas para **apenas 1 Cena Contínua**!",
+          "✦ **Reanimação Crítica Acelerada**: Pacientes em estado 'Derrotado' têm o tempo de reanimação reduzido de 4 cenas para **2 cenas** (ou **1 cena** sob sobrecarga suprema de Reishi).",
+          "✦ **Recompensa por Esforço de Reishi**: Quanto mais Pressão o conjurador dedicar à canalização médica, mais rápido o paciente retorna à prontidão de combate (100% vitalidade)."
+        ]
+      },
+      {
+        "tipo": "novo",
+        "titulo": "🧪 Desintoxicação & Especialização Médica por Feitiço",
+        "itens": [
+          "✦ **Purificação Celular (#6 Seika)**: Gera diagnósticos e roteiros de cena específicos para neutralização de venenos, ácidos e toxinas retidas nos tecidos.",
+          "✦ **Analgesia & Supressão de Dor (#1 Chiyaku)**: Foco em alívio de choque de dor e restauração de lucidez.",
+          "✦ **Sutura & Hemostasia (#9 Kekkai Seimei / #16 Hikari no Ito)**: Roteiro focado em tecelagem cirúrgica e fechamento de vasos rompidos."
+        ]
+      }
+    ]
+  },
+  {
     "versao": "6.4",
     "titulo": "Simulador de Kaidō na Aba de Kidōs, Bônus de 30% por Encantamento (Eishō) & Loja por Conhecimento",
     "data": "24 de Agosto de 2026",
@@ -2315,6 +2385,23 @@ const DEFAULT_DB = {
     }
   ],
   zanpakutosVinculadas: [],
+  tramasIndividuais: [
+    {
+      id: "trama-ren-001",
+      charId: "ren-001",
+      charNome: "Kurosaki Ren",
+      cenasArco: [
+        {
+          id: "cena-1",
+          titulo: "O Chamado do 11º Esquadrão",
+          texto: "Em meio aos campos de treino do Seireitei, Ren desembainhou sua lâmina sentindo o peso do Reiryoku ao redor. Os primeiros ecos de sua Shikai começavam a ressonar...",
+          data: "22/08/2026 às 16:30"
+        }
+      ],
+      tramaAtual: null
+    }
+  ],
+  tramasConjuntas: [],
   personagens: [
     {
       id: "ren-001",
@@ -3981,9 +4068,31 @@ function calcularEfeitoBakudo(poderBakudo, forcaInimiga) {
   }
 }
 
-function calcularEfeitoKaido(poderKaido, estadoInicial = "Debilitado") {
+function getKaidoSpecialty(kido) {
+  if (!kido) return "geral";
+  const num = Number(kido.numero || 0);
+  const nome = (kido.nome || "").toLowerCase();
+  const desc = (kido.desc || "").toLowerCase();
+  if (num === 6 || nome.includes("seika") || desc.includes("venen") || desc.includes("toxin") || desc.includes("purific")) {
+    return "purificacao";
+  }
+  if (num === 1 || nome.includes("chiyaku") || desc.includes("calmante") || desc.includes("dor")) {
+    return "analgesia";
+  }
+  if (num === 9 || num === 16 || nome.includes("kekkai") || nome.includes("ito") || desc.includes("sutura") || desc.includes("hemorr")) {
+    return "sutura";
+  }
+  if (num >= 50 || desc.includes("reanima") || desc.includes("alma") || desc.includes("orgao")) {
+    return "ressurreicao";
+  }
+  return "geral";
+}
+
+function calcularEfeitoKaido(poderKaido, estadoInicial = "Debilitado", kido = null) {
   const pK = Math.max(1, Number(poderKaido || 10));
   const est = estadoInicial || "Debilitado";
+  const spec = getKaidoSpecialty(kido);
+  const kidoNome = kido?.nome || "Kaidō";
 
   let nivel = "Básico";
   let cor = "#C9C1AF";
@@ -3995,69 +4104,103 @@ function calcularEfeitoKaido(poderKaido, estadoInicial = "Debilitado") {
   let dicaTatica = "";
   let roteiroCenas = [];
 
-  if (pK >= 1200) {
+  // 1. TIER SUPREMO (pK >= 350): Restauração Milagrosa / Divisão Zero / Nível Unohana
+  // Imbuir alta quantidade de Reiatsu cura QUALQUER estado (até Derrotado/Crítico) em APENAS 1 CENA!
+  if (pK >= 350) {
     nivel = "Supremo";
     cor = "#FFD700";
-    categoria = "Restauração Milagrosa & Regeneração Celular Total";
     curaHpStr = "Recuperação de 95% a 100% da Vitalidade";
-    diagnostico = "Reconstitui tecidos dilacerados, regenera órgãos vitais e restaura o fluxo de Reiryoku instantaneamente.";
-    
-    if (est === "Derrotado") {
-      cenasNecessarias = 1;
-      estadoFinal = "Inteiro";
+    cenasNecessarias = 1;
+    estadoFinal = "Inteiro";
+
+    if (spec === "purificacao") {
+      categoria = "Purificação Celular Absoluta & Neutralização Instantânea de Toxinas";
+      diagnostico = "A alta sobrecarga de Reishi expurga instantaneamente venenos mortais, ácidos espirituais e toxinas dos órgãos vitais em tempo recorde.";
       roteiroCenas = [
-        "Cena 1: Concentração máxima de Kaidō verde-dourado nos pontos vitais. Reanimação imediata e fechamento de todas as feridas mortais (Derrotado ➔ Inteiro)."
+        `Cena 1: Infusão máxima de Kaidō (${kidoNome}) nos canais de Reiryoku. Todo o veneno é expelido e dissolvido dos tecidos em segundos, neutralizando falência de órgãos e restaurando a integridade plena (${est} ➔ Inteiro).`
       ];
-    } else if (est === "Debilitado") {
-      cenasNecessarias = 1;
-      estadoFinal = "Inteiro";
+      dicaTatica = "Sobrecarga de Reiatsu Suprema: Elimina qualquer envenenamento ou toxina no grupo e regenera o aliado direto para 'Inteiro' em apenas 1 cena no WhatsApp!";
+    } else if (spec === "analgesia") {
+      categoria = "Supressão Neural Total & Revigoração Espiritual Completa";
+      diagnostico = "Anestesia o sistema nervoso contra choque de dor, reanima o fôlego espiritual e sela traumas físicos.";
       roteiroCenas = [
-        "Cena 1: Consolidação óssea e celular imediata. O guerreiro recupera 100% de mobilidade para lutar na mesma cena (Debilitado ➔ Inteiro)."
+        `Cena 1: Aplicação analgésica de alta intensidade (${kidoNome}). Dissipa dores incapacitantes, restaura a lucidez e revigora o aliado (${est} ➔ Inteiro).`
       ];
+      dicaTatica = "Recuperação de 1 cena rápida sem dor ou sequelas.";
+    } else if (spec === "sutura") {
+      categoria = "Tecelagem Espiritual Divina & Fechamento de Rompimentos Fatais";
+      diagnostico = "Sutura instantânea de tendões, artérias seccionadas e músculos dilacerados por cortes profundos.";
+      roteiroCenas = [
+        `Cena 1: Fios de luz cirúrgica de alta densidade entrelaçam tecidos e vasos rompidos, estancando qualquer hemorragia em segundos (${est} ➔ Inteiro).`
+      ];
+      dicaTatica = "Sutura cirúrgica de emergência de 1 cena com eficácia absoluta.";
     } else {
-      cenasNecessarias = 1;
-      estadoFinal = "Inteiro";
+      categoria = "Restauração Milagrosa & Regeneração Celular Total";
+      diagnostico = "Reconstitui tecidos dilacerados, regenera órgãos vitais e restaura o fluxo de Reiryoku instantaneamente.";
       roteiroCenas = [
-        "Cena 1: Purificação e cicatrização instantânea sem deixar marcas (Ferido ➔ Inteiro)."
+        `Cena 1: Concentração máxima de Kaidō verde-dourado nos pontos vitais. Reanimação imediata e fechamento de todas as feridas mortais (${est} ➔ Inteiro).`
       ];
+      dicaTatica = "Nível Supremo do 4º Esquadrão (Capitã Unohana / Divisão Zero). A infusão massiva de Reiatsu reduz o tempo de tratamento para apenas 1 cena no WhatsApp!";
     }
-    dicaTatica = "Nível Supremo do 4º Esquadrão (Capitã Unohana / Divisão Zero). O aliado é completamente curado para o estado 'Inteiro' em apenas 1 cena contínua de tratamento no WhatsApp!";
-  } else if (pK >= 600) {
+
+  // 2. TIER AVANÇADO / ALTA INJEÇÃO DE REIATSU (pK >= 130):
+  // Imbuir mais Reiatsu REDUZ DEBILITADO PARA APENAS 1 CENA e DERROTADO PARA 2 CENAS!
+  } else if (pK >= 130) {
     nivel = "Avançado";
     cor = "#5FA96B";
-    categoria = "Regeneração Profunda de Órgãos & Consolidação Óssea";
-    curaHpStr = "Recuperação de 60% a 85% da Vitalidade";
-    diagnostico = "Cura fraturas ósseas graves, estanca hemorragias arteriais e sutura músculos lacerados.";
+    curaHpStr = "Recuperação de 70% a 90% da Vitalidade";
+    estadoFinal = "Inteiro";
 
     if (est === "Derrotado") {
       cenasNecessarias = 2;
-      estadoFinal = "Inteiro";
-      roteiroCenas = [
-        "Cena 1: Estabilização de emergência dos sinais vitais e hemostasia (Derrotado ➔ Debilitado).",
-        "Cena 2: Recomposição de tecidos e reinfusão de Reishi (Debilitado ➔ Inteiro)."
-      ];
-      dicaTatica = "Necessário 2 cenas contínuas no WhatsApp: a 1ª cena para tirar o aliado do risco de morte e a 2ª cena para restabelecer a integridade completa (Inteiro).";
+      if (spec === "purificacao") {
+        categoria = "Desintoxicação Acelerada & Estabilização de Órgãos";
+        diagnostico = "Neutraliza venenos em estado crítico e estanca choque anafilático/químico nas artérias.";
+        roteiroCenas = [
+          "Cena 1: Infusão de emergência de Kaidō purificador para neutralizar o veneno letal e tirar o aliado do coma (Derrotado ➔ Debilitado).",
+          "Cena 2: Expulsão das toxinas residuais e reconstituição do fluxo sanguíneo (Debilitado ➔ Inteiro)."
+        ];
+        dicaTatica = "A injeção extra de Reiatsu acelerou a neutralização das toxinas, reduzindo o tempo crítico de 4 para 2 cenas no WhatsApp!";
+      } else {
+        categoria = "Regeneração Profunda & Reanimação Acelerada";
+        diagnostico = "Cura fraturas ósseas graves, estanca hemorragias arteriais e sutura músculos lacerados.";
+        roteiroCenas = [
+          "Cena 1: Estabilização de emergência dos sinais vitais e hemostasia (Derrotado ➔ Debilitado).",
+          "Cena 2: Recomposição de tecidos e reinfusão de Reishi acelerada pela Reiatsu investida (Debilitado ➔ Inteiro)."
+        ];
+        dicaTatica = "Graças à Reiatsu extra investida, o tempo de cura do paciente em estado crítico caiu para 2 cenas contínuas no WhatsApp!";
+      }
     } else if (est === "Debilitado") {
-      cenasNecessarias = 1;
-      estadoFinal = "Inteiro";
-      roteiroCenas = [
-        "Cena 1: Tratamento cirúrgico de alta precisão canalizado. Restaura fraturas e regenera o aliado direto para 'Inteiro'."
-      ];
-      dicaTatica = "Graças ao alto poder de Kaidō, 1 cena detalhada no WhatsApp é suficiente para curar de 'Debilitado' direto para 'Inteiro'.";
+      cenasNecessarias = 1; // Reduzido de 2 para 1 cena graças à Reiatsu investida!
+      if (spec === "purificacao") {
+        categoria = "Desintoxicação Rápida & Purificação Tecidual Completa";
+        diagnostico = "A alta vazão de Reiatsu drena toxinas e venenos dos tecidos em tempo recorde.";
+        roteiroCenas = [
+          `Cena 1: Drenagem e purificação acelerada de venenos e toxinas via ${kidoNome}. O combatente recupera 100% da sua mobilidade (Debilitado ➔ Inteiro).`
+        ];
+        dicaTatica = "Com a injeção de Reiatsu / Encantamento (+30% PE), o tempo de desintoxicação de 'Debilitado' foi reduzido de 2 para apenas 1 cena no WhatsApp!";
+      } else {
+        categoria = "Regeneração Celular Acelerada por Infusão de Reishi";
+        diagnostico = "Sutura cortes profundos, alinha fraturas e restaura a integridade física em alta velocidade.";
+        roteiroCenas = [
+          "Cena 1: Tratamento intensivo com sobrecarga de Reiatsu. Sutura rápida e regeneração celular completa em 1 única cena (Debilitado ➔ Inteiro)."
+        ];
+        dicaTatica = "Com a injeção extra de Reiatsu / Encantamento (+30% PE), o tempo de tratamento de 'Debilitado' foi reduzido para apenas 1 cena no WhatsApp!";
+      }
     } else {
       cenasNecessarias = 1;
-      estadoFinal = "Inteiro";
       roteiroCenas = [
-        "Cena 1: Alívio de contusões e fechamento de cortes médios em poucos instantes (Ferido ➔ Inteiro)."
+        "Cena 1: Cicatrização e purificação rápida de ferimentos moderados (Ferido ➔ Inteiro)."
       ];
-      dicaTatica = "Cura rápida de 1 cena. O aliado volta a 100% de prontidão no ON.";
+      dicaTatica = "Cura de 1 cena rápida no WhatsApp. O aliado volta a 100% de prontidão no ON.";
     }
-  } else if (pK >= 250) {
+
+  // 3. TIER INTERMEDIÁRIO (pK >= 60):
+  } else if (pK >= 60) {
     nivel = "Intermediário";
     cor = "#4FB3E8";
-    categoria = "Estancamento de Hemorragias & Alívio Crítico";
-    curaHpStr = "Recuperação de 35% a 55% da Vitalidade";
-    diagnostico = "Fecha cortes de lâmina, estanca sangramentos ativos, realinha microfraturas e ameniza dores incapacitantes.";
+    curaHpStr = "Recuperação de 40% a 60% da Vitalidade";
+    diagnostico = "Fecha cortes de lâmina, estanca sangramentos ativos e neutraliza venenos moderados.";
 
     if (est === "Derrotado") {
       cenasNecessarias = 3;
@@ -4067,27 +4210,29 @@ function calcularEfeitoKaido(poderKaido, estadoInicial = "Debilitado") {
         "Cena 2: Cicatrização de lacerações e reanimação física (Debilitado ➔ Ferido).",
         "Cena 3: Restauração de fôlego e cicatrização final (Ferido ➔ Inteiro)."
       ];
-      dicaTatica = "O paciente está em estado crítico: necessita manter o Kaidō ativo por 3 cenas no WhatsApp para cura completa (ou 1 cena para apenas sair do coma).";
+      dicaTatica = "Paciente crítico: requer 3 cenas no WhatsApp para recuperação completa. (Dica: Injete mais Pressão Espiritual para reduzir para 1 ou 2 cenas!).";
     } else if (est === "Debilitado") {
       cenasNecessarias = 2;
       estadoFinal = "Inteiro";
       roteiroCenas = [
-        "Cena 1: Imobilização e sutura de cortes profundos (Debilitado ➔ Ferido).",
-        "Cena 2: Recuperação de mobilidade e reabsorção de hematomas (Ferido ➔ Inteiro)."
+        "Cena 1: Imobilização, sutura de cortes e início da desintoxicação (Debilitado ➔ Ferido).",
+        "Cena 2: Recuperação de mobilidade e cicatrização dos tecidos (Ferido ➔ Inteiro)."
       ];
-      dicaTatica = "Requer manter o Kaidō ativo por 2 cenas no ON: a 1ª cena reduz a gravidade para 'Ferido' e a 2ª cena recupera para 'Inteiro'.";
+      dicaTatica = "Requer 2 cenas no ON. (Dica: Recite o encantamento ou injete +50/+100 PE para reduzir para 1 cena!).";
     } else {
       cenasNecessarias = 1;
       estadoFinal = "Inteiro";
       roteiroCenas = [
         "Cena 1: Fechamento de escoriações e alívio da dor do combate em 1 cena (Ferido ➔ Inteiro)."
       ];
-      dicaTatica = "Tratamento de 1 cena rápida no WhatsApp. O aliado recupera o estado 'Inteiro'.";
+      dicaTatica = "Tratamento de 1 cena rápida no WhatsApp.";
     }
+
+  // 4. TIER BÁSICO (pK < 60):
   } else {
     nivel = "Básico";
     cor = "#C9C1AF";
-    categoria = "Primeiros Socorros & Microlesões";
+    categoria = "Primeiros Socorros & Estabilização Básica";
     curaHpStr = "Recuperação de 15% a 30% da Vitalidade";
     diagnostico = "Revigora o fôlego espiritual básico, estanca pequenos sangramentos e alivia contusões superficiais.";
 
@@ -4098,7 +4243,7 @@ function calcularEfeitoKaido(poderKaido, estadoInicial = "Debilitado") {
         "Cena 1 e 2: Triagem médica exaustiva para estabilizar respiração (Derrotado ➔ Debilitado).",
         "Cena 3 e 4: Fechamento gradual de lacerações e suturas leves (Debilitado ➔ Ferido)."
       ];
-      dicaTatica = "Kaidō com Pressão Espiritual básica em paciente crítico: exige manter o feitiço por 4 cenas no WhatsApp e atinge no máximo o estado 'Ferido' (necessita de suporte avançado para ficar 'Inteiro').";
+      dicaTatica = "Kaidō com Pressão básica em paciente crítico: exige 4 cenas no WhatsApp e atinge o estado 'Ferido'. Injete mais Reiatsu para acelerar o processo!";
     } else if (est === "Debilitado") {
       cenasNecessarias = 2;
       estadoFinal = "Ferido";
@@ -4127,7 +4272,8 @@ function calcularEfeitoKaido(poderKaido, estadoInicial = "Debilitado") {
     curaHpStr,
     diagnostico,
     dicaTatica,
-    roteiroCenas
+    roteiroCenas,
+    especialidade: spec
   };
 }
 
@@ -4152,15 +4298,13 @@ function gerarFichaFormatadaMalutti(p) {
   if (!p) return "";
 
   const totalAtributos = Object.values(p.atributos || { pressao: 10, forca: 10, velocidade: 10, resiliencia: 10 }).reduce((a, b) => a + b, 0);
-  const tier = (typeof getPowerTier === 'function') ? getPowerTier(totalAtributos) : { title: "Iniciante", patamar: "201–450" };
+  const tier = (typeof getPowerTier === "function") ? getPowerTier(totalAtributos) : { title: "Iniciante", patamar: "201–450" };
 
   const whatsDigits = p.whatsapp ? String(p.whatsapp).replace(/\D/g, "").slice(-4) : "0000";
   const codAtividade = getCodigoAtividade(p);
   const pNome = p.nome || "Shinigami";
   const playerNome = pNome.split(" ")[0] || "Jogador";
   const playerNasc = p.aniversarioPlayer ? `${p.aniversarioPlayer}` : "01/01/2000";
-
-  const pers = p.personalidade || {};
 
   return `\`\`\`ㅤㅤ\`\`\`ㅤㅤㅤ\`\`\`ㅤㅤ\`\`\`
 
@@ -4171,75 +4315,73 @@ function gerarFichaFormatadaMalutti(p) {
                     ⚯͛
                          ᩠      ⊹                ᩠          . 
                              ࣪       ✶  ͏t𝖍e
-                  ﹙  𝐒𝐎𝐔𝐋 𝐒𝐎𝐂𝐈𝐄𝐓𝐘  ﹚⊹
-                 ɑquele que nɑ̃o teme ɑ pɾó-
-             pɾiɑ lɑ̂minɑ nɑ̃o é digno de 
-                  .  empunhɑ́-lɑ     𝗻𝗼    𝗦𝗘𝗜𝗥𝗘𝗜𝗧𝗘𝗜 .ᐟ
-                          ︶ ͝     ︶꒷꒦︶                        
+                   ﹙  𝐒𝐎𝐔𝐋 𝐒𝐎𝐂𝐈𝐄𝐓𝐘  ﹚⊹
+                  ɑquele que nɑ̃o teme ɑ pɾó-
+              pɾiɑ lɑ̂minɑ nɑ̃o é digno de 
+                   .  empunhɑ́-lɑ     𝗻𝗼    𝗦𝗘𝗜𝗥𝗘𝗜𝗧𝗘𝗜 .ᐟ
+                           ︶ ͝     ︶꒷꒦︶                        
          
-                  ⊹    /   𝙫ocê é um shinigɑmi
-                toɾne-se   𝓛𝐞𝐧𝐝𝗮́𝗿𝗶𝗼  ・・・
+                   ⊹    /   𝙫ocê é um shinigɑmi
+                 toɾne-se   𝓛𝐞𝐧𝐝𝗮́𝗿𝗶𝗼  ・・・
                                          ﹀                                   
-            ͛  𝒇𝒊𝒄𝒉𝒂 𝒅𝒆   :   𝕾𝗛𝗜𝗡𝗜𝗚𝗔𝗠𝗜  „                        
-      ɑpɾesentɑmos ɑ fichɑ que dɑɾɑ́ vidɑ 
-      ɑo seu guêɾɾeiɾo espirituɑl!  ⊹ ɑdiɑntɑ-
-      mos ɑ impoɾtɑ̂nciɑ de cɑnɑlizɑɾ suɑ 
-      ɑlmɑ em hɑɾmoniɑ com o Seireitei.
-                                                                       
-            \`﹙ 𝗗𝗔𝗗𝗢𝗦 𝗗𝗢 𝗣𝗔𝗥𝗧𝗜𝗖𝗜𝗣𝗔𝗡𝗧𝗘 ﹚\` 
-           ✶  „  nome & quɑtɾo dı́git͟os .ᐟ
-           ⎯  ${playerNome}, ${whatsDigits}
-           ✶  „  código de ɑtividɑde (on) .ᐟ
-           ⎯  ${codAtividade} ‹ use no contador de cenas! ›
-           ✶  „  dɑ͟tɑ de nɑscimento & idɑde .ᐟ
-           ⎯  ${playerNasc} (${p.idadePlayer || "20"} anos)
-           ✶  „  ɑçɑ̃o de suɑ ɑu͟t͟oɾiɑ .ᐟ
-           ⎯  fɑvoɾ enviɑɾ sepɑɾɑdɑmente no privado.
+             ͛  𝒇𝒊𝒄𝒉𝒂 𝒅𝒆   :   𝕾𝗛𝗜𝗡𝗜𝗚𝗔𝗠𝗜  „                        
+       ɑpɾesentɑmos ɑ fichɑ que dɑɾɑ́ vidɑ 
+       ɑo seu guêɾɾeiɾo espirituɑl!  ⊹ ɑdiɑntɑ-
+       mos ɑ impoɾtɑ̂nciɑ de cɑnɑlizɑɾ suɑ 
+       ɑlmɑ em hɑɾmoniɑ com o Seireitei.
+                                                                        
+             \`﹙ 𝗗𝗔𝗗𝗢𝗦 𝗗𝗢 𝗣𝗔𝗥𝗧𝗜𝗖𝗜𝗣𝗔𝗡𝗧𝗘 ﹚\` 
+            ✶  „  nome & quɑtɾo dı́git͟os .ᐟ
+            ⎯  ${playerNome}, ${whatsDigits}
+            ✶  „  código de ɑtividɑde (on) .ᐟ
+            ⎯  ${codAtividade} ‹ use no contador de cenas! ›
+            ✶  „  dɑ͟tɑ de nɑscimento & idɑde .ᐟ
+            ⎯  ${playerNasc} (${p.idadePlayer || "20"} anos)
+            ✶  „  ɑçɑ̃o de suɑ ɑu͟t͟oɾiɑ .ᐟ
+            ⎯  fɑvoɾ enviɑɾ sepɑɾɑdɑmente no privado.
 
-            \`﹙ 𝗗𝗔𝗗𝗢𝗦 𝗗𝗢 𝗣𝗘𝗥𝗦𝗢𝗡𝗔𝗚𝗘𝗠 ﹚\` 
-           ✶  „  no͟me do peɾsonɑgem  .ᐟ
-           ⎯  ${p.nome}
-           ✶  „  idɑde &` + "\\" + `\` ɑn͟ive͟ɾsɑ́ɾio .ᐟ
-           ⎯  ${p.idadeChar || "18"} anos — ${p.aniversarioChar || "15/07"}.
-           ✶  „  ɾeivindicɑçɑ̃o fɑ͟ciɑl (fɑceclɑim) .ᐟ
-           ⎯  ${p.faceclaim || p.nome}
-           ✶  „  esquɑdɾɑ̃o do gotei 13 .ᐟ
-           ⎯  ${p.esquadrao || "11º Esquadrão"}
-           ✶  „  ɾɑçɑ & linhɑgem espı́ɾituɑl .ᐟ
-           ⎯  ${p.raca || "Shinigami"}
-           ✶  „  código de ɑtividɑde do shinigɑmi .ᐟ
-           ⎯  ${codAtividade}
-           ✶  „  estɑdo & condiçɑ̃o .ᐟ
-           ⎯  ${p.estado || "Inteiro"}
-           ✶  „  pɑtɑmɑɾ no seı́ɾeı́teı́ .ᐟ
-           ⎯  ${tier.title} (${totalAtributos} pts acumulados)
+             \`﹙ 𝗗𝗔𝗗𝗢𝗦 𝗗𝗢 𝗣𝗘𝗥𝗦𝗢𝗡𝗔𝗚𝗘𝗠 ﹚\` 
+            ✶  „  no͟me do peɾsonɑgem  .ᐟ
+            ⎯  ${p.nome}
+            ✶  „  idɑde &\` ɑn͟ive͟ɾsɑ́ɾio .ᐟ
+            ⎯  ${p.idadeChar || "18"} anos — ${p.aniversarioChar || "15/07"}.
+            ✶  „  ɾeivindicɑçɑ̃o fɑ͟ciɑl (fɑceclɑim) .ᐟ
+            ⎯  ${p.faceclaim || p.nome}
+            ✶  „  esquɑdɾɑ̃o do gotei 13 .ᐟ
+            ⎯  ${p.esquadrao || "11º Esquadrão"}
+            ✶  „  ɾɑçɑ & linhɑgem espı́ɾituɑl .ᐟ
+            ⎯  ${p.raca || "Shinigami"}
+            ✶  „  código de ɑtividɑde do shinigɑmi .ᐟ
+            ⎯  ${codAtividade}
+            ✶  „  estɑdo & condiçɑ̃o .ᐟ
+            ⎯  ${p.estado || "Inteiro"}
+            ✶  „  pɑtɑmɑɾ no seı́ɾeı́teı́ .ᐟ
+            ⎯  ${tier.title} (${totalAtributos} pts acumulados)
 
-            \`﹙ 𝗔𝗧𝗥𝗜𝗕𝗨𝗧𝗢𝗦 𝗘𝗦𝗣𝗜𝗥𝗜𝗧𝗨𝗔𝗜𝗦 ﹚\`              
-           ✶  „ distɾibuiçɑ̃o de reiryoku .ᐟ
-           ⎯  pɾessɑ̃o espı́ɾituɑl: ${p.atributos?.pressao || 10}
-           ⎯  foɾçɑ: ${p.atributos?.forca || 10}           
-           ⎯  velocidɑde: ${p.atributos?.velocidade || 10}
-           ⎯  ɾesiliênciɑ: ${p.atributos?.resiliencia || 10}
-           ✶  „ totɑl geɾɑl .ᐟ
-           ⎯  ${totalAtributos} pts (Patamar: ${tier.title})
+             \`﹙ 𝗔𝗧𝗥𝗜𝗕𝗨𝗧𝗢𝗦 𝗘𝗦𝗣𝗜𝗥𝗜𝗧𝗨𝗔𝗜𝗦 ﹚\`              
+            ✶  „ distɾibuiçɑ̃o de reiryoku .ᐟ
+            ⎯  pɾessɑ̃o espı́ɾituɑl: ${p.atributos?.pressao || 10}
+            ⎯  foɾçɑ: ${p.atributos?.forca || 10}           
+            ⎯  velocidɑde: ${p.atributos?.velocidade || 10}
+            ⎯  ɾesiliênciɑ: ${p.atributos?.resiliencia || 10}
+            ✶  „ totɑl geɾɑl .ᐟ
+            ⎯  ${totalAtributos} pts (Patamar: ${tier.title})
 
-${(pers.texto || pers.virtudes || pers.estiloCombate) ? `            \`﹙ 𝗣𝗘𝗥𝗦𝗢𝗡𝗔𝗟𝗜𝗗𝗔𝗗𝗘 & 𝗗𝗡𝗔 𝗗𝗔 𝗔𝗟𝗠𝗔 ﹚\` 
-${pers.texto ? `           ✶  „  essênciɑ psicológicɑ .ᐟ\n           ⎯  ${pers.texto.trim()}\n` : ''}${pers.virtudes ? `           ✶  „  viɾtudes & quɑlidɑdes .ᐟ\n           ⎯  ${pers.virtudes.trim()}\n` : ''}${pers.defeitos ? `           ✶  „  defeitos & fɑlhɑs .ᐟ\n           ⎯  ${pers.defeitos.trim()}\n` : ''}${pers.desejos ? `           ✶  „  desejos & ɑmbições .ᐟ\n           ⎯  ${pers.desejos.trim()}\n` : ''}${pers.medos ? `           ✶  „  medos & pesɑdelos .ᐟ\n           ⎯  ${pers.medos.trim()}\n` : ''}${pers.estiloCombate ? `           ✶  „  estilo de combɑte .ᐟ\n           ⎯  ${pers.estiloCombate.trim()}\n` : ''}` : ''}
-            \`﹙ 𝗧𝗘𝗥𝗠𝗢 𝗗𝗘 𝗖𝗢𝗡𝗦𝗘𝗡𝗧𝗜𝗠𝗘𝗡𝗧𝗢 ﹚\`     
-      ₍  X  ₎     estou ciente de que dentɾo do 
-      role playing gɑme encontɾɑɾei temɑs           
-      e cenɑs de bɑtɑlhɑ que podem seɾ gɑtilhos, 
-      e tɑmbém ɑssumo ɾesponsɑbilidɑde 
-      de ɑceitɑçɑ̃o cɑso o peɾsonɑgem 
-      sofɾɑ quɑlqueɾ dɑno nɑɾɾɑtivo.
+             \`﹙ 𝗧𝗘𝗥𝗠𝗢 𝗗𝗘 𝗖𝗢𝗡𝗦𝗘𝗡𝗧𝗜𝗠𝗘𝗡𝗧𝗢 ﹚\`     
+       ₍  X  ₎     estou ciente de que dentɾo do 
+       role playing gɑme encontɾɑɾei temɑs           
+       e cenɑs de bɑtɑlhɑ que podem seɾ gɑtilhos, 
+       e tɑmbém ɑssumo ɾesponsɑbilidɑde 
+       de ɑceitɑçɑ̃o cɑso o peɾsonɑgem 
+       sofɾɑ quɑlqueɾ dɑno nɑɾɾɑtivo.
 
 
-       
-                                   ✶
-                           𝐩𝐬𝐲𝐜𝐡𝐞 ın 
-                          ınspırαtıon
-                  
-                   ✧ 𝗠𝗮𝗱𝗲 𝗕𝘆 𝗠𝗮𝗹𝘂𝘁𝘁𝗶 ✧
+        
+                                    ✶
+                            𝐩𝐬𝐲𝐜𝐡𝐞 ın 
+                           ınspırαtıon
+                   
+                    ✧ 𝗠𝗮𝗱𝗲 𝗕𝘆 𝗠𝗮𝗹𝘂𝘁𝘁𝗶 ✧
 
 
 \`\`\`ㅤㅤ\`\`\`ㅤㅤㅤ\`\`\`ㅤㅤ\`\`\``;
@@ -4334,6 +4476,286 @@ function getCapacidadeKidos(pressaoTotal) {
   }
 }
 
+
+// =========================================================================
+// AI PLOT & STORY ARC GENERATION ENGINE (INDIVIDUAL & JOINT TRAMAS)
+// =========================================================================
+
+function sintetizarTramaIndividualHeuristica(player, cenas = []) {
+  const pNome = player?.nome || "Guerreiro Espiritual";
+  const pRaca = player?.raca || "Shinigami";
+  const pEsq = player?.esquadrao || "11º Esquadrão";
+  const pPatamar = (typeof getPowerTier === 'function') 
+    ? getPowerTier(Object.values(player?.atributos || {}).reduce((a, b) => a + b, 0)).title 
+    : "Treinado";
+  const zkNome = player?.zanpakuto?.shikaiAtiva?.nome || player?.zanpakuto?.nome || "Zanpakutō Interior";
+  const numCenas = cenas.length;
+
+  const temasPorEsquadrao = {
+    "1º Esquadrão": { foco: "Dever Absoluto & Ordens da Central 46", antag: "Um conspirador nobre da Soul Society", local: "Seireitei - Sala dos Julgamentos" },
+    "2º Esquadrão": { foco: "Infiltração das Sombras & Assassinato Silencioso", antag: "Um desertor do Onmitsukidō com Shunpo veloz", local: "Distrito Secreto de Rukongai" },
+    "3º Esquadrão": { foco: "O Peso do Desespero & Conflito Moral", antag: "Um ex-oficial tomado por amargura e vingança", local: "Ruínas do 80º Distrito de Zaraki" },
+    "4º Esquadrão": { foco: "Juramento Médico & O Preço da Cura", antag: "Um Hollow que corrompe meridianos e canais de Kaidō", local: "Enfermaria de Quarentena do Seireitei" },
+    "5º Esquadrão": { foco: "Conspiração de Reishi & Ambição Proibida", antag: "Um pesquisador renegado de ilusões espirituais", local: "Laboratório Subterrâneo Oculto" },
+    "6º Esquadrão": { foco: "A Lei Inflexível vs Laços de Sangue", antag: "Um parente da nobreza que violou os éditos sagrados", local: "Mansão do Clã Kuchiki / Portão do Seireitei" },
+    "7º Esquadrão": { foco: "A Honra Inabalável & Proteção dos Inocentes", antag: "Um bando de saqueadores espirituais impiedosos", local: "Vila Periférica de Rukongai" },
+    "8º Esquadrão": { foco: "Informações Críticas & Blefes Fatais", antag: "Um mercenário do submundo que negocia segredos", local: "Casas de Chá de Karakura / Rukongai" },
+    "9º Esquadrão": { foco: "Justiça Distorcida & A Verdade Silenciada", antag: "Um líder revolucionário que distorceu os ideais de justiça", local: "Arquivos Sagrados da Soul Society" },
+    "10º Esquadrão": { foco: "Patrulhas no Mundo Humano & Proteção de Karakura", antag: "Um Hollow de Classe Menos que ataca no mundo dos vivos", local: "Karakura - Distrito de Negócios" },
+    "11º Esquadrão": { foco: "O Clímax do Combate & Sangue na Lâmina", antag: "Um guerreiro brutal que busca morrer em duelo contra o mais forte", local: "Arena Abandonada do Rukongai" },
+    "12º Esquadrão": { foco: "Experimentos Perigosos & Anomalias de Reishi", antag: "Uma criatura artificial de laboratório que perdeu o controle", local: "Setor 46 de Desenvolvimento Tecnológico" },
+    "13º Esquadrão": { foco: "Defesa dos Desamparados & Conexão de Almas", antag: "Um espírito corrompido que assombra o portal Senkaimon", local: "Travessia do Senkaimon" }
+  };
+
+  const tema = temasPorEsquadrao[pEsq] || { foco: "Ascensão Espiritual & Rompimento de Limites", antag: "Um Hollow evoluído com ressonância espiritual", local: "Limiar entre Seireitei e Karakura" };
+
+  const ultimasCenasResumo = cenas.slice(-3).map((c, i) => `• Cena ${i + 1} (${c.titulo || 'Treino/Arco'}): ${(c.texto || '').slice(0, 120)}...`).join('\n');
+
+  return {
+    tituloArco: `Arco de ${pNome}: A Provação de ${zkNome}`,
+    faseAtual: numCenas === 0 ? "Fase 1: Convocação & Premonição" : numCenas <= 2 ? "Fase 2: O Conflito Crescente" : "Fase 3: O Ponto de Ruptura & Clímax",
+    diagnosticoPsicologico: `${pNome} (${pRaca}, ${pEsq}, Patamar ${pPatamar}) carrega um forte conflito entre a disciplina militar do Seireitei e a busca pelo domínio pleno de sua lâmina (${zkNome}). Suas ações recentes em ON demonstram determinação crescente, mas revelam brechas táticas que serão testadas neste arco.`,
+    ganchoImediato: `Estruturas de Reishi anormais foram detectadas em ${tema.local}. Relatos indicam a presença de ${tema.antag}, cuja assinatura espiritual desafia diretamente a postura de ${pNome}.`,
+    eventos: [
+      {
+        numero: 1,
+        fase: "Evento 1: O Teste de Convicção (ON)",
+        titulo: `Incidente em ${tema.local}`,
+        descricao: `${pNome} é despachado(a) para investigar anomalias em ${tema.local}. Ao chegar, depara-se com armadilhas espirituais e é provocado(a) verbalmente e taticamente pelo opositor.`,
+        objetivoCena: "Investigar o local, conter o pânico e demonstrar postura marcial na primeira interação de ON.",
+        desafioSugerido: "Superar emboscada inicial sem revelar todas as cartas de sua Zanpakutō."
+      },
+      {
+        numero: 2,
+        fase: "Evento 2: A Sombra da Dúvida & Conflito Espiritual (ON)",
+        titulo: "Ressonância Rompida",
+        descricao: `O confronto direto com ${tema.antag} coloca em xeque a ideologia de ${pNome} (${tema.foco}). A pressão espiritual do ambiente começa a desestabilizar o fluxo de Reishi.`,
+        objetivoCena: "Resistir à pressão moral/física do antagonista e encontrar o ponto de equilíbrio com sua própria lâmina.",
+        desafioSugerido: "Uso estratégico de Kidōs, Shunpo ou técnicas de espada para neutralizar a vantagem do terreno."
+      },
+      {
+        numero: 3,
+        fase: "Evento 3: O Clímax & Quebra de Limites (ON)",
+        titulo: `O Veredito da Lâmina: ${zkNome}`,
+        descricao: `Batalha decisiva onde ${pNome} deve dar tudo de si. O vilão ativa sua forma final forçando uma cena de narração épica onde apenas a evolução da alma garantirá a vitória.`,
+        objetivoCena: "Executar o golpe final, proteger os aliados ou selar o inimigo de forma honrosa.",
+        desafioSugerido: "Aplicação da Shikai/Bankai ou combinação definitiva de atributos para fechar o arco com maestria."
+      }
+    ],
+    antagonista: {
+      nome: tema.antag,
+      titulo: `O Flagelo de ${tema.local}`,
+      origem: `Nascido dos desvios espirituais e segredos de ${pEsq}`,
+      motivacao: `Provar que os métodos de ${pNome} são fracos e corromper sua convicção.`,
+      fraquezaChave: "Vulnerabilidade a golpes de velocidade pura e Kidōs de contenção rápida."
+    },
+    recompensaArco: "Garantido de 15 Pontos de Atributo + 2 Giros de Sorteio Comum + 1 Giro Especial de Seireitei",
+    briefingWhatsApp: `\`\`\`ㅤㅤ\`\`\`ㅤㅤㅤ\`\`\`ㅤㅤ\`\`\`
+👑 𝗗𝗢𝗦𝗦𝗜𝗘̂ 𝗗𝗘 𝗔𝗥𝗖𝗢 𝗜𝗡𝗗𝗜𝗩𝗜𝗗𝗨𝗔𝗟 • 𝗦𝗢𝗨𝗟 𝗦𝗢𝗖𝗜𝗘𝗧𝗬
+✶ „ Jogador: ${pNome} [${player?.codigoAtividade || 'ACT-0000'}]
+✶ „ Esquadrão & Patamar: ${pEsq} • ${pPatamar}
+✶ „ Título do Arco: Arco de ${pNome} — A Provação de ${zkNome}
+✶ „ Local de Ação: ${tema.local}
+
+📋 𝗦𝗜𝗡𝗢𝗣𝗦𝗘 & 𝗚𝗔𝗡𝗖𝗛𝗢 𝗣𝗔𝗥𝗔 𝗢 𝗢𝗡:
+${tema.foco}. ${pNome} é convocado(a) para enfrentar ${tema.antag}. A missão exigirá precisão marcial e postura espiritual inabalável.
+
+🎯 𝗢𝗕𝗝𝗘𝗧𝗜𝗩𝗢 𝗗𝗔 𝗣𝗥𝗢́𝗫𝗜𝗠𝗔 𝗖𝗘𝗡𝗔:
+1. Ir até ${tema.local} e registrar sua entrada em ON (mínimo 30 linhas para treino / 90 linhas para arco).
+2. Investigar a anomalia e reagir ao primeiro confronto tático!
+
+✧ Recompensa ao Concluir: 15 Pontos Livres + 2 Giros Comuns + 1 Especial!
+\`\`\`ㅤㅤ\`\`\`ㅤㅤㅤ\`\`\`ㅤㅤ\`\`\``
+  };
+}
+
+function sintetizarTramaConjuntaHeuristica(players = [], cenasConjuntas = []) {
+  const p1 = players[0] || { nome: "Guerreiro 1", esquadrao: "11º Esquadrão", codigoAtividade: "ACT-0001" };
+  const p2 = players[1] || { nome: "Guerreiro 2", esquadrao: "4º Esquadrão", codigoAtividade: "ACT-0002" };
+
+  const nomesStr = players.map(p => p.nome).join(" & ");
+  const codigosStr = players.map(p => p.codigoAtividade || getCodigoAtividade(p)).join(" / ");
+
+  return {
+    tituloArco: `Arco Cruzado: A Aliança das Almas (${nomesStr})`,
+    dinamicaDupla: `Cooperação Tática & Choque de Filosofias (${p1.esquadrao} ⚔️ ${p2.esquadrao})`,
+    sinopse: `Um incidente de proporções críticas interliga os destinos de ${p1.nome} e ${p2.nome}. Uma fenda dimensional no Mundo Humano ameaça romper a barreira do Senkaimon, exigindo que ambos superem suas divergências de esquadrão para operar como uma unidade marcial coesa.`,
+    conflitoCentral: `Enquanto ${p1.nome} prioriza a ofensiva e a erradicação do perigo, ${p2.nome} analisa a preservação dos inocentes e o equilíbrio de Reishi. A missão forçará ambos a confiarem a retaguarda um no outro.`,
+    eventosCruzados: [
+      {
+        fase: "Fase 1: O Choque Inicial & Convocação Conjunta (ON)",
+        descricao: `${p1.nome} e ${p2.nome} são designados conjuntamente pelo Comando Central. Uma emboscada de Hollows intermediários força os dois a combinarem suas habilidades de combate imediatamente.`,
+        papelPlayer1: `Abrir brecha na vanguarda usando sua força/velocidade (${p1.nome}).`,
+        papelPlayer2: `Fornecer suporte tático, controle de área com Kidō ou cura (${p2.nome}).`,
+        ganchoWhats: `Primeira cena no ON onde ${p1.nome} e ${p2.nome} dialogam e executam um ataque combinado.`
+      },
+      {
+        fase: "Fase 2: A Provação Cruzada (Ação de um afeta o outro)",
+        descricao: `O inimigo divide o campo de batalha com uma barreira espiritual opressiva. Para que ${p1.nome} sobreviva ao ataque mortal, ${p2.nome} precisará decifrar o ponto fraco da barreira a tempo.`,
+        papelPlayer1: `Segurar a investida do monstro sob dano constante.`,
+        papelPlayer2: `Interromper a conjuração do feitiço proibido com extrema precisão.`,
+        ganchoWhats: "Cena de alta tensão onde cada linha de roleplay influencia o estado do parceiro."
+      },
+      {
+        fase: "Fase 3: Batalha Cooperativa Decisiva (Clímax)",
+        descricao: `O confronto final contra o líder da anomalia. Um ataque sincronizado combinando a liberação de suas Zanpakutōs sela a fenda e consolida um vínculo lendário no Seireitei.`,
+        papelPlayer1: `Golpe de finalização de alta potência.`,
+        papelPlayer2: `Selo de contenção / cura de emergência final.`,
+        ganchoWhats: "Conclusão épica do arco conjunto com narrativa compartilhada no grupo."
+      }
+    ],
+    ameacaComum: {
+      nome: "Menos Grande Híbrido & Conspiradores Renegados",
+      perigo: "Capacidade de anular ataques isolados; vulnerável apenas a ataques combinados sincronizados.",
+      mecanicaEspecial: "Exige que ambos os jogadores rolem dados ou intercalem turnos narrativos contínuos."
+    },
+    briefingWhatsApp: `\`\`\`ㅤㅤ\`\`\`ㅤㅤㅤ\`\`\`ㅤㅤ\`\`\`
+👑 𝗗𝗢𝗦𝗦𝗜𝗘̂ 𝗗𝗘 𝗧𝗥𝗔𝗠𝗔 𝗖𝗢𝗡𝗝𝗨𝗡𝗧𝗔 • 𝗦𝗢𝗨𝗟 𝗦𝗢𝗖𝗜𝗘𝗧𝗬
+✶ „ Jogadores Envolvidos: ${nomesStr}
+✶ „ Códigos de Atividade: ${codigosStr}
+✶ „ Título do Arco: Arco Cruzado — A Aliança das Almas
+✶ „ Dinâmica: ${p1.esquadrao} ⚔️ ${p2.esquadrao}
+
+📋 𝗦𝗜𝗡𝗢𝗣𝗦𝗘 𝗖𝗢𝗠𝗣𝗔𝗥𝗧𝗜𝗟𝗛𝗔𝗗𝗔:
+Uma anomalia de alta gravidade une os destinos de ${p1.nome} e ${p2.nome}. Uma ameaça que não pode ser derrotada individualmente exigirá sincronia absoluta entre ambos no ON!
+
+🎯 𝗜𝗡𝗦𝗧𝗥𝗨𝗖̧𝗢̃𝗘𝗦 𝗣𝗔𝗥𝗔 𝗢𝗦 𝗝𝗢𝗚𝗔𝗗𝗢𝗥𝗘𝗦:
+1. Cenar juntos em interação contínua (mínimo de 30 a 90 linhas conjuntas).
+2. Intercalar ações combinando suas técnicas e liberando suas Zanpakutōs em sincronia.
+
+✧ Recompensa Garantida para Ambos: 15 Pontos de Atributo + 2 Giros Comuns + 1 Giro Especial cada!
+\`\`\`ㅤㅤ\`\`\`ㅤㅤㅤ\`\`\`ㅤㅤ\`\`\``
+  };
+}
+
+async function gerarTramaIndividualAI({ player, cenas = [], openAiKey = "" }) {
+  const heuristicResult = sintetizarTramaIndividualHeuristica(player, cenas);
+  const apiKey = (openAiKey || (typeof localStorage !== 'undefined' ? localStorage.getItem("bleach_openai_key") || "" : "")).trim();
+
+  if (!apiKey || apiKey.length < 15) {
+    return heuristicResult;
+  }
+
+  try {
+    const prompt = `Você é o Mestre Narrador Principal do BLEACH RPG (Soul Society / Seireitei).
+Analise o seguinte jogador e suas cenas de arco para gerar uma Trama Individual profunda, dramática e desafiadora:
+
+DADOS DO JOGADOR:
+- Nome: ${player?.nome || 'Shinigami'}
+- Raça: ${player?.raca || 'Shinigami'}
+- Esquadrão: ${player?.esquadrao || '11º Esquadrão'}
+- Patamar: ${heuristicResult.diagnosticoPsicologico}
+- Zanpakutō: ${player?.zanpakuto?.shikaiAtiva?.nome || player?.zanpakuto?.nome || 'Despertar'}
+- Histórico de Cenas: ${cenas.map(c => `[${c.titulo}]: ${c.texto.slice(0, 150)}`).join(' | ') || 'Nenhuma cena registrada ainda.'}
+
+Responda APENAS em formato JSON válido com as chaves:
+{
+  "tituloArco": string,
+  "faseAtual": string,
+  "diagnosticoPsicologico": string,
+  "ganchoImediato": string,
+  "eventos": [
+    { "numero": 1, "fase": "...", "titulo": "...", "descricao": "...", "objetivoCena": "...", "desafioSugerido": "..." },
+    { "numero": 2, "fase": "...", "titulo": "...", "descricao": "...", "objetivoCena": "...", "desafioSugerido": "..." },
+    { "numero": 3, "fase": "...", "titulo": "...", "descricao": "...", "objetivoCena": "...", "desafioSugerido": "..." }
+  ],
+  "antagonista": { "nome": "...", "titulo": "...", "origem": "...", "motivacao": "...", "fraquezaChave": "..." },
+  "recompensaArco": string,
+  "briefingWhatsApp": string
+}`;
+
+    const res = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        messages: [{ role: "user", content: prompt }],
+        temperature: 0.8,
+        response_format: { type: "json_object" }
+      })
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      const content = data?.choices?.[0]?.message?.content;
+      if (content) {
+        const parsed = JSON.parse(content);
+        return { ...heuristicResult, ...parsed };
+      }
+    }
+  } catch (err) {
+    console.warn("OpenAI API call failed, falling back to heuristic lore engine:", err);
+  }
+
+  return heuristicResult;
+}
+
+async function gerarTramaConjuntaAI({ players = [], cenasConjuntas = [], openAiKey = "" }) {
+  const heuristicResult = sintetizarTramaConjuntaHeuristica(players, cenasConjuntas);
+  const apiKey = (openAiKey || (typeof localStorage !== 'undefined' ? localStorage.getItem("bleach_openai_key") || "" : "")).trim();
+
+  if (!apiKey || apiKey.length < 15) {
+    return heuristicResult;
+  }
+
+  try {
+    const prompt = `Você é o Mestre Narrador Principal do BLEACH RPG.
+Crie um Arco Compartilhado (Trama Conjunta) para os seguintes jogadores cooperarem ou rivalizarem no ON:
+
+JOGADORES:
+${players.map(p => `- ${p.nome} (${p.raca}, ${p.esquadrao}, Atributos: ${JSON.stringify(p.atributos)})`).join('\n')}
+
+CENAS ARMAZENADAS:
+${cenasConjuntas.map(c => `[${c.autorNome || 'Cena'} - ${c.titulo}]: ${(c.texto || '').slice(0, 150)}`).join('\n') || 'Início de arco conjunto.'}
+
+Responda APENAS em formato JSON válido com as chaves:
+{
+  "tituloArco": string,
+  "dinamicaDupla": string,
+  "sinopse": string,
+  "conflitoCentral": string,
+  "eventosCruzados": [
+    { "fase": "...", "descricao": "...", "papelPlayer1": "...", "papelPlayer2": "...", "ganchoWhats": "..." },
+    { "fase": "...", "descricao": "...", "papelPlayer1": "...", "papelPlayer2": "...", "ganchoWhats": "..." },
+    { "fase": "...", "descricao": "...", "papelPlayer1": "...", "papelPlayer2": "...", "ganchoWhats": "..." }
+  ],
+  "ameacaComum": { "nome": "...", "perigo": "...", "mecanicaEspecial": "..." },
+  "briefingWhatsApp": string
+}`;
+
+    const res = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        messages: [{ role: "user", content: prompt }],
+        temperature: 0.8,
+        response_format: { type: "json_object" }
+      })
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      const content = data?.choices?.[0]?.message?.content;
+      if (content) {
+        const parsed = JSON.parse(content);
+        return { ...heuristicResult, ...parsed };
+      }
+    }
+  } catch (err) {
+    console.warn("OpenAI joint arc call failed, falling back to heuristic engine:", err);
+  }
+
+  return heuristicResult;
+}
+
+
 if (typeof window !== 'undefined') {
   window.gerar4CaminhosZanpakutoAI = gerar4CaminhosZanpakutoAI;
   window.gerar4CaminhosZanpakutoAI_Async = gerar4CaminhosZanpakutoAI_Async;
@@ -4361,6 +4783,10 @@ if (typeof window !== 'undefined') {
   window.gerarFichaFormatadaMalutti = gerarFichaFormatadaMalutti;
   window.copiarFichaFormatadaWhatsApp = copiarFichaFormatadaWhatsApp;
   window.getCodigoAtividade = getCodigoAtividade;
+  window.gerarTramaIndividualAI = gerarTramaIndividualAI;
+  window.gerarTramaConjuntaAI = gerarTramaConjuntaAI;
+  window.sintetizarTramaIndividualHeuristica = sintetizarTramaIndividualHeuristica;
+  window.sintetizarTramaConjuntaHeuristica = sintetizarTramaConjuntaHeuristica;
 }
 
 
@@ -5347,7 +5773,7 @@ function KidoDetailModal({ kido, personagem, isOpen, onClose, onConjurar, pressa
 
   const efeitoHado = isHado ? calcularEfeitoHado(poderCalculado, simTargetStat) : null;
   const efeitoBakudo = isBakudo ? calcularEfeitoBakudo(poderCalculado, simTargetStat) : null;
-  const efeitoKaido = isKaido ? calcularEfeitoKaido(poderCalculado, simEstadoInicial) : null;
+  const efeitoKaido = isKaido ? calcularEfeitoKaido(poderCalculado, simEstadoInicial, kido) : null;
 
   const podeConjurar = pressaoRestante >= custoInfo.custoTotal;
 
@@ -6256,7 +6682,10 @@ function TopBar({ session, onLogout, view, setView, nome, onOpenAdminLogin, clou
             { id: "kidos", label: "Grimório de Kidō", icon: "📕" },
             { id: "arena", label: "Arena de Duelos", icon: "⚔️" },
             { id: "patchnotes", label: "Patch Notes", icon: "📰" },
-            ...(isAdmin ? [{ id: "admin", label: "Painel ADM", icon: "👑" }] : [])
+            ...(isAdmin ? [
+              { id: "tramas_adm", label: "Tramas & Arcos (IA)", icon: "🎭" },
+              { id: "admin", label: "Painel ADM", icon: "👑" }
+            ] : [])
           ].map((tab) => (
             <button
               key={tab.id}
@@ -6332,7 +6761,10 @@ function TopBar({ session, onLogout, view, setView, nome, onOpenAdminLogin, clou
           { id: "kidos", label: "Kidō", icon: "📕" },
           { id: "arena", label: "Arena", icon: "⚔️" },
           { id: "patchnotes", label: "Patch", icon: "📰" },
-          ...(isAdmin ? [{ id: "admin", label: "ADM", icon: "👑" }] : [])
+          ...(isAdmin ? [
+            { id: "tramas_adm", label: "Tramas", icon: "🎭" },
+            { id: "admin", label: "ADM", icon: "👑" }
+          ] : [])
         ].map((tab) => (
           <button
             key={tab.id}
@@ -7140,6 +7572,8 @@ function KidosView({ personagem, isAdmin }) {
   const [busca, setBusca] = useState("");
   const [modalKido, setModalKido] = useState(null);
   const [kaidoSimEstado, setKaidoSimEstado] = useState("Debilitado");
+  const [kaidoExtraReiatsu, setKaidoExtraReiatsu] = useState(0);
+  const [kaidoIncantado, setKaidoIncantado] = useState(false);
   
   const pressaoTotal = Number(personagem?.atributos?.pressao || 30);
   const [reiatsuGastaCena, setReiatsuGastaCena] = useState(0);
@@ -7323,34 +7757,38 @@ function KidosView({ personagem, isAdmin }) {
         </div>
       </Section>
 
-      {/* SEÇÃO DEDICADA: SIMULADOR DE KAIDŌ & CENAS DE TRATAMENTO */}
+      {/* SEÇÃO DEDICADA: SIMULADOR DE KAIDŌ & REDUÇÃO DE CENAS POR REIATSU */}
       {(() => {
+        const pressaoTotalCura = pressaoRestante + kaidoExtraReiatsu;
+        const bonusEncanto = Math.round(pressaoTotalCura * 0.30);
+        const poderCuraFinal = kaidoIncantado ? (pressaoTotalCura + bonusEncanto) : pressaoTotalCura;
+
         const analiseKaido = (typeof calcularEfeitoKaido === 'function')
-          ? calcularEfeitoKaido(pressaoRestante, kaidoSimEstado)
-          : { categoria: "Tratamento Tático", cor: "#10B981", cenasNecessarias: 2, curaHpStr: "Recuperação de 70%", estadoFinal: "Inteiro", diagnostico: "Estabilizado", dicaTatica: "Manter canalização", roteiroCenas: [] };
+          ? calcularEfeitoKaido(poderCuraFinal, kaidoSimEstado)
+          : { categoria: "Tratamento Tático", cor: "#10B981", cenasNecessarias: 1, curaHpStr: "Recuperação de 80%", estadoFinal: "Inteiro", diagnostico: "Estabilizado", dicaTatica: "Manter canalização", roteiroCenas: [] };
 
         return (
           <Section
-            title="🌿 Simulador Médico de Kaidō & Cenas de Tratamento no ON"
+            title="🌿 Simulador Médico de Kaidō & Redução de Cenas por Infusão de Reiatsu"
             subtitle="Calcule exatamente quantas cenas no WhatsApp são necessárias para curar um aliado com base na sua Pressão Espiritual"
             className="border-2 border-emerald-500/40"
           >
             <div className="p-4 sm:p-6 bg-gradient-to-b from-emerald-950/30 via-bleach-panel2 to-black rounded-xl border-2 border-emerald-500/50 space-y-5 shadow-2xl">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-emerald-500/20 pb-4">
                 <div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <span className="px-2.5 py-0.5 bg-emerald-950 text-emerald-300 border border-emerald-500 text-[10px] font-extrabold uppercase rounded-full tracking-wider">
                       Hospital Geral do 4º Esquadrão • Cálculo de Cenas
                     </span>
                     <span className="text-xs font-mono text-cyan-400 font-bold">
-                      Reiatsu Disponível: {pressaoRestante} / {pressaoTotal} pts
+                      Pressão Investida: {pressaoTotalCura} pts {kaidoIncantado ? `(+${bonusEncanto} Encanto)` : ''} = <strong className="text-emerald-300">{poderCuraFinal} Poder</strong>
                     </span>
                   </div>
                   <h4 className="font-title text-2xl text-emerald-400 mt-1 flex items-center gap-2">
-                    <span>💚</span> Simulação de Tratamento & Evolução Vital
+                    <span>💚</span> Simulação de Tratamento & Desintoxicação
                   </h4>
                   <p className="text-xs text-bleach-creamDim">
-                    Selecione a gravidade do paciente para visualizar o tempo de cura exigido no WhatsApp e o roteiro de narração por cena.
+                    Imbuir mais Reiatsu e recitar o encantamento (+30% PE) reduz drasticamente as cenas exigidas no WhatsApp para curar e purificar toxinas.
                   </p>
                 </div>
 
@@ -7371,11 +7809,51 @@ function KidosView({ personagem, isAdmin }) {
                         onClick={() => setKaidoSimEstado(est.id)}
                         className={`px-2.5 py-1 rounded-lg text-xs font-bold transition border ${
                           kaidoSimEstado === est.id
-                            ? "bg-emerald-500 text-black border-white shadow"
+                            ? "bg-emerald-500 text-black border-white shadow font-black"
                             : "bg-black/60 text-bleach-creamDim border-white/10 hover:border-emerald-400"
                         }`}
                       >
                         {est.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Controles de Pressão Extra e Encantamento */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-black/60 rounded-xl border border-emerald-500/20">
+                <label className="flex items-center gap-2.5 cursor-pointer bg-black/50 p-2.5 rounded-lg border border-emerald-500/30 hover:border-emerald-400 transition">
+                  <input
+                    type="checkbox"
+                    checked={kaidoIncantado}
+                    onChange={(e) => setKaidoIncantado(e.target.checked)}
+                    className="accent-emerald-500 w-4 h-4"
+                  />
+                  <div>
+                    <span className="text-xs text-emerald-300 font-bold block">
+                      Recitar Cântico Sagrado de Kaidō (Eishō)
+                    </span>
+                    <span className="text-[10px] text-bleach-muted">
+                      Concede +30% da sua Pressão Espiritual (+{bonusEncanto} pts) acelerando a cura
+                    </span>
+                  </div>
+                </label>
+
+                <div className="flex items-center justify-between bg-black/50 p-2.5 rounded-lg border border-white/5 flex-wrap gap-2">
+                  <span className="text-[11px] text-bleach-creamDim font-bold">Imbuir Mais Reiatsu:</span>
+                  <div className="flex gap-1">
+                    {[0, 20, 50, 100, 200].map((pe) => (
+                      <button
+                        key={pe}
+                        type="button"
+                        onClick={() => setKaidoExtraReiatsu(pe)}
+                        className={`px-2 py-0.5 rounded text-xs font-mono font-bold transition border ${
+                          kaidoExtraReiatsu === pe
+                            ? "bg-emerald-500 text-black border-white shadow"
+                            : "bg-black/70 text-bleach-muted border-white/10 hover:text-white"
+                        }`}
+                      >
+                        +{pe} PE
                       </button>
                     ))}
                   </div>
@@ -7389,7 +7867,9 @@ function KidosView({ personagem, isAdmin }) {
                   <span className="text-2xl font-mono font-black text-emerald-400 block mt-0.5">
                     ⏳ {analiseKaido.cenasNecessarias} {analiseKaido.cenasNecessarias === 1 ? 'Cena' : 'Cenas'}
                   </span>
-                  <span className="text-[11px] text-emerald-200/70">Manutenção contínua de Reiki</span>
+                  <span className="text-[11px] text-emerald-200/70">
+                    {analiseKaido.cenasNecessarias === 1 ? '✨ Cura Acelerada por Reiatsu!' : 'Manutenção contínua de Reiki'}
+                  </span>
                 </div>
 
                 <div className="p-3.5 bg-black/70 rounded-xl border border-emerald-500/40 text-center">
@@ -7412,17 +7892,16 @@ function KidosView({ personagem, isAdmin }) {
               {/* Roteiro Narrativo Passo a Passo por Cena */}
               <div className="p-4 bg-black/80 rounded-xl border border-emerald-500/30 space-y-3">
                 <h6 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
-                  <span>📋</span> Roteiro Passo-a-Passo de Narração para o WhatsApp ({analiseKaido.cenasNecessarias} Cenas):
+                  <span>📋</span> Roteiro de Narração para o WhatsApp ({analiseKaido.cenasNecessarias} {analiseKaido.cenasNecessarias === 1 ? 'Cena' : 'Cenas'}):
                 </h6>
                 <div className="space-y-2">
                   {(analiseKaido.roteiroCenas || []).map((passo, idx) => (
                     <div key={idx} className="p-2.5 bg-emerald-950/20 border border-emerald-500/20 rounded-lg flex items-start gap-2.5">
                       <span className="px-2 py-0.5 bg-emerald-900/80 text-emerald-300 border border-emerald-500 font-mono font-bold text-[10px] rounded shrink-0">
-                        Cena {passo.cena}
+                        {typeof passo === 'string' ? `Etapa ${idx + 1}` : `Cena ${passo.cena}`}
                       </span>
-                      <div>
-                        <strong className="text-white text-xs block">{passo.fase}</strong>
-                        <p className="text-xs text-bleach-creamDim mt-0.5">{passo.instrucao}</p>
+                      <div className="text-xs text-bleach-cream leading-relaxed">
+                        {typeof passo === 'string' ? passo : passo.instrucao}
                       </div>
                     </div>
                   ))}
@@ -7431,7 +7910,7 @@ function KidosView({ personagem, isAdmin }) {
 
               {/* Recomendação de Roleplay */}
               <div className="p-3 bg-bleach-panel rounded-xl border border-white/10 text-xs">
-                <strong className="text-emerald-400 block text-[10px] uppercase font-bold">Instrução Tática do 4º Esquadrão:</strong>
+                <strong className="text-emerald-400 block text-[10px] uppercase font-bold">🌿 Diagnóstico do 4º Esquadrão:</strong>
                 <p className="text-bleach-cream mt-0.5 leading-relaxed">{analiseKaido.dicaTatica}</p>
               </div>
             </div>
@@ -10806,6 +11285,178 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
             </div>
           )}
 
+          {/* SUB-ABA 2: KAIDŌ & SIMULAÇÃO DE CURA MÉDICA (4º ESQUADRÃO) */}
+          {subAbaKido === "kaido" && (
+            <div className="space-y-6">
+              {(() => {
+                const pressaoTotal = Number(personagem.atributos?.pressao || 30);
+                const pressaoRestante = Math.max(0, pressaoTotal - gastoPressaoForca - gastoPressaoResiliencia);
+                const pressaoTotalCura = pressaoRestante + simKaidoExtraPressao;
+                const bonusEncanto = Math.round(pressaoTotalCura * 0.30);
+                const poderCuraFinal = simKaidoIncantado ? (pressaoTotalCura + bonusEncanto) : pressaoTotalCura;
+
+                const kidosKaido = (personagem.kidosConhecidos || []).filter(k => k.cat === "Kaidō");
+                const kidoAtivo = kidosKaido[0] || null;
+
+                const analiseKaido = (typeof calcularEfeitoKaido === 'function')
+                  ? calcularEfeitoKaido(poderCuraFinal, simKaidoEstado, kidoAtivo)
+                  : { categoria: "Tratamento Tático", cor: "#10B981", cenasNecessarias: 1, curaHpStr: "Recuperação de 80%", estadoFinal: "Inteiro", diagnostico: "Estabilizado", dicaTatica: "Manter canalização", roteiroCenas: [] };
+
+                return (
+                  <Section
+                    title="🌿 Simulador Médico de Kaidō & Redução de Cenas por Infusão de Reiatsu"
+                    subtitle="Imbuir mais Pressão Espiritual e recitar o encantamento acelera a regeneração celular, desintoxicação e reduz os turnos necessários no ON"
+                    className="border-2 border-emerald-500/50"
+                  >
+                    <div className="p-4 sm:p-6 bg-gradient-to-b from-emerald-950/40 via-bleach-panel2 to-black rounded-2xl border-2 border-emerald-500/60 space-y-5 shadow-2xl">
+                      
+                      {/* Topo do Simulador */}
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-emerald-500/20 pb-4">
+                        <div>
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="px-2.5 py-0.5 bg-emerald-950 text-emerald-300 border border-emerald-500 text-[10px] font-extrabold uppercase rounded-full tracking-wider">
+                              Hospital Geral do Seireitei • Cálculo Dinâmico de Cenas
+                            </span>
+                            <span className="text-xs font-mono text-cyan-400 font-bold">
+                              Pressão Investida: {pressaoTotalCura} pts {simKaidoIncantado ? `(+${bonusEncanto} Encanto)` : ''} = <strong className="text-emerald-300">{poderCuraFinal} Poder</strong>
+                            </span>
+                          </div>
+                          <h4 className="font-title text-2xl text-emerald-400 mt-1 flex items-center gap-2">
+                            <span>💚</span> {kidoAtivo ? kidoAtivo.nome : "Kaidō & Medicina Espiritual"}
+                          </h4>
+                          <p className="text-xs text-bleach-creamDim">
+                            Injetar mais Reiatsu e recitar o encantamento (+30% PE) reduz drasticamente as cenas exigidas no WhatsApp para curar feridas graves e desintoxicar venenos.
+                          </p>
+                        </div>
+
+                        {/* Seletor de Estado Inicial */}
+                        <div className="bg-black/70 p-2.5 rounded-xl border border-emerald-500/30 space-y-1">
+                          <label className="text-[10px] text-bleach-muted uppercase font-bold block">
+                            Estado Inicial do Paciente:
+                          </label>
+                          <div className="flex gap-1.5">
+                            {[
+                              { id: "Derrotado", label: "💀 Derrotado", cor: "#EF4444" },
+                              { id: "Debilitado", label: "🩸 Debilitado", cor: "#F97316" },
+                              { id: "Ferido", label: "🩹 Ferido", cor: "#EAB308" }
+                            ].map((est) => (
+                              <button
+                                key={est.id}
+                                type="button"
+                                onClick={() => setSimKaidoEstado(est.id)}
+                                className={`px-2.5 py-1 rounded-lg text-xs font-bold transition border ${
+                                  simKaidoEstado === est.id
+                                    ? "bg-emerald-500 text-black border-white shadow font-black"
+                                    : "bg-black/60 text-bleach-creamDim border-white/10 hover:border-emerald-400"
+                                }`}
+                              >
+                                {est.label}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Controles de Pressão Extra e Encantamento */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-black/60 rounded-xl border border-emerald-500/20">
+                        <label className="flex items-center gap-2.5 cursor-pointer bg-black/50 p-2.5 rounded-lg border border-emerald-500/30 hover:border-emerald-400 transition">
+                          <input
+                            type="checkbox"
+                            checked={simKaidoIncantado}
+                            onChange={(e) => setSimKaidoIncantado(e.target.checked)}
+                            className="accent-emerald-500 w-4 h-4"
+                          />
+                          <div>
+                            <span className="text-xs text-emerald-300 font-bold block">
+                              Recitar Cântico Sagrado de Kaidō (Eishō)
+                            </span>
+                            <span className="text-[10px] text-bleach-muted">
+                              Concede +30% da sua Pressão Espiritual (+{bonusEncanto} pts) acelerando a cura
+                            </span>
+                          </div>
+                        </label>
+
+                        <div className="flex items-center justify-between bg-black/50 p-2.5 rounded-lg border border-white/5 flex-wrap gap-2">
+                          <span className="text-[11px] text-bleach-creamDim font-bold">Imbuir Mais Reiatsu:</span>
+                          <div className="flex gap-1">
+                            {[0, 20, 50, 100, 200].map((pe) => (
+                              <button
+                                key={pe}
+                                type="button"
+                                onClick={() => setSimKaidoExtraPressao(pe)}
+                                className={`px-2 py-0.5 rounded text-xs font-mono font-bold transition border ${
+                                  simKaidoExtraPressao === pe
+                                    ? "bg-emerald-500 text-black border-white shadow"
+                                    : "bg-black/70 text-bleach-muted border-white/10 hover:text-white"
+                                }`}
+                              >
+                                +{pe} PE
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Cartões de Métricas de Cura */}
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                        <div className="p-4 bg-black/80 rounded-xl border border-emerald-500/40 text-center">
+                          <span className="text-[10px] text-bleach-muted uppercase font-bold block">Tempo de Tratamento no ON:</span>
+                          <span className="text-3xl font-mono font-black text-emerald-400 block mt-1">
+                            ⏳ {analiseKaido.cenasNecessarias} {analiseKaido.cenasNecessarias === 1 ? 'Cena' : 'Cenas'}
+                          </span>
+                          <span className="text-[11px] text-emerald-200/70">
+                            {analiseKaido.cenasNecessarias === 1 ? '✨ Cura Acelerada por Reiatsu!' : 'Duração necessária no WhatsApp'}
+                          </span>
+                        </div>
+
+                        <div className="p-4 bg-black/80 rounded-xl border border-emerald-500/40 text-center">
+                          <span className="text-[10px] text-bleach-muted uppercase font-bold block">Evolução do Paciente:</span>
+                          <span className="text-base font-extrabold text-white block mt-1.5">
+                            {analiseKaido.estadoInicial || simKaidoEstado} ➔ <span className="text-emerald-400">{analiseKaido.estadoFinal}</span>
+                          </span>
+                          <span className="text-xs text-yellow-300/90 font-mono font-bold">{analiseKaido.curaHpStr}</span>
+                        </div>
+
+                        <div className="p-4 bg-black/80 rounded-xl border border-emerald-500/40 text-center">
+                          <span className="text-[10px] text-bleach-muted uppercase font-bold block">Classificação Médica:</span>
+                          <span className="text-sm font-extrabold text-emerald-300 block mt-1.5">
+                            {analiseKaido.categoria}
+                          </span>
+                          <span className="text-[10px] text-bleach-muted">{analiseKaido.diagnostico}</span>
+                        </div>
+                      </div>
+
+                      {/* Roteiro Narrativo Passo a Passo por Cena */}
+                      <div className="p-4 bg-black/80 rounded-xl border border-emerald-500/30 space-y-3">
+                        <h6 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                          <span>📋</span> Roteiro de Narração para o WhatsApp ({analiseKaido.cenasNecessarias} {analiseKaido.cenasNecessarias === 1 ? 'Cena' : 'Cenas'}):
+                        </h6>
+                        <div className="space-y-2">
+                          {(analiseKaido.roteiroCenas || []).map((passo, idx) => (
+                            <div key={idx} className="p-2.5 bg-emerald-950/20 border border-emerald-500/20 rounded-lg flex items-start gap-2.5">
+                              <span className="px-2 py-0.5 bg-emerald-900/80 text-emerald-300 border border-emerald-500 font-mono font-bold text-[10px] rounded shrink-0">
+                                {typeof passo === 'string' ? `Etapa ${idx + 1}` : `Cena ${passo.cena}`}
+                              </span>
+                              <div className="text-xs text-bleach-cream leading-relaxed">
+                                {typeof passo === 'string' ? passo : passo.instrucao}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Recomendação Tática de Narração */}
+                      <div className="p-3.5 bg-bleach-panel rounded-xl border border-white/10 text-xs">
+                        <strong className="text-emerald-400 block text-[10px] uppercase font-bold">🌿 Diagnóstico do 4º Esquadrão:</strong>
+                        <p className="text-bleach-cream mt-0.5 leading-relaxed">{analiseKaido.dicaTatica}</p>
+                      </div>
+                    </div>
+                  </Section>
+                );
+              })()}
+            </div>
+          )}
+
         </div>
       )}
 
@@ -11515,6 +12166,7 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
           <div className="flex flex-wrap gap-2">
             {[
               { id: "fichas", label: "Fichas" },
+              { id: "tramas", label: "🎭 Tramas & Arcos (IA)" },
               { id: "atividade", label: "📊 Cenas & Conhecimento" },
               { id: "novo", label: "+ Criar" },
               { id: "subadms", label: "Avaliadores" },
@@ -11535,6 +12187,16 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
           </div>
         </div>
       </div>
+
+      {/* SUBTAB: GESTÃO DE TRAMAS & ARCOS COM IA (INTEGRADO NO ADMIN PANEL) */}
+      {tabAdm === "tramas" && (
+        <TramasArcosAdmView
+          db={db}
+          saveDb={saveDb}
+          session={session}
+          onAbrirFicha={onAbrirFicha}
+        />
+      )}
 
       {/* SUBTAB: REGISTRO DE ATIVIDADE & CENAS EM LOTE */}
       {tabAdm === "atividade" && (
@@ -12183,6 +12845,1156 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
   );
 }
 
+
+// =========================================================================
+// VIEW: GERENCIADOR DE TRAMAS, ARCOS & NARRATIVA COM IA (ÁREA ADM)
+// =========================================================================
+function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
+  const [subAba, setSubAba] = useState("individuais"); // "individuais", "conjuntas", "fichas", "nivelamento"
+  
+  // Estado para Tramas Individuais
+  const [selectedCharId, setSelectedCharId] = useState(db.personagens?.[0]?.id || "");
+  const [buscaChar, setBuscaChar] = useState("");
+  const [novaCenaTitulo, setNovaCenaTitulo] = useState("");
+  const [novaCenaTexto, setNovaCenaTexto] = useState("");
+  const [gerandoIaIndividual, setGerandoIaIndividual] = useState(false);
+  const [copiadoMsg, setCopiadoMsg] = useState("");
+
+  // Estado para Tramas Conjuntas (Multi-Player)
+  const [selectedConjId, setSelectedConjId] = useState("");
+  const [modalCriarConj, setModalCriarConj] = useState(false);
+  const [conjTitulo, setConjTitulo] = useState("");
+  const [conjSelectedCharIds, setConjSelectedCharIds] = useState([]);
+  const [novaCenaConjAutor, setNovaCenaConjAutor] = useState("");
+  const [novaCenaConjTitulo, setNovaCenaConjTitulo] = useState("");
+  const [novaCenaConjTexto, setNovaCenaConjTexto] = useState("");
+  const [gerandoIaConjunta, setGerandoIaConjunta] = useState(false);
+
+  const openAiKey = (typeof localStorage !== 'undefined') ? localStorage.getItem("bleach_openai_key") || "" : "";
+
+  // Helper para copiar texto
+  function copiarTexto(txt, msg = "✓ Copiado com sucesso para a área de transferência!") {
+    if (!txt) return;
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText(txt).then(() => {
+        setCopiadoMsg(msg);
+        setTimeout(() => setCopiadoMsg(""), 3500);
+        playReiatsuSound('roll');
+      }).catch(() => {});
+    }
+  }
+
+  // Obter personagem ativo na aba individual
+  const activeChar = (db.personagens || []).find(p => p.id === selectedCharId) || db.personagens?.[0] || null;
+
+  // Obter ou criar registro de trama individual para o personagem
+  const tramasIndividuaisList = db.tramasIndividuais || [];
+  const tramaIndivAtual = tramasIndividuaisList.find(t => t.charId === activeChar?.id) || {
+    id: "trama-" + (activeChar?.id || "default"),
+    charId: activeChar?.id || "",
+    charNome: activeChar?.nome || "",
+    cenasArco: [],
+    tramaAtual: null
+  };
+
+  // Obter registro de tramas conjuntas
+  const tramasConjuntasList = db.tramasConjuntas || [];
+  const tramaConjAtual = tramasConjuntasList.find(c => c.id === selectedConjId) || tramasConjuntasList[0] || null;
+
+  // 1. Adicionar Nova Cena de Arco Individual
+  function handleAdicionarCenaIndividual(e) {
+    e.preventDefault();
+    if (!activeChar) return;
+    if (!novaCenaTitulo.trim() || !novaCenaTexto.trim()) {
+      alert("Por favor, informe o Título e o Texto da Cena de Arco!");
+      return;
+    }
+
+    const novaCena = {
+      id: uid(),
+      titulo: novaCenaTitulo.trim(),
+      texto: novaCenaTexto.trim(),
+      data: nowStr()
+    };
+
+    const updatedCenas = [novaCena, ...(tramaIndivAtual.cenasArco || [])];
+    const updatedTrama = {
+      ...tramaIndivAtual,
+      charId: activeChar.id,
+      charNome: activeChar.nome,
+      cenasArco: updatedCenas
+    };
+
+    const novasTramasIndiv = tramasIndividuaisList.filter(t => t.charId !== activeChar.id);
+    novasTramasIndiv.push(updatedTrama);
+
+    saveDb({ ...db, tramasIndividuais: novasTramasIndiv });
+    setNovaCenaTitulo("");
+    setNovaCenaTexto("");
+    playReiatsuSound('win');
+    alert("✓ Cena de arco registrada com sucesso para " + activeChar.nome + "!");
+  }
+
+  // 2. Apagar Cena de Arco Individual
+  function handleApagarCenaIndividual(cenaId) {
+    if (!confirm("Tem certeza que deseja apagar esta cena de arco?")) return;
+    const updatedCenas = (tramaIndivAtual.cenasArco || []).filter(c => c.id !== cenaId);
+    const updatedTrama = { ...tramaIndivAtual, cenasArco: updatedCenas };
+    const novasTramasIndiv = tramasIndividuaisList.map(t => t.charId === activeChar.id ? updatedTrama : t);
+    saveDb({ ...db, tramasIndividuais: novasTramasIndiv });
+    playReiatsuSound('shatter');
+  }
+
+  // 3. Sintetizar Trama Individual com IA
+  async function handleGerarIaIndividual() {
+    if (!activeChar) return;
+    setGerandoIaIndividual(true);
+    try {
+      const generator = (typeof gerarTramaIndividualAI === 'function')
+        ? gerarTramaIndividualAI
+        : (typeof sintetizarTramaIndividualHeuristica === 'function' ? sintetizarTramaIndividualHeuristica : null);
+
+      let resultado = null;
+      if (generator) {
+        resultado = await generator({
+          player: activeChar,
+          cenas: tramaIndivAtual.cenasArco || [],
+          openAiKey
+        });
+      }
+
+      if (resultado) {
+        const updatedTrama = {
+          ...tramaIndivAtual,
+          charId: activeChar.id,
+          charNome: activeChar.nome,
+          tramaAtual: resultado,
+          ultimaAtualizacao: nowStr()
+        };
+
+        const novasTramasIndiv = tramasIndividuaisList.filter(t => t.charId !== activeChar.id);
+        novasTramasIndiv.push(updatedTrama);
+
+        saveDb({ ...db, tramasIndividuais: novasTramasIndiv });
+        playReiatsuSound('bankai_charge');
+      }
+    } catch (err) {
+      alert("Erro ao sintetizar trama individual: " + err.message);
+    } finally {
+      setGerandoIaIndividual(false);
+    }
+  }
+
+  // 4. Criar Nova Ficha de Trama Conjunta (Cruzar 2 ou mais Players)
+  function handleCriarTramaConjunta(e) {
+    e.preventDefault();
+    if (conjSelectedCharIds.length < 2) {
+      alert("Selecione pelo menos 2 jogadores para criar uma trama conjunta / cruzada!");
+      return;
+    }
+    if (!conjTitulo.trim()) {
+      alert("Defina um título para a trama conjunta!");
+      return;
+    }
+
+    const selectedPlayers = (db.personagens || []).filter(p => conjSelectedCharIds.includes(p.id));
+    const nomesDupla = selectedPlayers.map(p => p.nome).join(" & ");
+
+    // Coletar cenas pré-existentes dos players selecionados
+    const cenasIniciais = [];
+    selectedPlayers.forEach(p => {
+      const pTrama = tramasIndividuaisList.find(t => t.charId === p.id);
+      if (pTrama && Array.isArray(pTrama.cenasArco)) {
+        pTrama.cenasArco.slice(0, 2).forEach(c => {
+          cenasIniciais.push({
+            id: uid(),
+            autorCharId: p.id,
+            autorNome: p.nome,
+            titulo: c.titulo,
+            texto: c.texto,
+            data: c.data
+          });
+        });
+      }
+    });
+
+    const novaConjId = "conj-" + uid();
+    const novaTramaConj = {
+      id: novaConjId,
+      titulo: conjTitulo.trim(),
+      charIds: selectedPlayers.map(p => p.id),
+      charNomes: selectedPlayers.map(p => p.nome),
+      cenasCompartilhadas: cenasIniciais,
+      tramaCruzada: null,
+      dataCriacao: nowStr()
+    };
+
+    saveDb({ ...db, tramasConjuntas: [novaTramaConj, ...(db.tramasConjuntas || [])] });
+    setSelectedConjId(novaConjId);
+    setModalCriarConj(false);
+    setConjTitulo("");
+    setConjSelectedCharIds([]);
+    playReiatsuSound('win');
+    alert("✓ Ficha de Trama Conjunta criada com sucesso para [" + nomesDupla + "]!");
+  }
+
+  // 5. Adicionar Cena Compartilhada na Trama Conjunta
+  function handleAdicionarCenaConjunta(e) {
+    e.preventDefault();
+    if (!tramaConjAtual) return;
+    if (!novaCenaConjTitulo.trim() || !novaCenaConjTexto.trim()) {
+      alert("Preencha o título e o texto da cena compartilhada!");
+      return;
+    }
+
+    const autorChar = (db.personagens || []).find(p => p.id === (novaCenaConjAutor || tramaConjAtual.charIds[0]));
+    const novaCena = {
+      id: uid(),
+      autorCharId: autorChar?.id || "",
+      autorNome: autorChar?.nome || "Dupla",
+      titulo: novaCenaConjTitulo.trim(),
+      texto: novaCenaConjTexto.trim(),
+      data: nowStr()
+    };
+
+    const updatedCenas = [novaCena, ...(tramaConjAtual.cenasCompartilhadas || [])];
+    const updatedConj = { ...tramaConjAtual, cenasCompartilhadas: updatedCenas };
+    const novasConjuntas = tramasConjuntasList.map(c => c.id === tramaConjAtual.id ? updatedConj : c);
+
+    saveDb({ ...db, tramasConjuntas: novasConjuntas });
+    setNovaCenaConjTitulo("");
+    setNovaCenaConjTexto("");
+    playReiatsuSound('win');
+    alert("✓ Cena compartilhada registrada na Trama Conjunta!");
+  }
+
+  // 6. Sintetizar Trama Cruzada com IA
+  async function handleGerarIaConjunta() {
+    if (!tramaConjAtual) return;
+    setGerandoIaConjunta(true);
+    try {
+      const playersDupla = (db.personagens || []).filter(p => (tramaConjAtual.charIds || []).includes(p.id));
+      const generator = (typeof gerarTramaConjuntaAI === 'function')
+        ? gerarTramaConjuntaAI
+        : (typeof sintetizarTramaConjuntaHeuristica === 'function' ? sintetizarTramaConjuntaHeuristica : null);
+
+      let resultado = null;
+      if (generator) {
+        resultado = await generator({
+          players: playersDupla,
+          cenasConjuntas: tramaConjAtual.cenasCompartilhadas || [],
+          openAiKey
+        });
+      }
+
+      if (resultado) {
+        const updatedConj = {
+          ...tramaConjAtual,
+          tramaCruzada: resultado,
+          ultimaAtualizacao: nowStr()
+        };
+        const novasConjuntas = tramasConjuntasList.map(c => c.id === tramaConjAtual.id ? updatedConj : c);
+        saveDb({ ...db, tramasConjuntas: novasConjuntas });
+        playReiatsuSound('bankai_charge');
+      }
+    } catch (err) {
+      alert("Erro ao sintetizar trama conjunta: " + err.message);
+    } finally {
+      setGerandoIaConjunta(false);
+    }
+  }
+
+  return (
+    <div className="space-y-6">
+      
+      {/* Banner Principal */}
+      <div className="bg-banner-overlay border-2 border-purple-500/70 purple-reiatsu-glow rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="px-3 py-1 bg-purple-950 border border-purple-400 text-purple-300 text-xs font-bold rounded-full uppercase tracking-wider">
+                🎭 Sistema Exclusivo da Administração • Arcos & Narrativa com IA
+              </span>
+              <span className="text-xs font-mono text-cyan-400">
+                {tramasIndividuaisList.length} Tramas Individuais • {tramasConjuntasList.length} Arcos Cruzados
+              </span>
+            </div>
+            <h2 className="font-title text-3xl sm:text-4xl tracking-widest text-purple-300 mt-2">
+              GERENCIADOR DE TRAMAS & ARCOS COM IA
+            </h2>
+            <p className="text-xs text-bleach-creamDim mt-1 max-w-3xl leading-relaxed">
+              Armazene as cenas de arco dos jogadores, utilize a inteligência artificial para diagnosticar motivações e forjar trilhas de eventos graduais. Caso a história de um player envolva outro, crie fichas de tramas cruzadas integrando suas narrativas!
+            </p>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            {[
+              { id: "individuais", label: "👤 Tramas Individuais", icon: "👤" },
+              { id: "conjuntas", label: "🔗 Tramas Cruzadas / Duplas", icon: "🔗" },
+              { id: "fichas", label: "📊 Visão Geral de Players", icon: "📊" },
+              { id: "nivelamento", label: "⚖️ Nivelamento ADM/Sub-ADM", icon: "⚖️" }
+            ].map(tab => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setSubAba(tab.id)}
+                className={"px-3 py-2 rounded-xl text-xs font-bold uppercase transition flex items-center gap-1.5 " + (
+                  subAba === tab.id
+                    ? "bg-purple-500 text-black font-black shadow-[0_0_15px_rgba(139,111,214,0.6)]"
+                    : "bg-black/70 border border-purple-500/30 text-purple-200 hover:border-purple-400"
+                )}
+              >
+                <span>{tab.icon}</span>
+                <span>{tab.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {copiadoMsg && (
+        <div className="p-3 bg-green-950/80 border border-green-500 text-green-200 text-xs font-bold rounded-xl text-center shadow-lg animate-pulse">
+          {copiadoMsg}
+        </div>
+      )}
+
+      {/* SUB-ABA 1: TRAMAS INDIVIDUAIS DE JOGADORES */}
+      {subAba === "individuais" && (
+        <div className="space-y-6">
+          <Section
+            title="👤 Dossiê Narrativo & Tramas Individuais por Player"
+            subtitle="Selecione um personagem para registrar suas cenas de arco e acionar a IA para preparar seus eventos e antagonistas"
+            className="border-2 border-purple-500/50"
+          >
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              
+              {/* Coluna Esquerda: Seletor e Ficha do Jogador (4 cols) */}
+              <div className="lg:col-span-4 space-y-4">
+                
+                {/* Seletor & Busca */}
+                <div className="p-4 bg-black/80 rounded-xl border border-purple-500/30 space-y-3">
+                  <label className="block text-[11px] font-bold text-purple-300 uppercase">
+                    🔍 Selecionar Jogador para Gestão de Trama:
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Buscar por nome ou código (ex: ACT-4321)..."
+                    value={buscaChar}
+                    onChange={(e) => {
+                      const q = e.target.value;
+                      setBuscaChar(q);
+                      if (q.trim()) {
+                        const found = (db.personagens || []).find(p =>
+                          p.nome.toLowerCase().includes(q.toLowerCase()) ||
+                          getCodigoAtividade(p).toLowerCase().includes(q.toLowerCase())
+                        );
+                        if (found) setSelectedCharId(found.id);
+                      }
+                    }}
+                    className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2 text-xs text-white placeholder:text-bleach-muted focus:border-purple-400 focus:outline-none font-sans"
+                  />
+
+                  <select
+                    value={activeChar?.id || ""}
+                    onChange={(e) => setSelectedCharId(e.target.value)}
+                    className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2.5 text-xs text-white focus:border-purple-400 focus:outline-none"
+                  >
+                    {(db.personagens || []).map(p => (
+                      <option key={p.id} value={p.id}>
+                        {p.nome} [{getCodigoAtividade(p)}] — {p.esquadrao}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Cartão de Identidade do Jogador */}
+                {activeChar && (
+                  <div className="p-4 bg-gradient-to-b from-purple-950/40 via-bleach-panel2 to-black rounded-xl border-2 border-purple-500/40 space-y-3 shadow-xl">
+                    <div className="flex items-center gap-3 border-b border-white/10 pb-3">
+                      <img
+                        src={activeChar.foto || 'assets/ichigo-orange.png'}
+                        className="w-14 h-14 rounded-xl object-cover border border-purple-400/50"
+                      />
+                      <div className="min-w-0">
+                        <span className="text-[10px] uppercase font-bold text-purple-300 block">
+                          {activeChar.raca} • {activeChar.esquadrao}
+                        </span>
+                        <h4 className="font-title text-xl text-white truncate">{activeChar.nome}</h4>
+                        <span className="text-xs font-mono text-yellow-400 font-bold">
+                          Código: {getCodigoAtividade(activeChar)}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2 text-[11px] font-mono">
+                      <div className="p-2 bg-black/60 rounded border border-white/5">
+                        <span className="text-bleach-muted block text-[10px]">Patamar:</span>
+                        <strong className="text-white">{getPowerTier(Object.values(activeChar.atributos || {}).reduce((a, b) => a + b, 0)).title}</strong>
+                      </div>
+                      <div className="p-2 bg-black/60 rounded border border-white/5">
+                        <span className="text-bleach-muted block text-[10px]">Cenas Totais:</span>
+                        <strong className="text-purple-300 font-bold">{activeChar.cenasTotal || 0} cenas</strong>
+                      </div>
+                      <div className="p-2 bg-black/60 rounded border border-white/5">
+                        <span className="text-bleach-muted block text-[10px]">Zanpakutō:</span>
+                        <strong className="text-cyan-300 truncate block">{activeChar.zanpakuto?.shikaiAtiva?.nome || activeChar.zanpakuto?.nome || 'Em despertar'}</strong>
+                      </div>
+                      <div className="p-2 bg-black/60 rounded border border-white/5">
+                        <span className="text-bleach-muted block text-[10px]">Conhecimento:</span>
+                        <strong className="text-yellow-400">{activeChar.conhecimento || 0} ₪</strong>
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2 pt-1">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setConjSelectedCharIds([activeChar.id]);
+                          setConjTitulo("Arco de " + activeChar.nome + " & Parceiro");
+                          setModalCriarConj(true);
+                        }}
+                        className="flex-1 py-2 bg-gradient-to-r from-purple-600 to-indigo-700 hover:brightness-110 text-white font-extrabold text-xs uppercase tracking-wider rounded-lg shadow transition text-center"
+                      >
+                        🔗 Cruzar Trama com Outro Player
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Formulário: Inserir Nova Cena de Arco */}
+                <form onSubmit={handleAdicionarCenaIndividual} className="p-4 bg-black/80 rounded-xl border border-purple-500/30 space-y-3">
+                  <h5 className="font-title text-sm text-purple-300 flex items-center gap-1.5 border-b border-white/10 pb-2">
+                    <span>✍️</span> Registrar Cena de Arco do Jogador
+                  </h5>
+                  <div>
+                    <label className="block text-[10px] font-bold text-bleach-muted uppercase mb-1">
+                      Título / Momento da Cena:
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Ex: Treino em Karakura com a Shikai / Confronto no Portão Sul"
+                      value={novaCenaTitulo}
+                      onChange={(e) => setNovaCenaTitulo(e.target.value)}
+                      className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2 text-xs text-white focus:border-purple-400 focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-bold text-bleach-muted uppercase mb-1">
+                      Conteúdo da Cena / Ação no ON:
+                    </label>
+                    <textarea
+                      rows={4}
+                      placeholder="Cole aqui o texto da cena de arco narrada pelo jogador no WhatsApp..."
+                      value={novaCenaTexto}
+                      onChange={(e) => setNovaCenaTexto(e.target.value)}
+                      className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2.5 text-xs text-white focus:border-purple-400 focus:outline-none resize-none leading-relaxed"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full py-2.5 bg-gradient-to-r from-purple-500 to-amber-600 hover:brightness-110 text-black font-extrabold text-xs uppercase tracking-wider rounded-lg shadow transition"
+                  >
+                    + Salvar Cena de Arco na Ficha
+                  </button>
+                </form>
+
+              </div>
+
+              {/* Coluna Direita: Cenas Registradas & Análise com IA (8 cols) */}
+              <div className="lg:col-span-8 space-y-5">
+                
+                {/* Gatilho da IA para Sintetizar Trama */}
+                <div className="p-4 bg-gradient-to-r from-purple-950/60 via-black to-purple-950/40 rounded-xl border-2 border-purple-500/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xl">
+                  <div>
+                    <span className="text-[10px] uppercase font-extrabold px-2.5 py-0.5 rounded bg-purple-900 border border-purple-400 text-purple-200">
+                      Motor de Narrativa & Análise Cognitiva
+                    </span>
+                    <h4 className="font-title text-xl text-white mt-1">
+                      Síntese de Trama & Eventos de Arco com IA
+                    </h4>
+                    <p className="text-xs text-bleach-creamDim">
+                      Analisa o histórico de cenas, o esquadrão e o patamar de <strong>{activeChar?.nome}</strong> para forjar 3 eventos graduais e um antagonista sob medida.
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={handleGerarIaIndividual}
+                    disabled={gerandoIaIndividual}
+                    className="px-5 py-3 bg-gradient-to-r from-purple-500 via-indigo-500 to-purple-600 hover:brightness-110 text-white font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-lg transition disabled:opacity-50 flex items-center gap-2 shrink-0"
+                  >
+                    {gerandoIaIndividual ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        <span>Sintetizando Arco com IA...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>🧠</span>
+                        <span>Sintetizar Trama com IA</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+
+                {/* Exibição da Trama Sintetizada com IA */}
+                {tramaIndivAtual.tramaAtual ? (
+                  <div className="p-5 bg-black/90 rounded-xl border-2 border-purple-500/60 space-y-4 shadow-2xl">
+                    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-purple-500/20 pb-3">
+                      <div>
+                        <span className="px-2.5 py-0.5 bg-purple-950 text-purple-300 border border-purple-400 text-[10px] font-extrabold uppercase rounded-full tracking-wider">
+                          {tramaIndivAtual.tramaAtual.faseAtual || "Fase 1: Convocação & Premonição"}
+                        </span>
+                        <h3 className="font-title text-2xl text-purple-300 mt-1">
+                          {tramaIndivAtual.tramaAtual.tituloArco}
+                        </h3>
+                      </div>
+
+                      <div className="flex gap-2">
+                        <button
+                          type="button"
+                          onClick={() => copiarTexto(tramaIndivAtual.tramaAtual.briefingWhatsApp, "✓ Dossiê do WhatsApp copiado!")}
+                          className="px-3 py-1.5 bg-green-950 hover:bg-green-900 border border-green-500 text-green-300 font-bold text-xs rounded-lg transition flex items-center gap-1.5 shadow"
+                        >
+                          <span>📋</span>
+                          <span>Copiar para WhatsApp</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Diagnóstico Psicológico & Gancho */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                      <div className="p-3.5 bg-bleach-panel2 rounded-xl border border-white/10 space-y-1">
+                        <strong className="text-purple-300 block text-xs uppercase font-bold">🧠 Diagnóstico Psicológico da Alma:</strong>
+                        <p className="text-bleach-creamDim leading-relaxed">{tramaIndivAtual.tramaAtual.diagnosticoPsicologico}</p>
+                      </div>
+                      <div className="p-3.5 bg-bleach-panel2 rounded-xl border border-white/10 space-y-1">
+                        <strong className="text-yellow-400 block text-xs uppercase font-bold">⚡ Gancho Narrativo Imediato (ON):</strong>
+                        <p className="text-bleach-creamDim leading-relaxed">{tramaIndivAtual.tramaAtual.ganchoImediato}</p>
+                      </div>
+                    </div>
+
+                    {/* Trilha dos 3 Eventos Planejados */}
+                    <div className="space-y-3 pt-2">
+                      <h5 className="font-title text-base text-purple-300 flex items-center gap-1.5">
+                        <span>⚔️</span> Trilha de Eventos Planejados para o Arco ({tramaIndivAtual.tramaAtual.eventos?.length || 3} Etapas):
+                      </h5>
+                      <div className="grid grid-cols-1 gap-3">
+                        {(tramaIndivAtual.tramaAtual.eventos || []).map((ev, idx) => (
+                          <div key={idx} className="p-3.5 bg-purple-950/20 border border-purple-500/30 rounded-xl space-y-2">
+                            <div className="flex items-center justify-between gap-2">
+                              <span className="px-2 py-0.5 bg-purple-900 text-purple-300 border border-purple-500 font-mono font-bold text-[10px] rounded uppercase">
+                                {ev.fase || ("Evento " + (idx + 1))}
+                              </span>
+                              <strong className="text-white text-xs font-bold">{ev.titulo}</strong>
+                            </div>
+                            <p className="text-xs text-bleach-cream leading-relaxed">{ev.descricao}</p>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] pt-1 border-t border-white/5">
+                              <span className="text-yellow-300"><strong>Objetivo:</strong> {ev.objetivoCena}</span>
+                              <span className="text-cyan-300"><strong>Desafio Tático:</strong> {ev.desafioSugerido}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Antagonista Desenvolvido Sob Medida */}
+                    {tramaIndivAtual.tramaAtual.antagonista && (
+                      <div className="p-4 bg-red-950/30 border border-red-500/40 rounded-xl space-y-2">
+                        <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-red-900 border border-red-500 text-red-200">
+                          Antagonista / Força Opositora
+                        </span>
+                        <h5 className="font-title text-lg text-red-400">
+                          {tramaIndivAtual.tramaAtual.antagonista.nome} — <span className="text-xs text-bleach-muted">{tramaIndivAtual.tramaAtual.antagonista.titulo}</span>
+                        </h5>
+                        <p className="text-xs text-bleach-creamDim leading-relaxed">
+                          <strong>Motivação:</strong> {tramaIndivAtual.tramaAtual.antagonista.motivacao}
+                        </p>
+                        <p className="text-xs text-red-300">
+                          <strong>Brecha / Ponto Fraco:</strong> {tramaIndivAtual.tramaAtual.antagonista.fraquezaChave}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Recompensa Nivelada */}
+                    <div className="p-3 bg-yellow-950/30 border border-yellow-500/40 rounded-lg flex items-center justify-between text-xs text-yellow-300">
+                      <span><strong>🎁 Recompensa Nivelada ao Concluir o Arco:</strong> {tramaIndivAtual.tramaAtual.recompensaArco || '15 Pontos de Atributo + 2 Giros Comuns + 1 Especial'}</span>
+                      <span className="font-mono text-[10px] text-bleach-muted">Garantido Oficial</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-8 bg-black/60 rounded-xl border border-white/10 text-center space-y-2 text-bleach-muted">
+                    <span className="text-3xl block">📖</span>
+                    <p className="text-sm font-bold text-white">Nenhuma trama individual sintetizada para {activeChar?.nome} ainda.</p>
+                    <p className="text-xs text-bleach-creamDim max-w-md mx-auto">
+                      Registre as cenas de arco do jogador e clique no botão acima para a IA analisar a essência do personagem e gerar a trilha de eventos.
+                    </p>
+                  </div>
+                )}
+
+                {/* Histórico de Cenas de Arco Armazenadas */}
+                <div className="p-4 bg-black/80 rounded-xl border border-purple-500/30 space-y-3">
+                  <div className="flex items-center justify-between border-b border-white/10 pb-2">
+                    <h5 className="font-title text-base text-purple-300 flex items-center gap-1.5">
+                      <span>📚</span> Cenas de Arco Armazenadas de {activeChar?.nome} ({tramaIndivAtual.cenasArco?.length || 0})
+                    </h5>
+                    <span className="text-xs text-bleach-muted font-mono">Total de Registros: {tramaIndivAtual.cenasArco?.length || 0}</span>
+                  </div>
+
+                  <div className="space-y-2 max-h-[350px] overflow-y-auto pr-1">
+                    {(tramaIndivAtual.cenasArco || []).length === 0 ? (
+                      <p className="text-xs text-bleach-muted py-4 text-center">Nenhuma cena de arco registrada para este jogador ainda.</p>
+                    ) : (
+                      (tramaIndivAtual.cenasArco || []).map((cena, idx) => (
+                        <div key={cena.id || idx} className="p-3 bg-bleach-panel2 rounded-lg border border-white/5 space-y-1.5">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-bold text-white flex items-center gap-1.5">
+                              <span>📜</span> {cena.titulo}
+                            </span>
+                            <div className="flex items-center gap-2">
+                              <span className="text-[10px] text-bleach-muted font-mono">{cena.data}</span>
+                              <button
+                                type="button"
+                                onClick={() => handleApagarCenaIndividual(cena.id)}
+                                className="text-red-400 hover:text-red-300 text-xs px-1.5 py-0.5 rounded hover:bg-red-950"
+                                title="Excluir cena"
+                              >
+                                ✕
+                              </button>
+                            </div>
+                          </div>
+                          <p className="text-xs text-bleach-creamDim leading-relaxed font-sans max-h-24 overflow-y-auto whitespace-pre-wrap">
+                            {cena.texto}
+                          </p>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          </Section>
+        </div>
+      )}
+
+      {/* SUB-ABA 2: TRAMAS CONJUNTAS & ARCOS CRUZADOS (MULTI-PLAYER) */}
+      {subAba === "conjuntas" && (
+        <div className="space-y-6">
+          <Section
+            title="🔗 Fichas de Tramas Conjuntas & Arcos Cruzados (Multi-Player)"
+            subtitle="Quando as histórias de dois ou mais jogadores se cruzam, crie uma ficha conjunta armazenando as cenas de ambos e forje um arco cooperativo com IA"
+            className="border-2 border-indigo-500/50"
+          >
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              
+              {/* Coluna Esquerda: Lista de Tramas Conjuntas (4 cols) */}
+              <div className="lg:col-span-4 space-y-4">
+                <div className="p-4 bg-black/80 rounded-xl border border-indigo-500/30 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h5 className="font-title text-sm text-indigo-300 uppercase">
+                      Tramas Conjuntas Existentes
+                    </h5>
+                    <button
+                      type="button"
+                      onClick={() => setModalCriarConj(true)}
+                      className="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-lg transition shadow"
+                    >
+                      + Nova Trama
+                    </button>
+                  </div>
+
+                  <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
+                    {tramasConjuntasList.length === 0 ? (
+                      <p className="text-xs text-bleach-muted py-3 text-center">Nenhuma trama conjunta criada ainda.</p>
+                    ) : (
+                      tramasConjuntasList.map(c => (
+                        <button
+                          key={c.id}
+                          type="button"
+                          onClick={() => setSelectedConjId(c.id)}
+                          className={"w-full p-3 rounded-xl border text-left transition " + (
+                            tramaConjAtual?.id === c.id
+                              ? "bg-indigo-950/80 border-indigo-400 text-white shadow"
+                              : "bg-bleach-panel2 border-white/5 text-bleach-creamDim hover:border-white/20"
+                          )}
+                        >
+                          <span className="text-[10px] font-mono text-indigo-300 block uppercase">
+                            Arco Compartilhado
+                          </span>
+                          <strong className="text-sm font-bold block text-white truncate">{c.titulo}</strong>
+                          <span className="text-xs text-bleach-muted block truncate">
+                            👥 {c.charNomes?.join(" & ") || "Jogadores"}
+                          </span>
+                        </button>
+                      ))
+                    )}
+                  </div>
+                </div>
+
+                {/* Se Trama Ativa: Adicionar Cena Compartilhada */}
+                {tramaConjAtual && (
+                  <form onSubmit={handleAdicionarCenaConjunta} className="p-4 bg-black/80 rounded-xl border border-indigo-500/30 space-y-3">
+                    <h5 className="font-title text-sm text-indigo-300 border-b border-white/10 pb-2 flex items-center gap-1.5">
+                      <span>✍️</span> Registrar Cena na Trama Conjunta
+                    </h5>
+                    <div>
+                      <label className="block text-[10px] font-bold text-bleach-muted uppercase mb-1">
+                        Autor / Protagonista da Cena:
+                      </label>
+                      <select
+                        value={novaCenaConjAutor}
+                        onChange={(e) => setNovaCenaConjAutor(e.target.value)}
+                        className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2 text-xs text-white"
+                      >
+                        {(tramaConjAtual.charIds || []).map(pId => {
+                          const pObj = (db.personagens || []).find(p => p.id === pId);
+                          return (
+                            <option key={pId} value={pId}>
+                              {pObj?.nome || pId}
+                            </option>
+                          );
+                        })}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] font-bold text-bleach-muted uppercase mb-1">
+                        Título da Cena Conjunta:
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Ex: Diálogo no Mundo Humano / Duelo Combinado"
+                        value={novaCenaConjTitulo}
+                        onChange={(e) => setNovaCenaConjTitulo(e.target.value)}
+                        className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2 text-xs text-white focus:border-indigo-400 focus:outline-none"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] font-bold text-bleach-muted uppercase mb-1">
+                        Texto da Cena Compartilhada:
+                      </label>
+                      <textarea
+                        rows={4}
+                        placeholder="Cole aqui a cena conjunta narrada no WhatsApp..."
+                        value={novaCenaConjTexto}
+                        onChange={(e) => setNovaCenaConjTexto(e.target.value)}
+                        className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2.5 text-xs text-white focus:border-indigo-400 focus:outline-none resize-none leading-relaxed"
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="w-full py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 hover:brightness-110 text-white font-extrabold text-xs uppercase tracking-wider rounded-lg shadow transition"
+                    >
+                      + Adicionar Cena ao Arco Conjunto
+                    </button>
+                  </form>
+                )}
+              </div>
+
+              {/* Coluna Direita: Análise com IA & Cenas Compartilhadas (8 cols) */}
+              <div className="lg:col-span-8 space-y-5">
+                {tramaConjAtual ? (
+                  <>
+                    {/* Botão de Síntese Cruzada com IA */}
+                    <div className="p-4 bg-gradient-to-r from-indigo-950/60 via-black to-purple-950/40 rounded-xl border-2 border-indigo-500/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xl">
+                      <div>
+                        <span className="text-[10px] uppercase font-extrabold px-2.5 py-0.5 rounded bg-indigo-900 border border-indigo-400 text-indigo-200">
+                          Motor de Narrativa Cruzada • Multi-Player
+                        </span>
+                        <h4 className="font-title text-xl text-white mt-1">
+                          {tramaConjAtual.titulo}
+                        </h4>
+                        <p className="text-xs text-bleach-creamDim">
+                          Jogadores Interligados: <strong className="text-indigo-300">{tramaConjAtual.charNomes?.join(" & ")}</strong>
+                        </p>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={handleGerarIaConjunta}
+                        disabled={gerandoIaConjunta}
+                        className="px-5 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 hover:brightness-110 text-white font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-lg transition disabled:opacity-50 flex items-center gap-2 shrink-0"
+                      >
+                        {gerandoIaConjunta ? (
+                          <>
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                            <span>Gerando Trama Cruzada...</span>
+                          </>
+                        ) : (
+                          <>
+                            <span>⚡</span>
+                            <span>Gerar Trama Cruzada com IA</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+
+                    {/* Exibição da Trama Cruzada Gerada */}
+                    {tramaConjAtual.tramaCruzada ? (
+                      <div className="p-5 bg-black/90 rounded-xl border-2 border-indigo-500/60 space-y-4 shadow-2xl">
+                        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-indigo-500/20 pb-3">
+                          <div>
+                            <span className="px-2.5 py-0.5 bg-indigo-950 text-indigo-300 border border-indigo-400 text-[10px] font-extrabold uppercase rounded-full">
+                              {tramaConjAtual.tramaCruzada.dinamicaDupla || "Aliança de Esquadrões"}
+                            </span>
+                            <h3 className="font-title text-2xl text-indigo-300 mt-1">
+                              {tramaConjAtual.tramaCruzada.tituloArco}
+                            </h3>
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={() => copiarTexto(tramaConjAtual.tramaCruzada.briefingWhatsApp, "✓ Briefing conjunto copiado!")}
+                            className="px-3 py-1.5 bg-green-950 hover:bg-green-900 border border-green-500 text-green-300 font-bold text-xs rounded-lg transition flex items-center gap-1.5 shadow"
+                          >
+                            <span>📋</span>
+                            <span>Copiar Briefing para WhatsApp</span>
+                          </button>
+                        </div>
+
+                        <div className="p-3.5 bg-bleach-panel2 rounded-xl border border-white/10 space-y-1 text-xs">
+                          <strong className="text-indigo-300 block text-xs uppercase font-bold">📖 Sinopse da Trama Compartilhada:</strong>
+                          <p className="text-bleach-cream leading-relaxed">{tramaConjAtual.tramaCruzada.sinopse}</p>
+                          {tramaConjAtual.tramaCruzada.conflitoCentral && (
+                            <p className="text-yellow-300 pt-1 border-t border-white/5">
+                              <strong>Conflito Central:</strong> {tramaConjAtual.tramaCruzada.conflitoCentral}
+                            </p>
+                          )}
+                        </div>
+
+                        {/* Fases Cruzadas */}
+                        <div className="space-y-3 pt-2">
+                          <h5 className="font-title text-base text-indigo-300 flex items-center gap-1.5">
+                            <span>⚔️</span> Fases da Provação Cruzada (Ações Interdependentes):
+                          </h5>
+                          <div className="grid grid-cols-1 gap-3">
+                            {(tramaConjAtual.tramaCruzada.eventosCruzados || []).map((fase, idx) => (
+                              <div key={idx} className="p-3.5 bg-indigo-950/20 border border-indigo-500/30 rounded-xl space-y-2">
+                                <span className="px-2 py-0.5 bg-indigo-900 text-indigo-300 border border-indigo-500 font-mono font-bold text-[10px] rounded uppercase">
+                                  {fase.fase || ("Fase " + (idx + 1))}
+                                </span>
+                                <p className="text-xs text-bleach-cream leading-relaxed">{fase.descricao}</p>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] pt-1 border-t border-white/5">
+                                  <span className="text-yellow-300"><strong>Papel Player 1:</strong> {fase.papelPlayer1}</span>
+                                  <span className="text-cyan-300"><strong>Papel Player 2:</strong> {fase.papelPlayer2}</span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Ameaça Comum */}
+                        {tramaConjAtual.tramaCruzada.ameacaComum && (
+                          <div className="p-3.5 bg-red-950/30 border border-red-500/40 rounded-xl text-xs space-y-1">
+                            <strong className="text-red-400 block text-xs uppercase font-bold">💀 Ameaça / Chefe Coletivo:</strong>
+                            <p className="text-white font-bold">{tramaConjAtual.tramaCruzada.ameacaComum.nome}</p>
+                            <p className="text-bleach-creamDim">{tramaConjAtual.tramaCruzada.ameacaComum.perigo}</p>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="p-8 bg-black/60 rounded-xl border border-white/10 text-center space-y-2 text-bleach-muted">
+                        <span className="text-3xl block">⚡</span>
+                        <p className="text-sm font-bold text-white">Nenhum arco compartilhado gerado com IA para esta dupla ainda.</p>
+                        <p className="text-xs text-bleach-creamDim max-w-md mx-auto">
+                          Clique no botão "Gerar Trama Cruzada com IA" para entrelaçar as histórias dos jogadores selecionados.
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Cenas Compartilhadas Armazenadas */}
+                    <div className="p-4 bg-black/80 rounded-xl border border-indigo-500/30 space-y-3">
+                      <h5 className="font-title text-base text-indigo-300 flex items-center gap-1.5 border-b border-white/10 pb-2">
+                        <span>📚</span> Cenas Integradas desta Trama Conjunta ({tramaConjAtual.cenasCompartilhadas?.length || 0})
+                      </h5>
+                      <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
+                        {(tramaConjAtual.cenasCompartilhadas || []).map((c, idx) => (
+                          <div key={c.id || idx} className="p-3 bg-bleach-panel2 rounded-lg border border-white/5 space-y-1">
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs font-bold text-white flex items-center gap-2">
+                                <span className="px-1.5 py-0.5 bg-indigo-950 text-indigo-300 rounded text-[10px] font-mono">{c.autorNome}</span>
+                                <span>{c.titulo}</span>
+                              </span>
+                              <span className="text-[10px] text-bleach-muted font-mono">{c.data}</span>
+                            </div>
+                            <p className="text-xs text-bleach-creamDim leading-relaxed whitespace-pre-wrap">{c.texto}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="p-12 bg-black/60 rounded-xl border border-white/10 text-center space-y-3 text-bleach-muted">
+                    <span className="text-4xl block">👥</span>
+                    <h4 className="font-title text-xl text-white">Nenhuma Trama Conjunta Selecionada</h4>
+                    <p className="text-xs text-bleach-creamDim max-w-md mx-auto">
+                      Crie uma nova trama conjunta para cruzar o destino de dois ou mais jogadores no RPG.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setModalCriarConj(true)}
+                      className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-lg transition"
+                    >
+                      + Criar Nova Trama Conjunta
+                    </button>
+                  </div>
+                )}
+              </div>
+
+            </div>
+          </Section>
+        </div>
+      )}
+
+      {/* SUB-ABA 3: VISÃO GERAL DE FICHAS DOS PLAYERS */}
+      {subAba === "fichas" && (
+        <div className="space-y-6">
+          <Section
+            title="📊 Visão Geral de Fichas dos Players & Códigos de Atividade"
+            subtitle="Fiscalize rapidamente os dados vitais, atributos, patamares e atividade de todos os jogadores"
+            className="border-2 border-yellow-500/50"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {(db.personagens || []).map(p => {
+                const total = Object.values(p.atributos || {}).reduce((a, b) => a + b, 0);
+                const tier = getPowerTier(total);
+                const cod = getCodigoAtividade(p);
+                const pTrama = tramasIndividuaisList.find(t => t.charId === p.id);
+                const qtdCenasArco = pTrama?.cenasArco?.length || 0;
+
+                return (
+                  <div
+                    key={p.id}
+                    className="p-4 bg-bleach-panel2 border-2 border-white/10 hover:border-yellow-500/60 rounded-2xl space-y-3 shadow-xl transition"
+                  >
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={p.foto || 'assets/ichigo-orange.png'}
+                        className="w-12 h-12 rounded-xl object-cover border border-white/10"
+                      />
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] uppercase font-bold text-yellow-400 truncate">{p.esquadrao}</span>
+                          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-black text-yellow-300 border border-white/10">{cod}</span>
+                        </div>
+                        <h4 className="font-bold text-white text-base truncate">{p.nome}</h4>
+                        <span className="text-xs text-bleach-muted">{p.raca} • {tier.title}</span>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-4 gap-1 text-center font-mono text-[11px]">
+                      <div className="p-1 bg-black/60 rounded border border-blue-500/20 text-cyan-300">
+                        <span className="text-[9px] text-bleach-muted block">PE</span>{p.atributos?.pressao || 10}
+                      </div>
+                      <div className="p-1 bg-black/60 rounded border border-red-500/20 text-red-300">
+                        <span className="text-[9px] text-bleach-muted block">FOR</span>{p.atributos?.forca || 10}
+                      </div>
+                      <div className="p-1 bg-black/60 rounded border border-green-500/20 text-green-300">
+                        <span className="text-[9px] text-bleach-muted block">VEL</span>{p.atributos?.velocidade || 10}
+                      </div>
+                      <div className="p-1 bg-black/60 rounded border border-purple-500/20 text-purple-300">
+                        <span className="text-[9px] text-bleach-muted block">RES</span>{p.atributos?.resiliencia || 10}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between text-xs font-mono pt-1 border-t border-white/5">
+                      <span className="text-bleach-muted">Cenas Semana: <strong className="text-white">{p.cenasSemana || 0}</strong></span>
+                      <span className="text-purple-300">Cenas de Arco: <strong>{qtdCenasArco}</strong></span>
+                    </div>
+
+                    <div className="flex gap-2 pt-1">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedCharId(p.id);
+                          setSubAba("individuais");
+                        }}
+                        className="flex-1 py-1.5 bg-purple-950/80 hover:bg-purple-900 border border-purple-500 text-purple-200 text-xs font-bold rounded-lg transition text-center"
+                      >
+                        🎭 Tramas
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (onAbrirFicha) onAbrirFicha(p.id);
+                        }}
+                        className="flex-1 py-1.5 bg-yellow-950/80 hover:bg-yellow-900 border border-yellow-500 text-yellow-200 text-xs font-bold rounded-lg transition text-center"
+                      >
+                        👁️ Ver Ficha
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </Section>
+        </div>
+      )}
+
+      {/* SUB-ABA 4: NIVELAMENTO JUSTO DE RECOMPENSAS ADM / SUB-ADM */}
+      {subAba === "nivelamento" && (
+        <div className="space-y-6">
+          <Section
+            title="⚖️ Nivelamento Sagrado de Recompensas de ADM / Sub-ADM"
+            subtitle="Regulamento oficial que impede inflação de atributos e garante paridade absoluta entre a Staff e os Players"
+            className="border-2 border-emerald-500/50"
+          >
+            <div className="p-6 bg-black/80 rounded-2xl border-2 border-emerald-500/40 space-y-6 shadow-2xl">
+              
+              <div className="p-4 bg-emerald-950/40 border border-emerald-500 rounded-xl space-y-2">
+                <span className="px-2.5 py-0.5 bg-emerald-900 text-emerald-300 border border-emerald-400 text-[10px] font-extrabold uppercase rounded-full">
+                  ✦ Diretriz da Central 46 & Staff
+                </span>
+                <h4 className="font-title text-xl text-emerald-300">
+                  Paridade Marcial: Como ADMs e Sub-ADMs Ganham Pontos no RPG
+                </h4>
+                <p className="text-xs text-bleach-creamDim leading-relaxed">
+                  Como Administradores e Sub-Administradores podem cenar em ON e realizar os mesmos treinos que qualquer jogador, <strong>é terminantemente proibido atribuir pontos a cada micro-tarefa administrativa</strong> (avaliar fichas, checar relatórios ou responder tickets). Caso contrário, a Staff escalaria rápido demais e desbalancearia as batalhas.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                
+                <div className="p-4 bg-bleach-panel2 rounded-xl border border-yellow-500/40 space-y-2">
+                  <div className="flex items-center gap-2 text-yellow-400 font-bold">
+                    <span>👑</span> 1. Narração de Missão Principal
+                  </div>
+                  <p className="text-bleach-creamDim leading-relaxed">
+                    Quando o ADM/Sub-ADM narrar ou concluir a Missão Principal da semana, recebe <strong>exatamente o mesmo prêmio garantido que os jogadores</strong>:
+                  </p>
+                  <div className="p-2.5 bg-black/60 rounded border border-yellow-500/20 font-mono text-yellow-300 font-bold">
+                    +15 Pontos de Atributo + 2 Giros Comuns + 1 Giro Especial
+                  </div>
+                </div>
+
+                <div className="p-4 bg-bleach-panel2 rounded-xl border border-purple-500/40 space-y-2">
+                  <div className="flex items-center gap-2 text-purple-400 font-bold">
+                    <span>📜</span> 2. Análise & Conclusão de Cenas de Arco
+                  </div>
+                  <p className="text-bleach-creamDim leading-relaxed">
+                    Ao estruturar e avaliar as Cenas de Arco dos jogadores (com o mínimo exigido de 90 linhas no ON), a Staff é bonificada de forma padronizada:
+                  </p>
+                  <div className="p-2.5 bg-black/60 rounded border border-purple-500/20 font-mono text-purple-300 font-bold">
+                    +15 Pontos de Atributo + 2 Giros Comuns + 1 Giro Especial
+                  </div>
+                </div>
+
+              </div>
+
+              <div className="p-4 bg-red-950/30 border border-red-500/40 rounded-xl space-y-2 text-xs">
+                <strong className="text-red-400 block text-xs uppercase font-bold">🚫 Proibições Expressas de Balanceamento:</strong>
+                <ul className="list-disc list-inside space-y-1 text-bleach-creamDim">
+                  <li>Proibido criar pontos do nada para si mesmo sem cenas em ON ou narração oficial de arco.</li>
+                  <li>Treinos individuais da Staff seguem a mesma regra dos players (mínimo de 30 linhas por cena no WhatsApp).</li>
+                  <li>Todos os registros de evolução passam pelo histórico público da ficha auditável.</li>
+                </ul>
+              </div>
+
+            </div>
+          </Section>
+        </div>
+      )}
+
+      {/* MODAL: CRIAR NOVA TRAMA CONJUNTA */}
+      {modalCriarConj && (
+        <div className="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
+          <div className="relative w-full max-w-lg bg-bleach-panel border-2 border-indigo-500 rounded-2xl p-6 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+              <div>
+                <span className="text-[10px] font-bold uppercase text-indigo-400">Multi-Player Arc Engine</span>
+                <h4 className="font-title text-xl text-white">Criar Nova Trama Conjunta</h4>
+              </div>
+              <button
+                type="button"
+                onClick={() => setModalCriarConj(false)}
+                className="text-bleach-muted hover:text-white font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleCriarTramaConjunta} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-bleach-creamDim uppercase mb-1">
+                  Título da Trama Conjunta:
+                </label>
+                <input
+                  type="text"
+                  placeholder="Ex: Arco do Eclipse das Lâminas / Missão Conjunta de Karakura"
+                  value={conjTitulo}
+                  onChange={(e) => setConjTitulo(e.target.value)}
+                  className="w-full bg-black/80 border border-bleach-border rounded-lg p-2.5 text-xs text-white focus:border-indigo-400 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-bleach-creamDim uppercase mb-1">
+                  Selecione os Jogadores Envolvidos (Mínimo 2):
+                </label>
+                <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1 bg-black/50 p-2 rounded-lg border border-white/5">
+                  {(db.personagens || []).map(p => {
+                    const isChecked = conjSelectedCharIds.includes(p.id);
+                    return (
+                      <label
+                        key={p.id}
+                        className={"flex items-center gap-2.5 p-2 rounded-lg cursor-pointer transition text-xs " + (
+                          isChecked ? "bg-indigo-950/80 border border-indigo-500 text-white" : "hover:bg-white/5 text-bleach-creamDim"
+                        )}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setConjSelectedCharIds(prev => [...prev, p.id]);
+                            } else {
+                              setConjSelectedCharIds(prev => prev.filter(id => id !== p.id));
+                            }
+                          }}
+                          className="accent-indigo-500"
+                        />
+                        <span className="font-bold">{p.nome}</span>
+                        <span className="text-[10px] text-bleach-muted">({p.esquadrao} • {getCodigoAtividade(p)})</span>
+                      </label>
+                    );
+                  })}
+                </div>
+                <span className="text-[10px] text-bleach-muted mt-1 block">
+                  {conjSelectedCharIds.length} jogadores selecionados
+                </span>
+              </div>
+
+              <div className="flex gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setModalCriarConj(false)}
+                  className="flex-1 py-2.5 bg-black/80 border border-white/20 text-bleach-muted text-xs font-bold rounded-xl"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 hover:brightness-110 text-white font-extrabold text-xs uppercase tracking-wider rounded-xl shadow"
+                >
+                  Criar Ficha Conjunta
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+    </div>
+  );
+}
+
+
 // FULL OFFICIAL SISTEMAS & REGRAS VIEW (100% CANONICAL BLEACH RPG BASE SYSTEM)
 function SistemasView() {
   const [tabSis, setTabSis] = useState("conceito");
@@ -12692,6 +14504,8 @@ function App() {
               subAdms: Array.isArray(parsed.subAdms) ? parsed.subAdms : DEFAULT_DB.subAdms,
               registrosTarefasAdm: Array.isArray(parsed.registrosTarefasAdm) ? parsed.registrosTarefasAdm : DEFAULT_DB.registrosTarefasAdm,
               zanpakutosVinculadas: Array.isArray(parsed.zanpakutosVinculadas) ? parsed.zanpakutosVinculadas : DEFAULT_DB.zanpakutosVinculadas,
+              tramasIndividuais: Array.isArray(parsed.tramasIndividuais) ? parsed.tramasIndividuais : DEFAULT_DB.tramasIndividuais,
+              tramasConjuntas: Array.isArray(parsed.tramasConjuntas) ? parsed.tramasConjuntas : DEFAULT_DB.tramasConjuntas,
             };
           }
         }
@@ -12826,6 +14640,8 @@ function App() {
         rolagensDadosPublicas: (next.rolagensDadosPublicas || []).slice(0, 30),
         mensagensChat: (next.mensagensChat || []).slice(-100),
         zanpakutosVinculadas: next.zanpakutosVinculadas || [],
+        tramasIndividuais: next.tramasIndividuais || [],
+        tramasConjuntas: next.tramasConjuntas || [],
         personagens: next.personagens || []
       };
       localStorage.setItem("bleachDB", JSON.stringify(minimalDb));
@@ -13006,6 +14822,28 @@ function App() {
             session={session}
             myChar={myChar}
           />
+        )}
+
+        {view === "tramas_adm" && (
+          session?.role === "super_admin" || session?.role === "sub_admin" ? (
+            <TramasArcosAdmView
+              db={db}
+              saveDb={saveDb}
+              session={session}
+              onAbrirFicha={(charId) => {
+                setAdminCharId(charId);
+                setView("ficha");
+              }}
+            />
+          ) : (
+            <AdminLoginScreen
+              db={db}
+              onLoginAdmin={(role, subAdmObj) => {
+                setSession({ role, ...(subAdmObj || {}) });
+                setView("tramas_adm");
+              }}
+            />
+          )
         )}
 
         {view === "admin" && (

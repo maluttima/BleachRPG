@@ -1587,9 +1587,31 @@ function calcularEfeitoBakudo(poderBakudo, forcaInimiga) {
   }
 }
 
-function calcularEfeitoKaido(poderKaido, estadoInicial = "Debilitado") {
+function getKaidoSpecialty(kido) {
+  if (!kido) return "geral";
+  const num = Number(kido.numero || 0);
+  const nome = (kido.nome || "").toLowerCase();
+  const desc = (kido.desc || "").toLowerCase();
+  if (num === 6 || nome.includes("seika") || desc.includes("venen") || desc.includes("toxin") || desc.includes("purific")) {
+    return "purificacao";
+  }
+  if (num === 1 || nome.includes("chiyaku") || desc.includes("calmante") || desc.includes("dor")) {
+    return "analgesia";
+  }
+  if (num === 9 || num === 16 || nome.includes("kekkai") || nome.includes("ito") || desc.includes("sutura") || desc.includes("hemorr")) {
+    return "sutura";
+  }
+  if (num >= 50 || desc.includes("reanima") || desc.includes("alma") || desc.includes("orgao")) {
+    return "ressurreicao";
+  }
+  return "geral";
+}
+
+function calcularEfeitoKaido(poderKaido, estadoInicial = "Debilitado", kido = null) {
   const pK = Math.max(1, Number(poderKaido || 10));
   const est = estadoInicial || "Debilitado";
+  const spec = getKaidoSpecialty(kido);
+  const kidoNome = kido?.nome || "Kaidō";
 
   let nivel = "Básico";
   let cor = "#C9C1AF";
@@ -1601,69 +1623,103 @@ function calcularEfeitoKaido(poderKaido, estadoInicial = "Debilitado") {
   let dicaTatica = "";
   let roteiroCenas = [];
 
-  if (pK >= 1200) {
+  // 1. TIER SUPREMO (pK >= 350): Restauração Milagrosa / Divisão Zero / Nível Unohana
+  // Imbuir alta quantidade de Reiatsu cura QUALQUER estado (até Derrotado/Crítico) em APENAS 1 CENA!
+  if (pK >= 350) {
     nivel = "Supremo";
     cor = "#FFD700";
-    categoria = "Restauração Milagrosa & Regeneração Celular Total";
     curaHpStr = "Recuperação de 95% a 100% da Vitalidade";
-    diagnostico = "Reconstitui tecidos dilacerados, regenera órgãos vitais e restaura o fluxo de Reiryoku instantaneamente.";
-    
-    if (est === "Derrotado") {
-      cenasNecessarias = 1;
-      estadoFinal = "Inteiro";
+    cenasNecessarias = 1;
+    estadoFinal = "Inteiro";
+
+    if (spec === "purificacao") {
+      categoria = "Purificação Celular Absoluta & Neutralização Instantânea de Toxinas";
+      diagnostico = "A alta sobrecarga de Reishi expurga instantaneamente venenos mortais, ácidos espirituais e toxinas dos órgãos vitais em tempo recorde.";
       roteiroCenas = [
-        "Cena 1: Concentração máxima de Kaidō verde-dourado nos pontos vitais. Reanimação imediata e fechamento de todas as feridas mortais (Derrotado ➔ Inteiro)."
+        `Cena 1: Infusão máxima de Kaidō (${kidoNome}) nos canais de Reiryoku. Todo o veneno é expelido e dissolvido dos tecidos em segundos, neutralizando falência de órgãos e restaurando a integridade plena (${est} ➔ Inteiro).`
       ];
-    } else if (est === "Debilitado") {
-      cenasNecessarias = 1;
-      estadoFinal = "Inteiro";
+      dicaTatica = "Sobrecarga de Reiatsu Suprema: Elimina qualquer envenenamento ou toxina no grupo e regenera o aliado direto para 'Inteiro' em apenas 1 cena no WhatsApp!";
+    } else if (spec === "analgesia") {
+      categoria = "Supressão Neural Total & Revigoração Espiritual Completa";
+      diagnostico = "Anestesia o sistema nervoso contra choque de dor, reanima o fôlego espiritual e sela traumas físicos.";
       roteiroCenas = [
-        "Cena 1: Consolidação óssea e celular imediata. O guerreiro recupera 100% de mobilidade para lutar na mesma cena (Debilitado ➔ Inteiro)."
+        `Cena 1: Aplicação analgésica de alta intensidade (${kidoNome}). Dissipa dores incapacitantes, restaura a lucidez e revigora o aliado (${est} ➔ Inteiro).`
       ];
+      dicaTatica = "Recuperação de 1 cena rápida sem dor ou sequelas.";
+    } else if (spec === "sutura") {
+      categoria = "Tecelagem Espiritual Divina & Fechamento de Rompimentos Fatais";
+      diagnostico = "Sutura instantânea de tendões, artérias seccionadas e músculos dilacerados por cortes profundos.";
+      roteiroCenas = [
+        `Cena 1: Fios de luz cirúrgica de alta densidade entrelaçam tecidos e vasos rompidos, estancando qualquer hemorragia em segundos (${est} ➔ Inteiro).`
+      ];
+      dicaTatica = "Sutura cirúrgica de emergência de 1 cena com eficácia absoluta.";
     } else {
-      cenasNecessarias = 1;
-      estadoFinal = "Inteiro";
+      categoria = "Restauração Milagrosa & Regeneração Celular Total";
+      diagnostico = "Reconstitui tecidos dilacerados, regenera órgãos vitais e restaura o fluxo de Reiryoku instantaneamente.";
       roteiroCenas = [
-        "Cena 1: Purificação e cicatrização instantânea sem deixar marcas (Ferido ➔ Inteiro)."
+        `Cena 1: Concentração máxima de Kaidō verde-dourado nos pontos vitais. Reanimação imediata e fechamento de todas as feridas mortais (${est} ➔ Inteiro).`
       ];
+      dicaTatica = "Nível Supremo do 4º Esquadrão (Capitã Unohana / Divisão Zero). A infusão massiva de Reiatsu reduz o tempo de tratamento para apenas 1 cena no WhatsApp!";
     }
-    dicaTatica = "Nível Supremo do 4º Esquadrão (Capitã Unohana / Divisão Zero). O aliado é completamente curado para o estado 'Inteiro' em apenas 1 cena contínua de tratamento no WhatsApp!";
-  } else if (pK >= 600) {
+
+  // 2. TIER AVANÇADO / ALTA INJEÇÃO DE REIATSU (pK >= 130):
+  // Imbuir mais Reiatsu REDUZ DEBILITADO PARA APENAS 1 CENA e DERROTADO PARA 2 CENAS!
+  } else if (pK >= 130) {
     nivel = "Avançado";
     cor = "#5FA96B";
-    categoria = "Regeneração Profunda de Órgãos & Consolidação Óssea";
-    curaHpStr = "Recuperação de 60% a 85% da Vitalidade";
-    diagnostico = "Cura fraturas ósseas graves, estanca hemorragias arteriais e sutura músculos lacerados.";
+    curaHpStr = "Recuperação de 70% a 90% da Vitalidade";
+    estadoFinal = "Inteiro";
 
     if (est === "Derrotado") {
       cenasNecessarias = 2;
-      estadoFinal = "Inteiro";
-      roteiroCenas = [
-        "Cena 1: Estabilização de emergência dos sinais vitais e hemostasia (Derrotado ➔ Debilitado).",
-        "Cena 2: Recomposição de tecidos e reinfusão de Reishi (Debilitado ➔ Inteiro)."
-      ];
-      dicaTatica = "Necessário 2 cenas contínuas no WhatsApp: a 1ª cena para tirar o aliado do risco de morte e a 2ª cena para restabelecer a integridade completa (Inteiro).";
+      if (spec === "purificacao") {
+        categoria = "Desintoxicação Acelerada & Estabilização de Órgãos";
+        diagnostico = "Neutraliza venenos em estado crítico e estanca choque anafilático/químico nas artérias.";
+        roteiroCenas = [
+          "Cena 1: Infusão de emergência de Kaidō purificador para neutralizar o veneno letal e tirar o aliado do coma (Derrotado ➔ Debilitado).",
+          "Cena 2: Expulsão das toxinas residuais e reconstituição do fluxo sanguíneo (Debilitado ➔ Inteiro)."
+        ];
+        dicaTatica = "A injeção extra de Reiatsu acelerou a neutralização das toxinas, reduzindo o tempo crítico de 4 para 2 cenas no WhatsApp!";
+      } else {
+        categoria = "Regeneração Profunda & Reanimação Acelerada";
+        diagnostico = "Cura fraturas ósseas graves, estanca hemorragias arteriais e sutura músculos lacerados.";
+        roteiroCenas = [
+          "Cena 1: Estabilização de emergência dos sinais vitais e hemostasia (Derrotado ➔ Debilitado).",
+          "Cena 2: Recomposição de tecidos e reinfusão de Reishi acelerada pela Reiatsu investida (Debilitado ➔ Inteiro)."
+        ];
+        dicaTatica = "Graças à Reiatsu extra investida, o tempo de cura do paciente em estado crítico caiu para 2 cenas contínuas no WhatsApp!";
+      }
     } else if (est === "Debilitado") {
-      cenasNecessarias = 1;
-      estadoFinal = "Inteiro";
-      roteiroCenas = [
-        "Cena 1: Tratamento cirúrgico de alta precisão canalizado. Restaura fraturas e regenera o aliado direto para 'Inteiro'."
-      ];
-      dicaTatica = "Graças ao alto poder de Kaidō, 1 cena detalhada no WhatsApp é suficiente para curar de 'Debilitado' direto para 'Inteiro'.";
+      cenasNecessarias = 1; // Reduzido de 2 para 1 cena graças à Reiatsu investida!
+      if (spec === "purificacao") {
+        categoria = "Desintoxicação Rápida & Purificação Tecidual Completa";
+        diagnostico = "A alta vazão de Reiatsu drena toxinas e venenos dos tecidos em tempo recorde.";
+        roteiroCenas = [
+          `Cena 1: Drenagem e purificação acelerada de venenos e toxinas via ${kidoNome}. O combatente recupera 100% da sua mobilidade (Debilitado ➔ Inteiro).`
+        ];
+        dicaTatica = "Com a injeção de Reiatsu / Encantamento (+30% PE), o tempo de desintoxicação de 'Debilitado' foi reduzido de 2 para apenas 1 cena no WhatsApp!";
+      } else {
+        categoria = "Regeneração Celular Acelerada por Infusão de Reishi";
+        diagnostico = "Sutura cortes profundos, alinha fraturas e restaura a integridade física em alta velocidade.";
+        roteiroCenas = [
+          "Cena 1: Tratamento intensivo com sobrecarga de Reiatsu. Sutura rápida e regeneração celular completa em 1 única cena (Debilitado ➔ Inteiro)."
+        ];
+        dicaTatica = "Com a injeção extra de Reiatsu / Encantamento (+30% PE), o tempo de tratamento de 'Debilitado' foi reduzido para apenas 1 cena no WhatsApp!";
+      }
     } else {
       cenasNecessarias = 1;
-      estadoFinal = "Inteiro";
       roteiroCenas = [
-        "Cena 1: Alívio de contusões e fechamento de cortes médios em poucos instantes (Ferido ➔ Inteiro)."
+        "Cena 1: Cicatrização e purificação rápida de ferimentos moderados (Ferido ➔ Inteiro)."
       ];
-      dicaTatica = "Cura rápida de 1 cena. O aliado volta a 100% de prontidão no ON.";
+      dicaTatica = "Cura de 1 cena rápida no WhatsApp. O aliado volta a 100% de prontidão no ON.";
     }
-  } else if (pK >= 250) {
+
+  // 3. TIER INTERMEDIÁRIO (pK >= 60):
+  } else if (pK >= 60) {
     nivel = "Intermediário";
     cor = "#4FB3E8";
-    categoria = "Estancamento de Hemorragias & Alívio Crítico";
-    curaHpStr = "Recuperação de 35% a 55% da Vitalidade";
-    diagnostico = "Fecha cortes de lâmina, estanca sangramentos ativos, realinha microfraturas e ameniza dores incapacitantes.";
+    curaHpStr = "Recuperação de 40% a 60% da Vitalidade";
+    diagnostico = "Fecha cortes de lâmina, estanca sangramentos ativos e neutraliza venenos moderados.";
 
     if (est === "Derrotado") {
       cenasNecessarias = 3;
@@ -1673,27 +1729,29 @@ function calcularEfeitoKaido(poderKaido, estadoInicial = "Debilitado") {
         "Cena 2: Cicatrização de lacerações e reanimação física (Debilitado ➔ Ferido).",
         "Cena 3: Restauração de fôlego e cicatrização final (Ferido ➔ Inteiro)."
       ];
-      dicaTatica = "O paciente está em estado crítico: necessita manter o Kaidō ativo por 3 cenas no WhatsApp para cura completa (ou 1 cena para apenas sair do coma).";
+      dicaTatica = "Paciente crítico: requer 3 cenas no WhatsApp para recuperação completa. (Dica: Injete mais Pressão Espiritual para reduzir para 1 ou 2 cenas!).";
     } else if (est === "Debilitado") {
       cenasNecessarias = 2;
       estadoFinal = "Inteiro";
       roteiroCenas = [
-        "Cena 1: Imobilização e sutura de cortes profundos (Debilitado ➔ Ferido).",
-        "Cena 2: Recuperação de mobilidade e reabsorção de hematomas (Ferido ➔ Inteiro)."
+        "Cena 1: Imobilização, sutura de cortes e início da desintoxicação (Debilitado ➔ Ferido).",
+        "Cena 2: Recuperação de mobilidade e cicatrização dos tecidos (Ferido ➔ Inteiro)."
       ];
-      dicaTatica = "Requer manter o Kaidō ativo por 2 cenas no ON: a 1ª cena reduz a gravidade para 'Ferido' e a 2ª cena recupera para 'Inteiro'.";
+      dicaTatica = "Requer 2 cenas no ON. (Dica: Recite o encantamento ou injete +50/+100 PE para reduzir para 1 cena!).";
     } else {
       cenasNecessarias = 1;
       estadoFinal = "Inteiro";
       roteiroCenas = [
         "Cena 1: Fechamento de escoriações e alívio da dor do combate em 1 cena (Ferido ➔ Inteiro)."
       ];
-      dicaTatica = "Tratamento de 1 cena rápida no WhatsApp. O aliado recupera o estado 'Inteiro'.";
+      dicaTatica = "Tratamento de 1 cena rápida no WhatsApp.";
     }
+
+  // 4. TIER BÁSICO (pK < 60):
   } else {
     nivel = "Básico";
     cor = "#C9C1AF";
-    categoria = "Primeiros Socorros & Microlesões";
+    categoria = "Primeiros Socorros & Estabilização Básica";
     curaHpStr = "Recuperação de 15% a 30% da Vitalidade";
     diagnostico = "Revigora o fôlego espiritual básico, estanca pequenos sangramentos e alivia contusões superficiais.";
 
@@ -1704,7 +1762,7 @@ function calcularEfeitoKaido(poderKaido, estadoInicial = "Debilitado") {
         "Cena 1 e 2: Triagem médica exaustiva para estabilizar respiração (Derrotado ➔ Debilitado).",
         "Cena 3 e 4: Fechamento gradual de lacerações e suturas leves (Debilitado ➔ Ferido)."
       ];
-      dicaTatica = "Kaidō com Pressão Espiritual básica em paciente crítico: exige manter o feitiço por 4 cenas no WhatsApp e atinge no máximo o estado 'Ferido' (necessita de suporte avançado para ficar 'Inteiro').";
+      dicaTatica = "Kaidō com Pressão básica em paciente crítico: exige 4 cenas no WhatsApp e atinge o estado 'Ferido'. Injete mais Reiatsu para acelerar o processo!";
     } else if (est === "Debilitado") {
       cenasNecessarias = 2;
       estadoFinal = "Ferido";
@@ -1733,7 +1791,8 @@ function calcularEfeitoKaido(poderKaido, estadoInicial = "Debilitado") {
     curaHpStr,
     diagnostico,
     dicaTatica,
-    roteiroCenas
+    roteiroCenas,
+    especialidade: spec
   };
 }
 
@@ -1758,15 +1817,13 @@ function gerarFichaFormatadaMalutti(p) {
   if (!p) return "";
 
   const totalAtributos = Object.values(p.atributos || { pressao: 10, forca: 10, velocidade: 10, resiliencia: 10 }).reduce((a, b) => a + b, 0);
-  const tier = (typeof getPowerTier === 'function') ? getPowerTier(totalAtributos) : { title: "Iniciante", patamar: "201–450" };
+  const tier = (typeof getPowerTier === "function") ? getPowerTier(totalAtributos) : { title: "Iniciante", patamar: "201–450" };
 
   const whatsDigits = p.whatsapp ? String(p.whatsapp).replace(/\D/g, "").slice(-4) : "0000";
   const codAtividade = getCodigoAtividade(p);
   const pNome = p.nome || "Shinigami";
   const playerNome = pNome.split(" ")[0] || "Jogador";
   const playerNasc = p.aniversarioPlayer ? `${p.aniversarioPlayer}` : "01/01/2000";
-
-  const pers = p.personalidade || {};
 
   return `\`\`\`ㅤㅤ\`\`\`ㅤㅤㅤ\`\`\`ㅤㅤ\`\`\`
 
@@ -1777,75 +1834,73 @@ function gerarFichaFormatadaMalutti(p) {
                     ⚯͛
                          ᩠      ⊹                ᩠          . 
                              ࣪       ✶  ͏t𝖍e
-                  ﹙  𝐒𝐎𝐔𝐋 𝐒𝐎𝐂𝐈𝐄𝐓𝐘  ﹚⊹
-                 ɑquele que nɑ̃o teme ɑ pɾó-
-             pɾiɑ lɑ̂minɑ nɑ̃o é digno de 
-                  .  empunhɑ́-lɑ     𝗻𝗼    𝗦𝗘𝗜𝗥𝗘𝗜𝗧𝗘𝗜 .ᐟ
-                          ︶ ͝     ︶꒷꒦︶                        
+                   ﹙  𝐒𝐎𝐔𝐋 𝐒𝐎𝐂𝐈𝐄𝐓𝐘  ﹚⊹
+                  ɑquele que nɑ̃o teme ɑ pɾó-
+              pɾiɑ lɑ̂minɑ nɑ̃o é digno de 
+                   .  empunhɑ́-lɑ     𝗻𝗼    𝗦𝗘𝗜𝗥𝗘𝗜𝗧𝗘𝗜 .ᐟ
+                           ︶ ͝     ︶꒷꒦︶                        
          
-                  ⊹    /   𝙫ocê é um shinigɑmi
-                toɾne-se   𝓛𝐞𝐧𝐝𝗮́𝗿𝗶𝗼  ・・・
+                   ⊹    /   𝙫ocê é um shinigɑmi
+                 toɾne-se   𝓛𝐞𝐧𝐝𝗮́𝗿𝗶𝗼  ・・・
                                          ﹀                                   
-            ͛  𝒇𝒊𝒄𝒉𝒂 𝒅𝒆   :   𝕾𝗛𝗜𝗡𝗜𝗚𝗔𝗠𝗜  „                        
-      ɑpɾesentɑmos ɑ fichɑ que dɑɾɑ́ vidɑ 
-      ɑo seu guêɾɾeiɾo espirituɑl!  ⊹ ɑdiɑntɑ-
-      mos ɑ impoɾtɑ̂nciɑ de cɑnɑlizɑɾ suɑ 
-      ɑlmɑ em hɑɾmoniɑ com o Seireitei.
-                                                                       
-            \`﹙ 𝗗𝗔𝗗𝗢𝗦 𝗗𝗢 𝗣𝗔𝗥𝗧𝗜𝗖𝗜𝗣𝗔𝗡𝗧𝗘 ﹚\` 
-           ✶  „  nome & quɑtɾo dı́git͟os .ᐟ
-           ⎯  ${playerNome}, ${whatsDigits}
-           ✶  „  código de ɑtividɑde (on) .ᐟ
-           ⎯  ${codAtividade} ‹ use no contador de cenas! ›
-           ✶  „  dɑ͟tɑ de nɑscimento & idɑde .ᐟ
-           ⎯  ${playerNasc} (${p.idadePlayer || "20"} anos)
-           ✶  „  ɑçɑ̃o de suɑ ɑu͟t͟oɾiɑ .ᐟ
-           ⎯  fɑvoɾ enviɑɾ sepɑɾɑdɑmente no privado.
+             ͛  𝒇𝒊𝒄𝒉𝒂 𝒅𝒆   :   𝕾𝗛𝗜𝗡𝗜𝗚𝗔𝗠𝗜  „                        
+       ɑpɾesentɑmos ɑ fichɑ que dɑɾɑ́ vidɑ 
+       ɑo seu guêɾɾeiɾo espirituɑl!  ⊹ ɑdiɑntɑ-
+       mos ɑ impoɾtɑ̂nciɑ de cɑnɑlizɑɾ suɑ 
+       ɑlmɑ em hɑɾmoniɑ com o Seireitei.
+                                                                        
+             \`﹙ 𝗗𝗔𝗗𝗢𝗦 𝗗𝗢 𝗣𝗔𝗥𝗧𝗜𝗖𝗜𝗣𝗔𝗡𝗧𝗘 ﹚\` 
+            ✶  „  nome & quɑtɾo dı́git͟os .ᐟ
+            ⎯  ${playerNome}, ${whatsDigits}
+            ✶  „  código de ɑtividɑde (on) .ᐟ
+            ⎯  ${codAtividade} ‹ use no contador de cenas! ›
+            ✶  „  dɑ͟tɑ de nɑscimento & idɑde .ᐟ
+            ⎯  ${playerNasc} (${p.idadePlayer || "20"} anos)
+            ✶  „  ɑçɑ̃o de suɑ ɑu͟t͟oɾiɑ .ᐟ
+            ⎯  fɑvoɾ enviɑɾ sepɑɾɑdɑmente no privado.
 
-            \`﹙ 𝗗𝗔𝗗𝗢𝗦 𝗗𝗢 𝗣𝗘𝗥𝗦𝗢𝗡𝗔𝗚𝗘𝗠 ﹚\` 
-           ✶  „  no͟me do peɾsonɑgem  .ᐟ
-           ⎯  ${p.nome}
-           ✶  „  idɑde &` + "\\" + `\` ɑn͟ive͟ɾsɑ́ɾio .ᐟ
-           ⎯  ${p.idadeChar || "18"} anos — ${p.aniversarioChar || "15/07"}.
-           ✶  „  ɾeivindicɑçɑ̃o fɑ͟ciɑl (fɑceclɑim) .ᐟ
-           ⎯  ${p.faceclaim || p.nome}
-           ✶  „  esquɑdɾɑ̃o do gotei 13 .ᐟ
-           ⎯  ${p.esquadrao || "11º Esquadrão"}
-           ✶  „  ɾɑçɑ & linhɑgem espı́ɾituɑl .ᐟ
-           ⎯  ${p.raca || "Shinigami"}
-           ✶  „  código de ɑtividɑde do shinigɑmi .ᐟ
-           ⎯  ${codAtividade}
-           ✶  „  estɑdo & condiçɑ̃o .ᐟ
-           ⎯  ${p.estado || "Inteiro"}
-           ✶  „  pɑtɑmɑɾ no seı́ɾeı́teı́ .ᐟ
-           ⎯  ${tier.title} (${totalAtributos} pts acumulados)
+             \`﹙ 𝗗𝗔𝗗𝗢𝗦 𝗗𝗢 𝗣𝗘𝗥𝗦𝗢𝗡𝗔𝗚𝗘𝗠 ﹚\` 
+            ✶  „  no͟me do peɾsonɑgem  .ᐟ
+            ⎯  ${p.nome}
+            ✶  „  idɑde &\` ɑn͟ive͟ɾsɑ́ɾio .ᐟ
+            ⎯  ${p.idadeChar || "18"} anos — ${p.aniversarioChar || "15/07"}.
+            ✶  „  ɾeivindicɑçɑ̃o fɑ͟ciɑl (fɑceclɑim) .ᐟ
+            ⎯  ${p.faceclaim || p.nome}
+            ✶  „  esquɑdɾɑ̃o do gotei 13 .ᐟ
+            ⎯  ${p.esquadrao || "11º Esquadrão"}
+            ✶  „  ɾɑçɑ & linhɑgem espı́ɾituɑl .ᐟ
+            ⎯  ${p.raca || "Shinigami"}
+            ✶  „  código de ɑtividɑde do shinigɑmi .ᐟ
+            ⎯  ${codAtividade}
+            ✶  „  estɑdo & condiçɑ̃o .ᐟ
+            ⎯  ${p.estado || "Inteiro"}
+            ✶  „  pɑtɑmɑɾ no seı́ɾeı́teı́ .ᐟ
+            ⎯  ${tier.title} (${totalAtributos} pts acumulados)
 
-            \`﹙ 𝗔𝗧𝗥𝗜𝗕𝗨𝗧𝗢𝗦 𝗘𝗦𝗣𝗜𝗥𝗜𝗧𝗨𝗔𝗜𝗦 ﹚\`              
-           ✶  „ distɾibuiçɑ̃o de reiryoku .ᐟ
-           ⎯  pɾessɑ̃o espı́ɾituɑl: ${p.atributos?.pressao || 10}
-           ⎯  foɾçɑ: ${p.atributos?.forca || 10}           
-           ⎯  velocidɑde: ${p.atributos?.velocidade || 10}
-           ⎯  ɾesiliênciɑ: ${p.atributos?.resiliencia || 10}
-           ✶  „ totɑl geɾɑl .ᐟ
-           ⎯  ${totalAtributos} pts (Patamar: ${tier.title})
+             \`﹙ 𝗔𝗧𝗥𝗜𝗕𝗨𝗧𝗢𝗦 𝗘𝗦𝗣𝗜𝗥𝗜𝗧𝗨𝗔𝗜𝗦 ﹚\`              
+            ✶  „ distɾibuiçɑ̃o de reiryoku .ᐟ
+            ⎯  pɾessɑ̃o espı́ɾituɑl: ${p.atributos?.pressao || 10}
+            ⎯  foɾçɑ: ${p.atributos?.forca || 10}           
+            ⎯  velocidɑde: ${p.atributos?.velocidade || 10}
+            ⎯  ɾesiliênciɑ: ${p.atributos?.resiliencia || 10}
+            ✶  „ totɑl geɾɑl .ᐟ
+            ⎯  ${totalAtributos} pts (Patamar: ${tier.title})
 
-${(pers.texto || pers.virtudes || pers.estiloCombate) ? `            \`﹙ 𝗣𝗘𝗥𝗦𝗢𝗡𝗔𝗟𝗜𝗗𝗔𝗗𝗘 & 𝗗𝗡𝗔 𝗗𝗔 𝗔𝗟𝗠𝗔 ﹚\` 
-${pers.texto ? `           ✶  „  essênciɑ psicológicɑ .ᐟ\n           ⎯  ${pers.texto.trim()}\n` : ''}${pers.virtudes ? `           ✶  „  viɾtudes & quɑlidɑdes .ᐟ\n           ⎯  ${pers.virtudes.trim()}\n` : ''}${pers.defeitos ? `           ✶  „  defeitos & fɑlhɑs .ᐟ\n           ⎯  ${pers.defeitos.trim()}\n` : ''}${pers.desejos ? `           ✶  „  desejos & ɑmbições .ᐟ\n           ⎯  ${pers.desejos.trim()}\n` : ''}${pers.medos ? `           ✶  „  medos & pesɑdelos .ᐟ\n           ⎯  ${pers.medos.trim()}\n` : ''}${pers.estiloCombate ? `           ✶  „  estilo de combɑte .ᐟ\n           ⎯  ${pers.estiloCombate.trim()}\n` : ''}` : ''}
-            \`﹙ 𝗧𝗘𝗥𝗠𝗢 𝗗𝗘 𝗖𝗢𝗡𝗦𝗘𝗡𝗧𝗜𝗠𝗘𝗡𝗧𝗢 ﹚\`     
-      ₍  X  ₎     estou ciente de que dentɾo do 
-      role playing gɑme encontɾɑɾei temɑs           
-      e cenɑs de bɑtɑlhɑ que podem seɾ gɑtilhos, 
-      e tɑmbém ɑssumo ɾesponsɑbilidɑde 
-      de ɑceitɑçɑ̃o cɑso o peɾsonɑgem 
-      sofɾɑ quɑlqueɾ dɑno nɑɾɾɑtivo.
+             \`﹙ 𝗧𝗘𝗥𝗠𝗢 𝗗𝗘 𝗖𝗢𝗡𝗦𝗘𝗡𝗧𝗜𝗠𝗘𝗡𝗧𝗢 ﹚\`     
+       ₍  X  ₎     estou ciente de que dentɾo do 
+       role playing gɑme encontɾɑɾei temɑs           
+       e cenɑs de bɑtɑlhɑ que podem seɾ gɑtilhos, 
+       e tɑmbém ɑssumo ɾesponsɑbilidɑde 
+       de ɑceitɑçɑ̃o cɑso o peɾsonɑgem 
+       sofɾɑ quɑlqueɾ dɑno nɑɾɾɑtivo.
 
 
-       
-                                   ✶
-                           𝐩𝐬𝐲𝐜𝐡𝐞 ın 
-                          ınspırαtıon
-                  
-                   ✧ 𝗠𝗮𝗱𝗲 𝗕𝘆 𝗠𝗮𝗹𝘂𝘁𝘁𝗶 ✧
+        
+                                    ✶
+                            𝐩𝐬𝐲𝐜𝐡𝐞 ın 
+                           ınspırαtıon
+                   
+                    ✧ 𝗠𝗮𝗱𝗲 𝗕𝘆 𝗠𝗮𝗹𝘂𝘁𝘁𝗶 ✧
 
 
 \`\`\`ㅤㅤ\`\`\`ㅤㅤㅤ\`\`\`ㅤㅤ\`\`\``;
@@ -1940,6 +1995,286 @@ function getCapacidadeKidos(pressaoTotal) {
   }
 }
 
+
+// =========================================================================
+// AI PLOT & STORY ARC GENERATION ENGINE (INDIVIDUAL & JOINT TRAMAS)
+// =========================================================================
+
+function sintetizarTramaIndividualHeuristica(player, cenas = []) {
+  const pNome = player?.nome || "Guerreiro Espiritual";
+  const pRaca = player?.raca || "Shinigami";
+  const pEsq = player?.esquadrao || "11º Esquadrão";
+  const pPatamar = (typeof getPowerTier === 'function') 
+    ? getPowerTier(Object.values(player?.atributos || {}).reduce((a, b) => a + b, 0)).title 
+    : "Treinado";
+  const zkNome = player?.zanpakuto?.shikaiAtiva?.nome || player?.zanpakuto?.nome || "Zanpakutō Interior";
+  const numCenas = cenas.length;
+
+  const temasPorEsquadrao = {
+    "1º Esquadrão": { foco: "Dever Absoluto & Ordens da Central 46", antag: "Um conspirador nobre da Soul Society", local: "Seireitei - Sala dos Julgamentos" },
+    "2º Esquadrão": { foco: "Infiltração das Sombras & Assassinato Silencioso", antag: "Um desertor do Onmitsukidō com Shunpo veloz", local: "Distrito Secreto de Rukongai" },
+    "3º Esquadrão": { foco: "O Peso do Desespero & Conflito Moral", antag: "Um ex-oficial tomado por amargura e vingança", local: "Ruínas do 80º Distrito de Zaraki" },
+    "4º Esquadrão": { foco: "Juramento Médico & O Preço da Cura", antag: "Um Hollow que corrompe meridianos e canais de Kaidō", local: "Enfermaria de Quarentena do Seireitei" },
+    "5º Esquadrão": { foco: "Conspiração de Reishi & Ambição Proibida", antag: "Um pesquisador renegado de ilusões espirituais", local: "Laboratório Subterrâneo Oculto" },
+    "6º Esquadrão": { foco: "A Lei Inflexível vs Laços de Sangue", antag: "Um parente da nobreza que violou os éditos sagrados", local: "Mansão do Clã Kuchiki / Portão do Seireitei" },
+    "7º Esquadrão": { foco: "A Honra Inabalável & Proteção dos Inocentes", antag: "Um bando de saqueadores espirituais impiedosos", local: "Vila Periférica de Rukongai" },
+    "8º Esquadrão": { foco: "Informações Críticas & Blefes Fatais", antag: "Um mercenário do submundo que negocia segredos", local: "Casas de Chá de Karakura / Rukongai" },
+    "9º Esquadrão": { foco: "Justiça Distorcida & A Verdade Silenciada", antag: "Um líder revolucionário que distorceu os ideais de justiça", local: "Arquivos Sagrados da Soul Society" },
+    "10º Esquadrão": { foco: "Patrulhas no Mundo Humano & Proteção de Karakura", antag: "Um Hollow de Classe Menos que ataca no mundo dos vivos", local: "Karakura - Distrito de Negócios" },
+    "11º Esquadrão": { foco: "O Clímax do Combate & Sangue na Lâmina", antag: "Um guerreiro brutal que busca morrer em duelo contra o mais forte", local: "Arena Abandonada do Rukongai" },
+    "12º Esquadrão": { foco: "Experimentos Perigosos & Anomalias de Reishi", antag: "Uma criatura artificial de laboratório que perdeu o controle", local: "Setor 46 de Desenvolvimento Tecnológico" },
+    "13º Esquadrão": { foco: "Defesa dos Desamparados & Conexão de Almas", antag: "Um espírito corrompido que assombra o portal Senkaimon", local: "Travessia do Senkaimon" }
+  };
+
+  const tema = temasPorEsquadrao[pEsq] || { foco: "Ascensão Espiritual & Rompimento de Limites", antag: "Um Hollow evoluído com ressonância espiritual", local: "Limiar entre Seireitei e Karakura" };
+
+  const ultimasCenasResumo = cenas.slice(-3).map((c, i) => `• Cena ${i + 1} (${c.titulo || 'Treino/Arco'}): ${(c.texto || '').slice(0, 120)}...`).join('\n');
+
+  return {
+    tituloArco: `Arco de ${pNome}: A Provação de ${zkNome}`,
+    faseAtual: numCenas === 0 ? "Fase 1: Convocação & Premonição" : numCenas <= 2 ? "Fase 2: O Conflito Crescente" : "Fase 3: O Ponto de Ruptura & Clímax",
+    diagnosticoPsicologico: `${pNome} (${pRaca}, ${pEsq}, Patamar ${pPatamar}) carrega um forte conflito entre a disciplina militar do Seireitei e a busca pelo domínio pleno de sua lâmina (${zkNome}). Suas ações recentes em ON demonstram determinação crescente, mas revelam brechas táticas que serão testadas neste arco.`,
+    ganchoImediato: `Estruturas de Reishi anormais foram detectadas em ${tema.local}. Relatos indicam a presença de ${tema.antag}, cuja assinatura espiritual desafia diretamente a postura de ${pNome}.`,
+    eventos: [
+      {
+        numero: 1,
+        fase: "Evento 1: O Teste de Convicção (ON)",
+        titulo: `Incidente em ${tema.local}`,
+        descricao: `${pNome} é despachado(a) para investigar anomalias em ${tema.local}. Ao chegar, depara-se com armadilhas espirituais e é provocado(a) verbalmente e taticamente pelo opositor.`,
+        objetivoCena: "Investigar o local, conter o pânico e demonstrar postura marcial na primeira interação de ON.",
+        desafioSugerido: "Superar emboscada inicial sem revelar todas as cartas de sua Zanpakutō."
+      },
+      {
+        numero: 2,
+        fase: "Evento 2: A Sombra da Dúvida & Conflito Espiritual (ON)",
+        titulo: "Ressonância Rompida",
+        descricao: `O confronto direto com ${tema.antag} coloca em xeque a ideologia de ${pNome} (${tema.foco}). A pressão espiritual do ambiente começa a desestabilizar o fluxo de Reishi.`,
+        objetivoCena: "Resistir à pressão moral/física do antagonista e encontrar o ponto de equilíbrio com sua própria lâmina.",
+        desafioSugerido: "Uso estratégico de Kidōs, Shunpo ou técnicas de espada para neutralizar a vantagem do terreno."
+      },
+      {
+        numero: 3,
+        fase: "Evento 3: O Clímax & Quebra de Limites (ON)",
+        titulo: `O Veredito da Lâmina: ${zkNome}`,
+        descricao: `Batalha decisiva onde ${pNome} deve dar tudo de si. O vilão ativa sua forma final forçando uma cena de narração épica onde apenas a evolução da alma garantirá a vitória.`,
+        objetivoCena: "Executar o golpe final, proteger os aliados ou selar o inimigo de forma honrosa.",
+        desafioSugerido: "Aplicação da Shikai/Bankai ou combinação definitiva de atributos para fechar o arco com maestria."
+      }
+    ],
+    antagonista: {
+      nome: tema.antag,
+      titulo: `O Flagelo de ${tema.local}`,
+      origem: `Nascido dos desvios espirituais e segredos de ${pEsq}`,
+      motivacao: `Provar que os métodos de ${pNome} são fracos e corromper sua convicção.`,
+      fraquezaChave: "Vulnerabilidade a golpes de velocidade pura e Kidōs de contenção rápida."
+    },
+    recompensaArco: "Garantido de 15 Pontos de Atributo + 2 Giros de Sorteio Comum + 1 Giro Especial de Seireitei",
+    briefingWhatsApp: `\`\`\`ㅤㅤ\`\`\`ㅤㅤㅤ\`\`\`ㅤㅤ\`\`\`
+👑 𝗗𝗢𝗦𝗦𝗜𝗘̂ 𝗗𝗘 𝗔𝗥𝗖𝗢 𝗜𝗡𝗗𝗜𝗩𝗜𝗗𝗨𝗔𝗟 • 𝗦𝗢𝗨𝗟 𝗦𝗢𝗖𝗜𝗘𝗧𝗬
+✶ „ Jogador: ${pNome} [${player?.codigoAtividade || 'ACT-0000'}]
+✶ „ Esquadrão & Patamar: ${pEsq} • ${pPatamar}
+✶ „ Título do Arco: Arco de ${pNome} — A Provação de ${zkNome}
+✶ „ Local de Ação: ${tema.local}
+
+📋 𝗦𝗜𝗡𝗢𝗣𝗦𝗘 & 𝗚𝗔𝗡𝗖𝗛𝗢 𝗣𝗔𝗥𝗔 𝗢 𝗢𝗡:
+${tema.foco}. ${pNome} é convocado(a) para enfrentar ${tema.antag}. A missão exigirá precisão marcial e postura espiritual inabalável.
+
+🎯 𝗢𝗕𝗝𝗘𝗧𝗜𝗩𝗢 𝗗𝗔 𝗣𝗥𝗢́𝗫𝗜𝗠𝗔 𝗖𝗘𝗡𝗔:
+1. Ir até ${tema.local} e registrar sua entrada em ON (mínimo 30 linhas para treino / 90 linhas para arco).
+2. Investigar a anomalia e reagir ao primeiro confronto tático!
+
+✧ Recompensa ao Concluir: 15 Pontos Livres + 2 Giros Comuns + 1 Especial!
+\`\`\`ㅤㅤ\`\`\`ㅤㅤㅤ\`\`\`ㅤㅤ\`\`\``
+  };
+}
+
+function sintetizarTramaConjuntaHeuristica(players = [], cenasConjuntas = []) {
+  const p1 = players[0] || { nome: "Guerreiro 1", esquadrao: "11º Esquadrão", codigoAtividade: "ACT-0001" };
+  const p2 = players[1] || { nome: "Guerreiro 2", esquadrao: "4º Esquadrão", codigoAtividade: "ACT-0002" };
+
+  const nomesStr = players.map(p => p.nome).join(" & ");
+  const codigosStr = players.map(p => p.codigoAtividade || getCodigoAtividade(p)).join(" / ");
+
+  return {
+    tituloArco: `Arco Cruzado: A Aliança das Almas (${nomesStr})`,
+    dinamicaDupla: `Cooperação Tática & Choque de Filosofias (${p1.esquadrao} ⚔️ ${p2.esquadrao})`,
+    sinopse: `Um incidente de proporções críticas interliga os destinos de ${p1.nome} e ${p2.nome}. Uma fenda dimensional no Mundo Humano ameaça romper a barreira do Senkaimon, exigindo que ambos superem suas divergências de esquadrão para operar como uma unidade marcial coesa.`,
+    conflitoCentral: `Enquanto ${p1.nome} prioriza a ofensiva e a erradicação do perigo, ${p2.nome} analisa a preservação dos inocentes e o equilíbrio de Reishi. A missão forçará ambos a confiarem a retaguarda um no outro.`,
+    eventosCruzados: [
+      {
+        fase: "Fase 1: O Choque Inicial & Convocação Conjunta (ON)",
+        descricao: `${p1.nome} e ${p2.nome} são designados conjuntamente pelo Comando Central. Uma emboscada de Hollows intermediários força os dois a combinarem suas habilidades de combate imediatamente.`,
+        papelPlayer1: `Abrir brecha na vanguarda usando sua força/velocidade (${p1.nome}).`,
+        papelPlayer2: `Fornecer suporte tático, controle de área com Kidō ou cura (${p2.nome}).`,
+        ganchoWhats: `Primeira cena no ON onde ${p1.nome} e ${p2.nome} dialogam e executam um ataque combinado.`
+      },
+      {
+        fase: "Fase 2: A Provação Cruzada (Ação de um afeta o outro)",
+        descricao: `O inimigo divide o campo de batalha com uma barreira espiritual opressiva. Para que ${p1.nome} sobreviva ao ataque mortal, ${p2.nome} precisará decifrar o ponto fraco da barreira a tempo.`,
+        papelPlayer1: `Segurar a investida do monstro sob dano constante.`,
+        papelPlayer2: `Interromper a conjuração do feitiço proibido com extrema precisão.`,
+        ganchoWhats: "Cena de alta tensão onde cada linha de roleplay influencia o estado do parceiro."
+      },
+      {
+        fase: "Fase 3: Batalha Cooperativa Decisiva (Clímax)",
+        descricao: `O confronto final contra o líder da anomalia. Um ataque sincronizado combinando a liberação de suas Zanpakutōs sela a fenda e consolida um vínculo lendário no Seireitei.`,
+        papelPlayer1: `Golpe de finalização de alta potência.`,
+        papelPlayer2: `Selo de contenção / cura de emergência final.`,
+        ganchoWhats: "Conclusão épica do arco conjunto com narrativa compartilhada no grupo."
+      }
+    ],
+    ameacaComum: {
+      nome: "Menos Grande Híbrido & Conspiradores Renegados",
+      perigo: "Capacidade de anular ataques isolados; vulnerável apenas a ataques combinados sincronizados.",
+      mecanicaEspecial: "Exige que ambos os jogadores rolem dados ou intercalem turnos narrativos contínuos."
+    },
+    briefingWhatsApp: `\`\`\`ㅤㅤ\`\`\`ㅤㅤㅤ\`\`\`ㅤㅤ\`\`\`
+👑 𝗗𝗢𝗦𝗦𝗜𝗘̂ 𝗗𝗘 𝗧𝗥𝗔𝗠𝗔 𝗖𝗢𝗡𝗝𝗨𝗡𝗧𝗔 • 𝗦𝗢𝗨𝗟 𝗦𝗢𝗖𝗜𝗘𝗧𝗬
+✶ „ Jogadores Envolvidos: ${nomesStr}
+✶ „ Códigos de Atividade: ${codigosStr}
+✶ „ Título do Arco: Arco Cruzado — A Aliança das Almas
+✶ „ Dinâmica: ${p1.esquadrao} ⚔️ ${p2.esquadrao}
+
+📋 𝗦𝗜𝗡𝗢𝗣𝗦𝗘 𝗖𝗢𝗠𝗣𝗔𝗥𝗧𝗜𝗟𝗛𝗔𝗗𝗔:
+Uma anomalia de alta gravidade une os destinos de ${p1.nome} e ${p2.nome}. Uma ameaça que não pode ser derrotada individualmente exigirá sincronia absoluta entre ambos no ON!
+
+🎯 𝗜𝗡𝗦𝗧𝗥𝗨𝗖̧𝗢̃𝗘𝗦 𝗣𝗔𝗥𝗔 𝗢𝗦 𝗝𝗢𝗚𝗔𝗗𝗢𝗥𝗘𝗦:
+1. Cenar juntos em interação contínua (mínimo de 30 a 90 linhas conjuntas).
+2. Intercalar ações combinando suas técnicas e liberando suas Zanpakutōs em sincronia.
+
+✧ Recompensa Garantida para Ambos: 15 Pontos de Atributo + 2 Giros Comuns + 1 Giro Especial cada!
+\`\`\`ㅤㅤ\`\`\`ㅤㅤㅤ\`\`\`ㅤㅤ\`\`\``
+  };
+}
+
+async function gerarTramaIndividualAI({ player, cenas = [], openAiKey = "" }) {
+  const heuristicResult = sintetizarTramaIndividualHeuristica(player, cenas);
+  const apiKey = (openAiKey || (typeof localStorage !== 'undefined' ? localStorage.getItem("bleach_openai_key") || "" : "")).trim();
+
+  if (!apiKey || apiKey.length < 15) {
+    return heuristicResult;
+  }
+
+  try {
+    const prompt = `Você é o Mestre Narrador Principal do BLEACH RPG (Soul Society / Seireitei).
+Analise o seguinte jogador e suas cenas de arco para gerar uma Trama Individual profunda, dramática e desafiadora:
+
+DADOS DO JOGADOR:
+- Nome: ${player?.nome || 'Shinigami'}
+- Raça: ${player?.raca || 'Shinigami'}
+- Esquadrão: ${player?.esquadrao || '11º Esquadrão'}
+- Patamar: ${heuristicResult.diagnosticoPsicologico}
+- Zanpakutō: ${player?.zanpakuto?.shikaiAtiva?.nome || player?.zanpakuto?.nome || 'Despertar'}
+- Histórico de Cenas: ${cenas.map(c => `[${c.titulo}]: ${c.texto.slice(0, 150)}`).join(' | ') || 'Nenhuma cena registrada ainda.'}
+
+Responda APENAS em formato JSON válido com as chaves:
+{
+  "tituloArco": string,
+  "faseAtual": string,
+  "diagnosticoPsicologico": string,
+  "ganchoImediato": string,
+  "eventos": [
+    { "numero": 1, "fase": "...", "titulo": "...", "descricao": "...", "objetivoCena": "...", "desafioSugerido": "..." },
+    { "numero": 2, "fase": "...", "titulo": "...", "descricao": "...", "objetivoCena": "...", "desafioSugerido": "..." },
+    { "numero": 3, "fase": "...", "titulo": "...", "descricao": "...", "objetivoCena": "...", "desafioSugerido": "..." }
+  ],
+  "antagonista": { "nome": "...", "titulo": "...", "origem": "...", "motivacao": "...", "fraquezaChave": "..." },
+  "recompensaArco": string,
+  "briefingWhatsApp": string
+}`;
+
+    const res = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        messages: [{ role: "user", content: prompt }],
+        temperature: 0.8,
+        response_format: { type: "json_object" }
+      })
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      const content = data?.choices?.[0]?.message?.content;
+      if (content) {
+        const parsed = JSON.parse(content);
+        return { ...heuristicResult, ...parsed };
+      }
+    }
+  } catch (err) {
+    console.warn("OpenAI API call failed, falling back to heuristic lore engine:", err);
+  }
+
+  return heuristicResult;
+}
+
+async function gerarTramaConjuntaAI({ players = [], cenasConjuntas = [], openAiKey = "" }) {
+  const heuristicResult = sintetizarTramaConjuntaHeuristica(players, cenasConjuntas);
+  const apiKey = (openAiKey || (typeof localStorage !== 'undefined' ? localStorage.getItem("bleach_openai_key") || "" : "")).trim();
+
+  if (!apiKey || apiKey.length < 15) {
+    return heuristicResult;
+  }
+
+  try {
+    const prompt = `Você é o Mestre Narrador Principal do BLEACH RPG.
+Crie um Arco Compartilhado (Trama Conjunta) para os seguintes jogadores cooperarem ou rivalizarem no ON:
+
+JOGADORES:
+${players.map(p => `- ${p.nome} (${p.raca}, ${p.esquadrao}, Atributos: ${JSON.stringify(p.atributos)})`).join('\n')}
+
+CENAS ARMAZENADAS:
+${cenasConjuntas.map(c => `[${c.autorNome || 'Cena'} - ${c.titulo}]: ${(c.texto || '').slice(0, 150)}`).join('\n') || 'Início de arco conjunto.'}
+
+Responda APENAS em formato JSON válido com as chaves:
+{
+  "tituloArco": string,
+  "dinamicaDupla": string,
+  "sinopse": string,
+  "conflitoCentral": string,
+  "eventosCruzados": [
+    { "fase": "...", "descricao": "...", "papelPlayer1": "...", "papelPlayer2": "...", "ganchoWhats": "..." },
+    { "fase": "...", "descricao": "...", "papelPlayer1": "...", "papelPlayer2": "...", "ganchoWhats": "..." },
+    { "fase": "...", "descricao": "...", "papelPlayer1": "...", "papelPlayer2": "...", "ganchoWhats": "..." }
+  ],
+  "ameacaComum": { "nome": "...", "perigo": "...", "mecanicaEspecial": "..." },
+  "briefingWhatsApp": string
+}`;
+
+    const res = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        messages: [{ role: "user", content: prompt }],
+        temperature: 0.8,
+        response_format: { type: "json_object" }
+      })
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      const content = data?.choices?.[0]?.message?.content;
+      if (content) {
+        const parsed = JSON.parse(content);
+        return { ...heuristicResult, ...parsed };
+      }
+    }
+  } catch (err) {
+    console.warn("OpenAI joint arc call failed, falling back to heuristic engine:", err);
+  }
+
+  return heuristicResult;
+}
+
+
 if (typeof window !== 'undefined') {
   window.gerar4CaminhosZanpakutoAI = gerar4CaminhosZanpakutoAI;
   window.gerar4CaminhosZanpakutoAI_Async = gerar4CaminhosZanpakutoAI_Async;
@@ -1967,6 +2302,10 @@ if (typeof window !== 'undefined') {
   window.gerarFichaFormatadaMalutti = gerarFichaFormatadaMalutti;
   window.copiarFichaFormatadaWhatsApp = copiarFichaFormatadaWhatsApp;
   window.getCodigoAtividade = getCodigoAtividade;
+  window.gerarTramaIndividualAI = gerarTramaIndividualAI;
+  window.gerarTramaConjuntaAI = gerarTramaConjuntaAI;
+  window.sintetizarTramaIndividualHeuristica = sintetizarTramaIndividualHeuristica;
+  window.sintetizarTramaConjuntaHeuristica = sintetizarTramaConjuntaHeuristica;
 }
 
 if (typeof module !== 'undefined' && module.exports) {
@@ -1998,7 +2337,11 @@ if (typeof module !== 'undefined' && module.exports) {
     getCapacidadeKidos,
     gerarFichaFormatadaMalutti,
     copiarFichaFormatadaWhatsApp,
-    getCodigoAtividade
+    getCodigoAtividade,
+    gerarTramaIndividualAI,
+    gerarTramaConjuntaAI,
+    sintetizarTramaIndividualHeuristica,
+    sintetizarTramaConjuntaHeuristica
   };
 }
 

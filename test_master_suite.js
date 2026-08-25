@@ -225,6 +225,7 @@ const viewsToTest = [
   { name: 'BleachSwordArt', props: { nomeZk: "Zabimaru", isBankai: false, foto: "assets/ichigo-orange.png" } },
   { name: 'FichaView', props: { db: mockDb, saveDb: () => {}, personagem: testCharFull, isAdmin: true, rankFisico: [{ id: "ren-001", score: 40 }], rankPressao: [{ id: "ren-001", score: 45 }] } },
   { name: 'FichaView', props: { db: mockDb, saveDb: () => {}, personagem: null, isAdmin: false, rankFisico: [], rankPressao: [] } },
+  { name: 'TramasArcosAdmView', props: { db: mockDb, saveDb: () => {}, session: { role: 'super_admin' }, onAbrirFicha: () => {} } },
   { name: 'AdminPanel', props: { db: mockDb, saveDb: () => {}, session: { role: 'super_admin' }, cloudStatus: 'connected', onAbrirFicha: () => {} } },
   { name: 'AdminLoginScreen', props: { db: mockDb, onLoginAdmin: () => {} } },
   { name: 'AdminLoginModal', props: { db: mockDb, onClose: () => {}, onSuccess: () => {} } },

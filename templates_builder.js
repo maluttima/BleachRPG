@@ -980,7 +980,7 @@ function KidoDetailModal({ kido, personagem, isOpen, onClose, onConjurar, pressa
 
   const efeitoHado = isHado ? calcularEfeitoHado(poderCalculado, simTargetStat) : null;
   const efeitoBakudo = isBakudo ? calcularEfeitoBakudo(poderCalculado, simTargetStat) : null;
-  const efeitoKaido = isKaido ? calcularEfeitoKaido(poderCalculado, simEstadoInicial) : null;
+  const efeitoKaido = isKaido ? calcularEfeitoKaido(poderCalculado, simEstadoInicial, kido) : null;
 
   const podeConjurar = pressaoRestante >= custoInfo.custoTotal;
 

@@ -356,6 +356,7 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
           <div className="flex flex-wrap gap-2">
             {[
               { id: "fichas", label: "Fichas" },
+              { id: "tramas", label: "🎭 Tramas & Arcos (IA)" },
               { id: "atividade", label: "📊 Cenas & Conhecimento" },
               { id: "novo", label: "+ Criar" },
               { id: "subadms", label: "Avaliadores" },
@@ -376,6 +377,16 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
           </div>
         </div>
       </div>
+
+      {/* SUBTAB: GESTÃO DE TRAMAS & ARCOS COM IA (INTEGRADO NO ADMIN PANEL) */}
+      {tabAdm === "tramas" && (
+        <TramasArcosAdmView
+          db={db}
+          saveDb={saveDb}
+          session={session}
+          onAbrirFicha={onAbrirFicha}
+        />
+      )}
 
       {/* SUBTAB: REGISTRO DE ATIVIDADE & CENAS EM LOTE */}
       {tabAdm === "atividade" && (
@@ -1023,6 +1034,1156 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
     </div>
   );
 }
+
+
+// =========================================================================
+// VIEW: GERENCIADOR DE TRAMAS, ARCOS & NARRATIVA COM IA (ÁREA ADM)
+// =========================================================================
+function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
+  const [subAba, setSubAba] = useState("individuais"); // "individuais", "conjuntas", "fichas", "nivelamento"
+  
+  // Estado para Tramas Individuais
+  const [selectedCharId, setSelectedCharId] = useState(db.personagens?.[0]?.id || "");
+  const [buscaChar, setBuscaChar] = useState("");
+  const [novaCenaTitulo, setNovaCenaTitulo] = useState("");
+  const [novaCenaTexto, setNovaCenaTexto] = useState("");
+  const [gerandoIaIndividual, setGerandoIaIndividual] = useState(false);
+  const [copiadoMsg, setCopiadoMsg] = useState("");
+
+  // Estado para Tramas Conjuntas (Multi-Player)
+  const [selectedConjId, setSelectedConjId] = useState("");
+  const [modalCriarConj, setModalCriarConj] = useState(false);
+  const [conjTitulo, setConjTitulo] = useState("");
+  const [conjSelectedCharIds, setConjSelectedCharIds] = useState([]);
+  const [novaCenaConjAutor, setNovaCenaConjAutor] = useState("");
+  const [novaCenaConjTitulo, setNovaCenaConjTitulo] = useState("");
+  const [novaCenaConjTexto, setNovaCenaConjTexto] = useState("");
+  const [gerandoIaConjunta, setGerandoIaConjunta] = useState(false);
+
+  const openAiKey = (typeof localStorage !== 'undefined') ? localStorage.getItem("bleach_openai_key") || "" : "";
+
+  // Helper para copiar texto
+  function copiarTexto(txt, msg = "✓ Copiado com sucesso para a área de transferência!") {
+    if (!txt) return;
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText(txt).then(() => {
+        setCopiadoMsg(msg);
+        setTimeout(() => setCopiadoMsg(""), 3500);
+        playReiatsuSound('roll');
+      }).catch(() => {});
+    }
+  }
+
+  // Obter personagem ativo na aba individual
+  const activeChar = (db.personagens || []).find(p => p.id === selectedCharId) || db.personagens?.[0] || null;
+
+  // Obter ou criar registro de trama individual para o personagem
+  const tramasIndividuaisList = db.tramasIndividuais || [];
+  const tramaIndivAtual = tramasIndividuaisList.find(t => t.charId === activeChar?.id) || {
+    id: "trama-" + (activeChar?.id || "default"),
+    charId: activeChar?.id || "",
+    charNome: activeChar?.nome || "",
+    cenasArco: [],
+    tramaAtual: null
+  };
+
+  // Obter registro de tramas conjuntas
+  const tramasConjuntasList = db.tramasConjuntas || [];
+  const tramaConjAtual = tramasConjuntasList.find(c => c.id === selectedConjId) || tramasConjuntasList[0] || null;
+
+  // 1. Adicionar Nova Cena de Arco Individual
+  function handleAdicionarCenaIndividual(e) {
+    e.preventDefault();
+    if (!activeChar) return;
+    if (!novaCenaTitulo.trim() || !novaCenaTexto.trim()) {
+      alert("Por favor, informe o Título e o Texto da Cena de Arco!");
+      return;
+    }
+
+    const novaCena = {
+      id: uid(),
+      titulo: novaCenaTitulo.trim(),
+      texto: novaCenaTexto.trim(),
+      data: nowStr()
+    };
+
+    const updatedCenas = [novaCena, ...(tramaIndivAtual.cenasArco || [])];
+    const updatedTrama = {
+      ...tramaIndivAtual,
+      charId: activeChar.id,
+      charNome: activeChar.nome,
+      cenasArco: updatedCenas
+    };
+
+    const novasTramasIndiv = tramasIndividuaisList.filter(t => t.charId !== activeChar.id);
+    novasTramasIndiv.push(updatedTrama);
+
+    saveDb({ ...db, tramasIndividuais: novasTramasIndiv });
+    setNovaCenaTitulo("");
+    setNovaCenaTexto("");
+    playReiatsuSound('win');
+    alert("✓ Cena de arco registrada com sucesso para " + activeChar.nome + "!");
+  }
+
+  // 2. Apagar Cena de Arco Individual
+  function handleApagarCenaIndividual(cenaId) {
+    if (!confirm("Tem certeza que deseja apagar esta cena de arco?")) return;
+    const updatedCenas = (tramaIndivAtual.cenasArco || []).filter(c => c.id !== cenaId);
+    const updatedTrama = { ...tramaIndivAtual, cenasArco: updatedCenas };
+    const novasTramasIndiv = tramasIndividuaisList.map(t => t.charId === activeChar.id ? updatedTrama : t);
+    saveDb({ ...db, tramasIndividuais: novasTramasIndiv });
+    playReiatsuSound('shatter');
+  }
+
+  // 3. Sintetizar Trama Individual com IA
+  async function handleGerarIaIndividual() {
+    if (!activeChar) return;
+    setGerandoIaIndividual(true);
+    try {
+      const generator = (typeof gerarTramaIndividualAI === 'function')
+        ? gerarTramaIndividualAI
+        : (typeof sintetizarTramaIndividualHeuristica === 'function' ? sintetizarTramaIndividualHeuristica : null);
+
+      let resultado = null;
+      if (generator) {
+        resultado = await generator({
+          player: activeChar,
+          cenas: tramaIndivAtual.cenasArco || [],
+          openAiKey
+        });
+      }
+
+      if (resultado) {
+        const updatedTrama = {
+          ...tramaIndivAtual,
+          charId: activeChar.id,
+          charNome: activeChar.nome,
+          tramaAtual: resultado,
+          ultimaAtualizacao: nowStr()
+        };
+
+        const novasTramasIndiv = tramasIndividuaisList.filter(t => t.charId !== activeChar.id);
+        novasTramasIndiv.push(updatedTrama);
+
+        saveDb({ ...db, tramasIndividuais: novasTramasIndiv });
+        playReiatsuSound('bankai_charge');
+      }
+    } catch (err) {
+      alert("Erro ao sintetizar trama individual: " + err.message);
+    } finally {
+      setGerandoIaIndividual(false);
+    }
+  }
+
+  // 4. Criar Nova Ficha de Trama Conjunta (Cruzar 2 ou mais Players)
+  function handleCriarTramaConjunta(e) {
+    e.preventDefault();
+    if (conjSelectedCharIds.length < 2) {
+      alert("Selecione pelo menos 2 jogadores para criar uma trama conjunta / cruzada!");
+      return;
+    }
+    if (!conjTitulo.trim()) {
+      alert("Defina um título para a trama conjunta!");
+      return;
+    }
+
+    const selectedPlayers = (db.personagens || []).filter(p => conjSelectedCharIds.includes(p.id));
+    const nomesDupla = selectedPlayers.map(p => p.nome).join(" & ");
+
+    // Coletar cenas pré-existentes dos players selecionados
+    const cenasIniciais = [];
+    selectedPlayers.forEach(p => {
+      const pTrama = tramasIndividuaisList.find(t => t.charId === p.id);
+      if (pTrama && Array.isArray(pTrama.cenasArco)) {
+        pTrama.cenasArco.slice(0, 2).forEach(c => {
+          cenasIniciais.push({
+            id: uid(),
+            autorCharId: p.id,
+            autorNome: p.nome,
+            titulo: c.titulo,
+            texto: c.texto,
+            data: c.data
+          });
+        });
+      }
+    });
+
+    const novaConjId = "conj-" + uid();
+    const novaTramaConj = {
+      id: novaConjId,
+      titulo: conjTitulo.trim(),
+      charIds: selectedPlayers.map(p => p.id),
+      charNomes: selectedPlayers.map(p => p.nome),
+      cenasCompartilhadas: cenasIniciais,
+      tramaCruzada: null,
+      dataCriacao: nowStr()
+    };
+
+    saveDb({ ...db, tramasConjuntas: [novaTramaConj, ...(db.tramasConjuntas || [])] });
+    setSelectedConjId(novaConjId);
+    setModalCriarConj(false);
+    setConjTitulo("");
+    setConjSelectedCharIds([]);
+    playReiatsuSound('win');
+    alert("✓ Ficha de Trama Conjunta criada com sucesso para [" + nomesDupla + "]!");
+  }
+
+  // 5. Adicionar Cena Compartilhada na Trama Conjunta
+  function handleAdicionarCenaConjunta(e) {
+    e.preventDefault();
+    if (!tramaConjAtual) return;
+    if (!novaCenaConjTitulo.trim() || !novaCenaConjTexto.trim()) {
+      alert("Preencha o título e o texto da cena compartilhada!");
+      return;
+    }
+
+    const autorChar = (db.personagens || []).find(p => p.id === (novaCenaConjAutor || tramaConjAtual.charIds[0]));
+    const novaCena = {
+      id: uid(),
+      autorCharId: autorChar?.id || "",
+      autorNome: autorChar?.nome || "Dupla",
+      titulo: novaCenaConjTitulo.trim(),
+      texto: novaCenaConjTexto.trim(),
+      data: nowStr()
+    };
+
+    const updatedCenas = [novaCena, ...(tramaConjAtual.cenasCompartilhadas || [])];
+    const updatedConj = { ...tramaConjAtual, cenasCompartilhadas: updatedCenas };
+    const novasConjuntas = tramasConjuntasList.map(c => c.id === tramaConjAtual.id ? updatedConj : c);
+
+    saveDb({ ...db, tramasConjuntas: novasConjuntas });
+    setNovaCenaConjTitulo("");
+    setNovaCenaConjTexto("");
+    playReiatsuSound('win');
+    alert("✓ Cena compartilhada registrada na Trama Conjunta!");
+  }
+
+  // 6. Sintetizar Trama Cruzada com IA
+  async function handleGerarIaConjunta() {
+    if (!tramaConjAtual) return;
+    setGerandoIaConjunta(true);
+    try {
+      const playersDupla = (db.personagens || []).filter(p => (tramaConjAtual.charIds || []).includes(p.id));
+      const generator = (typeof gerarTramaConjuntaAI === 'function')
+        ? gerarTramaConjuntaAI
+        : (typeof sintetizarTramaConjuntaHeuristica === 'function' ? sintetizarTramaConjuntaHeuristica : null);
+
+      let resultado = null;
+      if (generator) {
+        resultado = await generator({
+          players: playersDupla,
+          cenasConjuntas: tramaConjAtual.cenasCompartilhadas || [],
+          openAiKey
+        });
+      }
+
+      if (resultado) {
+        const updatedConj = {
+          ...tramaConjAtual,
+          tramaCruzada: resultado,
+          ultimaAtualizacao: nowStr()
+        };
+        const novasConjuntas = tramasConjuntasList.map(c => c.id === tramaConjAtual.id ? updatedConj : c);
+        saveDb({ ...db, tramasConjuntas: novasConjuntas });
+        playReiatsuSound('bankai_charge');
+      }
+    } catch (err) {
+      alert("Erro ao sintetizar trama conjunta: " + err.message);
+    } finally {
+      setGerandoIaConjunta(false);
+    }
+  }
+
+  return (
+    <div className="space-y-6">
+      
+      {/* Banner Principal */}
+      <div className="bg-banner-overlay border-2 border-purple-500/70 purple-reiatsu-glow rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="px-3 py-1 bg-purple-950 border border-purple-400 text-purple-300 text-xs font-bold rounded-full uppercase tracking-wider">
+                🎭 Sistema Exclusivo da Administração • Arcos & Narrativa com IA
+              </span>
+              <span className="text-xs font-mono text-cyan-400">
+                {tramasIndividuaisList.length} Tramas Individuais • {tramasConjuntasList.length} Arcos Cruzados
+              </span>
+            </div>
+            <h2 className="font-title text-3xl sm:text-4xl tracking-widest text-purple-300 mt-2">
+              GERENCIADOR DE TRAMAS & ARCOS COM IA
+            </h2>
+            <p className="text-xs text-bleach-creamDim mt-1 max-w-3xl leading-relaxed">
+              Armazene as cenas de arco dos jogadores, utilize a inteligência artificial para diagnosticar motivações e forjar trilhas de eventos graduais. Caso a história de um player envolva outro, crie fichas de tramas cruzadas integrando suas narrativas!
+            </p>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            {[
+              { id: "individuais", label: "👤 Tramas Individuais", icon: "👤" },
+              { id: "conjuntas", label: "🔗 Tramas Cruzadas / Duplas", icon: "🔗" },
+              { id: "fichas", label: "📊 Visão Geral de Players", icon: "📊" },
+              { id: "nivelamento", label: "⚖️ Nivelamento ADM/Sub-ADM", icon: "⚖️" }
+            ].map(tab => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setSubAba(tab.id)}
+                className={"px-3 py-2 rounded-xl text-xs font-bold uppercase transition flex items-center gap-1.5 " + (
+                  subAba === tab.id
+                    ? "bg-purple-500 text-black font-black shadow-[0_0_15px_rgba(139,111,214,0.6)]"
+                    : "bg-black/70 border border-purple-500/30 text-purple-200 hover:border-purple-400"
+                )}
+              >
+                <span>{tab.icon}</span>
+                <span>{tab.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {copiadoMsg && (
+        <div className="p-3 bg-green-950/80 border border-green-500 text-green-200 text-xs font-bold rounded-xl text-center shadow-lg animate-pulse">
+          {copiadoMsg}
+        </div>
+      )}
+
+      {/* SUB-ABA 1: TRAMAS INDIVIDUAIS DE JOGADORES */}
+      {subAba === "individuais" && (
+        <div className="space-y-6">
+          <Section
+            title="👤 Dossiê Narrativo & Tramas Individuais por Player"
+            subtitle="Selecione um personagem para registrar suas cenas de arco e acionar a IA para preparar seus eventos e antagonistas"
+            className="border-2 border-purple-500/50"
+          >
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              
+              {/* Coluna Esquerda: Seletor e Ficha do Jogador (4 cols) */}
+              <div className="lg:col-span-4 space-y-4">
+                
+                {/* Seletor & Busca */}
+                <div className="p-4 bg-black/80 rounded-xl border border-purple-500/30 space-y-3">
+                  <label className="block text-[11px] font-bold text-purple-300 uppercase">
+                    🔍 Selecionar Jogador para Gestão de Trama:
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Buscar por nome ou código (ex: ACT-4321)..."
+                    value={buscaChar}
+                    onChange={(e) => {
+                      const q = e.target.value;
+                      setBuscaChar(q);
+                      if (q.trim()) {
+                        const found = (db.personagens || []).find(p =>
+                          p.nome.toLowerCase().includes(q.toLowerCase()) ||
+                          getCodigoAtividade(p).toLowerCase().includes(q.toLowerCase())
+                        );
+                        if (found) setSelectedCharId(found.id);
+                      }
+                    }}
+                    className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2 text-xs text-white placeholder:text-bleach-muted focus:border-purple-400 focus:outline-none font-sans"
+                  />
+
+                  <select
+                    value={activeChar?.id || ""}
+                    onChange={(e) => setSelectedCharId(e.target.value)}
+                    className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2.5 text-xs text-white focus:border-purple-400 focus:outline-none"
+                  >
+                    {(db.personagens || []).map(p => (
+                      <option key={p.id} value={p.id}>
+                        {p.nome} [{getCodigoAtividade(p)}] — {p.esquadrao}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Cartão de Identidade do Jogador */}
+                {activeChar && (
+                  <div className="p-4 bg-gradient-to-b from-purple-950/40 via-bleach-panel2 to-black rounded-xl border-2 border-purple-500/40 space-y-3 shadow-xl">
+                    <div className="flex items-center gap-3 border-b border-white/10 pb-3">
+                      <img
+                        src={activeChar.foto || 'assets/ichigo-orange.png'}
+                        className="w-14 h-14 rounded-xl object-cover border border-purple-400/50"
+                      />
+                      <div className="min-w-0">
+                        <span className="text-[10px] uppercase font-bold text-purple-300 block">
+                          {activeChar.raca} • {activeChar.esquadrao}
+                        </span>
+                        <h4 className="font-title text-xl text-white truncate">{activeChar.nome}</h4>
+                        <span className="text-xs font-mono text-yellow-400 font-bold">
+                          Código: {getCodigoAtividade(activeChar)}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2 text-[11px] font-mono">
+                      <div className="p-2 bg-black/60 rounded border border-white/5">
+                        <span className="text-bleach-muted block text-[10px]">Patamar:</span>
+                        <strong className="text-white">{getPowerTier(Object.values(activeChar.atributos || {}).reduce((a, b) => a + b, 0)).title}</strong>
+                      </div>
+                      <div className="p-2 bg-black/60 rounded border border-white/5">
+                        <span className="text-bleach-muted block text-[10px]">Cenas Totais:</span>
+                        <strong className="text-purple-300 font-bold">{activeChar.cenasTotal || 0} cenas</strong>
+                      </div>
+                      <div className="p-2 bg-black/60 rounded border border-white/5">
+                        <span className="text-bleach-muted block text-[10px]">Zanpakutō:</span>
+                        <strong className="text-cyan-300 truncate block">{activeChar.zanpakuto?.shikaiAtiva?.nome || activeChar.zanpakuto?.nome || 'Em despertar'}</strong>
+                      </div>
+                      <div className="p-2 bg-black/60 rounded border border-white/5">
+                        <span className="text-bleach-muted block text-[10px]">Conhecimento:</span>
+                        <strong className="text-yellow-400">{activeChar.conhecimento || 0} ₪</strong>
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2 pt-1">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setConjSelectedCharIds([activeChar.id]);
+                          setConjTitulo("Arco de " + activeChar.nome + " & Parceiro");
+                          setModalCriarConj(true);
+                        }}
+                        className="flex-1 py-2 bg-gradient-to-r from-purple-600 to-indigo-700 hover:brightness-110 text-white font-extrabold text-xs uppercase tracking-wider rounded-lg shadow transition text-center"
+                      >
+                        🔗 Cruzar Trama com Outro Player
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Formulário: Inserir Nova Cena de Arco */}
+                <form onSubmit={handleAdicionarCenaIndividual} className="p-4 bg-black/80 rounded-xl border border-purple-500/30 space-y-3">
+                  <h5 className="font-title text-sm text-purple-300 flex items-center gap-1.5 border-b border-white/10 pb-2">
+                    <span>✍️</span> Registrar Cena de Arco do Jogador
+                  </h5>
+                  <div>
+                    <label className="block text-[10px] font-bold text-bleach-muted uppercase mb-1">
+                      Título / Momento da Cena:
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Ex: Treino em Karakura com a Shikai / Confronto no Portão Sul"
+                      value={novaCenaTitulo}
+                      onChange={(e) => setNovaCenaTitulo(e.target.value)}
+                      className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2 text-xs text-white focus:border-purple-400 focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-bold text-bleach-muted uppercase mb-1">
+                      Conteúdo da Cena / Ação no ON:
+                    </label>
+                    <textarea
+                      rows={4}
+                      placeholder="Cole aqui o texto da cena de arco narrada pelo jogador no WhatsApp..."
+                      value={novaCenaTexto}
+                      onChange={(e) => setNovaCenaTexto(e.target.value)}
+                      className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2.5 text-xs text-white focus:border-purple-400 focus:outline-none resize-none leading-relaxed"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full py-2.5 bg-gradient-to-r from-purple-500 to-amber-600 hover:brightness-110 text-black font-extrabold text-xs uppercase tracking-wider rounded-lg shadow transition"
+                  >
+                    + Salvar Cena de Arco na Ficha
+                  </button>
+                </form>
+
+              </div>
+
+              {/* Coluna Direita: Cenas Registradas & Análise com IA (8 cols) */}
+              <div className="lg:col-span-8 space-y-5">
+                
+                {/* Gatilho da IA para Sintetizar Trama */}
+                <div className="p-4 bg-gradient-to-r from-purple-950/60 via-black to-purple-950/40 rounded-xl border-2 border-purple-500/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xl">
+                  <div>
+                    <span className="text-[10px] uppercase font-extrabold px-2.5 py-0.5 rounded bg-purple-900 border border-purple-400 text-purple-200">
+                      Motor de Narrativa & Análise Cognitiva
+                    </span>
+                    <h4 className="font-title text-xl text-white mt-1">
+                      Síntese de Trama & Eventos de Arco com IA
+                    </h4>
+                    <p className="text-xs text-bleach-creamDim">
+                      Analisa o histórico de cenas, o esquadrão e o patamar de <strong>{activeChar?.nome}</strong> para forjar 3 eventos graduais e um antagonista sob medida.
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={handleGerarIaIndividual}
+                    disabled={gerandoIaIndividual}
+                    className="px-5 py-3 bg-gradient-to-r from-purple-500 via-indigo-500 to-purple-600 hover:brightness-110 text-white font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-lg transition disabled:opacity-50 flex items-center gap-2 shrink-0"
+                  >
+                    {gerandoIaIndividual ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        <span>Sintetizando Arco com IA...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>🧠</span>
+                        <span>Sintetizar Trama com IA</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+
+                {/* Exibição da Trama Sintetizada com IA */}
+                {tramaIndivAtual.tramaAtual ? (
+                  <div className="p-5 bg-black/90 rounded-xl border-2 border-purple-500/60 space-y-4 shadow-2xl">
+                    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-purple-500/20 pb-3">
+                      <div>
+                        <span className="px-2.5 py-0.5 bg-purple-950 text-purple-300 border border-purple-400 text-[10px] font-extrabold uppercase rounded-full tracking-wider">
+                          {tramaIndivAtual.tramaAtual.faseAtual || "Fase 1: Convocação & Premonição"}
+                        </span>
+                        <h3 className="font-title text-2xl text-purple-300 mt-1">
+                          {tramaIndivAtual.tramaAtual.tituloArco}
+                        </h3>
+                      </div>
+
+                      <div className="flex gap-2">
+                        <button
+                          type="button"
+                          onClick={() => copiarTexto(tramaIndivAtual.tramaAtual.briefingWhatsApp, "✓ Dossiê do WhatsApp copiado!")}
+                          className="px-3 py-1.5 bg-green-950 hover:bg-green-900 border border-green-500 text-green-300 font-bold text-xs rounded-lg transition flex items-center gap-1.5 shadow"
+                        >
+                          <span>📋</span>
+                          <span>Copiar para WhatsApp</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Diagnóstico Psicológico & Gancho */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                      <div className="p-3.5 bg-bleach-panel2 rounded-xl border border-white/10 space-y-1">
+                        <strong className="text-purple-300 block text-xs uppercase font-bold">🧠 Diagnóstico Psicológico da Alma:</strong>
+                        <p className="text-bleach-creamDim leading-relaxed">{tramaIndivAtual.tramaAtual.diagnosticoPsicologico}</p>
+                      </div>
+                      <div className="p-3.5 bg-bleach-panel2 rounded-xl border border-white/10 space-y-1">
+                        <strong className="text-yellow-400 block text-xs uppercase font-bold">⚡ Gancho Narrativo Imediato (ON):</strong>
+                        <p className="text-bleach-creamDim leading-relaxed">{tramaIndivAtual.tramaAtual.ganchoImediato}</p>
+                      </div>
+                    </div>
+
+                    {/* Trilha dos 3 Eventos Planejados */}
+                    <div className="space-y-3 pt-2">
+                      <h5 className="font-title text-base text-purple-300 flex items-center gap-1.5">
+                        <span>⚔️</span> Trilha de Eventos Planejados para o Arco ({tramaIndivAtual.tramaAtual.eventos?.length || 3} Etapas):
+                      </h5>
+                      <div className="grid grid-cols-1 gap-3">
+                        {(tramaIndivAtual.tramaAtual.eventos || []).map((ev, idx) => (
+                          <div key={idx} className="p-3.5 bg-purple-950/20 border border-purple-500/30 rounded-xl space-y-2">
+                            <div className="flex items-center justify-between gap-2">
+                              <span className="px-2 py-0.5 bg-purple-900 text-purple-300 border border-purple-500 font-mono font-bold text-[10px] rounded uppercase">
+                                {ev.fase || ("Evento " + (idx + 1))}
+                              </span>
+                              <strong className="text-white text-xs font-bold">{ev.titulo}</strong>
+                            </div>
+                            <p className="text-xs text-bleach-cream leading-relaxed">{ev.descricao}</p>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] pt-1 border-t border-white/5">
+                              <span className="text-yellow-300"><strong>Objetivo:</strong> {ev.objetivoCena}</span>
+                              <span className="text-cyan-300"><strong>Desafio Tático:</strong> {ev.desafioSugerido}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Antagonista Desenvolvido Sob Medida */}
+                    {tramaIndivAtual.tramaAtual.antagonista && (
+                      <div className="p-4 bg-red-950/30 border border-red-500/40 rounded-xl space-y-2">
+                        <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-red-900 border border-red-500 text-red-200">
+                          Antagonista / Força Opositora
+                        </span>
+                        <h5 className="font-title text-lg text-red-400">
+                          {tramaIndivAtual.tramaAtual.antagonista.nome} — <span className="text-xs text-bleach-muted">{tramaIndivAtual.tramaAtual.antagonista.titulo}</span>
+                        </h5>
+                        <p className="text-xs text-bleach-creamDim leading-relaxed">
+                          <strong>Motivação:</strong> {tramaIndivAtual.tramaAtual.antagonista.motivacao}
+                        </p>
+                        <p className="text-xs text-red-300">
+                          <strong>Brecha / Ponto Fraco:</strong> {tramaIndivAtual.tramaAtual.antagonista.fraquezaChave}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Recompensa Nivelada */}
+                    <div className="p-3 bg-yellow-950/30 border border-yellow-500/40 rounded-lg flex items-center justify-between text-xs text-yellow-300">
+                      <span><strong>🎁 Recompensa Nivelada ao Concluir o Arco:</strong> {tramaIndivAtual.tramaAtual.recompensaArco || '15 Pontos de Atributo + 2 Giros Comuns + 1 Especial'}</span>
+                      <span className="font-mono text-[10px] text-bleach-muted">Garantido Oficial</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-8 bg-black/60 rounded-xl border border-white/10 text-center space-y-2 text-bleach-muted">
+                    <span className="text-3xl block">📖</span>
+                    <p className="text-sm font-bold text-white">Nenhuma trama individual sintetizada para {activeChar?.nome} ainda.</p>
+                    <p className="text-xs text-bleach-creamDim max-w-md mx-auto">
+                      Registre as cenas de arco do jogador e clique no botão acima para a IA analisar a essência do personagem e gerar a trilha de eventos.
+                    </p>
+                  </div>
+                )}
+
+                {/* Histórico de Cenas de Arco Armazenadas */}
+                <div className="p-4 bg-black/80 rounded-xl border border-purple-500/30 space-y-3">
+                  <div className="flex items-center justify-between border-b border-white/10 pb-2">
+                    <h5 className="font-title text-base text-purple-300 flex items-center gap-1.5">
+                      <span>📚</span> Cenas de Arco Armazenadas de {activeChar?.nome} ({tramaIndivAtual.cenasArco?.length || 0})
+                    </h5>
+                    <span className="text-xs text-bleach-muted font-mono">Total de Registros: {tramaIndivAtual.cenasArco?.length || 0}</span>
+                  </div>
+
+                  <div className="space-y-2 max-h-[350px] overflow-y-auto pr-1">
+                    {(tramaIndivAtual.cenasArco || []).length === 0 ? (
+                      <p className="text-xs text-bleach-muted py-4 text-center">Nenhuma cena de arco registrada para este jogador ainda.</p>
+                    ) : (
+                      (tramaIndivAtual.cenasArco || []).map((cena, idx) => (
+                        <div key={cena.id || idx} className="p-3 bg-bleach-panel2 rounded-lg border border-white/5 space-y-1.5">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-bold text-white flex items-center gap-1.5">
+                              <span>📜</span> {cena.titulo}
+                            </span>
+                            <div className="flex items-center gap-2">
+                              <span className="text-[10px] text-bleach-muted font-mono">{cena.data}</span>
+                              <button
+                                type="button"
+                                onClick={() => handleApagarCenaIndividual(cena.id)}
+                                className="text-red-400 hover:text-red-300 text-xs px-1.5 py-0.5 rounded hover:bg-red-950"
+                                title="Excluir cena"
+                              >
+                                ✕
+                              </button>
+                            </div>
+                          </div>
+                          <p className="text-xs text-bleach-creamDim leading-relaxed font-sans max-h-24 overflow-y-auto whitespace-pre-wrap">
+                            {cena.texto}
+                          </p>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          </Section>
+        </div>
+      )}
+
+      {/* SUB-ABA 2: TRAMAS CONJUNTAS & ARCOS CRUZADOS (MULTI-PLAYER) */}
+      {subAba === "conjuntas" && (
+        <div className="space-y-6">
+          <Section
+            title="🔗 Fichas de Tramas Conjuntas & Arcos Cruzados (Multi-Player)"
+            subtitle="Quando as histórias de dois ou mais jogadores se cruzam, crie uma ficha conjunta armazenando as cenas de ambos e forje um arco cooperativo com IA"
+            className="border-2 border-indigo-500/50"
+          >
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              
+              {/* Coluna Esquerda: Lista de Tramas Conjuntas (4 cols) */}
+              <div className="lg:col-span-4 space-y-4">
+                <div className="p-4 bg-black/80 rounded-xl border border-indigo-500/30 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h5 className="font-title text-sm text-indigo-300 uppercase">
+                      Tramas Conjuntas Existentes
+                    </h5>
+                    <button
+                      type="button"
+                      onClick={() => setModalCriarConj(true)}
+                      className="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-lg transition shadow"
+                    >
+                      + Nova Trama
+                    </button>
+                  </div>
+
+                  <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
+                    {tramasConjuntasList.length === 0 ? (
+                      <p className="text-xs text-bleach-muted py-3 text-center">Nenhuma trama conjunta criada ainda.</p>
+                    ) : (
+                      tramasConjuntasList.map(c => (
+                        <button
+                          key={c.id}
+                          type="button"
+                          onClick={() => setSelectedConjId(c.id)}
+                          className={"w-full p-3 rounded-xl border text-left transition " + (
+                            tramaConjAtual?.id === c.id
+                              ? "bg-indigo-950/80 border-indigo-400 text-white shadow"
+                              : "bg-bleach-panel2 border-white/5 text-bleach-creamDim hover:border-white/20"
+                          )}
+                        >
+                          <span className="text-[10px] font-mono text-indigo-300 block uppercase">
+                            Arco Compartilhado
+                          </span>
+                          <strong className="text-sm font-bold block text-white truncate">{c.titulo}</strong>
+                          <span className="text-xs text-bleach-muted block truncate">
+                            👥 {c.charNomes?.join(" & ") || "Jogadores"}
+                          </span>
+                        </button>
+                      ))
+                    )}
+                  </div>
+                </div>
+
+                {/* Se Trama Ativa: Adicionar Cena Compartilhada */}
+                {tramaConjAtual && (
+                  <form onSubmit={handleAdicionarCenaConjunta} className="p-4 bg-black/80 rounded-xl border border-indigo-500/30 space-y-3">
+                    <h5 className="font-title text-sm text-indigo-300 border-b border-white/10 pb-2 flex items-center gap-1.5">
+                      <span>✍️</span> Registrar Cena na Trama Conjunta
+                    </h5>
+                    <div>
+                      <label className="block text-[10px] font-bold text-bleach-muted uppercase mb-1">
+                        Autor / Protagonista da Cena:
+                      </label>
+                      <select
+                        value={novaCenaConjAutor}
+                        onChange={(e) => setNovaCenaConjAutor(e.target.value)}
+                        className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2 text-xs text-white"
+                      >
+                        {(tramaConjAtual.charIds || []).map(pId => {
+                          const pObj = (db.personagens || []).find(p => p.id === pId);
+                          return (
+                            <option key={pId} value={pId}>
+                              {pObj?.nome || pId}
+                            </option>
+                          );
+                        })}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] font-bold text-bleach-muted uppercase mb-1">
+                        Título da Cena Conjunta:
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Ex: Diálogo no Mundo Humano / Duelo Combinado"
+                        value={novaCenaConjTitulo}
+                        onChange={(e) => setNovaCenaConjTitulo(e.target.value)}
+                        className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2 text-xs text-white focus:border-indigo-400 focus:outline-none"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] font-bold text-bleach-muted uppercase mb-1">
+                        Texto da Cena Compartilhada:
+                      </label>
+                      <textarea
+                        rows={4}
+                        placeholder="Cole aqui a cena conjunta narrada no WhatsApp..."
+                        value={novaCenaConjTexto}
+                        onChange={(e) => setNovaCenaConjTexto(e.target.value)}
+                        className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2.5 text-xs text-white focus:border-indigo-400 focus:outline-none resize-none leading-relaxed"
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="w-full py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 hover:brightness-110 text-white font-extrabold text-xs uppercase tracking-wider rounded-lg shadow transition"
+                    >
+                      + Adicionar Cena ao Arco Conjunto
+                    </button>
+                  </form>
+                )}
+              </div>
+
+              {/* Coluna Direita: Análise com IA & Cenas Compartilhadas (8 cols) */}
+              <div className="lg:col-span-8 space-y-5">
+                {tramaConjAtual ? (
+                  <>
+                    {/* Botão de Síntese Cruzada com IA */}
+                    <div className="p-4 bg-gradient-to-r from-indigo-950/60 via-black to-purple-950/40 rounded-xl border-2 border-indigo-500/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xl">
+                      <div>
+                        <span className="text-[10px] uppercase font-extrabold px-2.5 py-0.5 rounded bg-indigo-900 border border-indigo-400 text-indigo-200">
+                          Motor de Narrativa Cruzada • Multi-Player
+                        </span>
+                        <h4 className="font-title text-xl text-white mt-1">
+                          {tramaConjAtual.titulo}
+                        </h4>
+                        <p className="text-xs text-bleach-creamDim">
+                          Jogadores Interligados: <strong className="text-indigo-300">{tramaConjAtual.charNomes?.join(" & ")}</strong>
+                        </p>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={handleGerarIaConjunta}
+                        disabled={gerandoIaConjunta}
+                        className="px-5 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 hover:brightness-110 text-white font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-lg transition disabled:opacity-50 flex items-center gap-2 shrink-0"
+                      >
+                        {gerandoIaConjunta ? (
+                          <>
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                            <span>Gerando Trama Cruzada...</span>
+                          </>
+                        ) : (
+                          <>
+                            <span>⚡</span>
+                            <span>Gerar Trama Cruzada com IA</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+
+                    {/* Exibição da Trama Cruzada Gerada */}
+                    {tramaConjAtual.tramaCruzada ? (
+                      <div className="p-5 bg-black/90 rounded-xl border-2 border-indigo-500/60 space-y-4 shadow-2xl">
+                        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-indigo-500/20 pb-3">
+                          <div>
+                            <span className="px-2.5 py-0.5 bg-indigo-950 text-indigo-300 border border-indigo-400 text-[10px] font-extrabold uppercase rounded-full">
+                              {tramaConjAtual.tramaCruzada.dinamicaDupla || "Aliança de Esquadrões"}
+                            </span>
+                            <h3 className="font-title text-2xl text-indigo-300 mt-1">
+                              {tramaConjAtual.tramaCruzada.tituloArco}
+                            </h3>
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={() => copiarTexto(tramaConjAtual.tramaCruzada.briefingWhatsApp, "✓ Briefing conjunto copiado!")}
+                            className="px-3 py-1.5 bg-green-950 hover:bg-green-900 border border-green-500 text-green-300 font-bold text-xs rounded-lg transition flex items-center gap-1.5 shadow"
+                          >
+                            <span>📋</span>
+                            <span>Copiar Briefing para WhatsApp</span>
+                          </button>
+                        </div>
+
+                        <div className="p-3.5 bg-bleach-panel2 rounded-xl border border-white/10 space-y-1 text-xs">
+                          <strong className="text-indigo-300 block text-xs uppercase font-bold">📖 Sinopse da Trama Compartilhada:</strong>
+                          <p className="text-bleach-cream leading-relaxed">{tramaConjAtual.tramaCruzada.sinopse}</p>
+                          {tramaConjAtual.tramaCruzada.conflitoCentral && (
+                            <p className="text-yellow-300 pt-1 border-t border-white/5">
+                              <strong>Conflito Central:</strong> {tramaConjAtual.tramaCruzada.conflitoCentral}
+                            </p>
+                          )}
+                        </div>
+
+                        {/* Fases Cruzadas */}
+                        <div className="space-y-3 pt-2">
+                          <h5 className="font-title text-base text-indigo-300 flex items-center gap-1.5">
+                            <span>⚔️</span> Fases da Provação Cruzada (Ações Interdependentes):
+                          </h5>
+                          <div className="grid grid-cols-1 gap-3">
+                            {(tramaConjAtual.tramaCruzada.eventosCruzados || []).map((fase, idx) => (
+                              <div key={idx} className="p-3.5 bg-indigo-950/20 border border-indigo-500/30 rounded-xl space-y-2">
+                                <span className="px-2 py-0.5 bg-indigo-900 text-indigo-300 border border-indigo-500 font-mono font-bold text-[10px] rounded uppercase">
+                                  {fase.fase || ("Fase " + (idx + 1))}
+                                </span>
+                                <p className="text-xs text-bleach-cream leading-relaxed">{fase.descricao}</p>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] pt-1 border-t border-white/5">
+                                  <span className="text-yellow-300"><strong>Papel Player 1:</strong> {fase.papelPlayer1}</span>
+                                  <span className="text-cyan-300"><strong>Papel Player 2:</strong> {fase.papelPlayer2}</span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Ameaça Comum */}
+                        {tramaConjAtual.tramaCruzada.ameacaComum && (
+                          <div className="p-3.5 bg-red-950/30 border border-red-500/40 rounded-xl text-xs space-y-1">
+                            <strong className="text-red-400 block text-xs uppercase font-bold">💀 Ameaça / Chefe Coletivo:</strong>
+                            <p className="text-white font-bold">{tramaConjAtual.tramaCruzada.ameacaComum.nome}</p>
+                            <p className="text-bleach-creamDim">{tramaConjAtual.tramaCruzada.ameacaComum.perigo}</p>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="p-8 bg-black/60 rounded-xl border border-white/10 text-center space-y-2 text-bleach-muted">
+                        <span className="text-3xl block">⚡</span>
+                        <p className="text-sm font-bold text-white">Nenhum arco compartilhado gerado com IA para esta dupla ainda.</p>
+                        <p className="text-xs text-bleach-creamDim max-w-md mx-auto">
+                          Clique no botão "Gerar Trama Cruzada com IA" para entrelaçar as histórias dos jogadores selecionados.
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Cenas Compartilhadas Armazenadas */}
+                    <div className="p-4 bg-black/80 rounded-xl border border-indigo-500/30 space-y-3">
+                      <h5 className="font-title text-base text-indigo-300 flex items-center gap-1.5 border-b border-white/10 pb-2">
+                        <span>📚</span> Cenas Integradas desta Trama Conjunta ({tramaConjAtual.cenasCompartilhadas?.length || 0})
+                      </h5>
+                      <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
+                        {(tramaConjAtual.cenasCompartilhadas || []).map((c, idx) => (
+                          <div key={c.id || idx} className="p-3 bg-bleach-panel2 rounded-lg border border-white/5 space-y-1">
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs font-bold text-white flex items-center gap-2">
+                                <span className="px-1.5 py-0.5 bg-indigo-950 text-indigo-300 rounded text-[10px] font-mono">{c.autorNome}</span>
+                                <span>{c.titulo}</span>
+                              </span>
+                              <span className="text-[10px] text-bleach-muted font-mono">{c.data}</span>
+                            </div>
+                            <p className="text-xs text-bleach-creamDim leading-relaxed whitespace-pre-wrap">{c.texto}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="p-12 bg-black/60 rounded-xl border border-white/10 text-center space-y-3 text-bleach-muted">
+                    <span className="text-4xl block">👥</span>
+                    <h4 className="font-title text-xl text-white">Nenhuma Trama Conjunta Selecionada</h4>
+                    <p className="text-xs text-bleach-creamDim max-w-md mx-auto">
+                      Crie uma nova trama conjunta para cruzar o destino de dois ou mais jogadores no RPG.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setModalCriarConj(true)}
+                      className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-lg transition"
+                    >
+                      + Criar Nova Trama Conjunta
+                    </button>
+                  </div>
+                )}
+              </div>
+
+            </div>
+          </Section>
+        </div>
+      )}
+
+      {/* SUB-ABA 3: VISÃO GERAL DE FICHAS DOS PLAYERS */}
+      {subAba === "fichas" && (
+        <div className="space-y-6">
+          <Section
+            title="📊 Visão Geral de Fichas dos Players & Códigos de Atividade"
+            subtitle="Fiscalize rapidamente os dados vitais, atributos, patamares e atividade de todos os jogadores"
+            className="border-2 border-yellow-500/50"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {(db.personagens || []).map(p => {
+                const total = Object.values(p.atributos || {}).reduce((a, b) => a + b, 0);
+                const tier = getPowerTier(total);
+                const cod = getCodigoAtividade(p);
+                const pTrama = tramasIndividuaisList.find(t => t.charId === p.id);
+                const qtdCenasArco = pTrama?.cenasArco?.length || 0;
+
+                return (
+                  <div
+                    key={p.id}
+                    className="p-4 bg-bleach-panel2 border-2 border-white/10 hover:border-yellow-500/60 rounded-2xl space-y-3 shadow-xl transition"
+                  >
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={p.foto || 'assets/ichigo-orange.png'}
+                        className="w-12 h-12 rounded-xl object-cover border border-white/10"
+                      />
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] uppercase font-bold text-yellow-400 truncate">{p.esquadrao}</span>
+                          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-black text-yellow-300 border border-white/10">{cod}</span>
+                        </div>
+                        <h4 className="font-bold text-white text-base truncate">{p.nome}</h4>
+                        <span className="text-xs text-bleach-muted">{p.raca} • {tier.title}</span>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-4 gap-1 text-center font-mono text-[11px]">
+                      <div className="p-1 bg-black/60 rounded border border-blue-500/20 text-cyan-300">
+                        <span className="text-[9px] text-bleach-muted block">PE</span>{p.atributos?.pressao || 10}
+                      </div>
+                      <div className="p-1 bg-black/60 rounded border border-red-500/20 text-red-300">
+                        <span className="text-[9px] text-bleach-muted block">FOR</span>{p.atributos?.forca || 10}
+                      </div>
+                      <div className="p-1 bg-black/60 rounded border border-green-500/20 text-green-300">
+                        <span className="text-[9px] text-bleach-muted block">VEL</span>{p.atributos?.velocidade || 10}
+                      </div>
+                      <div className="p-1 bg-black/60 rounded border border-purple-500/20 text-purple-300">
+                        <span className="text-[9px] text-bleach-muted block">RES</span>{p.atributos?.resiliencia || 10}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between text-xs font-mono pt-1 border-t border-white/5">
+                      <span className="text-bleach-muted">Cenas Semana: <strong className="text-white">{p.cenasSemana || 0}</strong></span>
+                      <span className="text-purple-300">Cenas de Arco: <strong>{qtdCenasArco}</strong></span>
+                    </div>
+
+                    <div className="flex gap-2 pt-1">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedCharId(p.id);
+                          setSubAba("individuais");
+                        }}
+                        className="flex-1 py-1.5 bg-purple-950/80 hover:bg-purple-900 border border-purple-500 text-purple-200 text-xs font-bold rounded-lg transition text-center"
+                      >
+                        🎭 Tramas
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (onAbrirFicha) onAbrirFicha(p.id);
+                        }}
+                        className="flex-1 py-1.5 bg-yellow-950/80 hover:bg-yellow-900 border border-yellow-500 text-yellow-200 text-xs font-bold rounded-lg transition text-center"
+                      >
+                        👁️ Ver Ficha
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </Section>
+        </div>
+      )}
+
+      {/* SUB-ABA 4: NIVELAMENTO JUSTO DE RECOMPENSAS ADM / SUB-ADM */}
+      {subAba === "nivelamento" && (
+        <div className="space-y-6">
+          <Section
+            title="⚖️ Nivelamento Sagrado de Recompensas de ADM / Sub-ADM"
+            subtitle="Regulamento oficial que impede inflação de atributos e garante paridade absoluta entre a Staff e os Players"
+            className="border-2 border-emerald-500/50"
+          >
+            <div className="p-6 bg-black/80 rounded-2xl border-2 border-emerald-500/40 space-y-6 shadow-2xl">
+              
+              <div className="p-4 bg-emerald-950/40 border border-emerald-500 rounded-xl space-y-2">
+                <span className="px-2.5 py-0.5 bg-emerald-900 text-emerald-300 border border-emerald-400 text-[10px] font-extrabold uppercase rounded-full">
+                  ✦ Diretriz da Central 46 & Staff
+                </span>
+                <h4 className="font-title text-xl text-emerald-300">
+                  Paridade Marcial: Como ADMs e Sub-ADMs Ganham Pontos no RPG
+                </h4>
+                <p className="text-xs text-bleach-creamDim leading-relaxed">
+                  Como Administradores e Sub-Administradores podem cenar em ON e realizar os mesmos treinos que qualquer jogador, <strong>é terminantemente proibido atribuir pontos a cada micro-tarefa administrativa</strong> (avaliar fichas, checar relatórios ou responder tickets). Caso contrário, a Staff escalaria rápido demais e desbalancearia as batalhas.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                
+                <div className="p-4 bg-bleach-panel2 rounded-xl border border-yellow-500/40 space-y-2">
+                  <div className="flex items-center gap-2 text-yellow-400 font-bold">
+                    <span>👑</span> 1. Narração de Missão Principal
+                  </div>
+                  <p className="text-bleach-creamDim leading-relaxed">
+                    Quando o ADM/Sub-ADM narrar ou concluir a Missão Principal da semana, recebe <strong>exatamente o mesmo prêmio garantido que os jogadores</strong>:
+                  </p>
+                  <div className="p-2.5 bg-black/60 rounded border border-yellow-500/20 font-mono text-yellow-300 font-bold">
+                    +15 Pontos de Atributo + 2 Giros Comuns + 1 Giro Especial
+                  </div>
+                </div>
+
+                <div className="p-4 bg-bleach-panel2 rounded-xl border border-purple-500/40 space-y-2">
+                  <div className="flex items-center gap-2 text-purple-400 font-bold">
+                    <span>📜</span> 2. Análise & Conclusão de Cenas de Arco
+                  </div>
+                  <p className="text-bleach-creamDim leading-relaxed">
+                    Ao estruturar e avaliar as Cenas de Arco dos jogadores (com o mínimo exigido de 90 linhas no ON), a Staff é bonificada de forma padronizada:
+                  </p>
+                  <div className="p-2.5 bg-black/60 rounded border border-purple-500/20 font-mono text-purple-300 font-bold">
+                    +15 Pontos de Atributo + 2 Giros Comuns + 1 Giro Especial
+                  </div>
+                </div>
+
+              </div>
+
+              <div className="p-4 bg-red-950/30 border border-red-500/40 rounded-xl space-y-2 text-xs">
+                <strong className="text-red-400 block text-xs uppercase font-bold">🚫 Proibições Expressas de Balanceamento:</strong>
+                <ul className="list-disc list-inside space-y-1 text-bleach-creamDim">
+                  <li>Proibido criar pontos do nada para si mesmo sem cenas em ON ou narração oficial de arco.</li>
+                  <li>Treinos individuais da Staff seguem a mesma regra dos players (mínimo de 30 linhas por cena no WhatsApp).</li>
+                  <li>Todos os registros de evolução passam pelo histórico público da ficha auditável.</li>
+                </ul>
+              </div>
+
+            </div>
+          </Section>
+        </div>
+      )}
+
+      {/* MODAL: CRIAR NOVA TRAMA CONJUNTA */}
+      {modalCriarConj && (
+        <div className="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
+          <div className="relative w-full max-w-lg bg-bleach-panel border-2 border-indigo-500 rounded-2xl p-6 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+              <div>
+                <span className="text-[10px] font-bold uppercase text-indigo-400">Multi-Player Arc Engine</span>
+                <h4 className="font-title text-xl text-white">Criar Nova Trama Conjunta</h4>
+              </div>
+              <button
+                type="button"
+                onClick={() => setModalCriarConj(false)}
+                className="text-bleach-muted hover:text-white font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleCriarTramaConjunta} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-bleach-creamDim uppercase mb-1">
+                  Título da Trama Conjunta:
+                </label>
+                <input
+                  type="text"
+                  placeholder="Ex: Arco do Eclipse das Lâminas / Missão Conjunta de Karakura"
+                  value={conjTitulo}
+                  onChange={(e) => setConjTitulo(e.target.value)}
+                  className="w-full bg-black/80 border border-bleach-border rounded-lg p-2.5 text-xs text-white focus:border-indigo-400 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-bleach-creamDim uppercase mb-1">
+                  Selecione os Jogadores Envolvidos (Mínimo 2):
+                </label>
+                <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1 bg-black/50 p-2 rounded-lg border border-white/5">
+                  {(db.personagens || []).map(p => {
+                    const isChecked = conjSelectedCharIds.includes(p.id);
+                    return (
+                      <label
+                        key={p.id}
+                        className={"flex items-center gap-2.5 p-2 rounded-lg cursor-pointer transition text-xs " + (
+                          isChecked ? "bg-indigo-950/80 border border-indigo-500 text-white" : "hover:bg-white/5 text-bleach-creamDim"
+                        )}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setConjSelectedCharIds(prev => [...prev, p.id]);
+                            } else {
+                              setConjSelectedCharIds(prev => prev.filter(id => id !== p.id));
+                            }
+                          }}
+                          className="accent-indigo-500"
+                        />
+                        <span className="font-bold">{p.nome}</span>
+                        <span className="text-[10px] text-bleach-muted">({p.esquadrao} • {getCodigoAtividade(p)})</span>
+                      </label>
+                    );
+                  })}
+                </div>
+                <span className="text-[10px] text-bleach-muted mt-1 block">
+                  {conjSelectedCharIds.length} jogadores selecionados
+                </span>
+              </div>
+
+              <div className="flex gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setModalCriarConj(false)}
+                  className="flex-1 py-2.5 bg-black/80 border border-white/20 text-bleach-muted text-xs font-bold rounded-xl"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 hover:brightness-110 text-white font-extrabold text-xs uppercase tracking-wider rounded-xl shadow"
+                >
+                  Criar Ficha Conjunta
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+    </div>
+  );
+}
+
 
 // FULL OFFICIAL SISTEMAS & REGRAS VIEW (100% CANONICAL BLEACH RPG BASE SYSTEM)
 function SistemasView() {

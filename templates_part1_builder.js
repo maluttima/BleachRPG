@@ -34,7 +34,10 @@ function TopBar({ session, onLogout, view, setView, nome, onOpenAdminLogin, clou
             { id: "kidos", label: "Grimório de Kidō", icon: "📕" },
             { id: "arena", label: "Arena de Duelos", icon: "⚔️" },
             { id: "patchnotes", label: "Patch Notes", icon: "📰" },
-            ...(isAdmin ? [{ id: "admin", label: "Painel ADM", icon: "👑" }] : [])
+            ...(isAdmin ? [
+              { id: "tramas_adm", label: "Tramas & Arcos (IA)", icon: "🎭" },
+              { id: "admin", label: "Painel ADM", icon: "👑" }
+            ] : [])
           ].map((tab) => (
             <button
               key={tab.id}
@@ -110,7 +113,10 @@ function TopBar({ session, onLogout, view, setView, nome, onOpenAdminLogin, clou
           { id: "kidos", label: "Kidō", icon: "📕" },
           { id: "arena", label: "Arena", icon: "⚔️" },
           { id: "patchnotes", label: "Patch", icon: "📰" },
-          ...(isAdmin ? [{ id: "admin", label: "ADM", icon: "👑" }] : [])
+          ...(isAdmin ? [
+            { id: "tramas_adm", label: "Tramas", icon: "🎭" },
+            { id: "admin", label: "ADM", icon: "👑" }
+          ] : [])
         ].map((tab) => (
           <button
             key={tab.id}
@@ -918,6 +924,8 @@ function KidosView({ personagem, isAdmin }) {
   const [busca, setBusca] = useState("");
   const [modalKido, setModalKido] = useState(null);
   const [kaidoSimEstado, setKaidoSimEstado] = useState("Debilitado");
+  const [kaidoExtraReiatsu, setKaidoExtraReiatsu] = useState(0);
+  const [kaidoIncantado, setKaidoIncantado] = useState(false);
   
   const pressaoTotal = Number(personagem?.atributos?.pressao || 30);
   const [reiatsuGastaCena, setReiatsuGastaCena] = useState(0);
@@ -1101,34 +1109,38 @@ function KidosView({ personagem, isAdmin }) {
         </div>
       </Section>
 
-      {/* SEÇÃO DEDICADA: SIMULADOR DE KAIDŌ & CENAS DE TRATAMENTO */}
+      {/* SEÇÃO DEDICADA: SIMULADOR DE KAIDŌ & REDUÇÃO DE CENAS POR REIATSU */}
       {(() => {
+        const pressaoTotalCura = pressaoRestante + kaidoExtraReiatsu;
+        const bonusEncanto = Math.round(pressaoTotalCura * 0.30);
+        const poderCuraFinal = kaidoIncantado ? (pressaoTotalCura + bonusEncanto) : pressaoTotalCura;
+
         const analiseKaido = (typeof calcularEfeitoKaido === 'function')
-          ? calcularEfeitoKaido(pressaoRestante, kaidoSimEstado)
-          : { categoria: "Tratamento Tático", cor: "#10B981", cenasNecessarias: 2, curaHpStr: "Recuperação de 70%", estadoFinal: "Inteiro", diagnostico: "Estabilizado", dicaTatica: "Manter canalização", roteiroCenas: [] };
+          ? calcularEfeitoKaido(poderCuraFinal, kaidoSimEstado)
+          : { categoria: "Tratamento Tático", cor: "#10B981", cenasNecessarias: 1, curaHpStr: "Recuperação de 80%", estadoFinal: "Inteiro", diagnostico: "Estabilizado", dicaTatica: "Manter canalização", roteiroCenas: [] };
 
         return (
           <Section
-            title="🌿 Simulador Médico de Kaidō & Cenas de Tratamento no ON"
+            title="🌿 Simulador Médico de Kaidō & Redução de Cenas por Infusão de Reiatsu"
             subtitle="Calcule exatamente quantas cenas no WhatsApp são necessárias para curar um aliado com base na sua Pressão Espiritual"
             className="border-2 border-emerald-500/40"
           >
             <div className="p-4 sm:p-6 bg-gradient-to-b from-emerald-950/30 via-bleach-panel2 to-black rounded-xl border-2 border-emerald-500/50 space-y-5 shadow-2xl">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-emerald-500/20 pb-4">
                 <div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <span className="px-2.5 py-0.5 bg-emerald-950 text-emerald-300 border border-emerald-500 text-[10px] font-extrabold uppercase rounded-full tracking-wider">
                       Hospital Geral do 4º Esquadrão • Cálculo de Cenas
                     </span>
                     <span className="text-xs font-mono text-cyan-400 font-bold">
-                      Reiatsu Disponível: {pressaoRestante} / {pressaoTotal} pts
+                      Pressão Investida: {pressaoTotalCura} pts {kaidoIncantado ? `(+${bonusEncanto} Encanto)` : ''} = <strong className="text-emerald-300">{poderCuraFinal} Poder</strong>
                     </span>
                   </div>
                   <h4 className="font-title text-2xl text-emerald-400 mt-1 flex items-center gap-2">
-                    <span>💚</span> Simulação de Tratamento & Evolução Vital
+                    <span>💚</span> Simulação de Tratamento & Desintoxicação
                   </h4>
                   <p className="text-xs text-bleach-creamDim">
-                    Selecione a gravidade do paciente para visualizar o tempo de cura exigido no WhatsApp e o roteiro de narração por cena.
+                    Imbuir mais Reiatsu e recitar o encantamento (+30% PE) reduz drasticamente as cenas exigidas no WhatsApp para curar e purificar toxinas.
                   </p>
                 </div>
 
@@ -1149,11 +1161,51 @@ function KidosView({ personagem, isAdmin }) {
                         onClick={() => setKaidoSimEstado(est.id)}
                         className={`px-2.5 py-1 rounded-lg text-xs font-bold transition border ${
                           kaidoSimEstado === est.id
-                            ? "bg-emerald-500 text-black border-white shadow"
+                            ? "bg-emerald-500 text-black border-white shadow font-black"
                             : "bg-black/60 text-bleach-creamDim border-white/10 hover:border-emerald-400"
                         }`}
                       >
                         {est.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Controles de Pressão Extra e Encantamento */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-black/60 rounded-xl border border-emerald-500/20">
+                <label className="flex items-center gap-2.5 cursor-pointer bg-black/50 p-2.5 rounded-lg border border-emerald-500/30 hover:border-emerald-400 transition">
+                  <input
+                    type="checkbox"
+                    checked={kaidoIncantado}
+                    onChange={(e) => setKaidoIncantado(e.target.checked)}
+                    className="accent-emerald-500 w-4 h-4"
+                  />
+                  <div>
+                    <span className="text-xs text-emerald-300 font-bold block">
+                      Recitar Cântico Sagrado de Kaidō (Eishō)
+                    </span>
+                    <span className="text-[10px] text-bleach-muted">
+                      Concede +30% da sua Pressão Espiritual (+{bonusEncanto} pts) acelerando a cura
+                    </span>
+                  </div>
+                </label>
+
+                <div className="flex items-center justify-between bg-black/50 p-2.5 rounded-lg border border-white/5 flex-wrap gap-2">
+                  <span className="text-[11px] text-bleach-creamDim font-bold">Imbuir Mais Reiatsu:</span>
+                  <div className="flex gap-1">
+                    {[0, 20, 50, 100, 200].map((pe) => (
+                      <button
+                        key={pe}
+                        type="button"
+                        onClick={() => setKaidoExtraReiatsu(pe)}
+                        className={`px-2 py-0.5 rounded text-xs font-mono font-bold transition border ${
+                          kaidoExtraReiatsu === pe
+                            ? "bg-emerald-500 text-black border-white shadow"
+                            : "bg-black/70 text-bleach-muted border-white/10 hover:text-white"
+                        }`}
+                      >
+                        +{pe} PE
                       </button>
                     ))}
                   </div>
@@ -1167,7 +1219,9 @@ function KidosView({ personagem, isAdmin }) {
                   <span className="text-2xl font-mono font-black text-emerald-400 block mt-0.5">
                     ⏳ {analiseKaido.cenasNecessarias} {analiseKaido.cenasNecessarias === 1 ? 'Cena' : 'Cenas'}
                   </span>
-                  <span className="text-[11px] text-emerald-200/70">Manutenção contínua de Reiki</span>
+                  <span className="text-[11px] text-emerald-200/70">
+                    {analiseKaido.cenasNecessarias === 1 ? '✨ Cura Acelerada por Reiatsu!' : 'Manutenção contínua de Reiki'}
+                  </span>
                 </div>
 
                 <div className="p-3.5 bg-black/70 rounded-xl border border-emerald-500/40 text-center">
@@ -1190,17 +1244,16 @@ function KidosView({ personagem, isAdmin }) {
               {/* Roteiro Narrativo Passo a Passo por Cena */}
               <div className="p-4 bg-black/80 rounded-xl border border-emerald-500/30 space-y-3">
                 <h6 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
-                  <span>📋</span> Roteiro Passo-a-Passo de Narração para o WhatsApp ({analiseKaido.cenasNecessarias} Cenas):
+                  <span>📋</span> Roteiro de Narração para o WhatsApp ({analiseKaido.cenasNecessarias} {analiseKaido.cenasNecessarias === 1 ? 'Cena' : 'Cenas'}):
                 </h6>
                 <div className="space-y-2">
                   {(analiseKaido.roteiroCenas || []).map((passo, idx) => (
                     <div key={idx} className="p-2.5 bg-emerald-950/20 border border-emerald-500/20 rounded-lg flex items-start gap-2.5">
                       <span className="px-2 py-0.5 bg-emerald-900/80 text-emerald-300 border border-emerald-500 font-mono font-bold text-[10px] rounded shrink-0">
-                        Cena {passo.cena}
+                        {typeof passo === 'string' ? `Etapa ${idx + 1}` : `Cena ${passo.cena}`}
                       </span>
-                      <div>
-                        <strong className="text-white text-xs block">{passo.fase}</strong>
-                        <p className="text-xs text-bleach-creamDim mt-0.5">{passo.instrucao}</p>
+                      <div className="text-xs text-bleach-cream leading-relaxed">
+                        {typeof passo === 'string' ? passo : passo.instrucao}
                       </div>
                     </div>
                   ))}
@@ -1209,7 +1262,7 @@ function KidosView({ personagem, isAdmin }) {
 
               {/* Recomendação de Roleplay */}
               <div className="p-3 bg-bleach-panel rounded-xl border border-white/10 text-xs">
-                <strong className="text-emerald-400 block text-[10px] uppercase font-bold">Instrução Tática do 4º Esquadrão:</strong>
+                <strong className="text-emerald-400 block text-[10px] uppercase font-bold">🌿 Diagnóstico do 4º Esquadrão:</strong>
                 <p className="text-bleach-cream mt-0.5 leading-relaxed">{analiseKaido.dicaTatica}</p>
               </div>
             </div>

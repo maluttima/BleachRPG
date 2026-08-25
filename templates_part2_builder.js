@@ -2935,6 +2935,178 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
             </div>
           )}
 
+          {/* SUB-ABA 2: KAIDŌ & SIMULAÇÃO DE CURA MÉDICA (4º ESQUADRÃO) */}
+          {subAbaKido === "kaido" && (
+            <div className="space-y-6">
+              {(() => {
+                const pressaoTotal = Number(personagem.atributos?.pressao || 30);
+                const pressaoRestante = Math.max(0, pressaoTotal - gastoPressaoForca - gastoPressaoResiliencia);
+                const pressaoTotalCura = pressaoRestante + simKaidoExtraPressao;
+                const bonusEncanto = Math.round(pressaoTotalCura * 0.30);
+                const poderCuraFinal = simKaidoIncantado ? (pressaoTotalCura + bonusEncanto) : pressaoTotalCura;
+
+                const kidosKaido = (personagem.kidosConhecidos || []).filter(k => k.cat === "Kaidō");
+                const kidoAtivo = kidosKaido[0] || null;
+
+                const analiseKaido = (typeof calcularEfeitoKaido === 'function')
+                  ? calcularEfeitoKaido(poderCuraFinal, simKaidoEstado, kidoAtivo)
+                  : { categoria: "Tratamento Tático", cor: "#10B981", cenasNecessarias: 1, curaHpStr: "Recuperação de 80%", estadoFinal: "Inteiro", diagnostico: "Estabilizado", dicaTatica: "Manter canalização", roteiroCenas: [] };
+
+                return (
+                  <Section
+                    title="🌿 Simulador Médico de Kaidō & Redução de Cenas por Infusão de Reiatsu"
+                    subtitle="Imbuir mais Pressão Espiritual e recitar o encantamento acelera a regeneração celular, desintoxicação e reduz os turnos necessários no ON"
+                    className="border-2 border-emerald-500/50"
+                  >
+                    <div className="p-4 sm:p-6 bg-gradient-to-b from-emerald-950/40 via-bleach-panel2 to-black rounded-2xl border-2 border-emerald-500/60 space-y-5 shadow-2xl">
+                      
+                      {/* Topo do Simulador */}
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-emerald-500/20 pb-4">
+                        <div>
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="px-2.5 py-0.5 bg-emerald-950 text-emerald-300 border border-emerald-500 text-[10px] font-extrabold uppercase rounded-full tracking-wider">
+                              Hospital Geral do Seireitei • Cálculo Dinâmico de Cenas
+                            </span>
+                            <span className="text-xs font-mono text-cyan-400 font-bold">
+                              Pressão Investida: {pressaoTotalCura} pts {simKaidoIncantado ? `(+${bonusEncanto} Encanto)` : ''} = <strong className="text-emerald-300">{poderCuraFinal} Poder</strong>
+                            </span>
+                          </div>
+                          <h4 className="font-title text-2xl text-emerald-400 mt-1 flex items-center gap-2">
+                            <span>💚</span> {kidoAtivo ? kidoAtivo.nome : "Kaidō & Medicina Espiritual"}
+                          </h4>
+                          <p className="text-xs text-bleach-creamDim">
+                            Injetar mais Reiatsu e recitar o encantamento (+30% PE) reduz drasticamente as cenas exigidas no WhatsApp para curar feridas graves e desintoxicar venenos.
+                          </p>
+                        </div>
+
+                        {/* Seletor de Estado Inicial */}
+                        <div className="bg-black/70 p-2.5 rounded-xl border border-emerald-500/30 space-y-1">
+                          <label className="text-[10px] text-bleach-muted uppercase font-bold block">
+                            Estado Inicial do Paciente:
+                          </label>
+                          <div className="flex gap-1.5">
+                            {[
+                              { id: "Derrotado", label: "💀 Derrotado", cor: "#EF4444" },
+                              { id: "Debilitado", label: "🩸 Debilitado", cor: "#F97316" },
+                              { id: "Ferido", label: "🩹 Ferido", cor: "#EAB308" }
+                            ].map((est) => (
+                              <button
+                                key={est.id}
+                                type="button"
+                                onClick={() => setSimKaidoEstado(est.id)}
+                                className={`px-2.5 py-1 rounded-lg text-xs font-bold transition border ${
+                                  simKaidoEstado === est.id
+                                    ? "bg-emerald-500 text-black border-white shadow font-black"
+                                    : "bg-black/60 text-bleach-creamDim border-white/10 hover:border-emerald-400"
+                                }`}
+                              >
+                                {est.label}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Controles de Pressão Extra e Encantamento */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-black/60 rounded-xl border border-emerald-500/20">
+                        <label className="flex items-center gap-2.5 cursor-pointer bg-black/50 p-2.5 rounded-lg border border-emerald-500/30 hover:border-emerald-400 transition">
+                          <input
+                            type="checkbox"
+                            checked={simKaidoIncantado}
+                            onChange={(e) => setSimKaidoIncantado(e.target.checked)}
+                            className="accent-emerald-500 w-4 h-4"
+                          />
+                          <div>
+                            <span className="text-xs text-emerald-300 font-bold block">
+                              Recitar Cântico Sagrado de Kaidō (Eishō)
+                            </span>
+                            <span className="text-[10px] text-bleach-muted">
+                              Concede +30% da sua Pressão Espiritual (+{bonusEncanto} pts) acelerando a cura
+                            </span>
+                          </div>
+                        </label>
+
+                        <div className="flex items-center justify-between bg-black/50 p-2.5 rounded-lg border border-white/5 flex-wrap gap-2">
+                          <span className="text-[11px] text-bleach-creamDim font-bold">Imbuir Mais Reiatsu:</span>
+                          <div className="flex gap-1">
+                            {[0, 20, 50, 100, 200].map((pe) => (
+                              <button
+                                key={pe}
+                                type="button"
+                                onClick={() => setSimKaidoExtraPressao(pe)}
+                                className={`px-2 py-0.5 rounded text-xs font-mono font-bold transition border ${
+                                  simKaidoExtraPressao === pe
+                                    ? "bg-emerald-500 text-black border-white shadow"
+                                    : "bg-black/70 text-bleach-muted border-white/10 hover:text-white"
+                                }`}
+                              >
+                                +{pe} PE
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Cartões de Métricas de Cura */}
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                        <div className="p-4 bg-black/80 rounded-xl border border-emerald-500/40 text-center">
+                          <span className="text-[10px] text-bleach-muted uppercase font-bold block">Tempo de Tratamento no ON:</span>
+                          <span className="text-3xl font-mono font-black text-emerald-400 block mt-1">
+                            ⏳ {analiseKaido.cenasNecessarias} {analiseKaido.cenasNecessarias === 1 ? 'Cena' : 'Cenas'}
+                          </span>
+                          <span className="text-[11px] text-emerald-200/70">
+                            {analiseKaido.cenasNecessarias === 1 ? '✨ Cura Acelerada por Reiatsu!' : 'Duração necessária no WhatsApp'}
+                          </span>
+                        </div>
+
+                        <div className="p-4 bg-black/80 rounded-xl border border-emerald-500/40 text-center">
+                          <span className="text-[10px] text-bleach-muted uppercase font-bold block">Evolução do Paciente:</span>
+                          <span className="text-base font-extrabold text-white block mt-1.5">
+                            {analiseKaido.estadoInicial || simKaidoEstado} ➔ <span className="text-emerald-400">{analiseKaido.estadoFinal}</span>
+                          </span>
+                          <span className="text-xs text-yellow-300/90 font-mono font-bold">{analiseKaido.curaHpStr}</span>
+                        </div>
+
+                        <div className="p-4 bg-black/80 rounded-xl border border-emerald-500/40 text-center">
+                          <span className="text-[10px] text-bleach-muted uppercase font-bold block">Classificação Médica:</span>
+                          <span className="text-sm font-extrabold text-emerald-300 block mt-1.5">
+                            {analiseKaido.categoria}
+                          </span>
+                          <span className="text-[10px] text-bleach-muted">{analiseKaido.diagnostico}</span>
+                        </div>
+                      </div>
+
+                      {/* Roteiro Narrativo Passo a Passo por Cena */}
+                      <div className="p-4 bg-black/80 rounded-xl border border-emerald-500/30 space-y-3">
+                        <h6 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                          <span>📋</span> Roteiro de Narração para o WhatsApp ({analiseKaido.cenasNecessarias} {analiseKaido.cenasNecessarias === 1 ? 'Cena' : 'Cenas'}):
+                        </h6>
+                        <div className="space-y-2">
+                          {(analiseKaido.roteiroCenas || []).map((passo, idx) => (
+                            <div key={idx} className="p-2.5 bg-emerald-950/20 border border-emerald-500/20 rounded-lg flex items-start gap-2.5">
+                              <span className="px-2 py-0.5 bg-emerald-900/80 text-emerald-300 border border-emerald-500 font-mono font-bold text-[10px] rounded shrink-0">
+                                {typeof passo === 'string' ? `Etapa ${idx + 1}` : `Cena ${passo.cena}`}
+                              </span>
+                              <div className="text-xs text-bleach-cream leading-relaxed">
+                                {typeof passo === 'string' ? passo : passo.instrucao}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Recomendação Tática de Narração */}
+                      <div className="p-3.5 bg-bleach-panel rounded-xl border border-white/10 text-xs">
+                        <strong className="text-emerald-400 block text-[10px] uppercase font-bold">🌿 Diagnóstico do 4º Esquadrão:</strong>
+                        <p className="text-bleach-cream mt-0.5 leading-relaxed">{analiseKaido.dicaTatica}</p>
+                      </div>
+                    </div>
+                  </Section>
+                );
+              })()}
+            </div>
+          )}
+
         </div>
       )}
 

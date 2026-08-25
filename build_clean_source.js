@@ -503,6 +503,23 @@ const DEFAULT_DB = {
     }
   ],
   zanpakutosVinculadas: [],
+  tramasIndividuais: [
+    {
+      id: "trama-ren-001",
+      charId: "ren-001",
+      charNome: "Kurosaki Ren",
+      cenasArco: [
+        {
+          id: "cena-1",
+          titulo: "O Chamado do 11º Esquadrão",
+          texto: "Em meio aos campos de treino do Seireitei, Ren desembainhou sua lâmina sentindo o peso do Reiryoku ao redor. Os primeiros ecos de sua Shikai começavam a ressonar...",
+          data: "22/08/2026 às 16:30"
+        }
+      ],
+      tramaAtual: null
+    }
+  ],
+  tramasConjuntas: [],
   personagens: [
     {
       id: "ren-001",
@@ -674,6 +691,8 @@ function App() {
               subAdms: Array.isArray(parsed.subAdms) ? parsed.subAdms : DEFAULT_DB.subAdms,
               registrosTarefasAdm: Array.isArray(parsed.registrosTarefasAdm) ? parsed.registrosTarefasAdm : DEFAULT_DB.registrosTarefasAdm,
               zanpakutosVinculadas: Array.isArray(parsed.zanpakutosVinculadas) ? parsed.zanpakutosVinculadas : DEFAULT_DB.zanpakutosVinculadas,
+              tramasIndividuais: Array.isArray(parsed.tramasIndividuais) ? parsed.tramasIndividuais : DEFAULT_DB.tramasIndividuais,
+              tramasConjuntas: Array.isArray(parsed.tramasConjuntas) ? parsed.tramasConjuntas : DEFAULT_DB.tramasConjuntas,
             };
           }
         }
@@ -808,6 +827,8 @@ function App() {
         rolagensDadosPublicas: (next.rolagensDadosPublicas || []).slice(0, 30),
         mensagensChat: (next.mensagensChat || []).slice(-100),
         zanpakutosVinculadas: next.zanpakutosVinculadas || [],
+        tramasIndividuais: next.tramasIndividuais || [],
+        tramasConjuntas: next.tramasConjuntas || [],
         personagens: next.personagens || []
       };
       localStorage.setItem("bleachDB", JSON.stringify(minimalDb));
@@ -988,6 +1009,28 @@ function App() {
             session={session}
             myChar={myChar}
           />
+        )}
+
+        {view === "tramas_adm" && (
+          session?.role === "super_admin" || session?.role === "sub_admin" ? (
+            <TramasArcosAdmView
+              db={db}
+              saveDb={saveDb}
+              session={session}
+              onAbrirFicha={(charId) => {
+                setAdminCharId(charId);
+                setView("ficha");
+              }}
+            />
+          ) : (
+            <AdminLoginScreen
+              db={db}
+              onLoginAdmin={(role, subAdmObj) => {
+                setSession({ role, ...(subAdmObj || {}) });
+                setView("tramas_adm");
+              }}
+            />
+          )
         )}
 
         {view === "admin" && (

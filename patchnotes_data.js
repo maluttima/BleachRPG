@@ -5,6 +5,76 @@
 
 const PATCH_NOTES_HISTORY = [
   {
+    versao: "6.6",
+    titulo: "Gerenciador de Tramas & Arcos com IA para ADM, Arcos Cruzados Multi-Player, Nivelamento Justo de Staff & Molde Limpo de WhatsApp",
+    data: "24 de Agosto de 2026",
+    destaque: "Novo painel exclusivo de Tramas & Arcos com IA para Mestres/ADMs, armazenamento de cenas de arco por player, criação de Fichas de Tramas Cruzadas (Multi-Player) com roteiros interligados, nivelamento sagrado de recompensas para ADMs/Sub-ADMs e molde oficial do WhatsApp sem bloco de personalidade.",
+    banner: "assets/bleach-banner.png",
+    resumo: "Uma atualização monumental voltada para a gestão de narrativa e equilíbrio sagrado do RPG. A Administração agora conta com um Gerenciador de Tramas & Arcos integrado com Inteligência Artificial capaz de estruturar trilhas de 3 eventos graduais e antagonistas sob medida para cada jogador com base em suas cenas registradas. Além disso, ao cruzar o destino de dois ou mais jogadores, o sistema cria automaticamente uma Ficha de Trama Conjunta com narrativa cooperativa/rival. A Staff tem suas recompensas niveladas estritamente com os players (garantido apenas por narração de missão principal e cenas de arco), e o molde de ficha do WhatsApp foi purificado.",
+    secoes: [
+      {
+        tipo: "novo",
+        titulo: "🎭 Gerenciador de Tramas, Arcos & Narrativa com IA (Exclusivo ADM)",
+        itens: [
+          "✦ **Armazenamento de Cenas de Arco**: Aba dedicada para registrar e gerenciar todas as cenas de arco e treinos de cada jogador, mantendo um histórico narrativo completo.",
+          "✦ **Síntese de Tramas Individuais com IA**: O motor cognitivo / ChatGPT analisa a essência do personagem e forja 3 eventos graduais, diagnóstico psicológico, ganchos de ON e antagonistas personalizados.",
+          "✦ **Exportação Instantânea para WhatsApp**: Botão de 1 clique para copiar o dossiê da missão pronto para ser enviado nos grupos de roleplay."
+        ]
+      },
+      {
+        tipo: "novo",
+        titulo: "🔗 Tramas Conjuntas & Arcos Cruzados (Multi-Player)",
+        itens: [
+          "✦ **Fusão de Histórias**: Ao cruzar dois ou mais jogadores, o sistema cria uma Nova Ficha de Trama Conjunta integrando as cenas de ambos.",
+          "✦ **Narrativa Compartilhada com IA**: Gera dinâmicas de dupla (rivalidade, aliança de esquadrões, choque de honra), eventos com ações interdependentes e ameaças coletivas."
+        ]
+      },
+      {
+        tipo: "regras",
+        titulo: "⚖️ Nivelamento Sagrado de Recompensas de ADM e Sub-ADM",
+        itens: [
+          "✦ **Paridade Absoluta com Jogadores**: Como a Staff pode cenar no ON e realizar os mesmos treinos, não há mais pontos concedidos por micro-tarefas administrativas, impedindo que escalem de forma desproporcional.",
+          "✦ **Recompensa Padronizada**: ADMs e Sub-ADMs recebem atributos exclusivamente através da Narração da Missão Principal (15 pts + Giros) e da Análise/Conclusão de Cenas de Arco (15 pts + Giros)."
+        ]
+      },
+      {
+        tipo: "ajuste",
+        titulo: "📋 Molde Oficial de Ficha para WhatsApp Simplificado",
+        itens: [
+          "✦ **Remoção da Seção de Personalidade**: O molde exportado para o WhatsApp agora contém exclusivamente os dados do participante, dados do personagem, atributos e termo de consentimento, mantendo o padrão visual limpo da Malutti."
+        ]
+      }
+    ]
+  },
+  {
+    versao: "6.5",
+    titulo: "Redução Dinâmica de Cenas por Infusão de Reiatsu no Kaidō & Desintoxicação de Venenos",
+    data: "24 de Agosto de 2026",
+    destaque: "Imbuir mais Pressão Espiritual e recitar o encantamento acelera expressivamente a cura, purificação e desintoxicação, reduzindo diretamente as cenas necessárias no WhatsApp (Debilitado curado em 1 Cena com sobrecarga de Reishi!).",
+    banner: "assets/bleach-banner.png",
+    resumo: "Uma evolução cirúrgica no sistema médico do 4º Esquadrão. A canalização intensiva de Reiatsu (Pressão Espiritual Extra + Encantamento +30%) agora reduz diretamente o número de cenas e turnos exigidos no ON para curar aliados e purificar venenos. Além disso, feitiços especializados como o Kaidō #6 Seika (Purificação) passam a gerar roteiros narrativos e diagnósticos focados em neutralização química e expulsão de toxinas.",
+    secoes: [
+      {
+        tipo: "buff",
+        titulo: "⚡ Redução de Turnos e Cenas por Injeção de Reiatsu",
+        itens: [
+          "✦ **Cura Acelerada de 'Debilitado' em 1 Cena**: Ao injetar Pressão Extra (+50/+100 PE) ou recitar o encantamento completo, o tempo de cura de um aliado 'Debilitado' cai de 2 cenas para **apenas 1 Cena Contínua**!",
+          "✦ **Reanimação Crítica Acelerada**: Pacientes em estado 'Derrotado' têm o tempo de reanimação reduzido de 4 cenas para **2 cenas** (ou **1 cena** sob sobrecarga suprema de Reishi).",
+          "✦ **Recompensa por Esforço de Reishi**: Quanto mais Pressão o conjurador dedicar à canalização médica, mais rápido o paciente retorna à prontidão de combate (100% vitalidade)."
+        ]
+      },
+      {
+        tipo: "novo",
+        titulo: "🧪 Desintoxicação & Especialização Médica por Feitiço",
+        itens: [
+          "✦ **Purificação Celular (#6 Seika)**: Gera diagnósticos e roteiros de cena específicos para neutralização de venenos, ácidos e toxinas retidas nos tecidos.",
+          "✦ **Analgesia & Supressão de Dor (#1 Chiyaku)**: Foco em alívio de choque de dor e restauração de lucidez.",
+          "✦ **Sutura & Hemostasia (#9 Kekkai Seimei / #16 Hikari no Ito)**: Roteiro focado em tecelagem cirúrgica e fechamento de vasos rompidos."
+        ]
+      }
+    ]
+  },
+  {
     versao: "6.4",
     titulo: "Simulador de Kaidō na Aba de Kidōs, Bônus de 30% por Encantamento (Eishō) & Loja por Conhecimento",
     data: "24 de Agosto de 2026",
