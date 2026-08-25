@@ -1441,6 +1441,60 @@ const CATALOGO_KIDOS = [
 ];
 const PATCH_NOTES_HISTORY = [
   {
+    "versao": "6.9",
+    "titulo": "Novo Guia Oficial para Novatos, Limites de Cenas & Regras de Fadiga e Combate",
+    "data": "25 de Agosto de 2026",
+    "destaque": "Lançamento da página oficial (Para Novatos: Como evoluir de modo simples), limites rígidos de cenas semanais e diárias, sistema de fadiga dos 3 períodos e escala visual de diferença em combate (0 a 1000+ pts).",
+    "banner": "assets/bleach-banner.png",
+    "resumo": "Uma grande expansão de usabilidade para novos jogadores. O sistema agora conta com um guia completo de evolução passo a passo, tabela de limites oficiais de cenas (2 arcos/semana com 90 linhas, 3 treinos diários com 30 linhas, 4 miscelâneas semanais e 1 PVP diário), explicação detalhada com exemplo da fadiga ao treinar até o 3º período e tabela comparativa da escala de diferença de poder em combate com exemplos para cada um dos 4 atributos.",
+    "secoes": [
+      {
+        "tipo": "novo",
+        "titulo": "🌱 Nova Página: Para Novatos (Como Evoluir de Modo Simples)",
+        "itens": [
+          "✦ **Guia de 4 Passos**: Distribuição dos 20 pontos livres, constância no WhatsApp, despertar da Zanpakutō e participação em Arcos.",
+          "✦ **Limites Oficiais de Cenas**: 2 Cenas de Arco semanais (90+ linhas), 3 Treinos diários (30+ linhas), 4 Miscelâneas semanais e 1 PVP diário.",
+          "✦ **Regra de Fadiga dos 3 Períodos**: Explicação biológica de saturação de Reishi nos circuitos de Saketsu/Hakusui com exemplo narrativo prático.",
+          "✦ **Escala de Diferença de Combate**: 0-50 pts (Equivalentes), 51-150 pts (Pequena vantagem), 151-300 pts (Vantagem clara), 301-600 pts (Grande vantagem), 601-1000 pts (Abismo de poder) e 1001+ pts (Diferença monstruosa), com exemplos detalhados para Pressão, Força, Velocidade e Resiliência."
+        ]
+      },
+      {
+        "tipo": "ajuste",
+        "titulo": "🔒 Bloqueio Definitivo da Taxa Fixa de Conhecimento (1 Cena = 10 ₪)",
+        "itens": [
+          "✦ **Bloqueio de Edição**: Removida a possibilidade de qualquer ADM ou Sub-ADM alterar o valor concedido por cena (1 cena = 10 ₪ sempre).",
+          "✦ **Novo Destaque nos Rankings**: O Ranking agora exibe o saldo de Conhecimento (₪) em destaque central dourado, com a quantidade de cenas feitas exibida no canto direito."
+        ]
+      }
+    ]
+  },
+  {
+    "versao": "6.8",
+    "titulo": "Padronização do Ganho Fixo de Conhecimento por Cena (10 ₪ / Cena) & Equilíbrio de Aquisição de Kidōs",
+    "data": "25 de Agosto de 2026",
+    "destaque": "Recompensa fixa de 10 ₪ de Conhecimento por qualquer cena realizada no WhatsApp (treino, interação cotidiana ou combate). Balanceamento perfeito para alto fluxo de roleplay (+10 cenas/dia) limitando a progressão para 2 a 3 novos Kidōs por semana.",
+    "banner": "assets/bleach-banner.png",
+    "resumo": "Um ajuste econômico cirúrgico no Grimório de Kidō e no sistema de atividade. Como os jogadores realizam um volume intenso de cenas diárias (muitas vezes ultrapassando 10 cenas por dia em interações normais e treinos), o ganho de Conhecimento foi padronizado em uma taxa fixa e imutável de 10 ₪ por cena. Isso garante que mesmo os jogadores mais ativos consigam adquirir no máximo 2 a 3 Kidōs novos por semana, mantendo cada feitiço valorizado e impedindo a inflação do grimório.",
+    "secoes": [
+      {
+        "tipo": "ajuste",
+        "titulo": "₪ Taxa Fixa de Conhecimento por Cena (10 ₪ Fixo)",
+        "itens": [
+          "✦ **Recompensa Universal e Fixa**: Toda e qualquer cena realizada no WhatsApp (seja treino, diálogo, convivência, patrulha ou combate) concede rigorosamente **+10 ₪ de Conhecimento**.",
+          "✦ **Controle de Inflação do Grimório**: Com 30 a 50 cenas semanais, o jogador acumula entre 300 ₪ e 500 ₪, o que permite desbloquear exatamente **2 a 3 feitiços de nível básico/médio por semana**."
+        ]
+      },
+      {
+        "tipo": "regras",
+        "titulo": "📊 Atualização nos Lançadores de Atividade da Staff",
+        "itens": [
+          "✦ **Botões Rápidos Atualizados**: Os atalhos de lançamento em lote foram atualizados para +1 cena (+10 ₪), +5 cenas (+50 ₪), +10 cenas (+100 ₪) e +20 cenas (+200 ₪).",
+          "✦ **Auditoria do Histórico**: Cada lançamento registra o número exato de cenas e o crédito proporcional de 10 ₪ por cena no histórico auditável da ficha."
+        ]
+      }
+    ]
+  },
+  {
     "versao": "6.7",
     "titulo": "Hierarquia de Segurança & Segregação de Poderes da Administração (ADM Máximo vs Sub-ADMs)",
     "data": "25 de Agosto de 2026",
@@ -2981,24 +3035,21 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "", claimedN
 }
 
 function getValidGeminiApiKey(apiKey = "") {
-  const defaultKey = getDefaultGeminiKey();
-  if (apiKey && apiKey.length > 20 && !apiKey.includes("AQ.Ab8RN6I0r1qN15nnRQd")) {
+  if (apiKey && apiKey.length > 15 && !apiKey.includes("AQ.Ab8RN6I0r1qN15nnRQd")) {
     return apiKey;
   }
   if (typeof localStorage !== 'undefined') {
-    const local = localStorage.getItem("bleach_openai_key");
-    if (local && local.includes("AQ.Ab8RN6I0r1qN15nnRQd")) {
-      try { localStorage.removeItem("bleach_openai_key"); } catch(e) {}
-      return defaultKey;
-    }
-    if (local && local.length > 20 && !local.includes("AQ.Ab8RN6I0r1qN15nnRQd")) {
-      return local;
-    }
+    try {
+      const local = localStorage.getItem("bleach_openai_key");
+      if (local && local.length > 15 && !local.includes("AQ.Ab8RN6I0r1qN15nnRQd")) {
+        return local;
+      }
+    } catch(e) {}
   }
-  if (typeof window !== 'undefined' && window.BLEACH_CONFIG?.openaiApiKey && window.BLEACH_CONFIG.openaiApiKey.length > 20 && !window.BLEACH_CONFIG.openaiApiKey.includes("AQ.Ab8RN6I0r1qN15nnRQd")) {
+  if (typeof window !== 'undefined' && window.BLEACH_CONFIG?.openaiApiKey && window.BLEACH_CONFIG.openaiApiKey.length > 15 && !window.BLEACH_CONFIG.openaiApiKey.includes("AQ.Ab8RN6I0r1qN15nnRQd")) {
     return window.BLEACH_CONFIG.openaiApiKey;
   }
-  return defaultKey;
+  return "";
 }
 
 // 5. FUNÇÃO CENTRAL ASSÍNCRONA DE GERAÇÃO COM IA (COM AUTO-RETRY E EXCLUSIVIDADE ABSOLUTA)
@@ -3078,6 +3129,7 @@ async function gerar4CaminhosZanpakutoAI_Async(personagem, dbPersonagens = [], d
       console.log("Chamando OpenAI GPT-4o-mini...");
       const prompt = construirPromptChatGPT(personagem, dna, cenaTexto, dbPersonagens, dbZanpakutosVinculadas);
       const res = await fetch("https://api.openai.com/v1/chat/completions", {
+        signal: typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function" ? AbortSignal.timeout(6000) : undefined,
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -3425,6 +3477,7 @@ async function gerar3BankaisEvolucaoAI_Async(personagem, shikai, dbPersonagens =
       console.log("Chamando OpenAI API (ChatGPT) para geração das 3 Evoluções de Bankai...");
       const prompt = construirPromptBankaiEvolucao(personagem, shikaiBase, dna, cenaTexto, dbPersonagens, dbZanpakutosVinculadas);
       const res = await fetch("https://api.openai.com/v1/chat/completions", {
+        signal: typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function" ? AbortSignal.timeout(6000) : undefined,
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -4516,13 +4569,31 @@ function getCapacidadeKidos(pressaoTotal) {
 // =========================================================================
 // DEEP SEMANTIC SCENE ANALYZER & AI PLOT GENERATION ENGINE (MULTI-BRANCH)
 // =========================================================================
+// DEEP COGNITIVE SCENE ANALYZER & AI INTERLINKING STORY ENGINE (GEMINI & OPENAI)
+// =========================================================================
 
-function analisarCenaSemanticaBleach(cenas, player) {
-  const cList = Array.isArray(cenas) ? cenas : [];
-  const textoGeral = cList.map(c => (c.titulo || '') + " " + (c.texto || '')).join(" \n ");
-  const textoLower = textoGeral.toLowerCase();
+function analisarCenasCronologicasBleach(cenas, player) {
+  const cList = Array.isArray(cenas) ? [...cenas] : [];
+  const pNome = player?.nome || "Guerreiro";
+  
+  if (cList.length === 0) {
+    return {
+      qtdCenas: 0,
+      oponentePrincipal: "Ameaça Espiritual Oculta",
+      localPrincipal: "Distritos de Rukongai & Seireitei",
+      elementosDetectados: ["Reishi Puro & Impacto de Lâmina"],
+      momentoChave: "O guerreiro aguarda ordens para iniciar sua jornada marcial.",
+      ultimoAcontecimento: "Preparação inicial de combate e sintonização de Reishi.",
+      resumoCronologico: "O guerreiro ainda não registrou cenas de arco no sistema.",
+      fioCondutor: "Início da jornada de provação espiritual."
+    };
+  }
 
-  // 1. Oponentes e Ameaças Detectados
+  // Ordenar cronologicamente se houver dados
+  const textoCompleto = cList.map((c, i) => `[Cena ${i + 1} - ${c.titulo || 'Cena'}]: ${c.texto || ''}`).join("\n\n");
+  const textoLower = textoCompleto.toLowerCase();
+
+  // 1. Extração de Inimigos / Ameaças
   const oponentes = [];
   if (textoLower.includes("vasto lorde")) oponentes.push("Vasto Lorde (Hollow Supremo)");
   else if (textoLower.includes("adjuchas")) oponentes.push("Adjuchas (Predador de Almas)");
@@ -4545,7 +4616,7 @@ function analisarCenaSemanticaBleach(cenas, player) {
     oponentes.push("Entidade Espiritual Corrompida de Alto Calibre");
   }
 
-  // 2. Locais Detectados
+  // 2. Extração de Locais
   const locais = [];
   if (textoLower.includes("karakura") || textoLower.includes("mundo humano") || textoLower.includes("escola") || textoLower.includes("cidade")) {
     locais.push("Karakura (Mundo dos Vivos)");
@@ -4566,7 +4637,7 @@ function analisarCenaSemanticaBleach(cenas, player) {
     locais.push("Limiar entre o Seireitei e Rukongai");
   }
 
-  // 3. Elementos, Feitiços e Técnicas
+  // 3. Extração de Elementos e Feitiços
   const elementos = [];
   if (textoLower.includes("fogo") || textoLower.includes("chama") || textoLower.includes("queimar") || textoLower.includes("cinzas")) elementos.push("Fogo & Chamas");
   if (textoLower.includes("gelo") || textoLower.includes("congelar") || textoLower.includes("geada")) elementos.push("Gelo & Cristal");
@@ -4579,9 +4650,14 @@ function analisarCenaSemanticaBleach(cenas, player) {
   if (textoLower.includes("hadō") || textoLower.includes("bakudō") || textoLower.includes("kaidō")) elementos.push("Kidō & Encantamentos");
   if (elementos.length === 0) elementos.push("Reishi Puro & Impacto Cortante");
 
-  // 4. Clímax e Sentença de Destaque
-  const frases = textoGeral.split(/[.!?\n]+/).map(f => f.trim()).filter(f => f.length > 15);
-  const momentoChave = frases.length > 0 ? frases[frases.length - 1] : ("O guerreiro " + (player?.nome || 'Shinigami') + " concluiu a ação com postura marcial inabalável.");
+  // 4. Última Cena e Conexão de Continuidade
+  const ultimaCena = cList[0] || cList[cList.length - 1];
+  const ultTexto = ultimaCena.texto || '';
+  const frases = ultTexto.split(/[.!?\n]+/).map(f => f.trim()).filter(f => f.length > 15);
+  const momentoChave = frases.length > 0 ? frases[frases.length - 1] : (ultimaCena.titulo || "Conclusão de ação marcial");
+  
+  // Resumo cronológico sequencial
+  const resumoCronologico = cList.map((c, idx) => `Etapa ${idx + 1} [${c.titulo || 'Cena'}]: ${(c.texto || '').slice(0, 120)}...`).join(" ➔ ");
 
   return {
     qtdCenas: cList.length,
@@ -4589,7 +4665,9 @@ function analisarCenaSemanticaBleach(cenas, player) {
     localPrincipal: locais[0],
     elementosDetectados: elementos,
     momentoChave: momentoChave,
-    resumoCenas: cList.map((c, i) => "[" + (i + 1) + "] " + (c.titulo || 'Cena') + ": " + (c.texto || '').slice(0, 100) + "...").join(' | ')
+    ultimoAcontecimento: momentoChave,
+    resumoCronologico: resumoCronologico,
+    fioCondutor: `Interligação de ${cList.length} cena(s): Consequências diretas de "${momentoChave}" em ${locais[0]}.`
   };
 }
 
@@ -4605,66 +4683,66 @@ function sintetizarTramaIndividualHeuristica(player, cenas) {
   const zkCmd = player?.zanpakuto?.shikaiAtiva?.comando || "Desperte";
   const codAtiv = (typeof getCodigoAtividade === 'function') ? getCodigoAtividade(player) : (player?.codigoAtividade || 'ACT-0000');
 
-  // Semantic Scene Analysis
-  const analise = analisarCenaSemanticaBleach(cList, player);
+  // Análise Semântica e Interligação Cronológica
+  const analise = analisarCenasCronologicasBleach(cList, player);
   const opPrincipal = analise.oponentePrincipal;
   const locPrincipal = analise.localPrincipal;
   const momChave = analise.momentoChave;
 
-  const analiseDiagnostico = "A análise das cenas de " + pNome + " (" + pEsq + ", " + pPatamar + ") revela um confronto direto contra " + opPrincipal + " em " + locPrincipal + ". A narrativa evidenciou o impacto de '" + momChave + "', demonstrando que " + pNome + " está à beira de uma ruptura de poder com sua lâmina (" + zkNome + ").";
+  const analiseDiagnostico = `A IA analisou ${analise.qtdCenas} cena(s) de ${pNome} (${pEsq}, ${pPatamar}). O fio condutor identificou um confronto crucial em ${locPrincipal} contra ${opPrincipal}, culminando no momento chave: "${momChave}". A nova trama interliga esses fatos para definir os próximos 3 passos narrativos.`;
 
   // OPÇÃO 1: COMBATE DECISIVO (PROVAÇÃO MARCIAL)
   const opcao1 = {
     id: "opcao_1",
     tipo: "combate",
     nomeOpcao: "⚔️ Opção 1: Caminho do Confronto Direto (Provação Marcial)",
-    tituloArco: "Arco de " + pNome + " — O Veredito de Sangue em " + locPrincipal,
-    focoNarrativo: "O combate anterior contra " + opPrincipal + " foi apenas o prelúdio. O inimigo retornará com uma força esmagadora, exigindo que " + pNome + " supere seus limites físicos e marciais no campo de batalha.",
+    tituloArco: `Arco de ${pNome} — O Veredito de Sangue em ${locPrincipal}`,
+    focoNarrativo: `Continuação direta do momento em que "${momChave}". O inimigo (${opPrincipal}) não foi totalmente derrotado e preparou um contra-ataque feroz nos limites de ${locPrincipal}, exigindo resposta militar imediata.`,
     eventos: [
       {
         numero: 1,
         fase: "Evento 1: O Rastro da Batalha (Investigação & Emboscada)",
-        titulo: "Caçada em " + locPrincipal,
-        descricao: pNome + " segue os vestígios deixados na cena anterior. Em meio aos escombros, é emboscado por batedores e precisa manter a compostura marcial.",
-        objetivoCena: "Investigar os rastros da última batalha, conter a emboscada sem hesitar e identificar o ponto fraco do bando inimigo.",
-        desafioSugerido: "Superar armadilhas de terreno usando velocidade (Shunpo) e cortes precisos de Zanpakutō."
+        titulo: `Caçada em ${locPrincipal}`,
+        descricao: `${pNome} parte imediatamente após os acontecimentos da última cena ("${momChave}"). Em meio aos escombros deixados para trás, batedores de ${opPrincipal} tentam fechar o cerco.`,
+        objetivoCena: "Investigar os vestígios da última batalha, repelir a emboscada com rapidez e localizar o núcleo da força inimiga.",
+        desafioSugerido: "Uso combinado de velocidade (Shunpo) e postura defensiva firme para proteger eventuais aliados."
       },
       {
         numero: 2,
         fase: "Evento 2: A Fúria Desencadeada (Duelo Intermediário)",
-        titulo: "Choque de Titãs: " + zkNome + " vs " + opPrincipal,
-        descricao: "O confronto direto explode. O oponente tenta anular os movimentos de " + pNome + " usando técnicas corruptas de Reishi.",
-        objetivoCena: "Manter a postura marcial, sincronizar o comando '" + zkCmd + "' e contra-atacar sob pressão extrema.",
-        desafioSugerido: "Uso estratégico de Kidōs de suporte ou combinação de força e velocidade para quebrar a guarda inimiga."
+        titulo: `Choque de Titãs: ${zkNome} vs ${opPrincipal}`,
+        descricao: `O comandante inimigo confronta ${pNome} diretamente, revelando técnicas aprimoradas para anular o estilo marcial do ${pEsq}.`,
+        objetivoCena: `Manter a compostura de combate, sincronizar o comando de liberação '${zkCmd}' e quebrar a barreira defensiva adversária.`,
+        desafioSugerido: "Uso estratégico de Kidōs de suporte ou combinação de força e velocidade."
       },
       {
         numero: 3,
         fase: "Evento 3: O Clímax & Golpe Final",
-        titulo: "A Lâmina Suprema de " + pNome,
-        descricao: "A batalha atinge o ápice com o oponente liberando sua forma máxima. " + pNome + " executa sua técnica definitiva em uma narração épica.",
-        objetivoCena: "Desferir o golpe decisivo de liberação da Zanpakutō e proteger os aliados/civis do Seireitei.",
-        desafioSugerido: "Conclusão épica com descrição detalhada do impacto visual e espiritual do golpe de misericórdia."
+        titulo: `A Lâmina Suprema de ${pNome}`,
+        descricao: `A batalha atinge o ápice. ${pNome} canaliza toda sua pressão espiritual na Zanpakutō ${zkNome} para desferir o golpe de misericórdia e selar a vitória.`,
+        objetivoCena: "Executar a finalização épica no roleplay narrando o impacto visual e a superação dos próprios limites.",
+        desafioSugerido: "Narração rica e detalhada do clímax espiritual com libertação de Reishi monumental."
       }
     ],
     antagonista: {
       nome: opPrincipal,
-      titulo: "O Algoz de " + locPrincipal,
-      origem: "Gerado pelas cicatrizes de batalha e perturbações de Reishi em " + locPrincipal + ".",
-      motivacao: "Destruir a honra de " + pNome + " e provar a fragilidade dos guerreiros do " + pEsq + ".",
-      fraquezaChave: "Vulnerável a ataques frontais de alta velocidade e liberação sincronizada de " + zkNome + "."
+      titulo: `O Algoz de ${locPrincipal}`,
+      origem: `Atraído pela perturbação de Reishi gerada na cena onde "${momChave}".`,
+      motivacao: `Vingar as perdas anteriores e provar a fragilidade dos guerreiros do ${pEsq}.`,
+      fraquezaChave: `Vulnerável a ataques frontais sincronizados com a liberação de ${zkNome}.`
     },
     briefingWhatsApp: "```ㅤㅤ```ㅤㅤㅤ```ㅤㅤ```\n" +
-      "👑 𝗗𝗢𝗦𝗦𝗜𝗘̂ 𝗗𝗘 𝗔𝗥𝗖𝗢 • 𝗢𝗣𝗖̧𝗔̃𝗢 𝟭: 𝗖𝗢𝗠𝗕𝗔𝗧𝗘 𝗗𝗜𝗥𝗘𝗧𝗢\n" +
-      "✶ „ Jogador: " + pNome + " [" + codAtiv + "]\n" +
-      "✶ „ Esquadrão: " + pEsq + " • Patamar: " + pPatamar + "\n" +
-      "✶ „ Título: Arco de " + pNome + " — O Veredito de Sangue em " + locPrincipal + "\n" +
-      "✶ „ Foco: Provação Marcial & Duelo contra " + opPrincipal + "\n\n" +
-      "📋 𝗦𝗜𝗡𝗢𝗣𝗦𝗘 𝗗𝗔 𝗠𝗜𝗦𝗦𝗔̃𝗢 (𝗢𝗡):\n" +
-      "Após o clímax da cena anterior onde \"" + momChave + "\", " + pNome + " é convocado para conter o avanço devastador de " + opPrincipal + " em " + locPrincipal + ". O confronto exigirá maestria absoluta no uso de " + zkNome + "!\n\n" +
-      "🎯 𝗢𝗕𝗝𝗘𝗧𝗜𝗩𝗢 𝗗𝗔 𝗣𝗥𝗢́𝗫𝗜𝗠𝗔 𝗖𝗘𝗡𝗔:\n" +
-      "1. Dirigir-se a " + locPrincipal + " e narrar sua prontidão de combate (mínimo 30 linhas treino / 90 linhas arco).\n" +
-      "2. Investigar os escombros da última batalha e travar o primeiro duelo de lâminas!\n\n" +
-      "✧ Recompensa Garantida: 15 Pontos de Atributo + 2 Giros Comuns + 1 Especial!\n" +
+      `👑 𝗗𝗢𝗦𝗦𝗜𝗘̂ 𝗗𝗘 𝗔𝗥𝗖𝗢 • 𝗢𝗣𝗖̧𝗔̃𝗢 𝟭: 𝗖𝗢𝗠𝗕𝗔𝗧𝗘 𝗗𝗜𝗥𝗘𝗧𝗢\n` +
+      `✶ „ Jogador: ${pNome} [${codAtiv}]\n` +
+      `✶ „ Esquadrão: ${pEsq} • Patamar: ${pPatamar}\n` +
+      `✶ „ Título: Arco de ${pNome} — O Veredito de Sangue em ${locPrincipal}\n` +
+      `✶ „ Foco: Continuidade de "${momChave}" & Duelo contra ${opPrincipal}\n\n` +
+      `📋 𝗦𝗜𝗡𝗢𝗣𝗦𝗘 𝗗𝗔 𝗠𝗜𝗦𝗦𝗔̃𝗢 (𝗢𝗡):\n` +
+      `Após os eventos em que "${momChave}", a presença de ${opPrincipal} tornou-se uma ameaça crítica em ${locPrincipal}. ${pNome} foi encarregado de liderar a ofensiva e levar o combate até o fim com sua lâmina ${zkNome}!\n\n` +
+      `🎯 𝗢𝗕𝗝𝗘𝗧𝗜𝗩𝗢 𝗗𝗔 𝗣𝗥𝗢́𝗫𝗜𝗠𝗔 𝗖𝗘𝗡𝗔:\n` +
+      `1. Dirigir-se a ${locPrincipal} e narrar sua chegada ao local (mínimo 30 linhas treino / 90 linhas arco).\n` +
+      `2. Investigar os escombros da última cena e travar o primeiro choque de lâminas contra os batedores!\n\n` +
+      `✧ Recompensa Garantida: 15 Pontos de Atributo + 2 Giros Comuns + 1 Especial!\n` +
       "```ㅤㅤ```ㅤㅤㅤ```ㅤㅤ```"
   };
 
@@ -4673,53 +4751,53 @@ function sintetizarTramaIndividualHeuristica(player, cenas) {
     id: "opcao_2",
     tipo: "misterio",
     nomeOpcao: "🕵️ Opção 2: Caminho da Conspiração Oculta (Mistério & Blefe)",
-    tituloArco: "Arco de " + pNome + " — A Sombra nos Bastidores do Seireitei",
-    focoNarrativo: "O ataque ocorrido na cena anterior não foi um evento isolado, mas parte de uma conspiração maior que envolve traição e segredos ocultos nos registros da Soul Society.",
+    tituloArco: `Arco de ${pNome} — A Sombra nos Bastidores de ${locPrincipal}`,
+    focoNarrativo: `O confronto anterior ("${momChave}") deixou pistas perturbadoras: as armas e feitiços usados continham traços de Reishi fabricados ilegalmente no Seireitei. Há conspiradores nos bastidores.`,
     eventos: [
       {
         numero: 1,
         fase: "Evento 1: O Enigma nos Escombros (Infiltração)",
         titulo: "Pistas Silenciosas",
-        descricao: pNome + " recolhe fragmentos de Reishi corrompido deixados pelo inimigo e descobre que as armas foram forjadas secretamente no Seireitei.",
-        objetivoCena: "Interrogar informantes em Rukongai e infiltrar-se em arquivos proibidos sem alertar os traidores.",
-        desafioSugerido: "Uso de furtividade, percepção espiritual e Bakudōs de silenciamento."
+        descricao: `${pNome} recolhe fragmentos do local da última batalha e descobre um selo clandestino ligando o ataque a oficiais do Seireitei.`,
+        objetivoCena: "Interrogar informantes sem alertar os traidores e infiltrar-se em arquivos confidenciais.",
+        desafioSugerido: "Uso de furtividade, percepção de Reishi e Bakudōs de silenciamento."
       },
       {
         numero: 2,
         fase: "Evento 2: O Jogo de Blefes & Armadilha Psicológica",
         titulo: "Traição Desmascarada",
-        descricao: "O conspirador tenta subornar ou chantagear " + pNome + ", forçando-o a um jogo tenso de blefes e armadilhas de ilusão.",
-        objetivoCena: "Resistir à manipulação psicológica e desmascarar a identidade do traidor perante o esquadrão.",
-        desafioSugerido: "Superar ilusões de Kidō e manter a integridade mental sob pressão."
+        descricao: "O conspirador tenta armar uma cilada contra o esquadrão, usando ilusões para culpar inocentes.",
+        objetivoCena: `Manter a lucidez perante manipulações e desmascarar publicamente a identidade do conspirador.`,
+        desafioSugerido: "Superar ilusões de Kidō e manter a integridade tática sob pressão."
       },
       {
         numero: 3,
         fase: "Evento 3: O Julgamento de Aço",
         titulo: "A Queda da Conspiração",
-        descricao: "Batalha final contra o mentor da conspiração nos limites do Seireitei, selando o plano sombrio de vez.",
-        objetivoCena: "Neutralizar o traidor, recuperar os registros roubados e restaurar a ordem na Soul Society.",
-        desafioSugerido: "Execução de um selamento tático com Kidō ou corte decisivo de Zanpakutō."
+        descricao: "Batalha decisiva contra o mentor da traição, selando suas rotas de fuga e garantindo as provas.",
+        objetivoCena: "Neutralizar o traidor, recuperar os documentos e restaurar a ordem na Soul Society.",
+        desafioSugerido: "Execução de um selamento de Kidō ou corte preciso de Zanpakutō."
       }
     ],
     antagonista: {
       nome: "O Mestre das Sombras (Oficial Desertor)",
-      titulo: "O Arquiteto da Traição",
-      origem: "Infiltrado nos setores burocráticos do Seireitei manipulando eventos de bastidores.",
-      motivacao: "Desestabilizar a hierarquia dos capitães e tomar o controle das rotas espirituais.",
-      fraquezaChave: "Insegurança em combates corpo a corpo quando suas ilusões são dissipadas."
+      titulo: `O Arquiteto da Traição em ${locPrincipal}`,
+      origem: `Manipula os incidentes ocorridos nas cenas anteriores para desestabilizar o ${pEsq}.`,
+      motivacao: "Tomar o controle das rotas espirituais e lucrar com o caos entre os mundos.",
+      fraquezaChave: "Insegurança em combates diretos de curta distância quando suas ilusões são anuladas."
     },
     briefingWhatsApp: "```ㅤㅤ```ㅤㅤㅤ```ㅤㅤ```\n" +
-      "👑 𝗗𝗢𝗦𝗦𝗜𝗘̂ 𝗗𝗘 𝗔𝗥𝗖𝗢 • 𝗢𝗣𝗖̧𝗔̃𝗢 𝟮: 𝗖𝗢𝗡𝗦𝗣𝗜𝗥𝗔𝗖̧𝗔̃𝗢 𝗢𝗖𝗨𝗟𝗧𝗔\n" +
-      "✶ „ Jogador: " + pNome + " [" + codAtiv + "]\n" +
-      "✶ „ Esquadrão: " + pEsq + " • Patamar: " + pPatamar + "\n" +
-      "✶ „ Título: Arco de " + pNome + " — A Sombra nos Bastidores do Seireitei\n" +
-      "✶ „ Foco: Investigação, Blefe & Desmascarar Conspiração\n\n" +
-      "📋 𝗦𝗜𝗡𝗢𝗣𝗦𝗘 𝗗𝗔 𝗠𝗜𝗦𝗦𝗔̃𝗢 (𝗢𝗡):\n" +
-      "A cena onde \"" + momChave + "\" revelou pistas perturbadoras. O ataque foi arquitetado por conspiradores infiltrados. " + pNome + " deve seguir o rastro das pistas antes que o traidor execute seu plano maior!\n\n" +
-      "🎯 𝗢𝗕𝗝𝗘𝗧𝗜𝗩𝗢 𝗗𝗔 𝗣𝗥𝗢́𝗫𝗜𝗠𝗔 𝗖𝗘𝗡𝗔:\n" +
-      "1. Iniciar a investigação em Rukongai/Seireitei (mínimo 30 linhas treino / 90 linhas arco).\n" +
-      "2. Rastrear o selo do conspirador e desarmar a primeira armadilha de bastidores!\n\n" +
-      "✧ Recompensa Garantida: 15 Pontos de Atributo + 2 Giros Comuns + 1 Especial!\n" +
+      `👑 𝗗𝗢𝗦𝗦𝗜𝗘̂ 𝗗𝗘 𝗔𝗥𝗖𝗢 • 𝗢𝗣𝗖̧𝗔̃𝗢 𝟮: 𝗖𝗢𝗡𝗦𝗣𝗜𝗥𝗔𝗖̧𝗔̃𝗢 𝗢𝗖𝗨𝗟𝗧𝗔\n` +
+      `✶ „ Jogador: ${pNome} [${codAtiv}]\n` +
+      `✶ „ Esquadrão: ${pEsq} • Patamar: ${pPatamar}\n` +
+      `✶ „ Título: Arco de ${pNome} — A Sombra nos Bastidores de ${locPrincipal}\n` +
+      `✶ „ Foco: Investigação, Conspiração & Rastreio de Traidores\n\n` +
+      `📋 𝗦𝗜𝗡𝗢𝗣𝗦𝗘 𝗗𝗔 𝗠𝗜𝗦𝗦𝗔̃𝗢 (𝗢𝗡):\n` +
+      `A cena onde "${momChave}" revelou conexões perigosas com traidores no Seireitei. ${pNome} deve agir com discrição para desvendar a conspiração antes que o plano do mentor seja executado!\n\n` +
+      `🎯 𝗢𝗕𝗝𝗘𝗧𝗜𝗩𝗢 𝗗𝗔 𝗣𝗥𝗢́𝗫𝗜𝗠𝗔 𝗖𝗘𝗡𝗔:\n` +
+      `1. Iniciar a investigação dos vestígios deixados no local (mínimo 30 linhas treino / 90 linhas arco).\n` +
+      `2. Rastrear o selo clandestino e confrontar os primeiros informantes no ON!\n\n` +
+      `✧ Recompensa Garantida: 15 Pontos de Atributo + 2 Giros Comuns + 1 Especial!\n` +
       "```ㅤㅤ```ㅤㅤㅤ```ㅤㅤ```"
   };
 
@@ -4728,53 +4806,53 @@ function sintetizarTramaIndividualHeuristica(player, cenas) {
     id: "opcao_3",
     tipo: "despertar",
     nomeOpcao: "⚖️ Opção 3: Caminho do Despertar da Alma (Ressonância da Zanpakutō)",
-    tituloArco: "Arco de " + pNome + " — O Despertar da Alma & A Provação de " + zkNome,
-    focoNarrativo: "O choque narrativo da última cena fez a Zanpakutō " + zkNome + " silenciar ou exigir uma evolução espiritual profunda de seu portador, forçando um teste de convicção e limites.",
+    tituloArco: `Arco de ${pNome} — O Despertar da Alma & A Provação de ${zkNome}`,
+    focoNarrativo: `O impacto emocional da cena onde "${momChave}" abalou a sincronia com a Zanpakutō ${zkNome}. Para evoluir e suportar as próximas batalhas, o guerreiro deve encarar a manifestação de sua própria lâmina no mundo interior.`,
     eventos: [
       {
         numero: 1,
         fase: "Evento 1: O Silêncio da Lâmina (Conflito Interior)",
         titulo: "O Eco do Mundo Interior",
-        descricao: pNome + " entra em meditação profunda (Jinzen). A alma da Zanpakutō recusa-se a obedecer até que o guerreiro encare seu maior medo/hesitação.",
-        objetivoCena: "Dialogar e duelar contra a manifestação espiritual de sua própria lâmina no mundo interior.",
-        desafioSugerido: "Narração psicológica rica detalhando o ambiente mental e a filosofia de sua arma."
+        descricao: `${pNome} entra em meditação profunda (Jinzen). A alma da Zanpakutō exige clareza sobre suas motivações após os recentes combates.`,
+        objetivoCena: `Dialogar e duelar contra a manifestação espiritual de ${zkNome} no plano mental.`,
+        desafioSugerido: "Narração psicológica rica detalhando o ambiente do mundo interior e a filosofia de sua arma."
       },
       {
         numero: 2,
         fase: "Evento 2: A Provação do Sacrifício",
         titulo: "O Teste de Sangue & Honra",
-        descricao: "Enquanto medita, uma ameaça repentina ataca os inocentes sob sua vigília. " + pNome + " precisa lutar com Reishi limitado para provar sua determinação.",
-        objetivoCena: "Proteger os aliados sem depender apenas de poder bruto, demonstrando maturidade tática.",
-        desafioSugerido: "Uso engenhoso de combate básico, esquivas perfeitas e resiliência espiritual."
+        descricao: "Uma ameaça repentina surge enquanto o guerreiro medita, forçando-o a lutar com Reishi limitado para proteger o posto.",
+        objetivoCena: "Demonstrar pureza de espírito e maturidade tática sem depender apenas de força bruta.",
+        desafioSugerido: "Uso de esquivas perfeitas, golpes básicos precisos e resiliência."
       },
       {
         numero: 3,
         fase: "Evento 3: A Fusão de Convicções (Despertar Lendário)",
-        titulo: "A Dança Harmoniosa de " + zkNome,
-        descricao: "A lâmina reconhece a verdadeira vontade de " + pNome + ". O Reishi explode em harmonia absoluta, culminando em uma liberação majestosa.",
-        objetivoCena: "Executar a liberação definitiva em harmonia com a Zanpakutō e aniquilar a ameaça restante.",
+        titulo: `A Dança Harmoniosa de ${zkNome}`,
+        descricao: `A lâmina reconhece a verdadeira vontade de ${pNome}. O Reishi explode em harmonia absoluta, culminando em uma liberação majestosa.`,
+        objetivoCena: "Executar a liberação definitiva em sincronia total com a Zanpakutō e aniquilar a ameaça restante.",
         desafioSugerido: "Liberação triunfante com narração da ressonância espiritual entre portador e lâmina."
       }
     ],
     antagonista: {
       nome: "A Sombra da Dúvida (Avatar Espiritual Interior)",
       titulo: "O Reflexo da Hesitação",
-      origem: "Manifestado das dúvidas e memórias não resolvidas no coração do guerreiro.",
+      origem: `Nascido das memórias e da tensão da cena onde "${momChave}".`,
       motivacao: "Testar se o guerreiro é digno de empunhar a lâmina sem hesitação.",
       fraquezaChave: "Desaparece quando confrontado com determinação inabalável e auto-aceitação."
     },
     briefingWhatsApp: "```ㅤㅤ```ㅤㅤㅤ```ㅤㅤ```\n" +
-      "👑 𝗗𝗢𝗦𝗦𝗜𝗘̂ 𝗗𝗘 𝗔𝗥𝗖𝗢 • 𝗢𝗣𝗖̧𝗔̃𝗢 𝟯: 𝗗𝗘𝗦𝗣𝗘𝗥𝗧𝗔𝗥 𝗗𝗔 𝗔𝗟𝗠𝗔\n" +
-      "✶ „ Jogador: " + pNome + " [" + codAtiv + "]\n" +
-      "✶ „ Esquadrão: " + pEsq + " • Patamar: " + pPatamar + "\n" +
-      "✶ „ Título: Arco de " + pNome + " — O Despertar da Alma & A Provação de " + zkNome + "\n" +
-      "✶ „ Foco: Conexão Espiritual & Provação da Zanpakutō\n\n" +
-      "📋 𝗦𝗜𝗡𝗢𝗣𝗦𝗘 𝗗𝗔 𝗠𝗜𝗦𝗦𝗔̃𝗢 (𝗢𝗡):\n" +
-      "Diante dos acontecimentos onde \"" + momChave + "\", " + zkNome + " clama por uma evolução espiritual definitiva. " + pNome + " deve enfrentar o teste de sua própria lâmina para desbloquear o próximo patamar de maestria!\n\n" +
-      "🎯 𝗢𝗕𝗝𝗘𝗧𝗜𝗩𝗢 𝗗𝗔 𝗣𝗥𝗢́𝗫𝗜𝗠𝗔 𝗖𝗘𝗡𝗔:\n" +
-      "1. Narrar a entrada no Mundo Interior / Meditação Jinzen (mínimo 30 linhas treino / 90 linhas arco).\n" +
-      "2. Confrontar a manifestação de " + zkNome + " e provar a pureza de sua convicção marcial!\n\n" +
-      "✧ Recompensa Garantida: 15 Pontos de Atributo + 2 Giros Comuns + 1 Especial!\n" +
+      `👑 𝗗𝗢𝗦𝗦𝗜𝗘̂ 𝗗𝗘 𝗔𝗥𝗖𝗢 • 𝗢𝗣𝗖̧𝗔̃𝗢 𝟯: 𝗗𝗘𝗦𝗣𝗘𝗥𝗧𝗔𝗥 𝗗𝗔 𝗔𝗟𝗠𝗔\n` +
+      `✶ „ Jogador: ${pNome} [${codAtiv}]\n` +
+      `✶ „ Esquadrão: ${pEsq} • Patamar: ${pPatamar}\n` +
+      `✶ „ Título: Arco de ${pNome} — O Despertar da Alma & A Provação de ${zkNome}\n` +
+      `✶ „ Foco: Conexão Espiritual & Provação de ${zkNome}\n\n` +
+      `📋 𝗦𝗜𝗡𝗢𝗣𝗦𝗘 𝗗𝗔 𝗠𝗜𝗦𝗦𝗔̃𝗢 (𝗢𝗡):\n` +
+      `Diante dos acontecimentos onde "${momChave}", a Zanpakutō ${zkNome} exige um salto evolutivo. ${pNome} deve entrar no Jinzen e superar a provação interior para consagrar o próximo patamar de poder!\n\n` +
+      `🎯 𝗢𝗕𝗝𝗘𝗧𝗜𝗩𝗢 𝗗𝗔 𝗣𝗥𝗢́𝗫𝗜𝗠𝗔 𝗖𝗘𝗡𝗔:\n` +
+      `1. Narrar a entrada no Mundo Interior / Meditação Jinzen (mínimo 30 linhas treino / 90 linhas arco).\n` +
+      `2. Confrontar a manifestação de ${zkNome} e provar a pureza de sua convicção marcial!\n\n` +
+      `✧ Recompensa Garantida: 15 Pontos de Atributo + 2 Giros Comuns + 1 Especial!\n` +
       "```ㅤㅤ```ㅤㅤㅤ```ㅤㅤ```"
   };
 
@@ -4809,27 +4887,28 @@ function sintetizarTramaConjuntaHeuristica(players, cenasConjuntas) {
   const nomesStr = pList.map(p => p.nome).join(" & ");
   const codigosStr = pList.map(p => (typeof getCodigoAtividade === 'function' ? getCodigoAtividade(p) : (p.codigoAtividade || 'ACT-0000'))).join(" / ");
 
-  const analise = analisarCenaSemanticaBleach(cList, p1);
+  const analise = analisarCenasCronologicasBleach(cList, p1);
   const opPrincipal = analise.oponentePrincipal || "Menos Grande Híbrido";
   const locPrincipal = analise.localPrincipal || "Distritos Periféricos de Rukongai";
+  const momChave = analise.momentoChave;
 
   const opcaoConj1 = {
     id: "conj_opcao_1",
     nomeOpcao: "⚔️ Opção 1: Aliança de Sangue (Combate Cooperativo Sincronizado)",
-    tituloArco: "Arco Cruzado: A Queda do Titã em " + locPrincipal + " (" + nomesStr + ")",
-    dinamicaDupla: "Cooperação Tática & União de Forças (" + p1.esquadrao + " ⚔️ " + p2.esquadrao + ")",
-    sinopse: "Um incidente em " + locPrincipal + " une " + p1.nome + " e " + p2.nome + " contra uma ameaça que nenhum guerreiro pode derrotar isoladamente (" + opPrincipal + "). Ambos devem intercalar ataques e defesas sincronizadas no ON.",
+    tituloArco: `Arco Cruzado: A Queda do Titã em ${locPrincipal} (${nomesStr})`,
+    dinamicaDupla: `Cooperação Tática & União de Forças (${p1.esquadrao} ⚔️ ${p2.esquadrao})`,
+    sinopse: `Após o incidente onde "${momChave}", uma anomalia em ${locPrincipal} une ${p1.nome} e ${p2.nome} contra uma ameaça que nenhum guerreiro pode derrotar isoladamente (${opPrincipal}). Ambos devem intercalar ataques e defesas sincronizadas no ON.`,
     eventosCruzados: [
       {
         fase: "Fase 1: O Choque Inicial & Convocação Conjunta (ON)",
-        descricao: p1.nome + " e " + p2.nome + " são emboscados em " + locPrincipal + ". A força de Reishi do monstro obriga os dois a unirem suas lâminas.",
-        papelPlayer1: "Abrir brecha na vanguarda (" + p1.nome + ").",
-        papelPlayer2: "Suporte tático, barreira ou cura (" + p2.nome + ").",
-        ganchoWhats: "Primeira cena no ON com diálogo e ataque combinado de " + p1.nome + " e " + p2.nome + "."
+        descricao: `${p1.nome} e ${p2.nome} são emboscados em ${locPrincipal}. A força de Reishi do monstro obriga os dois a unirem suas lâminas.`,
+        papelPlayer1: `Abrir brecha na vanguarda (${p1.nome}).`,
+        papelPlayer2: `Suporte tático, barreira ou cura (${p2.nome}).`,
+        ganchoWhats: `Primeira cena no ON com diálogo e ataque combinado de ${p1.nome} e ${p2.nome}.`
       },
       {
         fase: "Fase 2: A Provação Cruzada (Ação de um afeta o outro)",
-        descricao: "O monstro isola os dois em domínios de Reishi. Para que " + p1.nome + " sobreviva, " + p2.nome + " precisará neutralizar a fonte de energia a tempo.",
+        descricao: `O monstro isola os dois em domínios de Reishi. Para que ${p1.nome} sobreviva, ${p2.nome} precisará neutralizar a fonte de energia a tempo.`,
         papelPlayer1: "Conter o dano devastador da criatura.",
         papelPlayer2: "Executar técnica de anulação ou quebra de selo.",
         ganchoWhats: "Interação contínua onde a rolagem/narração de um altera o estado do parceiro."
@@ -4848,26 +4927,26 @@ function sintetizarTramaConjuntaHeuristica(players, cenasConjuntas) {
       mecanicaEspecial: "Exige intercalação de turnos narrativos contínuos no WhatsApp."
     },
     briefingWhatsApp: "```ㅤㅤ```ㅤㅤㅤ```ㅤㅤ```\n" +
-      "👑 𝗗𝗢𝗦𝗦𝗜𝗘̂ 𝗗𝗘 𝗧𝗥𝗔𝗠𝗔 𝗖𝗢𝗡𝗝𝗨𝗡𝗧𝗔 • 𝗢𝗣𝗖̧𝗔̃𝗢 𝟭: 𝗔𝗟𝗜𝗔𝗡𝗖̧𝗔 𝗗𝗘 𝗦𝗔𝗡𝗚𝗨𝗘\n" +
-      "✶ „ Jogadores Envolvidos: " + nomesStr + "\n" +
-      "✶ „ Códigos de Atividade: " + codigosStr + "\n" +
-      "✶ „ Título: Arco Cruzado — A Queda do Titã em " + locPrincipal + "\n" +
-      "✶ „ Dinâmica: " + p1.esquadrao + " ⚔️ " + p2.esquadrao + "\n\n" +
-      "📋 𝗦𝗜𝗡𝗢𝗣𝗦𝗘 𝗖𝗢𝗠𝗣𝗔𝗥𝗧𝗜𝗟𝗛𝗔𝗗𝗔:\n" +
-      "Uma anomalia de extrema gravidade em " + locPrincipal + " exige a colaboração imediata de " + p1.nome + " e " + p2.nome + ". A ameaça " + opPrincipal + " só poderá ser contida com sincronia total de Reishi!\n\n" +
-      "🎯 𝗜𝗡𝗦𝗧𝗥𝗨𝗖̧𝗢̃𝗘𝗦 𝗣𝗔𝗥𝗔 𝗢𝗦 𝗝𝗢𝗚𝗔𝗗𝗢𝗥𝗘𝗦:\n" +
-      "1. Cenar juntos em interação contínua no grupo (mínimo 30 a 90 linhas conjuntas).\n" +
-      "2. Intercalar ações combinando suas técnicas e liberando suas Zanpakutōs em sincronia.\n\n" +
-      "✧ Recompensa Garantida para Ambos: 15 Pontos de Atributo + 2 Giros Comuns + 1 Giro Especial cada!\n" +
+      `👑 𝗗𝗢𝗦𝗦𝗜𝗘̂ 𝗗𝗘 𝗧𝗥𝗔𝗠𝗔 𝗖𝗢𝗡𝗝𝗨𝗡𝗧𝗔 • 𝗢𝗣𝗖̧𝗔̃𝗢 𝟭: 𝗔𝗟𝗜𝗔𝗡𝗖̧𝗔 𝗗𝗘 𝗦𝗔𝗡𝗚𝗨𝗘\n` +
+      `✶ „ Jogadores Envolvidos: ${nomesStr}\n` +
+      `✶ „ Códigos de Atividade: ${codigosStr}\n` +
+      `✶ „ Título: Arco Cruzado — A Queda do Titã em ${locPrincipal}\n` +
+      `✶ „ Dinâmica: ${p1.esquadrao} ⚔️ ${p2.esquadrao}\n\n` +
+      `📋 𝗦𝗜𝗡𝗢𝗣𝗦𝗘 𝗖𝗢𝗠𝗣𝗔𝗥𝗧𝗜𝗟𝗛𝗔𝗗𝗔:\n` +
+      `Após os acontecimentos em que "${momChave}", a ameaça ${opPrincipal} em ${locPrincipal} exige a colaboração imediata de ${p1.nome} e ${p2.nome}. Apenas sincronia total de Reishi poderá conter o avanço inimigo!\n\n` +
+      `🎯 𝗜𝗡𝗦𝗧𝗥𝗨𝗖̧𝗢̃𝗘𝗦 𝗣𝗔𝗥𝗔 𝗢𝗦 𝗝𝗢𝗚𝗔𝗗𝗢𝗥𝗘𝗦:\n` +
+      `1. Cenar juntos em interação contínua no grupo (mínimo 30 a 90 linhas conjuntas).\n` +
+      `2. Intercalar ações combinando suas técnicas e liberando suas Zanpakutōs em sincronia.\n\n` +
+      `✧ Recompensa Garantida para Ambos: 15 Pontos de Atributo + 2 Giros Comuns + 1 Giro Especial cada!\n` +
       "```ㅤㅤ```ㅤㅤㅤ```ㅤㅤ```"
   };
 
   const opcaoConj2 = {
     id: "conj_opcao_2",
     nomeOpcao: "⚖️ Opção 2: Choque Ideológico & Provação Cruzada (Conflito de Honra)",
-    tituloArco: "Arco Cruzado: O Julgamento de Honra em " + locPrincipal + " (" + nomesStr + ")",
-    dinamicaDupla: "Divergência de Métodos & Respeito Mútuo (" + p1.esquadrao + " vs " + p2.esquadrao + ")",
-    sinopse: "Enquanto " + p1.nome + " busca aniquilar o alvo custe o que custar, " + p2.nome + " defende a preservação das leis e dos civis. O confronto forçará os dois a aprenderem com os ideais um do outro.",
+    tituloArco: `Arco Cruzado: O Julgamento de Honra em ${locPrincipal} (${nomesStr})`,
+    dinamicaDupla: `Divergência de Métodos & Respeito Mútuo (${p1.esquadrao} vs ${p2.esquadrao})`,
+    sinopse: `Enquanto ${p1.nome} busca aniquilar o alvo custe o que custar, ${p2.nome} defende a preservação das leis e dos civis. O confronto forçará os dois a aprenderem com os ideais um do outro.`,
     eventosCruzados: [
       {
         fase: "Fase 1: O Choque de Ordens",
@@ -4897,26 +4976,26 @@ function sintetizarTramaConjuntaHeuristica(players, cenasConjuntas) {
       mecanicaEspecial: "Requer reconciliação tática no roleplay para abrir brecha no escudo inimigo."
     },
     briefingWhatsApp: "```ㅤㅤ```ㅤㅤㅤ```ㅤㅤ```\n" +
-      "👑 𝗗𝗢𝗦𝗦𝗜𝗘̂ 𝗗𝗘 𝗧𝗥𝗔𝗠𝗔 𝗖𝗢𝗡𝗝𝗨𝗡𝗧𝗔 • 𝗢𝗣𝗖̧𝗔̃𝗢 𝟮: 𝗖𝗛𝗢𝗤𝗨𝗘 𝗜𝗗𝗘𝗢𝗟𝗢́𝗚𝗜𝗖𝗢\n" +
-      "✶ „ Jogadores Envolvidos: " + nomesStr + "\n" +
-      "✶ „ Códigos de Atividade: " + codigosStr + "\n" +
-      "✶ „ Título: Arco Cruzado — O Julgamento de Honra em " + locPrincipal + "\n" +
-      "✶ „ Dinâmica: Choque de Métodos (" + p1.esquadrao + " vs " + p2.esquadrao + ")\n\n" +
-      "📋 𝗦𝗜𝗡𝗢𝗣𝗦𝗘 𝗖𝗢𝗠𝗣𝗔𝗥𝗧𝗜𝗟𝗛𝗔𝗗𝗔:\n" +
-      "Um dilema de honra coloca " + p1.nome + " e " + p2.nome + " em teste. Para superar a armadilha em " + locPrincipal + ", ambos precisarão conciliar a força bruta com a sabedoria tática!\n\n" +
-      "🎯 𝗜𝗡𝗦𝗧𝗥𝗨𝗖̧𝗢̃𝗘𝗦 𝗣𝗔𝗥𝗔 𝗢𝗦 𝗝𝗢𝗚𝗔𝗗𝗢𝗥𝗘𝗦:\n" +
-      "1. Dialogar e contrapor suas filosofias de esquadrão no ON (mínimo 30 a 90 linhas).\n" +
-      "2. Superar a discórdia e executar uma estratégia mista impecável.\n\n" +
-      "✧ Recompensa Garantida para Ambos: 15 Pontos de Atributo + 2 Giros Comuns + 1 Especial cada!\n" +
+      `👑 𝗗𝗢𝗦𝗦𝗜𝗘̂ 𝗗𝗘 𝗧𝗥𝗔𝗠𝗔 𝗖𝗢𝗡𝗝𝗨𝗡𝗧𝗔 • 𝗢𝗣𝗖̧𝗔̃𝗢 𝟮: 𝗖𝗛𝗢𝗤𝗨𝗘 𝗜𝗗𝗘𝗢𝗟𝗢́𝗚𝗜𝗖𝗢\n` +
+      `✶ „ Jogadores Envolvidos: ${nomesStr}\n` +
+      `✶ „ Códigos de Atividade: ${codigosStr}\n` +
+      `✶ „ Título: Arco Cruzado — O Julgamento de Honra em ${locPrincipal}\n` +
+      `✶ „ Dinâmica: Choque de Métodos (${p1.esquadrao} vs ${p2.esquadrao})\n\n` +
+      `📋 𝗦𝗜𝗡𝗢𝗣𝗦𝗘 𝗖𝗢𝗠𝗣𝗔𝗥𝗧𝗜𝗟𝗛𝗔𝗗𝗔:\n` +
+      `Um dilema de honra coloca ${p1.nome} e ${p2.nome} em teste. Para superar a armadilha em ${locPrincipal}, ambos precisarão conciliar a força bruta com a sabedoria tática!\n\n` +
+      `🎯 𝗜𝗡𝗦𝗧𝗥𝗨𝗖̧𝗢̃𝗘𝗦 𝗣𝗔𝗥𝗔 𝗢𝗦 𝗝𝗢𝗚𝗔𝗗𝗢𝗥𝗘𝗦:\n` +
+      `1. Dialogar e contrapor suas filosofias de esquadrão no ON (mínimo 30 a 90 linhas).\n` +
+      `2. Superar a discórdia e executar uma estratégia mista impecável.\n\n` +
+      `✧ Recompensa Garantida para Ambos: 15 Pontos de Atributo + 2 Giros Comuns + 1 Especial cada!\n` +
       "```ㅤㅤ```ㅤㅤㅤ```ㅤㅤ```"
   };
 
   const opcaoConj3 = {
     id: "conj_opcao_3",
     nomeOpcao: "🕵️ Opção 3: Operação de Infiltração & Resgate de Alto Risco",
-    tituloArco: "Arco Cruzado: Resgate nas Sombras de " + locPrincipal + " (" + nomesStr + ")",
+    tituloArco: `Arco Cruzado: Resgate nas Sombras de ${locPrincipal} (${nomesStr})`,
     dinamicaDupla: "Infiltração Furtiva & Ataque Cirúrgico",
-    sinopse: "Um oficial do Gotei 13 foi capturado em " + locPrincipal + ". " + p1.nome + " e " + p2.nome + " formam a equipe de extração secreta que deve agir antes da execução do prisioneiro.",
+    sinopse: `Um oficial do Gotei 13 foi capturado em ${locPrincipal}. ${p1.nome} e ${p2.nome} formam a equipe de extração secreta que deve agir antes da execução do prisioneiro.`,
     eventosCruzados: [
       {
         fase: "Fase 1: Infiltração Silenciosa",
@@ -4946,17 +5025,17 @@ function sintetizarTramaConjuntaHeuristica(players, cenasConjuntas) {
       mecanicaEspecial: "Sucesso depende de coordenação contínua de ações."
     },
     briefingWhatsApp: "```ㅤㅤ```ㅤㅤㅤ```ㅤㅤ```\n" +
-      "👑 𝗗𝗢𝗦𝗦𝗜𝗘̂ 𝗗𝗘 𝗧𝗥𝗔𝗠𝗔 𝗖𝗢𝗡𝗝𝗨𝗡𝗧𝗔 • 𝗢𝗣𝗖̧𝗔̃𝗢 𝟯: 𝗢𝗣𝗘𝗥𝗔𝗖̧𝗔̃𝗢 𝗗𝗘 𝗥𝗘𝗦𝗚𝗔𝗧𝗘\n" +
-      "✶ „ Jogadores Envolvidos: " + nomesStr + "\n" +
-      "✶ „ Códigos de Atividade: " + codigosStr + "\n" +
-      "✶ „ Título: Arco Cruzado — Resgate nas Sombras de " + locPrincipal + "\n" +
-      "✶ „ Dinâmica: Infiltração Furtiva & Ataque Cirúrgico\n\n" +
-      "📋 𝗦𝗜𝗡𝗢𝗣𝗦𝗘 𝗖𝗢𝗠𝗣𝗔𝗥𝗧𝗜𝗟𝗛𝗔𝗗𝗔:\n" +
-      "Uma missão de alta espionagem em " + locPrincipal + ". " + p1.nome + " e " + p2.nome + " devem extrair o alvo e romper o cerco inimigo antes que o portal Senkaimon se feche!\n\n" +
-      "🎯 𝗜𝗡𝗦𝗧𝗥𝗨𝗖̧𝗢̃𝗘𝗦 𝗣𝗔𝗥𝗔 𝗢𝗦 𝗝𝗢𝗚𝗔𝗗𝗢𝗥𝗘𝗦:\n" +
-      "1. Cenar a infiltração e resgate coordenado (mínimo 30 a 90 linhas conjuntas).\n" +
-      "2. Dividir tarefas de ataque e cobertura defensiva no ON.\n\n" +
-      "✧ Recompensa Garantida para Ambos: 15 Pontos de Atributo + 2 Giros Comuns + 1 Especial cada!\n" +
+      `👑 𝗗𝗢𝗦𝗦𝗜𝗘̂ 𝗗𝗘 𝗧𝗥𝗔𝗠𝗔 𝗖𝗢𝗡𝗝𝗨𝗡𝗧𝗔 • 𝗢𝗣𝗖̧𝗔̃𝗢 𝟯: 𝗢𝗣𝗘𝗥𝗔𝗖̧𝗔̃𝗢 𝗗𝗘 𝗥𝗘𝗦𝗚𝗔𝗧𝗘\n` +
+      `✶ „ Jogadores Envolvidos: ${nomesStr}\n` +
+      `✶ „ Códigos de Atividade: ${codigosStr}\n` +
+      `✶ „ Título: Arco Cruzado — Resgate nas Sombras de ${locPrincipal}\n` +
+      `✶ „ Dinâmica: Infiltração Furtiva & Ataque Cirúrgico\n\n` +
+      `📋 𝗦𝗜𝗡𝗢𝗣𝗦𝗘 𝗖𝗢𝗠𝗣𝗔𝗥𝗧𝗜𝗟𝗛𝗔𝗗𝗔:\n` +
+      `Uma missão de alta espionagem em ${locPrincipal}. ${p1.nome} e ${p2.nome} devem extrair o alvo e romper o cerco inimigo antes que o portal Senkaimon se feche!\n\n` +
+      `🎯 𝗜𝗡𝗦𝗧𝗥𝗨𝗖̧𝗢̃𝗘𝗦 𝗣𝗔𝗥𝗔 𝗢𝗦 𝗝𝗢𝗚𝗔𝗗𝗢𝗥𝗘𝗦:\n` +
+      `1. Cenar a infiltração e resgate coordenado (mínimo 30 a 90 linhas conjuntas).\n` +
+      `2. Dividir tarefas de ataque e cobertura defensiva no ON.\n\n` +
+      `✧ Recompensa Garantida para Ambos: 15 Pontos de Atributo + 2 Giros Comuns + 1 Especial cada!\n` +
       "```ㅤㅤ```ㅤㅤㅤ```ㅤㅤ```"
   };
 
@@ -4966,7 +5045,7 @@ function sintetizarTramaConjuntaHeuristica(players, cenasConjuntas) {
       oponentePrincipal: opPrincipal,
       localPrincipal: locPrincipal,
       elementosDetectados: analise.elementosDetectados,
-      momentoChave: analise.momentoChave
+      momentoChave: momChave
     },
     opcoesTramas: [opcaoConj1, opcaoConj2, opcaoConj3],
     opcaoAtivaId: "conj_opcao_1",
@@ -4980,79 +5059,131 @@ function sintetizarTramaConjuntaHeuristica(players, cenasConjuntas) {
   };
 }
 
+// 4. FUNÇÃO CENTRAL DE GERAÇÃO COM IA (GEMINI 3.6 FLASH + OPENAI COM AUTO-LEARN)
 async function gerarTramaIndividualAI(params) {
   const player = params?.player;
   const cenas = params?.cenas || [];
   const openAiKey = params?.openAiKey || "";
   const heuristicResult = sintetizarTramaIndividualHeuristica(player, cenas);
-  const apiKey = (openAiKey || (typeof localStorage !== 'undefined' ? localStorage.getItem("bleach_openai_key") || "" : "")).trim();
+  
+  const keyToUse = (typeof getValidGeminiApiKey === 'function') 
+    ? getValidGeminiApiKey(openAiKey) 
+    : (openAiKey || (typeof localStorage !== 'undefined' ? localStorage.getItem("bleach_openai_key") || "" : ""));
 
-  if (!apiKey || apiKey.length < 15) {
-    return heuristicResult;
-  }
+  const prompt = `Você é o Mestre Narrador Principal do BLEACH RPG (Soul Society / Seireitei).
+Analise o histórico cronológico de cenas narradas pelo jogador no WhatsApp, compreenda o que aconteceu em cada cena e gere 3 Opções de Tramas Individuais que deem continuidade lógica e coesa aos eventos anteriores:
 
-  try {
-    const prompt = "Você é o Mestre Narrador Principal do BLEACH RPG (Soul Society / Seireitei).\n" +
-      "Analise o seguinte jogador e suas cenas de arco para gerar 3 Opções de Tramas Individuais com base nas ações e acontecimentos narrados no ON:\n\n" +
-      "DADOS DO JOGADOR:\n" +
-      "- Nome: " + (player?.nome || 'Shinigami') + "\n" +
-      "- Raça: " + (player?.raca || 'Shinigami') + "\n" +
-      "- Esquadrão: " + (player?.esquadrao || '11º Esquadrão') + "\n" +
-      "- Patamar: " + heuristicResult.diagnosticoPsicologico + "\n" +
-      "- Zanpakutō: " + (player?.zanpakuto?.shikaiAtiva?.nome || player?.zanpakuto?.nome || 'Despertar') + "\n" +
-      "- Histórico de Cenas: " + cenas.map(c => "[" + c.titulo + "]: " + c.texto).join(' | ') + "\n\n" +
-      "Responda APENAS em formato JSON válido com as 3 opções de tramas:\n" +
-      JSON.stringify({
-        opcoesTramas: [
-          {
-            id: "opcao_1",
-            nomeOpcao: "⚔️ Opção 1: Caminho do Confronto Direto (Provação Marcial)",
-            tituloArco: "string",
-            focoNarrativo: "string",
-            eventos: [
-              { numero: 1, fase: "...", titulo: "...", descricao: "...", objetivoCena: "...", desafioSugerido: "..." }
-            ],
-            antagonista: { nome: "...", titulo: "...", origem: "...", motivacao: "...", fraquezaChave: "..." },
-            briefingWhatsApp: "string"
+DADOS DO PERSONAGEM:
+- Nome: ${player?.nome || 'Shinigami'}
+- Raça: ${player?.raca || 'Shinigami'}
+- Esquadrão: ${player?.esquadrao || '11º Esquadrão'}
+- Patamar: ${heuristicResult.diagnosticoPsicologico}
+- Zanpakutō: ${player?.zanpakuto?.shikaiAtiva?.nome || player?.zanpakuto?.nome || 'Despertar'} (${player?.zanpakuto?.shikaiAtiva?.comando || 'Liberte'})
+
+HISTÓRICO CRONOLÓGICO DE CENAS REGISTRADAS:
+${cenas.length === 0 ? "O jogador ainda não possui cenas registradas. Crie um arco introdutório marcante." : cenas.map((c, i) => `[Cena ${i + 1} - ${c.titulo}]: ${c.texto}`).join("\n\n")}
+
+DIRETRIZES DE APRENDIZADO & CONTINUIDADE:
+1. O Evento 1 de cada trama DEVE continuar exatamente a partir da última ação/conclusão narrada na Cena mais recente.
+2. Identifique os oponentes, locais, aliados e conflitos citados no texto das cenas.
+3. Crie 3 Opções distintas:
+   - Opção 1: Caminho do Confronto Direto (Ação & Provação Marcial)
+   - Opção 2: Caminho da Conspiração Oculta (Mistério, Blefe & Investigação)
+   - Opção 3: Caminho do Despertar da Alma (Evolução Espiritual & Jinzen com a Zanpakutō)
+
+Responda ESTRITAMENTE em formato JSON válido conforme o esquema:
+${JSON.stringify({
+  opcoesTramas: [
+    {
+      id: "opcao_1",
+      nomeOpcao: "⚔️ Opção 1: Caminho do Confronto Direto (Provação Marcial)",
+      tituloArco: "string",
+      focoNarrativo: "string",
+      eventos: [
+        { numero: 1, fase: "Evento 1: ...", titulo: "string", descricao: "string", objetivoCena: "string", desafioSugerido: "string" },
+        { numero: 2, fase: "Evento 2: ...", titulo: "string", descricao: "string", objetivoCena: "string", desafioSugerido: "string" },
+        { numero: 3, fase: "Evento 3: ...", titulo: "string", descricao: "string", objetivoCena: "string", desafioSugerido: "string" }
+      ],
+      antagonista: { nome: "string", titulo: "string", origem: "string", motivacao: "string", fraquezaChave: "string" },
+      briefingWhatsApp: "string"
+    }
+  ]
+}, null, 2)}`;
+
+  // 1. Tentar Google Gemini 3.6 Flash
+  if (keyToUse && !keyToUse.startsWith("sk-")) {
+    try {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${encodeURIComponent(keyToUse)}`, {
+        signal: typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function" ? AbortSignal.timeout(6000) : undefined,
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ role: "user", parts: [{ text: prompt }] }],
+          generationConfig: { responseMimeType: "application/json", temperature: 0.85 }
+        })
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (rawText) {
+          const parsed = JSON.parse(rawText);
+          if (Array.isArray(parsed.opcoesTramas) && parsed.opcoesTramas.length >= 3) {
+            const op1 = parsed.opcoesTramas[0];
+            return {
+              ...heuristicResult,
+              opcoesTramas: parsed.opcoesTramas,
+              tituloArco: op1.tituloArco || heuristicResult.tituloArco,
+              ganchoImediato: op1.focoNarrativo || heuristicResult.ganchoImediato,
+              eventos: op1.eventos || heuristicResult.eventos,
+              antagonista: op1.antagonista || heuristicResult.antagonista,
+              briefingWhatsApp: op1.briefingWhatsApp || heuristicResult.briefingWhatsApp
+            };
           }
-        ]
-      }, null, 2);
-
-    const res = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + apiKey
-      },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [{ role: "user", content: prompt }],
-        temperature: 0.8,
-        response_format: { type: "json_object" }
-      })
-    });
-
-    if (res.ok) {
-      const data = await res.json();
-      const content = data?.choices?.[0]?.message?.content;
-      if (content) {
-        const parsed = JSON.parse(content);
-        if (Array.isArray(parsed.opcoesTramas) && parsed.opcoesTramas.length > 0) {
-          const op1 = parsed.opcoesTramas[0];
-          return {
-            ...heuristicResult,
-            opcoesTramas: parsed.opcoesTramas,
-            tituloArco: op1.tituloArco || heuristicResult.tituloArco,
-            ganchoImediato: op1.focoNarrativo || heuristicResult.ganchoImediato,
-            eventos: op1.eventos || heuristicResult.eventos,
-            antagonista: op1.antagonista || heuristicResult.antagonista,
-            briefingWhatsApp: op1.briefingWhatsApp || heuristicResult.briefingWhatsApp
-          };
         }
       }
+    } catch (err) {
+      console.warn("Gemini Arc Analysis error, falling back:", err);
     }
-  } catch (err) {
-    console.warn("OpenAI API call failed, falling back to cognitive semantic engine:", err);
+  }
+
+  // 2. Tentar OpenAI se chave for sk-
+  if (keyToUse && keyToUse.startsWith("sk-")) {
+    try {
+      const res = await fetch("https://api.openai.com/v1/chat/completions", {
+        signal: typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function" ? AbortSignal.timeout(6000) : undefined,
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${keyToUse}` },
+        body: JSON.stringify({
+          model: "gpt-4o-mini",
+          messages: [{ role: "user", content: prompt }],
+          temperature: 0.85,
+          response_format: { type: "json_object" }
+        })
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        const content = data?.choices?.[0]?.message?.content;
+        if (content) {
+          const parsed = JSON.parse(content);
+          if (Array.isArray(parsed.opcoesTramas) && parsed.opcoesTramas.length >= 3) {
+            const op1 = parsed.opcoesTramas[0];
+            return {
+              ...heuristicResult,
+              opcoesTramas: parsed.opcoesTramas,
+              tituloArco: op1.tituloArco || heuristicResult.tituloArco,
+              ganchoImediato: op1.focoNarrativo || heuristicResult.ganchoImediato,
+              eventos: op1.eventos || heuristicResult.eventos,
+              antagonista: op1.antagonista || heuristicResult.antagonista,
+              briefingWhatsApp: op1.briefingWhatsApp || heuristicResult.briefingWhatsApp
+            };
+          }
+        }
+      }
+    } catch (err) {
+      console.warn("OpenAI Arc Analysis error, falling back:", err);
+    }
   }
 
   return heuristicResult;
@@ -5063,73 +5194,116 @@ async function gerarTramaConjuntaAI(params) {
   const cenasConjuntas = params?.cenasConjuntas || [];
   const openAiKey = params?.openAiKey || "";
   const heuristicResult = sintetizarTramaConjuntaHeuristica(players, cenasConjuntas);
-  const apiKey = (openAiKey || (typeof localStorage !== 'undefined' ? localStorage.getItem("bleach_openai_key") || "" : "")).trim();
+  
+  const keyToUse = (typeof getValidGeminiApiKey === 'function') 
+    ? getValidGeminiApiKey(openAiKey) 
+    : (openAiKey || (typeof localStorage !== 'undefined' ? localStorage.getItem("bleach_openai_key") || "" : ""));
 
-  if (!apiKey || apiKey.length < 15) {
-    return heuristicResult;
-  }
+  const prompt = `Você é o Mestre Narrador Principal do BLEACH RPG.
+Analise as cenas armazenadas dos seguintes jogadores e gere 3 Opções de Tramas Cruzadas (Arcos Compartilhados Multi-Player) que interliguem o destino de ambos de forma coesa:
 
-  try {
-    const prompt = "Você é o Mestre Narrador Principal do BLEACH RPG.\n" +
-      "Analise as cenas dos seguintes jogadores e crie 3 Opções de Tramas Cruzadas / Arcos Compartilhados:\n\n" +
-      "JOGADORES:\n" +
-      players.map(p => "- " + p.nome + " (" + p.raca + ", " + p.esquadrao + ")").join('\n') + "\n\n" +
-      "CENAS ARMAZENADAS:\n" +
-      cenasConjuntas.map(c => "[" + (c.autorNome || 'Cena') + " - " + c.titulo + "]: " + c.texto).join('\n') + "\n\n" +
-      "Responda APENAS em formato JSON com as 3 opções de tramas:\n" +
-      JSON.stringify({
-        opcoesTramas: [
-          {
-            id: "conj_opcao_1",
-            nomeOpcao: "⚔️ Opção 1: Aliança de Sangue (Combate Cooperativo Sincronizado)",
-            tituloArco: "string",
-            dinamicaDupla: "string",
-            sinopse: "string",
-            eventosCruzados: [
-              { fase: "...", descricao: "...", papelPlayer1: "...", papelPlayer2: "...", ganchoWhats: "..." }
-            ],
-            ameacaComum: { nome: "...", perigo: "...", mecanicaEspecial: "..." },
-            briefingWhatsApp: "string"
+JOGADORES ENVOLVIDOS:
+${players.map(p => `- ${p.nome} (${p.raca}, ${p.esquadrao})`).join('\n')}
+
+CENAS COMPARTILHADAS:
+${cenasConjuntas.length === 0 ? "Nenhuma cena compartilhada ainda. Crie um primeiro encontro épico." : cenasConjuntas.map(c => `[${c.autorNome || 'Cena'} - ${c.titulo}]: ${c.texto}`).join('\n\n')}
+
+Responda ESTRITAMENTE em formato JSON com as 3 opções de tramas:
+${JSON.stringify({
+  opcoesTramas: [
+    {
+      id: "conj_opcao_1",
+      nomeOpcao: "⚔️ Opção 1: Aliança de Sangue (Combate Cooperativo Sincronizado)",
+      tituloArco: "string",
+      dinamicaDupla: "string",
+      sinopse: "string",
+      eventosCruzados: [
+        { fase: "Fase 1: ...", descricao: "string", papelPlayer1: "string", papelPlayer2: "string", ganchoWhats: "string" },
+        { fase: "Fase 2: ...", descricao: "string", papelPlayer1: "string", papelPlayer2: "string", ganchoWhats: "string" },
+        { fase: "Fase 3: ...", descricao: "string", papelPlayer1: "string", papelPlayer2: "string", ganchoWhats: "string" }
+      ],
+      ameacaComum: { nome: "string", perigo: "string", mecanicaEspecial: "string" },
+      briefingWhatsApp: "string"
+    }
+  ]
+}, null, 2)}`;
+
+  // 1. Tentar Google Gemini 3.6 Flash
+  if (keyToUse && !keyToUse.startsWith("sk-")) {
+    try {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${encodeURIComponent(keyToUse)}`, {
+        signal: typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function" ? AbortSignal.timeout(6000) : undefined,
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ role: "user", parts: [{ text: prompt }] }],
+          generationConfig: { responseMimeType: "application/json", temperature: 0.85 }
+        })
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (rawText) {
+          const parsed = JSON.parse(rawText);
+          if (Array.isArray(parsed.opcoesTramas) && parsed.opcoesTramas.length >= 3) {
+            const op1 = parsed.opcoesTramas[0];
+            return {
+              ...heuristicResult,
+              opcoesTramas: parsed.opcoesTramas,
+              tituloArco: op1.tituloArco || heuristicResult.tituloArco,
+              dinamicaDupla: op1.dinamicaDupla || heuristicResult.dinamicaDupla,
+              sinopse: op1.sinopse || heuristicResult.sinopse,
+              eventosCruzados: op1.eventosCruzados || heuristicResult.eventosCruzados,
+              ameacaComum: op1.ameacaComum || heuristicResult.ameacaComum,
+              briefingWhatsApp: op1.briefingWhatsApp || heuristicResult.briefingWhatsApp
+            };
           }
-        ]
-      }, null, 2);
-
-    const res = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + apiKey
-      },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [{ role: "user", content: prompt }],
-        temperature: 0.8,
-        response_format: { type: "json_object" }
-      })
-    });
-
-    if (res.ok) {
-      const data = await res.json();
-      const content = data?.choices?.[0]?.message?.content;
-      if (content) {
-        const parsed = JSON.parse(content);
-        if (Array.isArray(parsed.opcoesTramas) && parsed.opcoesTramas.length > 0) {
-          const op1 = parsed.opcoesTramas[0];
-          return {
-            ...heuristicResult,
-            opcoesTramas: parsed.opcoesTramas,
-            tituloArco: op1.tituloArco || heuristicResult.tituloArco,
-            dinamicaDupla: op1.dinamicaDupla || heuristicResult.dinamicaDupla,
-            sinopse: op1.sinopse || heuristicResult.sinopse,
-            eventosCruzados: op1.eventosCruzados || heuristicResult.eventosCruzados,
-            ameacaComum: op1.ameacaComum || heuristicResult.ameacaComum,
-            briefingWhatsApp: op1.briefingWhatsApp || heuristicResult.briefingWhatsApp
-          };
         }
       }
+    } catch (err) {
+      console.warn("Gemini Joint Arc Analysis error, falling back:", err);
     }
-  } catch (err) {
-    console.warn("OpenAI joint arc call failed, falling back to cognitive semantic engine:", err);
+  }
+
+  // 2. Tentar OpenAI se chave for sk-
+  if (keyToUse && keyToUse.startsWith("sk-")) {
+    try {
+      const res = await fetch("https://api.openai.com/v1/chat/completions", {
+        signal: typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function" ? AbortSignal.timeout(6000) : undefined,
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${keyToUse}` },
+        body: JSON.stringify({
+          model: "gpt-4o-mini",
+          messages: [{ role: "user", content: prompt }],
+          temperature: 0.85,
+          response_format: { type: "json_object" }
+        })
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        const content = data?.choices?.[0]?.message?.content;
+        if (content) {
+          const parsed = JSON.parse(content);
+          if (Array.isArray(parsed.opcoesTramas) && parsed.opcoesTramas.length >= 3) {
+            const op1 = parsed.opcoesTramas[0];
+            return {
+              ...heuristicResult,
+              opcoesTramas: parsed.opcoesTramas,
+              tituloArco: op1.tituloArco || heuristicResult.tituloArco,
+              dinamicaDupla: op1.dinamicaDupla || heuristicResult.dinamicaDupla,
+              sinopse: op1.sinopse || heuristicResult.sinopse,
+              eventosCruzados: op1.eventosCruzados || heuristicResult.eventosCruzados,
+              ameacaComum: op1.ameacaComum || heuristicResult.ameacaComum,
+              briefingWhatsApp: op1.briefingWhatsApp || heuristicResult.briefingWhatsApp
+            };
+          }
+        }
+      }
+    } catch (err) {
+      console.warn("OpenAI Joint Arc Analysis error, falling back:", err);
+    }
   }
 
   return heuristicResult;
@@ -7056,6 +7230,8 @@ function TopBar({ session, onLogout, view, setView, nome, onOpenAdminLogin, clou
         <nav className="hidden md:flex items-center gap-1">
           {[
             { id: "sistemas", label: "Sistemas & Regras", icon: "📜" },
+            { id: "guia_novatos", label: "🌱 Como Evoluir", icon: "🌱" },
+            { id: "mapa_3d", label: "Mapa 3D", icon: "🗺️" },
             { id: "ficha", label: session?.role === "jogador" ? "Minha Ficha" : "Ficha de Jogador", icon: "👤" },
             { id: "chat", label: "Chat dos Shinigamis", icon: "💬" },
             { id: "rankings", label: "Rankings", icon: "🏆" },
@@ -7135,6 +7311,7 @@ function TopBar({ session, onLogout, view, setView, nome, onOpenAdminLogin, clou
       <div className="md:hidden flex items-center justify-around border-t border-bleach-borderSoft/60 px-2 py-1.5 overflow-x-auto bg-black/40">
         {[
           { id: "sistemas", label: "Regras", icon: "📜" },
+          { id: "mapa_3d", label: "Mapa 3D", icon: "🗺️" },
           { id: "ficha", label: "Ficha", icon: "👤" },
           { id: "chat", label: "Chat", icon: "💬" },
           { id: "rankings", label: "Rankings", icon: "🏆" },
@@ -7617,17 +7794,21 @@ function AdminLoginModal({ db, onClose, onSuccess }) {
 
 // RANKINGS VIEW WITH PHYSICAL, REIATSU AND WEEKLY ACTIVITY / KNOWLEDGE RANKING
 function RankingsView({ db, saveDb, session, rankFisico, rankPressao, myCharId }) {
-  const [tab, setTab] = useState("fisico");
+  const [tab, setTab] = useState("conhecimento");
   const isAdmin = session?.role === "super_admin" || session?.role === "sub_admin";
 
-  const rankAtividade = useMemo(() => {
+  const rankConhecimentoCenas = useMemo(() => {
     const list = [...(db?.personagens || [])];
     return list.sort((a, b) => {
-      const diffCenas = (b.cenasSemana || 0) - (a.cenasSemana || 0);
-      if (diffCenas !== 0) return diffCenas;
-      return (b.conhecimento || 0) - (a.conhecimento || 0);
+      const diffCon = (b.conhecimento || 0) - (a.conhecimento || 0);
+      if (diffCon !== 0) return diffCon;
+      const diffCenasSem = (b.cenasSemana || 0) - (a.cenasSemana || 0);
+      if (diffCenasSem !== 0) return diffCenasSem;
+      return (b.cenasTotal || 0) - (a.cenasTotal || 0);
     });
   }, [db?.personagens]);
+
+  const rankAtividade = rankConhecimentoCenas;
 
   // Cálculo dinâmico do contador de dias do ciclo semanal (7, 6, 5, 4, 3, 2, 1, Dia da Recompensa)
   const cicloInfo = useMemo(() => {
@@ -7747,7 +7928,7 @@ function RankingsView({ db, saveDb, session, rankFisico, rankPressao, myCharId }
         </div>
 
         {/* TAB 3: RANKING DE ATIVIDADE & CONHECIMENTO */}
-        {tab === "atividade" ? (
+        {(tab === "conhecimento" || tab === "atividade") ? (
           <div className="space-y-5">
             {/* Banner do Ciclo de 7 Dias & Premiações */}
             <div className="p-5 rounded-2xl bg-gradient-to-r from-amber-950/60 via-black/80 to-yellow-950/60 border-2 border-yellow-500/70 shadow-2xl space-y-4">
@@ -7842,39 +8023,53 @@ function RankingsView({ db, saveDb, session, rankFisico, rankPressao, myCharId }
                         : "bg-bleach-panel2/60 border-bleach-borderSoft"
                     }`}
                   >
-                    <div className="flex items-center gap-3">
-                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-title text-base font-extrabold ${
-                        pos === 1 ? "bg-yellow-500 text-black shadow-[0_0_10px_#E0B34C]" :
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-title text-base font-extrabold shrink-0 ${
+                        pos === 1 ? "bg-yellow-500 text-black shadow-[0_0_12px_#E0B34C]" :
                         pos === 2 ? "bg-slate-300 text-black" :
-                        pos === 3 ? "bg-amber-700 text-white" : "bg-black text-bleach-muted"
+                        pos === 3 ? "bg-amber-700 text-white" : "bg-black/80 border border-white/10 text-bleach-muted"
                       }`}>
                         {pos === 1 ? "1º" : pos === 2 ? "2º" : pos === 3 ? "3º" : `#${pos}`}
                       </div>
 
-                      <div className="w-10 h-10 rounded-lg overflow-hidden border border-bleach-border bg-black">
+                      <div className="w-11 h-11 rounded-xl overflow-hidden border border-bleach-border bg-black shrink-0">
                         <img src={p.foto || 'assets/ichigo-orange.png'} alt={p.nome} className="w-full h-full object-cover" />
                       </div>
 
-                      <div>
-                        <h4 className="font-bold text-white text-sm flex items-center gap-2">
-                          <span>{p.nome}</span>
-                          {isMe && <span className="text-[10px] bg-yellow-500 text-black px-1.5 py-0.2 rounded font-bold">VOCÊ</span>}
+                      <div className="min-w-0">
+                        <h4 className="font-bold text-white text-sm flex items-center gap-2 truncate">
+                          <span className="truncate">{p.nome}</span>
+                          {isMe && <span className="text-[10px] bg-yellow-500 text-black px-1.5 py-0.2 rounded font-bold shrink-0">VOCÊ</span>}
                         </h4>
-                        <div className="text-[11px] text-bleach-muted font-mono flex gap-2">
-                          <span>Código: <strong className="text-yellow-400">{cod}</strong></span>
+                        <div className="text-[11px] text-bleach-muted font-mono flex items-center gap-2 flex-wrap">
+                          <span>{p.esquadrao || 'Shinigami'}</span>
                           <span>•</span>
-                          <span>Conhecimento: <strong className="text-yellow-300">{p.conhecimento || 0} ₪</strong></span>
+                          <span>Código: <strong className="text-yellow-400">{cod}</strong></span>
                         </div>
                       </div>
                     </div>
 
-                    <div className="text-right">
-                      <span className="text-[10px] text-bleach-muted block uppercase">
-                        Cenas na Semana:
-                      </span>
-                      <span className="font-mono text-lg font-black text-yellow-400">
-                        {p.cenasSemana || 0} <span className="text-xs text-bleach-muted font-sans font-normal">cenas</span>
-                      </span>
+                    {/* CONHECIMENTO COMO DESTAQUE PRINCIPAL */}
+                    <div className="flex items-center gap-4 shrink-0">
+                      <div className="text-center px-4 py-2 bg-yellow-950/60 border border-yellow-500/70 rounded-xl shadow-inner hidden sm:block">
+                        <span className="text-[9px] text-yellow-300 font-bold uppercase tracking-wider block">Saldo de Conhecimento</span>
+                        <span className="text-xl font-title font-black text-yellow-300 tracking-wide">
+                          {p.conhecimento || 0} <span className="text-xs font-mono font-normal">₪</span>
+                        </span>
+                      </div>
+
+                      {/* NO CANTO: QUANTIDADE DE CENAS FEITAS */}
+                      <div className="text-right pl-2 border-l border-white/10">
+                        <span className="text-[10px] text-bleach-muted block uppercase font-bold">
+                          Cenas Feitas:
+                        </span>
+                        <span className="font-mono text-base font-black text-white block">
+                          {p.cenasSemana || 0} <span className="text-[11px] text-yellow-400 font-sans font-semibold">semana</span>
+                        </span>
+                        <span className="text-[10px] text-bleach-muted font-mono block">
+                          ({p.cenasTotal || 0} totais)
+                        </span>
+                      </div>
                     </div>
                   </div>
                 );
@@ -8726,6 +8921,682 @@ function BleachSwordArt({ arma, nomeZk, isBankai, foto, onUpload }) {
     </div>
   );
 }
+
+
+// =========================================================================
+// GUIA PARA NOVATOS: COMO EVOLUIR DE MODO SIMPLES & SISTEMA DE COMBATE
+// =========================================================================
+
+function GuiaNovatosView() {
+  const [subAba, setSubAba] = useState("evolucao");
+
+  return (
+    <div className="space-y-6">
+      {/* Banner Principal de Boas-Vindas */}
+      <div className="bg-banner-overlay border-2 border-emerald-500/70 rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="px-3 py-1 bg-emerald-950 border border-emerald-400 text-emerald-300 text-xs font-bold rounded-full uppercase tracking-wider">
+                🌱 Manual Oficial da Academia Shin’ō • Para Recém-Chegados
+              </span>
+            </div>
+            <h2 className="font-title text-3xl sm:text-4xl tracking-widest text-emerald-300 mt-2">
+              PARA NOVATOS: COMO EVOLUIR DE MODO SIMPLES
+            </h2>
+            <p className="text-xs text-bleach-creamDim mt-1 max-w-3xl leading-relaxed">
+              Tudo o que você precisa saber para construir seu guerreiro, entender as recompensas em pontos, limites de cenas e fadiga dos 3 períodos, dominar a escala de combate e evoluir com consistência no WhatsApp.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            {[
+              { id: "evolucao", label: "📈 Dicas de Evolução & Builds", icon: "📈" },
+              { id: "pontos", label: "🎁 Tabela de Pontos & Recompensas", icon: "🎁" },
+              { id: "limites", label: "⏱️ Limites & Fadiga", icon: "⏱️" },
+              { id: "combate", label: "⚔️ Combate & Escala de Poder", icon: "⚔️" },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setSubAba(tab.id)}
+                className={"px-4 py-2.5 rounded-xl text-xs font-bold uppercase transition flex items-center gap-2 " + (
+                  subAba === tab.id
+                    ? "bg-emerald-500 text-black font-black shadow-[0_0_15px_rgba(16,185,129,0.6)]"
+                    : "bg-black/70 border border-emerald-500/30 text-emerald-200 hover:border-emerald-400"
+                )}
+              >
+                <span>{tab.icon}</span>
+                <span>{tab.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ========================================================================= */}
+      {/* SUB-ABA 1: COMO EVOLUIR DE FORMA SIMPLES & RECOMENDAÇÕES DE BUILDS */}
+      {/* ========================================================================= */}
+      {subAba === "evolucao" && (
+        <div className="space-y-6">
+          
+          {/* Passo a Passo */}
+          <Section
+            title="📈 Guia Passo a Passo: As 4 Etapas da sua Jornada"
+            subtitle="O caminho fundamental para transformar um recém-formado em um respeitado oficial do Gotei 13"
+            className="border-2 border-emerald-500/50"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              
+              {/* Passo 1 */}
+              <div className="p-5 bg-black/70 rounded-xl border border-emerald-500/30 space-y-3 shadow-lg">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-emerald-950 border border-emerald-400 flex items-center justify-center font-title text-emerald-300 font-bold text-lg">
+                    1
+                  </div>
+                  <div>
+                    <h4 className="font-title text-base text-emerald-300">Distribua seus 20 Pontos Iniciais com Sabedoria</h4>
+                    <span className="text-[10px] text-bleach-muted uppercase font-mono">Criação da Ficha</span>
+                  </div>
+                </div>
+                <p className="text-xs text-bleach-creamDim leading-relaxed">
+                  Todo novo Shinigami começa com <strong>10 pontos em cada um dos 4 atributos</strong> (40 pts base) e ganha <strong>20 Pontos Livres</strong> para moldar sua especialidade marcial.
+                </p>
+                <div className="p-3 bg-bleach-panel2 rounded-lg border border-white/5 text-[11px] text-bleach-creamDim">
+                  ✦ <strong className="text-yellow-300">Dica:</strong> Escolha uma função clara (Dano, Tanque, Furtivo, Suporte/Cura ou Kidō) para ter vantagens na escala de combate.
+                </div>
+              </div>
+
+              {/* Passo 2 */}
+              <div className="p-5 bg-black/70 rounded-xl border border-emerald-500/30 space-y-3 shadow-lg">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-emerald-950 border border-emerald-400 flex items-center justify-center font-title text-emerald-300 font-bold text-lg">
+                    2
+                  </div>
+                  <div>
+                    <h4 className="font-title text-base text-emerald-300">Cene no WhatsApp com Constância (1 Cena = 10 ₪)</h4>
+                    <span className="text-[10px] text-bleach-muted uppercase font-mono">Economia de Conhecimento</span>
+                  </div>
+                </div>
+                <p className="text-xs text-bleach-creamDim leading-relaxed">
+                  Toda cena feita no WhatsApp concede <strong>exatamente 10 ₪ de Conhecimento fixos</strong>. Não importa se é um treino individual, uma patrulha, um diálogo em Rukongai ou um combate.
+                </p>
+                <div className="p-3 bg-bleach-panel2 rounded-lg border border-white/5 text-[11px] text-bleach-creamDim">
+                  ✦ <strong className="text-yellow-300">Ritmo de Compra:</strong> Com 5 a 10 cenas diárias, você acumula de 350 ₪ a 700 ₪ semanais, podendo comprar de <strong>2 a 3 Kidōs novos por semana</strong>!
+                </div>
+              </div>
+
+              {/* Passo 3 */}
+              <div className="p-5 bg-black/70 rounded-xl border border-emerald-500/30 space-y-3 shadow-lg">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-emerald-950 border border-emerald-400 flex items-center justify-center font-title text-emerald-300 font-bold text-lg">
+                    3
+                  </div>
+                  <div>
+                    <h4 className="font-title text-base text-emerald-300">Conecte-se com sua Lâmina Selada (Jinzen & Meditação)</h4>
+                    <span className="text-[10px] text-bleach-muted uppercase font-mono">Comunhão Espiritual</span>
+                  </div>
+                </div>
+                <p className="text-xs text-bleach-creamDim leading-relaxed">
+                  Todo recém-formado recebe uma <strong>lâmina selada tradicional (Asauchi)</strong>. A espada é um espelho de sua alma: preencha sua <strong>Personalidade</strong> (virtudes, defeitos, desejos, medos e estilo de combate) para que sua lâmina sintonize com sua essência.
+                </p>
+                <div className="p-3 bg-bleach-panel2 rounded-lg border border-white/5 text-[11px] text-bleach-creamDim">
+                  ✦ <strong className="text-purple-300">Dica:</strong> Narre cenas de Jinzen (meditação com a lâmina cruzada sobre os joelhos) para que o espírito da espada reconheça sua convicção.
+                </div>
+              </div>
+
+              {/* Passo 4 */}
+              <div className="p-5 bg-black/70 rounded-xl border border-emerald-500/30 space-y-3 shadow-lg">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-emerald-950 border border-emerald-400 flex items-center justify-center font-title text-emerald-300 font-bold text-lg">
+                    4
+                  </div>
+                  <div>
+                    <h4 className="font-title text-base text-emerald-300">Participe dos Arcos Narrativos (Maior Salto de Poder)</h4>
+                    <span className="text-[10px] text-bleach-muted uppercase font-mono">Recompensas Épicas</span>
+                  </div>
+                </div>
+                <p className="text-xs text-bleach-creamDim leading-relaxed">
+                  As <strong>Cenas de Arco (mínimo de 90 linhas)</strong> são os momentos de clímax onde a história avança. Concluir um arco oficial garante a maior premiação do RPG:
+                </p>
+                <div className="p-3 bg-amber-950/40 border border-yellow-500/50 rounded-lg text-xs space-y-1 font-mono">
+                  <span className="text-yellow-300 font-bold block">🎁 Recompensa Garantida por Conclusão de Arco:</span>
+                  <span className="text-white block">+15 Pontos de Atributo Livres</span>
+                  <span className="text-cyan-300 block">+2 Giros no Baú de Sorteio Comum</span>
+                  <span className="text-purple-300 block">+1 Giro no Baú Especial de Seireitei</span>
+                </div>
+              </div>
+
+            </div>
+          </Section>
+
+          {/* Recomendações de Builds Estratégicas */}
+          <Section
+            title="🛡️ Recomendações de Builds para Iniciantes (20 Pontos Livres)"
+            subtitle="Sugestões de distribuição inicial para definir o papel tático do seu guerreiro no esquadrão"
+            className="border-2 border-cyan-500/50"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              
+              {/* Build 1: Suporte & Cura */}
+              <div className="p-4 bg-bleach-panel2 border border-emerald-500/40 rounded-xl space-y-2 shadow">
+                <div className="flex items-center gap-2 text-emerald-400 font-bold">
+                  <span>🏥</span>
+                  <span className="font-title text-sm uppercase">Suporte Médico & Defesa Tática</span>
+                </div>
+                <span className="text-[10px] text-bleach-muted block font-mono">Recomendado: 4º Esquadrão (Kaidō & Bakudō)</span>
+                <div className="p-2.5 bg-black/60 rounded border border-white/5 text-[11px] font-mono space-y-0.5">
+                  <div className="flex justify-between text-bleach-muted"><span>Resiliência:</span><strong className="text-purple-300">18 pts</strong></div>
+                  <div className="flex justify-between text-bleach-muted"><span>Pressão Espiritual:</span><strong className="text-blue-300">16 pts</strong></div>
+                  <div className="flex justify-between text-bleach-muted"><span>Velocidade:</span><strong className="text-green-300">14 pts</strong></div>
+                  <div className="flex justify-between text-bleach-muted"><span>Força:</span><strong className="text-red-300">12 pts</strong></div>
+                </div>
+                <p className="text-[11px] text-bleach-creamDim leading-relaxed">
+                  <strong>Papel:</strong> Sustenta aliados em combate, cura ferimentos críticos com Kaidō, ergue barreiras protetoras e possui alta estamina para suportar investidas.
+                </p>
+              </div>
+
+              {/* Build 2: Tanque Guardião */}
+              <div className="p-4 bg-bleach-panel2 border border-purple-500/40 rounded-xl space-y-2 shadow">
+                <div className="flex items-center gap-2 text-purple-400 font-bold">
+                  <span>🛡️</span>
+                  <span className="font-title text-sm uppercase">Tanque Guardião / Muralha Viva</span>
+                </div>
+                <span className="text-[10px] text-bleach-muted block font-mono">Recomendado: 7º ou 11º Esquadrão</span>
+                <div className="p-2.5 bg-black/60 rounded border border-white/5 text-[11px] font-mono space-y-0.5">
+                  <div className="flex justify-between text-bleach-muted"><span>Resiliência:</span><strong className="text-purple-300">20 pts</strong></div>
+                  <div className="flex justify-between text-bleach-muted"><span>Força:</span><strong className="text-red-300">16 pts</strong></div>
+                  <div className="flex justify-between text-bleach-muted"><span>Pressão Espiritual:</span><strong className="text-blue-300">12 pts</strong></div>
+                  <div className="flex justify-between text-bleach-muted"><span>Velocidade:</span><strong className="text-green-300">12 pts</strong></div>
+                </div>
+                <p className="text-[11px] text-bleach-creamDim leading-relaxed">
+                  <strong>Papel:</strong> Absorve o impacto dos golpes mais pesados, protege companheiros frágeis e quebra a postura dos inimigos com pura massa corporal de Reishi.
+                </p>
+              </div>
+
+              {/* Build 3: Assassino Furtivo */}
+              <div className="p-4 bg-bleach-panel2 border border-green-500/40 rounded-xl space-y-2 shadow">
+                <div className="flex items-center gap-2 text-green-400 font-bold">
+                  <span>⚡</span>
+                  <span className="font-title text-sm uppercase">Assassino de Elite / Velocista</span>
+                </div>
+                <span className="text-[10px] text-bleach-muted block font-mono">Recomendado: 2º Esquadrão (Onmitsukidō)</span>
+                <div className="p-2.5 bg-black/60 rounded border border-white/5 text-[11px] font-mono space-y-0.5">
+                  <div className="flex justify-between text-bleach-muted"><span>Velocidade:</span><strong className="text-green-300">20 pts</strong></div>
+                  <div className="flex justify-between text-bleach-muted"><span>Força:</span><strong className="text-red-300">16 pts</strong></div>
+                  <div className="flex justify-between text-bleach-muted"><span>Pressão Espiritual:</span><strong className="text-blue-300">12 pts</strong></div>
+                  <div className="flex justify-between text-bleach-muted"><span>Resiliência:</span><strong className="text-purple-300">12 pts</strong></div>
+                </div>
+                <p className="text-[11px] text-bleach-creamDim leading-relaxed">
+                  <strong>Papel:</strong> Mobilidade extrema com Shunpo, flanqueamento instantâneo e ataques cirúrgicos em pontos vitais sem dar tempo de reação.
+                </p>
+              </div>
+
+              {/* Build 4: Combatente de Choque */}
+              <div className="p-4 bg-bleach-panel2 border border-red-500/40 rounded-xl space-y-2 shadow">
+                <div className="flex items-center gap-2 text-red-400 font-bold">
+                  <span>⚔️</span>
+                  <span className="font-title text-sm uppercase">Combatente de Choque / Zanjutsu</span>
+                </div>
+                <span className="text-[10px] text-bleach-muted block font-mono">Recomendado: 11º Esquadrão (Zaraki)</span>
+                <div className="p-2.5 bg-black/60 rounded border border-white/5 text-[11px] font-mono space-y-0.5">
+                  <div className="flex justify-between text-bleach-muted"><span>Força:</span><strong className="text-red-300">20 pts</strong></div>
+                  <div className="flex justify-between text-bleach-muted"><span>Resiliência:</span><strong className="text-purple-300">16 pts</strong></div>
+                  <div className="flex justify-between text-bleach-muted"><span>Velocidade:</span><strong className="text-green-300">14 pts</strong></div>
+                  <div className="flex justify-between text-bleach-muted"><span>Pressão Espiritual:</span><strong className="text-blue-300">10 pts</strong></div>
+                </div>
+                <p className="text-[11px] text-bleach-creamDim leading-relaxed">
+                  <strong>Papel:</strong> Destruição frontal de lâminas e armaduras através de pura potência de corte e choques violentos de aço.
+                </p>
+              </div>
+
+              {/* Build 5: Mestre em Kidō */}
+              <div className="p-4 bg-bleach-panel2 border border-blue-500/40 rounded-xl space-y-2 shadow">
+                <div className="flex items-center gap-2 text-blue-400 font-bold">
+                  <span>🔮</span>
+                  <span className="font-title text-sm uppercase">Mestre Espiritual / Kidō Destrutivo</span>
+                </div>
+                <span className="text-[10px] text-bleach-muted block font-mono">Recomendado: 5º Esquadrão (Feitiçaria)</span>
+                <div className="p-2.5 bg-black/60 rounded border border-white/5 text-[11px] font-mono space-y-0.5">
+                  <div className="flex justify-between text-bleach-muted"><span>Pressão Espiritual:</span><strong className="text-blue-300">20 pts</strong></div>
+                  <div className="flex justify-between text-bleach-muted"><span>Velocidade:</span><strong className="text-green-300">16 pts</strong></div>
+                  <div className="flex justify-between text-bleach-muted"><span>Resiliência:</span><strong className="text-purple-300">12 pts</strong></div>
+                  <div className="flex justify-between text-bleach-muted"><span>Força:</span><strong className="text-red-300">12 pts</strong></div>
+                </div>
+                <p className="text-[11px] text-bleach-creamDim leading-relaxed">
+                  <strong>Papel:</strong> Bombardeio à distância com Hadō de alto calibre, imposição de barreiras e anulação de feitiços inimigos pela densidade de Reiatsu.
+                </p>
+              </div>
+
+              {/* Build 6: Generalista Equilibrado */}
+              <div className="p-4 bg-bleach-panel2 border border-yellow-500/40 rounded-xl space-y-2 shadow">
+                <div className="flex items-center gap-2 text-yellow-400 font-bold">
+                  <span>⚖️</span>
+                  <span className="font-title text-sm uppercase">Guerreiro Tático / Híbrido Flexível</span>
+                </div>
+                <span className="text-[10px] text-bleach-muted block font-mono">Recomendado: Generalista do Gotei 13</span>
+                <div className="p-2.5 bg-black/60 rounded border border-white/5 text-[11px] font-mono space-y-0.5">
+                  <div className="flex justify-between text-bleach-muted"><span>Pressão:</span><strong className="text-blue-300">15 pts</strong></div>
+                  <div className="flex justify-between text-bleach-muted"><span>Força:</span><strong className="text-red-300">15 pts</strong></div>
+                  <div className="flex justify-between text-bleach-muted"><span>Velocidade:</span><strong className="text-green-300">15 pts</strong></div>
+                  <div className="flex justify-between text-bleach-muted"><span>Resiliência:</span><strong className="text-purple-300">15 pts</strong></div>
+                </div>
+                <p className="text-[11px] text-bleach-creamDim leading-relaxed">
+                  <strong>Papel:</strong> Adaptabilidade universal a qualquer adversário e terreno, sem fraquezas graves de combate.
+                </p>
+              </div>
+
+            </div>
+          </Section>
+
+          {/* 5 Dicas de Ouro para Iniciantes */}
+          <Section
+            title="💡 5 Dicas de Ouro para Evoluir Rápido & Sem Desperdício"
+            subtitle="Recomendações dos oficiais veteranos para otimizar sua progressão diária"
+            className="border-2 border-yellow-500/50"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+              
+              <div className="p-3.5 bg-black/70 rounded-xl border border-white/10 space-y-1.5">
+                <h5 className="font-bold text-yellow-400 text-sm flex items-center gap-2">
+                  <span>1️⃣</span> Monte seu Grimório Inicial com os 450 ₪ de Base
+                </h5>
+                <p className="text-bleach-creamDim leading-relaxed text-[11px]">
+                  Como Shinigami, você começa com 450 ₪ de Conhecimento. Compre um kit versátil:
+                  <br />• <strong>1 Hadō Rápido</strong> (ex: #4 Byakurai [140 ₪])
+                  <br />• <strong>1 Bakudō de Contenção</strong> (ex: #1 Sai [95 ₪])
+                  <br />• <strong>1 Kaidō de Primeiros Socorros</strong> (ex: #1 Kyōsō [120 ₪])
+                  <br />• <strong>1 Feitiço de Impacto</strong> (ex: Hadō #1 Shō [90 ₪]).
+                  <br /><em className="text-emerald-300">Total: 445 ₪ gastos com máxima utilidade em combate!</em>
+                </p>
+              </div>
+
+              <div className="p-3.5 bg-black/70 rounded-xl border border-white/10 space-y-1.5">
+                <h5 className="font-bold text-yellow-400 text-sm flex items-center gap-2">
+                  <span>2️⃣</span> Estruture seus Treinos em 3 Blocos de 10 Linhas
+                </h5>
+                <p className="text-bleach-creamDim leading-relaxed text-[11px]">
+                  Para atingir com facilidade o mínimo de <strong>30 linhas por treino</strong>:
+                  <br />• <strong>Linhas 1-10:</strong> Aquecimento e canalização de Reishi.
+                  <br />• <strong>Linhas 11-20:</strong> Execução técnica, repetições e cansaço.
+                  <br />• <strong>Linhas 21-30:</strong> Superação, corte decisivo e reflexão.
+                </p>
+              </div>
+
+              <div className="p-3.5 bg-black/70 rounded-xl border border-white/10 space-y-1.5">
+                <h5 className="font-bold text-yellow-400 text-sm flex items-center gap-2">
+                  <span>3️⃣</span> Espace seus 3 Treinos Diários nos Turnos
+                </h5>
+                <p className="text-bleach-creamDim leading-relaxed text-[11px]">
+                  Não envie os 3 treinos de uma vez em 5 minutos! Narre o <strong>1º de manhã</strong>, o <strong>2º à tarde</strong> e o <strong>3º à noite</strong>. Isso respeita a regra da fadiga e dá riqueza e imersão ao roleplay.
+                </p>
+              </div>
+
+              <div className="p-3.5 bg-black/70 rounded-xl border border-white/10 space-y-1.5">
+                <h5 className="font-bold text-yellow-400 text-sm flex items-center gap-2">
+                  <span>4️⃣</span> Sincronize com seu Código de Atividade (ACT-XXXX)
+                </h5>
+                <p className="text-bleach-creamDim leading-relaxed text-[11px]">
+                  Ao postar sua cena no grupo do WhatsApp, coloque sempre seu código <strong>[ACT-XXXX]</strong> no topo. A Staff usará seu código para lançar suas cenas e seus pontos instantaneamente no painel!
+                </p>
+              </div>
+
+            </div>
+          </Section>
+
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* SUB-ABA 2: TABELA OFICIAL DE PONTOS & RECOMPENSAS */}
+      {/* ========================================================================= */}
+      {subAba === "pontos" && (
+        <div className="space-y-6">
+          <Section
+            title="🎁 Tabela Oficial de Recompensas em Pontos de Atributo"
+            subtitle="Valores exatos creditados em sua ficha para cada tipo de cena e atividade no WhatsApp"
+            className="border-2 border-emerald-500/50"
+          >
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                
+                {/* Treino Diário */}
+                <div className="p-4 bg-black/80 rounded-xl border-2 border-red-500/50 space-y-2 shadow-lg">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-title font-bold text-red-300 uppercase">🥋 Treino Diário</span>
+                    <span className="px-2.5 py-0.5 bg-red-950 text-red-200 border border-red-400 font-mono font-black text-xs rounded-full">
+                      +3 Pontos
+                    </span>
+                  </div>
+                  <p className="text-xs text-bleach-creamDim leading-relaxed">
+                    Mínimo de <strong>30 linhas</strong> por treino.
+                  </p>
+                  <div className="pt-1 border-t border-white/10 text-[11px] font-mono text-yellow-300">
+                    +10 ₪ Conhecimento por cena
+                  </div>
+                </div>
+
+                {/* Miscelânea */}
+                <div className="p-4 bg-black/80 rounded-xl border-2 border-cyan-500/50 space-y-2 shadow-lg">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-title font-bold text-cyan-300 uppercase">📜 Miscelânea / Diálogo</span>
+                    <span className="px-2.5 py-0.5 bg-cyan-950 text-cyan-200 border border-cyan-400 font-mono font-black text-xs rounded-full">
+                      +1 Ponto
+                    </span>
+                  </div>
+                  <p className="text-xs text-bleach-creamDim leading-relaxed">
+                    Mínimo de <strong>30 linhas</strong> de interação cotidiana.
+                  </p>
+                  <div className="pt-1 border-t border-white/10 text-[11px] font-mono text-yellow-300">
+                    +10 ₪ Conhecimento por cena
+                  </div>
+                </div>
+
+                {/* PVP / Duelo */}
+                <div className="p-4 bg-black/80 rounded-xl border-2 border-yellow-500/50 space-y-2 shadow-lg">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-title font-bold text-yellow-300 uppercase">⚔️ PVP / Duelo ON</span>
+                    <span className="px-2.5 py-0.5 bg-yellow-950 text-yellow-200 border border-yellow-400 font-mono font-black text-xs rounded-full">
+                      +2 Pontos
+                    </span>
+                  </div>
+                  <p className="text-xs text-bleach-creamDim leading-relaxed">
+                    Mínimo de <strong>30 linhas</strong> por participante em combate.
+                  </p>
+                  <div className="pt-1 border-t border-white/10 text-[11px] font-mono text-yellow-300">
+                    +10 ₪ Conhecimento por cena
+                  </div>
+                </div>
+
+                {/* Conclusão de Arco */}
+                <div className="sm:col-span-2 lg:col-span-3 p-5 bg-gradient-to-r from-amber-950/60 via-black to-purple-950/60 rounded-xl border-2 border-yellow-500/80 space-y-3 shadow-xl">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <span className="text-sm font-title font-bold text-yellow-300 uppercase flex items-center gap-2">
+                      <span>👑</span> Conclusão de Arco Narrativo Oficial (Missão Principal)
+                    </span>
+                    <span className="px-3 py-1 bg-yellow-950 text-yellow-300 border border-yellow-400 font-mono font-black text-xs rounded-full shadow">
+                      +15 Pontos Livres + 3 Giros
+                    </span>
+                  </div>
+                  <p className="text-xs text-bleach-creamDim leading-relaxed">
+                    Cenas com mínimo de <strong>90 linhas</strong> narrando o clímax da trama do personagem ou missão do esquadrão.
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs font-mono pt-1">
+                    <div className="p-2 bg-black/60 rounded border border-white/5 text-white">✦ +15 Pontos de Atributos Livres</div>
+                    <div className="p-2 bg-black/60 rounded border border-white/5 text-cyan-300">✦ +2 Giros de Baú Comum</div>
+                    <div className="p-2 bg-black/60 rounded border border-white/5 text-purple-300">✦ +1 Giro Especial de Seireitei</div>
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Premiação Semanal do Ranking de Atividade */}
+              <div className="p-5 bg-black/80 rounded-xl border border-yellow-500/40 space-y-3">
+                <h4 className="font-title text-base text-yellow-400 flex items-center gap-2">
+                  <span>🏆</span> Premiação Semanal do Ranking de Atividade (Ciclo de 7 Dias)
+                </h4>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div className="p-3 bg-yellow-950/40 border border-yellow-500 rounded-lg flex items-center justify-between text-xs">
+                    <span className="font-bold text-yellow-300">🥇 1º Lugar Geral:</span>
+                    <strong className="text-white font-mono text-sm">+15 Pontos Livres</strong>
+                  </div>
+                  <div className="p-3 bg-slate-900 border border-slate-400 rounded-lg flex items-center justify-between text-xs">
+                    <span className="font-bold text-slate-300">🥈 2º Lugar Geral:</span>
+                    <strong className="text-white font-mono text-sm">+10 Pontos Livres</strong>
+                  </div>
+                  <div className="p-3 bg-amber-950/40 border border-amber-600 rounded-lg flex items-center justify-between text-xs">
+                    <span className="font-bold text-amber-400">🥉 3º Lugar Geral:</span>
+                    <strong className="text-white font-mono text-sm">+5 Pontos Livres</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Section>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* SUB-ABA 3: LIMITES DE CENAS & SISTEMA DE FADIGA DE TREINO */}
+      {/* ========================================================================= */}
+      {subAba === "limites" && (
+        <div className="space-y-6">
+          <Section
+            title="⏱️ Limites Oficiais de Cenas & Regras de Atividade"
+            subtitle="Equilíbrio para garantir roleplay de alta qualidade e evolução justa entre todos os jogadores"
+            className="border-2 border-amber-500/50"
+          >
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              
+              <div className="p-4 bg-black/80 rounded-xl border border-purple-500/40 space-y-2 text-center">
+                <span className="text-2xl block">🎭</span>
+                <h4 className="font-title text-base text-purple-300">Cenas de Arco</h4>
+                <span className="px-2.5 py-1 bg-purple-950 border border-purple-400 text-purple-200 text-xs font-mono font-bold rounded-full block">
+                  Máximo: 2 por Semana
+                </span>
+                <p className="text-[11px] text-bleach-creamDim">
+                  Mínimo de <strong>90 linhas</strong> por cena. Foco narrativo em missões capitais, clímax de eventos e provações espirituais profundas.
+                </p>
+              </div>
+
+              <div className="p-4 bg-black/80 rounded-xl border border-red-500/40 space-y-2 text-center">
+                <span className="text-2xl block">🥋</span>
+                <h4 className="font-title text-base text-red-300">Cenas de Treino</h4>
+                <span className="px-2.5 py-1 bg-red-950 border border-red-400 text-red-200 text-xs font-mono font-bold rounded-full block">
+                  Máximo: 3 Diários
+                </span>
+                <p className="text-[11px] text-bleach-creamDim">
+                  Mínimo de <strong>30 linhas</strong> cada. Divididos nos 3 períodos diários (Manhã, Tarde e Noite), gerando acúmulo de fadiga.
+                </p>
+              </div>
+
+              <div className="p-4 bg-black/80 rounded-xl border border-cyan-500/40 space-y-2 text-center">
+                <span className="text-2xl block">📜</span>
+                <h4 className="font-title text-base text-cyan-300">Miscelâneas (ON)</h4>
+                <span className="px-2.5 py-1 bg-cyan-950 border border-cyan-400 text-cyan-200 text-xs font-mono font-bold rounded-full block">
+                  Máximo: 4 Semanais
+                </span>
+                <p className="text-[11px] text-bleach-creamDim">
+                  Mínimo de <strong>30 linhas</strong>. Cenas de convivência no esquadrão, visitas a Rukongai, diálogos de tavern ou patrulhas comuns.
+                </p>
+              </div>
+
+              <div className="p-4 bg-black/80 rounded-xl border border-yellow-500/40 space-y-2 text-center">
+                <span className="text-2xl block">⚔️</span>
+                <h4 className="font-title text-base text-yellow-300">PVP / Duelos ON</h4>
+                <span className="px-2.5 py-1 bg-yellow-950 border border-yellow-400 text-yellow-200 text-xs font-mono font-bold rounded-full block">
+                  Máximo: 1 Diário
+                </span>
+                <p className="text-[11px] text-bleach-creamDim">
+                  Mínimo de <strong>30 linhas</strong> por participante. Duelos oficiais na Arena ou confrontos de rivalidade autorizados pela Staff.
+                </p>
+              </div>
+
+            </div>
+          </Section>
+
+          {/* Sistema de Fadiga de Treino */}
+          <Section
+            title="💤 Sistema de Fadiga de Treino: A Regra dos 3 Períodos Diários"
+            subtitle="Como o corpo espiritual e os circuitos de Reishi reagem ao esforço físico e mágico contínuo"
+            className="border-2 border-red-500/50"
+          >
+            <div className="space-y-4">
+              <div className="p-4 bg-red-950/30 border border-red-500/40 rounded-xl space-y-2">
+                <h4 className="font-title text-base text-red-300 flex items-center gap-2">
+                  <span>⚠️</span> Por que o limite de 3 treinos diários impõe fadiga?
+                </h4>
+                <p className="text-xs text-bleach-creamDim leading-relaxed">
+                  O fluxo de Reishi nos Shinigamis percorre os <em>Saketsu</em> (elo espiritual) e os <em>Hakusui</em> (fonte da alma). Treinar exaustivamente satura esses canais. O corpo humanoide espiritual necessita de descanso biológico para converter a prática em aumento permanente de força.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                <div className="p-3.5 bg-bleach-panel2 border border-green-500/40 rounded-xl space-y-1.5">
+                  <div className="flex items-center justify-between text-green-300 font-bold uppercase text-[11px]">
+                    <span>🌅 1º Período (Manhã)</span>
+                    <span>100% Vigor</span>
+                  </div>
+                  <strong className="text-white block">1º Treino do Dia</strong>
+                  <p className="text-bleach-creamDim leading-relaxed text-[11px]">
+                    Corpo totalmente descansado. Controle de Reiatsu perfeito, reflexos afiados e ganho pleno de aprendizado técnico (+3 pts).
+                  </p>
+                </div>
+
+                <div className="p-3.5 bg-bleach-panel2 border border-yellow-500/40 rounded-xl space-y-1.5">
+                  <div className="flex items-center justify-between text-yellow-300 font-bold uppercase text-[11px]">
+                    <span>☀️ 2º Período (Tarde)</span>
+                    <span>70% Vigor</span>
+                  </div>
+                  <strong className="text-white block">2º Treino do Dia</strong>
+                  <p className="text-bleach-creamDim leading-relaxed text-[11px]">
+                    Início de microlesões nos canais espirituais e fadiga muscular. O guerreiro precisa de foco mental redobrado para manter o ritmo (+3 pts).
+                  </p>
+                </div>
+
+                <div className="p-3.5 bg-bleach-panel2 border border-red-500/40 rounded-xl space-y-1.5">
+                  <div className="flex items-center justify-between text-red-300 font-bold uppercase text-[11px]">
+                    <span>🌙 3º Período (Noite)</span>
+                    <span>30% Vigor (Crítico)</span>
+                  </div>
+                  <strong className="text-white block">3º Treino do Dia (Fadiga Extrema)</strong>
+                  <p className="text-bleach-creamDim leading-relaxed text-[11px]">
+                    Esgotamento da estamina. Músculos ardem, a velocidade de reação cai pela metade e feitiços de Kidō oscilam pela sobrecarga de Reishi (+3 pts).
+                  </p>
+                </div>
+              </div>
+
+              {/* Exemplo Prático de Fadiga */}
+              <div className="p-4 bg-black/80 rounded-xl border border-yellow-500/50 space-y-2">
+                <span className="text-[10px] uppercase font-bold text-yellow-400 block font-mono">
+                  📖 Exemplo Narrativo de Fadiga em Ação:
+                </span>
+                <p className="text-xs text-bleach-cream leading-relaxed italic">
+                  "O Shinigami Ren acordou às 06h e fez um treino pesado de Zanjutsu contra bonecos de ferro no 11º Esquadrão (1º período, +3 pts). Às 14h, foi até as montanhas de Rukongai praticar saltos de Shunpo de alta velocidade (2º período, +3 pts). Às 21h, ainda insistiu em forçar um 3º treino tentando conjurar Hadō #31 Shakkahō (3º período, +3 pts). Na 3ª cena, seus braços tremiam involuntariamente, o Reishi da explosão queimou suas próprias mãos devido à perda de concentração e seu corpo desabou de exaustão. Sem uma noite completa de sono para restaurar o fluxo de Hakusui, ele estaria vulnerável e incapaz de duelar no dia seguinte."
+                </p>
+              </div>
+            </div>
+          </Section>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* SUB-ABA 4: COMBATE DO RPG & ESCALA DE DIFERENÇA DE ATRIBUTOS */}
+      {/* ========================================================================= */}
+      {subAba === "combate" && (
+        <div className="space-y-6">
+          <Section
+            title="⚔️ Sistema de Combate & Escala de Diferença de Poder"
+            subtitle="Regra oficial da Sociedade das Almas para confrontos diretos, choques de atributos e narrativa marcial"
+            className="border-2 border-cyan-500/50"
+          >
+            <div className="space-y-5">
+              
+              {/* Tabela da Escala de Diferença idêntica à imagem */}
+              <div className="p-5 bg-black/90 rounded-xl border-2 border-cyan-500/60 space-y-3 shadow-2xl">
+                <h4 className="font-title text-xl text-cyan-400 tracking-wider">
+                  DIFERENÇA EM COMBATE
+                </h4>
+
+                <div className="space-y-2">
+                  {[
+                    { faixa: "0 – 50 pts", rotulo: "Equivalentes", cor: "text-white", borda: "border-white/10" },
+                    { faixa: "51 – 150 pts", rotulo: "Pequena vantagem", cor: "text-green-400", borda: "border-green-500/20" },
+                    { faixa: "151 – 300 pts", rotulo: "Vantagem clara", cor: "text-cyan-300", borda: "border-cyan-500/30" },
+                    { faixa: "301 – 600 pts", rotulo: "Grande vantagem", cor: "text-yellow-300", borda: "border-yellow-500/40" },
+                    { faixa: "601 – 1000 pts", rotulo: "Abismo de poder", cor: "text-orange-400", borda: "border-orange-500/50" },
+                    { faixa: "1001+ pts", rotulo: "Diferença monstruosa", cor: "text-red-400 font-black", borda: "border-red-500/60" },
+                  ].map((item, idx) => (
+                    <div
+                      key={idx}
+                      className={"p-3 bg-bleach-panel2 rounded-xl border flex items-center justify-between gap-4 transition " + item.borda}
+                    >
+                      <span className="font-mono text-sm sm:text-base font-bold text-bleach-creamDim">
+                        {item.faixa}
+                      </span>
+                      <span className={"font-title text-sm sm:text-base tracking-wide " + item.cor}>
+                        {item.rotulo}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                <p className="text-xs text-bleach-creamDim italic pt-2 text-center">
+                  "Quanto maior a diferença, mais difícil é superar a inferioridade através de técnica pura."
+                </p>
+              </div>
+
+              {/* Explicação Profunda por Atributo */}
+              <div className="space-y-4 pt-2">
+                <h4 className="font-title text-lg text-white border-b border-white/10 pb-2">
+                  🔍 O que cada diferença significa em cada atributo:
+                </h4>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                  
+                  {/* 1. Pressão Espiritual */}
+                  <div className="p-4 bg-bleach-panel2 border border-blue-500/40 rounded-xl space-y-2">
+                    <div className="flex items-center gap-2 text-blue-400 font-bold">
+                      <span>🔥</span>
+                      <span className="text-sm font-title uppercase">Pressão Espiritual (Reiatsu & Kidō)</span>
+                    </div>
+                    <ul className="space-y-1.5 text-bleach-creamDim list-disc list-inside leading-relaxed text-[11px]">
+                      <li><strong>50–150 pts de vantagem:</strong> A aura do mais forte aquece/pesa no ar; feitiços básicos têm 20% mais penetração.</li>
+                      <li><strong>300–600 pts de vantagem:</strong> A presença espiritual faz o chão tremer; Kidōs de nível 1 a 30 do inimigo podem ser dissipados no choque direto com a pele ou lâmina.</li>
+                      <li><strong>1000+ pts de vantagem (Abismo):</strong> O oponente mal consegue respirar de pé; a densidade de Reishi anula feitiços médios sem esforço (efeito Aizen / Yamamoto).</li>
+                    </ul>
+                  </div>
+
+                  {/* 2. Força Física */}
+                  <div className="p-4 bg-bleach-panel2 border border-red-500/40 rounded-xl space-y-2">
+                    <div className="flex items-center gap-2 text-red-400 font-bold">
+                      <span>⚔️</span>
+                      <span className="text-sm font-title uppercase">Força Física (Zanjutsu & Hakuda)</span>
+                    </div>
+                    <ul className="space-y-1.5 text-bleach-creamDim list-disc list-inside leading-relaxed text-[11px]">
+                      <li><strong>50–150 pts de vantagem:</strong> O choque de espadas estremece o pulso do defensor, empurrando-o um passo para trás.</li>
+                      <li><strong>300–600 pts de vantagem:</strong> Cada golpe contundente quebra posturas defensivas, parte muros de pedra e arremessa o oponente longe.</li>
+                      <li><strong>1000+ pts de vantagem (Abismo):</strong> A força bruta esmaga defesas sólidas com as mãos nuas e corta estruturas maciças com a pressão de ar do balanço.</li>
+                    </ul>
+                  </div>
+
+                  {/* 3. Velocidade */}
+                  <div className="p-4 bg-bleach-panel2 border border-green-500/40 rounded-xl space-y-2">
+                    <div className="flex items-center gap-2 text-green-400 font-bold">
+                      <span>⚡</span>
+                      <span className="text-sm font-title uppercase">Velocidade (Shunpo & Sonido)</span>
+                    </div>
+                    <ul className="space-y-1.5 text-bleach-creamDim list-disc list-inside leading-relaxed text-[11px]">
+                      <li><strong>50–150 pts de vantagem:</strong> Chega meio segundo antes aos ângulos laterais, forçando o adversário a se virar com pressa.</li>
+                      <li><strong>300–600 pts de vantagem:</strong> Cria ilusões de pós-imagem (passos fantasmas) e flanqueia pelas costas antes que o inimigo termine o ataque frontal.</li>
+                      <li><strong>1000+ pts de vantagem (Abismo):</strong> Desaparece por completo do campo de visão; desfere múltiplos golpes antes que o som do primeiro impacto seja processado.</li>
+                    </ul>
+                  </div>
+
+                  {/* 4. Resiliência */}
+                  <div className="p-4 bg-bleach-panel2 border border-purple-500/40 rounded-xl space-y-2">
+                    <div className="flex items-center gap-2 text-purple-400 font-bold">
+                      <span>🛡️</span>
+                      <span className="text-sm font-title uppercase">Resiliência (Hierro & Estamina)</span>
+                    </div>
+                    <ul className="space-y-1.5 text-bleach-creamDim list-disc list-inside leading-relaxed text-[11px]">
+                      <li><strong>50–150 pts de vantagem:</strong> Cicatrização mais rápida de cortes superficiais e menor gasto de energia em combates médios.</li>
+                      <li><strong>300–600 pts de vantagem:</strong> Suporta explosões e impactos de Kidōs intermediários sem cair de joelhos, continuando a lutar mesmo ferido.</li>
+                      <li><strong>1000+ pts de vantagem (Abismo):</strong> A couraça de Reishi repele lâminas fracas, impedindo penetração e tornando ataques desarmados inofensivos.</li>
+                    </ul>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+          </Section>
+        </div>
+      )}
+
+    </div>
+  );
+}
+
 
 
 // =========================================================================
@@ -12231,7 +13102,7 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
   const [atvCharId, setAtvCharId] = useState("");
   const [atvBuscaCodigo, setAtvBuscaCodigo] = useState("");
   const [atvQtdCenas, setAtvQtdCenas] = useState(5);
-  const [atvValorPorCena, setAtvValorPorCena] = useState(100);
+  const [atvValorPorCena, setAtvValorPorCena] = useState(10);
   const [atvMotivo, setAtvMotivo] = useState("");
 
   // Auto-correção caso sub-adm tente acessar aba restrita
@@ -12271,8 +13142,7 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
       return;
     }
     const numCenas = Math.max(1, Number(qtd !== undefined ? qtd : atvQtdCenas) || 1);
-    const taxaCena = Number(valPorCena !== undefined ? valPorCena : atvValorPorCena) || 100;
-    const ganhoConhecimento = numCenas * taxaCena;
+    const ganhoConhecimento = numCenas * 10;
 
     let charNome = "";
     const novosP = (db.personagens || []).map(p => {
@@ -12570,6 +13440,63 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
     downloadAnchor.remove();
     playReiatsuSound('roll');
   }
+  function executarLimpezaMadrugada() {
+    if (!isSuper) {
+      alert("⛔ Acesso Restrito: Apenas o ADM Máximo pode executar a rotina de limpeza.");
+      return;
+    }
+
+    const personagens = db.personagens || [];
+    const activeCharIds = new Set(personagens.map(p => p.id));
+    const savedSkillIds = new Set();
+    const savedSkillNames = new Set();
+
+    personagens.forEach(p => {
+      if (p.zanpakuto?.shikaiAtiva?.id) savedSkillIds.add(String(p.zanpakuto.shikaiAtiva.id));
+      if (p.zanpakuto?.shikaiAtiva?.nome) savedSkillNames.add(String(p.zanpakuto.shikaiAtiva.nome).toLowerCase().trim());
+      if (p.zanpakuto?.bankaiAtiva?.id) savedSkillIds.add(String(p.zanpakuto.bankaiAtiva.id));
+      if (p.zanpakuto?.bankaiAtiva?.nome) savedSkillNames.add(String(p.zanpakuto.bankaiAtiva.nome).toLowerCase().trim());
+      if (Array.isArray(p.tecnicas)) p.tecnicas.forEach(t => t.id && savedSkillIds.add(String(t.id)));
+      if (Array.isArray(p.kidosConhecidos)) p.kidosConhecidos.forEach(k => k.id && savedSkillIds.add(String(k.id)));
+    });
+
+    const totalZanpakutosAntes = (db.zanpakutosVinculadas || []).length;
+    const zanpakutosLimpas = (db.zanpakutosVinculadas || []).filter(item => {
+      if (item.charId && !activeCharIds.has(item.charId)) return false;
+      return savedSkillIds.has(String(item.id)) || savedSkillNames.has(String(item.nome)?.toLowerCase()?.trim());
+    });
+    const descartadasRemovidas = totalZanpakutosAntes - zanpakutosLimpas.length;
+
+    const totalRolagensAntes = (db.rolagensDadosPublicas || []).length;
+    const rolagensLimpas = (db.rolagensDadosPublicas || []).slice(0, 15);
+    const rolagensRemovidas = totalRolagensAntes - rolagensLimpas.length;
+
+    const emAndamento = (db.combatesArena || []).filter(c => !c.finalizado);
+    const finalizadosRecentes = (db.combatesArena || []).filter(c => c.finalizado).slice(0, 5);
+    const arenaLimpa = [...emAndamento, ...finalizadosRecentes];
+
+    const nextDb = {
+      ...db,
+      zanpakutosVinculadas: zanpakutosLimpas,
+      rolagensDadosPublicas: rolagensLimpas,
+      combatesArena: arenaLimpa,
+      ultimaLimpezaAutomatica: {
+        timestamp: Date.now(),
+        dataHora: new Date().toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }),
+        habilidadesDescartadasApagadas: descartadasRemovidas,
+        rolagensAntigasApagadas: rolagensRemovidas,
+        personagensPreservados: personagens.length
+      }
+    };
+
+    saveDb(nextDb);
+    playReiatsuSound('win');
+    alert(`✨ Limpeza da Madrugada executada com sucesso!\n\n` +
+          `🛡️ Personagens e Atributos: ${personagens.length} 100% preservados intactos.\n` +
+          `🧹 Habilidades IA descartadas removidas: ${descartadasRemovidas}\n` +
+          `🎲 Rolagens antigas podadas: ${rolagensRemovidas}\n` +
+          `⚔️ Combates finalizados limpos: ${(db.combatesArena || []).length - arenaLimpa.length}`);
+  }
 
   function importarBackupJson(e) {
     if (!isSuper) {
@@ -12748,7 +13675,7 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
                       className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2 text-xs text-white font-mono"
                     />
                     <div className="flex gap-1 shrink-0">
-                      {[1, 3, 5, 10].map(val => (
+                      {[1, 5, 10, 20].map(val => (
                         <button
                           key={val}
                           type="button"
@@ -12762,21 +13689,22 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-[11px] font-bold text-bleach-creamDim uppercase mb-1">
-                    Conhecimento Concedido por Cena:
-                  </label>
-                  <input
-                    type="number"
-                    min="0"
-                    step="10"
-                    value={atvValorPorCena}
-                    onChange={(e) => setAtvValorPorCena(Math.max(0, Number(e.target.value) || 0))}
-                    className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2 text-xs text-yellow-300 font-mono"
-                  />
-                  <span className="text-[10px] text-bleach-muted mt-0.5 block">
-                    Total a creditar: <strong className="text-yellow-400 font-mono">+{atvQtdCenas * atvValorPorCena} ₪ Conhecimento</strong>
-                  </span>
+                <div className="p-3 bg-yellow-950/40 border border-yellow-500/50 rounded-xl space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-extrabold uppercase text-yellow-300 flex items-center gap-1.5">
+                      <span>🔒</span> Regra Fixa do Sistema:
+                    </span>
+                    <span className="px-2.5 py-0.5 bg-yellow-900 text-yellow-200 border border-yellow-400 text-[10px] font-mono font-black rounded-full">
+                      1 Cena = 10 ₪ Conhecimento
+                    </span>
+                  </div>
+                  <p className="text-[10px] text-bleach-creamDim leading-relaxed">
+                    O ganho por cena é rigorosamente fixo e imutável (1 cena = 10 pontos de conhecimento).
+                  </p>
+                  <div className="pt-1.5 border-t border-white/10 text-xs text-white flex justify-between font-mono">
+                    <span className="text-bleach-muted">Total a creditar (+{atvQtdCenas} cenas):</span>
+                    <strong className="text-yellow-400 font-black">+{atvQtdCenas * 10} ₪ Conhecimento</strong>
+                  </div>
                 </div>
 
                 <div>
@@ -12794,7 +13722,7 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
 
                 <button
                   type="button"
-                  onClick={() => lancarAtividadeCenas(atvCharId, atvQtdCenas, atvValorPorCena, atvMotivo)}
+                  onClick={() => lancarAtividadeCenas(atvCharId, atvQtdCenas, 10, atvMotivo)}
                   className="w-full py-3 bg-gradient-to-r from-yellow-500 to-amber-600 hover:brightness-110 text-black font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-lg transition"
                 >
                   ✓ Lançar +{atvQtdCenas} Cenas & Creditar Conhecimento
@@ -12840,33 +13768,18 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
                           </div>
 
                           <div className="flex items-center gap-1.5">
-                            {[1, 3, 5].map((qtd) => (
+                            {[1, 5, 10, 20].map((qtd) => (
                               <button
                                 key={qtd}
                                 type="button"
-                                onClick={() => lancarAtividadeCenas(p.id, qtd, 100, `Lançamento rápido +${qtd} cenas`)}
+                                onClick={() => lancarAtividadeCenas(p.id, qtd, 10, `Lançamento rápido +${qtd} cenas`)}
                                 className="px-2.5 py-1.5 bg-yellow-950/80 hover:bg-yellow-900 border border-yellow-500 text-yellow-300 text-xs font-bold font-mono rounded-lg transition"
-                                title={`Adicionar +${qtd} cena(s) e +${qtd * 100} Conhecimento`}
+                                title={`Adicionar +${qtd} cena(s) e +${qtd * 10} ₪ Conhecimento`}
                               >
                                 +{qtd}
                               </button>
                             ))}
-                            <button
-                              type="button"
-                              onClick={() => {
-                                const val = prompt(`Definir saldo exato de Conhecimento (₪) para [${p.nome}]:`, String(p.conhecimento || 0));
-                                if (val !== null && !isNaN(Number(val))) {
-                                  const novoCon = Math.max(0, Number(val));
-                                  const novosP = (db.personagens || []).map(cp => cp.id === p.id ? { ...cp, conhecimento: novoCon } : cp);
-                                  saveDb({ ...db, personagens: novosP });
-                                  playReiatsuSound('win');
-                                }
-                              }}
-                              className="px-2 py-1.5 bg-black/80 border border-white/10 hover:border-yellow-400 text-bleach-cream text-xs rounded-lg transition"
-                              title="Editar saldo de Conhecimento manualmente"
-                            >
-                              ✏️ ₪
-                            </button>
+
                           </div>
                         </div>
                       </div>
@@ -13132,6 +14045,42 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
                 >
                   <span>⬇️</span> Puxar Dados da Nuvem (Atualizar Fichas)
                 </button>
+              </div>
+            </div>
+
+            {/* Card de Limpeza Automática & Manutenção da Madrugada (03:00) */}
+            <div className="p-5 bg-bleach-panel2 border border-yellow-500/40 rounded-2xl space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-yellow-950 border border-yellow-500/50 flex items-center justify-center text-lg">
+                    🌙
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-white text-sm">Limpeza da Madrugada (03:00) & Otimização do Banco</h4>
+                    <p className="text-xs text-bleach-muted">
+                      Apaga habilidades de IA descartadas e rolagens antigas. <strong>Garante que todos os atributos e fichas ativas NUNCA sejam apagados.</strong>
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={executarLimpezaMadrugada}
+                  className="px-5 py-2.5 bg-gradient-to-r from-yellow-500 to-amber-600 hover:brightness-110 text-black font-extrabold text-xs uppercase tracking-wider rounded-xl shadow transition flex items-center gap-2"
+                >
+                  <span>🧹</span> Executar Limpeza Agora
+                </button>
+              </div>
+
+              <div className="p-3 bg-black/40 rounded-xl border border-white/10 flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
+                <span className="text-bleach-muted">
+                  Última execução registrada: <strong className="text-yellow-300">{db.ultimaLimpezaAutomatica?.dataHora || "Agendada para as 03:00"}</strong>
+                </span>
+                {db.ultimaLimpezaAutomatica && (
+                  <span className="text-green-400">
+                    ✓ {db.ultimaLimpezaAutomatica.personagensPreservados || db.personagens?.length || 0} fichas e atributos 100% seguros
+                  </span>
+                )}
               </div>
             </div>
 
@@ -15437,6 +16386,29 @@ function App() {
         )}
 
         {view === "sistemas" && <SistemasView />}
+
+        {view === "guia_novatos" && <GuiaNovatosView />}
+
+        {view === "mapa_3d" && (
+          <div className="w-full h-[85vh] rounded-2xl overflow-hidden border-2 border-bleach-border shadow-2xl relative bg-black">
+            <iframe
+              src="mapa_3d_soul_society.html"
+              title="Mapa 3D da Soul Society"
+              className="w-full h-full border-0"
+              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+            />
+            <div className="absolute top-3 right-3 flex gap-2 z-30">
+              <a
+                href="mapa_3d_soul_society.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3.5 py-1.5 bg-bleach-orange hover:bg-orange-400 text-black text-xs font-extrabold rounded-xl shadow-lg flex items-center gap-1.5 transition"
+              >
+                <span>↗️</span> Abrir em Tela Cheia
+              </a>
+            </div>
+          </div>
+        )}
 
         {view === "chat" && (
           <ChatView

@@ -3,15 +3,7 @@ const fs = require('fs');
 console.log("Reading parts...");
 
 function extractCleanCode(filename) {
-  const content = fs.readFileSync(filename, 'utf8');
-  const lines = content.split('\n');
-  let lastLine = lines.length;
-  for (let i = lines.length - 1; i >= 0; i--) {
-    if (lines[i].trim() === '`;' || lines[i].includes('fs.writeFileSync')) {
-      lastLine = i;
-    }
-  }
-  return lines.slice(0, lastLine).join('\n');
+  return fs.readFileSync(filename, 'utf8');
 }
 
 const modalsCode = extractCleanCode('templates_builder.js');
@@ -909,6 +901,29 @@ function App() {
         )}
 
         {view === "sistemas" && <SistemasView />}
+
+        {view === "guia_novatos" && <GuiaNovatosView />}
+
+        {view === "mapa_3d" && (
+          <div className="w-full h-[85vh] rounded-2xl overflow-hidden border-2 border-bleach-border shadow-2xl relative bg-black">
+            <iframe
+              src="mapa_3d_soul_society.html"
+              title="Mapa 3D da Soul Society"
+              className="w-full h-full border-0"
+              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+            />
+            <div className="absolute top-3 right-3 flex gap-2 z-30">
+              <a
+                href="mapa_3d_soul_society.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3.5 py-1.5 bg-bleach-orange hover:bg-orange-400 text-black text-xs font-extrabold rounded-xl shadow-lg flex items-center gap-1.5 transition"
+              >
+                <span>↗️</span> Abrir em Tela Cheia
+              </a>
+            </div>
+          </div>
+        )}
 
         {view === "chat" && (
           <ChatView

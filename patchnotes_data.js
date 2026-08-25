@@ -5,6 +5,60 @@
 
 const PATCH_NOTES_HISTORY = [
   {
+    versao: "6.9",
+    titulo: "Novo Guia Oficial para Novatos, Limites de Cenas & Regras de Fadiga e Combate",
+    data: "25 de Agosto de 2026",
+    destaque: "Lançamento da página oficial (Para Novatos: Como evoluir de modo simples), limites rígidos de cenas semanais e diárias, sistema de fadiga dos 3 períodos e escala visual de diferença em combate (0 a 1000+ pts).",
+    banner: "assets/bleach-banner.png",
+    resumo: "Uma grande expansão de usabilidade para novos jogadores. O sistema agora conta com um guia completo de evolução passo a passo, tabela de limites oficiais de cenas (2 arcos/semana com 90 linhas, 3 treinos diários com 30 linhas, 4 miscelâneas semanais e 1 PVP diário), explicação detalhada com exemplo da fadiga ao treinar até o 3º período e tabela comparativa da escala de diferença de poder em combate com exemplos para cada um dos 4 atributos.",
+    secoes: [
+      {
+        tipo: "novo",
+        titulo: "🌱 Nova Página: Para Novatos (Como Evoluir de Modo Simples)",
+        itens: [
+          "✦ **Guia de 4 Passos**: Distribuição dos 20 pontos livres, constância no WhatsApp, despertar da Zanpakutō e participação em Arcos.",
+          "✦ **Limites Oficiais de Cenas**: 2 Cenas de Arco semanais (90+ linhas), 3 Treinos diários (30+ linhas), 4 Miscelâneas semanais e 1 PVP diário.",
+          "✦ **Regra de Fadiga dos 3 Períodos**: Explicação biológica de saturação de Reishi nos circuitos de Saketsu/Hakusui com exemplo narrativo prático.",
+          "✦ **Escala de Diferença de Combate**: 0-50 pts (Equivalentes), 51-150 pts (Pequena vantagem), 151-300 pts (Vantagem clara), 301-600 pts (Grande vantagem), 601-1000 pts (Abismo de poder) e 1001+ pts (Diferença monstruosa), com exemplos detalhados para Pressão, Força, Velocidade e Resiliência."
+        ]
+      },
+      {
+        tipo: "ajuste",
+        titulo: "🔒 Bloqueio Definitivo da Taxa Fixa de Conhecimento (1 Cena = 10 ₪)",
+        itens: [
+          "✦ **Bloqueio de Edição**: Removida a possibilidade de qualquer ADM ou Sub-ADM alterar o valor concedido por cena (1 cena = 10 ₪ sempre).",
+          "✦ **Novo Destaque nos Rankings**: O Ranking agora exibe o saldo de Conhecimento (₪) em destaque central dourado, com a quantidade de cenas feitas exibida no canto direito."
+        ]
+      }
+    ]
+  },
+  {
+    versao: "6.8",
+    titulo: "Padronização do Ganho Fixo de Conhecimento por Cena (10 ₪ / Cena) & Equilíbrio de Aquisição de Kidōs",
+    data: "25 de Agosto de 2026",
+    destaque: "Recompensa fixa de 10 ₪ de Conhecimento por qualquer cena realizada no WhatsApp (treino, interação cotidiana ou combate). Balanceamento perfeito para alto fluxo de roleplay (+10 cenas/dia) limitando a progressão para 2 a 3 novos Kidōs por semana.",
+    banner: "assets/bleach-banner.png",
+    resumo: "Um ajuste econômico cirúrgico no Grimório de Kidō e no sistema de atividade. Como os jogadores realizam um volume intenso de cenas diárias (muitas vezes ultrapassando 10 cenas por dia em interações normais e treinos), o ganho de Conhecimento foi padronizado em uma taxa fixa e imutável de 10 ₪ por cena. Isso garante que mesmo os jogadores mais ativos consigam adquirir no máximo 2 a 3 Kidōs novos por semana, mantendo cada feitiço valorizado e impedindo a inflação do grimório.",
+    secoes: [
+      {
+        tipo: "ajuste",
+        titulo: "₪ Taxa Fixa de Conhecimento por Cena (10 ₪ Fixo)",
+        itens: [
+          "✦ **Recompensa Universal e Fixa**: Toda e qualquer cena realizada no WhatsApp (seja treino, diálogo, convivência, patrulha ou combate) concede rigorosamente **+10 ₪ de Conhecimento**.",
+          "✦ **Controle de Inflação do Grimório**: Com 30 a 50 cenas semanais, o jogador acumula entre 300 ₪ e 500 ₪, o que permite desbloquear exatamente **2 a 3 feitiços de nível básico/médio por semana**."
+        ]
+      },
+      {
+        tipo: "regras",
+        titulo: "📊 Atualização nos Lançadores de Atividade da Staff",
+        itens: [
+          "✦ **Botões Rápidos Atualizados**: Os atalhos de lançamento em lote foram atualizados para +1 cena (+10 ₪), +5 cenas (+50 ₪), +10 cenas (+100 ₪) e +20 cenas (+200 ₪).",
+          "✦ **Auditoria do Histórico**: Cada lançamento registra o número exato de cenas e o crédito proporcional de 10 ₪ por cena no histórico auditável da ficha."
+        ]
+      }
+    ]
+  },
+  {
     versao: "6.7",
     titulo: "Hierarquia de Segurança & Segregação de Poderes da Administração (ADM Máximo vs Sub-ADMs)",
     data: "25 de Agosto de 2026",

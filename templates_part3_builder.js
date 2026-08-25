@@ -41,7 +41,7 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
   const [atvCharId, setAtvCharId] = useState("");
   const [atvBuscaCodigo, setAtvBuscaCodigo] = useState("");
   const [atvQtdCenas, setAtvQtdCenas] = useState(5);
-  const [atvValorPorCena, setAtvValorPorCena] = useState(100);
+  const [atvValorPorCena, setAtvValorPorCena] = useState(10);
   const [atvMotivo, setAtvMotivo] = useState("");
 
   // Auto-correção caso sub-adm tente acessar aba restrita
@@ -81,8 +81,7 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
       return;
     }
     const numCenas = Math.max(1, Number(qtd !== undefined ? qtd : atvQtdCenas) || 1);
-    const taxaCena = Number(valPorCena !== undefined ? valPorCena : atvValorPorCena) || 100;
-    const ganhoConhecimento = numCenas * taxaCena;
+    const ganhoConhecimento = numCenas * 10;
 
     let charNome = "";
     const novosP = (db.personagens || []).map(p => {
@@ -380,6 +379,63 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
     downloadAnchor.remove();
     playReiatsuSound('roll');
   }
+  function executarLimpezaMadrugada() {
+    if (!isSuper) {
+      alert("⛔ Acesso Restrito: Apenas o ADM Máximo pode executar a rotina de limpeza.");
+      return;
+    }
+
+    const personagens = db.personagens || [];
+    const activeCharIds = new Set(personagens.map(p => p.id));
+    const savedSkillIds = new Set();
+    const savedSkillNames = new Set();
+
+    personagens.forEach(p => {
+      if (p.zanpakuto?.shikaiAtiva?.id) savedSkillIds.add(String(p.zanpakuto.shikaiAtiva.id));
+      if (p.zanpakuto?.shikaiAtiva?.nome) savedSkillNames.add(String(p.zanpakuto.shikaiAtiva.nome).toLowerCase().trim());
+      if (p.zanpakuto?.bankaiAtiva?.id) savedSkillIds.add(String(p.zanpakuto.bankaiAtiva.id));
+      if (p.zanpakuto?.bankaiAtiva?.nome) savedSkillNames.add(String(p.zanpakuto.bankaiAtiva.nome).toLowerCase().trim());
+      if (Array.isArray(p.tecnicas)) p.tecnicas.forEach(t => t.id && savedSkillIds.add(String(t.id)));
+      if (Array.isArray(p.kidosConhecidos)) p.kidosConhecidos.forEach(k => k.id && savedSkillIds.add(String(k.id)));
+    });
+
+    const totalZanpakutosAntes = (db.zanpakutosVinculadas || []).length;
+    const zanpakutosLimpas = (db.zanpakutosVinculadas || []).filter(item => {
+      if (item.charId && !activeCharIds.has(item.charId)) return false;
+      return savedSkillIds.has(String(item.id)) || savedSkillNames.has(String(item.nome)?.toLowerCase()?.trim());
+    });
+    const descartadasRemovidas = totalZanpakutosAntes - zanpakutosLimpas.length;
+
+    const totalRolagensAntes = (db.rolagensDadosPublicas || []).length;
+    const rolagensLimpas = (db.rolagensDadosPublicas || []).slice(0, 15);
+    const rolagensRemovidas = totalRolagensAntes - rolagensLimpas.length;
+
+    const emAndamento = (db.combatesArena || []).filter(c => !c.finalizado);
+    const finalizadosRecentes = (db.combatesArena || []).filter(c => c.finalizado).slice(0, 5);
+    const arenaLimpa = [...emAndamento, ...finalizadosRecentes];
+
+    const nextDb = {
+      ...db,
+      zanpakutosVinculadas: zanpakutosLimpas,
+      rolagensDadosPublicas: rolagensLimpas,
+      combatesArena: arenaLimpa,
+      ultimaLimpezaAutomatica: {
+        timestamp: Date.now(),
+        dataHora: new Date().toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }),
+        habilidadesDescartadasApagadas: descartadasRemovidas,
+        rolagensAntigasApagadas: rolagensRemovidas,
+        personagensPreservados: personagens.length
+      }
+    };
+
+    saveDb(nextDb);
+    playReiatsuSound('win');
+    alert(`✨ Limpeza da Madrugada executada com sucesso!\n\n` +
+          `🛡️ Personagens e Atributos: ${personagens.length} 100% preservados intactos.\n` +
+          `🧹 Habilidades IA descartadas removidas: ${descartadasRemovidas}\n` +
+          `🎲 Rolagens antigas podadas: ${rolagensRemovidas}\n` +
+          `⚔️ Combates finalizados limpos: ${(db.combatesArena || []).length - arenaLimpa.length}`);
+  }
 
   function importarBackupJson(e) {
     if (!isSuper) {
@@ -558,7 +614,7 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
                       className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2 text-xs text-white font-mono"
                     />
                     <div className="flex gap-1 shrink-0">
-                      {[1, 3, 5, 10].map(val => (
+                      {[1, 5, 10, 20].map(val => (
                         <button
                           key={val}
                           type="button"
@@ -572,21 +628,22 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-[11px] font-bold text-bleach-creamDim uppercase mb-1">
-                    Conhecimento Concedido por Cena:
-                  </label>
-                  <input
-                    type="number"
-                    min="0"
-                    step="10"
-                    value={atvValorPorCena}
-                    onChange={(e) => setAtvValorPorCena(Math.max(0, Number(e.target.value) || 0))}
-                    className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2 text-xs text-yellow-300 font-mono"
-                  />
-                  <span className="text-[10px] text-bleach-muted mt-0.5 block">
-                    Total a creditar: <strong className="text-yellow-400 font-mono">+{atvQtdCenas * atvValorPorCena} ₪ Conhecimento</strong>
-                  </span>
+                <div className="p-3 bg-yellow-950/40 border border-yellow-500/50 rounded-xl space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-extrabold uppercase text-yellow-300 flex items-center gap-1.5">
+                      <span>🔒</span> Regra Fixa do Sistema:
+                    </span>
+                    <span className="px-2.5 py-0.5 bg-yellow-900 text-yellow-200 border border-yellow-400 text-[10px] font-mono font-black rounded-full">
+                      1 Cena = 10 ₪ Conhecimento
+                    </span>
+                  </div>
+                  <p className="text-[10px] text-bleach-creamDim leading-relaxed">
+                    O ganho por cena é rigorosamente fixo e imutável (1 cena = 10 pontos de conhecimento).
+                  </p>
+                  <div className="pt-1.5 border-t border-white/10 text-xs text-white flex justify-between font-mono">
+                    <span className="text-bleach-muted">Total a creditar (+{atvQtdCenas} cenas):</span>
+                    <strong className="text-yellow-400 font-black">+{atvQtdCenas * 10} ₪ Conhecimento</strong>
+                  </div>
                 </div>
 
                 <div>
@@ -604,7 +661,7 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
 
                 <button
                   type="button"
-                  onClick={() => lancarAtividadeCenas(atvCharId, atvQtdCenas, atvValorPorCena, atvMotivo)}
+                  onClick={() => lancarAtividadeCenas(atvCharId, atvQtdCenas, 10, atvMotivo)}
                   className="w-full py-3 bg-gradient-to-r from-yellow-500 to-amber-600 hover:brightness-110 text-black font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-lg transition"
                 >
                   ✓ Lançar +{atvQtdCenas} Cenas & Creditar Conhecimento
@@ -650,33 +707,18 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
                           </div>
 
                           <div className="flex items-center gap-1.5">
-                            {[1, 3, 5].map((qtd) => (
+                            {[1, 5, 10, 20].map((qtd) => (
                               <button
                                 key={qtd}
                                 type="button"
-                                onClick={() => lancarAtividadeCenas(p.id, qtd, 100, `Lançamento rápido +${qtd} cenas`)}
+                                onClick={() => lancarAtividadeCenas(p.id, qtd, 10, `Lançamento rápido +${qtd} cenas`)}
                                 className="px-2.5 py-1.5 bg-yellow-950/80 hover:bg-yellow-900 border border-yellow-500 text-yellow-300 text-xs font-bold font-mono rounded-lg transition"
-                                title={`Adicionar +${qtd} cena(s) e +${qtd * 100} Conhecimento`}
+                                title={`Adicionar +${qtd} cena(s) e +${qtd * 10} ₪ Conhecimento`}
                               >
                                 +{qtd}
                               </button>
                             ))}
-                            <button
-                              type="button"
-                              onClick={() => {
-                                const val = prompt(`Definir saldo exato de Conhecimento (₪) para [${p.nome}]:`, String(p.conhecimento || 0));
-                                if (val !== null && !isNaN(Number(val))) {
-                                  const novoCon = Math.max(0, Number(val));
-                                  const novosP = (db.personagens || []).map(cp => cp.id === p.id ? { ...cp, conhecimento: novoCon } : cp);
-                                  saveDb({ ...db, personagens: novosP });
-                                  playReiatsuSound('win');
-                                }
-                              }}
-                              className="px-2 py-1.5 bg-black/80 border border-white/10 hover:border-yellow-400 text-bleach-cream text-xs rounded-lg transition"
-                              title="Editar saldo de Conhecimento manualmente"
-                            >
-                              ✏️ ₪
-                            </button>
+
                           </div>
                         </div>
                       </div>
@@ -942,6 +984,42 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
                 >
                   <span>⬇️</span> Puxar Dados da Nuvem (Atualizar Fichas)
                 </button>
+              </div>
+            </div>
+
+            {/* Card de Limpeza Automática & Manutenção da Madrugada (03:00) */}
+            <div className="p-5 bg-bleach-panel2 border border-yellow-500/40 rounded-2xl space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-yellow-950 border border-yellow-500/50 flex items-center justify-center text-lg">
+                    🌙
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-white text-sm">Limpeza da Madrugada (03:00) & Otimização do Banco</h4>
+                    <p className="text-xs text-bleach-muted">
+                      Apaga habilidades de IA descartadas e rolagens antigas. <strong>Garante que todos os atributos e fichas ativas NUNCA sejam apagados.</strong>
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={executarLimpezaMadrugada}
+                  className="px-5 py-2.5 bg-gradient-to-r from-yellow-500 to-amber-600 hover:brightness-110 text-black font-extrabold text-xs uppercase tracking-wider rounded-xl shadow transition flex items-center gap-2"
+                >
+                  <span>🧹</span> Executar Limpeza Agora
+                </button>
+              </div>
+
+              <div className="p-3 bg-black/40 rounded-xl border border-white/10 flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
+                <span className="text-bleach-muted">
+                  Última execução registrada: <strong className="text-yellow-300">{db.ultimaLimpezaAutomatica?.dataHora || "Agendada para as 03:00"}</strong>
+                </span>
+                {db.ultimaLimpezaAutomatica && (
+                  <span className="text-green-400">
+                    ✓ {db.ultimaLimpezaAutomatica.personagensPreservados || db.personagens?.length || 0} fichas e atributos 100% seguros
+                  </span>
+                )}
               </div>
             </div>
 

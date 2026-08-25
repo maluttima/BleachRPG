@@ -1,0 +1,3078 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Soul Society 3D · Seireitei & Rukongai (~500 Anos Antes de Ichigo)</title>
+  
+  <!-- Google Fonts: Bebas Neue, Cinzel, Outfit, Noto Serif JP -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cinzel:wght@600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&family=Noto+Serif+JP:wght@600;700;900&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            bleach: {
+              bg: '#050403',
+              panel: '#120d09',
+              panelCard: '#18120c',
+              border: '#332314',
+              orange: '#FF6A13',
+              orangeGlow: 'rgba(255, 106, 19, 0.45)',
+              gold: '#E5B842',
+              cyan: '#4FB3E8',
+              crimson: '#D6483F',
+              purple: '#9B72F2',
+              emerald: '#42BA7E',
+              cream: '#F5EFE6',
+              creamDim: '#BDB19F'
+            }
+          },
+          fontFamily: {
+            title: ['Bebas Neue', 'Impact', 'sans-serif'],
+            cinzel: ['Cinzel', 'serif'],
+            sans: ['Outfit', 'system-ui', 'sans-serif'],
+            kanji: ['Noto Serif JP', 'serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Three.js + OrbitControls + Tween.js CDNs -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.js"></script>
+
+  <style>
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: #050403; }
+    ::-webkit-scrollbar-thumb { background: #3b2818; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #ff6a13; }
+
+    body {
+      background-color: #050403;
+      color: #F5EFE6;
+      font-family: 'Outfit', sans-serif;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    #webgl-canvas-container {
+      width: 100vw;
+      height: 100vh;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+
+    /* 3D Floating Tooltip */
+    #tooltip-3d {
+      position: absolute;
+      pointer-events: none;
+      z-index: 30;
+      transform: translate(-50%, -115%);
+      transition: opacity 0.15s ease, transform 0.15s ease;
+      opacity: 0;
+      display: none;
+    }
+
+    /* Glass Panels */
+    .glass-panel {
+      background: rgba(16, 12, 8, 0.94);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(66, 44, 24, 0.85);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.95);
+    }
+
+    /* Modal Animation */
+    .modal-enter {
+      animation: modalSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes modalSlide {
+      0% { opacity: 0; transform: scale(0.94) translateY(20px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    /* World Switcher Active Glow */
+    .active-world-btn {
+      background: linear-gradient(135deg, #ff6a13, #c94e0a) !important;
+      color: #000000 !important;
+      font-weight: 800 !important;
+      box-shadow: 0 0 20px rgba(255, 106, 19, 0.5) !important;
+      border-color: #ff6a13 !important;
+    }
+
+    /* Minimap Compass Needle */
+    .compass-ring {
+      border: 2px solid rgba(229, 184, 66, 0.4);
+      box-shadow: inset 0 0 10px rgba(255, 106, 19, 0.2);
+    }
+
+    /* World Transition Overlay */
+    #world-transition-overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle, rgba(255,106,19,0.3) 0%, rgba(5,4,3,0.95) 75%);
+      z-index: 40;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.45s ease;
+    }
+  </style>
+</head>
+<body class="w-screen h-screen overflow-hidden relative">
+
+  <!-- ========================================== -->
+  <!-- 3D WEBGL CANVAS -->
+  <!-- ========================================== -->
+  <div id="webgl-canvas-container"></div>
+
+  <!-- World Transition Flash Overlay -->
+  <div id="world-transition-overlay"></div>
+
+  <!-- 3D Tooltip Overlay -->
+  <div id="tooltip-3d" class="glass-panel px-3.5 py-2.5 rounded-xl text-center shadow-2xl border border-[#ff6a13]/60">
+    <div id="tooltip-kanji" class="text-xs font-kanji font-bold text-[#e5b842]"></div>
+    <div id="tooltip-title" class="text-sm font-bold text-white tracking-wider font-cinzel"></div>
+    <div id="tooltip-sub" class="text-[10.5px] text-[#ff6a13] font-semibold"></div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- TOP HEADER HUD (Cartographic & Tactical) -->
+  <!-- ========================================== -->
+  <header class="absolute top-0 left-0 right-0 z-20 px-4 py-3 pointer-events-none flex flex-wrap items-center justify-between gap-3 bg-gradient-to-b from-[#050403]/95 via-[#050403]/60 to-transparent">
+    
+    <!-- Title & Era Banner -->
+    <div class="pointer-events-auto flex items-center gap-3.5">
+      <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-[#ff6a13] via-[#e5b842] to-[#802a00] p-[1.5px] flex items-center justify-center shadow-lg shadow-[#ff6a13]/35">
+        <div id="header-kanji-icon" class="w-full h-full bg-[#120d09] rounded-[10px] flex items-center justify-center text-[#ff6a13] font-kanji font-bold text-2xl">
+          廷
+        </div>
+      </div>
+      <div>
+        <div class="flex items-center gap-2 flex-wrap">
+          <h1 id="header-map-title" class="font-title text-2xl sm:text-3xl tracking-wider text-white flex items-center gap-2 drop-shadow-md">
+            SEIREITEI 3D <span class="text-[#ff6a13] font-kanji text-xl">瀞霊廷</span>
+          </h1>
+          <span class="text-[10px] font-bold tracking-widest uppercase bg-[#ff6a13]/20 text-[#ff6a13] border border-[#ff6a13]/50 px-2 py-0.5 rounded-md backdrop-blur-sm">
+            Era: ~500 Anos Antes
+          </span>
+        </div>
+        <p id="header-map-subtitle" class="text-xs text-[#c4b9a8] hidden sm:block drop-shadow">
+          Cidade Fortificada Monumental · 13 Divisões, Central 46, Sōkyoku e Quarteirões
+        </p>
+      </div>
+    </div>
+
+    <!-- Central Dual-Map Switcher (SEIREITEI ⇄ RUKONGAI) -->
+    <div class="pointer-events-auto flex items-center glass-panel rounded-2xl p-1.5 gap-1.5 shadow-2xl border border-[#e5b842]/40">
+      <button id="btn-world-seireitei" onclick="switchActiveWorld('seireitei')" class="px-4 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 active-world-btn" title="Entrar na Capital Fortificada (Gotei 13)">
+        <span>🏯</span> <span>SEIREITEI</span>
+      </button>
+      <button id="btn-world-rukongai" onclick="switchActiveWorld('rukongai')" class="px-4 py-1.5 rounded-xl text-xs font-semibold text-[#c7bcac] hover:text-white hover:bg-[#25180f] transition-all flex items-center gap-1.5" title="Explorar o Vasto Mundo Orgânico dos 320 Distritos">
+        <span>⛩️</span> <span>RUKONGAI (320 Distritos)</span>
+      </button>
+    </div>
+
+    <!-- Lighting, Overview, and Layer Toggles -->
+    <div class="pointer-events-auto flex items-center gap-2 flex-wrap">
+      
+      <!-- Lighting presets -->
+      <div class="flex items-center glass-panel rounded-xl p-1 gap-1">
+        <button onclick="setLighting('day')" id="btn-light-day" class="px-2.5 py-1 text-xs font-bold rounded-lg bg-[#ff6a13] text-black transition-all" title="Luz do Sol Radiante">
+          ☀️ Dia
+        </button>
+        <button onclick="setLighting('sunset')" id="btn-light-sunset" class="px-2.5 py-1 text-xs font-semibold rounded-lg text-[#c7bcac] hover:text-white hover:bg-[#25180f] transition-all" title="Pôr do Sol (Reiatsu Dourada)">
+          🌅 Tarde
+        </button>
+        <button onclick="setLighting('night')" id="btn-light-night" class="px-2.5 py-1 text-xs font-semibold rounded-lg text-[#c7bcac] hover:text-white hover:bg-[#25180f] transition-all" title="Noite Espiritual com Lanternas">
+          🌙 Noite
+        </button>
+      </div>
+
+      <!-- Quick Action Buttons -->
+      <button onclick="flyToOverview()" class="glass-panel hover:bg-[#ff6a13] hover:text-black text-white px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-lg border border-[#422e1c]" title="Visão Geral Superior">
+        <span>🗺️</span> Visão Geral
+      </button>
+
+      <button onclick="toggleLayerDrawer()" class="glass-panel hover:bg-[#261b11] text-[#e5b842] px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-lg border border-[#422e1c]">
+        <span>⚙️</span> Camadas & Mestre
+      </button>
+
+      <button onclick="toggleNavDrawer()" id="btn-open-navigator" class="glass-panel bg-[#ff6a13]/20 hover:bg-[#ff6a13] text-[#ff6a13] hover:text-black px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-lg border border-[#ff6a13]/50">
+        <span>📍</span> Navegador de Regiões
+      </button>
+
+    </div>
+  </header>
+
+
+  <!-- ========================================== -->
+  <!-- LEFT DRAWER: REGION / DISTRICT NAVIGATOR -->
+  <!-- ========================================== -->
+  <aside id="nav-drawer" class="absolute top-16 left-4 z-20 w-84 max-h-[82vh] glass-panel rounded-2xl p-4 flex flex-col shadow-2xl transition-all duration-300 hidden">
+    <div class="flex items-center justify-between border-b border-[#2e2014] pb-2 mb-2">
+      <div id="nav-drawer-title" class="text-xs font-bold uppercase tracking-wider text-[#e5b842] flex items-center gap-1.5">
+        <span>🏯</span> Voo para Estruturas & Quartéis
+      </div>
+      <button onclick="toggleNavDrawer()" class="text-xs text-[#8f8270] hover:text-white">✕</button>
+    </div>
+
+    <!-- Search Input -->
+    <input type="text" id="nav-search" oninput="filterNavigator(this.value)" placeholder="Buscar 1ª Divisão, Junrinan, Zaraki..." class="w-full bg-[#090705] border border-[#332314] rounded-lg px-3 py-1.5 text-xs text-white placeholder-[#705e4c] focus:outline-none focus:border-[#ff6a13] mb-2" />
+
+    <!-- List -->
+    <div id="nav-list" class="flex-1 overflow-y-auto space-y-1 pr-1 text-xs">
+      <!-- Dynamic navigation items -->
+    </div>
+  </aside>
+
+
+  <!-- ========================================== -->
+  <!-- RIGHT DRAWER: LAYERS & GM RPG TOOLS -->
+  <!-- ========================================== -->
+  <aside id="layer-drawer" class="absolute top-16 right-4 z-20 w-80 max-h-[82vh] glass-panel rounded-2xl p-4 flex flex-col shadow-2xl transition-all duration-300 hidden">
+    <div class="flex items-center justify-between border-b border-[#2e2014] pb-2 mb-3">
+      <div class="text-xs font-bold uppercase tracking-wider text-[#ff6a13] flex items-center gap-1.5">
+        <span>⚙️</span> Camadas & Ferramentas do Mestre
+      </div>
+      <button onclick="toggleLayerDrawer()" class="text-xs text-[#8f8270] hover:text-white">✕</button>
+    </div>
+
+    <div class="space-y-3.5 overflow-y-auto pr-1 text-xs text-[#cfc5b4]">
+      
+      <!-- Layer Toggles -->
+      <div>
+        <div class="text-[10px] uppercase font-bold text-[#8f8270] tracking-wider mb-2">Camadas Visíveis</div>
+        <div class="space-y-2">
+          <label class="flex items-center gap-2 cursor-pointer hover:text-white">
+            <input type="checkbox" id="layer-structures" checked onchange="toggle3DLayer('structures', this.checked)" class="accent-[#ff6a13] w-4 h-4 rounded" />
+            <span>⚔️ Quartéis, Vilas & Centros Urbanos</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer hover:text-white">
+            <input type="checkbox" id="layer-citadel" checked onchange="toggle3DLayer('citadel', this.checked)" class="accent-[#ff6a13] w-4 h-4 rounded" />
+            <span>🏛️ Cidadela Central, Sōkyoku & Montanhas</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer hover:text-white">
+            <input type="checkbox" id="layer-walls" checked onchange="toggle3DLayer('walls', this.checked)" class="accent-[#ff6a13] w-4 h-4 rounded" />
+            <span>🛡️ Muralhas de Sekiseki & Muros de Setor</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer hover:text-white">
+            <input type="checkbox" id="layer-houses" checked onchange="toggle3DLayer('houses', this.checked)" class="accent-[#ff6a13] w-4 h-4 rounded" />
+            <span>🏘️ Casas Residenciais & Cabanas Rurais</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer hover:text-white">
+            <input type="checkbox" id="layer-trees" checked onchange="toggle3DLayer('trees', this.checked)" class="accent-[#ff6a13] w-4 h-4 rounded" />
+            <span>🌸 Florestas de Cerejeiras, Pinheiros & Bambuzais</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer hover:text-white">
+            <input type="checkbox" id="layer-water" checked onchange="toggle3DLayer('water', this.checked)" class="accent-[#ff6a13] w-4 h-4 rounded" />
+            <span>🌊 Rios Fluviais & Canais de Água Líquida</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer hover:text-white">
+            <input type="checkbox" id="layer-labels" checked onchange="toggle3DLayer('labels', this.checked)" class="accent-[#ff6a13] w-4 h-4 rounded" />
+            <span>🏷️ Rótulos 3D & Nomes de Distritos</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- GM Marker Tool -->
+      <div class="border-t border-[#2e2014] pt-3">
+        <div class="text-[10px] uppercase font-bold text-[#ff6a13] tracking-wider mb-1.5">Marcadores de RPG (Mestre)</div>
+        <button id="btn-add-marker" onclick="toggleAddMarkerMode()" class="w-full py-2 bg-[#22160d] hover:bg-[#ff6a13] text-[#e5b842] hover:text-black border border-[#422e1c] rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-md">
+          <span>📍</span> Ativar 'Colocar Marcador'
+        </button>
+        <p class="text-[10px] text-[#8f8270] mt-1.5 leading-tight">Ao ativar, clique em qualquer ponto 3D do mapa atual para fixar um pin de Batalha, Missão, NPC ou Segredo.</p>
+      </div>
+
+      <!-- Backup / Export Lore -->
+      <div class="border-t border-[#2e2014] pt-3 flex items-center gap-2">
+        <button onclick="exportCampaignData()" class="flex-1 py-1.5 bg-[#19110a] hover:bg-[#2b1d12] border border-[#3e2a18] rounded-lg text-[10.5px] font-semibold text-white transition-all shadow">
+          💾 Baixar Lore (.json)
+        </button>
+        <button onclick="document.getElementById('import-file-input').click()" class="flex-1 py-1.5 bg-[#19110a] hover:bg-[#2b1d12] border border-[#3e2a18] rounded-lg text-[10.5px] font-semibold text-[#e5b842] transition-all shadow">
+          📥 Carregar Lore
+        </button>
+        <input type="file" id="import-file-input" accept=".json" class="hidden" onchange="importCampaignData(event)" />
+      </div>
+
+    </div>
+  </aside>
+
+
+  <!-- ========================================== -->
+  <!-- BOTTOM CONTROLS HINT HUD & MINIMAP -->
+  <!-- ========================================== -->
+  <footer class="absolute bottom-3 left-4 right-4 z-20 pointer-events-none flex items-center justify-between">
+    
+    <!-- Controls Hint -->
+    <div class="hidden sm:flex items-center gap-3.5 glass-panel px-4 py-2 rounded-full text-xs text-[#a89c89]">
+      <span class="flex items-center gap-1"><kbd class="bg-[#24170e] px-1.5 py-0.5 rounded text-white text-[10px] font-bold">Botão Esquerdo</kbd> Girar 360°</span>
+      <span class="flex items-center gap-1"><kbd class="bg-[#24170e] px-1.5 py-0.5 rounded text-white text-[10px] font-bold">Botão Direito</kbd> Mover (Pan)</span>
+      <span class="flex items-center gap-1"><kbd class="bg-[#24170e] px-1.5 py-0.5 rounded text-white text-[10px] font-bold">Scroll</kbd> Zoom Multinível</span>
+      <span class="text-[#ff6a13]">✦ Clique em qualquer local para explorar</span>
+    </div>
+
+    <!-- Minimap Radar Compass (Bottom Right) -->
+    <div class="pointer-events-auto glass-panel w-24 h-24 rounded-full flex items-center justify-center p-1.5 shadow-2xl relative">
+      <div id="minimap-compass" class="w-full h-full rounded-full compass-ring flex items-center justify-center relative transition-transform duration-100">
+        <span class="absolute top-1 text-[9px] font-bold text-[#ff6a13]">N</span>
+        <span class="absolute bottom-1 text-[9px] font-bold text-[#8f8270]">S</span>
+        <span class="absolute left-1.5 text-[9px] font-bold text-[#8f8270]">O</span>
+        <span class="absolute right-1.5 text-[9px] font-bold text-[#8f8270]">L</span>
+        <div id="compass-center-dot" class="w-2.5 h-2.5 rounded-full bg-[#ff6a13] shadow-md shadow-[#ff6a13]/80"></div>
+      </div>
+    </div>
+
+  </footer>
+
+
+  <!-- ============================================================ -->
+  <!-- MODAL DE DETALHES & EDITOR DO MESTRE/ADMIN -->
+  <!-- ============================================================ -->
+  <div id="regionModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div class="relative w-full max-w-3xl bg-[#140e09] border-2 border-[#422c18] rounded-2xl shadow-[0_30px_90px_rgba(0,0,0,0.98)] overflow-hidden modal-enter text-[#f5efe6]">
+      
+      <!-- Top Dynamic Reiatsu Bar -->
+      <div id="modalAccent" class="h-2 w-full bg-gradient-to-r from-[#ff6a13] via-[#e5b842] to-[#ff6a13]"></div>
+
+      <!-- Close Button -->
+      <button onclick="closeRegionModal()" class="absolute top-4 right-4 z-30 w-8 h-8 rounded-full bg-[#24170e] border border-[#4a3420] hover:border-[#ff6a13] text-[#cfc5b4] hover:text-white flex items-center justify-center text-sm transition-all shadow-lg">
+        ✕
+      </button>
+
+      <!-- Modal Content Body -->
+      <div class="p-5 sm:p-7 max-h-[85vh] overflow-y-auto space-y-5">
+        
+        <!-- Header Info (Editable in Admin Mode) -->
+        <div class="flex flex-wrap items-start justify-between gap-3 border-b border-[#2e1f12] pb-4">
+          <div class="flex-1 min-w-[260px]">
+            <div class="flex items-center gap-2 flex-wrap mb-1">
+              <span id="modalCategoryBadge" class="text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded bg-[#ff6a13]/20 text-[#ff6a13] border border-[#ff6a13]/40">
+                GOTEI 13
+              </span>
+              <span class="text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded bg-[#e5b842]/15 text-[#e5b842] border border-[#e5b842]/30">
+                ~500 Anos Antes
+              </span>
+              <span id="modalKanji" class="text-lg font-kanji font-bold text-[#e5b842]" contenteditable="false">
+                第一番隊
+              </span>
+            </div>
+            <h2 id="modalTitle" class="text-2xl sm:text-3xl font-title tracking-wider text-white" contenteditable="false">
+              1ª DIVISÃO · QUARTEL GENERAL
+            </h2>
+          </div>
+
+          <!-- Canon vs RPG Expansion Tag & Security Level -->
+          <div class="text-right">
+            <span id="modalCanonTag" class="text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 rounded bg-[#25170d] border border-[#523720] text-[#e5b842]">
+              ✓ Canônico + Expansão RPG
+            </span>
+            <div id="modalSecurityLevel" class="text-xs font-semibold text-[#a89c89] mt-1.5" contenteditable="false">
+              🔒 Nível Máximo
+            </div>
+          </div>
+        </div>
+
+        <!-- ===================================================== -->
+        <!-- IMAGE SHOWCASE & CUSTOM IMAGE UPLOADER -->
+        <!-- ===================================================== -->
+        <div class="relative w-full h-64 rounded-xl overflow-hidden border-2 border-[#3b2716] bg-[#0c0805] group">
+          <img id="modalImage" src="assets/soul_society_4quadrants.jpg" alt="Região" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90 group-hover:opacity-100" />
+          <div class="absolute inset-0 bg-gradient-to-t from-[#140e09] via-transparent to-transparent"></div>
+          
+          <div class="absolute bottom-3 left-3 bg-[#0d0805]/85 backdrop-blur-md px-3 py-1.5 rounded-lg border border-[#2d1c0f] text-xs text-[#dcd2c3] flex items-center gap-1.5">
+            <span>📷</span> <span id="modalImageCaption">Visual 3D do Setor</span>
+          </div>
+
+          <!-- Image Change Controls -->
+          <div class="absolute bottom-3 right-3 flex items-center gap-2">
+            <input type="file" id="modalFileInput" accept="image/*" class="hidden" onchange="handleImageFileUpload(event)" />
+            
+            <button onclick="document.getElementById('modalFileInput').click()" class="bg-[#1f140b]/90 hover:bg-[#ff6a13] text-white hover:text-black border border-[#4a321e] hover:border-[#ff6a13] px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-xl flex items-center gap-1.5">
+              <span>📤</span> Alterar Imagem
+            </button>
+            
+            <button onclick="promptImageUrl()" class="bg-[#1f140b]/90 hover:bg-[#2e1d10] text-[#c7bcac] hover:text-white border border-[#4a321e] px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all shadow-xl" title="Inserir Link de Imagem Web">
+              🔗 Link
+            </button>
+
+            <button onclick="resetRegionImage()" class="bg-[#1f140b]/90 hover:bg-[#3d0f0f] text-[#e57373] border border-[#4a321e] px-2 py-1.5 rounded-lg text-xs font-medium transition-all shadow-xl" title="Restaurar Imagem Padrão">
+              ↺
+            </button>
+          </div>
+        </div>
+
+        <!-- ===================================================== -->
+        <!-- MODAL SUB-TABS (Lore / NPCs / Missões / Economia) -->
+        <!-- ===================================================== -->
+        <div class="flex items-center gap-1 border-b border-[#2e1f12] pb-1">
+          <button id="modalTabBtn-lore" onclick="switchModalTab('lore')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-[#ff6a13] text-black">
+            📜 Lore & Função
+          </button>
+          <button id="modalTabBtn-npcs" onclick="switchModalTab('npcs')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-[#c7bcac] hover:text-white hover:bg-[#25180f]">
+            ⚔️ Liderança & População
+          </button>
+          <button id="modalTabBtn-missions" onclick="switchModalTab('missions')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-[#c7bcac] hover:text-white hover:bg-[#25180f]">
+            🎯 Missões & Perigos
+          </button>
+          <button id="modalTabBtn-economy" onclick="switchModalTab('economy')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-[#c7bcac] hover:text-white hover:bg-[#25180f]">
+            💰 Economia & Kan
+          </button>
+        </div>
+
+        <!-- TAB 1: LORE -->
+        <div id="modalTab-lore" class="space-y-3">
+          <div class="bg-[#191008] p-4 rounded-xl border border-[#2e1e10]">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-[#ff6a13] mb-1.5 flex items-center gap-1.5">
+              <span>🏛️</span> Papel & Características no Mundo Espiritual
+            </h4>
+            <p id="modalDescription" class="text-sm leading-relaxed text-[#dcd2c3] outline-none" contenteditable="false">
+              Carregando descrição...
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="bg-[#160d07] p-3 rounded-xl border border-[#2b1a0e]">
+              <div class="text-[10px] uppercase text-[#8f8270] font-bold tracking-wider">Densidade Espiritual (Reiatsu)</div>
+              <div id="modalReiatsuText" class="text-sm font-bold text-[#e5b842] mt-0.5" contenteditable="false">Grau Médio</div>
+              <div class="w-full bg-[#24150b] h-1.5 rounded-full mt-1.5 overflow-hidden">
+                <div id="modalReiatsuBar" class="bg-gradient-to-r from-[#ff6a13] to-[#e5b842] h-full" style="width: 80%;"></div>
+              </div>
+            </div>
+            <div class="bg-[#160d07] p-3 rounded-xl border border-[#2b1a0e]">
+              <div class="text-[10px] uppercase text-[#8f8270] font-bold tracking-wider">Ambiente & Arquitetura</div>
+              <div id="modalArchText" class="text-xs font-semibold text-white mt-0.5" contenteditable="false">Vilas tradicionais e relevo natural</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: NPCS -->
+        <div id="modalTab-npcs" class="space-y-3 hidden">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="bg-[#180f08] p-3.5 rounded-xl border border-[#2d1c0f]">
+              <div class="text-[10px] uppercase text-[#8f8270] font-bold tracking-wider">Autoridade / Líder Local</div>
+              <div id="modalLeader" class="text-sm font-bold text-white mt-1" contenteditable="false">Líder Regional</div>
+              <div id="modalSubLeader" class="text-xs text-[#a89c89]" contenteditable="false">Conselho Local</div>
+            </div>
+            <div class="bg-[#180f08] p-3.5 rounded-xl border border-[#2d1c0f]">
+              <div class="text-[10px] uppercase text-[#8f8270] font-bold tracking-wider">População & Facções</div>
+              <div id="modalFactions" class="text-xs text-[#dcd2c3] mt-1" contenteditable="false">Guildas e Famílias</div>
+            </div>
+          </div>
+
+          <div class="bg-[#180f08] p-3.5 rounded-xl border border-[#2d1c0f]">
+            <h4 class="text-xs font-bold uppercase text-[#e5b842] mb-2 flex items-center gap-1.5">
+              <span>👥</span> Figuras Notáveis do RPG
+            </h4>
+            <div id="modalNotableNpcs" class="space-y-1.5 text-xs text-[#b8ad9c] outline-none" contenteditable="false">
+              <!-- Dynamic NPC list -->
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: MISSÕES -->
+        <div id="modalTab-missions" class="space-y-3 hidden">
+          <div class="bg-[#180f08] p-3.5 rounded-xl border border-[#2d1c0f]">
+            <h4 class="text-xs font-bold uppercase text-[#ff6a13] mb-2 flex items-center gap-1.5">
+              <span>🎯</span> Ganchos de Aventura & Ocorrências
+            </h4>
+            <div id="modalMissionsList" class="space-y-2 text-xs text-[#dcd2c3] outline-none" contenteditable="false">
+              <!-- Dynamic Missions -->
+            </div>
+          </div>
+          <div class="bg-[#180f08] p-3.5 rounded-xl border border-[#2d1c0f]">
+            <h4 class="text-xs font-bold uppercase text-[#ef4444] mb-1.5 flex items-center gap-1.5">
+              <span>⚠️</span> Tensões Sociais & Perigos
+            </h4>
+            <p id="modalSocialConflict" class="text-xs text-[#b8ad9c] leading-relaxed outline-none" contenteditable="false">
+              Conflitos locais...
+            </p>
+          </div>
+        </div>
+
+        <!-- TAB 4: ECONOMIA -->
+        <div id="modalTab-economy" class="space-y-3 hidden">
+          <div class="bg-[#180f08] p-3.5 rounded-xl border border-[#2d1c0f]">
+            <h4 class="text-xs font-bold uppercase text-[#e5b842] mb-2 flex items-center gap-1.5">
+              <span>💰</span> Comércio, Serviços & Custos em Kan
+            </h4>
+            <div id="modalEconomyContent" class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs outline-none" contenteditable="false">
+              <!-- Dynamic Economy Items -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Footer & Admin Edit Button -->
+        <div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-[#2e1f12]">
+          <div class="flex items-center gap-2">
+            <button id="btn-edit-mode" onclick="toggleEditMode()" class="px-3.5 py-2 bg-[#261a11] hover:bg-[#382618] text-[#e5b842] border border-[#523720] rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shadow-md">
+              <span id="edit-icon">✏️</span> <span id="edit-text">Editar Informações</span>
+            </button>
+            <button onclick="copyRegionLoreToClipboard()" class="px-3.5 py-2 bg-[#1b120a] hover:bg-[#291b0f] text-[#dcd2c3] border border-[#3b2716] rounded-xl text-xs font-medium flex items-center gap-1.5 transition-all shadow-md">
+              <span>📋</span> Copiar para WhatsApp
+            </button>
+          </div>
+
+          <button onclick="closeRegionModal()" class="px-6 py-2 bg-gradient-to-r from-[#ff6a13] to-[#c94e0a] hover:brightness-110 text-black font-bold rounded-xl text-xs tracking-wider uppercase transition-all shadow-lg shadow-[#ff6a13]/25">
+            Fechar
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================ -->
+  <!-- THREE.JS HIGH-DENSITY DUAL-MAP ENGINE (SEIREITEI ⇄ RUKONGAI) -->
+  <!-- ============================================================ -->
+  <script>
+    // ==========================================================
+    // 1. MASTER DATABASE: SEIREITEI (~500 ANOS ANTES)
+    // ==========================================================
+    const DEFAULT_SEIREITEI_DATA = {
+      div_1: {
+        title: "1ª DIVISÃO · QUARTEL GENERAL",
+        kanji: "第一番隊",
+        category: "GOTEI 13",
+        canonTag: "✓ Canônico + Expansão RPG",
+        securityLevel: "🔒 Nível Máximo (Capitão-Comandante)",
+        defaultImage: "assets/soul_society_4quadrants.jpg",
+        imageCaption: "Sede Suprema do Gotei 13 no topo do Seireitei",
+        description: "A Primeira Divisão é a sede do Capitão-Comandante Genryūsai Shigekuni Yamamoto e o salão sagrado onde os Treze Capitães se reúnem. É a parte mais silenciosa e imponente do Seireitei: pouquíssimos civis circulam por aqui, apenas mensageiros, guardas de honra e oficiais seniores. Para os jogadores, a sensação deve ser clara: 'Aqui, uma palavra errada pode acabar com minha carreira.'",
+        reiatsu: "Grau 1 (Reiatsu Solar e Primordial de Yamamoto)",
+        reiatsuPercent: "100%",
+        arch: "Pátios monumentais de pedra polida, portas de carvalho maciço e selos antigos.",
+        leader: "Genryūsai Shigekuni Yamamoto",
+        subLeader: "Chōjirō Sasakibe (Tenente)",
+        factions: "Guarda Pessoal do Comandante, Conselho de Estratégia e Mensageiros Oficiais.",
+        notableNpcs: [
+          "Yamamoto: O pilar inabalável que moldou o Gotei 13 com punho de ferro.",
+          "Sasakibe: Guardião cerimonial e especialista no protocolo das divisões.",
+          "Emissários das 4 Grandes Famílias que prestam contas ao Comandante."
+        ],
+        missions: [
+          "Convocação de Emergência: Escoltar um relatório ultra-secreto da fronteira de Rukongai.",
+          "Audiência de Disciplina: Um dos membros do grupo foi citado por conduta imprópria.",
+          "Supervisão do Conselho: Investigar relatos de anomalias no fluxo de almas."
+        ],
+        socialConflict: "Rígida exigência de obediência cega versus a flexibilidade necessária em tempos de crise espiritual.",
+        economy: [
+          { item: "Autorização Oficial de Trânsito", cost: "Gratuito (Por Mérito)" },
+          { item: "Relatório de Missão Selado", cost: "50 Kan" },
+          { item: "Selo Cerimonial do Comandante", cost: "Inestimável" }
+        ],
+        coords: { x: 0, y: 52, z: -85 }
+      },
+
+      central_46: {
+        title: "CENTRAL 46 & DAIREISHOKAIRŌ",
+        kanji: "中央四十六室 · 大霊書回廊",
+        category: "PODER JUDICIÁRIO & HISTÓRIA",
+        canonTag: "✓ Canônico + Expansão RPG",
+        securityLevel: "🔒 Câmara Suprema Subterrânea",
+        defaultImage: "assets/soul_society_4quadrants.jpg",
+        imageCaption: "O complexo legislativo e a lendária Grande Biblioteca Histórica",
+        description: "Composto por 40 sábios e 6 juízes escolhidos entre a aristocracia. Abaixo da superfície fica o Daireishokairō — o grande arquivo histórico onde estão guardados segredos sobre guerras antigas, registros censurados de capitães, crimes apagados das famílias nobres, informações sobre Arrancars arcaicos e experimentos proibidos.",
+        reiatsu: "Grau 1 (Barreiras Mágicas de Isolamento Kekkai)",
+        reiatsuPercent: "95%",
+        arch: "Câmaras subterrâneas abobadadas, estantes infinitas de pergaminhos e selos mágicos.",
+        leader: "Conselho dos 46 Sábios e Juízes",
+        subLeader: "Supervisão Arcana do Kidōshū",
+        factions: "Juízes da Nobreza, Bibliotecários Sagrados do Daireishokairō, Guardas Mudos.",
+        notableNpcs: ["Sumo Juiz da Central 46: Um aristocrata implacável que prioriza a ordem."],
+        missions: ["Infiltração no Subsolo: Resgatar manuscrito censurado sobre os Arrancars."],
+        socialConflict: "A justiça burocrática e implacável colide com a honra dos próprios capitães.",
+        economy: [{ item: "Consulta a Arquivos Comuns", cost: "100 Kan" }],
+        coords: { x: 75, y: 40, z: -75 }
+      },
+
+      sokyoku: {
+        title: "COLINA DO SŌKYOKU",
+        kanji: "雙殛の丘",
+        category: "ESTRUTURA SAGRADA",
+        canonTag: "✓ Canônico",
+        securityLevel: "⚠️ Área Cerimonial de Execução",
+        defaultImage: "assets/soul_society_4quadrants.jpg",
+        imageCaption: "A Colina Sagrada com a Lança da Fênix de 1 milhão de Zanpakutōs",
+        description: "O ponto mais alto de Seireitei, proporcionando uma vista panorâmica de toda a Soul Society. Abriga o cadafalso do Sōkyoku, a lança cerimonial que assume a forma de uma fênix incandescente.",
+        reiatsu: "Grau 1 (Energia Térmica Incandescente Selada)",
+        reiatsuPercent: "98%",
+        arch: "Plataforma de pedra elevada sobre o penhasco com a lança gigante amarrada por cordas sagradas.",
+        leader: "Guarda Cerimonial da 1ª Divisão",
+        subLeader: "Executores do Onmitsukidō",
+        factions: "Sentinelas do Sōkyoku, Oficiais de Execução.",
+        notableNpcs: ["Mestre de Cerimônias de Execução."],
+        missions: ["Vigília Noturna: Evitar sabotagem nas cordas sagradas."],
+        socialConflict: "O terror da execução pública versus a dúvida sobre ordens da nobreza.",
+        economy: [{ item: "Oferenda no Templo da Colina", cost: "25 Kan" }],
+        coords: { x: 130, y: 62, z: -150 }
+      },
+
+      senzaikyu: {
+        title: "SENZAIKYŪ · GRANDE PRISÃO",
+        kanji: "懺罪宮",
+        category: "COMPLEXO PRISIONAL",
+        canonTag: "✓ Canônico + Expansão RPG",
+        securityLevel: "🔒 Torre Branca de Prisioneiros Perigosos",
+        defaultImage: "assets/soul_society_4quadrants.jpg",
+        imageCaption: "Torre de Penitência construída inteiramente com pedra Sekiseki",
+        description: "A torre branca erguida próximo à Colina do Sōkyoku. Sua área externa possui belos jardins de pedra, mas o interior é composto por celas impenetráveis revestidas de rocha Sekiseki que anulam Reiatsu.",
+        reiatsu: "Zona Nula (Absorção Contínua de Reiatsu)",
+        reiatsuPercent: "15%",
+        arch: "Paredes de 2 metros de rocha branca anti-Reiatsu e grades mágicas.",
+        leader: "Carcereiros Especiais da 2ª Divisão",
+        subLeader: "Supervisão Jurídica da 6ª Divisão",
+        factions: "Carcereiros de Sekiseki, Interrogadores.",
+        notableNpcs: ["Diretor do Senzaikyū."],
+        missions: ["Transferência de Alto Risco do Distrito 80."],
+        socialConflict: "Prisioneiros políticos da nobreza trancafiados sem julgamento público.",
+        economy: [{ item: "Algemas de Sekiseki Portáteis", cost: "400 Kan" }],
+        coords: { x: 240, y: 18, z: -150 }
+      },
+
+      div_2: {
+        title: "2ª DIVISÃO & ONMITSUKIDŌ",
+        kanji: "第二番隊 · 隠密機動",
+        category: "GOTEI 13 · OPERAÇÕES SECRETAS",
+        canonTag: "✓ Canônico + Expansão RPG",
+        securityLevel: "🕵️ Alto Sigilo (A 'Soul Society Invisível')",
+        defaultImage: "assets/soul_society_4quadrants.jpg",
+        imageCaption: "Quartel camuflado e entrada para o Ninho dos Vermes (Maggot's Nest)",
+        description: "Opera com espionagem, execuções silenciosas, assassinato de traidores e supervisão de criminosos no subterrâneo. Possui controle direto sobre o Ninho dos Vermes.",
+        reiatsu: "Grau 2 (Reiatsu Oculta & Mestria Extrema em Shunpo)",
+        reiatsuPercent: "88%",
+        arch: "Paredes escuras, telhados planos para deslocamento rápido e passagens subterrâneas secretas.",
+        leader: "Capitão(ã) da 2ª Divisão & Comandante do Onmitsukidō",
+        subLeader: "Comandante da Tropa de Patrulha",
+        factions: "Tropa de Execução, Patrulha Secreta.",
+        notableNpcs: ["Instrutor de Hakuda & Shunpo."],
+        missions: ["Caça ao Traidor Interno antes do amanhecer."],
+        socialConflict: "Métodos cruéis sem julgamento que causam atrito com a 6ª Divisão.",
+        economy: [{ item: "Capa de Ocultação de Reiatsu", cost: "350 Kan" }],
+        coords: { x: -150, y: 16, z: -170 }
+      },
+
+      div_3: {
+        title: "3ª DIVISÃO · OPERAÇÕES GERAIS",
+        kanji: "第三番隊",
+        category: "GOTEI 13",
+        canonTag: "✓ Canônico",
+        securityLevel: "🛡️ Tática & Inteligência de Campo",
+        defaultImage: "assets/soul_society_4quadrants.jpg",
+        imageCaption: "Quartel ocidental de resposta tática rápida",
+        description: "Responsável pelo suporte tático, patrulha avançada e integração estratégica entre as forças militares.",
+        reiatsu: "Grau 3 (Equilibrado e Firme)",
+        reiatsuPercent: "78%",
+        arch: "Pátios amplos para formação de pelotões.",
+        leader: "Capitão da 3ª Divisão",
+        subLeader: "Tenente Tático",
+        factions: "Pelotão de Reconhecimento.",
+        notableNpcs: ["Estrategista de Guerra."],
+        missions: ["Mapeamento de Rotas Seguras no Rukongai."],
+        socialConflict: "Disputas de jurisdição com a 9ª Divisão.",
+        economy: [{ item: "Bússola Espiritual de Campo", cost: "45 Kan" }],
+        coords: { x: -220, y: 12, z: -90 }
+      },
+
+      div_4: {
+        title: "4ª DIVISÃO · SŌGŌ KYŪGO TSUMESHO",
+        kanji: "第四番隊",
+        category: "GOTEI 13 · SAÚDE & SUPORTE",
+        canonTag: "✓ Canônico + Expansão RPG",
+        securityLevel: "🏥 Hospital Central Aberto a Tropas",
+        defaultImage: "assets/soul_society_4quadrants.jpg",
+        imageCaption: "O complexo médico e de recuperação espiritual mais movimentado",
+        description: "A 4ª Divisão funciona como corpo médico, suprimentos e manutenção geral, abrigando o grande centro de atendimento Sōgō Kyūgo Tsumesho com enfermarias e tanques de cura.",
+        reiatsu: "Grau 2 (Reiatsu Suave de Cura Kaidō)",
+        reiatsuPercent: "75%",
+        arch: "Pátios limpos, pavilhões de madeira clara com tatames médicos e aromas de ervas.",
+        leader: "Capitão(ã) da 4ª Divisão (Liderança Médica)",
+        subLeader: "Tenente Médico-Chefe",
+        factions: "Brigada de Cirurgia Kaidō, Equipe Móvel de Socorro.",
+        notableNpcs: ["Mestre em Kaidō.", "Farmacêutico Espiritual."],
+        missions: ["Epidemia no Rukongai Sul drenando o Reishi das almas."],
+        socialConflict: "Tratada com desdém pelos esquadrões de combate bruto (11ª Divisão).",
+        economy: [{ item: "Tratamento Kaidō Simples", cost: "10 Kan" }, { item: "Tanque de Cura", cost: "50 Kan/dia" }],
+        coords: { x: -220, y: 12, z: 20 }
+      },
+
+      div_5: {
+        title: "5ª DIVISÃO · OPERAÇÕES ESPIRITUAIS",
+        kanji: "第五番隊",
+        category: "GOTEI 13",
+        canonTag: "✓ Canônico",
+        securityLevel: "📜 Diplomacia e Forças Combinadas",
+        defaultImage: "assets/soul_society_4quadrants.jpg",
+        imageCaption: "Quartel tradicional focado na harmonia e treino de Kidō",
+        description: "Especializada em operações espirituais integradas, treinamento refinado de Kidō e coordenação cerimonial.",
+        reiatsu: "Grau 2 (Harmonioso e Articulado)",
+        reiatsuPercent: "82%",
+        arch: "Salões elegantes com tatames e jardins de meditação.",
+        leader: "Capitão da 5ª Divisão",
+        subLeader: "Tenente Cerimonial",
+        factions: "Pelotão de Cerimônias.",
+        notableNpcs: ["Mestre de Rituais da 5ª Divisão."],
+        missions: ["Supervisão do Festival das Almas."],
+        socialConflict: "Intrigas sutis de bastidores sobre jovens oficiais.",
+        economy: [{ item: "Pó de Purificação Espiritual", cost: "20 Kan" }],
+        coords: { x: -230, y: 12, z: 130 }
+      },
+
+      div_6: {
+        title: "6ª DIVISÃO · LEI & DISCIPLINA",
+        kanji: "第六番隊",
+        category: "GOTEI 13 · ORDEM JUDICIÁRIA",
+        canonTag: "✓ Canônico",
+        securityLevel: "⚖️ Manutenção da Lei & Nobreza Kuchiki",
+        defaultImage: "assets/soul_society_4quadrants.jpg",
+        imageCaption: "Quartel exemplar tradicionalmente ligado à Casa Nobre Kuchiki",
+        description: "Modelo de conduta, postura e obediência cega ao regulamento militar. Seus membros patrulham os distritos nobres.",
+        reiatsu: "Grau 2 (Reiatsu Disciplinada e Refinada)",
+        reiatsuPercent: "88%",
+        arch: "Pátios simétricos com jardins de cerejeira Senbonzakura.",
+        leader: "Capitão da 6ª Divisão (Patriarca Kuchiki)",
+        subLeader: "Tenente Disciplinar",
+        factions: "Tribunal Militar Interno, Patrulha de Honra.",
+        notableNpcs: ["Capitão Kuchiki."],
+        missions: ["Investigação de Corrupção no Seireitei."],
+        socialConflict: "Cumprir a lei ao pé da letra versus o que é moralmente correto.",
+        economy: [{ item: "Código de Leis Impresso", cost: "20 Kan" }],
+        coords: { x: 160, y: 12, z: -20 }
+      },
+
+      div_7: {
+        title: "7ª DIVISÃO · HONRA & SEGURANÇA",
+        kanji: "第七番隊",
+        category: "GOTEI 13",
+        canonTag: "✓ Canônico",
+        securityLevel: "🛡️ Proteção de Vias e Portões",
+        defaultImage: "assets/soul_society_4quadrants.jpg",
+        imageCaption: "Quartel da honra inabalável e guarda perimetral",
+        description: "Responsável pelo patrulhamento das grandes avenidas e pela cooperação com os guardiões gigantes dos 4 Portões de Sekiseki.",
+        reiatsu: "Grau 3 (Rígido e Resistente)",
+        reiatsuPercent: "80%",
+        arch: "Construção de pedra rústica e madeira maciça com dojos de resistência física.",
+        leader: "Capitão da 7ª Divisão",
+        subLeader: "Tenente de Guarda",
+        factions: "Sentinelas dos Muros.",
+        notableNpcs: ["Oficial de Ligação com os Portões."],
+        missions: ["Reforço na Ronda do Portão Shūwaimon."],
+        socialConflict: "Resistência a ceder autoridade a agentes do Onmitsukidō.",
+        economy: [{ item: "Armadura Leve de Patrulha", cost: "85 Kan" }],
+        coords: { x: 170, y: 12, z: -120 }
+      },
+
+      div_8: {
+        title: "8ª DIVISÃO · ESTRATÉGIA & RESERVA",
+        kanji: "第八番隊",
+        category: "GOTEI 13",
+        canonTag: "✓ Canônico",
+        securityLevel: "🍶 Diplomacia & Reserva Estratégica",
+        defaultImage: "assets/soul_society_4quadrants.jpg",
+        imageCaption: "Quartel tranquilo com casas de chá e observatório de tavernas",
+        description: "Conhecida por sua atmosfera relaxada, mas que abriga os estrategistas e observadores mais perspicazes do Seireitei.",
+        reiatsu: "Grau 2 (Disfarçado e Profundo)",
+        reiatsuPercent: "84%",
+        arch: "Varandas abertas com vista para jardins de bambu e salas de chá.",
+        leader: "Capitão da 8ª Divisão (Linhagem Nobre Antiga)",
+        subLeader: "Tenente Administrativa",
+        factions: "Rede de Informantes Informais.",
+        notableNpcs: ["Veterano de Tavernas."],
+        missions: ["Reunião Secreta na Casa de Chá."],
+        socialConflict: "Críticas de esquadrões austeros sobre suposta falta de disciplina.",
+        economy: [{ item: "Garrafa de Saquê Nobre", cost: "18 Kan" }],
+        coords: { x: 190, y: 12, z: 160 }
+      },
+
+      div_9: {
+        title: "9ª DIVISÃO · SEGURANÇA & IMPRENSA",
+        kanji: "第九番隊",
+        category: "GOTEI 13 · INFORMAÇÃO",
+        canonTag: "✓ Canônico",
+        securityLevel: "📰 Patrulha Armada e Seireitei Communication",
+        defaultImage: "assets/soul_society_4quadrants.jpg",
+        imageCaption: "Sede editorial da Seireitei Communication e força de patrulha",
+        description: "Responsável pela segurança geral da cidade e pelo controle editorial do jornal oficial Seireitei Communication.",
+        reiatsu: "Grau 3 (Vigilante)",
+        reiatsuPercent: "80%",
+        arch: "Oficinas de impressão com prensas de madeira e arquivos.",
+        leader: "Capitão da 9ª Divisão",
+        subLeader: "Editor-Chefe / Tenente",
+        factions: "Repórteres de Campo, Brigada de Patrulha Noturna.",
+        notableNpcs: ["Repórter Audacioso."],
+        missions: ["Investigar Notícias Falsas que Causam Pânico no Rukongai."],
+        socialConflict: "Censura imposta pela Central 46 sobre as matérias.",
+        economy: [{ item: "Exemplar do Jornal", cost: "2 Kan" }],
+        coords: { x: -150, y: 12, z: 190 }
+      },
+
+      div_10: {
+        title: "10ª DIVISÃO · RESPOSTA RÁPIDA",
+        kanji: "第十番隊",
+        category: "GOTEI 13",
+        canonTag: "✓ Canônico",
+        securityLevel: "⚡ Defesa Central e Mobilização",
+        defaultImage: "assets/soul_society_4quadrants.jpg",
+        imageCaption: "Quartel de defesa imediata do anel interno",
+        description: "Esquadrão altamente disciplinado voltado para mobilização imediata contra ameaças internas.",
+        reiatsu: "Grau 2 (Focado e Preciso)",
+        reiatsuPercent: "86%",
+        arch: "Torres de vigia com sinos de alarme e pátios de rápida formação.",
+        leader: "Capitão da 10ª Divisão",
+        subLeader: "Tenente de Vanguarda",
+        factions: "Pelotão de Intercepção Rápida.",
+        notableNpcs: ["Sentinela do Sino de Emergência."],
+        missions: ["Interceptar Invasores na Praça Ocidental."],
+        socialConflict: "Sobrecarga de chamados de emergência de divisões vizinhas.",
+        economy: [{ item: "Capa de Resposta Rápida", cost: "40 Kan" }],
+        coords: { x: -130, y: 15, z: 30 }
+      },
+
+      div_11: {
+        title: "11ª DIVISÃO · FORÇA DE CHOQUE",
+        kanji: "第十一番隊",
+        category: "GOTEI 13 · COMBATE DIRETO",
+        canonTag: "✓ Canônico",
+        securityLevel: "⚔️ Força Bruta e Zanjutsu Sem Kidō",
+        defaultImage: "assets/soul_society_4quadrants.jpg",
+        imageCaption: "Dojôs e arenas abertas para duelos diários de vida ou morte",
+        description: "A divisão mais feroz do Seireitei. Seus membros desprezam Kidō e vivem pela espada e pelo combate corpo a corpo.",
+        reiatsu: "Grau 1 (Reiatsu Densa, Violenta e Intimidante)",
+        reiatsuPercent: "99%",
+        arch: "Dojôs desgastados por cortes de espada e arenas de terra batida.",
+        leader: "Kenpachi (O guerreiro mais forte)",
+        subLeader: "Oficiais Duelistas",
+        factions: "Vanguarda de Choque.",
+        notableNpcs: ["O Kenpachi da Era."],
+        missions: ["Aniquilação de Horda Hollow no Distrito 80."],
+        socialConflict: "Desprezo total pela burocracia do Seireitei e brigas constantes.",
+        economy: [{ item: "Pedra de Afiar Espiritual", cost: "15 Kan" }],
+        coords: { x: -80, y: 12, z: 240 }
+      },
+
+      div_12: {
+        title: "12ª DIVISÃO & PESQUISA REISHI",
+        kanji: "第十二番隊 · 技術開発",
+        category: "GOTEI 13 · CIÊNCIA ESPIRITUAL",
+        canonTag: "✓ Canônico + Expansão RPG",
+        securityLevel: "🧪 Laboratórios Restritos",
+        defaultImage: "assets/soul_society_4quadrants.jpg",
+        imageCaption: "O polo tecnológico espiritual e centro de estudo de anomalias",
+        description: "Abriga oficinas mecânicas de Reishi, observatórios astronômicos espirituais, laboratórios de estudo de Hollows e pesquisas sobre portais Senkaimon e Garganta.",
+        reiatsu: "Grau 2 (Reiatsu Eletrostática & Campos de Força)",
+        reiatsuPercent: "85%",
+        arch: "Tubulações de cobre espiritual, lanternas fluorescentes e engrenagens.",
+        leader: "Capitão(ã) da 12ª Divisão / Diretor de Pesquisa",
+        subLeader: "Vice-Diretor(a)",
+        factions: "Divisão de Balística, Departamento de Portais.",
+        notableNpcs: ["Cientista Chefe de Reishi."],
+        missions: ["Medir flutuações anômalas na Garganta dimensional."],
+        socialConflict: "Experimentos na fronteira da ética versus conservadores do conselho.",
+        economy: [{ item: "Rastreador de Reiatsu Portátil", cost: "200 Kan" }],
+        coords: { x: -90, y: 15, z: -40 }
+      },
+
+      div_13: {
+        title: "13ª DIVISÃO · DEFESA EXTERIOR",
+        kanji: "第十三番隊",
+        category: "GOTEI 13",
+        canonTag: "✓ Canônico",
+        securityLevel: "🌍 Missões no Mundo Humano e Fronteiras",
+        defaultImage: "assets/soul_society_4quadrants.jpg",
+        imageCaption: "Quartel de ligação com o Mundo dos Vivos e patrulha externa",
+        description: "Responsável pelo destacamento de Shinigamis para missões de purificação de almas no Mundo dos Vivos e defesa das fronteiras do Rukongai.",
+        reiatsu: "Grau 3 (Sereno e Vigilante)",
+        reiatsuPercent: "79%",
+        arch: "Pavilhões serenos cercados por lagoas de lótus e salas de conexão Senkaimon.",
+        leader: "Capitão da 13ª Divisão",
+        subLeader: "Tenente de Ligação Dimensional",
+        factions: "Oficiais de Campo no Mundo Real.",
+        notableNpcs: ["Oficial Responsável pelo Senkaimon."],
+        missions: ["Missão de Purificação de Hollows no Japão Feudal."],
+        socialConflict: "Isolamento prolongado de oficiais no Mundo dos Vivos.",
+        economy: [{ item: "Denreishinki (Comunicação)", cost: "150 Kan" }],
+        coords: { x: 240, y: 12, z: 70 }
+      },
+
+      kidoshu: {
+        title: "KIDŌSHŪ · CORPO DE MAGIA",
+        kanji: "鬼道衆",
+        category: "INSTITUIÇÃO SAGRADA · MAGIA",
+        canonTag: "✓ Canônico",
+        securityLevel: "🔮 Alta Magia & Barreiras Kekkai",
+        defaultImage: "assets/soul_society_4quadrants.jpg",
+        imageCaption: "Templos de encantamento onde os Hadō e Bakudō de número 90+ são guardados",
+        description: "Ordem independente responsável pela criação e manutenção das barreiras protetoras (Kekkai) sobre o Seireitei e execução dos grandes feitiços proibidos.",
+        reiatsu: "Grau 2 (Reiatsu Encantada & Selos Arcanos)",
+        reiatsuPercent: "92%",
+        arch: "Torres hexagonais cobertas de talismãs Ofuda e círculos mágicos gravados no chão.",
+        leader: "Grande Mestre Kidō (Dai-Kiryō)",
+        subLeader: "Vice-Comandante de Barreiras",
+        factions: "Mestres de Hadō, Mestres de Bakudō.",
+        notableNpcs: ["Dai-Kiryō."],
+        missions: ["Reparar ponto cego no Kekkai superior."],
+        socialConflict: "Rivalidade histórica com o Gotei 13 sobre autoridade espiritual.",
+        economy: [{ item: "Pergaminho de Selamento Ofuda", cost: "40 Kan" }],
+        coords: { x: 160, y: 14, z: 70 }
+      },
+
+      academia: {
+        title: "ACADEMIA SHIN'Ō",
+        kanji: "真央霊術院",
+        category: "FORMAÇÃO DE SHINIGAMIS",
+        canonTag: "✓ Canônico + Expansão RPG",
+        securityLevel: "🎓 Campus Educacional (Anos 1 a 4)",
+        defaultImage: "assets/soul_society_4quadrants.jpg",
+        imageCaption: "O berço de todos os cadetes e onde as Asauchi são entregues",
+        description: "Fundada por Yamamoto há mais de dois milênios. Ponto de entrada perfeito para os jogadores no RPG, com currículo de 4 anos de formação.",
+        reiatsu: "Grau 4 (Cadetes em Formação e Despertar)",
+        reiatsuPercent: "55%",
+        arch: "Dojôs abertos, grandes bibliotecas de pergaminhos e dormitórios estudantis.",
+        leader: "Reitor e Conselho de Instrutores",
+        subLeader: "Mestres de Zanjutsu, Hakuda, Hohō e Kidō",
+        factions: "Grêmio Estudantil Nobre, Alunos Plebeus do Rukongai.",
+        notableNpcs: ["Mestre de Zanjutsu.", "Instrutora de Kidō."],
+        missions: ["Exame de Sobrevivência no Rukongai."],
+        socialConflict: "Abismo social entre cadetes nobres e alunos talentosos do Rukongai.",
+        economy: [{ item: "Bokken (Espada de Madeira)", cost: "15 Kan" }],
+        coords: { x: 0, y: 12, z: 270 }
+      },
+
+      nobres: {
+        title: "GRANDES CASAS NOBRES & SHIBA",
+        kanji: "四大貴族 · 志波家",
+        category: "ARISTOCRACIA & PODER POLÍTICO",
+        canonTag: "✓ Canônico + Expansão RPG 500 Anos Antes",
+        securityLevel: "👑 Mansões Fortificadas da Alta Nobreza",
+        defaultImage: "assets/soul_society_4quadrants.jpg",
+        imageCaption: "Propriedades aristocráticas com templos, jardins de cerejeira e arquivos",
+        description: "As 4 Grandes Famílias Nobres: Kuchiki (tradição), Shihōin (tesouros e stealth), Tsunayashiro (segredos censurados) e Shiba (na época de 500 anos antes, ainda respeitada no ápice).",
+        reiatsu: "Grau 2 (Reiatsu Refinada e Nobre de Linhagem)",
+        reiatsuPercent: "90%",
+        arch: "Mansões colossais cercadas por muros altos, pontes de madeira laqueada e lagos de carpas.",
+        leader: "Chefes dos Clãs Kuchiki, Shihōin, Tsunayashiro e Shiba",
+        subLeader: "Conselho de Anciãos Nobres",
+        factions: "Famílias Menores Vassalas (Ise, Kyōraku, Ukitake, Ōmaeda, Fēng, Kira).",
+        notableNpcs: ["Patriarca Shiba.", "Lorde Tsunayashiro."],
+        missions: ["Banquete das 4 Famílias: Proteger evento contra conspiração."],
+        socialConflict: "A soberba e imunidade quase absoluta da aristocracia perante a lei.",
+        economy: [{ item: "Tecido de Seda Espiritual Nobre", cost: "250 Kan" }],
+        coords: { x: 70, y: 15, z: -190 }
+      },
+
+      gate_north: {
+        title: "KOKURYŌMON · PORTÃO NORTE",
+        kanji: "黑隆門",
+        category: "PORTÃO DE SEKISEKI",
+        canonTag: "✓ Canônico",
+        securityLevel: "🛡️ Conexão com o Rukongai Norte",
+        defaultImage: "assets/soul_society_4quadrants.jpg",
+        imageCaption: "O imponente Portão do Dragão Negro voltado para as montanhas de Zaraki",
+        description: "Construído em pedra Sekiseki maciça. Liga o Seireitei diretamente às terras selvagens e montanhosas do Rukongai Norte.",
+        reiatsu: "Barreira Anti-Reiatsu 100% Ativa",
+        reiatsuPercent: "100%",
+        arch: "Fortaleza de pedra negra com torres de vigia.",
+        leader: "Guardião Gigante Danzōmaru",
+        subLeader: "Patrulhas da 9ª e 11ª Divisões",
+        factions: "Sentinelas de Fronteira.",
+        notableNpcs: ["Danzōmaru."],
+        missions: ["Conter invasores vindos do Distrito 80."],
+        socialConflict: "Tensão constante com refugiados do norte.",
+        economy: [{ item: "Passe Militar de Trânsito", cost: "Apenas Oficiais" }],
+        coords: { x: 0, y: 25, z: -390 }
+      },
+
+      gate_south: {
+        title: "SHŪWAIMON · PORTÃO SUL",
+        kanji: "朱洼門",
+        category: "PORTÃO DE SEKISEKI",
+        canonTag: "✓ Canônico",
+        securityLevel: "🏮 Maior Circulação de Almas Comuns",
+        defaultImage: "assets/soul_society_4quadrants.jpg",
+        imageCaption: "O Portão Vermelho do Pássaro Carmesim guardado por Jidanbō",
+        description: "O mais movimentado de todos os portões. Conecta o Seireitei às feiras, canais e áreas residenciais do Rukongai Sul.",
+        reiatsu: "Barreira Anti-Reiatsu 100% Ativa",
+        reiatsuPercent: "100%",
+        arch: "Pórtico vermelho monumental com pontes sobre o rio espiritual.",
+        leader: "Guardião Jidanbō Ikkanzaka",
+        subLeader: "Supervisão da 7ª Divisão",
+        factions: "Vigilantes do Rio, Fiscais Alfandegários.",
+        notableNpcs: ["Jidanbō."],
+        missions: ["Conter briga de gangues de Inuzuri no pátio exterior."],
+        socialConflict: "Desespero de almas famintas dos distritos distantes.",
+        economy: [{ item: "Pedágio de Comércio Autorizado", cost: "10 Kan" }],
+        coords: { x: 0, y: 25, z: 390 }
+      },
+
+      gate_west: {
+        title: "HAKUTŌMON · PORTÃO OESTE",
+        kanji: "白道門",
+        category: "PORTÃO DE SEKISEKI",
+        canonTag: "✓ Canônico",
+        securityLevel: "📜 Setor Administrativo e Comitiva Nobre",
+        defaultImage: "assets/soul_society_4quadrants.jpg",
+        imageCaption: "O Portão Branco do Tigre voltado para a rica vila de Junrinan",
+        description: "O portão mais elegante e ornamentado. Liga o Seireitei aos distritos ocidentais de comércio nobre e Junrinan.",
+        reiatsu: "Barreira Anti-Reiatsu 100% Ativa",
+        reiatsuPercent: "100%",
+        arch: "Paredes de mármore branco com detalhes dourados e telhados de jade.",
+        leader: "Guardião Kaiwan",
+        subLeader: "Supervisão da 3ª Divisão",
+        factions: "Guardas Cerimonias dos Nobres.",
+        notableNpcs: ["Kaiwan."],
+        missions: ["Escolta de comitiva nobre vinda de Junrinan."],
+        socialConflict: "Revistas rigorosas em plebeus em contraste com nobres livres.",
+        economy: [{ item: "Carruagem Nobre de Aluguel", cost: "80 Kan" }],
+        coords: { x: -390, y: 25, z: 0 }
+      },
+
+      gate_east: {
+        title: "SHŌRYŪMON · PORTÃO LESTE",
+        kanji: "青流門",
+        category: "PORTÃO DE SEKISEKI",
+        canonTag: "✓ Canônico",
+        securityLevel: "⛵ Entrada de Mercadorias e Templos",
+        defaultImage: "assets/soul_society_4quadrants.jpg",
+        imageCaption: "O Portão Azul do Dragão conectado aos canais navegáveis do leste",
+        description: "Conecta os canais fluviais e florestas orientais ao centro comercial de Seireitei. Barcos espirituais chegam por este canal.",
+        reiatsu: "Barreira Anti-Reiatsu 100% Ativa",
+        reiatsuPercent: "100%",
+        arch: "Doca fortificada com comportas de Sekiseki e guindastes.",
+        leader: "Guardião Higonyūdō",
+        subLeader: "Supervisão da 5ª Divisão",
+        factions: "Guilda dos Barqueiros Espirituais.",
+        notableNpcs: ["Higonyūdō."],
+        missions: ["Apreensão de carga contrabandeada nos barcos do canal."],
+        socialConflict: "Monopólio de transporte fluvial mantido por nobres mercadores.",
+        economy: [{ item: "Frete de Barco no Canal", cost: "30 Kan" }],
+        coords: { x: 390, y: 25, z: 0 }
+      }
+    };
+
+
+    // ==========================================================
+    // 2. MASTER DATABASE: RUKONGAI (OS 320 DISTRITOS)
+    // ==========================================================
+    const DEFAULT_RUKONGAI_DATA = {
+      // --- RUKONGAI OESTE (WEST) ---
+      ruk_w_01: {
+        title: "DISTRITO 1 OESTE · JUNRINAN",
+        kanji: "西流魂街一地区 · 潤林安",
+        category: "RUKONGAI OESTE · DISTRITO NOBRE",
+        canonTag: "✓ Canônico + Expansão RPG",
+        securityLevel: "🛡️ Grau Seguro (Patrulhas Nobres Regulares)",
+        defaultImage: "assets/soul_society_4quadrants.jpg",
+        imageCaption: "A vila mais pacífica e próspera do Rukongai",
+        description: "O mais rico e bem estruturado de todos os 320 distritos do Rukongai. Famoso por suas plantações de melancias espirituais, campos de chá e casarões de madeira nobre. As almas que vivem aqui desfrutam de paz quase igual aos nobres de Seireitei. Foi o berço de infância de Tōshirō Hitsugaya e Momo Hinamori no canon.",
+        reiatsu: "Grau Suave e Estável (Alta Pureza Espiritual)",
+        reiatsuPercent: "75%",
+        arch: "Casas tradicionais de madeira polida, cercas vivas de bambu, poços artesianos e calçadas de pedra limpa.",
+        leader: "Conselho de Anciãos de Junrinan & Magistrados Nobres",
+        subLeader: "Guarda Comunitária de Junrinan",
+        factions: "Guilda dos Agricultores de Chá, Artesãos de Seda, Oficiais Aposentados do Gotei 13.",
+        notableNpcs: [
+          "Ancião de Junrinan: Guardião das tradições da vila que acolhe jovens talentos.",
+          "Mestre Produtor de Saquê Espiritual: Fornecedor oficial das tavernas de Seireitei."
+        ],
+        missions: [
+          "Colheita Ameaçada: Proteger os campos de chá contra espíritos errantes famintos.",
+          "Jovem Desperto: Conduzir um calouro com alta pressão espiritual para a Academia Shin'ō.",
+          "Disputa de Terra com Vassalos Nobres: Mediar conflito sobre os limites de pastoreio."
+        ],
+        socialConflict: "Receio de que a criminalidade dos distritos distantes se infiltre nas terras pacíficas de Junrinan.",
+        economy: [
+          { item: "Chá Verde Nobre de Junrinan", cost: "8 Kan" },
+          { item: "Melancia de Reishi Doce", cost: "5 Kan" },
+          { item: "Aluguel de Casa Tradicional", cost: "120 Kan/mês" }
+        ],
+        coords: { x: -650, y: 15, z: -80 }
+      },
+
+      ruk_w_25: {
+        title: "DISTRITO 25 OESTE · KAWARAJI",
+        kanji: "西流魂街二十五地区 · 瓦路",
+        category: "RUKONGAI OESTE · POLO ARTESANAL",
+        canonTag: "✓ Expansão RPG 500 Anos Antes",
+        securityLevel: "⚖️ Segurança Moderada (Guildas de Artesãos)",
+        defaultImage: "assets/soul_society_4quadrants.jpg",
+        imageCaption: "O grande centro de forjas de Reishi e olarias de cerâmica",
+        description: "Conhecido como o distrito das chaminés e fornos de pedra. É onde mestres ferreiros produzem ferramentas reforçadas com Reishi e oleiros fabricam as telhas Kawara usadas nas construções de toda a Soul Society.",
+        reiatsu: "Grau Médio (Calor Térmico Espiritual de Forjas)",
+        reiatsuPercent: "68%",
+        arch: "Oficinas com fornos de tijolo refratário, armazéns de argila espiritual e tabernas movimentadas.",
+        leader: "Mestre da Guilda das Forjas de Kawaraji",
+        subLeader: "Sindicato dos Oleiros",
+        factions: "Ferreiros de Reishi, Carroceiros de Transporte Mineral.",
+        notableNpcs: ["Mestre Forjador: Artesão experiente que sabe trabalhar ligas de metal espiritual."],
+        missions: ["Roubo de Minério no Comboio: Rastrear ladrões nas montanhas ocidentais."],
+        socialConflict: "Cobrança abusiva de impostos sobre o carvão mineral imposta por intermediários nobres.",
+        economy: [
+          { item: "Ferramenta de Aço Espiritual", cost: "25 Kan" },
+          { item: "Lote de 100 Telhas de Cerâmica", cost: "40 Kan" }
+        ],
+        coords: { x: -850, y: 18, z: -250 }
+      },
+
+      ruk_w_78: {
+        title: "DISTRITO 78 OESTE · HAKKEN",
+        kanji: "西流魂街七十八地区 · 白崖",
+        category: "RUKONGAI OESTE · TERRA ÁSPERA",
+        canonTag: "✓ Expansão RPG 500 Anos Antes",
+        securityLevel: "⚠️ Zona Perigosa (Sem Patrulhas do Gotei)",
+        defaultImage: "assets/soul_society_4quadrants.jpg",
+        imageCaption: "Minas abandonadas e desfiladeiros rochosos de calcário",
+        description: "Uma região agreste cercada por penhascos de pedra branca e minas esgotadas. Abriga almas endurecidas que vivem da mineração de resíduos e bandos de salteadores de estradas.",
+        reiatsu: "Grau Áspero e Turbulento",
+        reiatsuPercent: "82%",
+        arch: "Cabanas cravadas em cavernas de calcário, pontes de corda suspensas e vielas escuras.",
+        leader: "Senhor da Guerra de Hakken",
+        subLeader: "Líderes de Bandos Locais",
+        factions: "Garimpeiros Clandestinos, Salteadores da Cordilheira Oeste.",
+        notableNpcs: ["Veterano Cego: Um ex-guerreiro que sobreviveu a 50 emboscadas nos desfiladeiros."],
+        missions: ["Resgate no Desfiladeiro: Recuperar reféns capturados por salteadores."],
+        socialConflict: "Luta sangrenta pelo controle das últimas fontes de água pura da serra.",
+        economy: [
+          { item: "Picareta de Minerador Reforçada", cost: "18 Kan" },
+          { item: "Garrafa de Álcool de Tubérculo", cost: "4 Kan" }
+        ],
+        coords: { x: -1100, y: 35, z: -480 }
+      },
+
+      // --- RUKONGAI SUL (SOUTH) ---
+      ruk_s_01: {
+        title: "DISTRITO 1 SUL · SHIZUHARA",
+        kanji: "南流魂街一地区 · 静原",
+        category: "RUKONGAI SUL · PLANÍCIE SERENA",
+        canonTag: "✓ Canônico + Expansão RPG",
+        securityLevel: "🛡️ Grau Seguro (Vila de Peregrinos)",
+        defaultImage: "assets/soul_society_4quadrants.jpg",
+        imageCaption: "O vale verdejante dos santuários e templos de oração",
+        description: "Fica imediatamente ao sul do Portão Shūwaimon. Uma planície calma e arborizada onde almas recém-chegadas são acolhidas e onde monges espirituais mantêm mosteiros de meditação e preces pelas almas que partem.",
+        reiatsu: "Grau Suave e Puro",
+        reiatsuPercent: "70%",
+        arch: "Pequenos pagodes de madeira clara, estátuas de Buda de pedra com musgo e pontes de bambu.",
+        leader: "Abade do Mosteiro de Shizuhara",
+        subLeader: "Guardiões da Paz do Sul",
+        factions: "Monges Peregrinos, Curandeiros Herbais.",
+        notableNpcs: ["Monge Ancião: Sábio que instrui recém-chegados sobre o equilíbrio das almas."],
+        missions: ["Peregrinação Segura: Escoltar noviços até os templos do lago."],
+        socialConflict: "Superlotação de almas famintas que descem dos distritos 60-70 em busca de esmolas.",
+        economy: [
+          { item: "Incenso de Purificação de Reishi", cost: "3 Kan" },
+          { item: "Refeição de Arroz e Ervas do Templo", cost: "2 Kan" }
+        ],
+        coords: { x: -80, y: 12, z: 650 }
+      },
+
+      ruk_s_30: {
+        title: "DISTRITO 30 SUL · MINATO-BASHI",
+        kanji: "南流魂街三十地区 · 湊橋",
+        category: "RUKONGAI SUL · ENTREPOSTO FLUVIAL",
+        canonTag: "✓ Expansão RPG 500 Anos Antes",
+        securityLevel: "⚖️ Segurança Comercial (Guilda dos Barqueiros)",
+        defaultImage: "assets/soul_society_4quadrants.jpg",
+        imageCaption: "O maior mercado de peixes e docas fluviais do sul",
+        description: "Localizado no cruzamento dos rios espirituais que descem do leste. Um porto fluvial barulhento e vibrante repleto de barcos de carga, mercados de rua e hospedarias para comerciantes.",
+        reiatsu: "Grau Moderado e Fluido",
+        reiatsuPercent: "65%",
+        arch: "Píons de madeira sobre palafitas, pontes levadiças, armazéns de pescado e barracas de lona.",
+        leader: "Capitão do Porto Fluvial",
+        subLeader: "Mestre dos Pescadores",
+        factions: "Guilda dos Barqueiros do Rio Sul, Mercadores de Grãos.",
+        notableNpcs: ["Velho Barqueiro: Conhece cada curva e perigo oculto nos pântanos do sul."],
+        missions: ["Contrabando Submerso: Investigar cargas misteriosas descarregadas à meia-noite."],
+        socialConflict: "Guerras de tarifas entre guildas de pescadores e armadores nobres.",
+        economy: [
+          { item: "Peixe Espiritual Fresco", cost: "4 Kan" },
+          { item: "Passagem de Balsa até o Distrito 50", cost: "6 Kan" }
+        ],
+        coords: { x: 250, y: 10, z: 820 }
+      },
+
+      ruk_s_78: {
+        title: "DISTRITO 78 SUL · INUZURI",
+        kanji: "南流魂街七十八地区 · 戌吊",
+        category: "RUKONGAI SUL · TERRA SEM LEI (CANON)",
+        canonTag: "✓ Canônico Lendário (Berço de Rukia & Renji)",
+        securityLevel: "☠️ Extremo Perigo (Anarquia e Sobrevivência)",
+        defaultImage: "assets/soul_society_4quadrants.jpg",
+        imageCaption: "A lendária favela de barracos podres e becos perigosos",
+        description: "Um dos distritos mais pobres e violentos de toda a Soul Society. Não há água encanada, leis ou patrulhas do Gotei 13. As almas vivem em barracos improvisados de tábuas e palha, disputando cada pedaço de alimento. Foi onde Rukia Kuchiki e Renji Abarai cresceram como órfãos lutando para não morrer de fome antes de ingressarem na Academia.",
+        reiatsu: "Grau Violento, Caótico e Feroz",
+        reiatsuPercent: "94%",
+        arch: "Barracos sobrepostos de madeira podre, esgotos a céu aberto, fogueiras de lixo e vielas lamacentas.",
+        leader: "Gangues Rivais de Inuzuri",
+        subLeader: "Chefes de Bandos de Ladrões",
+        factions: "Bando dos Órfãos de Inuzuri, Mercenários da Lama, Traficantes de Água.",
+        notableNpcs: [
+          "Líder da Gangue da Ponte Quebrada: Um guerreiro cruel que cobra pedágio de sangue.",
+          "Curandeira Clandestina: Uma idosa que trata ferimentos de espada em troca de comida."
+        ],
+        missions: [
+          "Sobrevivência Pura: Proteger um grupo de crianças de um ataque de assassinos.",
+          "Água Envenenada: Descobrir quem contaminou o único poço do setor leste.",
+          "Duelo de Território: Decidir o controle de um armazém abandonado."
+        ],
+        socialConflict: "Desprezo absoluto dos nobres e Shinigamis pelo sofrimento dos habitantes de Inuzuri.",
+        economy: [
+          { item: "Pedaço de Pão Seco e Água Turva", cost: "1 Kan (Ou por Luta)" },
+          { item: "Faca de Ferro Enferrujada", cost: "5 Kan" }
+        ],
+        coords: { x: -350, y: 8, z: 1100 }
+      },
+
+      // --- RUKONGAI NORTE (NORTH) ---
+      ruk_n_01: {
+        title: "DISTRITO 1 NORTE · KITAYAMA",
+        kanji: "北流魂街一地区 · 北山",
+        category: "RUKONGAI NORTE · VANGUARDA MILITAR",
+        canonTag: "✓ Expansão RPG 500 Anos Antes",
+        securityLevel: "🛡️ Alto Policiamento (Posto Avançado da 9ª/11ª)",
+        defaultImage: "assets/soul_society_4quadrants.jpg",
+        imageCaption: "Vila fortificada ao pé da cordilheira do norte",
+        description: "Localizado em frente ao Portão Kokuryōmon. Serve como barreira de segurança e centro de abastecimento para as tropas do Gotei 13 antes de expedições contra os distritos perigosos do norte.",
+        reiatsu: "Grau Rígido e Disciplinado",
+        reiatsuPercent: "78%",
+        arch: "Paliçadas de madeira maciça, torres de vigilância com tochas e ferrarias de armaduras.",
+        leader: "Comandante da Guarnição de Kitayama",
+        subLeader: "Oficiais de Ronda da 9ª Divisão",
+        factions: "Tropas de Choque, Batedores de Fronteira.",
+        notableNpcs: ["Capitão de Fronteira: Veterano com cicatrizes que monitora o fluxo do norte."],
+        missions: ["Alerta de Incursão: Rastrear bando de rebeldes que desceu da serra."],
+        socialConflict: "Tratamento truculento da guarda contra viajantes pacíficos que vêm do norte.",
+        economy: [
+          { item: "Ração Militar de Viagem", cost: "8 Kan" },
+          { item: "Corda de Escalada com Gancho", cost: "15 Kan" }
+        ],
+        coords: { x: 50, y: 22, z: -650 }
+      },
+
+      ruk_n_80: {
+        title: "DISTRITO 80 NORTE · ZARAKI",
+        kanji: "北流魂街八十地区 · 更木",
+        category: "RUKONGAI NORTE · O INFERNO DE SANGUE (CANON)",
+        canonTag: "✓ Canônico Lendário (Berço do Kenpachi)",
+        securityLevel: "☠️ ZONA DE MORTE ABSOLUTA (Sem Leis)",
+        defaultImage: "assets/soul_society_4quadrants.jpg",
+        imageCaption: "O deserto de cinzas e desfiladeiros onde apenas os monstros sobrevivem",
+        description: "O distrito mais aterrorizante e sanguinário de toda a história da Soul Society. Fica nos confins do norte, onde o chão é cinzento e rochoso. Não há governo, comércio formal ou civilização: apenas bandos de monstros humanos que se matam diariamente por alimento, água e supremacia de poder. Foi aqui que o lendário Kenpachi Zaraki nasceu e viveu incontáveis batalhas antes de tomar o posto de capitão.",
+        reiatsu: "Grau Monstruoso, Densa e Asfixiante (Reiatsu de Carnificina)",
+        reiatsuPercent: "100%",
+        arch: "Desfiladeiros de pedra vulcânica, cavernas ensanguentadas, ruínas de fortalezas desmoronadas e fogueiras sinistras.",
+        leader: "Nenhum (A Lei do Mais Forte e Cruel)",
+        subLeader: "Chefes de Clãs Sanguinários",
+        factions: "Duelistas Errantes, Bandos Canibais de Reishi, Caçadores de Zanpakutō.",
+        notableNpcs: [
+          "O Demônio das Cinzas: Um duelista invicto que coleciona lâminas quebradas.",
+          "Sobrevivente Insano: Alguém que viveu 100 anos no Distrito 80 sem nunca baixar a guarda."
+        ],
+        missions: [
+          "Sobrevivência no Inferno: Escapar com vida após ser encurralado no Desfiladeiro dos Ossos.",
+          "O Monstro das Cinzas: Investigar rumores de uma criança com Reiatsu colossal que massacrou um bando inteiro.",
+          "Resgate Impossível: Recuperar o corpo de um oficial nobre capturado por gladiadores de Zaraki."
+        ],
+        socialConflict: "A barbárie total do Distrito 80 é uma mancha vergonhosa que a Central 46 prefere fingir que não existe.",
+        economy: [
+          { item: "Garrafa de Água Potável de Poço", cost: "50 Kan (Ou a Vida)" },
+          { item: "Zanpakutō Sem Dono Recolhida", cost: "300+ Kan" }
+        ],
+        coords: { x: -200, y: 48, z: -1150 }
+      },
+
+      // --- RUKONGAI LESTE (EAST) ---
+      ruk_e_01: {
+        title: "DISTRITO 1 LESTE · HIGASHIYAMA",
+        kanji: "東流魂街一地区 · 東山",
+        category: "RUKONGAI LESTE · JARDINS & TEMPLOS",
+        canonTag: "✓ Expansão RPG 500 Anos Antes",
+        securityLevel: "🛡️ Grau Seguro (Bosques Sagrados de Kidō)",
+        defaultImage: "assets/soul_society_4quadrants.jpg",
+        imageCaption: "Bosques de bambu serenos e santuários arcanos",
+        description: "Localizado junto ao Portão Shōryūmon. Caracterizado por densos bambuzais verdes, riachos de águas cristalinas e santuários milenares protegidos por monges sacerdotes de Kidō.",
+        reiatsu: "Grau Puro e Encantado",
+        reiatsuPercent: "76%",
+        arch: "Templos com telhados verdes, lanternas de pedra tōrō e pontes vermelhas laqueadas.",
+        leader: "Conselho dos Sacerdotes de Higashiyama",
+        subLeader: "Mestres Jardineiros",
+        factions: "Sacerdotes de Kidō, Ervanários e Poetas Espirituais.",
+        notableNpcs: ["Mestre do Bambuzal: Ensina técnicas de respiração e meditação."],
+        missions: ["Harmonia Quebrada: Investigar anomalia espiritual na nascente sagrada."],
+        socialConflict: "Tensão com lenhadores que tentam cortar bambu sagrado para venda comercial.",
+        economy: [
+          { item: "Talismã Protetor de Bambu", cost: "10 Kan" },
+          { item: "Flauta Tradicional Shakuhachi", cost: "20 Kan" }
+        ],
+        coords: { x: 650, y: 16, z: -80 }
+      },
+
+      ruk_e_79: {
+        title: "DISTRITO 79 LESTE · KUSAJISHI",
+        kanji: "東流魂街七十九地区 · 草鹿",
+        category: "RUKONGAI LESTE · PÂNTANOS & SOMBRAS (CANON)",
+        canonTag: "✓ Canônico Lendário (Berço de Yachiru)",
+        securityLevel: "☠️ Extremo Perigo (Pântanos dos Assassinos)",
+        defaultImage: "assets/soul_society_4quadrants.jpg",
+        imageCaption: "Pântanos sombrios, névoa espessa e florestas abandonadas",
+        description: "O segundo distrito mais perigoso da Soul Society. Uma terra pantanosa coberta por névoa densa e florestas impenetráveis, onde assassinos e fugitivos se escondem nas sombras. Foi onde Kenpachi encontrou a pequena Yachiru cercada por corpos caídos.",
+        reiatsu: "Grau Venenoso e Opressivo",
+        reiatsuPercent: "92%",
+        arch: "Cabanas em palafitas afundadas no lodo, caminhos de tábuas apodrecidas e árvores retorcidas.",
+        leader: "Clãs das Sombras de Kusajishi",
+        subLeader: "Assassinos de Aluguel",
+        factions: "Irmandade dos Pântanos, Renegados de Kidō.",
+        notableNpcs: ["Mestre Venenoso: Especialista em toxinas extraídas dos fungos do pântano."],
+        missions: ["Trilha na Névoa: Atravessar o pântano sem ser emboscado pelos assassinos das sombras."],
+        socialConflict: "Luta sangrenta entre clãs rivais pelo controle das rotas secretas de fuga.",
+        economy: [
+          { item: "Frasco de Veneno Paralisante do Pântano", cost: "80 Kan" },
+          { item: "Capa Camuflada de Lodo", cost: "35 Kan" }
+        ],
+        coords: { x: 1100, y: 12, z: 350 }
+      }
+    };
+
+    // Load active campaign lore from localStorage
+    let CAMPAIGN_SEIREITEI = JSON.parse(localStorage.getItem('bleach_campaign_seireitei') || 'null') || DEFAULT_SEIREITEI_DATA;
+    let CAMPAIGN_RUKONGAI = JSON.parse(localStorage.getItem('bleach_campaign_rukongai') || 'null') || DEFAULT_RUKONGAI_DATA;
+
+    // GM Markers store (compatible across both maps)
+    let GM_MARKERS = JSON.parse(localStorage.getItem('bleach_gm_markers') || '[]');
+
+    // Active World State: 'seireitei' | 'rukongai'
+    let currentWorld = 'seireitei';
+    let isTransitioningWorld = false;
+
+    // ==========================================================
+    // 3. THREE.JS 3D SCENE & TEXTURES SETUP
+    // ==========================================================
+    let scene, camera, renderer, controls, raycaster, mouse;
+    let interactiveObjects = [];
+    let currentHoveredObject = null;
+    let activeSelectedKey = null;
+    let isEditMode = false;
+    let isAddMarkerMode = false;
+
+    // World root groups
+    const worldGroups = {
+      seireitei: new THREE.Group(),
+      rukongai: new THREE.Group()
+    };
+
+    // Layer groups
+    const layerGroups = {
+      structures: new THREE.Group(),
+      citadel: new THREE.Group(),
+      walls: new THREE.Group(),
+      houses: new THREE.Group(),
+      trees: new THREE.Group(),
+      water: new THREE.Group(),
+      labels: new THREE.Group(),
+      gmMarkers: new THREE.Group()
+    };
+
+    // Lighting refs
+    let dirLight, ambientLight, hemiLight;
+
+    // ==========================================================
+    // 4. PROCEDURAL PBR TEXTURE GENERATORS
+    // ==========================================================
+    function createTileRoofTexture() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 512; canvas.height = 512;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#1c1f24';
+      ctx.fillRect(0, 0, 512, 512);
+
+      const rows = 16; const cols = 16;
+      const rh = 512 / rows; const cw = 512 / cols;
+
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const x = c * cw; const y = r * rh;
+          const grad = ctx.createLinearGradient(x, y, x + cw, y + rh);
+          grad.addColorStop(0, '#2e353f');
+          grad.addColorStop(0.5, '#1e2329');
+          grad.addColorStop(1, '#111317');
+          ctx.fillStyle = grad;
+          ctx.fillRect(x + 1.5, y + 1.5, cw - 3, rh - 3);
+
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.16)';
+          ctx.fillRect(x + 1.5, y + 1.5, cw - 3, 2.5);
+
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.65)';
+          ctx.fillRect(x, y + rh - 2.5, cw, 2.5);
+          ctx.fillRect(x + cw - 2, y, 2, rh);
+        }
+      }
+      const tex = new THREE.CanvasTexture(canvas);
+      tex.wrapS = THREE.RepeatWrapping; tex.wrapT = THREE.RepeatWrapping;
+      tex.repeat.set(6, 6);
+      return tex;
+    }
+
+    function createStoneWallTexture() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 512; canvas.height = 512;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#6a6052';
+      ctx.fillRect(0, 0, 512, 512);
+
+      const rows = 14; const rh = 512 / rows;
+      for (let r = 0; r < rows; r++) {
+        const y = r * rh;
+        const cols = 7 + (r % 2);
+        const cw = 512 / cols;
+        const offset = (r % 2) * (cw / 2);
+
+        for (let c = -1; c <= cols + 1; c++) {
+          const x = c * cw + offset;
+          const tone = 0.85 + (Math.sin(r * 9 + c * 15) * 0.15);
+          const grad = ctx.createLinearGradient(x, y, x + cw, y + rh);
+          grad.addColorStop(0, `rgb(${Math.floor(135 * tone)}, ${Math.floor(122 * tone)}, ${Math.floor(105 * tone)})`);
+          grad.addColorStop(1, `rgb(${Math.floor(88 * tone)}, ${Math.floor(78 * tone)}, ${Math.floor(66 * tone)})`);
+          ctx.fillStyle = grad;
+          ctx.fillRect(x + 1.5, y + 1.5, cw - 3, rh - 3);
+
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.48)';
+          ctx.fillRect(x + cw - 2.5, y, 2.5, rh);
+          ctx.fillRect(x, y + rh - 2.5, cw, 2.5);
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.18)';
+          ctx.fillRect(x + 1.5, y + 1.5, cw - 3, 1.8);
+        }
+      }
+      const tex = new THREE.CanvasTexture(canvas);
+      tex.wrapS = THREE.RepeatWrapping; tex.wrapT = THREE.RepeatWrapping;
+      tex.repeat.set(6, 4);
+      return tex;
+    }
+
+    function createAvenuePaverTexture() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 512; canvas.height = 512;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#3a2f24';
+      ctx.fillRect(0, 0, 512, 512);
+
+      const size = 32;
+      for (let y = 0; y < 512; y += size) {
+        for (let x = 0; x < 512; x += size) {
+          const varTone = 0.88 + Math.random() * 0.24;
+          ctx.fillStyle = `rgb(${Math.floor(85 * varTone)}, ${Math.floor(72 * varTone)}, ${Math.floor(58 * varTone)})`;
+          ctx.fillRect(x + 1.5, y + 1.5, size - 3, size - 3);
+          ctx.fillStyle = '#1e160e';
+          ctx.strokeRect(x, y, size, size);
+        }
+      }
+      const tex = new THREE.CanvasTexture(canvas);
+      tex.wrapS = THREE.RepeatWrapping; tex.wrapT = THREE.RepeatWrapping;
+      tex.repeat.set(8, 8);
+      return tex;
+    }
+
+    function createPlasterTimberTexture() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 256; canvas.height = 256;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#f0ece3';
+      ctx.fillRect(0, 0, 256, 256);
+
+      ctx.fillStyle = '#261b11';
+      ctx.fillRect(0, 0, 16, 256);
+      ctx.fillRect(240, 0, 16, 256);
+      ctx.fillRect(0, 0, 256, 16);
+      ctx.fillRect(0, 240, 256, 16);
+      ctx.fillRect(0, 120, 256, 14);
+
+      const tex = new THREE.CanvasTexture(canvas);
+      tex.wrapS = THREE.RepeatWrapping; tex.wrapT = THREE.RepeatWrapping;
+      tex.repeat.set(2, 2);
+      return tex;
+    }
+
+    function createRukongaiEarthTexture() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 512; canvas.height = 512;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#2d2419';
+      ctx.fillRect(0, 0, 512, 512);
+
+      // Noise grain & patches
+      for (let i = 0; i < 400; i++) {
+        const x = Math.random() * 512;
+        const y = Math.random() * 512;
+        const rad = 4 + Math.random() * 28;
+        ctx.fillStyle = Math.random() > 0.5 ? 'rgba(64, 82, 38, 0.25)' : 'rgba(32, 23, 15, 0.35)';
+        ctx.beginPath();
+        ctx.arc(x, y, rad, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      const tex = new THREE.CanvasTexture(canvas);
+      tex.wrapS = THREE.RepeatWrapping; tex.wrapT = THREE.RepeatWrapping;
+      tex.repeat.set(16, 16);
+      return tex;
+    }
+
+    // Material variables initialized in init3D
+    let TEX_ROOF, TEX_WALL, TEX_PAVER, TEX_PLASTER, TEX_EARTH;
+    let MAT_GROUND, MAT_STREET_STONE, MAT_AVENUE_PAVER, MAT_PLASTER_WALL, MAT_DARK_WOOD;
+    let MAT_TILE_ROOF, MAT_SEKISEKI_STONE, MAT_SEKISEKI_CAP, MAT_WATER, MAT_SAKURA, MAT_PINE, MAT_TORII_RED, MAT_GOLD_TRIM;
+    let MAT_RUKONGAI_TERRAIN, MAT_THATCH_ROOF, MAT_RUSTIC_WOOD;
+
+
+    // ==========================================================
+    // 5. ENGINE INITIALIZATION
+    // ==========================================================
+    function init3D() {
+      const container = document.getElementById('webgl-canvas-container');
+      
+      // Scene & Atmospheric Fog (Luminous, non-darkening linear fog)
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x1a140e);
+      scene.fog = new THREE.Fog(0x1a140e, 1400, 5800);
+
+      // Camera with Extended Horizon Range
+      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 5, 6500);
+      camera.position.set(0, 480, 530);
+
+      // Renderer
+      renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.25;
+      container.appendChild(renderer.domElement);
+
+      // OrbitControls (Smooth high-altitude zoom)
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.06;
+      controls.maxPolarAngle = Math.PI / 2 - 0.03;
+      controls.minDistance = 35;
+      controls.maxDistance = 3200;
+      controls.target.set(0, 18, 0);
+
+      // Lighting Setup (Crisp, High-Altitude Sunlight & Ambient Fill)
+      ambientLight = new THREE.AmbientLight(0xffecd6, 0.95);
+      scene.add(ambientLight);
+
+      hemiLight = new THREE.HemisphereLight(0xfff3e0, 0x3d2b1f, 0.75);
+      hemiLight.position.set(0, 800, 0);
+      scene.add(hemiLight);
+
+      dirLight = new THREE.DirectionalLight(0xfffaed, 1.55);
+      dirLight.position.set(500, 800, 400);
+      dirLight.castShadow = true;
+      dirLight.shadow.mapSize.width = 2048;
+      dirLight.shadow.mapSize.height = 2048;
+      dirLight.shadow.camera.near = 50;
+      dirLight.shadow.camera.far = 3800;
+      const d = 1200;
+      dirLight.shadow.camera.left = -d;
+      dirLight.shadow.camera.right = d;
+      dirLight.shadow.camera.top = d;
+      dirLight.shadow.camera.bottom = -d;
+      dirLight.shadow.bias = -0.0004;
+      scene.add(dirLight);
+
+      // Build Textures & Materials
+      TEX_ROOF = createTileRoofTexture();
+      TEX_WALL = createStoneWallTexture();
+      TEX_PAVER = createAvenuePaverTexture();
+      TEX_PLASTER = createPlasterTimberTexture();
+      TEX_EARTH = createRukongaiEarthTexture();
+
+      MAT_GROUND = new THREE.MeshStandardMaterial({ color: 0x1c1712, roughness: 0.92, metalness: 0.05 });
+      MAT_STREET_STONE = new THREE.MeshStandardMaterial({ map: TEX_PAVER, roughness: 0.72, metalness: 0.1 });
+      MAT_AVENUE_PAVER = new THREE.MeshStandardMaterial({ map: TEX_PAVER, roughness: 0.65, metalness: 0.15 });
+      MAT_PLASTER_WALL = new THREE.MeshStandardMaterial({ map: TEX_PLASTER, roughness: 0.68 });
+      MAT_DARK_WOOD = new THREE.MeshStandardMaterial({ color: 0x241a12, roughness: 0.85 });
+      MAT_TILE_ROOF = new THREE.MeshStandardMaterial({ map: TEX_ROOF, roughness: 0.45, metalness: 0.22 });
+      MAT_SEKISEKI_STONE = new THREE.MeshStandardMaterial({ map: TEX_WALL, roughness: 0.78, metalness: 0.12 });
+      MAT_SEKISEKI_CAP = new THREE.MeshStandardMaterial({ color: 0x3b3024, roughness: 0.65 });
+      MAT_WATER = new THREE.MeshStandardMaterial({ color: 0x165a75, roughness: 0.06, metalness: 0.9, transparent: true, opacity: 0.9 });
+      MAT_SAKURA = new THREE.MeshStandardMaterial({ color: 0xf472b6, roughness: 0.6 });
+      MAT_PINE = new THREE.MeshStandardMaterial({ color: 0x1b4324, roughness: 0.75 });
+      MAT_TORII_RED = new THREE.MeshStandardMaterial({ color: 0x99241b, roughness: 0.6 });
+      MAT_GOLD_TRIM = new THREE.MeshStandardMaterial({ color: 0xd4af37, roughness: 0.35, metalness: 0.8 });
+
+      MAT_RUKONGAI_TERRAIN = new THREE.MeshStandardMaterial({ map: TEX_EARTH, roughness: 0.92, metalness: 0.05 });
+      MAT_THATCH_ROOF = new THREE.MeshStandardMaterial({ color: 0x5c4d38, roughness: 0.95 });
+      MAT_RUSTIC_WOOD = new THREE.MeshStandardMaterial({ color: 0x33261a, roughness: 0.9 });
+
+      // Add World Groups
+      scene.add(worldGroups.seireitei);
+      scene.add(worldGroups.rukongai);
+      worldGroups.rukongai.visible = false; // Seireitei starts active
+
+      // Layer groups attachment
+      Object.values(layerGroups).forEach(group => worldGroups.seireitei.add(group));
+
+      // Raycaster
+      raycaster = new THREE.Raycaster();
+      mouse = new THREE.Vector2();
+
+      // Build Both Worlds Procedurally
+      buildSeireiteiWorld();
+      buildRukongaiWorld();
+      renderGMMarkers();
+
+      // Events
+      window.addEventListener('resize', onWindowResize);
+      renderer.domElement.addEventListener('mousemove', onMouseMove);
+      renderer.domElement.addEventListener('click', onMouseClick);
+
+      // Populate Initial Navigation
+      buildNavigatorList();
+
+      // Start Animation Loop
+      animate();
+    }
+
+
+    // ==========================================================
+    // 6. BUILD SEIREITEI WORLD (CITADEL, 13 DIVISIONS, WALLS)
+    // ==========================================================
+    let liquidRingGeo, liquidRingMesh;
+    let particleGeometry, particleSystem;
+    let cartographicLabels = [];
+
+    function buildSeireiteiWorld() {
+      // 1. Base Ground
+      const baseGround = new THREE.Mesh(new THREE.CylinderGeometry(460, 470, 10, 64), MAT_GROUND);
+      baseGround.position.y = -5;
+      baseGround.receiveShadow = true;
+      layerGroups.citadel.add(baseGround);
+
+      // 2. Terraced Mountain Core
+      const t1 = new THREE.Mesh(new THREE.CylinderGeometry(140, 160, 16, 48), MAT_SEKISEKI_STONE);
+      t1.position.y = 8;
+      t1.receiveShadow = true; t1.castShadow = true;
+      layerGroups.citadel.add(t1);
+
+      const t2 = new THREE.Mesh(new THREE.CylinderGeometry(95, 115, 16, 40), MAT_SEKISEKI_STONE);
+      t2.position.y = 22;
+      t2.receiveShadow = true; t2.castShadow = true;
+      layerGroups.citadel.add(t2);
+
+      const t3 = new THREE.Mesh(new THREE.CylinderGeometry(55, 75, 16, 32), MAT_SEKISEKI_STONE);
+      t3.position.y = 36;
+      t3.receiveShadow = true; t3.castShadow = true;
+      layerGroups.citadel.add(t3);
+
+      // 3. Primary Radial Avenues
+      const nAve = new THREE.Mesh(new THREE.BoxGeometry(26, 1.2, 380), MAT_AVENUE_PAVER);
+      nAve.position.set(0, 0.7, -190); nAve.receiveShadow = true;
+      layerGroups.structures.add(nAve);
+
+      const sAve = new THREE.Mesh(new THREE.BoxGeometry(26, 1.2, 380), MAT_AVENUE_PAVER);
+      sAve.position.set(0, 0.7, 190); sAve.receiveShadow = true;
+      layerGroups.structures.add(sAve);
+
+      const eAve = new THREE.Mesh(new THREE.BoxGeometry(380, 1.2, 26), MAT_AVENUE_PAVER);
+      eAve.position.set(190, 0.7, 0); eAve.receiveShadow = true;
+      layerGroups.structures.add(eAve);
+
+      const wAve = new THREE.Mesh(new THREE.BoxGeometry(380, 1.2, 26), MAT_AVENUE_PAVER);
+      wAve.position.set(-190, 0.7, 0); wAve.receiveShadow = true;
+      layerGroups.structures.add(wAve);
+
+      // 4. Concentric Ring Streets
+      const ring1 = new THREE.Mesh(new THREE.RingGeometry(160, 178, 64), MAT_STREET_STONE);
+      ring1.rotation.x = -Math.PI / 2; ring1.position.y = 0.8; ring1.receiveShadow = true;
+      layerGroups.structures.add(ring1);
+
+      const ring2 = new THREE.Mesh(new THREE.RingGeometry(265, 283, 64), MAT_STREET_STONE);
+      ring2.rotation.x = -Math.PI / 2; ring2.position.y = 0.8; ring2.receiveShadow = true;
+      layerGroups.structures.add(ring2);
+
+      // 5. Four Color Quadrants & Boundary Walls
+      buildQuadrantZoningAndWalls();
+
+      // 6. Liquid Water Ring with Wave Physics
+      liquidRingGeo = new THREE.RingGeometry(238, 258, 128, 12);
+      const posArray = liquidRingGeo.attributes.position.array;
+      liquidRingGeo.userData = { initialZ: new Float32Array(posArray) };
+
+      liquidRingMesh = new THREE.Mesh(liquidRingGeo, MAT_WATER);
+      liquidRingMesh.rotation.x = -Math.PI / 2;
+      liquidRingMesh.position.y = 0.9;
+      liquidRingMesh.receiveShadow = true;
+      layerGroups.water.add(liquidRingMesh);
+
+      // 7. Stone Bridges
+      [0, Math.PI / 2, Math.PI, 3 * Math.PI / 2].forEach(ang => {
+        const bridge = new THREE.Mesh(new THREE.BoxGeometry(32, 4, 22), MAT_SEKISEKI_CAP);
+        bridge.position.set(Math.cos(ang) * 248, 2.5, Math.sin(ang) * 248);
+        bridge.rotation.y = -ang;
+        bridge.castShadow = true; bridge.receiveShadow = true;
+        layerGroups.water.add(bridge);
+      });
+
+      // 8. Colossal Sekiseki Wall & 4 Gates
+      buildMonumentalSekisekiWall();
+
+      // 9. Central Spire, Sōkyoku & Senzaikyū
+      buildCentralCitadelHierarchy();
+
+      // 10. All 13 Divisions
+      buildGotei13Districts();
+
+      // 11. Instanced Machiya Houses & Trees
+      buildStructuredUrbanBlocks();
+      buildOrganizedVegetation();
+
+      // 12. Reishi Particles & 3D Labels
+      buildSpiritualParticles();
+      buildSeireiteiCartographicLabels();
+    }
+
+    function buildQuadrantZoningAndWalls() {
+      const quadrantConfigs = [
+        { name: "Norte", start: Math.PI / 4, len: Math.PI / 2, color: 0x1e242b },
+        { name: "Leste", start: 7 * Math.PI / 4, len: Math.PI / 2, color: 0x132733 },
+        { name: "Sul", start: 5 * Math.PI / 4, len: Math.PI / 2, color: 0x2b1d16 },
+        { name: "Oeste", start: 3 * Math.PI / 4, len: Math.PI / 2, color: 0x241d2e }
+      ];
+
+      quadrantConfigs.forEach(q => {
+        const plateGeo = new THREE.RingGeometry(178, 238, 32, 1, q.start, q.len);
+        const plateMat = new THREE.MeshStandardMaterial({ color: q.color, roughness: 0.85 });
+        const plate = new THREE.Mesh(plateGeo, plateMat);
+        plate.rotation.x = -Math.PI / 2; plate.position.y = 0.4; plate.receiveShadow = true;
+        layerGroups.structures.add(plate);
+
+        const outerPlateGeo = new THREE.RingGeometry(258, 385, 32, 1, q.start, q.len);
+        const outerPlate = new THREE.Mesh(outerPlateGeo, plateMat);
+        outerPlate.rotation.x = -Math.PI / 2; outerPlate.position.y = 0.4; outerPlate.receiveShadow = true;
+        layerGroups.structures.add(outerPlate);
+      });
+
+      // Boundary Tsuijibei walls
+      const wallMat = new THREE.MeshStandardMaterial({ map: TEX_WALL, roughness: 0.8 });
+      const capMat = new THREE.MeshStandardMaterial({ map: TEX_ROOF, roughness: 0.5 });
+
+      [Math.PI / 4, 3 * Math.PI / 4, 5 * Math.PI / 4, 7 * Math.PI / 4].forEach(ang => {
+        const wallGroup = new THREE.Group();
+        wallGroup.rotation.y = -ang;
+
+        const w1 = new THREE.Mesh(new THREE.BoxGeometry(6, 7, 58), wallMat);
+        w1.position.set(0, 3.5, 208); w1.castShadow = true;
+        wallGroup.add(w1);
+        const c1 = new THREE.Mesh(new THREE.BoxGeometry(7.5, 2, 60), capMat);
+        c1.position.set(0, 7.8, 208); c1.castShadow = true;
+        wallGroup.add(c1);
+
+        const w2 = new THREE.Mesh(new THREE.BoxGeometry(6, 7, 120), wallMat);
+        w2.position.set(0, 3.5, 320); w2.castShadow = true;
+        wallGroup.add(w2);
+        const c2 = new THREE.Mesh(new THREE.BoxGeometry(7.5, 2, 122), capMat);
+        c2.position.set(0, 7.8, 320); c2.castShadow = true;
+        wallGroup.add(c2);
+
+        layerGroups.walls.add(wallGroup);
+      });
+    }
+
+    function buildMonumentalSekisekiWall() {
+      const wallRadius = 390;
+      const wallHeight = 36;
+      const wallThickness = 14;
+
+      const segments = [
+        { start: 0.12, end: Math.PI / 2 - 0.12 },
+        { start: Math.PI / 2 + 0.12, end: Math.PI - 0.12 },
+        { start: Math.PI + 0.12, end: 3 * Math.PI / 2 - 0.12 },
+        { start: 3 * Math.PI / 2 + 0.12, end: 2 * Math.PI - 0.12 }
+      ];
+
+      segments.forEach(seg => {
+        const wallGeo = new THREE.CylinderGeometry(wallRadius, wallRadius + wallThickness, wallHeight, 32, 1, true, seg.start, seg.end - seg.start);
+        const wallMesh = new THREE.Mesh(wallGeo, MAT_SEKISEKI_STONE);
+        wallMesh.position.y = wallHeight / 2;
+        wallMesh.castShadow = true; wallMesh.receiveShadow = true;
+        layerGroups.walls.add(wallMesh);
+
+        const parapetGeo = new THREE.CylinderGeometry(wallRadius + 1, wallRadius + wallThickness - 1, 4, 32, 1, true, seg.start, seg.end - seg.start);
+        const parapetMesh = new THREE.Mesh(parapetGeo, MAT_SEKISEKI_CAP);
+        parapetMesh.position.y = wallHeight + 2;
+        parapetMesh.castShadow = true;
+        layerGroups.walls.add(parapetMesh);
+      });
+
+      // 16 Watchtowers
+      for (let i = 0; i < 16; i++) {
+        if (i % 4 === 0) continue;
+        const ang = (i / 16) * Math.PI * 2;
+        const tx = Math.cos(ang) * (wallRadius + wallThickness / 2);
+        const tz = Math.sin(ang) * (wallRadius + wallThickness / 2);
+
+        const towerMesh = new THREE.Mesh(new THREE.CylinderGeometry(8, 10, wallHeight + 12, 8), MAT_SEKISEKI_STONE);
+        towerMesh.position.set(tx, (wallHeight + 12) / 2, tz);
+        towerMesh.castShadow = true;
+        layerGroups.walls.add(towerMesh);
+
+        const roof1 = new THREE.Mesh(new THREE.ConeGeometry(12, 6, 8), MAT_TILE_ROOF);
+        roof1.position.set(tx, wallHeight + 14, tz); roof1.castShadow = true;
+        layerGroups.walls.add(roof1);
+      }
+
+      // 4 Cardinal Gates
+      createMonumentalGate('gate_north', 0, -wallRadius, 0x1c1917, 0x78716c, 0, 'KOKURYŌMON');
+      createMonumentalGate('gate_south', 0, wallRadius, 0x4a0e0e, 0xdc2626, Math.PI, 'SHŪWAIMON');
+      createMonumentalGate('gate_west', -wallRadius, 0, 0x24201e, 0xfbbf24, -Math.PI / 2, 'HAKUTŌMON');
+      createMonumentalGate('gate_east', wallRadius, 0, 0x0c4a6e, 0x38bdf8, Math.PI / 2, 'SHŌRYŪMON');
+    }
+
+    function createMonumentalGate(key, x, z, wallCol, roofCol, rotY, label) {
+      const gate = new THREE.Group();
+      gate.position.set(x, 0, z);
+      gate.rotation.y = rotY;
+
+      const baseMesh = new THREE.Mesh(new THREE.BoxGeometry(40, 26, 22), new THREE.MeshStandardMaterial({ color: wallCol, roughness: 0.7 }));
+      baseMesh.position.y = 13; baseMesh.castShadow = true;
+      gate.add(baseMesh);
+
+      const tunnel = new THREE.Mesh(new THREE.BoxGeometry(16, 18, 24), new THREE.MeshStandardMaterial({ color: 0x080604 }));
+      tunnel.position.y = 9;
+      gate.add(tunnel);
+
+      const upperHall = new THREE.Mesh(new THREE.BoxGeometry(32, 12, 16), MAT_PLASTER_WALL);
+      upperHall.position.y = 32; upperHall.castShadow = true;
+      gate.add(upperHall);
+
+      const r1 = new THREE.Mesh(new THREE.ConeGeometry(28, 9, 4), new THREE.MeshStandardMaterial({ color: roofCol, roughness: 0.55 }));
+      r1.rotation.y = Math.PI / 4; r1.position.y = 40; r1.castShadow = true;
+      gate.add(r1);
+
+      const hit = new THREE.Mesh(new THREE.BoxGeometry(45, 55, 30), new THREE.MeshBasicMaterial({ visible: false }));
+      hit.position.y = 27;
+      hit.userData = { regionKey: key, title: CAMPAIGN_SEIREITEI[key]?.title || label, kanji: CAMPAIGN_SEIREITEI[key]?.kanji || "", world: 'seireitei' };
+      gate.add(hit);
+      interactiveObjects.push(hit);
+
+      layerGroups.walls.add(gate);
+    }
+
+    function buildCentralCitadelHierarchy() {
+      const apexGroup = new THREE.Group();
+      apexGroup.position.set(0, 44, 0);
+
+      const mainHall = new THREE.Mesh(new THREE.BoxGeometry(38, 22, 38), MAT_DARK_WOOD);
+      mainHall.position.y = 11; mainHall.castShadow = true;
+      apexGroup.add(mainHall);
+
+      const roof1 = new THREE.Mesh(new THREE.ConeGeometry(32, 10, 4), MAT_TILE_ROOF);
+      roof1.rotation.y = Math.PI / 4; roof1.position.y = 27; roof1.castShadow = true;
+      apexGroup.add(roof1);
+
+      const spireBody = new THREE.Mesh(new THREE.CylinderGeometry(14, 18, 50, 16), MAT_PLASTER_WALL);
+      spireBody.position.y = 52; spireBody.castShadow = true;
+      apexGroup.add(spireBody);
+
+      const goldFinial = new THREE.Mesh(new THREE.ConeGeometry(6, 42, 16), MAT_GOLD_TRIM);
+      goldFinial.position.y = 96; goldFinial.castShadow = true;
+      apexGroup.add(goldFinial);
+
+      layerGroups.citadel.add(apexGroup);
+
+      // Sōkyoku
+      const sokyokuGroup = new THREE.Group();
+      sokyokuGroup.position.set(130, 24, -150);
+      const rockCliff = new THREE.Mesh(new THREE.CylinderGeometry(24, 34, 38, 10), new THREE.MeshStandardMaterial({ color: 0x3d281a, roughness: 0.95 }));
+      rockCliff.position.y = 19; rockCliff.castShadow = true;
+      sokyokuGroup.add(rockCliff);
+
+      const lance = new THREE.Mesh(new THREE.ConeGeometry(3.5, 48, 8), new THREE.MeshStandardMaterial({ color: 0xff6a13, emissive: 0xff6a13, emissiveIntensity: 0.5 }));
+      lance.position.y = 56; lance.castShadow = true;
+      sokyokuGroup.add(lance);
+
+      const sokyokuHit = new THREE.Mesh(new THREE.BoxGeometry(40, 75, 40), new THREE.MeshBasicMaterial({ visible: false }));
+      sokyokuHit.position.y = 35;
+      sokyokuHit.userData = { regionKey: 'sokyoku', title: CAMPAIGN_SEIREITEI.sokyoku.title, kanji: CAMPAIGN_SEIREITEI.sokyoku.kanji, world: 'seireitei' };
+      sokyokuGroup.add(sokyokuHit);
+      interactiveObjects.push(sokyokuHit);
+
+      layerGroups.citadel.add(sokyokuGroup);
+
+      // Senzaikyū
+      const senzaikyuGroup = new THREE.Group();
+      senzaikyuGroup.position.set(240, 0, -150);
+      const prisonTower = new THREE.Mesh(new THREE.CylinderGeometry(18, 22, 56, 6), new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.6 }));
+      prisonTower.position.y = 28; prisonTower.castShadow = true;
+      senzaikyuGroup.add(prisonTower);
+
+      const prisonRoof = new THREE.Mesh(new THREE.ConeGeometry(24, 12, 6), MAT_TILE_ROOF);
+      prisonRoof.position.y = 62; prisonRoof.castShadow = true;
+      senzaikyuGroup.add(prisonRoof);
+
+      const senzaikyuHit = new THREE.Mesh(new THREE.BoxGeometry(42, 70, 42), new THREE.MeshBasicMaterial({ visible: false }));
+      senzaikyuHit.position.y = 35;
+      senzaikyuHit.userData = { regionKey: 'senzaikyu', title: CAMPAIGN_SEIREITEI.senzaikyu.title, kanji: CAMPAIGN_SEIREITEI.senzaikyu.kanji, world: 'seireitei' };
+      senzaikyuGroup.add(senzaikyuHit);
+      interactiveObjects.push(senzaikyuHit);
+
+      layerGroups.citadel.add(senzaikyuGroup);
+    }
+
+    function buildGotei13Districts() {
+      const divisionList = [
+        { key: 'div_1', color: 0xe5b842, roof: 0x1f170e, scale: 1.5 },
+        { key: 'div_2', color: 0x737373, roof: 0x111111, scale: 1.25 },
+        { key: 'div_3', color: 0xf59e0b, roof: 0x241d15, scale: 1.15 },
+        { key: 'div_4', color: 0x10b981, roof: 0x064e3b, scale: 1.35 },
+        { key: 'div_5', color: 0x3b82f6, roof: 0x1e3a8a, scale: 1.15 },
+        { key: 'div_6', color: 0x818cf8, roof: 0x312e81, scale: 1.35 },
+        { key: 'div_7', color: 0xd97706, roof: 0x2a1d12, scale: 1.15 },
+        { key: 'div_8', color: 0xf43f5e, roof: 0x4c0519, scale: 1.15 },
+        { key: 'div_9', color: 0xa855f7, roof: 0x3b0764, scale: 1.2 },
+        { key: 'div_10', color: 0x06b6d4, roof: 0x164e63, scale: 1.15 },
+        { key: 'div_11', color: 0xef4444, roof: 0x7f1d1d, scale: 1.45 },
+        { key: 'div_12', color: 0x06b6d4, roof: 0x083344, scale: 1.3 },
+        { key: 'div_13', color: 0x38bdf8, roof: 0x0c4a6e, scale: 1.15 },
+        { key: 'central_46', color: 0xc084fc, roof: 0x2a0e4a, scale: 1.4 },
+        { key: 'kidoshu', color: 0xa855f7, roof: 0x3b0764, scale: 1.25 },
+        { key: 'academia', color: 0x38bdf8, roof: 0x1e293b, scale: 1.55 },
+        { key: 'nobres', color: 0xa5b4fc, roof: 0x262464, scale: 1.45 }
+      ];
+
+      divisionList.forEach(item => {
+        const lore = CAMPAIGN_SEIREITEI[item.key];
+        if (!lore || !lore.coords) return;
+
+        const comp = new THREE.Group();
+        comp.position.set(lore.coords.x, lore.coords.y, lore.coords.z);
+
+        const s = item.scale;
+        const roofMat = new THREE.MeshStandardMaterial({ color: item.roof, roughness: 0.55 });
+
+        const cWall = new THREE.Mesh(new THREE.BoxGeometry(46 * s, 8 * s, 38 * s), MAT_PLASTER_WALL);
+        cWall.position.y = 4 * s; cWall.castShadow = true;
+        comp.add(cWall);
+
+        const mainHall = new THREE.Mesh(new THREE.BoxGeometry(28 * s, 16 * s, 22 * s), MAT_DARK_WOOD);
+        mainHall.position.y = 8 * s; mainHall.castShadow = true;
+        comp.add(mainHall);
+
+        const r1 = new THREE.Mesh(new THREE.ConeGeometry(24 * s, 8 * s, 4), roofMat);
+        r1.rotation.y = Math.PI / 4; r1.position.y = 19 * s; r1.castShadow = true;
+        comp.add(r1);
+
+        const beacon = new THREE.Mesh(new THREE.SphereGeometry(2.2 * s, 12, 12), new THREE.MeshStandardMaterial({ color: item.color, emissive: item.color, emissiveIntensity: 0.65 }));
+        beacon.position.y = 26 * s;
+        comp.add(beacon);
+
+        const hitBox = new THREE.Mesh(new THREE.BoxGeometry(50 * s, 42 * s, 42 * s), new THREE.MeshBasicMaterial({ visible: false }));
+        hitBox.position.y = 21 * s;
+        hitBox.userData = { regionKey: item.key, title: lore.title, kanji: lore.kanji, parentCompound: comp, originalY: lore.coords.y, world: 'seireitei' };
+        comp.add(hitBox);
+        interactiveObjects.push(hitBox);
+
+        layerGroups.structures.add(comp);
+      });
+    }
+
+    function buildStructuredUrbanBlocks() {
+      const houseCount = 1800;
+      const mWallGeo = new THREE.BoxGeometry(9, 7.5, 8);
+      const machiyaWalls = new THREE.InstancedMesh(mWallGeo, MAT_PLASTER_WALL, houseCount);
+      machiyaWalls.castShadow = true; machiyaWalls.receiveShadow = true;
+
+      const mRoofGeo = new THREE.ConeGeometry(7.5, 4.2, 4);
+      const machiyaRoofs = new THREE.InstancedMesh(mRoofGeo, MAT_TILE_ROOF, houseCount);
+      machiyaRoofs.castShadow = true;
+
+      const dummy = new THREE.Object3D();
+      let placed = 0;
+
+      const numRings = 7;
+      const baseR = 175;
+      const stepR = 28;
+
+      for (let rIdx = 0; rIdx < numRings; rIdx++) {
+        const radius = baseR + rIdx * stepR;
+        if (Math.abs(radius - 248) < 18) continue;
+
+        const countOnRing = Math.floor((2 * Math.PI * radius) / 16);
+        for (let i = 0; i < countOnRing && placed < houseCount; i++) {
+          const angle = (i / countOnRing) * Math.PI * 2;
+          const x = Math.cos(angle) * radius;
+          const z = Math.sin(angle) * radius;
+
+          if (Math.abs(x) < 22 || Math.abs(z) < 22) continue;
+
+          let nearDiv = false;
+          for (const key in CAMPAIGN_SEIREITEI) {
+            const c = CAMPAIGN_SEIREITEI[key]?.coords;
+            if (c && Math.hypot(x - c.x, z - c.z) < 32) { nearDiv = true; break; }
+          }
+          if (nearDiv) continue;
+
+          dummy.position.set(x, 3.75, z);
+          dummy.rotation.y = angle + Math.PI / 2 + (Math.random() * 0.2 - 0.1);
+          dummy.scale.setScalar(0.85 + Math.random() * 0.35);
+          dummy.updateMatrix();
+          machiyaWalls.setMatrixAt(placed, dummy.matrix);
+
+          dummy.position.y = 3.75 + 4.2;
+          dummy.rotation.y += Math.PI / 4;
+          dummy.updateMatrix();
+          machiyaRoofs.setMatrixAt(placed, dummy.matrix);
+
+          placed++;
+        }
+      }
+      machiyaWalls.instanceMatrix.needsUpdate = true;
+      machiyaRoofs.instanceMatrix.needsUpdate = true;
+      layerGroups.houses.add(machiyaWalls);
+      layerGroups.houses.add(machiyaRoofs);
+    }
+
+    function buildOrganizedVegetation() {
+      const treeCount = 900;
+      const sakuraGeo = new THREE.DodecahedronGeometry(5, 1);
+      const sakuraInst = new THREE.InstancedMesh(sakuraGeo, MAT_SAKURA, treeCount / 2);
+      sakuraInst.castShadow = true;
+
+      const pineGeo = new THREE.ConeGeometry(4.2, 10, 6);
+      const pineInst = new THREE.InstancedMesh(pineGeo, MAT_PINE, treeCount / 2);
+      pineInst.castShadow = true;
+
+      const dummy = new THREE.Object3D();
+      for (let i = 0; i < treeCount / 2; i++) {
+        const sAng = Math.random() * Math.PI * 2;
+        const sRad = 110 + Math.random() * 260;
+        dummy.position.set(Math.cos(sAng) * sRad, 6, Math.sin(sAng) * sRad);
+        dummy.scale.setScalar(0.75 + Math.random() * 0.55);
+        dummy.updateMatrix();
+        sakuraInst.setMatrixAt(i, dummy.matrix);
+
+        const pAng = Math.random() * Math.PI * 2;
+        const pRad = 130 + Math.random() * 250;
+        dummy.position.set(Math.cos(pAng) * pRad, 6.5, Math.sin(pAng) * pRad);
+        dummy.scale.setScalar(0.75 + Math.random() * 0.6);
+        dummy.updateMatrix();
+        pineInst.setMatrixAt(i, dummy.matrix);
+      }
+      sakuraInst.instanceMatrix.needsUpdate = true;
+      pineInst.instanceMatrix.needsUpdate = true;
+      layerGroups.trees.add(sakuraInst);
+      layerGroups.trees.add(pineInst);
+    }
+
+    function buildSpiritualParticles() {
+      const particleCount = 650;
+      particleGeometry = new THREE.BufferGeometry();
+      const positions = new Float32Array(particleCount * 3);
+      const colors = new Float32Array(particleCount * 3);
+
+      for (let i = 0; i < particleCount; i++) {
+        positions[i * 3] = (Math.random() - 0.5) * 780;
+        positions[i * 3 + 1] = Math.random() * 110 + 5;
+        positions[i * 3 + 2] = (Math.random() - 0.5) * 780;
+
+        if (Math.random() > 0.4) {
+          colors[i * 3] = 0.3; colors[i * 3 + 1] = 0.7; colors[i * 3 + 2] = 1.0;
+        } else {
+          colors[i * 3] = 1.0; colors[i * 3 + 1] = 0.8; colors[i * 3 + 2] = 0.3;
+        }
+      }
+
+      particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+      const particleMat = new THREE.PointsMaterial({
+        size: 3.2,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.65,
+        blending: THREE.AdditiveBlending
+      });
+
+      particleSystem = new THREE.Points(particleGeometry, particleMat);
+      layerGroups.structures.add(particleSystem);
+    }
+
+    function buildSeireiteiCartographicLabels() {
+      Object.entries(CAMPAIGN_SEIREITEI).forEach(([key, item]) => {
+        if (!item.coords) return;
+        const canvas = document.createElement('canvas');
+        canvas.width = 256; canvas.height = 70;
+        const ctx = canvas.getContext('2d');
+
+        ctx.fillStyle = 'rgba(18, 13, 9, 0.82)';
+        ctx.strokeStyle = 'rgba(255, 106, 19, 0.7)';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.rect(8, 8, 240, 54);
+        ctx.fill(); ctx.stroke();
+
+        ctx.fillStyle = '#e5b842';
+        ctx.font = 'bold 16px "Noto Serif JP", serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(item.kanji || '', 128, 28);
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 14px "Cinzel", serif';
+        ctx.fillText(item.title.split('·')[0].trim(), 128, 48);
+
+        const texture = new THREE.CanvasTexture(canvas);
+        const spriteMat = new THREE.SpriteMaterial({ map: texture, transparent: true, opacity: 0.95, depthTest: false });
+        const sprite = new THREE.Sprite(spriteMat);
+        sprite.position.set(item.coords.x, (item.coords.y || 14) + 38, item.coords.z);
+        sprite.scale.set(38, 11, 1);
+        cartographicLabels.push(sprite);
+        layerGroups.labels.add(sprite);
+      });
+    }
+
+
+    // ==========================================================
+    // 7. BUILD RUKONGAI WORLD (320 DISTRICTS & VAST TERRAIN ~2400M)
+    // ==========================================================
+    let rukongaiLabels = [];
+
+    function buildRukongaiWorld() {
+      const rukGroup = worldGroups.rukongai;
+
+      // 1. Vast Terrain (2400m x 2400m Plane with Topographic Relief)
+      const terrainGeo = new THREE.PlaneGeometry(2400, 2400, 96, 96);
+      const pos = terrainGeo.attributes.position.array;
+
+      // Sculpt mountainous north, valley west, river delta south, and forested hills east
+      for (let i = 0; i < pos.length; i += 3) {
+        const x = pos[i];
+        const y = pos[i + 1]; // y in PlaneGeometry represents Z in world
+        const distFromCenter = Math.hypot(x, y);
+
+        // Keep center clearing flat for Seireitei silhouette
+        if (distFromCenter < 440) {
+          pos[i + 2] = 0;
+        } else {
+          // North Mountain Ridge (Z < -400)
+          let h = 0;
+          if (y < -400) {
+            h += Math.sin(x * 0.008) * 35 + Math.cos(y * 0.008) * 45 + ((-y - 400) * 0.08);
+          }
+          // East Forest Hills (X > 400)
+          if (x > 400) {
+            h += Math.sin(x * 0.012) * 22 + Math.cos(y * 0.01) * 18;
+          }
+          // West Farmland Terraces (X < -400)
+          if (x < -400) {
+            h += Math.sin(x * 0.006) * 15 + Math.cos(y * 0.006) * 12;
+          }
+          // South River Basin (Y > 400)
+          if (y > 400) {
+            h += Math.sin(x * 0.01) * 10 - 5;
+          }
+          pos[i + 2] = Math.max(-8, h);
+        }
+      }
+      terrainGeo.computeVertexNormals();
+
+      const terrainMesh = new THREE.Mesh(terrainGeo, MAT_RUKONGAI_TERRAIN);
+      terrainMesh.rotation.x = -Math.PI / 2;
+      terrainMesh.position.y = -2;
+      terrainMesh.receiveShadow = true;
+      rukGroup.add(terrainMesh);
+
+      // 2. Central Seireitei Fortress Distant Silhouette (Monumental Wall at center)
+      const centralWall = new THREE.Mesh(new THREE.CylinderGeometry(390, 404, 42, 64), MAT_SEKISEKI_STONE);
+      centralWall.position.y = 21; centralWall.castShadow = true;
+      rukGroup.add(centralWall);
+
+      const centralCitadelDistant = new THREE.Mesh(new THREE.ConeGeometry(80, 110, 16), MAT_DARK_WOOD);
+      centralCitadelDistant.position.set(0, 55, 0);
+      rukGroup.add(centralCitadelDistant);
+
+      // 3. Four Great Imperial Highways (North, South, East, West extending 1100m)
+      const roadMat = new THREE.MeshStandardMaterial({ color: 0x423527, roughness: 0.88 });
+      const nRoad = new THREE.Mesh(new THREE.BoxGeometry(22, 1, 800), roadMat);
+      nRoad.position.set(0, 0.4, -790); rukGroup.add(nRoad);
+
+      const sRoad = new THREE.Mesh(new THREE.BoxGeometry(22, 1, 800), roadMat);
+      sRoad.position.set(0, 0.4, 790); rukGroup.add(sRoad);
+
+      const eRoad = new THREE.Mesh(new THREE.BoxGeometry(800, 1, 22), roadMat);
+      eRoad.position.set(790, 0.4, 0); rukGroup.add(eRoad);
+
+      const wRoad = new THREE.Mesh(new THREE.BoxGeometry(800, 1, 22), roadMat);
+      wRoad.position.set(-790, 0.4, 0); rukGroup.add(wRoad);
+
+      // 4. Winding Southern & Eastern Rivers
+      const riverMat = new THREE.MeshStandardMaterial({ color: 0x146b88, roughness: 0.08, metalness: 0.85, transparent: true, opacity: 0.9 });
+      const riverSouth = new THREE.Mesh(new THREE.BoxGeometry(45, 1, 850), riverMat);
+      riverSouth.position.set(220, 0.2, 750);
+      riverSouth.rotation.y = 0.25;
+      rukGroup.add(riverSouth);
+
+      // 5. Representative District Hubs & Settlements (Junrinan, Zaraki, Inuzuri, Kusajishi, etc.)
+      buildRukongaiDistrictsAndVillages();
+
+      // 6. Over 2,200+ Instanced Rural Houses & Outlaw Shanties across the 4 Quadrants
+      buildRukongaiInstancedUrbanMass();
+
+      // 7. Forests of Bamboo, Pines & Cedars
+      buildRukongaiForests();
+
+      // 8. 3D Cartographic Labels for Rukongai Districts
+      buildRukongaiCartographicLabels();
+    }
+
+    function buildRukongaiDistrictsAndVillages() {
+      const rukGroup = worldGroups.rukongai;
+
+      Object.entries(CAMPAIGN_RUKONGAI).forEach(([key, d]) => {
+        if (!d.coords) return;
+
+        const hub = new THREE.Group();
+        hub.position.set(d.coords.x, d.coords.y || 12, d.coords.z);
+
+        // Distinct Architecture per District Type:
+        if (key.includes('ruk_w_01')) {
+          // JUNRINAN (Distrito 1 Oeste): Refined Noble Japanese Estate with Torii & Pagoda
+          const mainManor = new THREE.Mesh(new THREE.BoxGeometry(34, 18, 26), MAT_PLASTER_WALL);
+          mainManor.position.y = 9; mainManor.castShadow = true;
+          hub.add(mainManor);
+
+          const r1 = new THREE.Mesh(new THREE.ConeGeometry(28, 8, 4), MAT_TILE_ROOF);
+          r1.rotation.y = Math.PI / 4; r1.position.y = 22; r1.castShadow = true;
+          hub.add(r1);
+
+          const torii = new THREE.Mesh(new THREE.BoxGeometry(16, 14, 2), MAT_TORII_RED);
+          torii.position.set(0, 7, 24);
+          hub.add(torii);
+        } else if (key.includes('ruk_n_80')) {
+          // ZARAKI (Distrito 80 Norte): Dark Jagged Fortress of Blood and Ash
+          const fort = new THREE.Mesh(new THREE.CylinderGeometry(18, 26, 32, 7), new THREE.MeshStandardMaterial({ color: 0x221a1a, roughness: 0.95 }));
+          fort.position.y = 16; fort.castShadow = true;
+          hub.add(fort);
+
+          const bonfire = new THREE.Mesh(new THREE.ConeGeometry(8, 16, 8), new THREE.MeshStandardMaterial({ color: 0xef4444, emissive: 0xef4444, emissiveIntensity: 0.8 }));
+          bonfire.position.set(22, 8, 12);
+          hub.add(bonfire);
+        } else if (key.includes('ruk_s_78')) {
+          // INUZURI (Distrito 78 Sul): Dense Maze of Shanties
+          const shanty1 = new THREE.Mesh(new THREE.BoxGeometry(26, 12, 18), MAT_RUSTIC_WOOD);
+          shanty1.position.y = 6; shanty1.castShadow = true;
+          hub.add(shanty1);
+          const thatch = new THREE.Mesh(new THREE.ConeGeometry(22, 6, 4), MAT_THATCH_ROOF);
+          thatch.rotation.y = Math.PI / 4; thatch.position.y = 15;
+          hub.add(thatch);
+        } else if (key.includes('ruk_e_79')) {
+          // KUSAJISHI (Distrito 79 Leste): Swamp Stilt Village with Dark Roof
+          const stilt = new THREE.Mesh(new THREE.BoxGeometry(28, 14, 20), new THREE.MeshStandardMaterial({ color: 0x1f2b24, roughness: 0.9 }));
+          stilt.position.y = 10; stilt.castShadow = true;
+          hub.add(stilt);
+        } else {
+          // Standard Rural / Merchant Town
+          const townHall = new THREE.Mesh(new THREE.BoxGeometry(28, 14, 22), MAT_PLASTER_WALL);
+          townHall.position.y = 7; townHall.castShadow = true;
+          hub.add(townHall);
+          const roof = new THREE.Mesh(new THREE.ConeGeometry(24, 7, 4), MAT_TILE_ROOF);
+          roof.rotation.y = Math.PI / 4; roof.position.y = 17;
+          hub.add(roof);
+        }
+
+        // Floating Reiatsu Marker Beacon
+        let beaconCol = 0xe5b842;
+        if (key.includes('ruk_n')) beaconCol = 0xef4444; // North Red
+        if (key.includes('ruk_s')) beaconCol = 0xf59e0b; // South Amber
+        if (key.includes('ruk_w')) beaconCol = 0x38bdf8; // West Blue
+        if (key.includes('ruk_e')) beaconCol = 0x10b981; // East Emerald
+
+        const beacon = new THREE.Mesh(new THREE.SphereGeometry(3.5, 12, 12), new THREE.MeshStandardMaterial({ color: beaconCol, emissive: beaconCol, emissiveIntensity: 0.7 }));
+        beacon.position.y = 30;
+        hub.add(beacon);
+
+        // Raycasting Hitbox
+        const hitBox = new THREE.Mesh(new THREE.BoxGeometry(55, 48, 55), new THREE.MeshBasicMaterial({ visible: false }));
+        hitBox.position.y = 22;
+        hitBox.userData = { regionKey: key, title: d.title, kanji: d.kanji, parentCompound: hub, originalY: d.coords.y || 12, world: 'rukongai' };
+        hub.add(hitBox);
+        interactiveObjects.push(hitBox);
+
+        rukGroup.add(hub);
+      });
+    }
+
+    function buildRukongaiInstancedUrbanMass() {
+      const rukGroup = worldGroups.rukongai;
+      const count = 2400;
+
+      const rWallGeo = new THREE.BoxGeometry(10, 7, 9);
+      const rWalls = new THREE.InstancedMesh(rWallGeo, MAT_RUSTIC_WOOD, count);
+      rWalls.castShadow = true; rWalls.receiveShadow = true;
+
+      const rRoofGeo = new THREE.ConeGeometry(8.5, 4.5, 4);
+      const rRoofs = new THREE.InstancedMesh(rRoofGeo, MAT_THATCH_ROOF, count);
+      rRoofs.castShadow = true;
+
+      const dummy = new THREE.Object3D();
+      let placed = 0;
+
+      // Scatter settlements into 8 regional clusters around Rukongai
+      const clusters = [
+        { cx: -650, cz: -80, rad: 220 },   // Junrinan area
+        { cx: -850, cz: -250, rad: 180 },  // Kawaraji area
+        { cx: -1050, cz: -450, rad: 160 }, // Hakken area
+        { cx: -80, cz: 650, rad: 220 },    // Shizuhara area
+        { cx: 250, cz: 820, rad: 200 },    // Minato-bashi area
+        { cx: -350, cz: 1050, rad: 240 },  // Inuzuri area
+        { cx: 50, cz: -650, rad: 200 },    // Kitayama area
+        { cx: -200, cz: -1100, rad: 240 }, // Zaraki area
+        { cx: 650, cz: -80, rad: 200 },    // Higashiyama area
+        { cx: 1050, cz: 350, rad: 220 }    // Kusajishi area
+      ];
+
+      clusters.forEach(cl => {
+        const numInCluster = Math.floor(count / clusters.length);
+        for (let i = 0; i < numInCluster && placed < count; i++) {
+          const ang = Math.random() * Math.PI * 2;
+          const dist = 30 + Math.random() * cl.rad;
+          const x = cl.cx + Math.cos(ang) * dist;
+          const z = cl.cz + Math.sin(ang) * dist;
+
+          dummy.position.set(x, 3.5, z);
+          dummy.rotation.y = Math.random() * Math.PI * 2;
+          dummy.scale.setScalar(0.75 + Math.random() * 0.55);
+          dummy.updateMatrix();
+          rWalls.setMatrixAt(placed, dummy.matrix);
+
+          dummy.position.y = 3.5 + 4;
+          dummy.rotation.y += Math.PI / 4;
+          dummy.updateMatrix();
+          rRoofs.setMatrixAt(placed, dummy.matrix);
+
+          placed++;
+        }
+      });
+
+      rWalls.instanceMatrix.needsUpdate = true;
+      rRoofs.instanceMatrix.needsUpdate = true;
+      rukGroup.add(rWalls);
+      rukGroup.add(rRoofs);
+    }
+
+    function buildRukongaiForests() {
+      const rukGroup = worldGroups.rukongai;
+      const count = 1600;
+
+      const pGeo = new THREE.ConeGeometry(5, 14, 6);
+      const pineInst = new THREE.InstancedMesh(pGeo, MAT_PINE, count);
+      pineInst.castShadow = true;
+
+      const dummy = new THREE.Object3D();
+      for (let i = 0; i < count; i++) {
+        const ang = Math.random() * Math.PI * 2;
+        const rad = 450 + Math.random() * 700;
+        const x = Math.cos(ang) * rad;
+        const z = Math.sin(ang) * rad;
+
+        dummy.position.set(x, 7, z);
+        dummy.scale.setScalar(0.8 + Math.random() * 0.8);
+        dummy.updateMatrix();
+        pineInst.setMatrixAt(i, dummy.matrix);
+      }
+      pineInst.instanceMatrix.needsUpdate = true;
+      rukGroup.add(pineInst);
+    }
+
+    function buildRukongaiCartographicLabels() {
+      const rukGroup = worldGroups.rukongai;
+
+      Object.entries(CAMPAIGN_RUKONGAI).forEach(([key, item]) => {
+        if (!item.coords) return;
+        const canvas = document.createElement('canvas');
+        canvas.width = 280; canvas.height = 70;
+        const ctx = canvas.getContext('2d');
+
+        ctx.fillStyle = 'rgba(16, 12, 8, 0.88)';
+        ctx.strokeStyle = 'rgba(229, 184, 66, 0.85)';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.rect(8, 8, 264, 54);
+        ctx.fill(); ctx.stroke();
+
+        ctx.fillStyle = '#ff6a13';
+        ctx.font = 'bold 15px "Noto Serif JP", serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(item.kanji || '', 140, 28);
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 13px "Cinzel", serif';
+        ctx.fillText(item.title.split('·')[1]?.trim() || item.title, 140, 48);
+
+        const texture = new THREE.CanvasTexture(canvas);
+        const spriteMat = new THREE.SpriteMaterial({ map: texture, transparent: true, opacity: 0.95, depthTest: false });
+        const sprite = new THREE.Sprite(spriteMat);
+        sprite.position.set(item.coords.x, (item.coords.y || 12) + 42, item.coords.z);
+        sprite.scale.set(46, 12, 1);
+        rukongaiLabels.push(sprite);
+        rukGroup.add(sprite);
+      });
+    }
+
+
+    // ==========================================================
+    // 8. DUAL-MAP TRANSITION ENGINE (SEIREITEI ⇄ RUKONGAI)
+    // ==========================================================
+    function switchActiveWorld(targetWorld) {
+      if (currentWorld === targetWorld || isTransitioningWorld) return;
+      isTransitioningWorld = true;
+
+      const overlay = document.getElementById('world-transition-overlay');
+      if (overlay) overlay.style.opacity = '1';
+
+      // 1. Zoom Camera to Stratosphere
+      new TWEEN.Tween(camera.position)
+        .to({ x: 0, y: 1100, z: 1200 }, 650)
+        .easing(TWEEN.Easing.Cubic.In)
+        .onComplete(() => {
+          // 2. Swap Active World Groups
+          currentWorld = targetWorld;
+          if (targetWorld === 'seireitei') {
+            worldGroups.seireitei.visible = true;
+            worldGroups.rukongai.visible = false;
+            document.getElementById('header-map-title').innerHTML = 'SEIREITEI 3D <span class="text-[#ff6a13] font-kanji text-xl">瀞霊廷</span>';
+            document.getElementById('header-map-subtitle').textContent = 'Cidade Fortificada Monumental · 13 Divisões, Central 46, Sōkyoku e Quarteirões';
+            document.getElementById('header-kanji-icon').textContent = '廷';
+            document.getElementById('nav-drawer-title').innerHTML = '<span>🏯</span> Voo para Quartéis do Gotei 13';
+            document.getElementById('btn-world-seireitei').className = 'px-4 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 active-world-btn';
+            document.getElementById('btn-world-rukongai').className = 'px-4 py-1.5 rounded-xl text-xs font-semibold text-[#c7bcac] hover:text-white hover:bg-[#25180f] transition-all flex items-center gap-1.5';
+          } else {
+            worldGroups.seireitei.visible = false;
+            worldGroups.rukongai.visible = true;
+            document.getElementById('header-map-title').innerHTML = 'RUKONGAI 3D <span class="text-[#e5b842] font-kanji text-xl">流魂街</span>';
+            document.getElementById('header-map-subtitle').textContent = 'O Vasto Mundo Orgânico das Almas · 320 Distritos nos 4 Quadrantes';
+            document.getElementById('header-kanji-icon').textContent = '魂';
+            document.getElementById('nav-drawer-title').innerHTML = '<span>⛩️</span> Voo para Distritos do Rukongai';
+            document.getElementById('btn-world-rukongai').className = 'px-4 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 active-world-btn';
+            document.getElementById('btn-world-seireitei').className = 'px-4 py-1.5 rounded-xl text-xs font-semibold text-[#c7bcac] hover:text-white hover:bg-[#25180f] transition-all flex items-center gap-1.5';
+          }
+
+          // Rebuild Navigation list for current world
+          buildNavigatorList();
+
+          // 3. Drop Camera into the New World
+          const dropY = targetWorld === 'seireitei' ? 480 : 750;
+          const dropZ = targetWorld === 'seireitei' ? 530 : 880;
+
+          new TWEEN.Tween(camera.position)
+            .to({ x: 0, y: dropY, z: dropZ }, 800)
+            .easing(TWEEN.Easing.Cubic.Out)
+            .onComplete(() => {
+              if (overlay) overlay.style.opacity = '0';
+              isTransitioningWorld = false;
+            })
+            .start();
+
+          new TWEEN.Tween(controls.target)
+            .to({ x: 0, y: 18, z: 0 }, 800)
+            .easing(TWEEN.Easing.Cubic.Out)
+            .start();
+        })
+        .start();
+    }
+
+
+    // ==========================================================
+    // 9. RAYCASTING, INTERACTION & CAMERA FLIGHT
+    // ==========================================================
+    function onMouseMove(event) {
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+      raycaster.setFromCamera(mouse, camera);
+      const activeObjects = interactiveObjects.filter(obj => obj.userData.world === currentWorld);
+      const intersects = raycaster.intersectObjects(activeObjects, false);
+
+      const tooltip = document.getElementById('tooltip-3d');
+
+      if (intersects.length > 0) {
+        const hit = intersects[0].object;
+        if (currentHoveredObject !== hit) {
+          if (currentHoveredObject && currentHoveredObject.userData.parentCompound) {
+            currentHoveredObject.userData.parentCompound.position.y = currentHoveredObject.userData.originalY;
+          }
+          currentHoveredObject = hit;
+          if (hit.userData.parentCompound) {
+            hit.userData.parentCompound.position.y = hit.userData.originalY + 9;
+          }
+        }
+
+        document.getElementById('tooltip-kanji').textContent = hit.userData.kanji || "";
+        document.getElementById('tooltip-title').textContent = hit.userData.title || "";
+        document.getElementById('tooltip-sub').textContent = "Clique para abrir lore e opções";
+        tooltip.style.left = `${event.clientX}px`;
+        tooltip.style.top = `${event.clientY - 15}px`;
+        tooltip.style.display = 'block';
+        tooltip.style.opacity = '1';
+        document.body.style.cursor = 'pointer';
+      } else {
+        if (currentHoveredObject) {
+          if (currentHoveredObject.userData.parentCompound) {
+            currentHoveredObject.userData.parentCompound.position.y = currentHoveredObject.userData.originalY;
+          }
+          currentHoveredObject = null;
+        }
+        tooltip.style.opacity = '0';
+        tooltip.style.display = 'none';
+        document.body.style.cursor = isAddMarkerMode ? 'crosshair' : 'default';
+      }
+    }
+
+    function onMouseClick(event) {
+      if (event.target.closest('header') || event.target.closest('aside') || event.target.closest('#regionModal')) return;
+
+      raycaster.setFromCamera(mouse, camera);
+
+      if (isAddMarkerMode) {
+        const groundIntersects = raycaster.intersectObjects(scene.children, true);
+        if (groundIntersects.length > 0) {
+          const pt = groundIntersects[0].point;
+          createCustomGMMarkerAt(pt.x, pt.y, pt.z);
+        }
+        return;
+      }
+
+      const activeObjects = interactiveObjects.filter(obj => obj.userData.world === currentWorld);
+      const intersects = raycaster.intersectObjects(activeObjects, false);
+      if (intersects.length > 0) {
+        const key = intersects[0].object.userData.regionKey;
+        if (key) {
+          const dataset = currentWorld === 'seireitei' ? CAMPAIGN_SEIREITEI : CAMPAIGN_RUKONGAI;
+          openRegionModal(key);
+          if (dataset[key]) flyCameraToTarget(dataset[key].coords);
+        }
+      }
+    }
+
+    function flyCameraToTarget(coords) {
+      if (!coords) return;
+
+      const targetX = coords.x;
+      const targetY = coords.y || 12;
+      const targetZ = coords.z;
+
+      const offsetDist = currentWorld === 'seireitei' ? 95 : 140;
+      const camTargetX = targetX + (targetX > 0 ? 55 : -55);
+      const camTargetY = targetY + offsetDist;
+      const camTargetZ = targetZ + offsetDist;
+
+      new TWEEN.Tween(camera.position)
+        .to({ x: camTargetX, y: camTargetY, z: camTargetZ }, 1100)
+        .easing(TWEEN.Easing.Cubic.Out)
+        .start();
+
+      new TWEEN.Tween(controls.target)
+        .to({ x: targetX, y: targetY + 12, z: targetZ }, 1100)
+        .easing(TWEEN.Easing.Cubic.Out)
+        .start();
+    }
+
+    function flyToOverview() {
+      const topY = currentWorld === 'seireitei' ? 480 : 750;
+      const topZ = currentWorld === 'seireitei' ? 530 : 880;
+
+      new TWEEN.Tween(camera.position)
+        .to({ x: 0, y: topY, z: topZ }, 1100)
+        .easing(TWEEN.Easing.Cubic.Out)
+        .start();
+
+      new TWEEN.Tween(controls.target)
+        .to({ x: 0, y: 18, z: 0 }, 1100)
+        .easing(TWEEN.Easing.Cubic.Out)
+        .start();
+    }
+
+
+    // ==========================================================
+    // 10. LIGHTING MODES (DAY / SUNSET / NIGHT)
+    // ==========================================================
+    function setLighting(mode) {
+      ['day', 'sunset', 'night'].forEach(m => {
+        const btn = document.getElementById(`btn-light-${m}`);
+        if (btn) btn.className = "px-2.5 py-1 text-xs font-semibold rounded-lg text-[#c7bcac] hover:text-white hover:bg-[#25180f] transition-all";
+      });
+      document.getElementById(`btn-light-${mode}`).className = "px-2.5 py-1 text-xs font-bold rounded-lg bg-[#ff6a13] text-black transition-all";
+
+      if (mode === 'day') {
+        scene.background.setHex(0x1a140e);
+        scene.fog.color.setHex(0x1a140e);
+        scene.fog.near = 1400;
+        scene.fog.far = 5800;
+        ambientLight.color.setHex(0xffecd6);
+        ambientLight.intensity = 0.95;
+        hemiLight.color.setHex(0xfff3e0);
+        hemiLight.groundColor.setHex(0x3d2b1f);
+        hemiLight.intensity = 0.75;
+        dirLight.color.setHex(0xfffaed);
+        dirLight.intensity = 1.55;
+        dirLight.position.set(500, 800, 400);
+      } else if (mode === 'sunset') {
+        scene.background.setHex(0x28160d);
+        scene.fog.color.setHex(0x28160d);
+        scene.fog.near = 1200;
+        scene.fog.far = 5500;
+        ambientLight.color.setHex(0xfda4af);
+        ambientLight.intensity = 0.9;
+        hemiLight.color.setHex(0xfb923c);
+        hemiLight.groundColor.setHex(0x271406);
+        hemiLight.intensity = 0.8;
+        dirLight.color.setHex(0xf97316);
+        dirLight.intensity = 1.75;
+        dirLight.position.set(500, 450, -400);
+      } else if (mode === 'night') {
+        scene.background.setHex(0x0c1220);
+        scene.fog.color.setHex(0x0c1220);
+        scene.fog.near = 1100;
+        scene.fog.far = 5000;
+        ambientLight.color.setHex(0x60a5fa);
+        ambientLight.intensity = 0.65;
+        hemiLight.color.setHex(0x93c5fd);
+        hemiLight.groundColor.setHex(0x090f1d);
+        hemiLight.intensity = 0.6;
+        dirLight.color.setHex(0xa5b4fc);
+        dirLight.intensity = 0.95;
+        dirLight.position.set(-400, 600, 400);
+      }
+    }
+
+
+    // ==========================================================
+    // 11. NAVIGATION LIST, LAYERS & GM MARKER TOOLS
+    // ==========================================================
+    function toggle3DLayer(layerName, visible) {
+      if (layerGroups[layerName]) {
+        layerGroups[layerName].visible = visible;
+      }
+    }
+
+    function toggleNavDrawer() {
+      document.getElementById('nav-drawer').classList.toggle('hidden');
+    }
+
+    function toggleLayerDrawer() {
+      document.getElementById('layer-drawer').classList.toggle('hidden');
+    }
+
+    function buildNavigatorList() {
+      const container = document.getElementById('nav-list');
+      container.innerHTML = '';
+
+      const dataset = currentWorld === 'seireitei' ? CAMPAIGN_SEIREITEI : CAMPAIGN_RUKONGAI;
+
+      Object.entries(dataset).forEach(([key, lore]) => {
+        const item = document.createElement('div');
+        item.className = "flex items-center justify-between p-2.5 rounded-lg bg-[#180f08] hover:bg-[#ff6a13] hover:text-black cursor-pointer transition-all border border-[#2d1c0f] group";
+        item.onclick = () => {
+          openRegionModal(key);
+          flyCameraToTarget(lore.coords);
+          toggleNavDrawer();
+        };
+
+        item.innerHTML = `
+          <div>
+            <div class="font-bold text-[11.5px] group-hover:text-black">${lore.title}</div>
+            <div class="text-[9px] text-[#e5b842] group-hover:text-black/80">${lore.kanji || ''} · ${lore.category}</div>
+          </div>
+          <span class="text-xs font-bold opacity-0 group-hover:opacity-100">✈️</span>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function filterNavigator(query) {
+      const q = query.toLowerCase().trim();
+      document.querySelectorAll('#nav-list > div').forEach(el => {
+        const text = el.textContent.toLowerCase();
+        el.style.display = text.includes(q) ? 'flex' : 'none';
+      });
+    }
+
+    function toggleAddMarkerMode() {
+      isAddMarkerMode = !isAddMarkerMode;
+      const btn = document.getElementById('btn-add-marker');
+      if (isAddMarkerMode) {
+        btn.className = "w-full py-2 bg-[#ef4444] text-white rounded-lg text-xs font-bold animate-pulse shadow-lg";
+        btn.textContent = "📍 Clique no Chão 3D para Fixar";
+        document.body.style.cursor = 'crosshair';
+      } else {
+        btn.className = "w-full py-2 bg-[#22160d] hover:bg-[#ff6a13] text-[#e5b842] hover:text-black border border-[#422e1c] rounded-lg text-xs font-bold transition-all shadow-md";
+        btn.textContent = "📍 Ativar 'Colocar Marcador'";
+        document.body.style.cursor = 'default';
+      }
+    }
+
+    function createCustomGMMarkerAt(x, y, z) {
+      const title = prompt("Título do Marcador do Mestre (ex: Emboscada Hollow, Vila Oculta, Acampamento Zaraki):");
+      if (!title) { toggleAddMarkerMode(); return; }
+      const type = prompt("Tipo de Marcador (combate / missao / npc / perigo / tesouro):", "missao") || "missao";
+
+      const newMarker = {
+        id: Date.now(),
+        world: currentWorld,
+        title: title.trim(),
+        type: type.toLowerCase().trim(),
+        x, y: y + 2, z
+      };
+
+      GM_MARKERS.push(newMarker);
+      localStorage.setItem('bleach_gm_markers', JSON.stringify(GM_MARKERS));
+      renderGMMarkers();
+      toggleAddMarkerMode();
+      alert(`✨ Marcador "${title}" fixado em ${currentWorld.toUpperCase()}!`);
+    }
+
+    function renderGMMarkers() {
+      while (layerGroups.gmMarkers.children.length > 0) {
+        layerGroups.gmMarkers.remove(layerGroups.gmMarkers.children[0]);
+      }
+
+      GM_MARKERS.filter(m => m.world === currentWorld).forEach(m => {
+        const pin = new THREE.Group();
+        pin.position.set(m.x, m.y, m.z);
+
+        let col = 0xff6a13;
+        if (m.type === 'combate') col = 0xef4444;
+        if (m.type === 'npc') col = 0x38bdf8;
+        if (m.type === 'perigo') col = 0xeab308;
+        if (m.type === 'tesouro') col = 0x10b981;
+
+        const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 0.2, 22, 8), new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.85 }));
+        pole.position.y = 11; pin.add(pole);
+
+        const orb = new THREE.Mesh(new THREE.SphereGeometry(3.8, 12, 12), new THREE.MeshStandardMaterial({ color: col, emissive: col, emissiveIntensity: 0.7 }));
+        orb.position.y = 23; pin.add(orb);
+
+        layerGroups.gmMarkers.add(pin);
+      });
+    }
+
+
+    // ==========================================================
+    // 12. MODAL DETAILS & LIVE ADMIN LORE EDITOR
+    // ==========================================================
+    function openRegionModal(regionKey) {
+      const dataset = currentWorld === 'seireitei' ? CAMPAIGN_SEIREITEI : CAMPAIGN_RUKONGAI;
+      const data = dataset[regionKey];
+      if (!data) return;
+
+      activeSelectedKey = regionKey;
+
+      document.getElementById('modalTitle').textContent = data.title;
+      document.getElementById('modalKanji').textContent = data.kanji || '';
+      document.getElementById('modalCategoryBadge').textContent = data.category;
+      document.getElementById('modalCanonTag').textContent = data.canonTag;
+      document.getElementById('modalSecurityLevel').textContent = data.securityLevel;
+
+      const savedImg = localStorage.getItem(`bleach_map_img_${regionKey}`);
+      document.getElementById('modalImage').src = savedImg || data.defaultImage;
+      document.getElementById('modalImageCaption').textContent = data.imageCaption;
+
+      document.getElementById('modalDescription').textContent = data.description;
+      document.getElementById('modalReiatsuText').textContent = data.reiatsu;
+      document.getElementById('modalReiatsuBar').style.width = data.reiatsuPercent || '80%';
+      document.getElementById('modalArchText').textContent = data.arch;
+
+      document.getElementById('modalLeader').textContent = data.leader;
+      document.getElementById('modalSubLeader').textContent = data.subLeader;
+      document.getElementById('modalFactions').textContent = data.factions;
+
+      const notableList = document.getElementById('modalNotableNpcs');
+      notableList.innerHTML = '';
+      (data.notableNpcs || []).forEach(npc => {
+        const item = document.createElement('div');
+        item.className = "flex items-start gap-2 bg-[#0e0905] p-2 rounded-lg border border-[#27170c]";
+        item.innerHTML = `<span class="text-[#ff6a13] font-bold">›</span><span>${npc}</span>`;
+        notableList.appendChild(item);
+      });
+
+      const missionList = document.getElementById('modalMissionsList');
+      missionList.innerHTML = '';
+      (data.missions || []).forEach(m => {
+        const item = document.createElement('div');
+        item.className = "flex items-start gap-2 bg-[#0e0905] p-2.5 rounded-lg border border-[#27170c]";
+        item.innerHTML = `<span class="text-[#ff6a13] font-bold">⚔️</span><span>${m}</span>`;
+        missionList.appendChild(item);
+      });
+      document.getElementById('modalSocialConflict').textContent = data.socialConflict || '';
+
+      const economyContainer = document.getElementById('modalEconomyContent');
+      economyContainer.innerHTML = '';
+      (data.economy || []).forEach(eco => {
+        const card = document.createElement('div');
+        card.className = "bg-[#0e0905] p-2.5 rounded-lg border border-[#27170c]";
+        card.innerHTML = `<div class="text-[10px] text-[#8f8270] uppercase font-semibold">${eco.item}</div><div class="text-xs font-bold text-[#e5b842] mt-0.5">${eco.cost}</div>`;
+        economyContainer.appendChild(card);
+      });
+
+      if (isEditMode) toggleEditMode();
+      switchModalTab('lore');
+      document.getElementById('regionModal').classList.remove('hidden');
+    }
+
+    function closeRegionModal() {
+      if (isEditMode) toggleEditMode();
+      document.getElementById('regionModal').classList.add('hidden');
+    }
+
+    function switchModalTab(tabId) {
+      ['lore', 'npcs', 'missions', 'economy'].forEach(t => {
+        const contentEl = document.getElementById(`modalTab-${t}`);
+        const btnEl = document.getElementById(`modalTabBtn-${t}`);
+        if (t === tabId) {
+          contentEl.classList.remove('hidden');
+          btnEl.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold bg-[#ff6a13] text-black shadow-md";
+        } else {
+          contentEl.classList.add('hidden');
+          btnEl.className = "px-3.5 py-1.5 rounded-lg text-xs font-semibold text-[#c7bcac] hover:text-white hover:bg-[#25180f] transition-all";
+        }
+      });
+    }
+
+    function toggleEditMode() {
+      isEditMode = !isEditMode;
+      const btn = document.getElementById('btn-edit-mode');
+      const icon = document.getElementById('edit-icon');
+      const text = document.getElementById('edit-text');
+
+      const editableIds = [
+        'modalTitle', 'modalKanji', 'modalSecurityLevel', 'modalDescription',
+        'modalReiatsuText', 'modalArchText', 'modalLeader', 'modalSubLeader',
+        'modalFactions', 'modalNotableNpcs', 'modalMissionsList', 'modalSocialConflict'
+      ];
+
+      if (isEditMode) {
+        editableIds.forEach(id => {
+          const el = document.getElementById(id);
+          if (el) {
+            el.contentEditable = "true";
+            el.classList.add('ring-1', 'ring-[#ff6a13]', 'p-1', 'rounded', 'bg-[#1e1309]');
+          }
+        });
+        btn.className = "px-3.5 py-2 bg-[#10b981] hover:bg-[#059669] text-black border border-[#059669] rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shadow-md";
+        icon.textContent = "💾"; text.textContent = "Salvar Alterações";
+      } else {
+        const dataset = currentWorld === 'seireitei' ? CAMPAIGN_SEIREITEI : CAMPAIGN_RUKONGAI;
+        const storageKey = currentWorld === 'seireitei' ? 'bleach_campaign_seireitei' : 'bleach_campaign_rukongai';
+
+        if (activeSelectedKey && dataset[activeSelectedKey]) {
+          const lore = dataset[activeSelectedKey];
+          lore.title = document.getElementById('modalTitle').textContent.trim();
+          lore.kanji = document.getElementById('modalKanji').textContent.trim();
+          lore.securityLevel = document.getElementById('modalSecurityLevel').textContent.trim();
+          lore.description = document.getElementById('modalDescription').textContent.trim();
+          lore.reiatsu = document.getElementById('modalReiatsuText').textContent.trim();
+          lore.arch = document.getElementById('modalArchText').textContent.trim();
+          lore.leader = document.getElementById('modalLeader').textContent.trim();
+          lore.subLeader = document.getElementById('modalSubLeader').textContent.trim();
+          lore.factions = document.getElementById('modalFactions').textContent.trim();
+          lore.socialConflict = document.getElementById('modalSocialConflict').textContent.trim();
+
+          localStorage.setItem(storageKey, JSON.stringify(dataset));
+          buildNavigatorList();
+          alert("✨ Alterações salvas com sucesso na campanha!");
+        }
+
+        editableIds.forEach(id => {
+          const el = document.getElementById(id);
+          if (el) {
+            el.contentEditable = "false";
+            el.classList.remove('ring-1', 'ring-[#ff6a13]', 'p-1', 'rounded', 'bg-[#1e1309]');
+          }
+        });
+        btn.className = "px-3.5 py-2 bg-[#261a11] hover:bg-[#382618] text-[#e5b842] border border-[#523720] rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shadow-md";
+        icon.textContent = "✏️"; text.textContent = "Editar Informações";
+      }
+    }
+
+    function handleImageFileUpload(e) {
+      const file = e.target.files[0];
+      if (!file || !activeSelectedKey) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const base64Data = evt.target.result;
+        localStorage.setItem(`bleach_map_img_${activeSelectedKey}`, base64Data);
+        document.getElementById('modalImage').src = base64Data;
+        alert("✨ Imagem salva com sucesso!");
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function promptImageUrl() {
+      if (!activeSelectedKey) return;
+      const url = prompt("Insira a URL da imagem:");
+      if (url && url.trim().length > 0) {
+        localStorage.setItem(`bleach_map_img_${activeSelectedKey}`, url.trim());
+        document.getElementById('modalImage').src = url.trim();
+        alert("✨ Link salvo!");
+      }
+    }
+
+    function resetRegionImage() {
+      if (!activeSelectedKey) return;
+      localStorage.removeItem(`bleach_map_img_${activeSelectedKey}`);
+      const dataset = currentWorld === 'seireitei' ? CAMPAIGN_SEIREITEI : CAMPAIGN_RUKONGAI;
+      document.getElementById('modalImage').src = dataset[activeSelectedKey].defaultImage;
+      alert("↺ Imagem restaurada!");
+    }
+
+    function exportCampaignData() {
+      const allData = { seireitei: CAMPAIGN_SEIREITEI, rukongai: CAMPAIGN_RUKONGAI, markers: GM_MARKERS };
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(allData, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", "soul_society_campaign_all_worlds.json");
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+
+    function importCampaignData(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        try {
+          const imported = JSON.parse(evt.target.result);
+          if (imported.seireitei) {
+            CAMPAIGN_SEIREITEI = imported.seireitei;
+            localStorage.setItem('bleach_campaign_seireitei', JSON.stringify(CAMPAIGN_SEIREITEI));
+          }
+          if (imported.rukongai) {
+            CAMPAIGN_RUKONGAI = imported.rukongai;
+            localStorage.setItem('bleach_campaign_rukongai', JSON.stringify(CAMPAIGN_RUKONGAI));
+          }
+          if (imported.markers) {
+            GM_MARKERS = imported.markers;
+            localStorage.setItem('bleach_gm_markers', JSON.stringify(GM_MARKERS));
+            renderGMMarkers();
+          }
+          buildNavigatorList();
+          alert("✨ Lore completa de Seireitei & Rukongai importada com sucesso!");
+        } catch (err) {
+          alert("❌ Erro ao ler arquivo JSON!");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function copyRegionLoreToClipboard() {
+      if (!activeSelectedKey) return;
+      const dataset = currentWorld === 'seireitei' ? CAMPAIGN_SEIREITEI : CAMPAIGN_RUKONGAI;
+      const d = dataset[activeSelectedKey];
+      if (!d) return;
+      const text = `⛩️ *SOUL SOCIETY RPG (~500 ANOS ANTES)*\n\n` +
+                   `📍 *Local:* ${d.title} (${d.kanji || ''})\n` +
+                   `🛡️ *Liderança:* ${d.leader}\n` +
+                   `⚡ *Densidade Espiritual:* ${d.reiatsu}\n\n` +
+                   `📜 *Descrição:* ${d.description}\n\n` +
+                   `🌐 *Portal:* https://maluttima.github.io/BleachRPG/`;
+      navigator.clipboard.writeText(text).then(() => alert("✨ Informações copiadas para o WhatsApp!"));
+    }
+
+    document.getElementById('regionModal').addEventListener('click', (e) => {
+      if (e.target.id === 'regionModal') closeRegionModal();
+    });
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeRegionModal();
+    });
+
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+
+    // ==========================================================
+    // 13. ANIMATION LOOP, LOD & COMPASS ROTATION
+    // ==========================================================
+    function animate(time) {
+      requestAnimationFrame(animate);
+
+      const currentTime = (typeof time === 'number' && !isNaN(time)) ? time : performance.now();
+      TWEEN.update(currentTime);
+
+      if (controls) controls.update();
+
+      // 1. Fluid Water Wave Physics in Seireitei
+      if (currentWorld === 'seireitei' && liquidRingGeo && liquidRingGeo.userData && liquidRingGeo.userData.initialZ) {
+        const pos = liquidRingGeo.attributes.position.array;
+        const init = liquidRingGeo.userData.initialZ;
+        const t = currentTime * 0.0025;
+        for (let i = 0; i < pos.length; i += 3) {
+          const u = init[i];
+          const v = init[i + 1];
+          const wave = Math.sin(u * 0.07 + t * 2.2) * Math.cos(v * 0.07 + t * 1.8) * 0.55
+                     + Math.sin(Math.hypot(u, v) * 0.12 - t * 3.2) * 0.35;
+          pos[i + 2] = init[i + 2] + wave;
+        }
+        liquidRingGeo.attributes.position.needsUpdate = true;
+        liquidRingGeo.computeVertexNormals();
+      }
+
+      // 2. Reishi Particles Drift
+      if (particleGeometry && particleGeometry.attributes.position) {
+        const pos = particleGeometry.attributes.position.array;
+        for (let i = 1; i < pos.length; i += 3) {
+          pos[i] += 0.18;
+          if (pos[i] > 120) pos[i] = 5;
+        }
+        particleGeometry.attributes.position.needsUpdate = true;
+      }
+
+      // 3. Dynamic LOD for Cartographic Labels based on Camera Distance
+      const activeLabels = currentWorld === 'seireitei' ? cartographicLabels : rukongaiLabels;
+      if (camera && activeLabels.length > 0) {
+        activeLabels.forEach(lbl => {
+          const d = camera.position.distanceTo(lbl.position);
+          const targetScale = Math.max(24, Math.min(65, d * 0.08));
+          lbl.scale.set(targetScale * 2.8, targetScale * 0.8, 1);
+
+          if (d > 1600) {
+            lbl.material.opacity = Math.max(0, 1 - (d - 1600) / 400);
+          } else if (d < 70) {
+            lbl.material.opacity = Math.max(0.2, (d - 30) / 40);
+          } else {
+            lbl.material.opacity = 0.95;
+          }
+        });
+      }
+
+      // 4. Rotate Minimap Compass needle
+      const compass = document.getElementById('minimap-compass');
+      if (compass && controls) {
+        const azimuthAngle = controls.getAzimuthalAngle();
+        compass.style.transform = `rotate(${azimuthAngle * (180 / Math.PI)}deg)`;
+      }
+
+      if (renderer && scene && camera) {
+        renderer.render(scene, camera);
+      }
+    }
+
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+      setTimeout(init3D, 1);
+    } else {
+      window.addEventListener('DOMContentLoaded', init3D);
+    }
+  </script>
+</body>
+</html>
