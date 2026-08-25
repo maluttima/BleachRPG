@@ -56,6 +56,10 @@
     ::-webkit-scrollbar-thumb { background: #3b2818; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #ff6a13; }
 
+    *, *::before, *::after {
+      -webkit-tap-highlight-color: transparent;
+    }
+
     body {
       background-color: #050403;
       color: #F5EFE6;
@@ -64,6 +68,8 @@
       margin: 0;
       padding: 0;
       user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
     }
 
     #webgl-canvas-container {
@@ -73,6 +79,17 @@
       top: 0;
       left: 0;
       z-index: 1;
+      touch-action: none;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    #webgl-canvas-container canvas {
+      touch-action: none !important;
+      display: block;
+      width: 100%;
+      height: 100%;
     }
 
     /* 3D Floating Tooltip */
@@ -150,68 +167,73 @@
   <!-- ========================================== -->
   <!-- TOP HEADER HUD (Cartographic & Tactical) -->
   <!-- ========================================== -->
-  <header class="absolute top-0 left-0 right-0 z-20 px-4 py-3 pointer-events-none flex flex-wrap items-center justify-between gap-3 bg-gradient-to-b from-[#050403]/95 via-[#050403]/60 to-transparent">
+  <header class="absolute top-0 left-0 right-0 z-20 px-2 sm:px-4 py-2 sm:py-3 pointer-events-none flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 sm:gap-3 bg-gradient-to-b from-[#050403]/95 via-[#050403]/70 to-transparent">
     
-    <!-- Title & Era Banner -->
-    <div class="pointer-events-auto flex items-center gap-3.5">
-      <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-[#ff6a13] via-[#e5b842] to-[#802a00] p-[1.5px] flex items-center justify-center shadow-lg shadow-[#ff6a13]/35">
-        <div id="header-kanji-icon" class="w-full h-full bg-[#120d09] rounded-[10px] flex items-center justify-center text-[#ff6a13] font-kanji font-bold text-2xl">
-          廷
+    <!-- Top row on mobile: Title + World Switcher -->
+    <div class="flex items-center justify-between gap-2 w-full sm:w-auto">
+      <!-- Title & Era Banner -->
+      <div class="pointer-events-auto flex items-center gap-2 sm:gap-3.5">
+        <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-[#ff6a13] via-[#e5b842] to-[#802a00] p-[1.5px] flex items-center justify-center shadow-lg shadow-[#ff6a13]/35 flex-shrink-0">
+          <div id="header-kanji-icon" class="w-full h-full bg-[#120d09] rounded-[10px] flex items-center justify-center text-[#ff6a13] font-kanji font-bold text-xl sm:text-2xl">
+            廷
+          </div>
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+            <h1 id="header-map-title" class="font-title text-lg sm:text-3xl tracking-wider text-white flex items-center gap-1.5 drop-shadow-md">
+              SEIREITEI 3D <span class="text-[#ff6a13] font-kanji text-base sm:text-xl">瀞霊廷</span>
+            </h1>
+            <span class="text-[9px] sm:text-[10px] font-bold tracking-widest uppercase bg-[#ff6a13]/20 text-[#ff6a13] border border-[#ff6a13]/50 px-1.5 py-0.5 rounded backdrop-blur-sm">
+              ~500 Anos
+            </span>
+          </div>
+          <p id="header-map-subtitle" class="text-[11px] text-[#c4b9a8] hidden md:block drop-shadow">
+            Cidade Fortificada Monumental · 13 Divisões, Central 46, Sōkyoku e Quarteirões
+          </p>
         </div>
       </div>
-      <div>
-        <div class="flex items-center gap-2 flex-wrap">
-          <h1 id="header-map-title" class="font-title text-2xl sm:text-3xl tracking-wider text-white flex items-center gap-2 drop-shadow-md">
-            SEIREITEI 3D <span class="text-[#ff6a13] font-kanji text-xl">瀞霊廷</span>
-          </h1>
-          <span class="text-[10px] font-bold tracking-widest uppercase bg-[#ff6a13]/20 text-[#ff6a13] border border-[#ff6a13]/50 px-2 py-0.5 rounded-md backdrop-blur-sm">
-            Era: ~500 Anos Antes
-          </span>
-        </div>
-        <p id="header-map-subtitle" class="text-xs text-[#c4b9a8] hidden sm:block drop-shadow">
-          Cidade Fortificada Monumental · 13 Divisões, Central 46, Sōkyoku e Quarteirões
-        </p>
+
+      <!-- Central Dual-Map Switcher (SEIREITEI ⇄ RUKONGAI) -->
+      <div class="pointer-events-auto flex items-center glass-panel rounded-xl sm:rounded-2xl p-1 sm:p-1.5 gap-1 sm:gap-1.5 shadow-2xl border border-[#e5b842]/40">
+        <button id="btn-world-seireitei" onclick="switchActiveWorld('seireitei')" class="px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-lg sm:rounded-xl text-[11px] sm:text-xs font-bold transition-all flex items-center gap-1 active-world-btn" title="Entrar na Capital Fortificada (Gotei 13)">
+          <span>🏯</span> <span class="tracking-wider">SEIREITEI</span>
+        </button>
+        <button id="btn-world-rukongai" onclick="switchActiveWorld('rukongai')" class="px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-lg sm:rounded-xl text-[11px] sm:text-xs font-semibold text-[#c7bcac] hover:text-white hover:bg-[#25180f] transition-all flex items-center gap-1" title="Explorar o Vasto Mundo Orgânico dos 320 Distritos">
+          <span>⛩️</span> <span class="tracking-wider">RUKONGAI</span>
+        </button>
       </div>
     </div>
 
-    <!-- Central Dual-Map Switcher (SEIREITEI ⇄ RUKONGAI) -->
-    <div class="pointer-events-auto flex items-center glass-panel rounded-2xl p-1.5 gap-1.5 shadow-2xl border border-[#e5b842]/40">
-      <button id="btn-world-seireitei" onclick="switchActiveWorld('seireitei')" class="px-4 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 active-world-btn" title="Entrar na Capital Fortificada (Gotei 13)">
-        <span>🏯</span> <span>SEIREITEI</span>
-      </button>
-      <button id="btn-world-rukongai" onclick="switchActiveWorld('rukongai')" class="px-4 py-1.5 rounded-xl text-xs font-semibold text-[#c7bcac] hover:text-white hover:bg-[#25180f] transition-all flex items-center gap-1.5" title="Explorar o Vasto Mundo Orgânico dos 320 Distritos">
-        <span>⛩️</span> <span>RUKONGAI (320 Distritos)</span>
-      </button>
-    </div>
-
-    <!-- Lighting, Overview, and Layer Toggles -->
-    <div class="pointer-events-auto flex items-center gap-2 flex-wrap">
+    <!-- Second row on mobile: Action buttons + Lighting -->
+    <div class="pointer-events-auto flex items-center justify-between sm:justify-end gap-1.5 sm:gap-2 flex-wrap">
       
       <!-- Lighting presets -->
-      <div class="flex items-center glass-panel rounded-xl p-1 gap-1">
-        <button onclick="setLighting('day')" id="btn-light-day" class="px-2.5 py-1 text-xs font-bold rounded-lg bg-[#ff6a13] text-black transition-all" title="Luz do Sol Radiante">
+      <div class="flex items-center glass-panel rounded-lg sm:rounded-xl p-0.5 sm:p-1 gap-0.5 sm:gap-1">
+        <button onclick="setLighting('day')" id="btn-light-day" class="px-2 sm:px-2.5 py-1 text-[10.5px] sm:text-xs font-bold rounded-md sm:rounded-lg bg-[#ff6a13] text-black transition-all" title="Luz do Sol Radiante">
           ☀️ Dia
         </button>
-        <button onclick="setLighting('sunset')" id="btn-light-sunset" class="px-2.5 py-1 text-xs font-semibold rounded-lg text-[#c7bcac] hover:text-white hover:bg-[#25180f] transition-all" title="Pôr do Sol (Reiatsu Dourada)">
+        <button onclick="setLighting('sunset')" id="btn-light-sunset" class="px-2 sm:px-2.5 py-1 text-[10.5px] sm:text-xs font-semibold rounded-md sm:rounded-lg text-[#c7bcac] hover:text-white hover:bg-[#25180f] transition-all" title="Pôr do Sol (Reiatsu Dourada)">
           🌅 Tarde
         </button>
-        <button onclick="setLighting('night')" id="btn-light-night" class="px-2.5 py-1 text-xs font-semibold rounded-lg text-[#c7bcac] hover:text-white hover:bg-[#25180f] transition-all" title="Noite Espiritual com Lanternas">
+        <button onclick="setLighting('night')" id="btn-light-night" class="px-2 sm:px-2.5 py-1 text-[10.5px] sm:text-xs font-semibold rounded-md sm:rounded-lg text-[#c7bcac] hover:text-white hover:bg-[#25180f] transition-all" title="Noite Espiritual com Lanternas">
           🌙 Noite
         </button>
       </div>
 
       <!-- Quick Action Buttons -->
-      <button onclick="flyToOverview()" class="glass-panel hover:bg-[#ff6a13] hover:text-black text-white px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-lg border border-[#422e1c]" title="Visão Geral Superior">
-        <span>🗺️</span> Visão Geral
-      </button>
+      <div class="flex items-center gap-1 sm:gap-2">
+        <button onclick="flyToOverview()" class="glass-panel hover:bg-[#ff6a13] hover:text-black text-white px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl text-[10.5px] sm:text-xs font-bold transition-all flex items-center gap-1 shadow-lg border border-[#422e1c]" title="Visão Geral Superior">
+          <span>🗺️</span> <span class="hidden xs:inline">Geral</span>
+        </button>
 
-      <button onclick="toggleLayerDrawer()" class="glass-panel hover:bg-[#261b11] text-[#e5b842] px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-lg border border-[#422e1c]">
-        <span>⚙️</span> Camadas & Mestre
-      </button>
+        <button onclick="toggleLayerDrawer()" class="glass-panel hover:bg-[#261b11] text-[#e5b842] px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl text-[10.5px] sm:text-xs font-bold transition-all flex items-center gap-1 shadow-lg border border-[#422e1c]" title="Camadas e Ferramentas">
+          <span>⚙️</span> <span class="hidden xs:inline">Camadas</span>
+        </button>
 
-      <button onclick="toggleNavDrawer()" id="btn-open-navigator" class="glass-panel bg-[#ff6a13]/20 hover:bg-[#ff6a13] text-[#ff6a13] hover:text-black px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-lg border border-[#ff6a13]/50">
-        <span>📍</span> Navegador de Regiões
-      </button>
+        <button onclick="toggleNavDrawer()" id="btn-open-navigator" class="glass-panel bg-[#ff6a13]/20 hover:bg-[#ff6a13] text-[#ff6a13] hover:text-black px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl text-[10.5px] sm:text-xs font-bold transition-all flex items-center gap-1 shadow-lg border border-[#ff6a13]/50">
+          <span>📍</span> <span>Locais</span>
+        </button>
+      </div>
 
     </div>
   </header>
@@ -220,12 +242,12 @@
   <!-- ========================================== -->
   <!-- LEFT DRAWER: REGION / DISTRICT NAVIGATOR -->
   <!-- ========================================== -->
-  <aside id="nav-drawer" class="absolute top-16 left-4 z-20 w-84 max-h-[82vh] glass-panel rounded-2xl p-4 flex flex-col shadow-2xl transition-all duration-300 hidden">
+  <aside id="nav-drawer" class="absolute top-20 sm:top-16 left-2 sm:left-4 z-30 w-[94vw] sm:w-84 max-h-[75vh] sm:max-h-[82vh] glass-panel rounded-2xl p-3.5 sm:p-4 flex flex-col shadow-2xl transition-all duration-300 hidden">
     <div class="flex items-center justify-between border-b border-[#2e2014] pb-2 mb-2">
       <div id="nav-drawer-title" class="text-xs font-bold uppercase tracking-wider text-[#e5b842] flex items-center gap-1.5">
         <span>🏯</span> Voo para Estruturas & Quartéis
       </div>
-      <button onclick="toggleNavDrawer()" class="text-xs text-[#8f8270] hover:text-white">✕</button>
+      <button onclick="toggleNavDrawer()" class="text-xs text-[#8f8270] hover:text-white p-1">✕</button>
     </div>
 
     <!-- Search Input -->
@@ -241,12 +263,12 @@
   <!-- ========================================== -->
   <!-- RIGHT DRAWER: LAYERS & GM RPG TOOLS -->
   <!-- ========================================== -->
-  <aside id="layer-drawer" class="absolute top-16 right-4 z-20 w-80 max-h-[82vh] glass-panel rounded-2xl p-4 flex flex-col shadow-2xl transition-all duration-300 hidden">
+  <aside id="layer-drawer" class="absolute top-20 sm:top-16 right-2 sm:right-4 z-30 w-[94vw] sm:w-80 max-h-[75vh] sm:max-h-[82vh] glass-panel rounded-2xl p-3.5 sm:p-4 flex flex-col shadow-2xl transition-all duration-300 hidden">
     <div class="flex items-center justify-between border-b border-[#2e2014] pb-2 mb-3">
       <div class="text-xs font-bold uppercase tracking-wider text-[#ff6a13] flex items-center gap-1.5">
         <span>⚙️</span> Camadas & Ferramentas do Mestre
       </div>
-      <button onclick="toggleLayerDrawer()" class="text-xs text-[#8f8270] hover:text-white">✕</button>
+      <button onclick="toggleLayerDrawer()" class="text-xs text-[#8f8270] hover:text-white p-1">✕</button>
     </div>
 
     <div class="space-y-3.5 overflow-y-auto pr-1 text-xs text-[#cfc5b4]">
@@ -313,24 +335,31 @@
   <!-- ========================================== -->
   <!-- BOTTOM CONTROLS HINT HUD & MINIMAP -->
   <!-- ========================================== -->
-  <footer class="absolute bottom-3 left-4 right-4 z-20 pointer-events-none flex items-center justify-between">
+  <footer class="absolute bottom-2 sm:bottom-3 left-2 sm:left-4 right-2 sm:right-4 z-20 pointer-events-none flex items-center justify-between gap-2">
     
-    <!-- Controls Hint -->
+    <!-- Controls Hint (Desktop) -->
     <div class="hidden sm:flex items-center gap-3.5 glass-panel px-4 py-2 rounded-full text-xs text-[#a89c89]">
       <span class="flex items-center gap-1"><kbd class="bg-[#24170e] px-1.5 py-0.5 rounded text-white text-[10px] font-bold">Botão Esquerdo</kbd> Girar 360°</span>
       <span class="flex items-center gap-1"><kbd class="bg-[#24170e] px-1.5 py-0.5 rounded text-white text-[10px] font-bold">Botão Direito</kbd> Mover (Pan)</span>
-      <span class="flex items-center gap-1"><kbd class="bg-[#24170e] px-1.5 py-0.5 rounded text-white text-[10px] font-bold">Scroll</kbd> Zoom Multinível</span>
-      <span class="text-[#ff6a13]">✦ Clique em qualquer local para explorar</span>
+      <span class="flex items-center gap-1"><kbd class="bg-[#24170e] px-1.5 py-0.5 rounded text-white text-[10px] font-bold">Scroll</kbd> Zoom</span>
+      <span class="text-[#ff6a13]">✦ Toque / Clique em qualquer local</span>
+    </div>
+
+    <!-- Controls Hint (Mobile) -->
+    <div class="sm:hidden flex items-center gap-1.5 glass-panel px-3 py-1.5 rounded-full text-[10.5px] text-[#cfc5b4] shadow-lg">
+      <span class="text-[#ff6a13] font-bold">👆 Toque no local</span>
+      <span class="text-[#523e2b]">•</span>
+      <span>🤏 2 dedos: Zoom</span>
     </div>
 
     <!-- Minimap Radar Compass (Bottom Right) -->
-    <div class="pointer-events-auto glass-panel w-24 h-24 rounded-full flex items-center justify-center p-1.5 shadow-2xl relative">
+    <div class="pointer-events-auto glass-panel w-16 h-16 sm:w-24 sm:h-24 rounded-full flex items-center justify-center p-1 sm:p-1.5 shadow-2xl relative flex-shrink-0">
       <div id="minimap-compass" class="w-full h-full rounded-full compass-ring flex items-center justify-center relative transition-transform duration-100">
-        <span class="absolute top-1 text-[9px] font-bold text-[#ff6a13]">N</span>
-        <span class="absolute bottom-1 text-[9px] font-bold text-[#8f8270]">S</span>
-        <span class="absolute left-1.5 text-[9px] font-bold text-[#8f8270]">O</span>
-        <span class="absolute right-1.5 text-[9px] font-bold text-[#8f8270]">L</span>
-        <div id="compass-center-dot" class="w-2.5 h-2.5 rounded-full bg-[#ff6a13] shadow-md shadow-[#ff6a13]/80"></div>
+        <span class="absolute top-0.5 sm:top-1 text-[8px] sm:text-[9px] font-bold text-[#ff6a13]">N</span>
+        <span class="absolute bottom-0.5 sm:bottom-1 text-[8px] sm:text-[9px] font-bold text-[#8f8270]">S</span>
+        <span class="absolute left-1 sm:left-1.5 text-[8px] sm:text-[9px] font-bold text-[#8f8270]">O</span>
+        <span class="absolute right-1 sm:right-1.5 text-[8px] sm:text-[9px] font-bold text-[#8f8270]">L</span>
+        <div id="compass-center-dot" class="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-[#ff6a13] shadow-md shadow-[#ff6a13]/80"></div>
       </div>
     </div>
 
@@ -416,17 +445,17 @@
         <!-- ===================================================== -->
         <!-- MODAL SUB-TABS (Lore / NPCs / Missões / Economia) -->
         <!-- ===================================================== -->
-        <div class="flex items-center gap-1 border-b border-[#2e1f12] pb-1">
-          <button id="modalTabBtn-lore" onclick="switchModalTab('lore')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-[#ff6a13] text-black">
+        <div class="flex items-center gap-1 border-b border-[#2e1f12] pb-1 overflow-x-auto whitespace-nowrap">
+          <button id="modalTabBtn-lore" onclick="switchModalTab('lore')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-[#ff6a13] text-black flex-shrink-0">
             📜 Lore & Função
           </button>
-          <button id="modalTabBtn-npcs" onclick="switchModalTab('npcs')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-[#c7bcac] hover:text-white hover:bg-[#25180f]">
+          <button id="modalTabBtn-npcs" onclick="switchModalTab('npcs')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-[#c7bcac] hover:text-white hover:bg-[#25180f] flex-shrink-0">
             ⚔️ Liderança & População
           </button>
-          <button id="modalTabBtn-missions" onclick="switchModalTab('missions')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-[#c7bcac] hover:text-white hover:bg-[#25180f]">
+          <button id="modalTabBtn-missions" onclick="switchModalTab('missions')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-[#c7bcac] hover:text-white hover:bg-[#25180f] flex-shrink-0">
             🎯 Missões & Perigos
           </button>
-          <button id="modalTabBtn-economy" onclick="switchModalTab('economy')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-[#c7bcac] hover:text-white hover:bg-[#25180f]">
+          <button id="modalTabBtn-economy" onclick="switchModalTab('economy')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-[#c7bcac] hover:text-white hover:bg-[#25180f] flex-shrink-0">
             💰 Economia & Kan
           </button>
         </div>
@@ -1556,7 +1585,7 @@
       renderer.toneMappingExposure = 1.25;
       container.appendChild(renderer.domElement);
 
-      // OrbitControls (Smooth high-altitude zoom)
+      // OrbitControls (Smooth high-altitude zoom & multi-touch support)
       controls = new THREE.OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true;
       controls.dampingFactor = 0.06;
@@ -1564,6 +1593,10 @@
       controls.minDistance = 35;
       controls.maxDistance = 3200;
       controls.target.set(0, 18, 0);
+      controls.touches = {
+        ONE: THREE.TOUCH.ROTATE,
+        TWO: THREE.TOUCH.DOLLY_PAN
+      };
 
       // Lighting Setup (Crisp, High-Altitude Sunlight & Ambient Fill)
       ambientLight = new THREE.AmbientLight(0xffecd6, 0.95);
@@ -1630,10 +1663,25 @@
       buildRukongaiWorld();
       renderGMMarkers();
 
-      // Events
+      // Events - Multi-platform Pointer & Touch Support
       window.addEventListener('resize', onWindowResize);
-      renderer.domElement.addEventListener('mousemove', onMouseMove);
-      renderer.domElement.addEventListener('click', onMouseClick);
+
+      const canvasEl = renderer.domElement;
+      canvasEl.style.touchAction = 'none';
+
+      // Primary Pointer Listeners (Mouse, Touch, Stylus)
+      canvasEl.addEventListener('pointerdown', onPointerDown, { passive: true });
+      canvasEl.addEventListener('pointermove', onPointerMove, { passive: true });
+      canvasEl.addEventListener('pointerup', onPointerUp, { passive: true });
+      canvasEl.addEventListener('pointercancel', onPointerCancel, { passive: true });
+
+      // Fallback Touch Listeners for mobile iframes/webviews
+      canvasEl.addEventListener('touchstart', onTouchStart, { passive: true });
+      canvasEl.addEventListener('touchmove', onTouchMove, { passive: true });
+      canvasEl.addEventListener('touchend', onTouchEnd, { passive: true });
+
+      // Fallback Click Listener
+      canvasEl.addEventListener('click', onMouseClick);
 
       // Populate Initial Navigation
       buildNavigatorList();
@@ -1975,8 +2023,8 @@
         beacon.position.y = 26 * s;
         comp.add(beacon);
 
-        const hitBox = new THREE.Mesh(new THREE.BoxGeometry(50 * s, 42 * s, 42 * s), new THREE.MeshBasicMaterial({ visible: false }));
-        hitBox.position.y = 21 * s;
+        const hitBox = new THREE.Mesh(new THREE.BoxGeometry(60 * s, 55 * s, 50 * s), new THREE.MeshBasicMaterial({ visible: false }));
+        hitBox.position.y = 24 * s;
         hitBox.userData = { regionKey: item.key, title: lore.title, kanji: lore.kanji, parentCompound: comp, originalY: lore.coords.y, world: 'seireitei' };
         comp.add(hitBox);
         interactiveObjects.push(hitBox);
@@ -2113,8 +2161,8 @@
         canvas.width = 256; canvas.height = 70;
         const ctx = canvas.getContext('2d');
 
-        ctx.fillStyle = 'rgba(18, 13, 9, 0.82)';
-        ctx.strokeStyle = 'rgba(255, 106, 19, 0.7)';
+        ctx.fillStyle = 'rgba(18, 13, 9, 0.88)';
+        ctx.strokeStyle = 'rgba(255, 106, 19, 0.8)';
         ctx.lineWidth = 3;
         ctx.beginPath();
         ctx.rect(8, 8, 240, 54);
@@ -2134,7 +2182,9 @@
         const sprite = new THREE.Sprite(spriteMat);
         sprite.position.set(item.coords.x, (item.coords.y || 14) + 38, item.coords.z);
         sprite.scale.set(38, 11, 1);
+        sprite.userData = { regionKey: key, title: item.title, kanji: item.kanji, world: 'seireitei' };
         cartographicLabels.push(sprite);
+        interactiveObjects.push(sprite);
         layerGroups.labels.add(sprite);
       });
     }
@@ -2299,9 +2349,9 @@
         beacon.position.y = 30;
         hub.add(beacon);
 
-        // Raycasting Hitbox
-        const hitBox = new THREE.Mesh(new THREE.BoxGeometry(55, 48, 55), new THREE.MeshBasicMaterial({ visible: false }));
-        hitBox.position.y = 22;
+        // Raycasting Hitbox (Generous for mobile touch)
+        const hitBox = new THREE.Mesh(new THREE.BoxGeometry(70, 60, 70), new THREE.MeshBasicMaterial({ visible: false }));
+        hitBox.position.y = 26;
         hitBox.userData = { regionKey: key, title: d.title, kanji: d.kanji, parentCompound: hub, originalY: d.coords.y || 12, world: 'rukongai' };
         hub.add(hitBox);
         interactiveObjects.push(hitBox);
@@ -2422,7 +2472,9 @@
         const sprite = new THREE.Sprite(spriteMat);
         sprite.position.set(item.coords.x, (item.coords.y || 12) + 42, item.coords.z);
         sprite.scale.set(46, 12, 1);
+        sprite.userData = { regionKey: key, title: item.title, kanji: item.kanji, world: 'rukongai' };
         rukongaiLabels.push(sprite);
+        interactiveObjects.push(sprite);
         rukGroup.add(sprite);
       });
     }
@@ -2491,54 +2543,171 @@
 
 
     // ==========================================================
-    // 9. RAYCASTING, INTERACTION & CAMERA FLIGHT
+    // 9. RAYCASTING, MOBILE TOUCH & INTERACTION ENGINE
     // ==========================================================
+    let pointerStartX = 0;
+    let pointerStartY = 0;
+    let pointerStartTime = 0;
+    let isDragging = false;
+    let lastProcessedTapTime = 0;
+
+    function onPointerDown(event) {
+      pointerStartX = event.clientX;
+      pointerStartY = event.clientY;
+      pointerStartTime = Date.now();
+      isDragging = false;
+    }
+
+    function onPointerMove(event) {
+      if (Math.hypot(event.clientX - pointerStartX, event.clientY - pointerStartY) > 10) {
+        isDragging = true;
+      }
+      if (event.pointerType === 'mouse') {
+        updateHover(event.clientX, event.clientY);
+      }
+    }
+
+    function onPointerUp(event) {
+      const dist = Math.hypot(event.clientX - pointerStartX, event.clientY - pointerStartY);
+      const elapsed = Date.now() - pointerStartTime;
+
+      if (!isDragging && dist < 14 && elapsed < 650) {
+        const now = Date.now();
+        if (now - lastProcessedTapTime > 150) {
+          lastProcessedTapTime = now;
+          handleSelectOrClick(event.clientX, event.clientY, event.target);
+        }
+      }
+    }
+
+    function onPointerCancel() {
+      isDragging = false;
+    }
+
+    function onTouchStart(event) {
+      if (event.touches && event.touches[0]) {
+        pointerStartX = event.touches[0].clientX;
+        pointerStartY = event.touches[0].clientY;
+        pointerStartTime = Date.now();
+        isDragging = false;
+      }
+    }
+
+    function onTouchMove(event) {
+      if (event.touches && event.touches[0]) {
+        const cx = event.touches[0].clientX;
+        const cy = event.touches[0].clientY;
+        if (Math.hypot(cx - pointerStartX, cy - pointerStartY) > 10) {
+          isDragging = true;
+        }
+      }
+    }
+
+    function onTouchEnd(event) {
+      if (event.changedTouches && event.changedTouches[0]) {
+        const cx = event.changedTouches[0].clientX;
+        const cy = event.changedTouches[0].clientY;
+        const dist = Math.hypot(cx - pointerStartX, cy - pointerStartY);
+        const elapsed = Date.now() - pointerStartTime;
+
+        if (!isDragging && dist < 14 && elapsed < 650) {
+          const now = Date.now();
+          if (now - lastProcessedTapTime > 150) {
+            lastProcessedTapTime = now;
+            handleSelectOrClick(cx, cy, event.target);
+          }
+        }
+      }
+    }
+
     function onMouseMove(event) {
-      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+      updateHover(event.clientX, event.clientY);
+    }
+
+    function onMouseClick(event) {
+      const now = Date.now();
+      if (now - lastProcessedTapTime > 150) {
+        lastProcessedTapTime = now;
+        handleSelectOrClick(event.clientX, event.clientY, event.target);
+      }
+    }
+
+    function updateHover(clientX, clientY) {
+      if (!renderer || !camera || !scene) return;
+      const rect = renderer.domElement.getBoundingClientRect();
+      mouse.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.y = -((clientY - rect.top) / rect.height) * 2 + 1;
 
       raycaster.setFromCamera(mouse, camera);
-      const activeObjects = interactiveObjects.filter(obj => obj.userData.world === currentWorld);
-      const intersects = raycaster.intersectObjects(activeObjects, false);
+      const activeObjects = interactiveObjects.filter(obj => obj.userData && obj.userData.world === currentWorld);
+      const intersects = raycaster.intersectObjects(activeObjects, true);
 
       const tooltip = document.getElementById('tooltip-3d');
 
       if (intersects.length > 0) {
-        const hit = intersects[0].object;
+        let hit = intersects[0].object;
+        let kanji = hit.userData?.kanji;
+        let title = hit.userData?.title;
+        let parentCompound = hit.userData?.parentCompound;
+        let originalY = hit.userData?.originalY;
+
+        let curr = hit;
+        while ((!title || !parentCompound) && curr.parent && curr.parent !== scene) {
+          curr = curr.parent;
+          if (curr.userData?.title && !title) title = curr.userData.title;
+          if (curr.userData?.kanji && !kanji) kanji = curr.userData.kanji;
+          if (curr.userData?.parentCompound && !parentCompound) parentCompound = curr.userData.parentCompound;
+          if (curr.userData?.originalY !== undefined && originalY === undefined) originalY = curr.userData.originalY;
+        }
+
         if (currentHoveredObject !== hit) {
-          if (currentHoveredObject && currentHoveredObject.userData.parentCompound) {
+          if (currentHoveredObject && currentHoveredObject.userData?.parentCompound) {
             currentHoveredObject.userData.parentCompound.position.y = currentHoveredObject.userData.originalY;
           }
           currentHoveredObject = hit;
-          if (hit.userData.parentCompound) {
-            hit.userData.parentCompound.position.y = hit.userData.originalY + 9;
+          if (parentCompound && originalY !== undefined) {
+            parentCompound.position.y = originalY + 8;
           }
         }
 
-        document.getElementById('tooltip-kanji').textContent = hit.userData.kanji || "";
-        document.getElementById('tooltip-title').textContent = hit.userData.title || "";
-        document.getElementById('tooltip-sub').textContent = "Clique para abrir lore e opções";
-        tooltip.style.left = `${event.clientX}px`;
-        tooltip.style.top = `${event.clientY - 15}px`;
-        tooltip.style.display = 'block';
-        tooltip.style.opacity = '1';
-        document.body.style.cursor = 'pointer';
-      } else {
-        if (currentHoveredObject) {
-          if (currentHoveredObject.userData.parentCompound) {
-            currentHoveredObject.userData.parentCompound.position.y = currentHoveredObject.userData.originalY;
-          }
-          currentHoveredObject = null;
+        if (title && tooltip) {
+          document.getElementById('tooltip-kanji').textContent = kanji || "";
+          document.getElementById('tooltip-title').textContent = title || "";
+          document.getElementById('tooltip-sub').textContent = "Toque / Clique para abrir lore";
+          tooltip.style.left = `${clientX}px`;
+          tooltip.style.top = `${clientY - 15}px`;
+          tooltip.style.display = 'block';
+          tooltip.style.opacity = '1';
+          document.body.style.cursor = 'pointer';
+          return;
         }
+      }
+
+      if (currentHoveredObject) {
+        if (currentHoveredObject.userData?.parentCompound) {
+          currentHoveredObject.userData.parentCompound.position.y = currentHoveredObject.userData.originalY;
+        }
+        currentHoveredObject = null;
+      }
+      if (tooltip) {
         tooltip.style.opacity = '0';
         tooltip.style.display = 'none';
-        document.body.style.cursor = isAddMarkerMode ? 'crosshair' : 'default';
       }
+      document.body.style.cursor = isAddMarkerMode ? 'crosshair' : 'default';
     }
 
-    function onMouseClick(event) {
-      if (event.target.closest('header') || event.target.closest('aside') || event.target.closest('#regionModal')) return;
+    function handleSelectOrClick(clientX, clientY, target) {
+      if (!renderer || !camera || !scene) return;
+      if (target && (target.closest('header') || target.closest('aside') || target.closest('#regionModal') || target.closest('button') || target.closest('input') || target.closest('a'))) {
+        return;
+      }
 
+      const rect = renderer.domElement.getBoundingClientRect();
+      const clickX = ((clientX - rect.left) / rect.width) * 2 - 1;
+      const clickY = -((clientY - rect.top) / rect.height) * 2 + 1;
+
+      mouse.x = clickX;
+      mouse.y = clickY;
       raycaster.setFromCamera(mouse, camera);
 
       if (isAddMarkerMode) {
@@ -2550,14 +2719,25 @@
         return;
       }
 
-      const activeObjects = interactiveObjects.filter(obj => obj.userData.world === currentWorld);
-      const intersects = raycaster.intersectObjects(activeObjects, false);
+      const activeObjects = interactiveObjects.filter(obj => obj.userData && obj.userData.world === currentWorld);
+      const intersects = raycaster.intersectObjects(activeObjects, true);
+
       if (intersects.length > 0) {
-        const key = intersects[0].object.userData.regionKey;
+        let hitObject = intersects[0].object;
+        let key = hitObject.userData?.regionKey;
+        let curr = hitObject;
+        while (!key && curr.parent && curr.parent !== scene) {
+          curr = curr.parent;
+          if (curr.userData?.regionKey) key = curr.userData.regionKey;
+        }
+
         if (key) {
           const dataset = currentWorld === 'seireitei' ? CAMPAIGN_SEIREITEI : CAMPAIGN_RUKONGAI;
           openRegionModal(key);
           if (dataset[key]) flyCameraToTarget(dataset[key].coords);
+          if (navigator.vibrate) {
+            try { navigator.vibrate(25); } catch(e) {}
+          }
         }
       }
     }
@@ -2775,6 +2955,12 @@
 
       activeSelectedKey = regionKey;
 
+      const tooltip = document.getElementById('tooltip-3d');
+      if (tooltip) {
+        tooltip.style.opacity = '0';
+        tooltip.style.display = 'none';
+      }
+
       document.getElementById('modalTitle').textContent = data.title;
       document.getElementById('modalKanji').textContent = data.kanji || '';
       document.getElementById('modalCategoryBadge').textContent = data.category;
@@ -2838,10 +3024,10 @@
         const btnEl = document.getElementById(`modalTabBtn-${t}`);
         if (t === tabId) {
           contentEl.classList.remove('hidden');
-          btnEl.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold bg-[#ff6a13] text-black shadow-md";
+          btnEl.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold bg-[#ff6a13] text-black shadow-md flex-shrink-0";
         } else {
           contentEl.classList.add('hidden');
-          btnEl.className = "px-3.5 py-1.5 rounded-lg text-xs font-semibold text-[#c7bcac] hover:text-white hover:bg-[#25180f] transition-all";
+          btnEl.className = "px-3.5 py-1.5 rounded-lg text-xs font-semibold text-[#c7bcac] hover:text-white hover:bg-[#25180f] transition-all flex-shrink-0";
         }
       });
     }
