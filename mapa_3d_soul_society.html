@@ -310,11 +310,30 @@
 
       <!-- GM Marker Tool -->
       <div class="border-t border-[#2e2014] pt-3">
-        <div class="text-[10px] uppercase font-bold text-[#ff6a13] tracking-wider mb-1.5">Marcadores de RPG (Mestre)</div>
+        <div class="flex items-center justify-between mb-1.5">
+          <div class="text-[10px] uppercase font-bold text-[#ff6a13] tracking-wider">Marcadores de Conflito (ADM / Mestre)</div>
+          <span id="gm-markers-count-badge" class="text-[9.5px] px-1.5 py-0.2 rounded bg-[#ff6a13]/20 text-[#ff6a13] font-bold border border-[#ff6a13]/40">0 ativos</span>
+        </div>
         <button id="btn-add-marker" onclick="toggleAddMarkerMode()" class="w-full py-2 bg-[#22160d] hover:bg-[#ff6a13] text-[#e5b842] hover:text-black border border-[#422e1c] rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-md">
           <span>📍</span> Ativar 'Colocar Marcador'
         </button>
-        <p class="text-[10px] text-[#8f8270] mt-1.5 leading-tight">Ao ativar, clique em qualquer ponto 3D do mapa atual para fixar um pin de Batalha, Missão, NPC ou Segredo.</p>
+        <p class="text-[9.5px] text-[#8f8270] mt-1.5 leading-tight">Ao ativar, clique em qualquer ponto do chão 3D para abrir o modal de criação de conflito, missão ou NPC.</p>
+        
+        <!-- Active Markers Dynamic List -->
+        <div class="mt-2.5 space-y-1">
+          <div class="text-[9px] uppercase font-bold text-[#8f8270] tracking-wider flex items-center justify-between">
+            <span>Marcadores no Mapa Atual</span>
+          </div>
+          <div id="gm-markers-list-container" class="space-y-1.5 max-h-48 overflow-y-auto pr-1">
+            <!-- Dynamic items rendered via renderGMMarkersDrawerList() -->
+          </div>
+        </div>
+
+        <div class="mt-2 pt-2 border-t border-[#24170e]">
+          <button onclick="clearAllGMMarkersInCurrentWorld()" class="w-full py-1 bg-red-950/40 hover:bg-red-900 border border-red-500/30 hover:border-red-500 text-red-300 text-[10px] font-semibold rounded transition-all">
+            🗑️ Limpar Todos os Marcadores deste Mundo
+          </button>
+        </div>
       </div>
 
       <!-- Backup / Export Lore -->
@@ -554,6 +573,259 @@
           </div>
 
           <button onclick="closeRegionModal()" class="px-6 py-2 bg-gradient-to-r from-[#ff6a13] to-[#c94e0a] hover:brightness-110 text-black font-bold rounded-xl text-xs tracking-wider uppercase transition-all shadow-lg shadow-[#ff6a13]/25">
+            Fechar
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================ -->
+  <!-- MODAL DE CRIAÇÃO / EDIÇÃO DE MARCADOR DO MESTRE & ADM -->
+  <!-- ============================================================ -->
+  <div id="markerEditModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div class="relative w-full max-w-2xl bg-[#140e09] border-2 border-[#422c18] rounded-2xl shadow-[0_30px_90px_rgba(0,0,0,0.98)] overflow-hidden modal-enter text-[#f5efe6]">
+      
+      <!-- Top Dynamic Color Bar -->
+      <div id="markerModalAccent" class="h-2.5 w-full bg-gradient-to-r from-[#ff6a13] via-[#e5b842] to-[#ef4444]"></div>
+
+      <!-- Close Button -->
+      <button onclick="closeMarkerEditModal()" class="absolute top-4 right-4 z-30 w-8 h-8 rounded-full bg-[#24170e] border border-[#4a3420] hover:border-[#ff6a13] text-[#cfc5b4] hover:text-white flex items-center justify-center text-sm transition-all shadow-lg">
+        ✕
+      </button>
+
+      <!-- Modal Body -->
+      <div class="p-5 sm:p-7 max-h-[85vh] overflow-y-auto space-y-4">
+        
+        <!-- Header -->
+        <div class="flex items-center gap-3 border-b border-[#2e1f12] pb-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#ff6a13] to-[#ef4444] p-[1.5px] flex items-center justify-center shadow-lg shadow-[#ff6a13]/30 flex-shrink-0">
+            <div id="markerModalHeaderIcon" class="w-full h-full bg-[#120d09] rounded-[10px] flex items-center justify-center text-xl">
+              ⚔️
+            </div>
+          </div>
+          <div>
+            <h3 id="markerEditModalTitle" class="text-xl sm:text-2xl font-title tracking-wider text-white">
+              NOVO MARCADOR DE CONFLITO (ADM / MESTRE)
+            </h3>
+            <p class="text-xs text-[#a89c89]">
+              Defina o local, formato 3D, cor da Reiatsu e visibilidade na Soul Society
+            </p>
+          </div>
+        </div>
+
+        <!-- Form Fields -->
+        <div class="space-y-3.5 text-xs">
+          
+          <!-- Título -->
+          <div>
+            <label class="block text-[10px] uppercase font-bold text-[#e5b842] tracking-wider mb-1">
+              Título do Conflito / Evento *
+            </label>
+            <input type="text" id="gmMarkerTitle" placeholder="Ex: Invasão Menos Grande no Distrito 80, Duelo de Capitães, Anomalia de Kidō..." class="w-full bg-[#090705] border border-[#332314] rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-[#665443] focus:outline-none focus:border-[#ff6a13] focus:ring-1 focus:ring-[#ff6a13]" />
+          </div>
+
+          <!-- Grid: Tipo / Categoria & Nível de Ameaça -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-[10px] uppercase font-bold text-[#8f8270] tracking-wider mb-1">
+                Tipo / Categoria
+              </label>
+              <select id="gmMarkerType" onchange="onMarkerTypeChange(this.value)" class="w-full bg-[#090705] border border-[#332314] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#ff6a13]">
+                <option value="combate">⚔️ Combate / Batalha Mortal</option>
+                <option value="perigo">⚠️ Perigo / Ameaça Hollow / Menos</option>
+                <option value="missao">🎯 Missão / Alerta de Emergência</option>
+                <option value="npc">👥 Encontro com NPC / Facção</option>
+                <option value="selamento">⚡ Barreira Kekkai / Anomalia Kidō</option>
+                <option value="tesouro">💎 Tesouro / Relíquia Espiritual</option>
+                <option value="conspiracao">🏛️ Conspiração / Central 46</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-[10px] uppercase font-bold text-[#8f8270] tracking-wider mb-1">
+                Nível de Ameaça / Reiatsu
+              </label>
+              <select id="gmMarkerThreat" class="w-full bg-[#090705] border border-[#332314] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#ff6a13]">
+                <option value="Grau 5 (Baixo / Treino)">Grau 5 · Baixo (Treino / Patrulha Comum)</option>
+                <option value="Grau 4 (Médio / Oficial)">Grau 4 · Médio (Oficiais Sentinelas)</option>
+                <option value="Grau 3 (Alto / Tenente)">Grau 3 · Alto (Nível Tenente / Menos)</option>
+                <option value="Grau 2 (Crítico / Capitão)" selected>Grau 2 · Crítico (Nível Capitão / Arrancar)</option>
+                <option value="Grau 1 (Catastrófico)">Grau 1 · Catastrófico (Yamamoto / Vasto Lorde)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Grid: Estrutura 3D & Cor da Reiatsu -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-[10px] uppercase font-bold text-[#8f8270] tracking-wider mb-1">
+                Estrutura Visual 3D (Formato no Mapa)
+              </label>
+              <select id="gmMarkerStructure" class="w-full bg-[#090705] border border-[#332314] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#ff6a13]">
+                <option value="pilar">⚡ Pilar / Feixe Vertical de Reiatsu</option>
+                <option value="pin">📍 Pin Clássico com Orbe & Halo</option>
+                <option value="monolito">🏛️ Monólito / Obelisco de Selamento</option>
+                <option value="torii">⛩️ Torii Sagrado com Chama Flutuante</option>
+                <option value="cristal">💎 Prisma / Cristal Hexagonal Giratório</option>
+                <option value="cranio">💀 Totem de Caveira / Alerta de Morte</option>
+                <option value="estandarte">🚩 Estandarte / Bandeira Militar</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-[10px] uppercase font-bold text-[#8f8270] tracking-wider mb-1">
+                Cor da Reiatsu (Selecione uma tonalidade)
+              </label>
+              <div class="flex items-center gap-1.5 flex-wrap pt-0.5" id="gmMarkerColorPalette">
+                <!-- Color Chips dynamically generated in init -->
+              </div>
+              <input type="hidden" id="gmMarkerColor" value="#ef4444" />
+            </div>
+          </div>
+
+          <!-- Status & Participantes -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-[10px] uppercase font-bold text-[#8f8270] tracking-wider mb-1">
+                Status do Conflito
+              </label>
+              <select id="gmMarkerStatus" class="w-full bg-[#090705] border border-[#332314] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#ff6a13]">
+                <option value="ativo" selected>🔴 Em Andamento (Ativo)</option>
+                <option value="investigando">🟡 Em Investigação</option>
+                <option value="resolvido">🟢 Resolvido / Pacificado</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-[10px] uppercase font-bold text-[#8f8270] tracking-wider mb-1">
+                Personagens / Forças Envolvidas
+              </label>
+              <input type="text" id="gmMarkerParticipants" placeholder="Ex: 11ª Divisão, Zaraki, Hollows, NPCs..." class="w-full bg-[#090705] border border-[#332314] rounded-xl px-3.5 py-2 text-xs text-white placeholder-[#665443] focus:outline-none focus:border-[#ff6a13]" />
+            </div>
+          </div>
+
+          <!-- Descrição Detalhada -->
+          <div>
+            <label class="block text-[10px] uppercase font-bold text-[#8f8270] tracking-wider mb-1">
+              Descrição & Lore do Conflito para os Jogadores
+            </label>
+            <textarea id="gmMarkerDescription" rows="4" placeholder="Descreva o que está ocorrendo nesta região da Soul Society, os perigos visíveis, atmosfera e objetivos da cena..." class="w-full bg-[#090705] border border-[#332314] rounded-xl px-3.5 py-2 text-xs text-white placeholder-[#665443] focus:outline-none focus:border-[#ff6a13] resize-none"></textarea>
+          </div>
+
+        </div>
+
+        <!-- Hidden inputs for marker ID / Coords -->
+        <input type="hidden" id="gmMarkerId" value="" />
+        <input type="hidden" id="gmMarkerCoordsX" value="0" />
+        <input type="hidden" id="gmMarkerCoordsY" value="0" />
+        <input type="hidden" id="gmMarkerCoordsZ" value="0" />
+
+        <!-- Modal Footer Actions -->
+        <div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-[#2e1f12]">
+          <div class="flex items-center gap-2">
+            <button id="btn-delete-marker-in-edit" onclick="deleteCurrentEditingMarker()" class="px-4 py-2 bg-red-950/70 hover:bg-red-800 border border-red-500/60 text-red-200 text-xs font-bold rounded-xl transition-all shadow-md hidden flex items-center gap-1.5">
+              <span>🗑️</span> Excluir Marcador
+            </button>
+            <button onclick="closeMarkerEditModal()" class="px-4 py-2 bg-[#1f140b] hover:bg-[#2e1e12] border border-[#422c18] text-[#c7bcac] hover:text-white text-xs font-semibold rounded-xl transition-all">
+              Cancelar
+            </button>
+          </div>
+
+          <button onclick="saveGMMarkerFromModal()" class="px-6 py-2.5 bg-gradient-to-r from-[#ff6a13] to-[#c94e0a] hover:brightness-110 text-black font-extrabold rounded-xl text-xs tracking-wider uppercase transition-all shadow-lg shadow-[#ff6a13]/30 flex items-center gap-1.5">
+            <span>💾</span> Salvar Marcador no Mapa
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================ -->
+  <!-- MODAL DE DETALHES DO MARCADOR / CONFLITO (VISUALIZAÇÃO) -->
+  <!-- ============================================================ -->
+  <div id="markerDetailModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div class="relative w-full max-w-2xl bg-[#140e09] border-2 border-[#422c18] rounded-2xl shadow-[0_30px_90px_rgba(0,0,0,0.98)] overflow-hidden modal-enter text-[#f5efe6]">
+      
+      <!-- Top Dynamic Color Bar -->
+      <div id="markerDetailAccent" class="h-2.5 w-full bg-gradient-to-r from-[#ff6a13] to-[#ef4444]"></div>
+
+      <!-- Close Button -->
+      <button onclick="closeMarkerDetailModal()" class="absolute top-4 right-4 z-30 w-8 h-8 rounded-full bg-[#24170e] border border-[#4a3420] hover:border-[#ff6a13] text-[#cfc5b4] hover:text-white flex items-center justify-center text-sm transition-all shadow-lg">
+        ✕
+      </button>
+
+      <!-- Modal Body -->
+      <div class="p-5 sm:p-7 max-h-[85vh] overflow-y-auto space-y-4">
+        
+        <!-- Header Info -->
+        <div class="border-b border-[#2e1f12] pb-3">
+          <div class="flex items-center gap-2 flex-wrap mb-1.5">
+            <span id="markerDetailCategoryBadge" class="text-[10px] font-bold tracking-wider uppercase px-2.5 py-0.5 rounded bg-red-950/80 text-red-400 border border-red-500/50">
+              ⚔️ COMBATE
+            </span>
+            <span id="markerDetailStatusBadge" class="text-[10px] font-bold tracking-wider uppercase px-2.5 py-0.5 rounded bg-[#ff6a13]/20 text-[#ff6a13] border border-[#ff6a13]/40">
+              🔴 EM ANDAMENTO
+            </span>
+            <span id="markerDetailWorldBadge" class="text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded bg-[#e5b842]/15 text-[#e5b842] border border-[#e5b842]/30">
+              🏯 SEIREITEI
+            </span>
+          </div>
+          <h2 id="markerDetailTitle" class="text-2xl sm:text-3xl font-title tracking-wider text-white">
+            TÍTULO DO CONFLITO
+          </h2>
+        </div>
+
+        <!-- Meta Grid: Threat, Structure, Participants -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+          <div class="bg-[#191008] p-3 rounded-xl border border-[#2e1e10]">
+            <div class="text-[9.5px] uppercase font-bold text-[#8f8270] tracking-wider">Ameaça / Reiatsu</div>
+            <div id="markerDetailThreat" class="text-xs font-bold text-[#e5b842] mt-0.5">Grau 2 (Capitão)</div>
+          </div>
+          <div class="bg-[#191008] p-3 rounded-xl border border-[#2e1e10]">
+            <div class="text-[9.5px] uppercase font-bold text-[#8f8270] tracking-wider">Estrutura Visual 3D</div>
+            <div id="markerDetailStructure" class="text-xs font-bold text-white mt-0.5">⚡ Pilar de Reiatsu</div>
+          </div>
+          <div class="bg-[#191008] p-3 rounded-xl border border-[#2e1e10]">
+            <div class="text-[9.5px] uppercase font-bold text-[#8f8270] tracking-wider">Forças Envolvidas</div>
+            <div id="markerDetailParticipants" class="text-xs font-bold text-[#38bdf8] mt-0.5 truncate">Gotei 13</div>
+          </div>
+        </div>
+
+        <!-- Lore / Descrição -->
+        <div class="bg-[#191008] p-4 rounded-xl border border-[#2e1e10] space-y-1.5">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-[#ff6a13] flex items-center gap-1.5">
+            <span>📜</span> Relatório da Situação & Ocorrência
+          </h4>
+          <p id="markerDetailDescription" class="text-sm leading-relaxed text-[#dcd2c3] whitespace-pre-wrap">
+            Descrição do conflito...
+          </p>
+        </div>
+
+        <!-- Coordinates Info -->
+        <div class="flex items-center justify-between text-[11px] text-[#8f8270] px-1">
+          <span id="markerDetailCoords">📍 Coordenadas: X: 0, Y: 0, Z: 0</span>
+          <span id="markerDetailDate">🕒 Registrado recentemente</span>
+        </div>
+
+        <!-- Action Footer -->
+        <div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-[#2e1f12]">
+          <div class="flex items-center gap-2">
+            <button onclick="copyMarkerLoreToClipboard()" class="px-3.5 py-2 bg-[#1b120a] hover:bg-[#291b0f] text-[#dcd2c3] border border-[#3b2716] rounded-xl text-xs font-medium flex items-center gap-1.5 transition-all shadow-md">
+              <span>📋</span> Copiar para WhatsApp
+            </button>
+            <button onclick="editCurrentActiveMarker()" class="px-3.5 py-2 bg-[#261a11] hover:bg-[#382618] text-[#e5b842] border border-[#523720] rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shadow-md" title="Editar este marcador (ADM/Subadm)">
+              <span>✏️</span> Editar
+            </button>
+            <button onclick="deleteActiveDetailMarker()" class="px-3.5 py-2 bg-red-950/70 hover:bg-red-800 border border-red-500/60 text-red-200 text-xs font-bold rounded-xl transition-all shadow-md flex items-center gap-1.5" title="Remover este marcador do mapa (ADM/Subadm)">
+              <span>🗑️</span> Remover do Mapa
+            </button>
+          </div>
+
+          <button onclick="closeMarkerDetailModal()" class="px-6 py-2 bg-gradient-to-r from-[#ff6a13] to-[#c94e0a] hover:brightness-110 text-black font-bold rounded-xl text-xs tracking-wider uppercase transition-all shadow-lg shadow-[#ff6a13]/25">
             Fechar
           </button>
         </div>
@@ -1661,6 +1933,7 @@
       // Build Both Worlds Procedurally
       buildSeireiteiWorld();
       buildRukongaiWorld();
+      initMarkerColorPalette();
       renderGMMarkers();
 
       // Events - Multi-platform Pointer & Touch Support
@@ -2517,8 +2790,9 @@
             document.getElementById('btn-world-seireitei').className = 'px-4 py-1.5 rounded-xl text-xs font-semibold text-[#c7bcac] hover:text-white hover:bg-[#25180f] transition-all flex items-center gap-1.5';
           }
 
-          // Rebuild Navigation list for current world
+          // Rebuild Navigation list and GM markers for current world
           buildNavigatorList();
+          renderGMMarkers();
 
           // 3. Drop Camera into the New World
           const dropY = targetWorld === 'seireitei' ? 480 : 750;
@@ -2646,18 +2920,36 @@
 
       if (intersects.length > 0) {
         let hit = intersects[0].object;
+        let isGM = hit.userData?.isGMMarker;
+        let gmTitle = hit.userData?.title;
         let kanji = hit.userData?.kanji;
         let title = hit.userData?.title;
         let parentCompound = hit.userData?.parentCompound;
         let originalY = hit.userData?.originalY;
 
         let curr = hit;
-        while ((!title || !parentCompound) && curr.parent && curr.parent !== scene) {
+        while ((!title || (!parentCompound && !isGM)) && curr.parent && curr.parent !== scene) {
           curr = curr.parent;
+          if (curr.userData?.isGMMarker) {
+            isGM = true;
+            gmTitle = curr.userData.title;
+          }
           if (curr.userData?.title && !title) title = curr.userData.title;
           if (curr.userData?.kanji && !kanji) kanji = curr.userData.kanji;
           if (curr.userData?.parentCompound && !parentCompound) parentCompound = curr.userData.parentCompound;
           if (curr.userData?.originalY !== undefined && originalY === undefined) originalY = curr.userData.originalY;
+        }
+
+        if (isGM && tooltip) {
+          document.getElementById('tooltip-kanji').textContent = "⚔️ CONFLITO / EVENTO";
+          document.getElementById('tooltip-title').textContent = gmTitle || title || "Marcador de RPG";
+          document.getElementById('tooltip-sub').textContent = "Toque / Clique para ver detalhes e opções";
+          tooltip.style.left = `${clientX}px`;
+          tooltip.style.top = `${clientY - 15}px`;
+          tooltip.style.display = 'block';
+          tooltip.style.opacity = '1';
+          document.body.style.cursor = 'pointer';
+          return;
         }
 
         if (currentHoveredObject !== hit) {
@@ -2698,7 +2990,7 @@
 
     function handleSelectOrClick(clientX, clientY, target) {
       if (!renderer || !camera || !scene) return;
-      if (target && (target.closest('header') || target.closest('aside') || target.closest('#regionModal') || target.closest('button') || target.closest('input') || target.closest('a'))) {
+      if (target && (target.closest('header') || target.closest('aside') || target.closest('#regionModal') || target.closest('#markerEditModal') || target.closest('#markerDetailModal') || target.closest('button') || target.closest('input') || target.closest('a') || target.closest('select') || target.closest('textarea'))) {
         return;
       }
 
@@ -2714,7 +3006,7 @@
         const groundIntersects = raycaster.intersectObjects(scene.children, true);
         if (groundIntersects.length > 0) {
           const pt = groundIntersects[0].point;
-          createCustomGMMarkerAt(pt.x, pt.y, pt.z);
+          openCreateMarkerModal(pt.x, pt.y, pt.z);
         }
         return;
       }
@@ -2724,11 +3016,31 @@
 
       if (intersects.length > 0) {
         let hitObject = intersects[0].object;
+        
+        let isGM = hitObject.userData?.isGMMarker;
+        let markerId = hitObject.userData?.markerId;
         let key = hitObject.userData?.regionKey;
+
         let curr = hitObject;
-        while (!key && curr.parent && curr.parent !== scene) {
+        while (curr && curr !== scene) {
+          if (curr.userData?.isGMMarker) {
+            isGM = true;
+            markerId = curr.userData.markerId;
+            break;
+          }
+          if (curr.userData?.regionKey) {
+            key = curr.userData.regionKey;
+            break;
+          }
           curr = curr.parent;
-          if (curr.userData?.regionKey) key = curr.userData.regionKey;
+        }
+
+        if (isGM && markerId) {
+          openMarkerDetailsModal(markerId);
+          if (navigator.vibrate) {
+            try { navigator.vibrate(25); } catch(e) {}
+          }
+          return;
         }
 
         if (key) {
@@ -2885,12 +3197,95 @@
       });
     }
 
+    // ==========================================================
+    // 11. GM MARKERS & CONFLICT MANAGEMENT ENGINE (ADM / MESTRE)
+    // ==========================================================
+    const MARKER_COLOR_PALETTE = [
+      { hex: '#ef4444', label: 'Vermelho Carmesim · Batalha / Hollow' },
+      { hex: '#ff6a13', label: 'Laranja Solar · Yamamoto / Combate' },
+      { hex: '#e5b842', label: 'Dourado Real · Nobreza / Central 46' },
+      { hex: '#38bdf8', label: 'Azul Reiatsu · Kidō / Oficial' },
+      { hex: '#a855f7', label: 'Roxo Espiritual · Kekkai / Sombras' },
+      { hex: '#10b981', label: 'Verde Esmeralda · 4ª Div / Cura' },
+      { hex: '#ec4899', label: 'Rosa Sakura · Senbonzakura' },
+      { hex: '#f8fafc', label: 'Branco Prata · Pureza / Quincy' }
+    ];
+
+    const MARKER_STRUCTURE_LABELS = {
+      pilar: '⚡ Pilar de Reiatsu',
+      pin: '📍 Pin com Orbe & Halo',
+      monolito: '🏛️ Monólito de Selamento',
+      torii: '⛩️ Torii Sagrado com Fogo',
+      cristal: '💎 Prisma / Cristal Hexagonal',
+      cranio: '💀 Totem de Caveira',
+      estandarte: '🚩 Estandarte Militar'
+    };
+
+    const MARKER_TYPE_ICONS = {
+      combate: '⚔️',
+      perigo: '⚠️',
+      missao: '🎯',
+      npc: '👥',
+      selamento: '⚡',
+      tesouro: '💎',
+      conspiracao: '🏛️'
+    };
+
+    let activeDetailMarkerId = null;
+
+    function initMarkerColorPalette() {
+      const container = document.getElementById('gmMarkerColorPalette');
+      if (!container) return;
+      container.innerHTML = '';
+
+      MARKER_COLOR_PALETTE.forEach(c => {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'w-6 h-6 rounded-full border-2 transition-all cursor-pointer transform hover:scale-110 flex items-center justify-center';
+        chip.style.backgroundColor = c.hex;
+        chip.style.borderColor = (document.getElementById('gmMarkerColor')?.value === c.hex) ? '#ffffff' : '#422c18';
+        chip.title = c.label;
+        chip.onclick = () => setMarkerColor(c.hex);
+        chip.dataset.colorHex = c.hex;
+        container.appendChild(chip);
+      });
+    }
+
+    function setMarkerColor(hex) {
+      document.getElementById('gmMarkerColor').value = hex;
+      const accent = document.getElementById('markerModalAccent');
+      if (accent) accent.style.background = `linear-gradient(to right, ${hex}, #e5b842, ${hex})`;
+
+      // Update active border on color chips
+      document.querySelectorAll('#gmMarkerColorPalette button').forEach(btn => {
+        btn.style.borderColor = (btn.dataset.colorHex === hex) ? '#ffffff' : '#422c18';
+        btn.style.boxShadow = (btn.dataset.colorHex === hex) ? `0 0 10px ${hex}` : 'none';
+      });
+    }
+
+    function onMarkerTypeChange(type) {
+      const iconEl = document.getElementById('markerModalHeaderIcon');
+      if (iconEl) iconEl.textContent = MARKER_TYPE_ICONS[type] || '⚔️';
+
+      // Auto-suggest matching structure & color if creating new
+      if (!document.getElementById('gmMarkerId').value) {
+        const structSelect = document.getElementById('gmMarkerStructure');
+        if (type === 'combate') { setMarkerColor('#ef4444'); structSelect.value = 'pilar'; }
+        else if (type === 'perigo') { setMarkerColor('#ef4444'); structSelect.value = 'cranio'; }
+        else if (type === 'missao') { setMarkerColor('#ff6a13'); structSelect.value = 'estandarte'; }
+        else if (type === 'npc') { setMarkerColor('#38bdf8'); structSelect.value = 'pin'; }
+        else if (type === 'selamento') { setMarkerColor('#a855f7'); structSelect.value = 'monolito'; }
+        else if (type === 'tesouro') { setMarkerColor('#e5b842'); structSelect.value = 'cristal'; }
+        else if (type === 'conspiracao') { setMarkerColor('#a855f7'); structSelect.value = 'monolito'; }
+      }
+    }
+
     function toggleAddMarkerMode() {
       isAddMarkerMode = !isAddMarkerMode;
       const btn = document.getElementById('btn-add-marker');
       if (isAddMarkerMode) {
         btn.className = "w-full py-2 bg-[#ef4444] text-white rounded-lg text-xs font-bold animate-pulse shadow-lg";
-        btn.textContent = "📍 Clique no Chão 3D para Fixar";
+        btn.textContent = "📍 Clique no Chão 3D para Abrir Modal";
         document.body.style.cursor = 'crosshair';
       } else {
         btn.className = "w-full py-2 bg-[#22160d] hover:bg-[#ff6a13] text-[#e5b842] hover:text-black border border-[#422e1c] rounded-lg text-xs font-bold transition-all shadow-md";
@@ -2899,49 +3294,405 @@
       }
     }
 
-    function createCustomGMMarkerAt(x, y, z) {
-      const title = prompt("Título do Marcador do Mestre (ex: Emboscada Hollow, Vila Oculta, Acampamento Zaraki):");
-      if (!title) { toggleAddMarkerMode(); return; }
-      const type = prompt("Tipo de Marcador (combate / missao / npc / perigo / tesouro):", "missao") || "missao";
+    function openCreateMarkerModal(x, y, z) {
+      if (isAddMarkerMode) toggleAddMarkerMode();
 
-      const newMarker = {
-        id: Date.now(),
+      document.getElementById('markerEditModalTitle').textContent = "NOVO MARCADOR DE CONFLITO (ADM / MESTRE)";
+      document.getElementById('gmMarkerId').value = "";
+      document.getElementById('gmMarkerCoordsX').value = Math.round(x);
+      document.getElementById('gmMarkerCoordsY').value = Math.round(y);
+      document.getElementById('gmMarkerCoordsZ').value = Math.round(z);
+
+      document.getElementById('gmMarkerTitle').value = "";
+      document.getElementById('gmMarkerType').value = "combate";
+      document.getElementById('gmMarkerThreat').value = "Grau 2 (Crítico / Capitão)";
+      document.getElementById('gmMarkerStructure').value = "pilar";
+      document.getElementById('gmMarkerStatus').value = "ativo";
+      document.getElementById('gmMarkerParticipants').value = "";
+      document.getElementById('gmMarkerDescription').value = "";
+
+      setMarkerColor('#ef4444');
+      document.getElementById('btn-delete-marker-in-edit').classList.add('hidden');
+
+      const tooltip = document.getElementById('tooltip-3d');
+      if (tooltip) { tooltip.style.opacity = '0'; tooltip.style.display = 'none'; }
+
+      document.getElementById('markerEditModal').classList.remove('hidden');
+      setTimeout(() => document.getElementById('gmMarkerTitle').focus(), 50);
+    }
+
+    function openEditMarkerModal(markerId) {
+      const m = GM_MARKERS.find(item => item.id == markerId);
+      if (!m) return;
+
+      closeMarkerDetailModal();
+
+      document.getElementById('markerEditModalTitle').textContent = "EDITAR MARCADOR DE CONFLITO";
+      document.getElementById('gmMarkerId').value = m.id;
+      document.getElementById('gmMarkerCoordsX').value = m.x;
+      document.getElementById('gmMarkerCoordsY').value = m.y;
+      document.getElementById('gmMarkerCoordsZ').value = m.z;
+
+      document.getElementById('gmMarkerTitle').value = m.title || "";
+      document.getElementById('gmMarkerType').value = m.type || "combate";
+      document.getElementById('gmMarkerThreat').value = m.threat || "Grau 2 (Crítico / Capitão)";
+      document.getElementById('gmMarkerStructure').value = m.structure || "pilar";
+      document.getElementById('gmMarkerStatus').value = m.status || "ativo";
+      document.getElementById('gmMarkerParticipants').value = m.participants || "";
+      document.getElementById('gmMarkerDescription').value = m.description || "";
+
+      setMarkerColor(m.color || '#ef4444');
+      document.getElementById('btn-delete-marker-in-edit').classList.remove('hidden');
+
+      const tooltip = document.getElementById('tooltip-3d');
+      if (tooltip) { tooltip.style.opacity = '0'; tooltip.style.display = 'none'; }
+
+      document.getElementById('markerEditModal').classList.remove('hidden');
+    }
+
+    function closeMarkerEditModal() {
+      document.getElementById('markerEditModal').classList.add('hidden');
+    }
+
+    function openMarkerDetailsModal(markerId) {
+      const m = GM_MARKERS.find(item => item.id == markerId);
+      if (!m) return;
+
+      activeDetailMarkerId = markerId;
+
+      const typeIcon = MARKER_TYPE_ICONS[m.type] || '⚔️';
+      const col = m.color || '#ef4444';
+
+      document.getElementById('markerDetailAccent').style.background = `linear-gradient(to right, ${col}, #e5b842, ${col})`;
+      document.getElementById('markerDetailCategoryBadge').innerHTML = `${typeIcon} ${m.type ? m.type.toUpperCase() : 'CONFLITO'}`;
+      document.getElementById('markerDetailCategoryBadge').style.color = col;
+      document.getElementById('markerDetailCategoryBadge').style.borderColor = `${col}80`;
+
+      let statusText = '🔴 EM ANDAMENTO';
+      if (m.status === 'investigando') statusText = '🟡 INVESTIGANDO';
+      if (m.status === 'resolvido') statusText = '🟢 RESOLVIDO';
+      document.getElementById('markerDetailStatusBadge').textContent = statusText;
+
+      document.getElementById('markerDetailWorldBadge').textContent = m.world === 'seireitei' ? '🏯 SEIREITEI' : '⛩️ RUKONGAI';
+      document.getElementById('markerDetailTitle').textContent = m.title || "Conflito Espiritual";
+      document.getElementById('markerDetailThreat').textContent = m.threat || "Grau 2 (Capitão)";
+      document.getElementById('markerDetailStructure').textContent = MARKER_STRUCTURE_LABELS[m.structure] || m.structure || 'Pilar';
+      document.getElementById('markerDetailParticipants').textContent = m.participants || "Gotei 13 & Forças Espirituais";
+      document.getElementById('markerDetailDescription').textContent = m.description || "Nenhuma descrição adicional informada para este evento.";
+      document.getElementById('markerDetailCoords').textContent = `📍 Coordenadas: X: ${Math.round(m.x)}, Y: ${Math.round(m.y)}, Z: ${Math.round(m.z)}`;
+      document.getElementById('markerDetailDate').textContent = `🕒 Criado em ${m.createdAt ? new Date(m.createdAt).toLocaleDateString('pt-BR') : 'Tempo Recente'}`;
+
+      const tooltip = document.getElementById('tooltip-3d');
+      if (tooltip) { tooltip.style.opacity = '0'; tooltip.style.display = 'none'; }
+
+      document.getElementById('markerDetailModal').classList.remove('hidden');
+    }
+
+    function closeMarkerDetailModal() {
+      document.getElementById('markerDetailModal').classList.add('hidden');
+      activeDetailMarkerId = null;
+    }
+
+    function saveGMMarkerFromModal() {
+      const titleInput = document.getElementById('gmMarkerTitle').value.trim();
+      const title = titleInput || "Conflito Espiritual";
+      const id = document.getElementById('gmMarkerId').value;
+      const x = parseFloat(document.getElementById('gmMarkerCoordsX').value) || 0;
+      const y = parseFloat(document.getElementById('gmMarkerCoordsY').value) || 0;
+      const z = parseFloat(document.getElementById('gmMarkerCoordsZ').value) || 0;
+
+      const markerData = {
+        id: id ? parseInt(id, 10) : Date.now(),
         world: currentWorld,
-        title: title.trim(),
-        type: type.toLowerCase().trim(),
-        x, y: y + 2, z
+        title: title,
+        type: document.getElementById('gmMarkerType').value,
+        threat: document.getElementById('gmMarkerThreat').value,
+        structure: document.getElementById('gmMarkerStructure').value,
+        color: document.getElementById('gmMarkerColor').value || '#ef4444',
+        status: document.getElementById('gmMarkerStatus').value,
+        participants: document.getElementById('gmMarkerParticipants').value.trim(),
+        description: document.getElementById('gmMarkerDescription').value.trim(),
+        x, y, z,
+        createdAt: id ? (GM_MARKERS.find(item => item.id == id)?.createdAt || Date.now()) : Date.now()
       };
 
-      GM_MARKERS.push(newMarker);
+      if (id) {
+        const idx = GM_MARKERS.findIndex(item => item.id == id);
+        if (idx !== -1) GM_MARKERS[idx] = markerData;
+        else GM_MARKERS.push(markerData);
+      } else {
+        GM_MARKERS.push(markerData);
+      }
+
       localStorage.setItem('bleach_gm_markers', JSON.stringify(GM_MARKERS));
       renderGMMarkers();
-      toggleAddMarkerMode();
-      alert(`✨ Marcador "${title}" fixado em ${currentWorld.toUpperCase()}!`);
+      closeMarkerEditModal();
+
+      // Open detail modal to preview the created/edited marker
+      openMarkerDetailsModal(markerData.id);
+    }
+
+    function deleteMarkerById(markerId) {
+      if (!confirm("⚠️ Tem certeza que deseja remover este marcador do mapa 3D?")) return;
+      GM_MARKERS = GM_MARKERS.filter(m => m.id != markerId);
+      localStorage.setItem('bleach_gm_markers', JSON.stringify(GM_MARKERS));
+      renderGMMarkers();
+      closeMarkerEditModal();
+      closeMarkerDetailModal();
+    }
+
+    function deleteCurrentEditingMarker() {
+      const id = document.getElementById('gmMarkerId').value;
+      if (id) deleteMarkerById(id);
+    }
+
+    function deleteActiveDetailMarker() {
+      if (activeDetailMarkerId) deleteMarkerById(activeDetailMarkerId);
+    }
+
+    function editCurrentActiveMarker() {
+      if (activeDetailMarkerId) openEditMarkerModal(activeDetailMarkerId);
+    }
+
+    function clearAllGMMarkersInCurrentWorld() {
+      const count = GM_MARKERS.filter(m => m.world === currentWorld).length;
+      if (count === 0) {
+        alert("Não há marcadores ativos no mapa atual.");
+        return;
+      }
+      if (!confirm(`⚠️ Deseja remover todos os ${count} marcadores do mapa ${currentWorld.toUpperCase()}?`)) return;
+
+      GM_MARKERS = GM_MARKERS.filter(m => m.world !== currentWorld);
+      localStorage.setItem('bleach_gm_markers', JSON.stringify(GM_MARKERS));
+      renderGMMarkers();
+      closeMarkerEditModal();
+      closeMarkerDetailModal();
+    }
+
+    function flyCameraToMarker(markerId) {
+      const m = GM_MARKERS.find(item => item.id == markerId);
+      if (!m) return;
+      flyCameraToTarget({ x: m.x, y: m.y, z: m.z });
+      openMarkerDetailsModal(markerId);
+    }
+
+    function copyMarkerLoreToClipboard() {
+      if (!activeDetailMarkerId) return;
+      const m = GM_MARKERS.find(item => item.id == activeDetailMarkerId);
+      if (!m) return;
+
+      const typeIcon = MARKER_TYPE_ICONS[m.type] || '⚔️';
+      const text = `⚔️ *SOUL SOCIETY RPG · ALERTA DE CONFLITO*\n\n` +
+                   `${typeIcon} *Evento:* ${m.title}\n` +
+                   `📍 *Localização:* ${m.world === 'seireitei' ? 'Seireitei' : 'Rukongai'} (X: ${Math.round(m.x)}, Z: ${Math.round(m.z)})\n` +
+                   `⚠️ *Nível de Ameaça:* ${m.threat || 'Grau 2'}\n` +
+                   `👥 *Forças Envolvidas:* ${m.participants || 'Oficiais do Gotei 13'}\n` +
+                   `🔴 *Status:* ${m.status === 'resolvido' ? 'Pacificado' : 'Em Andamento'}\n\n` +
+                   `📜 *Descrição:* ${m.description || 'Sem briefing adicional.'}\n\n` +
+                   `🌐 *Mapa 3D:* https://maluttima.github.io/BleachRPG/`;
+
+      navigator.clipboard.writeText(text).then(() => alert("✨ Alerta de Conflito copiado para a área de transferência!"));
+    }
+
+    function renderGMMarkersDrawerList() {
+      const countBadge = document.getElementById('gm-markers-count-badge');
+      const listContainer = document.getElementById('gm-markers-list-container');
+      if (!listContainer) return;
+
+      const currentList = GM_MARKERS.filter(m => m.world === currentWorld);
+      if (countBadge) countBadge.textContent = `${currentList.length} ativos`;
+
+      listContainer.innerHTML = '';
+
+      if (currentList.length === 0) {
+        listContainer.innerHTML = `
+          <div class="text-[10px] text-[#736354] italic p-2 bg-[#120c08] rounded-lg border border-[#24170e] text-center">
+            Nenhum conflito ou marcador ativo em ${currentWorld.toUpperCase()}.
+          </div>
+        `;
+        return;
+      }
+
+      currentList.forEach(m => {
+        const item = document.createElement('div');
+        item.className = "flex items-center justify-between p-2 rounded-lg bg-[#180f08] border border-[#2d1c0f] hover:border-[#ff6a13]/50 transition-all text-xs group";
+
+        const col = m.color || '#ef4444';
+        const typeIcon = MARKER_TYPE_ICONS[m.type] || '⚔️';
+
+        item.innerHTML = `
+          <div class="flex items-center gap-2 overflow-hidden flex-1 cursor-pointer" onclick="flyCameraToMarker(${m.id})">
+            <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: ${col}; box-shadow: 0 0 6px ${col};"></span>
+            <div class="truncate">
+              <div class="font-bold text-[11px] text-white group-hover:text-[#ff6a13] truncate">${m.title}</div>
+              <div class="text-[9px] text-[#8f8270] truncate">${typeIcon} ${m.threat ? m.threat.split('·')[0] : 'Conflito'}</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-1 flex-shrink-0 ml-1">
+            <button onclick="flyCameraToMarker(${m.id})" class="p-1 hover:bg-[#2e1f13] text-[#e5b842] rounded text-[11px]" title="Ver no Mapa">✈️</button>
+            <button onclick="openEditMarkerModal(${m.id})" class="p-1 hover:bg-[#2e1f13] text-white rounded text-[11px]" title="Editar">✏️</button>
+            <button onclick="deleteMarkerById(${m.id})" class="p-1 hover:bg-red-950 text-red-400 rounded text-[11px]" title="Remover">🗑️</button>
+          </div>
+        `;
+        listContainer.appendChild(item);
+      });
     }
 
     function renderGMMarkers() {
+      if (!layerGroups.gmMarkers) return;
+
+      // Clear existing 3D markers and remove their hitboxes from interactiveObjects
       while (layerGroups.gmMarkers.children.length > 0) {
-        layerGroups.gmMarkers.remove(layerGroups.gmMarkers.children[0]);
+        const child = layerGroups.gmMarkers.children[0];
+        interactiveObjects = interactiveObjects.filter(obj => obj !== child && obj.userData?.markerId !== child.userData?.markerId);
+        layerGroups.gmMarkers.remove(child);
       }
 
-      GM_MARKERS.filter(m => m.world === currentWorld).forEach(m => {
-        const pin = new THREE.Group();
-        pin.position.set(m.x, m.y, m.z);
+      const activeMarkers = GM_MARKERS.filter(m => m.world === currentWorld);
 
-        let col = 0xff6a13;
-        if (m.type === 'combate') col = 0xef4444;
-        if (m.type === 'npc') col = 0x38bdf8;
-        if (m.type === 'perigo') col = 0xeab308;
-        if (m.type === 'tesouro') col = 0x10b981;
+      activeMarkers.forEach(m => {
+        const markerGroup = new THREE.Group();
+        markerGroup.position.set(m.x, m.y, m.z);
 
-        const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 0.2, 22, 8), new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.85 }));
-        pole.position.y = 11; pin.add(pole);
+        const colStr = m.color || '#ef4444';
+        const colHex = parseInt(colStr.replace('#', '0x'), 16);
+        const animatedParts = [];
 
-        const orb = new THREE.Mesh(new THREE.SphereGeometry(3.8, 12, 12), new THREE.MeshStandardMaterial({ color: col, emissive: col, emissiveIntensity: 0.7 }));
-        orb.position.y = 23; pin.add(orb);
+        const struct = m.structure || 'pilar';
 
-        layerGroups.gmMarkers.add(pin);
+        if (struct === 'pilar') {
+          // Base seal ring
+          const baseRing = new THREE.Mesh(new THREE.RingGeometry(7, 11, 32), new THREE.MeshBasicMaterial({ color: colHex, side: THREE.DoubleSide, transparent: true, opacity: 0.75 }));
+          baseRing.rotation.x = -Math.PI / 2; baseRing.position.y = 0.5; markerGroup.add(baseRing);
+
+          // Outer glowing beam
+          const beamOuter = new THREE.Mesh(new THREE.CylinderGeometry(3.5, 5, 90, 24, 1, true), new THREE.MeshStandardMaterial({ color: colHex, emissive: colHex, emissiveIntensity: 0.65, transparent: true, opacity: 0.45, side: THREE.DoubleSide }));
+          beamOuter.position.y = 45; markerGroup.add(beamOuter);
+
+          // Inner laser core
+          const beamInner = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.5, 95, 16), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.9 }));
+          beamInner.position.y = 47.5; markerGroup.add(beamInner);
+
+          // Orbital rings
+          const orbRing1 = new THREE.Mesh(new THREE.TorusGeometry(6.5, 0.6, 8, 32), new THREE.MeshStandardMaterial({ color: colHex, emissive: colHex, emissiveIntensity: 0.9 }));
+          orbRing1.rotation.x = Math.PI / 3; orbRing1.position.y = 35; markerGroup.add(orbRing1);
+
+          const orbRing2 = new THREE.Mesh(new THREE.TorusGeometry(5.5, 0.6, 8, 32), new THREE.MeshStandardMaterial({ color: colHex, emissive: colHex, emissiveIntensity: 0.9 }));
+          orbRing2.rotation.x = -Math.PI / 4; orbRing2.position.y = 65; markerGroup.add(orbRing2);
+
+          animatedParts.push({ type: 'rotate', mesh: orbRing1 });
+          animatedParts.push({ type: 'rotate', mesh: orbRing2 });
+          animatedParts.push({ type: 'rotate', mesh: baseRing });
+
+        } else if (struct === 'monolito') {
+          const plinth = new THREE.Mesh(new THREE.BoxGeometry(14, 3.5, 14), new THREE.MeshStandardMaterial({ color: 0x1f1914, roughness: 0.9 }));
+          plinth.position.y = 1.75; markerGroup.add(plinth);
+
+          const obelisk = new THREE.Mesh(new THREE.CylinderGeometry(3.2, 5.2, 34, 4), new THREE.MeshStandardMaterial({ color: 0x2e251e, roughness: 0.7 }));
+          obelisk.rotation.y = Math.PI / 4; obelisk.position.y = 18.5; markerGroup.add(obelisk);
+
+          const runes = new THREE.Mesh(new THREE.BoxGeometry(4.2, 22, 4.2), new THREE.MeshStandardMaterial({ color: colHex, emissive: colHex, emissiveIntensity: 0.85, transparent: true, opacity: 0.85 }));
+          runes.rotation.y = Math.PI / 4; runes.position.y = 18.5; markerGroup.add(runes);
+
+          const capStone = new THREE.Mesh(new THREE.ConeGeometry(4.6, 6.5, 4), new THREE.MeshStandardMaterial({ color: colHex, emissive: colHex, emissiveIntensity: 0.7 }));
+          capStone.rotation.y = Math.PI / 4; capStone.position.y = 38; markerGroup.add(capStone);
+
+        } else if (struct === 'torii') {
+          const p1 = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.4, 24, 8), new THREE.MeshStandardMaterial({ color: 0x8a1c14, roughness: 0.6 }));
+          p1.position.set(-8, 12, 0); markerGroup.add(p1);
+
+          const p2 = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.4, 24, 8), new THREE.MeshStandardMaterial({ color: 0x8a1c14, roughness: 0.6 }));
+          p2.position.set(8, 12, 0); markerGroup.add(p2);
+
+          const topBar = new THREE.Mesh(new THREE.BoxGeometry(22, 2.5, 3.5), new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.5 }));
+          topBar.position.set(0, 24, 0); markerGroup.add(topBar);
+
+          const flame = new THREE.Mesh(new THREE.DodecahedronGeometry(4), new THREE.MeshStandardMaterial({ color: colHex, emissive: colHex, emissiveIntensity: 0.95 }));
+          flame.position.set(0, 14, 0); markerGroup.add(flame);
+
+          animatedParts.push({ type: 'rotate', mesh: flame });
+          animatedParts.push({ type: 'bob', mesh: flame, baseY: 14, offset: 0 });
+
+        } else if (struct === 'cristal') {
+          const basePlinth = new THREE.Mesh(new THREE.CylinderGeometry(6, 8, 3, 6), new THREE.MeshStandardMaterial({ color: 0x1c1712, roughness: 0.85 }));
+          basePlinth.position.y = 1.5; markerGroup.add(basePlinth);
+
+          const crystal = new THREE.Mesh(new THREE.OctahedronGeometry(6.5, 0), new THREE.MeshStandardMaterial({ color: colHex, emissive: colHex, emissiveIntensity: 0.8, roughness: 0.1, metalness: 0.2, transparent: true, opacity: 0.9 }));
+          crystal.scale.set(1, 1.8, 1); crystal.position.y = 20; markerGroup.add(crystal);
+
+          const shard1 = new THREE.Mesh(new THREE.OctahedronGeometry(2.2), new THREE.MeshStandardMaterial({ color: colHex, emissive: colHex, emissiveIntensity: 0.85 }));
+          shard1.position.set(8, 20, 0); markerGroup.add(shard1);
+
+          const shard2 = new THREE.Mesh(new THREE.OctahedronGeometry(2.2), new THREE.MeshStandardMaterial({ color: colHex, emissive: colHex, emissiveIntensity: 0.85 }));
+          shard2.position.set(-8, 20, 0); markerGroup.add(shard2);
+
+          animatedParts.push({ type: 'rotate', mesh: crystal });
+          animatedParts.push({ type: 'bob', mesh: crystal, baseY: 20, offset: 0 });
+          animatedParts.push({ type: 'rotate', mesh: shard1 });
+          animatedParts.push({ type: 'rotate', mesh: shard2 });
+
+        } else if (struct === 'cranio') {
+          const totemPole = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 2.2, 22, 6), new THREE.MeshStandardMaterial({ color: 0x1f1917, roughness: 0.9 }));
+          totemPole.position.y = 11; markerGroup.add(totemPole);
+
+          const skull = new THREE.Mesh(new THREE.SphereGeometry(4.8, 8, 8), new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.5 }));
+          skull.scale.set(0.9, 1.1, 1); skull.position.y = 24; markerGroup.add(skull);
+
+          const eyeL = new THREE.Mesh(new THREE.SphereGeometry(1.1, 6, 6), new THREE.MeshBasicMaterial({ color: colHex }));
+          eyeL.position.set(-1.6, 24.5, 3.8); markerGroup.add(eyeL);
+
+          const eyeR = new THREE.Mesh(new THREE.SphereGeometry(1.1, 6, 6), new THREE.MeshBasicMaterial({ color: colHex }));
+          eyeR.position.set(1.6, 24.5, 3.8); markerGroup.add(eyeR);
+
+          const darkAura = new THREE.Mesh(new THREE.RingGeometry(6, 8.5, 16), new THREE.MeshBasicMaterial({ color: colHex, side: THREE.DoubleSide, transparent: true, opacity: 0.7 }));
+          darkAura.rotation.x = Math.PI / 2; darkAura.position.y = 24; markerGroup.add(darkAura);
+
+          animatedParts.push({ type: 'rotate', mesh: darkAura });
+          animatedParts.push({ type: 'bob', mesh: skull, baseY: 24, offset: 0 });
+
+        } else if (struct === 'estandarte') {
+          const mast = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 0.9, 36, 8), new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.85, roughness: 0.25 }));
+          mast.position.y = 18; markerGroup.add(mast);
+
+          const crossBeam = new THREE.Mesh(new THREE.BoxGeometry(14, 0.8, 0.8), new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.85 }));
+          crossBeam.position.set(5.5, 33, 0); markerGroup.add(crossBeam);
+
+          const banner = new THREE.Mesh(new THREE.PlaneGeometry(12, 18), new THREE.MeshStandardMaterial({ color: colHex, emissive: colHex, emissiveIntensity: 0.4, side: THREE.DoubleSide, roughness: 0.7 }));
+          banner.position.set(5.5, 23, 0); banner.rotation.y = 0.2; markerGroup.add(banner);
+
+          const spearHead = new THREE.Mesh(new THREE.ConeGeometry(2, 6, 4), new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.9 }));
+          spearHead.position.y = 38; markerGroup.add(spearHead);
+
+        } else {
+          // Default PIN
+          const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 0.3, 24, 8), new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.9, roughness: 0.2 }));
+          pole.position.y = 12; markerGroup.add(pole);
+
+          const orb = new THREE.Mesh(new THREE.SphereGeometry(4.2, 16, 16), new THREE.MeshStandardMaterial({ color: colHex, emissive: colHex, emissiveIntensity: 0.85, roughness: 0.2 }));
+          orb.position.y = 25; markerGroup.add(orb);
+
+          const halo = new THREE.Mesh(new THREE.RingGeometry(5.2, 6.4, 24), new THREE.MeshBasicMaterial({ color: colHex, side: THREE.DoubleSide, transparent: true, opacity: 0.85 }));
+          halo.rotation.x = Math.PI / 2; halo.position.y = 25; markerGroup.add(halo);
+
+          animatedParts.push({ type: 'bob', mesh: orb, baseY: 25, offset: Math.random() * 5 });
+          animatedParts.push({ type: 'bob', mesh: halo, baseY: 25, offset: Math.random() * 5 });
+          animatedParts.push({ type: 'rotate', mesh: halo });
+        }
+
+        // Invisible Raycast HitBox for effortless mobile/desktop tapping
+        const hitBoxGeo = new THREE.BoxGeometry(45, 65, 45);
+        const hitBoxMat = new THREE.MeshBasicMaterial({ visible: false, wireframe: true });
+        const hitBox = new THREE.Mesh(hitBoxGeo, hitBoxMat);
+        hitBox.position.y = 28;
+        hitBox.userData = { isGMMarker: true, markerId: m.id, title: m.title, world: m.world };
+        markerGroup.add(hitBox);
+
+        markerGroup.userData = { isGMMarker: true, markerId: m.id, title: m.title, world: m.world, animatedParts };
+        interactiveObjects.push(hitBox);
+        layerGroups.gmMarkers.add(markerGroup);
       });
+
+      renderGMMarkersDrawerList();
     }
 
 
@@ -3176,8 +3927,18 @@
     document.getElementById('regionModal').addEventListener('click', (e) => {
       if (e.target.id === 'regionModal') closeRegionModal();
     });
+    document.getElementById('markerEditModal').addEventListener('click', (e) => {
+      if (e.target.id === 'markerEditModal') closeMarkerEditModal();
+    });
+    document.getElementById('markerDetailModal').addEventListener('click', (e) => {
+      if (e.target.id === 'markerDetailModal') closeMarkerDetailModal();
+    });
     window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeRegionModal();
+      if (e.key === 'Escape') {
+        closeRegionModal();
+        closeMarkerEditModal();
+        closeMarkerDetailModal();
+      }
     });
 
     function onWindowResize() {
@@ -3247,6 +4008,25 @@
       if (compass && controls) {
         const azimuthAngle = controls.getAzimuthalAngle();
         compass.style.transform = `rotate(${azimuthAngle * (180 / Math.PI)}deg)`;
+      }
+
+      // 5. Animate GM Markers (rotating rings, pulsing beams, floating crystals/orbs)
+      if (layerGroups.gmMarkers && layerGroups.gmMarkers.children.length > 0) {
+        const t = currentTime * 0.0025;
+        layerGroups.gmMarkers.children.forEach(markerGroup => {
+          if (markerGroup.userData && markerGroup.userData.animatedParts) {
+            markerGroup.userData.animatedParts.forEach(part => {
+              if (part.type === 'rotate') {
+                part.mesh.rotation.y += 0.018;
+              } else if (part.type === 'bob') {
+                part.mesh.position.y = part.baseY + Math.sin(t * 1.8 + (part.offset || 0)) * 1.8;
+              } else if (part.type === 'pulse') {
+                const s = 1 + Math.sin(t * 2.5 + (part.offset || 0)) * 0.12;
+                part.mesh.scale.set(s, s, s);
+              }
+            });
+          }
+        });
       }
 
       if (renderer && scene && camera) {

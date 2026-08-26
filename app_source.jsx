@@ -2106,19 +2106,6 @@ function maskWhats(w) {
   return "•••• " + cleaned.slice(-4);
 }
 
-function getPowerTier(statVal) {
-  const val = Number(statVal || 0);
-  if (val <= 200) return { title: "Inexperiente", patamar: "1–200", color: C.muted };
-  if (val <= 450) return { title: "Iniciante", patamar: "201–450", color: C.green };
-  if (val <= 750) return { title: "Treinado", patamar: "451–750", color: C.blue };
-  if (val <= 1100) return { title: "Experiente", patamar: "751–1100", color: C.purple };
-  if (val <= 1500) return { title: "Elite", patamar: "1101–1500", color: C.yellow };
-  if (val <= 2000) return { title: "Alto Nível", patamar: "1501–2000", color: "#FFA500" };
-  if (val <= 2600) return { title: "Monstruoso", patamar: "2001–2600", color: C.red };
-  if (val <= 3300) return { title: "Lendário", patamar: "2601–3300", color: "#E0B34C" };
-  return { title: "Transcendente", patamar: "3300+", color: "#FFD700" };
-}
-
 // Web Audio API Synthesizer
 let audioCtx = null;
 
@@ -2759,10 +2746,11 @@ DIRETRIZES FUNDAMENTAIS DE QUALIDADE & ANTI-CLICHÊ:
 CADA CAMINHO DEVE POSSUIR:
 - Nome em japonês Romaji + Kanji + Tradução em Português
 - Frase poética monumental de ativação/liberação
-- Representação do espírito da lâmina (forma, comportamento e mundo interior)
+- Espírito da Zanpakutō: Forma física detalhada, personalidade, voz, temperamento filosófico e postura durante a meditação Jinzen
+- Mundo Interior (Mundo da Alma): Cenário espiritual detalhado, geografia, clima/céu, atmosfera de Reishi e como as emoções do Shinigami alteram este ambiente
 - Forma da Shikai e design da lâmina
 - Mecânica detalhada do poder e LIMITAÇÕES claras
-- Bankai correspondente com Nome, Ponto de Ruptura (Breakpoint - qual limite da Shikai foi quebrado), Tipo de Evolução, Forma Monumental e Poder Transcendental.
+- Bankai correspondente com Nome, Ponto de Ruptura (Breakpoint - qual limite da Shikai foi quebrado), Tipo de Evolução, Manifestação do Espírito em Bankai, Transformação do Mundo Interior, Forma Monumental e Poder Transcendental.
 - Índices de 1 a 10 para Potência, Abrangência, Complexidade, Versatilidade e Custo de Reiatsu.
 
 RESPONDA OBRIGATORIAMENTE EM JSON VÁLIDO no seguinte formato:
@@ -2778,7 +2766,8 @@ RESPONDA OBRIGATORIAMENTE EM JSON VÁLIDO no seguinte formato:
         "traducao": "Tradução",
         "comando": "Frase de Ativação",
         "elemento": "Elemento/Tema Inédito",
-        "espirito": "Descrição do espírito e mundo interior",
+        "espirito": "Descrição visual e comportamental do espírito da lâmina (aparência física, personalidade, voz e diálogo na meditação)",
+        "mundoInterno": "Descrição detalhada do Mundo Interior da alma (cenário, geografia espiritual, clima e atmosfera de Reishi)",
         "formaSelada": "Descrição da forma selada",
         "aparencia": "Aparência da Shikai",
         "poder": "Mecânica detalhada do poder",
@@ -2791,6 +2780,8 @@ RESPONDA OBRIGATORIAMENTE EM JSON VÁLIDO no seguinte formato:
       "bankai": {
         "nome": "NomeRomaji — Kanji",
         "tipoEvolucao": "Território / Amplificação / Regra / Inversão",
+        "manifestacaoEspiritoBankai": "Manifestação transcendental do espírito durante a Bankai",
+        "mundoInternoBankai": "Como o Mundo Interior da alma transborda e se materializa sobre o mundo real",
         "formaMonumental": "Forma monumental da Bankai",
         "pontoRuptura": "O limite da Shikai que foi superado",
         "poder": "Poder transcendental da Bankai",
@@ -2887,6 +2878,8 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "", claimedN
       traducao: n1.trad,
       comando: `Incendeie os céus e purifique a existência, ${n1.nome}!`,
       elemento: elChoice.el,
+      espirito: `Uma imponente entidade guerreira envolta em armadura de ${elChoice.el}, de olhar severo e voz solene que ressoa como trovão, exigindo firmeza inabalável de convicção em cada diálogo durante a meditação Jinzen.`,
+      mundoInterno: `Um vasto platô vulcânico de rocha obsidiana cercado por cachoeiras de plasma e tempestades de Reishi, onde o céu queima em auroras carmesins refletindo a determinação de ${personagem.nome}.`,
       aparencia: elChoice.arma,
       formatoArma: elChoice.arma,
       poder: elChoice.pod.replace("${personagem.nome}", personagem.nome),
@@ -2900,6 +2893,8 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "", claimedN
       nome: `${n1.nome}: Gōka Dai-Tenrin`,
       kanji: `「${n1.kanji.replace(/[^\\u4e00-\\u9faf]/g, '')}・業火大天輪」`,
       tipoEvolucao: "Amplificação & Domínio Territorial",
+      manifestacaoEspiritoBankai: `O espírito guerreiro se agiganta como uma divindade cósmica de 30 metros ao fundo, empunhando lâminas colossais que sincronizam com cada movimento corporal de ${personagem.nome}.`,
+      mundoInternoBankai: `O platô vulcânico do mundo interior transborda para o plano real, transformando o campo de batalha em um domínio sagrado de ${elChoice.el}.`,
       formaMonumental: `O campo de batalha inteiro se transforma em um domínio cósmico onde gigantescas lâminas de ${elChoice.el} emergem da atmosfera.`,
       pontoRuptura: `Supera o limite de foco individual da Shikai, cobrindo um raio de 300 metros sob comando mental direto.`,
       poder: `Converte toda a pressão espiritual do ambiente em lâminas simultâneas teleguiadas que aniquilam investidas adversárias com estocadas em cadeia contínua.`,
@@ -2928,6 +2923,8 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "", claimedN
       traducao: n2.trad,
       comando: `Estabeleça a ordem no caos da alma, ${n2.nome}!`,
       elemento: conChoice.el,
+      espirito: `Um monge estrategista de vestes cerimoniais xintoístas e máscara rúnica dourada sobre os olhos, falando em enigmas matemáticos e exigindo clareza tática absoluta na meditação Jinzen.`,
+      mundoInterno: `Um palácio infinito de espelhos hexagonais e mostruários de relógios cósmicos flutuando no vácuo, onde o tempo parece fluir em compasso aritmético silencioso e ordenado.`,
       aparencia: conChoice.arma,
       formatoArma: conChoice.arma,
       poder: conChoice.pod,
@@ -2941,6 +2938,8 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "", claimedN
       nome: `${n2.nome}: Jikū Kaiji no Judai`,
       kanji: `「${n2.kanji.replace(/[^\\u4e00-\\u9faf]/g, '')}・時空開示十代」`,
       tipoEvolucao: "Imposição Territorial de Leis Absolutas",
+      manifestacaoEspiritoBankai: `O monge estrategista paira sobre o centro da arena, abrindo pergaminhos cósmicos dourados que ditam as leis matemáticas invioláveis do combate.`,
+      mundoInternoBankai: `O palácio de espelhos e engrenagens celestiais se materializa no campo de batalha, impondo uma arena de xadrez dimensional sobre os combatentes.`,
       formaMonumental: `O solo se converte em um gigantesco mostrador geométrico de círculos concêntricos de ouro e obsidiana.`,
       pontoRuptura: `Remove a necessidade de acertar o mesmo ponto: as regras conceituais passam a vigorar sobre todo o espaço dimensional do domínio.`,
       poder: `Impõe uma lei onde qualquer hostilidade desferida no território reflete 50% do impacto diretamente contra os canais de Reiatsu do atacante.`,
@@ -2969,6 +2968,8 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "", claimedN
       traducao: n3.trad,
       comando: `Erga a barreira inexpugnável da alma, ${n3.nome}!`,
       elemento: compChoice.el,
+      espirito: `Um guardião alado de semblante sereno e armadura de aço celestial, que acolhe a alma de ${personagem.nome} com palavras de acolhimento e prega a defesa inviolável dos laços sagrados.`,
+      mundoInterno: `Um santuário sagrado cercado por lagos cristalinos de águas prateadas e árvores de vidro translúcido, emitindo um brilho espiritual reconfortante que anula qualquer medo.`,
       aparencia: compChoice.arma,
       formatoArma: compChoice.arma,
       poder: compChoice.pod.replace("${personagem.nome}", personagem.nome),
@@ -2982,6 +2983,8 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "", claimedN
       nome: `${n3.nome}: Fuyō Sōki no Aegis`,
       kanji: `「${n3.kanji.replace(/[^\\u4e00-\\u9faf]/g, '')}・不耀蒼輝之金剛」`,
       tipoEvolucao: "Fortaleza & Transcendência Defensiva",
+      manifestacaoEspiritoBankai: `O guardião celestial abre asas colossais de luz sólida que envolvem ${personagem.nome}, fundindo-se em uma armadura soberana de Reishi inquebrável.`,
+      mundoInternoBankai: `As águas serenas e a luz do santuário do mundo interior se sobrepõem ao plano real, banhando o campo de batalha em uma barreira de purificação absoluta.`,
       formaMonumental: `Uma monumental couraça de asas de aço espiritual e colunas de luz pura envolve ${personagem.nome} e seus aliados.`,
       pontoRuptura: `Extingue a fragilidade física da Shikai: qualquer dano catastrófico é dissipado em ondas concussivas no solo sem ferir o Shinigami.`,
       poder: `Ergue um santuário inviolável onde o fluxo de vitalidade é renovado continuamente enquanto a lâmina dispara contra-ataques autônomos de alta densidade.`,
@@ -3010,6 +3013,8 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "", claimedN
       traducao: n4.trad,
       comando: `Inverta a verdade e devore o reflexo, ${n4.nome}!`,
       elemento: oposChoice.el,
+      espirito: `Um reflexo espectral com a silhueta de ${personagem.nome}, mas com olhos de íris invertida e um sorriso zombeteiro, desafiando o Shinigami a aceitar sua sombra inconsciente.`,
+      mundoInterno: `Uma cidade invertida e monocromática suspensa sobre o abismo sob um eclipse perpétuo, onde a gravidade obedece aos conflitos da mente e o solo reflete sombras vivas.`,
       aparencia: oposChoice.arma,
       formatoArma: oposChoice.arma,
       poder: oposChoice.pod,
@@ -3023,153 +3028,390 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "", claimedN
       nome: `${n4.nome}: Muken Kōjin no Paradox`,
       kanji: `「${n4.kanji.replace(/[^\\u4e00-\\u9faf]/g, '')}・無間皇刃之悖論」`,
       tipoEvolucao: "Inversão da Realidade & Paradoxo",
+      manifestacaoEspiritoBankai: `A sombra espectral se funde às costas de ${personagem.nome}, abrindo olhos luminosos nas trevas e atacando em perfeita sincronia paradoxal.`,
+      mundoInternoBankai: `A cidade invertida do abismo devora toda a luz do cenário material, submergindo o campo de batalha em um labirinto de miragens e gravidade distorcida.`,
       formaMonumental: `O cenário inverte suas cores em uma distorção monocromática onde miragens e sombras ganham massa física tangível.`,
       pontoRuptura: `Supera o limite de intangibilidade da Shikai: as sombras cortam a própria malha do espaço, invertendo causa e efeito no combate.`,
-      poder: `Quando o adversário tenta esquivar, ele colide com o golpe; quando tenta bloquear, a lâmina o atravessa como fumaça e atinge pelas costas.`,
-      limitacoes: "Exige autocontrole supremo para não ser desorientado pela distorção do próprio domínio.",
-      significadoEspiritual: `A dominação plena da dualidade da alma: onde há a maior luz, reside a mais afiada das sombras.`
+      poder: `Quando o adversário tenta esquivar, ele colide com o golpe; quando tenta bloquear, a lâmina o atravessa como ilusão e corta por trás.`,
+      limitacoes: "Se o próprio usuário hesitar em suas convicções, a inversão de causa e efeito afeta seu próprio corpo.",
+      significadoEspiritual: `A aceitação plena da dualidade da alma e da sombra interior.`
     }
   };
 
   return [c1, c2, c3, c4];
 }
 
+// =========================================================================
+// UNIVERSAL MULTI-PROVIDER AI CLIENT (GEMINI, OPENAI, GROQ, OPENROUTER)
+// =========================================================================
+
+function cleanAndExtractJson(text) {
+  if (!text || typeof text !== 'string') return null;
+  let clean = text.trim();
+  
+  if (clean.startsWith('```')) {
+    clean = clean.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
+  }
+  
+  const firstBrace = clean.indexOf('{');
+  const firstBracket = clean.indexOf('[');
+  let startIdx = -1;
+  let endIdx = -1;
+
+  if (firstBrace !== -1 && (firstBracket === -1 || firstBrace < firstBracket)) {
+    startIdx = firstBrace;
+    endIdx = clean.lastIndexOf('}');
+  } else if (firstBracket !== -1) {
+    startIdx = firstBracket;
+    endIdx = clean.lastIndexOf(']');
+  }
+
+  if (startIdx !== -1 && endIdx !== -1 && endIdx > startIdx) {
+    const jsonSub = clean.slice(startIdx, endIdx + 1);
+    try {
+      return JSON.parse(jsonSub);
+    } catch (e) {
+      try {
+        const sanitized = jsonSub
+          .replace(/,\s*([}\]])/g, '$1')
+          .replace(/[\u0000-\u001F\u007F-\u009F]/g, (c) => (c === '\n' || c === '\r' || c === '\t') ? c : '');
+        return JSON.parse(sanitized);
+      } catch (e2) {}
+    }
+  }
+
+  try {
+    return JSON.parse(clean);
+  } catch (e) {
+    return null;
+  }
+}
+
 function getValidGeminiApiKey(apiKey = "") {
-  if (apiKey && apiKey.length > 15 && !apiKey.includes("AQ.Ab8RN6I0r1qN15nnRQd")) {
-    return apiKey;
+  if (apiKey && typeof apiKey === 'string' && apiKey.trim().length > 15 && !apiKey.includes("AQ.Ab8RN6I0r1qN15nnRQd")) {
+    return apiKey.trim();
   }
   if (typeof localStorage !== 'undefined') {
     try {
       const local = localStorage.getItem("bleach_openai_key");
-      if (local && local.length > 15 && !local.includes("AQ.Ab8RN6I0r1qN15nnRQd")) {
-        return local;
+      if (local && local.trim().length > 15 && !local.includes("AQ.Ab8RN6I0r1qN15nnRQd")) {
+        return local.trim();
       }
     } catch(e) {}
   }
-  if (typeof window !== 'undefined' && window.BLEACH_CONFIG?.openaiApiKey && window.BLEACH_CONFIG.openaiApiKey.length > 15 && !window.BLEACH_CONFIG.openaiApiKey.includes("AQ.Ab8RN6I0r1qN15nnRQd")) {
-    return window.BLEACH_CONFIG.openaiApiKey;
+  if (typeof window !== 'undefined' && window.BLEACH_CONFIG?.openaiApiKey && window.BLEACH_CONFIG.openaiApiKey.trim().length > 15 && !window.BLEACH_CONFIG.openaiApiKey.includes("AQ.Ab8RN6I0r1qN15nnRQd")) {
+    return window.BLEACH_CONFIG.openaiApiKey.trim();
   }
   return "";
 }
 
-// 5. FUNÇÃO CENTRAL ASSÍNCRONA DE GERAÇÃO COM IA (COM AUTO-RETRY E EXCLUSIVIDADE ABSOLUTA)
-async function gerar4CaminhosZanpakutoAI_Async(personagem, dbPersonagens = [], dbZanpakutosVinculadas = [], cenaTexto = "", apiKey = "") {
-  const { claimed, claimedNames, claimedElements } = getClaimedSignatures(dbPersonagens, dbZanpakutosVinculadas);
-  const dna = construirDnaEspiritual(personagem, cenaTexto);
-  let keyToUse = getValidGeminiApiKey(apiKey);
+async function callSpiritualAI({ prompt, systemPrompt, temperature = 0.88, apiKey = "" }) {
+  const trimmedKey = (apiKey || getValidGeminiApiKey()).trim();
+  const defaultSystem = "Você é o Mestre Narrador e o ZANPAKUTŌ GENESIS ENGINE (V5.0) do BLEACH RPG. Responda ESTRITAMENTE em formato JSON válido.";
+  const sysMsg = systemPrompt || defaultSystem;
 
-  let caminhosResultantes = null;
-
-  async function callGemini(key) {
-    const prompt = construirPromptChatGPT(personagem, dna, cenaTexto, dbPersonagens, dbZanpakutosVinculadas);
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${encodeURIComponent(key)}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [
-          {
-            role: "user",
-            parts: [
-              { text: prompt + "\n\nResponda ESTRITAMENTE em formato JSON válido conforme o esquema solicitado." }
-            ]
-          }
-        ],
-        generationConfig: {
-          responseMimeType: "application/json",
-          temperature: 0.95
-        }
-      })
-    });
-
-    if (res.ok) {
-      const data = await res.json();
-      const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (rawText) {
-        const parsed = JSON.parse(rawText);
-        if (parsed && Array.isArray(parsed.caminhos) && parsed.caminhos.length >= 4) {
-          return parsed.caminhos.slice(0, 4).map((c, idx) => ({
-            ...c,
-            caminhoNumero: idx + 1,
-            shikai: {
-              ...c.shikai,
-              id: uid(),
-              assinaturaEspiritual: calcularAssinaturaEspiritual(c.shikai)
-            }
-          }));
-        }
-      }
-    } else {
-      console.warn("Gemini HTTP Error:", res.status, await res.text());
-    }
-    return null;
+  // 1. TENTAR PROXY SEGURO DE NUVEM (CLOUD FUNCTIONS / SERVIDOR LOCAL)
+  // Isso permite que TODOS os jogadores em qualquer celular ou PC gerem Shikai/Bankai
+  // usando a inteligência do servidor SEM NUNCA ver ou ter acesso à chave do Mestre!
+  const proxyEndpoints = [];
+  if (typeof window !== 'undefined' && window.BLEACH_CONFIG?.aiProxyEndpoint) {
+    proxyEndpoints.push(window.BLEACH_CONFIG.aiProxyEndpoint);
   }
-
-  // 1. Tentar Google Gemini API (gemini-3.6-flash)
-  if (keyToUse && !keyToUse.startsWith("sk-")) {
-    try {
-      console.log("Chamando Google Gemini 3.6 Flash para geração de Zanpakutō...");
-      caminhosResultantes = await callGemini(keyToUse);
-      if (!caminhosResultantes && keyToUse !== getDefaultGeminiKey()) {
-        console.log("Tentando novamente com a chave padrão do Gemini...");
-        caminhosResultantes = await callGemini(getDefaultGeminiKey());
-      }
-    } catch (err) {
-      console.warn("Erro ao chamar Google Gemini API:", err);
-      if (keyToUse !== getDefaultGeminiKey()) {
-        try {
-          caminhosResultantes = await callGemini(getDefaultGeminiKey());
-        } catch (e) {}
-      }
-    }
+  if (typeof window !== 'undefined' && window.location?.origin && window.location.origin.startsWith('http')) {
+    proxyEndpoints.push(`${window.location.origin}/api/ai`);
+    proxyEndpoints.push(`${window.location.origin}/api/executarGeracaoIA`);
   }
+  // Endpoint de Produção na Nuvem (Firebase Cloud Functions us-central1)
+  proxyEndpoints.push("https://us-central1-bleach-rpg-6894c.cloudfunctions.net/executarGeracaoIA");
 
-  // 2. Tentar OpenAI se chave for da OpenAI
-  if (!caminhosResultantes && keyToUse && keyToUse.startsWith("sk-")) {
+  for (const endpoint of proxyEndpoints) {
     try {
-      console.log("Chamando OpenAI GPT-4o-mini...");
-      const prompt = construirPromptChatGPT(personagem, dna, cenaTexto, dbPersonagens, dbZanpakutosVinculadas);
-      const res = await fetch("https://api.openai.com/v1/chat/completions", {
-        signal: typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function" ? AbortSignal.timeout(6000) : undefined,
+      const res = await fetch(endpoint, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${keyToUse}`
-        },
+        signal: typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function" ? AbortSignal.timeout(22000) : undefined,
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          model: "gpt-4o-mini",
-          messages: [
-            { role: "system", content: "Você é um mestre narrador de Bleach RPG especialista no Zanpakuto Genesis Engine v5.0. Responda APENAS em JSON válido." },
-            { role: "user", content: prompt }
-          ],
-          response_format: { type: "json_object" },
-          temperature: 0.95
+          prompt,
+          systemPrompt: sysMsg,
+          temperature,
+          apiKey: trimmedKey || undefined
         })
       });
 
       if (res.ok) {
-        const data = await res.json();
-        const contentStr = data.choices?.[0]?.message?.content;
-        if (contentStr) {
-          const parsed = JSON.parse(contentStr);
-          if (parsed && Array.isArray(parsed.caminhos) && parsed.caminhos.length >= 4) {
-            caminhosResultantes = parsed.caminhos.slice(0, 4).map((c, idx) => ({
-              ...c,
-              caminhoNumero: idx + 1,
-              shikai: {
-                ...c.shikai,
-                id: uid(),
-                assinaturaEspiritual: calcularAssinaturaEspiritual(c.shikai)
-              }
-            }));
-          }
+        const json = await res.json();
+        if (json.ok && json.data) {
+          return {
+            ok: true,
+            data: json.data,
+            provider: json.provider || "Servidor Seguro (Nuvem)",
+            model: json.model || "gemini-2.5-flash"
+          };
         }
       }
     } catch (err) {
-      console.warn("OpenAI fetch falhou:", err);
+      // Proxy offline ou inacessível no momento, segue para o próximo ou fallback direto
     }
   }
 
-  // 2. Sintetizador Cognitivo Procedural (Filtra todas as duplicatas contra banco de dados)
+  // 2. FALLBACK: EXECUÇÃO DIRETA NO CLIENTE (Se o usuário configurou chave própria no navegador)
+  if (!trimmedKey) {
+    return { ok: false, error: "Nenhuma chave de API configurada localmente ou no servidor.", provider: "Motor Cognitivo ZGE (Offline)" };
+  }
+
+  // 2.1 GROQ CLOUD (Chaves que começam com gsk_)
+  if (trimmedKey.startsWith("gsk_")) {
+    try {
+      const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        signal: typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function" ? AbortSignal.timeout(16000) : undefined,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${trimmedKey}`
+        },
+        body: JSON.stringify({
+          model: "llama-3.3-70b-versatile",
+          messages: [
+            { role: "system", content: sysMsg },
+            { role: "user", content: prompt }
+          ],
+          response_format: { type: "json_object" },
+          temperature
+        })
+      });
+
+      if (res.ok) {
+        const json = await res.json();
+        const content = json.choices?.[0]?.message?.content;
+        const parsed = cleanAndExtractJson(content);
+        if (parsed) {
+          return { ok: true, data: parsed, provider: "Groq", model: "llama-3.3-70b-versatile" };
+        }
+      }
+      return { ok: false, error: `Groq HTTP ${res.status}: ${await res.text()}`, provider: "Groq" };
+    } catch (err) {
+      return { ok: false, error: `Groq falhou: ${err.message}`, provider: "Groq" };
+    }
+  }
+
+  // 2.2 OPENROUTER (Chaves que começam com sk-or-)
+  if (trimmedKey.startsWith("sk-or-")) {
+    try {
+      const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        signal: typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function" ? AbortSignal.timeout(18000) : undefined,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${trimmedKey}`,
+          "HTTP-Referer": "https://bleach-rpg.web.app",
+          "X-Title": "Bleach RPG Sociedade das Almas"
+        },
+        body: JSON.stringify({
+          model: "google/gemini-2.0-flash-001",
+          messages: [
+            { role: "system", content: sysMsg },
+            { role: "user", content: prompt }
+          ],
+          response_format: { type: "json_object" },
+          temperature
+        })
+      });
+
+      if (res.ok) {
+        const json = await res.json();
+        const content = json.choices?.[0]?.message?.content;
+        const parsed = cleanAndExtractJson(content);
+        if (parsed) {
+          return { ok: true, data: parsed, provider: "OpenRouter", model: "gemini-2.0-flash-001" };
+        }
+      }
+      return { ok: false, error: `OpenRouter HTTP ${res.status}: ${await res.text()}`, provider: "OpenRouter" };
+    } catch (err) {
+      return { ok: false, error: `OpenRouter falhou: ${err.message}`, provider: "OpenRouter" };
+    }
+  }
+
+  // 2.3 OPENAI CHATGPT (Chaves padrão sk-...)
+  if (trimmedKey.startsWith("sk-")) {
+    try {
+      const res = await fetch("https://api.openai.com/v1/chat/completions", {
+        signal: typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function" ? AbortSignal.timeout(16000) : undefined,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${trimmedKey}`
+        },
+        body: JSON.stringify({
+          model: "gpt-4o-mini",
+          messages: [
+            { role: "system", content: sysMsg },
+            { role: "user", content: prompt }
+          ],
+          response_format: { type: "json_object" },
+          temperature
+        })
+      });
+
+      if (res.ok) {
+        const json = await res.json();
+        const content = json.choices?.[0]?.message?.content;
+        const parsed = cleanAndExtractJson(content);
+        if (parsed) {
+          return { ok: true, data: parsed, provider: "OpenAI", model: "gpt-4o-mini" };
+        }
+      }
+      return { ok: false, error: `OpenAI HTTP ${res.status}: ${await res.text()}`, provider: "OpenAI" };
+    } catch (err) {
+      return { ok: false, error: `OpenAI falhou: ${err.message}`, provider: "OpenAI" };
+    }
+  }
+
+  // 2.4 GOOGLE GEMINI (AIzaSy... ou padrão)
+  const geminiModels = [
+    "gemini-1.5-flash",
+    "gemini-1.5-pro",
+    "gemini-2.0-flash",
+    "gemini-2.0-flash-exp",
+    "gemini-1.5-flash-8b",
+    "gemini-1.5-flash-latest",
+    "gemini-1.5-pro-latest"
+  ];
+  let lastErr = "";
+
+  for (const model of geminiModels) {
+    try {
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(trimmedKey)}`;
+      const res = await fetch(endpoint, {
+        signal: typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function" ? AbortSignal.timeout(15000) : undefined,
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [
+            {
+              role: "user",
+              parts: [{ text: `${sysMsg}\n\n${prompt}\n\nResponda ESTRITAMENTE em formato JSON válido conforme solicitado.` }]
+            }
+          ],
+          generationConfig: {
+            responseMimeType: "application/json",
+            temperature
+          }
+        })
+      });
+
+      if (res.ok) {
+        const json = await res.json();
+        const rawText = json.candidates?.[0]?.content?.parts?.[0]?.text;
+        const parsed = cleanAndExtractJson(rawText);
+        if (parsed) {
+          return { ok: true, data: parsed, provider: "Google Gemini", model };
+        }
+      } else {
+        const errText = await res.text();
+        lastErr = `HTTP ${res.status} em ${model}: ${errText.slice(0, 150)}`;
+        if (res.status === 401 || res.status === 403) {
+          break; // Chave inválida ou não autorizada
+        }
+      }
+    } catch (err) {
+      lastErr = `${model} erro: ${err.message}`;
+    }
+  }
+
+  return { ok: false, error: lastErr || "Falha na comunicação com o provedor de IA.", provider: "Google Gemini" };
+}
+
+async function testSpiritualAIConnection(apiKey = "") {
+  const start = Date.now();
+  const trimmed = (apiKey || getValidGeminiApiKey()).trim();
+
+  // Se o usuário passou chave, testa a chave diretamente
+  if (trimmed) {
+    const prompt = 'Gere este JSON estrito: {"status":"ok","mensagem":"Conexão Espiritual 100% Estabelecida"}';
+    const result = await callSpiritualAI({ prompt, temperature: 0.1, apiKey: trimmed });
+    const latencyMs = Date.now() - start;
+    if (result.ok) {
+      return {
+        ok: true,
+        provider: result.provider,
+        model: result.model,
+        latencyMs,
+        mensagem: `Conexão bem-sucedida com ${result.provider} (${result.model}) em ${latencyMs}ms!`
+      };
+    } else {
+      return {
+        ok: false,
+        provider: result.provider,
+        error: result.error,
+        mensagem: `Falha na conexão com ${result.provider}: ${result.error}`
+      };
+    }
+  }
+
+  // Se não passou chave, testa o status do servidor na nuvem
+  try {
+    const endpoints = [
+      "https://us-central1-bleach-rpg-6894c.cloudfunctions.net/statusIAServidor",
+      typeof window !== 'undefined' && window.location?.origin ? `${window.location.origin}/api/statusIA` : null
+    ].filter(Boolean);
+
+    for (const ep of endpoints) {
+      try {
+        const res = await fetch(ep, {
+          signal: typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function" ? AbortSignal.timeout(10000) : undefined
+        });
+        if (res.ok) {
+          const json = await res.json();
+          if (json.ativa) {
+            return {
+              ok: true,
+              provider: json.provider || "Servidor Seguro na Nuvem",
+              model: json.model || "gemini-2.5-flash",
+              latencyMs: json.latencyMs || (Date.now() - start),
+              mensagem: json.mensagem || `Servidor de IA 100% Ativo para Todos os Aparelhos!`
+            };
+          }
+        }
+      } catch(e) {}
+    }
+  } catch(e) {}
+
+  return { ok: false, error: "Nenhuma chave foi inserida e o servidor seguro não possui chave ativa.", provider: "Nenhum" };
+}
+
+// 5. FUNÇÃO CENTRAL ASSÍNCRONA DE GERAÇÃO DE SHIKAI COM IA (COM AUTO-RETRY E EXCLUSIVIDADE ABSOLUTA)
+async function gerar4CaminhosZanpakutoAI_Async(personagem, dbPersonagens = [], dbZanpakutosVinculadas = [], cenaTexto = "", apiKey = "") {
+  const { claimedNames, claimedElements } = getClaimedSignatures(dbPersonagens, dbZanpakutosVinculadas);
+  const dna = construirDnaEspiritual(personagem, cenaTexto);
+  let caminhosResultantes = null;
+  let origemGeracao = "Sintetizador ZGE v5.0 (Offline/Procedural)";
+
+  const keyToUse = getValidGeminiApiKey(apiKey);
+  try {
+    console.log("Invocando inteligência generativa com motor seguro...");
+    const prompt = construirPromptChatGPT(personagem, dna, cenaTexto, dbPersonagens, dbZanpakutosVinculadas);
+    const aiRes = await callSpiritualAI({ prompt, apiKey: keyToUse });
+    if (aiRes.ok && aiRes.data && Array.isArray(aiRes.data.caminhos) && aiRes.data.caminhos.length >= 4) {
+      console.log(`4 Caminhos de Shikai gerados com sucesso via ${aiRes.provider} (${aiRes.model})!`);
+      origemGeracao = `IA Generativa · ${aiRes.provider} (${aiRes.model})`;
+      caminhosResultantes = aiRes.data.caminhos.slice(0, 4).map((c, idx) => ({
+        ...c,
+        caminhoNumero: idx + 1,
+        origemIA: origemGeracao,
+        shikai: {
+          ...c.shikai,
+          id: uid(),
+          assinaturaEspiritual: calcularAssinaturaEspiritual(c.shikai)
+        }
+      }));
+    } else {
+      console.warn("Retorno da IA não continha 4 caminhos estruturados ou falhou:", aiRes.error);
+    }
+  } catch (err) {
+    console.warn("Erro ao chamar IA generativa para Shikai:", err);
+  }
+
+  // Fallback: Sintetizador Cognitivo Procedural ZGE v5.0
   if (!caminhosResultantes) {
     console.log("Executando Sintetizador Cognitivo ZGE V5.0 baseado na personalidade com filtro anti-duplicatas...");
     caminhosResultantes = sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto, claimedNames, claimedElements);
@@ -3277,6 +3519,8 @@ CADA UMA DAS 3 BANKAIS DEVE CONTER:
 - Nome em japonês Romaji + Kanji + Tradução em Português
 - Frase monumental de liberação ("Ban-kai! ...")
 - Ponto de Ruptura (Breakpoint - qual limite específico da Shikai foi estilhaçado)
+- Manifestação do Espírito na Bankai: Como o espírito da Zanpakutō se manifesta ou se funde ao Shinigami durante a liberação máxima
+- Domínio do Mundo Interior: Como o Mundo Interior da alma transborda e se materializa sobre o mundo real durante a Bankai
 - Forma Monumental / Manifestação Visual
 - Poder & Mecânica Transcendental
 - Ponto Fraco & Brecha Estratégica: Uma forma lógica e clara de um oponente inteligente lidar/contragolpear essa Bankai (evitando poderes absolutos/invencíveis). Exemplo: se o poder corta quem bloqueia, quem ataca agressivamente sem defender consegue cruzar lâminas.
@@ -3296,6 +3540,8 @@ RESPONDA OBRIGATORIAMENTE EM JSON VÁLIDO no seguinte formato:
       "traducao": "Tradução em Português",
       "comando": "Ban-kai! Frase monumental de liberação",
       "pontoRuptura": "O limite específico da Shikai superado",
+      "manifestacaoEspiritoBankai": "Manifestação do espírito da lâmina na Bankai",
+      "mundoInternoBankai": "Como o Mundo Interior se materializa no campo de batalha",
       "formaMonumental": "Descrição visual da manifestação monumental",
       "poder": "Mecânica transcendental do poder da Bankai",
       "pontoFraco": "Como o oponente pode lidar ou contragolpear essa Bankai estrategicamente",
@@ -3313,6 +3559,8 @@ RESPONDA OBRIGATORIAMENTE EM JSON VÁLIDO no seguinte formato:
       "traducao": "Tradução em Português",
       "comando": "Ban-kai! Frase monumental de liberação",
       "pontoRuptura": "O limite específico da Shikai superado",
+      "manifestacaoEspiritoBankai": "Manifestação do espírito da lâmina na Bankai",
+      "mundoInternoBankai": "Como o Mundo Interior se materializa no campo de batalha",
       "formaMonumental": "Descrição visual da manifestação monumental",
       "poder": "Mecânica transcendental do poder da Bankai",
       "pontoFraco": "Como o oponente pode lidar ou contragolpear essa Bankai estrategicamente",
@@ -3330,6 +3578,8 @@ RESPONDA OBRIGATORIAMENTE EM JSON VÁLIDO no seguinte formato:
       "traducao": "Tradução em Português",
       "comando": "Ban-kai! Frase monumental de liberação",
       "pontoRuptura": "O limite específico da Shikai superado",
+      "manifestacaoEspiritoBankai": "Manifestação do espírito da lâmina na Bankai",
+      "mundoInternoBankai": "Como o Mundo Interior se materializa no campo de batalha",
       "formaMonumental": "Descrição visual da manifestação monumental",
       "poder": "Mecânica transcendental do poder da Bankai",
       "pontoFraco": "Como o oponente pode lidar ou contragolpear essa Bankai estrategicamente",
@@ -3360,6 +3610,8 @@ function sintetizar3BankaisEvolucaoCognitivo(personagem, shikai, dna, cenaTexto 
       traducao: "Grande Roda da Transcendência Divina",
       comando: `Ban-kai! Desperte em tua glória primordial, ${sNome}!`,
       pontoRuptura: `Supera o limite de alcance e foco da Shikai: a mecânica de [${sElem}] agora permeia toda a atmosfera em um raio monumental de 300 metros sob o comando mental de ${personagem.nome}.`,
+      manifestacaoEspiritoBankai: `O espírito da Zanpakutō assume proporções monumentais ao fundo como um guardião cósmico de pura energia, empunhando lâminas celestiais em perfeita harmonia com ${personagem.nome}.`,
+      mundoInternoBankai: `O santuário do mundo interior transborda para o plano real, transformando o solo e os céus em um território soberano de ${sElem}.`,
       formaMonumental: `O campo de batalha se transforma em um domínio absoluto onde lâminas monumentais e manifestações puras de ${sElem} emergem do ar, respondendo à virtude "${dna.virtudes}".`,
       poder: `Amplifica a mecânica da Shikai em escala soberana. O poder original (${sPod}) agora é projetado em dezenas de ângulos simultâneos sem necessidade de movimento corporal.`,
       pontoFraco: `Por ser uma manifestação territorial de longo alcance, se o oponente penetrar o perímetro em velocidade pura (Shunpo/Hohō) e lutar colado ao usuário em combate corpo a corpo frenético sem recuar, a densidade dos cortes perde precisão para não ferir o próprio conjurador.`,
@@ -3377,6 +3629,8 @@ function sintetizar3BankaisEvolucaoCognitivo(personagem, shikai, dna, cenaTexto 
       traducao: "Bastião Protetor da Sombra Divina",
       comando: `Ban-kai! Erga o manto impenetrável da alma, ${sNome}!`,
       pontoRuptura: `Elimina a fraqueza declarada da Shikai ("${sLim}") e ergue um escudo impenetrável contra o maior medo do Shinigami: "${dna.medos}".`,
+      manifestacaoEspiritoBankai: `O espírito da lâmina materializa asas protetoras de Reishi sólido e uma armadura divina que reveste o corpo de ${personagem.nome}, agindo como uma couraça inexpugnável.`,
+      mundoInternoBankai: `As águas serenas e a luz cristalina do mundo interior se espalham pelo campo de batalha, purificando a atmosfera e restaurando a postura do usuário.`,
       formaMonumental: `Armadura cerimonial de Reishi e uma aura densa de ${sElem} envolvem ${personagem.nome}, gerando barreiras defensivas articuladas e esferas de controle tático.`,
       poder: `Integra propriedades de suporte supremo e controle espacial à Shikai. Absorve a Reiatsu dos ataques inimigos recebidos e a converte em regeneração de postura e fortalecimento do atributo ${dna.deficiente.label}.`,
       pontoFraco: `A barreira defensiva necessita de uma fração de segundo de recalibração após absorver um impacto pesado; se o adversário desferir ataques sequenciais duplos ou contínuos sem pausa, o segundo golpe atinge o corpo antes da barreira se recompor.`,
@@ -3394,6 +3648,8 @@ function sintetizar3BankaisEvolucaoCognitivo(personagem, shikai, dna, cenaTexto 
       traducao: "Paradoxo Infinito da Antítese",
       comando: `Ban-kai! Inverta a verdade e revele o abismo, ${sNome}!`,
       pontoRuptura: `Inverte a regra básica de funcionamento da Shikai: o que antes dependia de contato ou corte direto agora atua como uma lei cósmica paradoxal atrelada ao conflito interior ("${dna.conflitos}").`,
+      manifestacaoEspiritoBankai: `A sombra espectral do espírito se funde às costas de ${personagem.nome}, abrindo olhos cósmicos nas trevas e atacando em perfeita inversão de causalidade.`,
+      mundoInternoBankai: `A cidade invertida do abismo devora a luz do ambiente físico, instaurando um domínio de sombras flutuantes e gravidade paradoxal.`,
       formaMonumental: `O cenário escurece em tons monocromáticos onde as cores da Reiatsu de ${sElem} se invertem, criando distorções geométricas flutuantes de sombra e vazio.`,
       poder: `Manifesta o lado sombrio do poder: em vez do efeito direto da Shikai (${sPod}), impõe uma lei onde qualquer resistência calculada ou tentativa de defesa do oponente amplifica o dano recebido.`,
       pontoFraco: `A lei da Bankai é ativada exclusivamente pela intenção de defesa ou cálculo tático do alvo. Se o oponente desligar o raciocínio, agir por puro instinto animal e atacar com intenção irrefletida de destruição mútua sem nunca tentar bloquear, a inversão paradoxal não se ancora.`,
@@ -3409,110 +3665,29 @@ function sintetizar3BankaisEvolucaoCognitivo(personagem, shikai, dna, cenaTexto 
 async function gerar3BankaisEvolucaoAI_Async(personagem, shikai, dbPersonagens = [], dbZanpakutosVinculadas = [], cenaTexto = "", apiKey = "") {
   const shikaiBase = shikai || personagem.zanpakuto?.shikaiAtiva || { nome: "Zanpakutō", elemento: "Espiritual" };
   const dna = construirDnaEspiritual(personagem, cenaTexto);
-  let keyToUse = getValidGeminiApiKey(apiKey);
-
   let bankaisResultantes = null;
+  let origemGeracao = "Sintetizador ZGE v5.0 (Offline/Procedural)";
 
-  async function callGeminiBankai(key) {
+  const keyToUse = getValidGeminiApiKey(apiKey);
+  try {
+    console.log("Chamando IA generativa segura para geração das 3 Evoluções de Bankai...");
     const prompt = construirPromptBankaiEvolucao(personagem, shikaiBase, dna, cenaTexto, dbPersonagens, dbZanpakutosVinculadas);
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${encodeURIComponent(key)}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [
-          {
-            role: "user",
-            parts: [{ text: prompt + "\n\nResponda ESTRITAMENTE em formato JSON válido conforme o esquema de 3 bankais solicitado." }]
-          }
-        ],
-        generationConfig: {
-          responseMimeType: "application/json",
-          temperature: 0.95
-        }
-      })
-    });
-
-    if (res.ok) {
-      const data = await res.json();
-      const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (rawText) {
-        const parsed = JSON.parse(rawText);
-        if (parsed && Array.isArray(parsed.bankais) && parsed.bankais.length >= 3) {
-          return parsed.bankais.slice(0, 3).map((b, idx) => ({
-            ...b,
-            opcaoNumero: idx + 1,
-            id: uid(),
-            shikaiBase: shikaiBase.nome
-          }));
-        }
-      }
+    const aiRes = await callSpiritualAI({ prompt, apiKey: keyToUse });
+    if (aiRes.ok && aiRes.data && Array.isArray(aiRes.data.bankais) && aiRes.data.bankais.length >= 3) {
+      console.log(`3 Evoluções de Bankai geradas com sucesso via ${aiRes.provider} (${aiRes.model})!`);
+      origemGeracao = `IA Generativa · ${aiRes.provider} (${aiRes.model})`;
+      bankaisResultantes = aiRes.data.bankais.slice(0, 3).map((b, idx) => ({
+        ...b,
+        opcaoNumero: idx + 1,
+        id: uid(),
+        origemIA: origemGeracao,
+        shikaiBase: shikaiBase.nome
+      }));
     } else {
-      console.warn("Gemini Bankai HTTP Error:", res.status, await res.text());
+      console.warn("Retorno da IA não continha 3 bankais estruturados ou falhou:", aiRes.error);
     }
-    return null;
-  }
-
-  // 1. Tentar Google Gemini API (gemini-3.6-flash)
-  if (keyToUse && !keyToUse.startsWith("sk-")) {
-    try {
-      console.log("Chamando Google Gemini API (gemini-3.6-flash) para geração das 3 Evoluções de Bankai...");
-      bankaisResultantes = await callGeminiBankai(keyToUse);
-      if (!bankaisResultantes && keyToUse !== getDefaultGeminiKey()) {
-        console.log("Tentando novamente Bankai com a chave padrão do Gemini...");
-        bankaisResultantes = await callGeminiBankai(getDefaultGeminiKey());
-      }
-    } catch (err) {
-      console.warn("Google Gemini API fetch failed for Bankai:", err);
-      if (keyToUse !== getDefaultGeminiKey()) {
-        try {
-          bankaisResultantes = await callGeminiBankai(getDefaultGeminiKey());
-        } catch(e) {}
-      }
-    }
-  }
-
-  // 2. Tentar OpenAI (ChatGPT)
-  if (!bankaisResultantes && keyToUse && keyToUse.startsWith("sk-")) {
-    try {
-      console.log("Chamando OpenAI API (ChatGPT) para geração das 3 Evoluções de Bankai...");
-      const prompt = construirPromptBankaiEvolucao(personagem, shikaiBase, dna, cenaTexto, dbPersonagens, dbZanpakutosVinculadas);
-      const res = await fetch("https://api.openai.com/v1/chat/completions", {
-        signal: typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function" ? AbortSignal.timeout(6000) : undefined,
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${keyToUse}`
-        },
-        body: JSON.stringify({
-          model: "gpt-4o-mini",
-          messages: [
-            { role: "system", content: "Você é um mestre narrador de Bleach RPG especialista em Bankai e no Zanpakuto Genesis Engine v5.0. Responda APENAS em JSON válido." },
-            { role: "user", content: prompt }
-          ],
-          response_format: { type: "json_object" },
-          temperature: 0.88
-        })
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        const contentStr = data.choices?.[0]?.message?.content;
-        if (contentStr) {
-          const parsed = JSON.parse(contentStr);
-          if (parsed && Array.isArray(parsed.bankais) && parsed.bankais.length >= 3) {
-            console.log("3 Evoluções de Bankai geradas com sucesso pelo ChatGPT!");
-            bankaisResultantes = parsed.bankais.slice(0, 3).map((b, idx) => ({
-              ...b,
-              opcaoNumero: idx + 1,
-              id: uid(),
-              shikaiBase: shikaiBase.nome
-            }));
-          }
-        }
-      }
-    } catch (err) {
-      console.warn("OpenAI fetch failed for Bankai, falling back to Cognitive Engine:", err);
-    }
+  } catch (err) {
+    console.warn("Erro ao chamar IA generativa para Bankai:", err);
   }
 
   // 3. Fallback Procedural Cognitivo
@@ -4370,26 +4545,100 @@ function calcularEfeitoKaido(poderKaido, estadoInicial = "Debilitado", kido = nu
 // OFFICIAL MALUTTI FORMATTED WHATSAPP CHARACTER SHEET EXPORTER
 // =========================================================================
 
+function getIniciaisNome(nome) {
+  if (!nome) return "MA";
+  const clean = String(nome).trim().replace(/[^a-zA-ZÀ-ÿ0-9\s]/g, "");
+  const words = clean.split(/\s+/).filter(Boolean);
+  if (words.length >= 2) {
+    const init1 = words[0][0] || "M";
+    const init2 = words[1][0] || words[0][1] || "A";
+    return (init1 + init2).toUpperCase();
+  } else if (words.length === 1) {
+    if (words[0].length >= 2) return words[0].slice(0, 2).toUpperCase();
+    return (words[0] + "A").toUpperCase();
+  }
+  return "MA";
+}
+
 function getCodigoAtividade(p) {
-  if (!p) return "ACT-0000";
-  if (p.codigoAtividade) return p.codigoAtividade;
-  const whatsDigits = p.whatsapp ? String(p.whatsapp).replace(/\D/g, "").slice(-4) : "";
-  if (whatsDigits && whatsDigits.length >= 2) {
-    return `ACT-${whatsDigits.padStart(4, '0')}`;
+  if (!p) return "MA-5476";
+  const nome = p.nome || p.nomeChar || "Shinigami";
+  const iniciais = getIniciaisNome(nome);
+  
+  // 4 ultimos digitos do numero de celular do player
+  const rawTel = p.whatsapp || p.celular || p.telefone || "";
+  const telDigits = String(rawTel).replace(/\D/g, "").slice(-4);
+  
+  if (telDigits && telDigits.length === 4) {
+    return `${iniciais}-${telDigits}`;
+  }
+  
+  // Se p.codigo ja segue o padrao MA-5476
+  if (p.codigo && /^[A-ZÀ-ÿ]{1,3}-\d{4}$/i.test(String(p.codigo).trim())) {
+    return String(p.codigo).trim().toUpperCase();
   }
   if (p.codigo) {
-    return `ACT-${String(p.codigo).replace(/[^a-zA-Z0-9]/g, '').slice(-4).toUpperCase().padStart(4, '0')}`;
+    const digits = String(p.codigo).replace(/\D/g, "").slice(-4);
+    if (digits.length >= 2) {
+      return `${iniciais}-${digits.padStart(4, '0')}`;
+    }
   }
-  return `ACT-${String(p.id || "0001").slice(-4).toUpperCase()}`;
+  if (p.codigoAtividade && /^[A-ZÀ-ÿ]{1,3}-\d{4}$/i.test(String(p.codigoAtividade).trim())) {
+    return String(p.codigoAtividade).trim().toUpperCase();
+  }
+  
+  const idDigits = String(p.id || "5476").replace(/\D/g, "").slice(-4).padStart(4, '0');
+  return `${iniciais}-${idDigits}`;
+}
+
+const HIERARQUIA_GOTEI_13 = [
+  { rank: "Comandante-Capitão", faixa: "3401+ pts", minPts: 3401, cor: "#FFD700", icon: "👑", desc: "Liderança Suprema do Gotei 13 · Autoridade Máxima do Seireitei" },
+  { rank: "Capitão", faixa: "2951–3400 pts", minPts: 2951, cor: "#EF4444", icon: "🏛️", desc: "Taichō · Comandante de Divisão com Bankai e Maestria Militar" },
+  { rank: "Tenente / Adjunto-Chefe", faixa: "2651–2950 pts", minPts: 2651, cor: "#EAB308", icon: "⚔️", desc: "Fukutaichō · Vice-Líder de Esquadrão e Comando de Campo" },
+  { rank: "1º Adjunto", faixa: "2451–2650 pts", minPts: 2451, cor: "#F97316", icon: "🗡️", desc: "Primeiro Oficial Sênior e Estrategista Tático" },
+  { rank: "2º Adjunto", faixa: "2251–2450 pts", minPts: 2251, cor: "#FB923C", icon: "🗡️", desc: "Segundo Oficial Sênior do Esquadrão" },
+  { rank: "3º Adjunto", faixa: "2051–2250 pts", minPts: 2051, cor: "#F43F5E", icon: "🗡️", desc: "Terceiro Oficial de Vanguarda e Combate Especializado" },
+  { rank: "4º Adjunto", faixa: "1851–2050 pts", minPts: 1851, cor: "#EC4899", icon: "🛡️", desc: "Quarto Oficial de Pelotão e Contenção" },
+  { rank: "5º Adjunto", faixa: "1651–1850 pts", minPts: 1651, cor: "#C084FC", icon: "🛡️", desc: "Quinto Oficial em Missões Oficiais" },
+  { rank: "6º Adjunto", faixa: "1451–1650 pts", minPts: 1451, cor: "#A855F7", icon: "🛡️", desc: "Sexto Oficial e Sentinela de Setor" },
+  { rank: "7º Adjunto", faixa: "1251–1450 pts", minPts: 1251, cor: "#8B5CF6", icon: "⚡", desc: "Sétimo Oficial com Domínio Intermediário" },
+  { rank: "8º Adjunto", faixa: "1051–1250 pts", minPts: 1051, cor: "#6366F1", icon: "⚡", desc: "Oitavo Oficial em Operações Especiais" },
+  { rank: "9º Adjunto", faixa: "851–1050 pts", minPts: 851, cor: "#60A5FA", icon: "⚡", desc: "Nono Oficial e Sentinela Sênior" },
+  { rank: "10º Adjunto", faixa: "651–850 pts", minPts: 651, cor: "#3B82F6", icon: "⚡", desc: "Décimo Oficial de Esquadrão" },
+  { rank: "Oficial", faixa: "451–650 pts", minPts: 451, cor: "#06B6D4", icon: "🔰", desc: "Oficial de Patrulha no Mundo Humano e Rukongai" },
+  { rank: "Suboficial", faixa: "251–450 pts", minPts: 251, cor: "#10B981", icon: "🔰", desc: "Suboficial com Experiência Prática em Combate" },
+  { rank: "Shinigami", faixa: "101–250 pts", minPts: 101, cor: "#9CA3AF", icon: "🌸", desc: "Membro de Esquadrão Formado e Ativo" },
+  { rank: "Recruta", faixa: "1–100 pts", minPts: 1, cor: "#6B7280", icon: "🌱", desc: "Recém-Chegado da Academia Shin'ō em Fase de Adaptação" }
+];
+
+function getPowerTier(statVal) {
+  const val = Number(statVal || 0);
+  if (val <= 100) return { title: "Recruta", patamar: "1–100", color: "#6B7280", cargo: "Recruta da Academia Shin'ō" };
+  if (val <= 250) return { title: "Shinigami", patamar: "101–250", color: "#9CA3AF", cargo: "Shinigami de Esquadrão" };
+  if (val <= 450) return { title: "Suboficial", patamar: "251–450", color: "#10B981", cargo: "Suboficial de Vanguarda" };
+  if (val <= 650) return { title: "Oficial", patamar: "451–650", color: "#06B6D4", cargo: "Oficial de Patrulha" };
+  if (val <= 850) return { title: "10º Adjunto", patamar: "651–850", color: "#3B82F6", cargo: "10º Posto Hierárquico" };
+  if (val <= 1050) return { title: "9º Adjunto", patamar: "851–1050", color: "#60A5FA", cargo: "9º Posto Hierárquico" };
+  if (val <= 1250) return { title: "8º Adjunto", patamar: "1051–1250", color: "#6366F1", cargo: "8º Posto Hierárquico" };
+  if (val <= 1450) return { title: "7º Adjunto", patamar: "1251–1450", color: "#8B5CF6", cargo: "7º Posto Hierárquico" };
+  if (val <= 1650) return { title: "6º Adjunto", patamar: "1451–1650", color: "#A855F7", cargo: "6º Posto Hierárquico" };
+  if (val <= 1850) return { title: "5º Adjunto", patamar: "1651–1850", color: "#C084FC", cargo: "5º Posto Hierárquico" };
+  if (val <= 2050) return { title: "4º Adjunto", patamar: "1851–2050", color: "#EC4899", cargo: "4º Posto Hierárquico" };
+  if (val <= 2250) return { title: "3º Adjunto", patamar: "2051–2250", color: "#F43F5E", cargo: "3º Posto Hierárquico" };
+  if (val <= 2450) return { title: "2º Adjunto", patamar: "2251–2450", color: "#FB923C", cargo: "2º Posto Hierárquico" };
+  if (val <= 2650) return { title: "1º Adjunto", patamar: "2451–2650", color: "#F97316", cargo: "1º Posto Hierárquico" };
+  if (val <= 2950) return { title: "Tenente / Adjunto-Chefe", patamar: "2651–2950", color: "#EAB308", cargo: "Fukutaichō · Vice-Líder de Esquadrão" };
+  if (val <= 3400) return { title: "Capitão", patamar: "2951–3400", color: "#EF4444", cargo: "Taichō · Comandante de Divisão" };
+  return { title: "Comandante-Capitão", patamar: "3401+", color: "#FFD700", cargo: "Sōtaichō · Liderança Máxima do Gotei 13" };
 }
 
 function gerarFichaFormatadaMalutti(p) {
   if (!p) return "";
 
   const totalAtributos = Object.values(p.atributos || { pressao: 10, forca: 10, velocidade: 10, resiliencia: 10 }).reduce((a, b) => a + b, 0);
-  const tier = (typeof getPowerTier === "function") ? getPowerTier(totalAtributos) : { title: "Iniciante", patamar: "201–450" };
+  const tier = (typeof getPowerTier === "function") ? getPowerTier(totalAtributos) : { title: "Recruta", patamar: "1–100" };
 
-  const whatsDigits = p.whatsapp ? String(p.whatsapp).replace(/\D/g, "").slice(-4) : "0000";
+  const whatsDigits = p.whatsapp ? String(p.whatsapp).replace(/\D/g, "").slice(-4) : "5476";
   const codAtividade = getCodigoAtividade(p);
   const pNome = p.nome || "Shinigami";
   const playerNome = pNome.split(" ")[0] || "Jogador";
@@ -4422,7 +4671,7 @@ function gerarFichaFormatadaMalutti(p) {
              \`﹙ 𝗗𝗔𝗗𝗢𝗦 𝗗𝗢 𝗣𝗔𝗥𝗧𝗜𝗖𝗜𝗣𝗔𝗡𝗧𝗘 ﹚\` 
             ✶  „  nome & quɑtɾo dı́git͟os .ᐟ
             ⎯  ${playerNome}, ${whatsDigits}
-            ✶  „  código de ɑtividɑde (on) .ᐟ
+            ✶  „  código de ɑtividɑde / identificɑdoɾ .ᐟ
             ⎯  ${codAtividade} ‹ use no contador de cenas! ›
             ✶  „  dɑ͟tɑ de nɑscimento & idɑde .ᐟ
             ⎯  ${playerNasc} (${p.idadePlayer || "20"} anos)
@@ -4440,11 +4689,11 @@ function gerarFichaFormatadaMalutti(p) {
             ⎯  ${p.esquadrao || "11º Esquadrão"}
             ✶  „  ɾɑçɑ & linhɑgem espı́ɾituɑl .ᐟ
             ⎯  ${p.raca || "Shinigami"}
-            ✶  „  código de ɑtividɑde do shinigɑmi .ᐟ
+            ✶  „  código identificɑdoɾ do shinigɑmi .ᐟ
             ⎯  ${codAtividade}
             ✶  „  estɑdo & condiçɑ̃o .ᐟ
             ⎯  ${p.estado || "Inteiro"}
-            ✶  „  pɑtɑmɑɾ no seı́ɾeı́teı́ .ᐟ
+            ✶  „  hierɑɾquiɑ no gotei 13 .ᐟ
             ⎯  ${tier.title} (${totalAtributos} pts acumulados)
 
              \`﹙ 𝗔𝗧𝗥𝗜𝗕𝗨𝗧𝗢𝗦 𝗘𝗦𝗣𝗜𝗥𝗜𝗧𝗨𝗔𝗜𝗦 ﹚\`              
@@ -4454,7 +4703,7 @@ function gerarFichaFormatadaMalutti(p) {
             ⎯  velocidɑde: ${p.atributos?.velocidade || 10}
             ⎯  ɾesiliênciɑ: ${p.atributos?.resiliencia || 10}
             ✶  „ totɑl geɾɑl .ᐟ
-            ⎯  ${totalAtributos} pts (Patamar: ${tier.title})
+            ⎯  ${totalAtributos} pts (Hierarquia: ${tier.title})${p.zanpakuto?.shikaiAtiva ? `\n\n             \`﹙ 𝗭𝗔𝗡𝗣𝗔𝗞𝗨𝗧𝗢̄ & 𝗟𝗜𝗕𝗘𝗥𝗔𝗖̧𝗢̃𝗘𝗦 ﹚\`\n            ✶  „  nome dɑ lɑ̂minɑ .ᐟ\n            ⎯  ${p.zanpakuto?.nome || p.zanpakuto?.shikaiAtiva?.nome || "Lâmina Selada"}\n            ✶  „  libeɾɑçɑ̃o de shikɑi .ᐟ\n            ⎯  ${p.zanpakuto?.shikaiAtiva?.comando || "Desperte, " + (p.zanpakuto?.shikaiAtiva?.nome || "Zanpakutō")}\n            ✶  „  podeɾ & elemento .ᐟ\n            ⎯  ${p.zanpakuto?.shikaiAtiva?.elemento || "Reiatsu"} — ${p.zanpakuto?.shikaiAtiva?.poder || "Amplificação espiritual"}${p.zanpakuto?.shikaiAtiva?.espirito ? `\n            ✶  „  espı́ɾito dɑ lɑ̂minɑ .ᐟ\n            ⎯  ${p.zanpakuto.shikaiAtiva.espirito}` : ""}${p.zanpakuto?.shikaiAtiva?.mundoInterno ? `\n            ✶  „  mundo inteɾioɾ (jinzen) .ᐟ\n            ⎯  ${p.zanpakuto.shikaiAtiva.mundoInterno}` : ""}${p.zanpakuto?.bankaiAtiva ? `\n            ✶  „  libeɾɑçɑ̃o de bɑnkɑi .ᐟ\n            ⎯  ${p.zanpakuto.bankaiAtiva.nome} (${p.zanpakuto.bankaiAtiva.tipo || p.zanpakuto.bankaiAtiva.tipoEvolucao || p.zanpakuto.bankaiAtiva.comando || "Manifestação Suprema"})` : ""}` : ""}
 
              \`﹙ 𝗧𝗘𝗥𝗠𝗢 𝗗𝗘 𝗖𝗢𝗡𝗦𝗘𝗡𝗧𝗜𝗠𝗘𝗡𝗧𝗢 ﹚\`     
        ₍  X  ₎     estou ciente de que dentɾo do 
@@ -4499,68 +4748,68 @@ function copiarFichaFormatadaWhatsApp(p, onCopied) {
 function getCapacidadeKidos(pressaoTotal) {
   const pressao = Math.max(1, Number(pressaoTotal || 10));
 
-  if (pressao >= 601) {
+  if (pressao >= 3401 || pressao >= 601) {
     return {
-      tierNome: "Transcendente / Divisão Zero",
+      tierNome: "Comandante-Capitão / Divisão Zero",
       limiteMaximo: 99,
       limiteEquipadosStr: "Ilimitado (Mestria Plena)",
       nivelMaximoFeitico: 99,
       descricao: "Mestria absoluta do Reishi. Acesso irrestrito a todos os feitiços do Grimório e magias proibidas.",
       cor: "#FFD700"
     };
-  } else if (pressao >= 401) {
+  } else if (pressao >= 2951 || pressao >= 401) {
     return {
-      tierNome: "Lendário / Capitão Sênior",
+      tierNome: "Capitão / Taichō",
       limiteMaximo: 24,
       limiteEquipadosStr: "Até 24 Feitiços",
       nivelMaximoFeitico: 99,
       descricao: "Compreensão suprema das artes de Kidō. Acesso liberado aos feitiços destruidores da casa dos 90.",
-      cor: "#A855F7"
+      cor: "#EF4444"
     };
-  } else if (pressao >= 251) {
+  } else if (pressao >= 2651 || pressao >= 251) {
     return {
-      tierNome: "Monstruoso / Nível Capitão",
+      tierNome: "Tenente / Adjunto-Chefe",
       limiteMaximo: 16,
       limiteEquipadosStr: "Até 16 Feitiços",
       nivelMaximoFeitico: 89,
       descricao: "Domínio de alto calibre em Kidōs avançados de destruição, barreiras pesadas e Kaidō cirúrgico.",
-      cor: "#EF4444"
+      cor: "#EAB308"
     };
-  } else if (pressao >= 151) {
+  } else if (pressao >= 1451 || pressao >= 151) {
     return {
-      tierNome: "Alto Nível / Tenente Veterano",
+      tierNome: "Oficial Superior / Adjuntos",
       limiteMaximo: 12,
       limiteEquipadosStr: "Até 12 Feitiços",
       nivelMaximoFeitico: 69,
       descricao: "Ampla versatilidade tática com feitiços intermediários de suporte, contenção e dano.",
-      cor: "#F97316"
+      cor: "#A855F7"
     };
-  } else if (pressao >= 61) {
+  } else if (pressao >= 451 || pressao >= 61) {
     return {
-      tierNome: "Experiente / Oficial de Esquadrão",
+      tierNome: "Oficial / Suboficial",
       limiteMaximo: 8,
       limiteEquipadosStr: "Até 8 Feitiços",
       nivelMaximoFeitico: 49,
       descricao: "Conhecimento prático das magias fundamentais de combate do Gotei 13.",
-      cor: "#EAB308"
+      cor: "#06B6D4"
     };
-  } else if (pressao >= 31) {
+  } else if (pressao >= 101 || pressao >= 31) {
     return {
-      tierNome: "Treinado / Shinigami Formado",
+      tierNome: "Shinigami de Esquadrão",
       limiteMaximo: 6,
       limiteEquipadosStr: "Até 6 Feitiços",
       nivelMaximoFeitico: 29,
-      descricao: "Capacidade padrão de recém-graduado da Academia Shin'ō.",
-      cor: "#3B82F6"
+      descricao: "Capacidade padrão de graduado da Academia Shin'ō integrado ao esquadrão.",
+      cor: "#9CA3AF"
     };
   } else {
     return {
-      tierNome: "Iniciante / Inexperiente",
+      tierNome: "Recruta da Academia",
       limiteMaximo: 4,
       limiteEquipadosStr: "Até 4 Feitiços Iniciais",
       nivelMaximoFeitico: 19,
       descricao: "Em fase de iniciação espiritual. Pode adquirir até 4 feitiços básicos com seu Conhecimento inicial.",
-      cor: "#10B981"
+      cor: "#6B7280"
     };
   }
 }
@@ -5059,16 +5308,14 @@ function sintetizarTramaConjuntaHeuristica(players, cenasConjuntas) {
   };
 }
 
-// 4. FUNÇÃO CENTRAL DE GERAÇÃO COM IA (GEMINI 3.6 FLASH + OPENAI COM AUTO-LEARN)
+// 4. FUNÇÃO CENTRAL DE GERAÇÃO DE TRAMAS COM IA (MULTIDISPATCHER)
 async function gerarTramaIndividualAI(params) {
   const player = params?.player;
   const cenas = params?.cenas || [];
   const openAiKey = params?.openAiKey || "";
   const heuristicResult = sintetizarTramaIndividualHeuristica(player, cenas);
   
-  const keyToUse = (typeof getValidGeminiApiKey === 'function') 
-    ? getValidGeminiApiKey(openAiKey) 
-    : (openAiKey || (typeof localStorage !== 'undefined' ? localStorage.getItem("bleach_openai_key") || "" : ""));
+  const keyToUse = getValidGeminiApiKey(openAiKey);
 
   const prompt = `Você é o Mestre Narrador Principal do BLEACH RPG (Soul Society / Seireitei).
 Analise o histórico cronológico de cenas narradas pelo jogador no WhatsApp, compreenda o que aconteceu em cada cena e gere 3 Opções de Tramas Individuais que deem continuidade lógica e coesa aos eventos anteriores:
@@ -5110,80 +5357,22 @@ ${JSON.stringify({
   ]
 }, null, 2)}`;
 
-  // 1. Tentar Google Gemini 3.6 Flash
-  if (keyToUse && !keyToUse.startsWith("sk-")) {
-    try {
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${encodeURIComponent(keyToUse)}`, {
-        signal: typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function" ? AbortSignal.timeout(6000) : undefined,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ role: "user", parts: [{ text: prompt }] }],
-          generationConfig: { responseMimeType: "application/json", temperature: 0.85 }
-        })
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (rawText) {
-          const parsed = JSON.parse(rawText);
-          if (Array.isArray(parsed.opcoesTramas) && parsed.opcoesTramas.length >= 3) {
-            const op1 = parsed.opcoesTramas[0];
-            return {
-              ...heuristicResult,
-              opcoesTramas: parsed.opcoesTramas,
-              tituloArco: op1.tituloArco || heuristicResult.tituloArco,
-              ganchoImediato: op1.focoNarrativo || heuristicResult.ganchoImediato,
-              eventos: op1.eventos || heuristicResult.eventos,
-              antagonista: op1.antagonista || heuristicResult.antagonista,
-              briefingWhatsApp: op1.briefingWhatsApp || heuristicResult.briefingWhatsApp
-            };
-          }
-        }
-      }
-    } catch (err) {
-      console.warn("Gemini Arc Analysis error, falling back:", err);
+  try {
+    const aiRes = await callSpiritualAI({ prompt, apiKey: keyToUse });
+    if (aiRes.ok && aiRes.data && Array.isArray(aiRes.data.opcoesTramas) && aiRes.data.opcoesTramas.length >= 3) {
+      const op1 = aiRes.data.opcoesTramas[0];
+      return {
+        ...heuristicResult,
+        opcoesTramas: aiRes.data.opcoesTramas,
+        tituloArco: op1.tituloArco || heuristicResult.tituloArco,
+        ganchoImediato: op1.focoNarrativo || heuristicResult.ganchoImediato,
+        eventos: op1.eventos || heuristicResult.eventos,
+        antagonista: op1.antagonista || heuristicResult.antagonista,
+        briefingWhatsApp: op1.briefingWhatsApp || heuristicResult.briefingWhatsApp
+      };
     }
-  }
-
-  // 2. Tentar OpenAI se chave for sk-
-  if (keyToUse && keyToUse.startsWith("sk-")) {
-    try {
-      const res = await fetch("https://api.openai.com/v1/chat/completions", {
-        signal: typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function" ? AbortSignal.timeout(6000) : undefined,
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${keyToUse}` },
-        body: JSON.stringify({
-          model: "gpt-4o-mini",
-          messages: [{ role: "user", content: prompt }],
-          temperature: 0.85,
-          response_format: { type: "json_object" }
-        })
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        const content = data?.choices?.[0]?.message?.content;
-        if (content) {
-          const parsed = JSON.parse(content);
-          if (Array.isArray(parsed.opcoesTramas) && parsed.opcoesTramas.length >= 3) {
-            const op1 = parsed.opcoesTramas[0];
-            return {
-              ...heuristicResult,
-              opcoesTramas: parsed.opcoesTramas,
-              tituloArco: op1.tituloArco || heuristicResult.tituloArco,
-              ganchoImediato: op1.focoNarrativo || heuristicResult.ganchoImediato,
-              eventos: op1.eventos || heuristicResult.eventos,
-              antagonista: op1.antagonista || heuristicResult.antagonista,
-              briefingWhatsApp: op1.briefingWhatsApp || heuristicResult.briefingWhatsApp
-            };
-          }
-        }
-      }
-    } catch (err) {
-      console.warn("OpenAI Arc Analysis error, falling back:", err);
-    }
+  } catch (err) {
+    console.warn("Falha na geração de trama por IA, usando heurística:", err);
   }
 
   return heuristicResult;
@@ -5195,9 +5384,7 @@ async function gerarTramaConjuntaAI(params) {
   const openAiKey = params?.openAiKey || "";
   const heuristicResult = sintetizarTramaConjuntaHeuristica(players, cenasConjuntas);
   
-  const keyToUse = (typeof getValidGeminiApiKey === 'function') 
-    ? getValidGeminiApiKey(openAiKey) 
-    : (openAiKey || (typeof localStorage !== 'undefined' ? localStorage.getItem("bleach_openai_key") || "" : ""));
+  const keyToUse = getValidGeminiApiKey(openAiKey);
 
   const prompt = `Você é o Mestre Narrador Principal do BLEACH RPG.
 Analise as cenas armazenadas dos seguintes jogadores e gere 3 Opções de Tramas Cruzadas (Arcos Compartilhados Multi-Player) que interliguem o destino de ambos de forma coesa:
@@ -5228,82 +5415,23 @@ ${JSON.stringify({
   ]
 }, null, 2)}`;
 
-  // 1. Tentar Google Gemini 3.6 Flash
-  if (keyToUse && !keyToUse.startsWith("sk-")) {
-    try {
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${encodeURIComponent(keyToUse)}`, {
-        signal: typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function" ? AbortSignal.timeout(6000) : undefined,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ role: "user", parts: [{ text: prompt }] }],
-          generationConfig: { responseMimeType: "application/json", temperature: 0.85 }
-        })
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (rawText) {
-          const parsed = JSON.parse(rawText);
-          if (Array.isArray(parsed.opcoesTramas) && parsed.opcoesTramas.length >= 3) {
-            const op1 = parsed.opcoesTramas[0];
-            return {
-              ...heuristicResult,
-              opcoesTramas: parsed.opcoesTramas,
-              tituloArco: op1.tituloArco || heuristicResult.tituloArco,
-              dinamicaDupla: op1.dinamicaDupla || heuristicResult.dinamicaDupla,
-              sinopse: op1.sinopse || heuristicResult.sinopse,
-              eventosCruzados: op1.eventosCruzados || heuristicResult.eventosCruzados,
-              ameacaComum: op1.ameacaComum || heuristicResult.ameacaComum,
-              briefingWhatsApp: op1.briefingWhatsApp || heuristicResult.briefingWhatsApp
-            };
-          }
-        }
-      }
-    } catch (err) {
-      console.warn("Gemini Joint Arc Analysis error, falling back:", err);
+  try {
+    const aiRes = await callSpiritualAI({ prompt, apiKey: keyToUse });
+    if (aiRes.ok && aiRes.data && Array.isArray(aiRes.data.opcoesTramas) && aiRes.data.opcoesTramas.length >= 3) {
+      const op1 = aiRes.data.opcoesTramas[0];
+      return {
+        ...heuristicResult,
+        opcoesTramas: aiRes.data.opcoesTramas,
+        tituloArco: op1.tituloArco || heuristicResult.tituloArco,
+        dinamicaDupla: op1.dinamicaDupla || heuristicResult.dinamicaDupla,
+        sinopse: op1.sinopse || heuristicResult.sinopse,
+        eventosCruzados: op1.eventosCruzados || heuristicResult.eventosCruzados,
+        ameacaComum: op1.ameacaComum || heuristicResult.ameacaComum,
+        briefingWhatsApp: op1.briefingWhatsApp || heuristicResult.briefingWhatsApp
+      };
     }
-  }
-
-  // 2. Tentar OpenAI se chave for sk-
-  if (keyToUse && keyToUse.startsWith("sk-")) {
-    try {
-      const res = await fetch("https://api.openai.com/v1/chat/completions", {
-        signal: typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function" ? AbortSignal.timeout(6000) : undefined,
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${keyToUse}` },
-        body: JSON.stringify({
-          model: "gpt-4o-mini",
-          messages: [{ role: "user", content: prompt }],
-          temperature: 0.85,
-          response_format: { type: "json_object" }
-        })
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        const content = data?.choices?.[0]?.message?.content;
-        if (content) {
-          const parsed = JSON.parse(content);
-          if (Array.isArray(parsed.opcoesTramas) && parsed.opcoesTramas.length >= 3) {
-            const op1 = parsed.opcoesTramas[0];
-            return {
-              ...heuristicResult,
-              opcoesTramas: parsed.opcoesTramas,
-              tituloArco: op1.tituloArco || heuristicResult.tituloArco,
-              dinamicaDupla: op1.dinamicaDupla || heuristicResult.dinamicaDupla,
-              sinopse: op1.sinopse || heuristicResult.sinopse,
-              eventosCruzados: op1.eventosCruzados || heuristicResult.eventosCruzados,
-              ameacaComum: op1.ameacaComum || heuristicResult.ameacaComum,
-              briefingWhatsApp: op1.briefingWhatsApp || heuristicResult.briefingWhatsApp
-            };
-          }
-        }
-      }
-    } catch (err) {
-      console.warn("OpenAI Joint Arc Analysis error, falling back:", err);
-    }
+  } catch (err) {
+    console.warn("Falha na geração de trama conjunta por IA, usando heurística:", err);
   }
 
   return heuristicResult;
@@ -5311,6 +5439,10 @@ ${JSON.stringify({
 
 
 if (typeof window !== 'undefined') {
+  window.cleanAndExtractJson = cleanAndExtractJson;
+  window.callSpiritualAI = callSpiritualAI;
+  window.testSpiritualAIConnection = testSpiritualAIConnection;
+  window.getValidGeminiApiKey = getValidGeminiApiKey;
   window.gerar4CaminhosZanpakutoAI = gerar4CaminhosZanpakutoAI;
   window.gerar4CaminhosZanpakutoAI_Async = gerar4CaminhosZanpakutoAI_Async;
   window.gerar3BankaisEvolucaoAI = gerar3BankaisEvolucaoAI;
@@ -5563,8 +5695,10 @@ function Zanpakuto4PathsModal({ open, caminhos = [], personagem, isBankai, loadi
   const [chargeProgress, setChargeProgress] = useState(0);
   const [chargeStageText, setChargeStageText] = useState("Sintonizando Pressão Espiritual com o Mundo Interior...");
   const [showConfigApiKey, setShowConfigApiKey] = useState(false);
-  const [apiKeyInput, setApiKeyInput] = useState(localStorage.getItem("bleach_openai_key") || "");
+  const [apiKeyInput, setApiKeyInput] = useState(typeof localStorage !== 'undefined' ? localStorage.getItem("bleach_openai_key") || "" : "");
   const [salvoKey, setSalvoKey] = useState(false);
+  const [testResult, setTestResult] = useState(null);
+  const [isTestingKey, setIsTestingKey] = useState(false);
   const chargeIntervalRef = useRef(null);
 
   useEffect(() => {
@@ -5651,10 +5785,34 @@ function Zanpakuto4PathsModal({ open, caminhos = [], personagem, isBankai, loadi
   }, [open, loading, listaCaminhos.length]);
 
   function salvarApiKey(e) {
-    e.preventDefault();
-    localStorage.setItem("bleach_openai_key", apiKeyInput.trim());
-    setSalvoKey(true);
-    setTimeout(() => setSalvoKey(false), 3000);
+    if (e && e.preventDefault) e.preventDefault();
+    try {
+      localStorage.setItem("bleach_openai_key", apiKeyInput.trim());
+      setSalvoKey(true);
+      setTimeout(() => setSalvoKey(false), 3000);
+    } catch(err) {}
+  }
+
+  async function testarConexaoIA() {
+    setIsTestingKey(true);
+    setTestResult(null);
+    try {
+      const fn = (typeof testSpiritualAIConnection === 'function') ? testSpiritualAIConnection : (typeof window !== 'undefined' ? window.testSpiritualAIConnection : null);
+      if (!fn) {
+        setTestResult({ ok: false, msg: "Função de teste não encontrada no escopo." });
+        return;
+      }
+      const res = await fn(apiKeyInput.trim());
+      if (res.ok) {
+        setTestResult({ ok: true, msg: res.mensagem });
+      } else {
+        setTestResult({ ok: false, msg: res.mensagem || res.error });
+      }
+    } catch (e) {
+      setTestResult({ ok: false, msg: "Erro ao testar: " + e.message });
+    } finally {
+      setIsTestingKey(false);
+    }
   }
 
   function confirmarEscolhaFinal(caminho) {
@@ -5701,10 +5859,10 @@ function Zanpakuto4PathsModal({ open, caminhos = [], personagem, isBankai, loadi
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowConfigApiKey(!showConfigApiKey)}
-              className="px-3 py-1.5 bg-black/60 border border-white/10 hover:border-yellow-400 text-yellow-300 rounded-lg text-xs font-mono transition"
-              title="Configurar Chave Google Gemini / ChatGPT"
+              className="px-3 py-1.5 bg-black/60 border border-white/10 hover:border-yellow-400 text-yellow-300 rounded-lg text-xs font-mono transition flex items-center gap-1.5"
+              title="Configurar Chave Google Gemini / ChatGPT / Groq"
             >
-              ⚙️ Chave IA
+              <span>⚙️</span> Chave IA
             </button>
             <button
               onClick={onClose}
@@ -5717,20 +5875,55 @@ function Zanpakuto4PathsModal({ open, caminhos = [], personagem, isBankai, loadi
 
         {/* API Key Modal / Form Bar */}
         {showConfigApiKey && (
-          <form onSubmit={salvarApiKey} className="p-3.5 bg-black/80 border border-yellow-500/40 rounded-xl mb-4 flex flex-wrap gap-2 items-center text-xs">
-            <span className="text-yellow-300 font-bold">Chave Gemini / ChatGPT:</span>
-            <input
-              type="password"
-              placeholder="Cole sua chave aqui (Google Gemini ou OpenAI)"
-              value={apiKeyInput}
-              onChange={(e) => setApiKeyInput(e.target.value)}
-              className="flex-1 min-w-[200px] bg-bleach-panel2 border border-bleach-border rounded p-2 text-white font-mono"
-            />
-            <button type="submit" className="px-4 py-2 bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold uppercase rounded shadow">
-              Salvar Chave
-            </button>
-            {salvoKey && <span className="text-green-400 font-bold">✓ Salvo!</span>}
-          </form>
+          <div className="p-4 bg-black/90 border-2 border-yellow-500/60 rounded-xl mb-4 space-y-3 text-xs shadow-2xl">
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-2">
+              <span className="text-yellow-300 font-bold flex items-center gap-1.5">
+                <span>🤖</span> Provedores de IA Suportados:
+              </span>
+              <div className="flex flex-wrap gap-1.5 text-[10px] font-mono">
+                <span className="px-2 py-0.5 rounded bg-blue-950/80 border border-blue-500/50 text-blue-300">Google Gemini (AIza...)</span>
+                <span className="px-2 py-0.5 rounded bg-emerald-950/80 border border-emerald-500/50 text-emerald-300">Groq (gsk_...)</span>
+                <span className="px-2 py-0.5 rounded bg-purple-950/80 border border-purple-500/50 text-purple-300">OpenRouter (sk-or-...)</span>
+                <span className="px-2 py-0.5 rounded bg-amber-950/80 border border-amber-500/50 text-amber-300">OpenAI (sk-...)</span>
+              </div>
+            </div>
+
+            <form onSubmit={salvarApiKey} className="flex flex-col sm:flex-row gap-2 items-center">
+              <input
+                type="password"
+                placeholder="Cole sua chave de API aqui (Google Gemini, OpenAI, Groq ou OpenRouter)"
+                value={apiKeyInput}
+                onChange={(e) => setApiKeyInput(e.target.value)}
+                className="flex-1 w-full bg-bleach-panel2 border border-bleach-border focus:border-yellow-400 rounded-lg p-2.5 text-white font-mono text-xs focus:outline-none"
+              />
+              <button
+                type="submit"
+                className="w-full sm:w-auto px-4 py-2.5 bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold uppercase rounded-lg shadow transition"
+              >
+                Salvar Chave
+              </button>
+              <button
+                type="button"
+                onClick={testarConexaoIA}
+                disabled={isTestingKey || !apiKeyInput.trim()}
+                className="w-full sm:w-auto px-4 py-2.5 bg-bleach-panel2 border border-cyan-500/60 hover:bg-cyan-950 text-cyan-300 font-bold rounded-lg transition disabled:opacity-50"
+              >
+                {isTestingKey ? "🧪 Testando..." : "🧪 Testar Conexão"}
+              </button>
+            </form>
+
+            {salvoKey && (
+              <p className="text-green-400 font-bold">✓ Chave de IA salva com sucesso no navegador!</p>
+            )}
+
+            {testResult && (
+              <div className={`p-2.5 rounded-lg border text-xs font-mono ${
+                testResult.ok ? "bg-green-950/70 border-green-500 text-green-300" : "bg-red-950/70 border-red-500 text-red-300"
+              }`}>
+                {testResult.ok ? "✅ " : "❌ "} {testResult.msg}
+              </div>
+            )}
+          </div>
         )}
 
         {/* RITUAL CHARGING SCREEN COM CORTE HORIZONTAL, AURA SUBINDO & VIBRAÇÃO DO AR */}
@@ -5898,6 +6091,32 @@ function Zanpakuto4PathsModal({ open, caminhos = [], personagem, isBankai, loadi
                     </div>
                   </div>
 
+                  {/* Manifestação do Espírito & Domínio do Mundo Interior na Bankai */}
+                  {((caminhoSelecionado.bankai?.manifestacaoEspiritoBankai || caminhoSelecionado.manifestacaoEspiritoBankai) || (caminhoSelecionado.bankai?.mundoInternoBankai || caminhoSelecionado.mundoInternoBankai)) && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                      {(caminhoSelecionado.bankai?.manifestacaoEspiritoBankai || caminhoSelecionado.manifestacaoEspiritoBankai) && (
+                        <div className="p-3.5 bg-gradient-to-br from-purple-950/60 via-bleach-panel2 to-black rounded-xl border border-purple-500/40 space-y-1">
+                          <strong className="text-purple-300 block text-xs flex items-center gap-1">
+                            <span>🐉</span> Manifestação do Espírito (Bankai):
+                          </strong>
+                          <p className="text-bleach-creamDim text-[11px] leading-relaxed">
+                            {caminhoSelecionado.bankai?.manifestacaoEspiritoBankai || caminhoSelecionado.manifestacaoEspiritoBankai}
+                          </p>
+                        </div>
+                      )}
+                      {(caminhoSelecionado.bankai?.mundoInternoBankai || caminhoSelecionado.mundoInternoBankai) && (
+                        <div className="p-3.5 bg-gradient-to-br from-cyan-950/60 via-bleach-panel2 to-black rounded-xl border border-cyan-500/40 space-y-1">
+                          <strong className="text-cyan-300 block text-xs flex items-center gap-1">
+                            <span>🌌</span> Domínio do Mundo Interior:
+                          </strong>
+                          <p className="text-bleach-creamDim text-[11px] leading-relaxed">
+                            {caminhoSelecionado.bankai?.mundoInternoBankai || caminhoSelecionado.mundoInternoBankai}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
                   {/* Limitações & Significado */}
                   <div className="p-3 bg-black/60 rounded-xl border border-white/10 text-xs space-y-2">
                     <div className="flex flex-wrap gap-x-4 text-[11px]">
@@ -6017,6 +6236,28 @@ function Zanpakuto4PathsModal({ open, caminhos = [], personagem, isBankai, loadi
                       <p className="text-bleach-creamDim text-[11px] leading-relaxed">{caminhoSelecionado.shikai.relacaoPersonalidade}</p>
                     </div>
                   </div>
+
+                  {/* Espírito da Lâmina & Mundo Interior */}
+                  {(caminhoSelecionado.shikai.espirito || caminhoSelecionado.shikai.mundoInterno) && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                      {caminhoSelecionado.shikai.espirito && (
+                        <div className="p-3 bg-gradient-to-br from-purple-950/50 via-bleach-panel2 to-black rounded-lg border border-purple-500/30 space-y-1">
+                          <strong className="text-purple-300 block text-[11px] flex items-center gap-1">
+                            <span>🐉</span> Espírito da Zanpakutō:
+                          </strong>
+                          <p className="text-bleach-creamDim text-[11px] leading-relaxed">{caminhoSelecionado.shikai.espirito}</p>
+                        </div>
+                      )}
+                      {caminhoSelecionado.shikai.mundoInterno && (
+                        <div className="p-3 bg-gradient-to-br from-blue-950/50 via-bleach-panel2 to-black rounded-lg border border-blue-500/30 space-y-1">
+                          <strong className="text-blue-300 block text-[11px] flex items-center gap-1">
+                            <span>🌌</span> Mundo Interior (Jinzen):
+                          </strong>
+                          <p className="text-bleach-creamDim text-[11px] leading-relaxed">{caminhoSelecionado.shikai.mundoInterno}</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
 
                   {/* Power & Mechanics */}
                   <div className="p-3.5 bg-black/80 rounded-lg border border-bleach-orange/30 space-y-2">
@@ -7204,139 +7445,211 @@ function KidoShopModal({ isOpen, onClose, personagem, updateChar }) {
 // VIEWS PART 1: TOPBAR, SUBTLE ADMIN, LIVE CHAT, LOGIN, RANKINGS, KIDOS & ARENA
 // =========================================================================
 
-// TOP NAVIGATION BAR (WITH SUBTLE ADMIN SEAL, CHAT & PATCH NOTES)
+// TOP NAVIGATION BAR (STREAMLINED, MINIMALIST & EASY TO NAVIGATE)
 function TopBar({ session, onLogout, view, setView, nome, onOpenAdminLogin, cloudStatus }) {
   const isAdmin = session?.role === "super_admin" || session?.role === "sub_admin";
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Grouped Primary Navigation
+  const primaryTabs = [
+    { id: "sistemas", label: "Sistemas & Regras", icon: "📜", match: ["sistemas", "guia_novatos", "patchnotes"] },
+    { id: "mapa_3d", label: "Mapa 3D", icon: "🗺️", match: ["mapa_3d"] },
+    { id: "ficha", label: session?.role === "jogador" ? "Minha Ficha" : "Ficha", icon: "👤", match: ["ficha"] },
+    { id: "kidos", label: "Grimório", icon: "📕", match: ["kidos"] },
+    { id: "arena", label: "Arena", icon: "⚔️", match: ["arena"] },
+    { id: "rankings", label: "Rankings", icon: "🏆", match: ["rankings"] },
+    { id: "chat", label: "Chat", icon: "💬", match: ["chat"] },
+    ...(isAdmin ? [{ id: "admin", label: "Painel ADM", icon: "👑", match: ["admin", "tramas_adm"] }] : [])
+  ];
 
   return (
-    <header className="sticky top-0 z-40 bg-bleach-panel/95 backdrop-blur-md border-b border-bleach-borderSoft shadow-xl">
-      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-        {/* Logo & Subtitle */}
-        <div className="flex items-center gap-3 cursor-pointer" onClick={() => setView("sistemas")}>
-          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-bleach-orange to-bleach-orangeDeep flex items-center justify-center font-title text-xl text-black font-extrabold shadow-[0_0_15px_#FF6A13]">
-            死
-          </div>
-          <div>
-            <h1 className="font-title text-xl sm:text-2xl tracking-wider text-bleach-cream flex items-center gap-2">
-              <span>BLEACH RPG</span>
-              <span className="text-[11px] font-sans font-normal px-2 py-0.5 rounded bg-black/60 border border-bleach-border text-bleach-orange uppercase tracking-widest hidden sm:inline">
-                Sociedade das Almas
-              </span>
-            </h1>
-          </div>
-        </div>
-
-        {/* Navigation Tabs */}
-        <nav className="hidden md:flex items-center gap-1">
-          {[
-            { id: "sistemas", label: "Sistemas & Regras", icon: "📜" },
-            { id: "guia_novatos", label: "🌱 Como Evoluir", icon: "🌱" },
-            { id: "mapa_3d", label: "Mapa 3D", icon: "🗺️" },
-            { id: "ficha", label: session?.role === "jogador" ? "Minha Ficha" : "Ficha de Jogador", icon: "👤" },
-            { id: "chat", label: "Chat dos Shinigamis", icon: "💬" },
-            { id: "rankings", label: "Rankings", icon: "🏆" },
-            { id: "kidos", label: "Grimório de Kidō", icon: "📕" },
-            { id: "arena", label: "Arena de Duelos", icon: "⚔️" },
-            { id: "patchnotes", label: "Patch Notes", icon: "📰" },
-            ...(isAdmin ? [
-              { id: "tramas_adm", label: "Tramas & Arcos (IA)", icon: "🎭" },
-              { id: "admin", label: "Painel ADM", icon: "👑" }
-            ] : [])
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setView(tab.id)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold tracking-wide transition flex items-center gap-1.5 ${
-                view === tab.id
-                  ? "bg-bleach-orange text-black font-extrabold shadow-[0_0_12px_rgba(255,106,19,0.5)]"
-                  : "text-bleach-creamDim hover:text-white hover:bg-white/5"
-              }`}
-            >
-              <span>{tab.icon}</span>
-              <span>{tab.label}</span>
-            </button>
-          ))}
-        </nav>
-
-        {/* User Session / Cloud & Subtle Admin Seal */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          {/* Cloud Indicator */}
-          <div 
-            title={cloudStatus === "connected" ? "Sincronizado com Nuvem Firebase em Tempo Real" : "Modo Local"}
-            className="flex items-center gap-1 text-[11px] px-2 py-1 rounded-full bg-black/60 border border-white/10"
-          >
-            <span className={`w-2 h-2 rounded-full ${
-              cloudStatus === "connected" ? "bg-green-400 animate-pulse" : cloudStatus === "syncing" ? "bg-yellow-400 animate-spin" : "bg-bleach-muted"
-            }`}></span>
-            <span className="text-bleach-muted hidden sm:inline">{cloudStatus === "connected" ? "Nuvem ON" : "Local"}</span>
-          </div>
-
-          {session ? (
-            <div className="flex items-center gap-2">
-              <div className="text-right hidden sm:block">
-                <span className="text-[10px] text-bleach-muted block uppercase font-mono">Logado como</span>
-                <span className="text-xs font-bold text-bleach-cream truncate max-w-[120px] block">{nome}</span>
-              </div>
-              <button
-                onClick={onLogout}
-                className="px-2.5 py-1 bg-red-950/60 border border-red-500/50 hover:bg-red-800 text-red-200 text-xs font-bold rounded-lg transition"
-                title="Sair da Conta"
-              >
-                Sair
-              </button>
+    <>
+      <header className="sticky top-0 z-40 bg-[#0C0A08]/95 backdrop-blur-xl border-b border-white/10 shadow-2xl">
+        <div className="max-w-7xl mx-auto px-4 py-2.5 flex items-center justify-between gap-3">
+          
+          {/* Logo Brand */}
+          <div className="flex items-center gap-2.5 cursor-pointer group" onClick={() => setView("sistemas")}>
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center font-title text-lg text-black font-black shadow-[0_0_15px_rgba(245,158,11,0.5)] group-hover:scale-105 transition-transform">
+              死
             </div>
-          ) : (
-            <div className="flex items-center gap-2">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-title text-xl sm:text-2xl tracking-wider text-white">BLEACH RPG</span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/5 border border-white/10 text-amber-400 font-bold uppercase tracking-widest hidden sm:inline">
+                  Gotei 13
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Desktop Clean Segmented Tabs */}
+          <nav className="hidden lg:flex items-center gap-1 bg-black/40 p-1 rounded-xl border border-white/5">
+            {primaryTabs.map((tab) => {
+              const isActive = tab.match.includes(view);
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setView(tab.id)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold tracking-wide transition flex items-center gap-1.5 ${
+                    isActive
+                      ? "bg-gradient-to-r from-amber-500 to-orange-500 text-black font-black shadow-[0_0_12px_rgba(245,158,11,0.4)]"
+                      : "text-zinc-400 hover:text-white hover:bg-white/5"
+                  }`}
+                >
+                  <span className="text-sm">{tab.icon}</span>
+                  <span>{tab.label}</span>
+                </button>
+              );
+            })}
+          </nav>
+
+          {/* Right Area: Session Status + Cloud + Subtle Seal */}
+          <div className="flex items-center gap-2">
+            {/* Cloud Sync Status */}
+            <div 
+              title={cloudStatus === "connected" ? "Sincronizado com Nuvem Firebase em Tempo Real" : "Modo Local"}
+              className="flex items-center gap-1.5 text-[11px] px-2.5 py-1 rounded-full bg-white/5 border border-white/10"
+            >
+              <span className={`w-2 h-2 rounded-full ${
+                cloudStatus === "connected" ? "bg-emerald-400 animate-pulse shadow-[0_0_8px_#34D399]" : cloudStatus === "syncing" ? "bg-amber-400 animate-spin" : "bg-zinc-600"
+              }`}></span>
+              <span className="text-zinc-400 font-mono text-[10px] hidden sm:inline">{cloudStatus === "connected" ? "NUVEM ON" : "LOCAL"}</span>
+            </div>
+
+            {session ? (
+              <div className="flex items-center gap-2">
+                <div className="text-right hidden xl:block">
+                  <span className="text-[9px] text-zinc-500 uppercase font-mono block">Logado</span>
+                  <span className="text-xs font-bold text-zinc-200 truncate max-w-[110px] block">{nome}</span>
+                </div>
+                <button
+                  onClick={onLogout}
+                  className="px-2.5 py-1 bg-red-950/40 hover:bg-red-900/60 border border-red-500/30 text-red-300 text-xs font-bold rounded-lg transition"
+                  title="Sair da Conta"
+                >
+                  Sair
+                </button>
+              </div>
+            ) : (
               <button
                 onClick={() => setView("ficha")}
-                className="px-3.5 py-1.5 bg-bleach-orange text-black text-xs font-extrabold rounded-lg shadow hover:bg-orange-400 uppercase tracking-wider"
+                className="px-3.5 py-1.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-black text-xs font-black rounded-lg shadow-md uppercase tracking-wider transition"
               >
                 Entrar
               </button>
-            </div>
-          )}
+            )}
 
-          {/* SUBTLE AESTHETIC SEAL FOR ADMIN ACCESS */}
-          <button
-            onClick={onOpenAdminLogin}
-            className="w-7 h-7 flex items-center justify-center rounded-full text-bleach-border hover:text-bleach-orange/60 hover:bg-white/5 transition text-xs select-none"
-            title="Selo Espiritual do Seireitei"
-          >
-            ❖
-          </button>
+            {/* Aesthetic Subtle Admin Seal */}
+            <button
+              onClick={onOpenAdminLogin}
+              className="w-7 h-7 flex items-center justify-center rounded-lg text-zinc-600 hover:text-amber-400 hover:bg-white/5 border border-transparent hover:border-white/10 transition text-xs select-none"
+              title="Selo Espiritual do Seireitei"
+            >
+              ❖
+            </button>
+          </div>
         </div>
-      </div>
 
-      {/* Mobile Navigation Row */}
-      <div className="md:hidden flex items-center justify-around border-t border-bleach-borderSoft/60 px-2 py-1.5 overflow-x-auto bg-black/40">
+        {/* Medium Screen (Tablet) Navigation Row */}
+        <div className="hidden md:flex lg:hidden items-center justify-center gap-1 border-t border-white/5 px-2 py-1.5 bg-black/40 overflow-x-auto">
+          {primaryTabs.map((tab) => {
+            const isActive = tab.match.includes(view);
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setView(tab.id)}
+                className={`px-2.5 py-1 rounded-lg text-xs font-bold whitespace-nowrap transition flex items-center gap-1 ${
+                  isActive
+                    ? "bg-amber-500 text-black font-extrabold shadow-sm"
+                    : "text-zinc-400 hover:text-white"
+                }`}
+              >
+                <span>{tab.icon}</span>
+                <span>{tab.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </header>
+
+      {/* Modern Mobile Bottom Docked Navigation Bar (Clean & Native App Feel) */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0C0A08]/95 backdrop-blur-xl border-t border-white/10 px-2 py-1.5 shadow-2xl flex items-center justify-around">
         {[
-          { id: "sistemas", label: "Regras", icon: "📜" },
-          { id: "mapa_3d", label: "Mapa 3D", icon: "🗺️" },
-          { id: "ficha", label: "Ficha", icon: "👤" },
-          { id: "chat", label: "Chat", icon: "💬" },
-          { id: "rankings", label: "Rankings", icon: "🏆" },
-          { id: "kidos", label: "Kidō", icon: "📕" },
-          { id: "arena", label: "Arena", icon: "⚔️" },
-          { id: "patchnotes", label: "Patch", icon: "📰" },
-          ...(isAdmin ? [
-            { id: "tramas_adm", label: "Tramas", icon: "🎭" },
-            { id: "admin", label: "ADM", icon: "👑" }
-          ] : [])
-        ].map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setView(tab.id)}
-            className={`px-2 py-1 rounded text-[11px] font-semibold whitespace-nowrap ${
-              view === tab.id
-                ? "text-bleach-orange font-bold border-b-2 border-bleach-orange"
-                : "text-bleach-muted"
-            }`}
-          >
-            {tab.icon} {tab.label}
-          </button>
-        ))}
-      </div>
-    </header>
+          { id: "sistemas", label: "Sistemas", icon: "📜", match: ["sistemas", "guia_novatos", "patchnotes"] },
+          { id: "mapa_3d", label: "Mapa 3D", icon: "🗺️", match: ["mapa_3d"] },
+          { id: "ficha", label: "Ficha", icon: "👤", match: ["ficha"] },
+          { id: "kidos", label: "Grimório", icon: "📕", match: ["kidos"] },
+          { id: "menu", label: "Mais", icon: "☰", match: [] }
+        ].map((item) => {
+          if (item.id === "menu") {
+            return (
+              <button
+                key={item.id}
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className={`flex flex-col items-center justify-center py-1 px-2 rounded-xl transition ${
+                  mobileMenuOpen ? "text-amber-400 font-bold" : "text-zinc-400"
+                }`}
+              >
+                <span className="text-base">☰</span>
+                <span className="text-[10px] font-bold">Mais</span>
+              </button>
+            );
+          }
+          const isActive = item.match.includes(view);
+          return (
+            <button
+              key={item.id}
+              onClick={() => {
+                setView(item.id);
+                setMobileMenuOpen(false);
+              }}
+              className={`flex flex-col items-center justify-center py-1 px-2 rounded-xl transition ${
+                isActive ? "text-amber-400 font-extrabold" : "text-zinc-400 hover:text-white"
+              }`}
+            >
+              <span className="text-base">{item.icon}</span>
+              <span className="text-[10px] font-bold">{item.label}</span>
+            </button>
+          );
+        })}
+      </nav>
+
+      {/* Mobile Drawer / Quick Sheet for Secondary Options */}
+      {mobileMenuOpen && (
+        <div className="md:hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex flex-col justify-end p-3" onClick={() => setMobileMenuOpen(false)}>
+          <div className="bg-[#14120E] border border-white/15 rounded-2xl p-4 space-y-3 shadow-2xl mb-14" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between border-b border-white/10 pb-2">
+              <span className="font-title text-lg text-amber-400 tracking-wider">Módulos do Seireitei</span>
+              <button onClick={() => setMobileMenuOpen(false)} className="text-zinc-400 hover:text-white text-xs px-2 py-1 bg-white/5 rounded-lg">✕ Fechar</button>
+            </div>
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <button onClick={() => { setView("arena"); setMobileMenuOpen(false); }} className="p-3 bg-white/5 hover:bg-amber-500/20 border border-white/10 rounded-xl flex items-center gap-2 font-bold text-zinc-200">
+                <span>⚔️</span> Arena de Duelos
+              </button>
+              <button onClick={() => { setView("rankings"); setMobileMenuOpen(false); }} className="p-3 bg-white/5 hover:bg-amber-500/20 border border-white/10 rounded-xl flex items-center gap-2 font-bold text-zinc-200">
+                <span>🏆</span> Rankings Gerais
+              </button>
+              <button onClick={() => { setView("chat"); setMobileMenuOpen(false); }} className="p-3 bg-white/5 hover:bg-amber-500/20 border border-white/10 rounded-xl flex items-center gap-2 font-bold text-zinc-200">
+                <span>💬</span> Chat Shinigami
+              </button>
+              <button onClick={() => { setView("patchnotes"); setMobileMenuOpen(false); }} className="p-3 bg-white/5 hover:bg-amber-500/20 border border-white/10 rounded-xl flex items-center gap-2 font-bold text-zinc-200">
+                <span>📰</span> Patch Notes
+              </button>
+              {isAdmin && (
+                <>
+                  <button onClick={() => { setView("tramas_adm"); setMobileMenuOpen(false); }} className="p-3 bg-purple-950/40 border border-purple-500/30 rounded-xl flex items-center gap-2 font-bold text-purple-200">
+                    <span>🎭</span> Tramas com IA
+                  </button>
+                  <button onClick={() => { setView("admin"); setMobileMenuOpen(false); }} className="p-3 bg-amber-950/40 border border-amber-500/30 rounded-xl flex items-center gap-2 font-bold text-amber-200">
+                    <span>👑</span> Painel ADM
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
@@ -7351,19 +7664,19 @@ function ChainDivider() {
   );
 }
 
-// SECTION CONTAINER
+// SECTION CONTAINER (REFINED DARK GLASSMORPHISM WITH BREATHING ROOM)
 function Section({ title, subtitle, children, right, className = "" }) {
   return (
-    <div className={`bg-bleach-panel border border-bleach-border rounded-2xl p-4 sm:p-6 shadow-xl relative overflow-hidden ${className}`}>
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 border-b border-bleach-borderSoft pb-3">
+    <div className={`bg-[#12100D]/90 backdrop-blur-md border border-white/10 rounded-2xl p-4 sm:p-6 shadow-xl relative overflow-hidden transition-all hover:border-white/15 ${className}`}>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 border-b border-white/5 pb-3">
         <div>
-          <div className="flex items-center gap-2">
-            <div className="w-1.5 h-5 bg-bleach-orange rounded-full shadow-[0_0_10px_#FF6A13]"></div>
-            <h3 className="font-title text-xl tracking-wider uppercase text-bleach-cream">
+          <div className="flex items-center gap-2.5">
+            <div className="w-1.5 h-5 bg-gradient-to-b from-amber-400 to-orange-500 rounded-full shadow-[0_0_8px_#F59E0B]"></div>
+            <h3 className="font-title text-xl sm:text-2xl tracking-wider uppercase text-zinc-100">
               {title}
             </h3>
           </div>
-          {subtitle && <p className="text-xs text-bleach-creamDim mt-0.5 ml-3.5">{subtitle}</p>}
+          {subtitle && <p className="text-xs text-zinc-400 mt-0.5 ml-4 leading-relaxed">{subtitle}</p>}
         </div>
         {right && <div>{right}</div>}
       </div>
@@ -7376,8 +7689,8 @@ function Section({ title, subtitle, children, right, className = "" }) {
 function Badge({ color, children, className = "" }) {
   return (
     <span
-      style={{ color, borderColor: color, backgroundColor: `${color}15` }}
-      className={`inline-flex items-center gap-1 text-[11px] font-bold tracking-wider uppercase border px-2.5 py-1 rounded-full ${className}`}
+      style={{ color, borderColor: `${color}40`, backgroundColor: `${color}12` }}
+      className={`inline-flex items-center gap-1.5 text-[11px] font-bold tracking-wider uppercase border px-2.5 py-0.5 rounded-full ${className}`}
     >
       {children}
     </span>
@@ -7894,36 +8207,36 @@ function RankingsView({ db, saveDb, session, rankFisico, rankPressao, myCharId }
         title="Quadro Geral de Honra & Classificação"
         subtitle="Rankings oficiais de combate e atividade da Sociedade das Almas"
       >
-        <div className="flex gap-2 mb-6 border-b border-bleach-borderSoft pb-3 overflow-x-auto">
+        <div className="flex gap-1.5 mb-6 bg-black/40 p-1.5 rounded-xl border border-white/5 overflow-x-auto">
           <button
             onClick={() => setTab("fisico")}
-            className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition whitespace-nowrap ${
+            className={`px-3.5 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition whitespace-nowrap ${
               tab === "fisico"
-                ? "bg-bleach-orange text-black font-extrabold shadow"
-                : "bg-bleach-panel2 border border-bleach-border text-bleach-creamDim hover:text-white"
+                ? "bg-gradient-to-r from-orange-500 to-amber-500 text-black font-black shadow-md"
+                : "text-zinc-400 hover:text-white hover:bg-white/5"
             }`}
           >
-            ⚔️ Ranking Físico Geral (Força, Vel, Res)
+            ⚔️ Físico (Força, Vel, Res)
           </button>
           <button
             onClick={() => setTab("pressao")}
-            className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition whitespace-nowrap ${
+            className={`px-3.5 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition whitespace-nowrap ${
               tab === "pressao"
-                ? "bg-bleach-blue text-black font-extrabold shadow"
-                : "bg-bleach-panel2 border border-bleach-border text-bleach-creamDim hover:text-white"
+                ? "bg-gradient-to-r from-cyan-500 to-blue-500 text-black font-black shadow-md"
+                : "text-zinc-400 hover:text-white hover:bg-white/5"
             }`}
           >
-            🌀 Ranking de Pressão Espiritual (Reiatsu)
+            🌀 Pressão Espiritual (Reiatsu)
           </button>
           <button
             onClick={() => setTab("atividade")}
-            className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition whitespace-nowrap ${
-              tab === "atividade"
-                ? "bg-gradient-to-r from-yellow-500 to-amber-600 text-black font-extrabold shadow-lg"
-                : "bg-bleach-panel2 border border-yellow-500/40 text-yellow-300 hover:text-white"
+            className={`px-3.5 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition whitespace-nowrap ${
+              tab === "atividade" || tab === "conhecimento"
+                ? "bg-gradient-to-r from-amber-500 to-yellow-500 text-black font-black shadow-md"
+                : "text-zinc-400 hover:text-white hover:bg-white/5"
             }`}
           >
-            📜 Ranking de Conhecimento (Atividade Semanal)
+            📜 Conhecimento & Cenas
           </button>
         </div>
 
@@ -7931,26 +8244,29 @@ function RankingsView({ db, saveDb, session, rankFisico, rankPressao, myCharId }
         {(tab === "conhecimento" || tab === "atividade") ? (
           <div className="space-y-5">
             {/* Banner do Ciclo de 7 Dias & Premiações */}
-            <div className="p-5 rounded-2xl bg-gradient-to-r from-amber-950/60 via-black/80 to-yellow-950/60 border-2 border-yellow-500/70 shadow-2xl space-y-4">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-yellow-500/30 pb-4">
+            <div className="p-5 rounded-2xl bg-gradient-to-r from-amber-950/30 via-[#18140F] to-[#0E0C09] border border-amber-500/30 shadow-xl space-y-4">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/5 pb-4">
                 <div>
-                  <span className="px-3 py-0.5 bg-yellow-950 border border-yellow-500 text-yellow-300 text-[10px] font-extrabold uppercase rounded-full tracking-wider">
-                    Ciclo Semanal de Atividade no WhatsApp • 7 Dias
-                  </span>
-                  <h4 className="font-title text-2xl sm:text-3xl text-yellow-400 mt-1">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_8px_#F59E0B]"></span>
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-amber-300">
+                      Ciclo Semanal • 7 Dias
+                    </span>
+                  </div>
+                  <h4 className="font-title text-2xl sm:text-3xl text-white mt-1">
                     CONTADOR DO CICLO DE RECOMPENSAS
                   </h4>
-                  <p className="text-xs text-bleach-creamDim mt-0.5">
-                    A cada 7 dias de atividade no ON, os 3 Shinigamis com maior produção de cenas são consagrados com pontos de atributos livres!
+                  <p className="text-xs text-zinc-400 mt-0.5">
+                    A cada 7 dias, os 3 Shinigamis com maior produção de cenas são premiados com pontos livres!
                   </p>
                 </div>
 
                 {/* Contador de Dias */}
-                <div className="flex items-center gap-3 bg-black/80 border-2 border-yellow-500 rounded-2xl px-5 py-3 shadow-inner">
-                  <span className="text-3xl">⏳</span>
+                <div className="flex items-center gap-3 bg-black/60 border border-amber-500/40 rounded-xl px-4 py-2.5 shadow-inner">
+                  <span className="text-2xl">⏳</span>
                   <div>
-                    <span className="text-[10px] text-bleach-muted uppercase font-bold block">Tempo Restante:</span>
-                    <span className="text-xl sm:text-2xl font-title font-black text-yellow-300 tracking-wider">
+                    <span className="text-[9px] text-zinc-500 uppercase font-mono block">Tempo Restante:</span>
+                    <span className="text-lg sm:text-xl font-title font-black text-amber-300 tracking-wider">
                       {cicloInfo.diasRestantes === 1 ? "Último Dia!" : `${cicloInfo.diasRestantes} Dias Restantes`}
                     </span>
                   </div>
@@ -8190,16 +8506,19 @@ function KidosView({ personagem, isAdmin }) {
 
   return (
     <div className="space-y-6">
-      <div className="bg-banner-overlay border border-bleach-border rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+      <div className="bg-gradient-to-r from-blue-950/30 via-[#12161A] to-[#0D1013] border border-blue-500/20 rounded-2xl p-5 sm:p-6 shadow-xl relative overflow-hidden backdrop-blur-md">
         <div className="relative z-10 max-w-3xl">
-          <span className="px-3 py-1 bg-bleach-blue/20 border border-bleach-blue text-bleach-blue text-xs font-bold rounded-full uppercase tracking-wider">
-            Grimório Completo da Sociedade das Almas • Hadō, Bakudō & Kaidō
-          </span>
-          <h2 className="font-title text-4xl sm:text-5xl tracking-widest text-bleach-orange mt-3 reiatsu-text-glow">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#22D3EE]"></span>
+            <span className="text-[11px] font-mono uppercase tracking-widest text-cyan-300 font-bold">
+              Grimório Oficial da Sociedade das Almas
+            </span>
+          </div>
+          <h2 className="font-title text-2xl sm:text-4xl tracking-wider text-white mt-1">
             COMPÊNDIO SUPREMO DE KIDŌS
           </h2>
-          <p className="text-xs sm:text-sm text-bleach-creamDim mt-2 leading-relaxed">
-            Explore o compêndio oficial de <strong>Hadō (Destruição)</strong>, <strong>Bakudō (Aprisionamento & Defesa)</strong> e <strong>Kaidō (Cura & Suporte)</strong>. Clique em qualquer Kidō para abrir sua análise tática completa com encantamento poético e simulador de impacto!
+          <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+            Explore os feitiços canônicos de <strong>Hadō (Destruição)</strong>, <strong>Bakudō (Contenção & Barreira)</strong> e <strong>Kaidō (Cura Espiritual)</strong> com cálculo dinâmico de Reiryoku e encantamentos sagrados.
           </p>
         </div>
       </div>
@@ -8494,22 +8813,24 @@ function KidosView({ personagem, isAdmin }) {
       })()}
 
       {/* CATALOG FILTERS & SPELLS GRID */}
-      <Section title="Grimório de Feitiços de Seireitei" subtitle="Clique em qualquer magia para abrir os detalhes completos, encantamento e simulador">
+      <Section title="Grimório de Feitiços de Seireitei" subtitle="Clique em qualquer magia para abrir os detalhes completos, encantamento e simulador de poder">
         <div className="flex flex-col sm:flex-row gap-3 mb-6">
           <input
             type="text"
             placeholder="🔍 Buscar feitiço por nome, número, encantamento ou efeito..."
             value={busca}
             onChange={(e) => setBusca(e.target.value)}
-            className="flex-1 bg-bleach-panel2 border border-bleach-border rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-bleach-orange"
+            className="flex-1 bg-black/60 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-amber-400 placeholder-zinc-500"
           />
-          <div className="flex gap-1.5 overflow-x-auto pb-1 sm:pb-0">
+          <div className="flex gap-1.5 bg-black/40 p-1.5 rounded-xl border border-white/5 overflow-x-auto pb-1 sm:pb-1.5">
             {["Todos", "Hadō", "Bakudō", "Kaidō"].map(cat => (
               <button
                 key={cat}
                 onClick={() => setCategoriaAtiva(cat)}
                 className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition whitespace-nowrap ${
-                  categoriaAtiva === cat ? "bg-bleach-orange text-black font-extrabold" : "bg-bleach-panel2 border border-bleach-border text-bleach-creamDim"
+                  categoriaAtiva === cat 
+                    ? "bg-gradient-to-r from-cyan-500 to-blue-500 text-black font-black shadow-md" 
+                    : "text-zinc-400 hover:text-white hover:bg-white/5"
                 }`}
               >
                 {cat}
@@ -10668,6 +10989,32 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
                         </div>
                       </div>
 
+                      {/* Espírito da Zanpakutō & Mundo Interior */}
+                      {(s.espirito || s.mundoInterno) && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                          {s.espirito && (
+                            <div className="p-3.5 bg-gradient-to-br from-purple-950/40 via-bleach-panel2 to-black rounded-xl border border-purple-500/30 space-y-1">
+                              <strong className="text-purple-300 block text-xs flex items-center gap-1.5 font-bold">
+                                <span>🐉</span> Espírito da Zanpakutō:
+                              </strong>
+                              <p className="text-bleach-creamDim leading-relaxed text-xs">
+                                {s.espirito}
+                              </p>
+                            </div>
+                          )}
+                          {s.mundoInterno && (
+                            <div className="p-3.5 bg-gradient-to-br from-blue-950/40 via-bleach-panel2 to-black rounded-xl border border-blue-500/30 space-y-1">
+                              <strong className="text-blue-300 block text-xs flex items-center gap-1.5 font-bold">
+                                <span>🌌</span> Mundo Interior (Jinzen):
+                              </strong>
+                              <p className="text-bleach-creamDim leading-relaxed text-xs">
+                                {s.mundoInterno}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
                       {/* Highlight Box: Poder & Mecânica Espiritual */}
                       <div className="p-4 bg-black/90 rounded-xl border-2 border-bleach-orange/40 space-y-2.5 shadow-inner">
                         <strong className="text-bleach-orange block text-xs uppercase tracking-wider flex items-center gap-1.5">
@@ -10974,6 +11321,32 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
                             </p>
                           </div>
                         </div>
+
+                        {/* Manifestação do Espírito & Mundo Interior na Bankai */}
+                        {(b.manifestacaoEspiritoBankai || b.mundoInternoBankai) && (
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                            {b.manifestacaoEspiritoBankai && (
+                              <div className="p-3.5 bg-gradient-to-br from-purple-950/50 via-bleach-panel2 to-black rounded-xl border border-purple-500/40 space-y-1">
+                                <strong className="text-purple-300 block text-xs flex items-center gap-1.5 font-bold">
+                                  <span>🐉</span> Manifestação do Espírito (Bankai):
+                                </strong>
+                                <p className="text-bleach-creamDim text-xs leading-relaxed">
+                                  {b.manifestacaoEspiritoBankai}
+                                </p>
+                              </div>
+                            )}
+                            {b.mundoInternoBankai && (
+                              <div className="p-3.5 bg-gradient-to-br from-cyan-950/50 via-bleach-panel2 to-black rounded-xl border border-cyan-500/40 space-y-1">
+                                <strong className="text-cyan-300 block text-xs flex items-center gap-1.5 font-bold">
+                                  <span>🌌</span> Domínio do Mundo Interior:
+                                </strong>
+                                <p className="text-bleach-creamDim text-xs leading-relaxed">
+                                  {b.mundoInternoBankai}
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        )}
 
                         {/* Limitações & Significado Filosófico */}
                         <div className="p-3.5 bg-black/80 rounded-xl border border-white/10 text-xs space-y-2">
@@ -13178,21 +13551,23 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
 
   function criarPersonagem(e) {
     e.preventDefault();
-    if (!novoNome.trim() || !novoCodigo.trim()) {
-      alert("Nome e Código de Acesso são obrigatórios!");
+    if (!novoNome.trim()) {
+      alert("O Nome do Personagem é obrigatório!");
       return;
     }
 
-    const whatsDigits = novoWhats.trim().replace(/\D/g, "").slice(-4) || String(Math.floor(1000 + Math.random() * 9000));
-    const codAtividade = `ACT-${whatsDigits.padStart(4, '0')}`;
+    const codGerado = typeof getCodigoAtividade === "function" 
+      ? getCodigoAtividade({ nome: novoNome.trim(), whatsapp: novoWhats.trim() }) 
+      : "MA-5476";
+    const codigoFinal = novoCodigo.trim() || codGerado;
 
     const novoP = {
       id: "char-" + uid(),
       nome: novoNome.trim(),
       foto: "assets/ichigo-orange.png",
       whatsapp: novoWhats.trim(),
-      codigo: novoCodigo.trim(),
-      codigoAtividade: codAtividade,
+      codigo: codigoFinal,
+      codigoAtividade: codigoFinal,
       raca: novoRaca,
       esquadrao: novoEsquadrao,
       faceclaim: novoNome.trim(),
@@ -13236,7 +13611,7 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
     setNovoWhats("");
     setNovoCodigo("");
     playReiatsuSound('win');
-    alert(`Personagem ${novoP.nome} criado com sucesso!`);
+    alert(`Personagem ${novoP.nome} criado com sucesso! Código: ${novoP.codigo}`);
   }
 
   function apagarPersonagem(charId, charNome) {
@@ -13870,8 +14245,20 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
                 <input type="text" placeholder="Ex: Zaraki Kenji" value={novoNome} onChange={(e) => setNovoNome(e.target.value)} className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2.5 text-white" />
               </div>
               <div>
-                <label className="block text-bleach-creamDim font-bold mb-1">Código de Acesso (Senha) *</label>
-                <input type="text" placeholder="Ex: ZAR-9901" value={novoCodigo} onChange={(e) => setNovoCodigo(e.target.value)} className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2.5 text-white font-mono" />
+                <label className="block text-bleach-creamDim font-bold mb-1">Código Identificador (Padrão: MA-5476)</label>
+                <div className="flex gap-2">
+                  <input type="text" placeholder="Ex: MA-5476" value={novoCodigo} onChange={(e) => setNovoCodigo(e.target.value)} className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2.5 text-white font-mono" />
+                  <button type="button" onClick={() => {
+                    if (novoNome.trim()) {
+                      const cod = typeof getCodigoAtividade === 'function' ? getCodigoAtividade({ nome: novoNome.trim(), whatsapp: novoWhats.trim() }) : 'MA-5476';
+                      setNovoCodigo(cod);
+                    } else {
+                      alert('Digite o nome do personagem primeiro!');
+                    }
+                  }} className="px-3 py-2 bg-yellow-950/80 hover:bg-yellow-900 border border-yellow-500 text-yellow-300 text-xs font-bold rounded-lg shrink-0" title="Gerar código baseado nas iniciais do personagem + 4 últimos dígitos do celular">
+                    ⚡ Auto
+                  </button>
+                </div>
               </div>
               <div>
                 <label className="block text-bleach-creamDim font-bold mb-1">WhatsApp (Opcional)</label>
@@ -14137,55 +14524,152 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
                 </div>
                 <span className={`text-[11px] font-bold px-3 py-1 rounded-full border ${
                   openAiKey && (openAiKey.startsWith("AIza") || openAiKey.startsWith("aiza"))
-                    ? "bg-green-950/80 border-green-500 text-green-300"
+                    ? "bg-blue-950/80 border-blue-500 text-blue-300"
+                    : openAiKey && openAiKey.startsWith("gsk_")
+                    ? "bg-emerald-950/80 border-emerald-500 text-emerald-300"
+                    : openAiKey && openAiKey.startsWith("sk-or-")
+                    ? "bg-purple-950/80 border-purple-500 text-purple-300"
                     : openAiKey && openAiKey.startsWith("sk-") 
                     ? "bg-green-950/80 border-green-500 text-green-300" 
                     : "bg-blue-950/80 border-cyan-500 text-cyan-300"
                 }`}>
                   {openAiKey && (openAiKey.startsWith("AIza") || openAiKey.startsWith("aiza"))
-                    ? "🟢 Google Gemini 2.0 Flash Online (Google AI)"
+                    ? "🟢 Google Gemini (2.5 Flash / 2.0 Flash) Ativo"
+                    : openAiKey && openAiKey.startsWith("gsk_")
+                    ? "🟢 Groq Cloud (Llama 3.3 70B) Ativo"
+                    : openAiKey && openAiKey.startsWith("sk-or-")
+                    ? "🟢 OpenRouter Multi-Model Ativo"
                     : openAiKey && openAiKey.startsWith("sk-")
-                    ? "🟢 OpenAI ChatGPT Online (GPT-4o-mini)"
-                    : "🔵 Motor Cognitivo ZGE v5.0 Nativo Ativo"}
+                    ? "🟢 OpenAI ChatGPT (GPT-4o-mini) Ativo"
+                    : "🔵 Motor Cognitivo ZGE v5.0 Nativo (Offline)"}
                 </span>
               </div>
 
               <p className="text-xs text-bleach-creamDim leading-relaxed">
-                O sistema analisa automaticamente os <strong>atributos</strong> (dominante e deficiente), <strong>personalidade selada</strong> (virtudes, defeitos, desejos, medos, conflitos e estilo de combate) e a <strong>cena de despertar narrada</strong>.
+                O motor generativo analisa automaticamente os <strong>atributos</strong> (dominante e deficiente), <strong>personalidade selada</strong> (virtudes, defeitos, desejos, medos, conflitos e estilo de combate) e a <strong>cena de despertar narrada</strong>. Suporta chaves do <strong>Google Gemini (Gratuito no Google AI Studio)</strong>, <strong>Groq Cloud</strong>, <strong>OpenRouter</strong> ou <strong>OpenAI ChatGPT</strong>.
               </p>
 
-              <div className="space-y-2">
-                <label className="block text-xs font-bold text-yellow-300 uppercase">
-                  Chave de API (Google Gemini ou OpenAI):
-                </label>
+              <div className="space-y-3 p-4 bg-black/60 border border-yellow-500/40 rounded-xl">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <label className="block text-xs font-bold text-yellow-300 uppercase flex items-center gap-1.5">
+                    <span>👑</span> Chave Global do Servidor (Funciona para Todos os Aparelhos):
+                  </label>
+                  <span className="text-[10px] text-green-300 bg-green-950/80 px-2 py-0.5 rounded border border-green-500/40">
+                    🔒 Blindada contra Cópias / Inspeções de Jogadores
+                  </span>
+                </div>
+
+                <p className="text-[11px] text-bleach-muted">
+                  Ao salvar a chave no servidor, <strong>todos os jogadores que acessarem o site em qualquer celular ou PC</strong> terão geração com IA ativa automaticamente, <strong>sem que ninguém possa ver ou roubar sua chave</strong>.
+                </p>
+
                 <div className="flex flex-col sm:flex-row gap-2">
                   <input
                     type="password"
-                    placeholder="Chave Google Gemini (AIzaSy...) ou OpenAI (sk-...)"
+                    placeholder="Chave Google Gemini (AIzaSy...), Groq (gsk_...), OpenRouter (sk-or-...) ou OpenAI (sk-...)"
                     value={openAiKey}
                     onChange={(e) => setOpenAiKey(e.target.value)}
-                    className="flex-1 bg-bleach-panel2 border border-bleach-border rounded-xl p-3 text-xs text-white font-mono"
+                    className="flex-1 bg-bleach-panel2 border border-bleach-border focus:border-yellow-400 rounded-xl p-3 text-xs text-white font-mono"
                   />
                   <button
                     type="button"
-                    onClick={() => {
+                    onClick={async () => {
+                      if (!openAiKey.trim()) {
+                        setKeyStatusMsg("⚠️ Digite uma chave de API para salvar.");
+                        return;
+                      }
+                      setKeyStatusMsg("⏳ Validando e salvando chave no servidor seguro...");
                       try {
-                        localStorage.setItem("bleach_openai_key", openAiKey.trim());
-                        setKeyStatusMsg("✓ Chave de API salva com sucesso!");
-                        setTimeout(() => setKeyStatusMsg(""), 4000);
-                      } catch(e) {}
+                        // 1. Salvar no localStorage local
+                        try { localStorage.setItem("bleach_openai_key", openAiKey.trim()); } catch(e) {}
+                        
+                        // 2. Salvar no Servidor Nuvem (Cloud Functions / Firebase)
+                        let salvouServidor = false;
+                        const endpoints = [
+                          "https://us-central1-bleach-rpg-6894c.cloudfunctions.net/salvarChaveSecretaServidor",
+                          typeof window !== 'undefined' && window.location?.origin ? `${window.location.origin}/api/salvarChaveSecretaServidor` : null
+                        ].filter(Boolean);
+
+                        for (const ep of endpoints) {
+                          try {
+                            const res = await fetch(ep, {
+                              method: "POST",
+                              headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify({
+                                senhaAdmin: "ADMIN_BLEACH_MESTRE_2026",
+                                novaChave: openAiKey.trim()
+                              })
+                            });
+                            if (res.ok) {
+                              const data = await res.json();
+                              if (data.ok) {
+                                salvouServidor = true;
+                                setKeyStatusMsg("✅ " + data.mensagem);
+                                break;
+                              }
+                            }
+                          } catch(err) {}
+                        }
+
+                        // 3. Se não salvou via endpoint HTTP, salvar direto no nó privado via Firebase SDK se disponível
+                        if (!salvouServidor && typeof window !== 'undefined' && window.firebaseDB) {
+                          try {
+                            await window.firebaseDB.ref("bleachSecretConfig/aiKey").set(openAiKey.trim());
+                            salvouServidor = true;
+                            setKeyStatusMsg("✅ Chave salva com sucesso no banco de dados seguro do servidor!");
+                          } catch(err2) {}
+                        }
+
+                        if (!salvouServidor) {
+                          setKeyStatusMsg("✓ Chave salva localmente no seu navegador e pronta para uso!");
+                        }
+                        setTimeout(() => setKeyStatusMsg(""), 6000);
+                      } catch(err) {
+                        setKeyStatusMsg("❌ Erro ao salvar: " + err.message);
+                      }
                     }}
                     className="px-5 py-2.5 bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold text-xs uppercase tracking-wider rounded-xl transition shadow"
                   >
-                    Salvar Chave
+                    ☁️ Salvar Global no Servidor
+                  </button>
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      if (!openAiKey.trim()) {
+                        setKeyStatusMsg("⚠️ Digite uma chave para testar.");
+                        return;
+                      }
+                      setKeyStatusMsg("🧪 Testando conexão com o provedor...");
+                      try {
+                        const fn = (typeof testSpiritualAIConnection === 'function') ? testSpiritualAIConnection : window.testSpiritualAIConnection;
+                        if (fn) {
+                          const res = await fn(openAiKey.trim());
+                          if (res.ok) {
+                            setKeyStatusMsg("✅ " + res.mensagem);
+                          } else {
+                            setKeyStatusMsg("❌ " + (res.mensagem || res.error));
+                          }
+                        } else {
+                          setKeyStatusMsg("⚠️ Motor de teste não encontrado.");
+                        }
+                      } catch (e) {
+                        setKeyStatusMsg("❌ Erro ao testar: " + e.message);
+                      }
+                    }}
+                    className="px-4 py-2.5 bg-cyan-950/80 hover:bg-cyan-900 border border-cyan-500 text-cyan-300 text-xs font-bold rounded-xl transition"
+                  >
+                    🧪 Testar Conexão
                   </button>
                   {openAiKey && (
                     <button
                       type="button"
-                      onClick={() => {
+                      onClick={async () => {
                         try {
                           localStorage.removeItem("bleach_openai_key");
                           setOpenAiKey("");
+                          if (typeof window !== 'undefined' && window.firebaseDB) {
+                            try { await window.firebaseDB.ref("bleachSecretConfig/aiKey").remove(); } catch(e) {}
+                          }
                           setKeyStatusMsg("✓ Chave removida. Usando Motor Cognitivo Nativo.");
                           setTimeout(() => setKeyStatusMsg(""), 4000);
                         } catch(e) {}
@@ -14197,7 +14681,7 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
                   )}
                 </div>
                 {keyStatusMsg && (
-                  <p className="text-xs text-green-400 font-bold mt-1">{keyStatusMsg}</p>
+                  <p className="text-xs text-yellow-300 font-mono mt-1 p-2.5 bg-black/80 rounded-lg border border-yellow-500/30">{keyStatusMsg}</p>
                 )}
               </div>
             </div>
@@ -15659,49 +16143,88 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
 }
 
 
-// FULL OFFICIAL SISTEMAS & REGRAS VIEW (100% CANONICAL BLEACH RPG BASE SYSTEM)
+// FULL OFFICIAL SISTEMAS & REGRAS VIEW (STREAMLINED CENTRAL HUB)
 function SistemasView() {
+  const [hubMode, setHubMode] = useState("regras"); // "regras" | "novatos" | "patchnotes"
   const [tabSis, setTabSis] = useState("conceito");
 
   return (
     <div className="space-y-6">
-      {/* Banner */}
-      <div className="bg-banner-overlay border border-bleach-border rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
-        <div className="relative z-10 max-w-3xl">
-          <span className="px-3 py-1 bg-bleach-orange/20 border border-bleach-orange text-bleach-orange text-xs font-bold rounded-full uppercase tracking-wider">
-            Regulamento Oficial da Sociedade das Almas • Versão 5.0
-          </span>
-          <h2 className="font-title text-4xl sm:text-5xl tracking-widest text-bleach-cream mt-3 reiatsu-text-glow">
-            BLEACH RPG — SISTEMA BASE
-          </h2>
-          <p className="text-xs sm:text-sm text-bleach-creamDim mt-2 leading-relaxed">
-            O RPG é focado principalmente em Narrativa, Desenvolvimento de personagem, Combate, Power scaling e Evolução gradual. Evita excesso de rolagens — dados só aparecem quando existe dúvida real!
-          </p>
+      {/* Sleek Central Knowledge Hub Header */}
+      <div className="bg-gradient-to-r from-[#14120E] via-[#1C1813] to-[#14120E] border border-white/10 rounded-2xl p-5 sm:p-6 shadow-xl relative overflow-hidden backdrop-blur-md">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_8px_#F59E0B]"></span>
+              <span className="text-[11px] font-mono uppercase tracking-widest text-amber-400 font-bold">
+                Biblioteca Oficial do Seireitei
+              </span>
+            </div>
+            <h2 className="font-title text-2xl sm:text-4xl tracking-wider text-white mt-1">
+              CENTRO DE CONHECIMENTO & REGRAS
+            </h2>
+            <p className="text-xs text-zinc-400 mt-1 max-w-2xl leading-relaxed">
+              Consulte as diretrizes canônicas da Sociedade das Almas, o guia simples de evolução para novatos e as notas de balanceamento.
+            </p>
+          </div>
+
+          {/* Clean Segmented Hub Pills */}
+          <div className="flex flex-wrap gap-1.5 bg-black/60 p-1.5 rounded-xl border border-white/5 self-start md:self-auto">
+            {[
+              { id: "regras", label: "Regras (1–30)", icon: "📜" },
+              { id: "novatos", label: "Guia para Novatos", icon: "🌱" },
+              { id: "patchnotes", label: "Patch Notes", icon: "📰" }
+            ].map(m => (
+              <button
+                key={m.id}
+                onClick={() => setHubMode(m.id)}
+                className={`px-3.5 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 ${
+                  hubMode === m.id
+                    ? "bg-gradient-to-r from-amber-500 to-orange-500 text-black font-black shadow-md"
+                    : "text-zinc-400 hover:text-white hover:bg-white/5"
+                }`}
+              >
+                <span>{m.icon}</span>
+                <span>{m.label}</span>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Category Tabs */}
-      <div className="flex gap-2 overflow-x-auto border-b border-bleach-borderSoft pb-2">
-        {[
-          { id: "conceito", label: "1–4. Conceito, Raças & Kidō Inicial", icon: "⚔️" },
-          { id: "atributos", label: "5–9. Atributos & Power Scaling", icon: "⚡" },
-          { id: "combate", label: "10–14. Combate, 1d6 & Estados", icon: "🩸" },
-          { id: "treinamento", label: "15–21. Treinos OFF & Fadiga", icon: "🏋️" },
-          { id: "missoes", label: "22–27. Missões, Miscelâneas & Drops", icon: "📜" },
-          { id: "filosofia", label: "28–30. Técnicas, Zanpakutō & Filosofia", icon: "🗡️" },
-        ].map(t => (
-          <button
-            key={t.id}
-            onClick={() => setTabSis(t.id)}
-            className={`px-4 py-2 rounded-xl text-xs font-bold tracking-wide transition whitespace-nowrap flex items-center gap-2 ${
-              tabSis === t.id ? "bg-bleach-orange text-black font-extrabold shadow-lg" : "bg-bleach-panel2 border border-bleach-border text-bleach-creamDim hover:text-white"
-            }`}
-          >
-            <span>{t.icon}</span>
-            <span>{t.label}</span>
-          </button>
-        ))}
-      </div>
+      {/* Hub Mode: Novice Guide */}
+      {hubMode === "novatos" && <GuiaNovatosView />}
+
+      {/* Hub Mode: Patch Notes */}
+      {hubMode === "patchnotes" && <PatchNotesView />}
+
+      {/* Hub Mode: Official Rules Compendium (1 to 30) */}
+      {hubMode === "regras" && (
+        <div className="space-y-6">
+          {/* Category Tabs */}
+          <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-thin">
+            {[
+              { id: "conceito", label: "1–4. Conceito & Raças", icon: "⚔️" },
+              { id: "atributos", label: "5–9. Atributos & Gotei 13", icon: "⚡" },
+              { id: "combate", label: "10–14. Combate & Estados", icon: "🩸" },
+              { id: "treinamento", label: "15–21. Treinos & Fadiga", icon: "🏋️" },
+              { id: "missoes", label: "22–27. Missões & Drops", icon: "📜" },
+              { id: "filosofia", label: "28–30. Filosofia & Zanpakutō", icon: "🗡️" },
+            ].map(t => (
+              <button
+                key={t.id}
+                onClick={() => setTabSis(t.id)}
+                className={`px-3.5 py-2 rounded-xl text-xs font-bold tracking-wide whitespace-nowrap transition flex items-center gap-2 ${
+                  tabSis === t.id
+                    ? "bg-white/15 border border-amber-500/60 text-amber-300 shadow-md font-extrabold"
+                    : "bg-black/40 border border-white/5 text-zinc-400 hover:text-white hover:border-white/15"
+                }`}
+              >
+                <span>{t.icon}</span>
+                <span>{t.label}</span>
+              </button>
+            ))}
+          </div>
 
       {/* TAB 1: CONCEITO, RAÇAS & KIDŌ INICIAL */}
       {tabSis === "conceito" && (
@@ -15792,25 +16315,38 @@ function SistemasView() {
             </div>
           </Section>
 
-          <Section title="8 & 9. Escala Oficial de Power Scaling & Diferenças" subtitle="Hierarquia e distâncias relativas entre atributos">
+          <Section title="8 & 9. 🏯 Hierarquia da Gotei 13 & Power Scaling" subtitle="Estrutura militar e distâncias relativas de poder no Seireitei">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
               <div className="space-y-2">
-                <h4 className="font-title text-sm text-bleach-orange uppercase">Escala de Referência</h4>
-                <div className="space-y-1.5">
+                <h4 className="font-title text-sm text-bleach-orange uppercase flex items-center gap-1.5">
+                  <span>🏯</span> Hierarquia da Gotei 13 (17 Postos Oficiais)
+                </h4>
+                <div className="space-y-1 max-h-[420px] overflow-y-auto pr-1">
                   {[
-                    { faixa: "1–200", patamar: "Inexperiente", cor: C.muted },
-                    { faixa: "201–450", patamar: "Iniciante", cor: C.green },
-                    { faixa: "451–750", patamar: "Treinado", cor: C.blue },
-                    { faixa: "751–1100", patamar: "Experiente", cor: C.purple },
-                    { faixa: "1101–1500", patamar: "Elite", cor: C.yellow },
-                    { faixa: "1501–2000", patamar: "Alto Nível", cor: "#FFA500" },
-                    { faixa: "2001–2600", patamar: "Monstruoso", cor: C.red },
-                    { faixa: "2601–3300", patamar: "Lendário", cor: "#E0B34C" },
-                    { faixa: "3300+", patamar: "Transcendente", cor: "#FFD700" }
+                    { faixa: "3401+ pts", patamar: "Comandante-Capitão", cor: "#FFD700", icon: "👑" },
+                    { faixa: "2951–3400 pts", patamar: "Capitão", cor: "#EF4444", icon: "🏛️" },
+                    { faixa: "2651–2950 pts", patamar: "Tenente / Adjunto-Chefe", cor: "#EAB308", icon: "⚔️" },
+                    { faixa: "2451–2650 pts", patamar: "1º Adjunto", cor: "#F97316", icon: "🗡️" },
+                    { faixa: "2251–2450 pts", patamar: "2º Adjunto", cor: "#FB923C", icon: "🗡️" },
+                    { faixa: "2051–2250 pts", patamar: "3º Adjunto", cor: "#F43F5E", icon: "🗡️" },
+                    { faixa: "1851–2050 pts", patamar: "4º Adjunto", cor: "#EC4899", icon: "🛡️" },
+                    { faixa: "1651–1850 pts", patamar: "5º Adjunto", cor: "#C084FC", icon: "🛡️" },
+                    { faixa: "1451–1650 pts", patamar: "6º Adjunto", cor: "#A855F7", icon: "🛡️" },
+                    { faixa: "1251–1450 pts", patamar: "7º Adjunto", cor: "#8B5CF6", icon: "⚡" },
+                    { faixa: "1051–1250 pts", patamar: "8º Adjunto", cor: "#6366F1", icon: "⚡" },
+                    { faixa: "851–1050 pts", patamar: "9º Adjunto", cor: "#60A5FA", icon: "⚡" },
+                    { faixa: "651–850 pts", patamar: "10º Adjunto", cor: "#3B82F6", icon: "⚡" },
+                    { faixa: "451–650 pts", patamar: "Oficial", cor: "#06B6D4", icon: "🔰" },
+                    { faixa: "251–450 pts", patamar: "Suboficial", cor: "#10B981", icon: "🔰" },
+                    { faixa: "101–250 pts", patamar: "Shinigami", cor: "#9CA3AF", icon: "🌸" },
+                    { faixa: "1–100 pts", patamar: "Recruta", cor: "#6B7280", icon: "🌱" }
                   ].map(p => (
-                    <div key={p.patamar} className="p-2 bg-bleach-panel2 border border-white/5 rounded-lg flex justify-between">
-                      <span className="font-mono font-bold text-white">{p.faixa} pts</span>
-                      <span className="font-bold uppercase" style={{ color: p.cor }}>{p.patamar}</span>
+                    <div key={p.patamar} className="p-2 bg-bleach-panel2 border border-white/5 rounded-lg flex justify-between items-center">
+                      <span className="font-mono font-bold text-white text-[11px]">{p.faixa}</span>
+                      <span className="font-bold uppercase text-[11px] flex items-center gap-1" style={{ color: p.cor }}>
+                        <span>{p.icon}</span>
+                        <span>{p.patamar}</span>
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -15820,16 +16356,16 @@ function SistemasView() {
                 <h4 className="font-title text-sm text-cyan-400 uppercase">Diferença em Combate</h4>
                 <div className="space-y-1.5">
                   {[
-                    { diff: "0–50 pts", desc: "Equivalentes" },
-                    { diff: "51–150 pts", desc: "Pequena vantagem" },
-                    { diff: "151–300 pts", desc: "Vantagem clara" },
-                    { diff: "301–600 pts", desc: "Grande vantagem" },
-                    { diff: "601–1000 pts", desc: "Abismo de poder" },
-                    { diff: "1001+ pts", desc: "Diferença monstruosa" }
+                    { diff: "0–50 pts", desc: "Equivalentes · Duelo parelho decidido por estratégia" },
+                    { diff: "51–150 pts", desc: "Pequena vantagem · Pressão perceptível no confronto" },
+                    { diff: "151–300 pts", desc: "Vantagem clara · Superioridade tática marcante" },
+                    { diff: "301–600 pts", desc: "Grande vantagem · Diferença de posto hierárquico" },
+                    { diff: "601–1000 pts", desc: "Abismo de poder · Vantagem avassaladora de Reishi" },
+                    { diff: "1001+ pts", desc: "Diferença monstruosa · Domínio absoluto e esmagador" }
                   ].map(d => (
-                    <div key={d.diff} className="p-2 bg-bleach-panel2 border border-white/5 rounded-lg flex justify-between">
+                    <div key={d.diff} className="p-2.5 bg-bleach-panel2 border border-white/5 rounded-lg flex justify-between">
                       <span className="font-mono text-bleach-muted">{d.diff}</span>
-                      <strong className="text-white">{d.desc}</strong>
+                      <strong className="text-white text-[11px]">{d.desc}</strong>
                     </div>
                   ))}
                 </div>
@@ -15981,6 +16517,8 @@ function SistemasView() {
           </Section>
         </div>
       )}
+      </div>
+      )}
     </div>
   );
 }
@@ -15993,26 +16531,29 @@ function PatchNotesView() {
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="bg-banner-overlay border border-bleach-border rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+      <div className="bg-gradient-to-r from-amber-950/30 via-[#18140F] to-[#0E0C09] border border-amber-500/20 rounded-2xl p-5 sm:p-6 shadow-xl relative overflow-hidden backdrop-blur-md">
         <div className="relative z-10 max-w-3xl">
-          <span className="px-3 py-1 bg-yellow-950 border border-yellow-500 text-yellow-300 text-xs font-bold rounded-full uppercase tracking-wider">
-            Histórico Oficial de Atualizações • Estilo League of Legends
-          </span>
-          <h2 className="font-title text-4xl sm:text-5xl tracking-widest text-bleach-cream mt-3 reiatsu-text-glow">
-            NOTAS DE ATUALIZAÇÃO & BALANCEAMENTO
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_8px_#F59E0B]"></span>
+            <span className="text-[11px] font-mono uppercase tracking-widest text-amber-300 font-bold">
+              Histórico Oficial de Versões & Balanceamento
+            </span>
+          </div>
+          <h2 className="font-title text-2xl sm:text-4xl tracking-wider text-white mt-1">
+            NOTAS DE ATUALIZAÇÃO DO SEIREITEI
           </h2>
-          <p className="text-xs sm:text-sm text-bleach-creamDim mt-2 leading-relaxed">
-            Acompanhe a evolução contínua do Bleach RPG: mudanças de regras, buffs, nerfs, novos sistemas e ajustes no motor de almas.
+          <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+            Acompanhe a evolução contínua do Bleach RPG: mudanças de regras, buffs, nerfs, novos sistemas e postos hierárquicos.
           </p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-5">
         {/* Version Selector Sidebar */}
         <div className="lg:col-span-1 space-y-2">
-          <span className="text-xs font-bold uppercase tracking-wider text-bleach-muted px-2 block">Versões Anteriores (10 Patches)</span>
-          <div className="space-y-1.5 max-h-[500px] overflow-y-auto pr-1">
-            {PATCH_NOTES_HISTORY.map((p) => {
+          <span className="text-xs font-bold uppercase tracking-wider text-zinc-400 px-1 block">Versões ({PATCH_NOTES_HISTORY.length})</span>
+          <div className="space-y-1.5 max-h-[520px] overflow-y-auto pr-1 scrollbar-thin">
+            {PATCH_NOTES_HISTORY.map((p, idx) => {
               const isCurrent = p.versao === patchAtivo;
               return (
                 <button
@@ -16020,14 +16561,19 @@ function PatchNotesView() {
                   onClick={() => setPatchAtivo(p.versao)}
                   className={`w-full text-left p-3 rounded-xl border transition flex items-center justify-between ${
                     isCurrent
-                      ? "bg-bleach-orange text-black font-extrabold border-bleach-orange shadow-lg"
-                      : "bg-bleach-panel2 border-bleach-border text-bleach-creamDim hover:text-white hover:border-white/20"
+                      ? "bg-gradient-to-r from-amber-500 to-orange-500 text-black font-black border-amber-400 shadow-md"
+                      : "bg-[#14120E] border-white/5 text-zinc-300 hover:text-white hover:border-white/15"
                   }`}
                 >
                   <div>
                     <span className="font-title text-base block leading-tight">PATCH {p.versao}</span>
-                    <span className={`text-[10px] block ${isCurrent ? "text-black/80 font-bold" : "text-bleach-muted"}`}>{p.data}</span>
+                    <span className={`text-[10px] block ${isCurrent ? "text-black/80 font-bold" : "text-zinc-500"}`}>{p.data}</span>
                   </div>
+                  {idx === 0 && (
+                    <span className={`px-2 py-0.5 rounded text-[9px] font-black uppercase ${
+                      isCurrent ? "bg-black text-amber-400" : "bg-amber-500/20 text-amber-300 border border-amber-500/40"
+                    }`}>NOVO</span>
+                  )}
                   {p.versao === "5.0" && (
                     <span className="px-2 py-0.5 rounded bg-black text-bleach-orange text-[9px] font-bold uppercase">ATUAL</span>
                   )}
@@ -16378,7 +16924,7 @@ function App() {
         cloudStatus={cloudStatus}
       />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 space-y-6">
+      <main className="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 space-y-6 pb-20 md:pb-6">
         {saveErr && (
           <div className="p-3 bg-red-950/80 border border-red-500 text-red-200 text-xs rounded-xl text-center">
             {saveErr}

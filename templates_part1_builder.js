@@ -2,139 +2,211 @@
 // VIEWS PART 1: TOPBAR, SUBTLE ADMIN, LIVE CHAT, LOGIN, RANKINGS, KIDOS & ARENA
 // =========================================================================
 
-// TOP NAVIGATION BAR (WITH SUBTLE ADMIN SEAL, CHAT & PATCH NOTES)
+// TOP NAVIGATION BAR (STREAMLINED, MINIMALIST & EASY TO NAVIGATE)
 function TopBar({ session, onLogout, view, setView, nome, onOpenAdminLogin, cloudStatus }) {
   const isAdmin = session?.role === "super_admin" || session?.role === "sub_admin";
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Grouped Primary Navigation
+  const primaryTabs = [
+    { id: "sistemas", label: "Sistemas & Regras", icon: "📜", match: ["sistemas", "guia_novatos", "patchnotes"] },
+    { id: "mapa_3d", label: "Mapa 3D", icon: "🗺️", match: ["mapa_3d"] },
+    { id: "ficha", label: session?.role === "jogador" ? "Minha Ficha" : "Ficha", icon: "👤", match: ["ficha"] },
+    { id: "kidos", label: "Grimório", icon: "📕", match: ["kidos"] },
+    { id: "arena", label: "Arena", icon: "⚔️", match: ["arena"] },
+    { id: "rankings", label: "Rankings", icon: "🏆", match: ["rankings"] },
+    { id: "chat", label: "Chat", icon: "💬", match: ["chat"] },
+    ...(isAdmin ? [{ id: "admin", label: "Painel ADM", icon: "👑", match: ["admin", "tramas_adm"] }] : [])
+  ];
 
   return (
-    <header className="sticky top-0 z-40 bg-bleach-panel/95 backdrop-blur-md border-b border-bleach-borderSoft shadow-xl">
-      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-        {/* Logo & Subtitle */}
-        <div className="flex items-center gap-3 cursor-pointer" onClick={() => setView("sistemas")}>
-          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-bleach-orange to-bleach-orangeDeep flex items-center justify-center font-title text-xl text-black font-extrabold shadow-[0_0_15px_#FF6A13]">
-            死
-          </div>
-          <div>
-            <h1 className="font-title text-xl sm:text-2xl tracking-wider text-bleach-cream flex items-center gap-2">
-              <span>BLEACH RPG</span>
-              <span className="text-[11px] font-sans font-normal px-2 py-0.5 rounded bg-black/60 border border-bleach-border text-bleach-orange uppercase tracking-widest hidden sm:inline">
-                Sociedade das Almas
-              </span>
-            </h1>
-          </div>
-        </div>
-
-        {/* Navigation Tabs */}
-        <nav className="hidden md:flex items-center gap-1">
-          {[
-            { id: "sistemas", label: "Sistemas & Regras", icon: "📜" },
-            { id: "guia_novatos", label: "🌱 Como Evoluir", icon: "🌱" },
-            { id: "mapa_3d", label: "Mapa 3D", icon: "🗺️" },
-            { id: "ficha", label: session?.role === "jogador" ? "Minha Ficha" : "Ficha de Jogador", icon: "👤" },
-            { id: "chat", label: "Chat dos Shinigamis", icon: "💬" },
-            { id: "rankings", label: "Rankings", icon: "🏆" },
-            { id: "kidos", label: "Grimório de Kidō", icon: "📕" },
-            { id: "arena", label: "Arena de Duelos", icon: "⚔️" },
-            { id: "patchnotes", label: "Patch Notes", icon: "📰" },
-            ...(isAdmin ? [
-              { id: "tramas_adm", label: "Tramas & Arcos (IA)", icon: "🎭" },
-              { id: "admin", label: "Painel ADM", icon: "👑" }
-            ] : [])
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setView(tab.id)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold tracking-wide transition flex items-center gap-1.5 ${
-                view === tab.id
-                  ? "bg-bleach-orange text-black font-extrabold shadow-[0_0_12px_rgba(255,106,19,0.5)]"
-                  : "text-bleach-creamDim hover:text-white hover:bg-white/5"
-              }`}
-            >
-              <span>{tab.icon}</span>
-              <span>{tab.label}</span>
-            </button>
-          ))}
-        </nav>
-
-        {/* User Session / Cloud & Subtle Admin Seal */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          {/* Cloud Indicator */}
-          <div 
-            title={cloudStatus === "connected" ? "Sincronizado com Nuvem Firebase em Tempo Real" : "Modo Local"}
-            className="flex items-center gap-1 text-[11px] px-2 py-1 rounded-full bg-black/60 border border-white/10"
-          >
-            <span className={`w-2 h-2 rounded-full ${
-              cloudStatus === "connected" ? "bg-green-400 animate-pulse" : cloudStatus === "syncing" ? "bg-yellow-400 animate-spin" : "bg-bleach-muted"
-            }`}></span>
-            <span className="text-bleach-muted hidden sm:inline">{cloudStatus === "connected" ? "Nuvem ON" : "Local"}</span>
-          </div>
-
-          {session ? (
-            <div className="flex items-center gap-2">
-              <div className="text-right hidden sm:block">
-                <span className="text-[10px] text-bleach-muted block uppercase font-mono">Logado como</span>
-                <span className="text-xs font-bold text-bleach-cream truncate max-w-[120px] block">{nome}</span>
-              </div>
-              <button
-                onClick={onLogout}
-                className="px-2.5 py-1 bg-red-950/60 border border-red-500/50 hover:bg-red-800 text-red-200 text-xs font-bold rounded-lg transition"
-                title="Sair da Conta"
-              >
-                Sair
-              </button>
+    <>
+      <header className="sticky top-0 z-40 bg-[#0C0A08]/95 backdrop-blur-xl border-b border-white/10 shadow-2xl">
+        <div className="max-w-7xl mx-auto px-4 py-2.5 flex items-center justify-between gap-3">
+          
+          {/* Logo Brand */}
+          <div className="flex items-center gap-2.5 cursor-pointer group" onClick={() => setView("sistemas")}>
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center font-title text-lg text-black font-black shadow-[0_0_15px_rgba(245,158,11,0.5)] group-hover:scale-105 transition-transform">
+              死
             </div>
-          ) : (
-            <div className="flex items-center gap-2">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-title text-xl sm:text-2xl tracking-wider text-white">BLEACH RPG</span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/5 border border-white/10 text-amber-400 font-bold uppercase tracking-widest hidden sm:inline">
+                  Gotei 13
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Desktop Clean Segmented Tabs */}
+          <nav className="hidden lg:flex items-center gap-1 bg-black/40 p-1 rounded-xl border border-white/5">
+            {primaryTabs.map((tab) => {
+              const isActive = tab.match.includes(view);
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setView(tab.id)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold tracking-wide transition flex items-center gap-1.5 ${
+                    isActive
+                      ? "bg-gradient-to-r from-amber-500 to-orange-500 text-black font-black shadow-[0_0_12px_rgba(245,158,11,0.4)]"
+                      : "text-zinc-400 hover:text-white hover:bg-white/5"
+                  }`}
+                >
+                  <span className="text-sm">{tab.icon}</span>
+                  <span>{tab.label}</span>
+                </button>
+              );
+            })}
+          </nav>
+
+          {/* Right Area: Session Status + Cloud + Subtle Seal */}
+          <div className="flex items-center gap-2">
+            {/* Cloud Sync Status */}
+            <div 
+              title={cloudStatus === "connected" ? "Sincronizado com Nuvem Firebase em Tempo Real" : "Modo Local"}
+              className="flex items-center gap-1.5 text-[11px] px-2.5 py-1 rounded-full bg-white/5 border border-white/10"
+            >
+              <span className={`w-2 h-2 rounded-full ${
+                cloudStatus === "connected" ? "bg-emerald-400 animate-pulse shadow-[0_0_8px_#34D399]" : cloudStatus === "syncing" ? "bg-amber-400 animate-spin" : "bg-zinc-600"
+              }`}></span>
+              <span className="text-zinc-400 font-mono text-[10px] hidden sm:inline">{cloudStatus === "connected" ? "NUVEM ON" : "LOCAL"}</span>
+            </div>
+
+            {session ? (
+              <div className="flex items-center gap-2">
+                <div className="text-right hidden xl:block">
+                  <span className="text-[9px] text-zinc-500 uppercase font-mono block">Logado</span>
+                  <span className="text-xs font-bold text-zinc-200 truncate max-w-[110px] block">{nome}</span>
+                </div>
+                <button
+                  onClick={onLogout}
+                  className="px-2.5 py-1 bg-red-950/40 hover:bg-red-900/60 border border-red-500/30 text-red-300 text-xs font-bold rounded-lg transition"
+                  title="Sair da Conta"
+                >
+                  Sair
+                </button>
+              </div>
+            ) : (
               <button
                 onClick={() => setView("ficha")}
-                className="px-3.5 py-1.5 bg-bleach-orange text-black text-xs font-extrabold rounded-lg shadow hover:bg-orange-400 uppercase tracking-wider"
+                className="px-3.5 py-1.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-black text-xs font-black rounded-lg shadow-md uppercase tracking-wider transition"
               >
                 Entrar
               </button>
-            </div>
-          )}
+            )}
 
-          {/* SUBTLE AESTHETIC SEAL FOR ADMIN ACCESS */}
-          <button
-            onClick={onOpenAdminLogin}
-            className="w-7 h-7 flex items-center justify-center rounded-full text-bleach-border hover:text-bleach-orange/60 hover:bg-white/5 transition text-xs select-none"
-            title="Selo Espiritual do Seireitei"
-          >
-            ❖
-          </button>
+            {/* Aesthetic Subtle Admin Seal */}
+            <button
+              onClick={onOpenAdminLogin}
+              className="w-7 h-7 flex items-center justify-center rounded-lg text-zinc-600 hover:text-amber-400 hover:bg-white/5 border border-transparent hover:border-white/10 transition text-xs select-none"
+              title="Selo Espiritual do Seireitei"
+            >
+              ❖
+            </button>
+          </div>
         </div>
-      </div>
 
-      {/* Mobile Navigation Row */}
-      <div className="md:hidden flex items-center justify-around border-t border-bleach-borderSoft/60 px-2 py-1.5 overflow-x-auto bg-black/40">
+        {/* Medium Screen (Tablet) Navigation Row */}
+        <div className="hidden md:flex lg:hidden items-center justify-center gap-1 border-t border-white/5 px-2 py-1.5 bg-black/40 overflow-x-auto">
+          {primaryTabs.map((tab) => {
+            const isActive = tab.match.includes(view);
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setView(tab.id)}
+                className={`px-2.5 py-1 rounded-lg text-xs font-bold whitespace-nowrap transition flex items-center gap-1 ${
+                  isActive
+                    ? "bg-amber-500 text-black font-extrabold shadow-sm"
+                    : "text-zinc-400 hover:text-white"
+                }`}
+              >
+                <span>{tab.icon}</span>
+                <span>{tab.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </header>
+
+      {/* Modern Mobile Bottom Docked Navigation Bar (Clean & Native App Feel) */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0C0A08]/95 backdrop-blur-xl border-t border-white/10 px-2 py-1.5 shadow-2xl flex items-center justify-around">
         {[
-          { id: "sistemas", label: "Regras", icon: "📜" },
-          { id: "mapa_3d", label: "Mapa 3D", icon: "🗺️" },
-          { id: "ficha", label: "Ficha", icon: "👤" },
-          { id: "chat", label: "Chat", icon: "💬" },
-          { id: "rankings", label: "Rankings", icon: "🏆" },
-          { id: "kidos", label: "Kidō", icon: "📕" },
-          { id: "arena", label: "Arena", icon: "⚔️" },
-          { id: "patchnotes", label: "Patch", icon: "📰" },
-          ...(isAdmin ? [
-            { id: "tramas_adm", label: "Tramas", icon: "🎭" },
-            { id: "admin", label: "ADM", icon: "👑" }
-          ] : [])
-        ].map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setView(tab.id)}
-            className={`px-2 py-1 rounded text-[11px] font-semibold whitespace-nowrap ${
-              view === tab.id
-                ? "text-bleach-orange font-bold border-b-2 border-bleach-orange"
-                : "text-bleach-muted"
-            }`}
-          >
-            {tab.icon} {tab.label}
-          </button>
-        ))}
-      </div>
-    </header>
+          { id: "sistemas", label: "Sistemas", icon: "📜", match: ["sistemas", "guia_novatos", "patchnotes"] },
+          { id: "mapa_3d", label: "Mapa 3D", icon: "🗺️", match: ["mapa_3d"] },
+          { id: "ficha", label: "Ficha", icon: "👤", match: ["ficha"] },
+          { id: "kidos", label: "Grimório", icon: "📕", match: ["kidos"] },
+          { id: "menu", label: "Mais", icon: "☰", match: [] }
+        ].map((item) => {
+          if (item.id === "menu") {
+            return (
+              <button
+                key={item.id}
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className={`flex flex-col items-center justify-center py-1 px-2 rounded-xl transition ${
+                  mobileMenuOpen ? "text-amber-400 font-bold" : "text-zinc-400"
+                }`}
+              >
+                <span className="text-base">☰</span>
+                <span className="text-[10px] font-bold">Mais</span>
+              </button>
+            );
+          }
+          const isActive = item.match.includes(view);
+          return (
+            <button
+              key={item.id}
+              onClick={() => {
+                setView(item.id);
+                setMobileMenuOpen(false);
+              }}
+              className={`flex flex-col items-center justify-center py-1 px-2 rounded-xl transition ${
+                isActive ? "text-amber-400 font-extrabold" : "text-zinc-400 hover:text-white"
+              }`}
+            >
+              <span className="text-base">{item.icon}</span>
+              <span className="text-[10px] font-bold">{item.label}</span>
+            </button>
+          );
+        })}
+      </nav>
+
+      {/* Mobile Drawer / Quick Sheet for Secondary Options */}
+      {mobileMenuOpen && (
+        <div className="md:hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex flex-col justify-end p-3" onClick={() => setMobileMenuOpen(false)}>
+          <div className="bg-[#14120E] border border-white/15 rounded-2xl p-4 space-y-3 shadow-2xl mb-14" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between border-b border-white/10 pb-2">
+              <span className="font-title text-lg text-amber-400 tracking-wider">Módulos do Seireitei</span>
+              <button onClick={() => setMobileMenuOpen(false)} className="text-zinc-400 hover:text-white text-xs px-2 py-1 bg-white/5 rounded-lg">✕ Fechar</button>
+            </div>
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <button onClick={() => { setView("arena"); setMobileMenuOpen(false); }} className="p-3 bg-white/5 hover:bg-amber-500/20 border border-white/10 rounded-xl flex items-center gap-2 font-bold text-zinc-200">
+                <span>⚔️</span> Arena de Duelos
+              </button>
+              <button onClick={() => { setView("rankings"); setMobileMenuOpen(false); }} className="p-3 bg-white/5 hover:bg-amber-500/20 border border-white/10 rounded-xl flex items-center gap-2 font-bold text-zinc-200">
+                <span>🏆</span> Rankings Gerais
+              </button>
+              <button onClick={() => { setView("chat"); setMobileMenuOpen(false); }} className="p-3 bg-white/5 hover:bg-amber-500/20 border border-white/10 rounded-xl flex items-center gap-2 font-bold text-zinc-200">
+                <span>💬</span> Chat Shinigami
+              </button>
+              <button onClick={() => { setView("patchnotes"); setMobileMenuOpen(false); }} className="p-3 bg-white/5 hover:bg-amber-500/20 border border-white/10 rounded-xl flex items-center gap-2 font-bold text-zinc-200">
+                <span>📰</span> Patch Notes
+              </button>
+              {isAdmin && (
+                <>
+                  <button onClick={() => { setView("tramas_adm"); setMobileMenuOpen(false); }} className="p-3 bg-purple-950/40 border border-purple-500/30 rounded-xl flex items-center gap-2 font-bold text-purple-200">
+                    <span>🎭</span> Tramas com IA
+                  </button>
+                  <button onClick={() => { setView("admin"); setMobileMenuOpen(false); }} className="p-3 bg-amber-950/40 border border-amber-500/30 rounded-xl flex items-center gap-2 font-bold text-amber-200">
+                    <span>👑</span> Painel ADM
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
@@ -149,19 +221,19 @@ function ChainDivider() {
   );
 }
 
-// SECTION CONTAINER
+// SECTION CONTAINER (REFINED DARK GLASSMORPHISM WITH BREATHING ROOM)
 function Section({ title, subtitle, children, right, className = "" }) {
   return (
-    <div className={`bg-bleach-panel border border-bleach-border rounded-2xl p-4 sm:p-6 shadow-xl relative overflow-hidden ${className}`}>
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 border-b border-bleach-borderSoft pb-3">
+    <div className={`bg-[#12100D]/90 backdrop-blur-md border border-white/10 rounded-2xl p-4 sm:p-6 shadow-xl relative overflow-hidden transition-all hover:border-white/15 ${className}`}>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 border-b border-white/5 pb-3">
         <div>
-          <div className="flex items-center gap-2">
-            <div className="w-1.5 h-5 bg-bleach-orange rounded-full shadow-[0_0_10px_#FF6A13]"></div>
-            <h3 className="font-title text-xl tracking-wider uppercase text-bleach-cream">
+          <div className="flex items-center gap-2.5">
+            <div className="w-1.5 h-5 bg-gradient-to-b from-amber-400 to-orange-500 rounded-full shadow-[0_0_8px_#F59E0B]"></div>
+            <h3 className="font-title text-xl sm:text-2xl tracking-wider uppercase text-zinc-100">
               {title}
             </h3>
           </div>
-          {subtitle && <p className="text-xs text-bleach-creamDim mt-0.5 ml-3.5">{subtitle}</p>}
+          {subtitle && <p className="text-xs text-zinc-400 mt-0.5 ml-4 leading-relaxed">{subtitle}</p>}
         </div>
         {right && <div>{right}</div>}
       </div>
@@ -174,8 +246,8 @@ function Section({ title, subtitle, children, right, className = "" }) {
 function Badge({ color, children, className = "" }) {
   return (
     <span
-      style={{ color, borderColor: color, backgroundColor: `${color}15` }}
-      className={`inline-flex items-center gap-1 text-[11px] font-bold tracking-wider uppercase border px-2.5 py-1 rounded-full ${className}`}
+      style={{ color, borderColor: `${color}40`, backgroundColor: `${color}12` }}
+      className={`inline-flex items-center gap-1.5 text-[11px] font-bold tracking-wider uppercase border px-2.5 py-0.5 rounded-full ${className}`}
     >
       {children}
     </span>
@@ -692,36 +764,36 @@ function RankingsView({ db, saveDb, session, rankFisico, rankPressao, myCharId }
         title="Quadro Geral de Honra & Classificação"
         subtitle="Rankings oficiais de combate e atividade da Sociedade das Almas"
       >
-        <div className="flex gap-2 mb-6 border-b border-bleach-borderSoft pb-3 overflow-x-auto">
+        <div className="flex gap-1.5 mb-6 bg-black/40 p-1.5 rounded-xl border border-white/5 overflow-x-auto">
           <button
             onClick={() => setTab("fisico")}
-            className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition whitespace-nowrap ${
+            className={`px-3.5 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition whitespace-nowrap ${
               tab === "fisico"
-                ? "bg-bleach-orange text-black font-extrabold shadow"
-                : "bg-bleach-panel2 border border-bleach-border text-bleach-creamDim hover:text-white"
+                ? "bg-gradient-to-r from-orange-500 to-amber-500 text-black font-black shadow-md"
+                : "text-zinc-400 hover:text-white hover:bg-white/5"
             }`}
           >
-            ⚔️ Ranking Físico Geral (Força, Vel, Res)
+            ⚔️ Físico (Força, Vel, Res)
           </button>
           <button
             onClick={() => setTab("pressao")}
-            className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition whitespace-nowrap ${
+            className={`px-3.5 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition whitespace-nowrap ${
               tab === "pressao"
-                ? "bg-bleach-blue text-black font-extrabold shadow"
-                : "bg-bleach-panel2 border border-bleach-border text-bleach-creamDim hover:text-white"
+                ? "bg-gradient-to-r from-cyan-500 to-blue-500 text-black font-black shadow-md"
+                : "text-zinc-400 hover:text-white hover:bg-white/5"
             }`}
           >
-            🌀 Ranking de Pressão Espiritual (Reiatsu)
+            🌀 Pressão Espiritual (Reiatsu)
           </button>
           <button
             onClick={() => setTab("atividade")}
-            className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition whitespace-nowrap ${
-              tab === "atividade"
-                ? "bg-gradient-to-r from-yellow-500 to-amber-600 text-black font-extrabold shadow-lg"
-                : "bg-bleach-panel2 border border-yellow-500/40 text-yellow-300 hover:text-white"
+            className={`px-3.5 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition whitespace-nowrap ${
+              tab === "atividade" || tab === "conhecimento"
+                ? "bg-gradient-to-r from-amber-500 to-yellow-500 text-black font-black shadow-md"
+                : "text-zinc-400 hover:text-white hover:bg-white/5"
             }`}
           >
-            📜 Ranking de Conhecimento (Atividade Semanal)
+            📜 Conhecimento & Cenas
           </button>
         </div>
 
@@ -729,26 +801,29 @@ function RankingsView({ db, saveDb, session, rankFisico, rankPressao, myCharId }
         {(tab === "conhecimento" || tab === "atividade") ? (
           <div className="space-y-5">
             {/* Banner do Ciclo de 7 Dias & Premiações */}
-            <div className="p-5 rounded-2xl bg-gradient-to-r from-amber-950/60 via-black/80 to-yellow-950/60 border-2 border-yellow-500/70 shadow-2xl space-y-4">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-yellow-500/30 pb-4">
+            <div className="p-5 rounded-2xl bg-gradient-to-r from-amber-950/30 via-[#18140F] to-[#0E0C09] border border-amber-500/30 shadow-xl space-y-4">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/5 pb-4">
                 <div>
-                  <span className="px-3 py-0.5 bg-yellow-950 border border-yellow-500 text-yellow-300 text-[10px] font-extrabold uppercase rounded-full tracking-wider">
-                    Ciclo Semanal de Atividade no WhatsApp • 7 Dias
-                  </span>
-                  <h4 className="font-title text-2xl sm:text-3xl text-yellow-400 mt-1">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_8px_#F59E0B]"></span>
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-amber-300">
+                      Ciclo Semanal • 7 Dias
+                    </span>
+                  </div>
+                  <h4 className="font-title text-2xl sm:text-3xl text-white mt-1">
                     CONTADOR DO CICLO DE RECOMPENSAS
                   </h4>
-                  <p className="text-xs text-bleach-creamDim mt-0.5">
-                    A cada 7 dias de atividade no ON, os 3 Shinigamis com maior produção de cenas são consagrados com pontos de atributos livres!
+                  <p className="text-xs text-zinc-400 mt-0.5">
+                    A cada 7 dias, os 3 Shinigamis com maior produção de cenas são premiados com pontos livres!
                   </p>
                 </div>
 
                 {/* Contador de Dias */}
-                <div className="flex items-center gap-3 bg-black/80 border-2 border-yellow-500 rounded-2xl px-5 py-3 shadow-inner">
-                  <span className="text-3xl">⏳</span>
+                <div className="flex items-center gap-3 bg-black/60 border border-amber-500/40 rounded-xl px-4 py-2.5 shadow-inner">
+                  <span className="text-2xl">⏳</span>
                   <div>
-                    <span className="text-[10px] text-bleach-muted uppercase font-bold block">Tempo Restante:</span>
-                    <span className="text-xl sm:text-2xl font-title font-black text-yellow-300 tracking-wider">
+                    <span className="text-[9px] text-zinc-500 uppercase font-mono block">Tempo Restante:</span>
+                    <span className="text-lg sm:text-xl font-title font-black text-amber-300 tracking-wider">
                       {cicloInfo.diasRestantes === 1 ? "Último Dia!" : `${cicloInfo.diasRestantes} Dias Restantes`}
                     </span>
                   </div>
@@ -988,16 +1063,19 @@ function KidosView({ personagem, isAdmin }) {
 
   return (
     <div className="space-y-6">
-      <div className="bg-banner-overlay border border-bleach-border rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+      <div className="bg-gradient-to-r from-blue-950/30 via-[#12161A] to-[#0D1013] border border-blue-500/20 rounded-2xl p-5 sm:p-6 shadow-xl relative overflow-hidden backdrop-blur-md">
         <div className="relative z-10 max-w-3xl">
-          <span className="px-3 py-1 bg-bleach-blue/20 border border-bleach-blue text-bleach-blue text-xs font-bold rounded-full uppercase tracking-wider">
-            Grimório Completo da Sociedade das Almas • Hadō, Bakudō & Kaidō
-          </span>
-          <h2 className="font-title text-4xl sm:text-5xl tracking-widest text-bleach-orange mt-3 reiatsu-text-glow">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#22D3EE]"></span>
+            <span className="text-[11px] font-mono uppercase tracking-widest text-cyan-300 font-bold">
+              Grimório Oficial da Sociedade das Almas
+            </span>
+          </div>
+          <h2 className="font-title text-2xl sm:text-4xl tracking-wider text-white mt-1">
             COMPÊNDIO SUPREMO DE KIDŌS
           </h2>
-          <p className="text-xs sm:text-sm text-bleach-creamDim mt-2 leading-relaxed">
-            Explore o compêndio oficial de <strong>Hadō (Destruição)</strong>, <strong>Bakudō (Aprisionamento & Defesa)</strong> e <strong>Kaidō (Cura & Suporte)</strong>. Clique em qualquer Kidō para abrir sua análise tática completa com encantamento poético e simulador de impacto!
+          <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+            Explore os feitiços canônicos de <strong>Hadō (Destruição)</strong>, <strong>Bakudō (Contenção & Barreira)</strong> e <strong>Kaidō (Cura Espiritual)</strong> com cálculo dinâmico de Reiryoku e encantamentos sagrados.
           </p>
         </div>
       </div>
@@ -1292,22 +1370,24 @@ function KidosView({ personagem, isAdmin }) {
       })()}
 
       {/* CATALOG FILTERS & SPELLS GRID */}
-      <Section title="Grimório de Feitiços de Seireitei" subtitle="Clique em qualquer magia para abrir os detalhes completos, encantamento e simulador">
+      <Section title="Grimório de Feitiços de Seireitei" subtitle="Clique em qualquer magia para abrir os detalhes completos, encantamento e simulador de poder">
         <div className="flex flex-col sm:flex-row gap-3 mb-6">
           <input
             type="text"
             placeholder="🔍 Buscar feitiço por nome, número, encantamento ou efeito..."
             value={busca}
             onChange={(e) => setBusca(e.target.value)}
-            className="flex-1 bg-bleach-panel2 border border-bleach-border rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-bleach-orange"
+            className="flex-1 bg-black/60 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-amber-400 placeholder-zinc-500"
           />
-          <div className="flex gap-1.5 overflow-x-auto pb-1 sm:pb-0">
+          <div className="flex gap-1.5 bg-black/40 p-1.5 rounded-xl border border-white/5 overflow-x-auto pb-1 sm:pb-1.5">
             {["Todos", "Hadō", "Bakudō", "Kaidō"].map(cat => (
               <button
                 key={cat}
                 onClick={() => setCategoriaAtiva(cat)}
                 className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition whitespace-nowrap ${
-                  categoriaAtiva === cat ? "bg-bleach-orange text-black font-extrabold" : "bg-bleach-panel2 border border-bleach-border text-bleach-creamDim"
+                  categoriaAtiva === cat 
+                    ? "bg-gradient-to-r from-cyan-500 to-blue-500 text-black font-black shadow-md" 
+                    : "text-zinc-400 hover:text-white hover:bg-white/5"
                 }`}
               >
                 {cat}

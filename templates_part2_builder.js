@@ -1067,6 +1067,32 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
                         </div>
                       </div>
 
+                      {/* Espírito da Zanpakutō & Mundo Interior */}
+                      {(s.espirito || s.mundoInterno) && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                          {s.espirito && (
+                            <div className="p-3.5 bg-gradient-to-br from-purple-950/40 via-bleach-panel2 to-black rounded-xl border border-purple-500/30 space-y-1">
+                              <strong className="text-purple-300 block text-xs flex items-center gap-1.5 font-bold">
+                                <span>🐉</span> Espírito da Zanpakutō:
+                              </strong>
+                              <p className="text-bleach-creamDim leading-relaxed text-xs">
+                                {s.espirito}
+                              </p>
+                            </div>
+                          )}
+                          {s.mundoInterno && (
+                            <div className="p-3.5 bg-gradient-to-br from-blue-950/40 via-bleach-panel2 to-black rounded-xl border border-blue-500/30 space-y-1">
+                              <strong className="text-blue-300 block text-xs flex items-center gap-1.5 font-bold">
+                                <span>🌌</span> Mundo Interior (Jinzen):
+                              </strong>
+                              <p className="text-bleach-creamDim leading-relaxed text-xs">
+                                {s.mundoInterno}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
                       {/* Highlight Box: Poder & Mecânica Espiritual */}
                       <div className="p-4 bg-black/90 rounded-xl border-2 border-bleach-orange/40 space-y-2.5 shadow-inner">
                         <strong className="text-bleach-orange block text-xs uppercase tracking-wider flex items-center gap-1.5">
@@ -1373,6 +1399,32 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
                             </p>
                           </div>
                         </div>
+
+                        {/* Manifestação do Espírito & Mundo Interior na Bankai */}
+                        {(b.manifestacaoEspiritoBankai || b.mundoInternoBankai) && (
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                            {b.manifestacaoEspiritoBankai && (
+                              <div className="p-3.5 bg-gradient-to-br from-purple-950/50 via-bleach-panel2 to-black rounded-xl border border-purple-500/40 space-y-1">
+                                <strong className="text-purple-300 block text-xs flex items-center gap-1.5 font-bold">
+                                  <span>🐉</span> Manifestação do Espírito (Bankai):
+                                </strong>
+                                <p className="text-bleach-creamDim text-xs leading-relaxed">
+                                  {b.manifestacaoEspiritoBankai}
+                                </p>
+                              </div>
+                            )}
+                            {b.mundoInternoBankai && (
+                              <div className="p-3.5 bg-gradient-to-br from-cyan-950/50 via-bleach-panel2 to-black rounded-xl border border-cyan-500/40 space-y-1">
+                                <strong className="text-cyan-300 block text-xs flex items-center gap-1.5 font-bold">
+                                  <span>🌌</span> Domínio do Mundo Interior:
+                                </strong>
+                                <p className="text-bleach-creamDim text-xs leading-relaxed">
+                                  {b.mundoInternoBankai}
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        )}
 
                         {/* Limitações & Significado Filosófico */}
                         <div className="p-3.5 bg-black/80 rounded-xl border border-white/10 text-xs space-y-2">

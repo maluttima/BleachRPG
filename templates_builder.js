@@ -216,8 +216,10 @@ function Zanpakuto4PathsModal({ open, caminhos = [], personagem, isBankai, loadi
   const [chargeProgress, setChargeProgress] = useState(0);
   const [chargeStageText, setChargeStageText] = useState("Sintonizando Pressão Espiritual com o Mundo Interior...");
   const [showConfigApiKey, setShowConfigApiKey] = useState(false);
-  const [apiKeyInput, setApiKeyInput] = useState(localStorage.getItem("bleach_openai_key") || "");
+  const [apiKeyInput, setApiKeyInput] = useState(typeof localStorage !== 'undefined' ? localStorage.getItem("bleach_openai_key") || "" : "");
   const [salvoKey, setSalvoKey] = useState(false);
+  const [testResult, setTestResult] = useState(null);
+  const [isTestingKey, setIsTestingKey] = useState(false);
   const chargeIntervalRef = useRef(null);
 
   useEffect(() => {
@@ -304,10 +306,34 @@ function Zanpakuto4PathsModal({ open, caminhos = [], personagem, isBankai, loadi
   }, [open, loading, listaCaminhos.length]);
 
   function salvarApiKey(e) {
-    e.preventDefault();
-    localStorage.setItem("bleach_openai_key", apiKeyInput.trim());
-    setSalvoKey(true);
-    setTimeout(() => setSalvoKey(false), 3000);
+    if (e && e.preventDefault) e.preventDefault();
+    try {
+      localStorage.setItem("bleach_openai_key", apiKeyInput.trim());
+      setSalvoKey(true);
+      setTimeout(() => setSalvoKey(false), 3000);
+    } catch(err) {}
+  }
+
+  async function testarConexaoIA() {
+    setIsTestingKey(true);
+    setTestResult(null);
+    try {
+      const fn = (typeof testSpiritualAIConnection === 'function') ? testSpiritualAIConnection : (typeof window !== 'undefined' ? window.testSpiritualAIConnection : null);
+      if (!fn) {
+        setTestResult({ ok: false, msg: "Função de teste não encontrada no escopo." });
+        return;
+      }
+      const res = await fn(apiKeyInput.trim());
+      if (res.ok) {
+        setTestResult({ ok: true, msg: res.mensagem });
+      } else {
+        setTestResult({ ok: false, msg: res.mensagem || res.error });
+      }
+    } catch (e) {
+      setTestResult({ ok: false, msg: "Erro ao testar: " + e.message });
+    } finally {
+      setIsTestingKey(false);
+    }
   }
 
   function confirmarEscolhaFinal(caminho) {
@@ -354,10 +380,10 @@ function Zanpakuto4PathsModal({ open, caminhos = [], personagem, isBankai, loadi
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowConfigApiKey(!showConfigApiKey)}
-              className="px-3 py-1.5 bg-black/60 border border-white/10 hover:border-yellow-400 text-yellow-300 rounded-lg text-xs font-mono transition"
-              title="Configurar Chave Google Gemini / ChatGPT"
+              className="px-3 py-1.5 bg-black/60 border border-white/10 hover:border-yellow-400 text-yellow-300 rounded-lg text-xs font-mono transition flex items-center gap-1.5"
+              title="Configurar Chave Google Gemini / ChatGPT / Groq"
             >
-              ⚙️ Chave IA
+              <span>⚙️</span> Chave IA
             </button>
             <button
               onClick={onClose}
@@ -370,20 +396,55 @@ function Zanpakuto4PathsModal({ open, caminhos = [], personagem, isBankai, loadi
 
         {/* API Key Modal / Form Bar */}
         {showConfigApiKey && (
-          <form onSubmit={salvarApiKey} className="p-3.5 bg-black/80 border border-yellow-500/40 rounded-xl mb-4 flex flex-wrap gap-2 items-center text-xs">
-            <span className="text-yellow-300 font-bold">Chave Gemini / ChatGPT:</span>
-            <input
-              type="password"
-              placeholder="Cole sua chave aqui (Google Gemini ou OpenAI)"
-              value={apiKeyInput}
-              onChange={(e) => setApiKeyInput(e.target.value)}
-              className="flex-1 min-w-[200px] bg-bleach-panel2 border border-bleach-border rounded p-2 text-white font-mono"
-            />
-            <button type="submit" className="px-4 py-2 bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold uppercase rounded shadow">
-              Salvar Chave
-            </button>
-            {salvoKey && <span className="text-green-400 font-bold">✓ Salvo!</span>}
-          </form>
+          <div className="p-4 bg-black/90 border-2 border-yellow-500/60 rounded-xl mb-4 space-y-3 text-xs shadow-2xl">
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-2">
+              <span className="text-yellow-300 font-bold flex items-center gap-1.5">
+                <span>🤖</span> Provedores de IA Suportados:
+              </span>
+              <div className="flex flex-wrap gap-1.5 text-[10px] font-mono">
+                <span className="px-2 py-0.5 rounded bg-blue-950/80 border border-blue-500/50 text-blue-300">Google Gemini (AIza...)</span>
+                <span className="px-2 py-0.5 rounded bg-emerald-950/80 border border-emerald-500/50 text-emerald-300">Groq (gsk_...)</span>
+                <span className="px-2 py-0.5 rounded bg-purple-950/80 border border-purple-500/50 text-purple-300">OpenRouter (sk-or-...)</span>
+                <span className="px-2 py-0.5 rounded bg-amber-950/80 border border-amber-500/50 text-amber-300">OpenAI (sk-...)</span>
+              </div>
+            </div>
+
+            <form onSubmit={salvarApiKey} className="flex flex-col sm:flex-row gap-2 items-center">
+              <input
+                type="password"
+                placeholder="Cole sua chave de API aqui (Google Gemini, OpenAI, Groq ou OpenRouter)"
+                value={apiKeyInput}
+                onChange={(e) => setApiKeyInput(e.target.value)}
+                className="flex-1 w-full bg-bleach-panel2 border border-bleach-border focus:border-yellow-400 rounded-lg p-2.5 text-white font-mono text-xs focus:outline-none"
+              />
+              <button
+                type="submit"
+                className="w-full sm:w-auto px-4 py-2.5 bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold uppercase rounded-lg shadow transition"
+              >
+                Salvar Chave
+              </button>
+              <button
+                type="button"
+                onClick={testarConexaoIA}
+                disabled={isTestingKey || !apiKeyInput.trim()}
+                className="w-full sm:w-auto px-4 py-2.5 bg-bleach-panel2 border border-cyan-500/60 hover:bg-cyan-950 text-cyan-300 font-bold rounded-lg transition disabled:opacity-50"
+              >
+                {isTestingKey ? "🧪 Testando..." : "🧪 Testar Conexão"}
+              </button>
+            </form>
+
+            {salvoKey && (
+              <p className="text-green-400 font-bold">✓ Chave de IA salva com sucesso no navegador!</p>
+            )}
+
+            {testResult && (
+              <div className={`p-2.5 rounded-lg border text-xs font-mono ${
+                testResult.ok ? "bg-green-950/70 border-green-500 text-green-300" : "bg-red-950/70 border-red-500 text-red-300"
+              }`}>
+                {testResult.ok ? "✅ " : "❌ "} {testResult.msg}
+              </div>
+            )}
+          </div>
         )}
 
         {/* RITUAL CHARGING SCREEN COM CORTE HORIZONTAL, AURA SUBINDO & VIBRAÇÃO DO AR */}
@@ -551,6 +612,32 @@ function Zanpakuto4PathsModal({ open, caminhos = [], personagem, isBankai, loadi
                     </div>
                   </div>
 
+                  {/* Manifestação do Espírito & Domínio do Mundo Interior na Bankai */}
+                  {((caminhoSelecionado.bankai?.manifestacaoEspiritoBankai || caminhoSelecionado.manifestacaoEspiritoBankai) || (caminhoSelecionado.bankai?.mundoInternoBankai || caminhoSelecionado.mundoInternoBankai)) && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                      {(caminhoSelecionado.bankai?.manifestacaoEspiritoBankai || caminhoSelecionado.manifestacaoEspiritoBankai) && (
+                        <div className="p-3.5 bg-gradient-to-br from-purple-950/60 via-bleach-panel2 to-black rounded-xl border border-purple-500/40 space-y-1">
+                          <strong className="text-purple-300 block text-xs flex items-center gap-1">
+                            <span>🐉</span> Manifestação do Espírito (Bankai):
+                          </strong>
+                          <p className="text-bleach-creamDim text-[11px] leading-relaxed">
+                            {caminhoSelecionado.bankai?.manifestacaoEspiritoBankai || caminhoSelecionado.manifestacaoEspiritoBankai}
+                          </p>
+                        </div>
+                      )}
+                      {(caminhoSelecionado.bankai?.mundoInternoBankai || caminhoSelecionado.mundoInternoBankai) && (
+                        <div className="p-3.5 bg-gradient-to-br from-cyan-950/60 via-bleach-panel2 to-black rounded-xl border border-cyan-500/40 space-y-1">
+                          <strong className="text-cyan-300 block text-xs flex items-center gap-1">
+                            <span>🌌</span> Domínio do Mundo Interior:
+                          </strong>
+                          <p className="text-bleach-creamDim text-[11px] leading-relaxed">
+                            {caminhoSelecionado.bankai?.mundoInternoBankai || caminhoSelecionado.mundoInternoBankai}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
                   {/* Limitações & Significado */}
                   <div className="p-3 bg-black/60 rounded-xl border border-white/10 text-xs space-y-2">
                     <div className="flex flex-wrap gap-x-4 text-[11px]">
@@ -670,6 +757,28 @@ function Zanpakuto4PathsModal({ open, caminhos = [], personagem, isBankai, loadi
                       <p className="text-bleach-creamDim text-[11px] leading-relaxed">{caminhoSelecionado.shikai.relacaoPersonalidade}</p>
                     </div>
                   </div>
+
+                  {/* Espírito da Lâmina & Mundo Interior */}
+                  {(caminhoSelecionado.shikai.espirito || caminhoSelecionado.shikai.mundoInterno) && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                      {caminhoSelecionado.shikai.espirito && (
+                        <div className="p-3 bg-gradient-to-br from-purple-950/50 via-bleach-panel2 to-black rounded-lg border border-purple-500/30 space-y-1">
+                          <strong className="text-purple-300 block text-[11px] flex items-center gap-1">
+                            <span>🐉</span> Espírito da Zanpakutō:
+                          </strong>
+                          <p className="text-bleach-creamDim text-[11px] leading-relaxed">{caminhoSelecionado.shikai.espirito}</p>
+                        </div>
+                      )}
+                      {caminhoSelecionado.shikai.mundoInterno && (
+                        <div className="p-3 bg-gradient-to-br from-blue-950/50 via-bleach-panel2 to-black rounded-lg border border-blue-500/30 space-y-1">
+                          <strong className="text-blue-300 block text-[11px] flex items-center gap-1">
+                            <span>🌌</span> Mundo Interior (Jinzen):
+                          </strong>
+                          <p className="text-bleach-creamDim text-[11px] leading-relaxed">{caminhoSelecionado.shikai.mundoInterno}</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
 
                   {/* Power & Mechanics */}
                   <div className="p-3.5 bg-black/80 rounded-lg border border-bleach-orange/30 space-y-2">

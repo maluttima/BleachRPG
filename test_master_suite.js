@@ -122,17 +122,26 @@ for (const fn of expectedGlobals) {
   }
 }
 
-// 3. Test PowerTier calculation across all levels
+// 3. Test PowerTier calculation across all 17 Gotei 13 ranks
 const testTiers = [
-  { val: 100, expected: "Inexperiente" },
-  { val: 300, expected: "Iniciante" },
-  { val: 600, expected: "Treinado" },
-  { val: 900, expected: "Experiente" },
-  { val: 1300, expected: "Elite" },
-  { val: 1800, expected: "Alto Nível" },
-  { val: 2300, expected: "Monstruoso" },
-  { val: 2900, expected: "Lendário" },
-  { val: 3500, expected: "Transcendente" }
+  { val: 50, expected: "Recruta" },
+  { val: 100, expected: "Recruta" },
+  { val: 150, expected: "Shinigami" },
+  { val: 300, expected: "Suboficial" },
+  { val: 500, expected: "Oficial" },
+  { val: 700, expected: "10º Adjunto" },
+  { val: 900, expected: "9º Adjunto" },
+  { val: 1100, expected: "8º Adjunto" },
+  { val: 1300, expected: "7º Adjunto" },
+  { val: 1500, expected: "6º Adjunto" },
+  { val: 1700, expected: "5º Adjunto" },
+  { val: 1900, expected: "4º Adjunto" },
+  { val: 2100, expected: "3º Adjunto" },
+  { val: 2300, expected: "2º Adjunto" },
+  { val: 2500, expected: "1º Adjunto" },
+  { val: 2800, expected: "Tenente / Adjunto-Chefe" },
+  { val: 3200, expected: "Capitão" },
+  { val: 3600, expected: "Comandante-Capitão" }
 ];
 
 testTiers.forEach(t => {
@@ -142,7 +151,7 @@ testTiers.forEach(t => {
     process.exit(1);
   }
 });
-console.log("✓ TEST 2: Power tier scaling verified across all attribute ranges.");
+console.log("✓ TEST 2: Gotei 13 hierarchy power scaling verified across all 17 ranks.");
 
 // 4. Test sound synthesis
 const soundTypes = ['hum', 'shikai_charge', 'bankai_charge', 'shikai', 'bankai', 'gacha_box_charge', 'gacha_box_suspense', 'gacha_box_shatter', 'shatter', 'roll', 'win', 'kido'];

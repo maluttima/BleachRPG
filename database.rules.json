@@ -1,0 +1,12 @@
+{
+  "rules": {
+    "bleachSecretConfig": {
+      ".read": false,
+      ".write": false
+    },
+    "bleachDB": {
+      ".read": true,
+      ".write": true
+    }
+  }
+}

@@ -1,7 +1,7 @@
 @echo off
 chcp 65001 >nul
 echo =========================================================================
-echo  BLEACH RPG - DEPLOY AUTOMATIZADO DAS CLOUD FUNCTIONS (FIREBASE)
+echo  BLEACH RPG - DEPLOY AUTOMATIZADO DAS CLOUD FUNCTIONS & SEGURANCA IA
 echo =========================================================================
 echo.
 
@@ -15,11 +15,15 @@ cmd.exe /c "npm install"
 cd ..
 
 echo.
-echo [3/3] Fazendo deploy da Cloud Function agendada (03:00 da madrugada)...
-cmd.exe /c "npx firebase-tools deploy --only functions"
+echo [3/3] Fazendo deploy das Cloud Functions (Proxy IA Seguro + Limpeza Madrugada) e Regras...
+cmd.exe /c "npx firebase-tools deploy --only functions,database"
 
 echo.
 echo =========================================================================
-echo  DEPLOY CONCLUIDO! A limpeza agendada das 03:00 esta ATIVA no Firebase.
+echo  DEPLOY CONCLUIDO COM SUCESSO!
+echo  1. Proxy de IA Seguro: ATIVO (Gera Shikai/Bankai para todos os aparelhos sem expor sua chave).
+echo  2. Limpeza Agendada das 03:00: ATIVA.
+echo  3. Regras de Seguranca: Chave Secreta PROTEGIDA no Realtime Database.
 echo =========================================================================
 pause
+

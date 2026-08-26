@@ -117,21 +117,23 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
 
   function criarPersonagem(e) {
     e.preventDefault();
-    if (!novoNome.trim() || !novoCodigo.trim()) {
-      alert("Nome e Código de Acesso são obrigatórios!");
+    if (!novoNome.trim()) {
+      alert("O Nome do Personagem é obrigatório!");
       return;
     }
 
-    const whatsDigits = novoWhats.trim().replace(/\D/g, "").slice(-4) || String(Math.floor(1000 + Math.random() * 9000));
-    const codAtividade = `ACT-${whatsDigits.padStart(4, '0')}`;
+    const codGerado = typeof getCodigoAtividade === "function" 
+      ? getCodigoAtividade({ nome: novoNome.trim(), whatsapp: novoWhats.trim() }) 
+      : "MA-5476";
+    const codigoFinal = novoCodigo.trim() || codGerado;
 
     const novoP = {
       id: "char-" + uid(),
       nome: novoNome.trim(),
       foto: "assets/ichigo-orange.png",
       whatsapp: novoWhats.trim(),
-      codigo: novoCodigo.trim(),
-      codigoAtividade: codAtividade,
+      codigo: codigoFinal,
+      codigoAtividade: codigoFinal,
       raca: novoRaca,
       esquadrao: novoEsquadrao,
       faceclaim: novoNome.trim(),
@@ -175,7 +177,7 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
     setNovoWhats("");
     setNovoCodigo("");
     playReiatsuSound('win');
-    alert(`Personagem ${novoP.nome} criado com sucesso!`);
+    alert(`Personagem ${novoP.nome} criado com sucesso! Código: ${novoP.codigo}`);
   }
 
   function apagarPersonagem(charId, charNome) {
@@ -809,8 +811,20 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
                 <input type="text" placeholder="Ex: Zaraki Kenji" value={novoNome} onChange={(e) => setNovoNome(e.target.value)} className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2.5 text-white" />
               </div>
               <div>
-                <label className="block text-bleach-creamDim font-bold mb-1">Código de Acesso (Senha) *</label>
-                <input type="text" placeholder="Ex: ZAR-9901" value={novoCodigo} onChange={(e) => setNovoCodigo(e.target.value)} className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2.5 text-white font-mono" />
+                <label className="block text-bleach-creamDim font-bold mb-1">Código Identificador (Padrão: MA-5476)</label>
+                <div className="flex gap-2">
+                  <input type="text" placeholder="Ex: MA-5476" value={novoCodigo} onChange={(e) => setNovoCodigo(e.target.value)} className="w-full bg-bleach-panel2 border border-bleach-border rounded-lg p-2.5 text-white font-mono" />
+                  <button type="button" onClick={() => {
+                    if (novoNome.trim()) {
+                      const cod = typeof getCodigoAtividade === 'function' ? getCodigoAtividade({ nome: novoNome.trim(), whatsapp: novoWhats.trim() }) : 'MA-5476';
+                      setNovoCodigo(cod);
+                    } else {
+                      alert('Digite o nome do personagem primeiro!');
+                    }
+                  }} className="px-3 py-2 bg-yellow-950/80 hover:bg-yellow-900 border border-yellow-500 text-yellow-300 text-xs font-bold rounded-lg shrink-0" title="Gerar código baseado nas iniciais do personagem + 4 últimos dígitos do celular">
+                    ⚡ Auto
+                  </button>
+                </div>
               </div>
               <div>
                 <label className="block text-bleach-creamDim font-bold mb-1">WhatsApp (Opcional)</label>
@@ -1076,55 +1090,152 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
                 </div>
                 <span className={`text-[11px] font-bold px-3 py-1 rounded-full border ${
                   openAiKey && (openAiKey.startsWith("AIza") || openAiKey.startsWith("aiza"))
-                    ? "bg-green-950/80 border-green-500 text-green-300"
+                    ? "bg-blue-950/80 border-blue-500 text-blue-300"
+                    : openAiKey && openAiKey.startsWith("gsk_")
+                    ? "bg-emerald-950/80 border-emerald-500 text-emerald-300"
+                    : openAiKey && openAiKey.startsWith("sk-or-")
+                    ? "bg-purple-950/80 border-purple-500 text-purple-300"
                     : openAiKey && openAiKey.startsWith("sk-") 
                     ? "bg-green-950/80 border-green-500 text-green-300" 
                     : "bg-blue-950/80 border-cyan-500 text-cyan-300"
                 }`}>
                   {openAiKey && (openAiKey.startsWith("AIza") || openAiKey.startsWith("aiza"))
-                    ? "🟢 Google Gemini 2.0 Flash Online (Google AI)"
+                    ? "🟢 Google Gemini (2.5 Flash / 2.0 Flash) Ativo"
+                    : openAiKey && openAiKey.startsWith("gsk_")
+                    ? "🟢 Groq Cloud (Llama 3.3 70B) Ativo"
+                    : openAiKey && openAiKey.startsWith("sk-or-")
+                    ? "🟢 OpenRouter Multi-Model Ativo"
                     : openAiKey && openAiKey.startsWith("sk-")
-                    ? "🟢 OpenAI ChatGPT Online (GPT-4o-mini)"
-                    : "🔵 Motor Cognitivo ZGE v5.0 Nativo Ativo"}
+                    ? "🟢 OpenAI ChatGPT (GPT-4o-mini) Ativo"
+                    : "🔵 Motor Cognitivo ZGE v5.0 Nativo (Offline)"}
                 </span>
               </div>
 
               <p className="text-xs text-bleach-creamDim leading-relaxed">
-                O sistema analisa automaticamente os <strong>atributos</strong> (dominante e deficiente), <strong>personalidade selada</strong> (virtudes, defeitos, desejos, medos, conflitos e estilo de combate) e a <strong>cena de despertar narrada</strong>.
+                O motor generativo analisa automaticamente os <strong>atributos</strong> (dominante e deficiente), <strong>personalidade selada</strong> (virtudes, defeitos, desejos, medos, conflitos e estilo de combate) e a <strong>cena de despertar narrada</strong>. Suporta chaves do <strong>Google Gemini (Gratuito no Google AI Studio)</strong>, <strong>Groq Cloud</strong>, <strong>OpenRouter</strong> ou <strong>OpenAI ChatGPT</strong>.
               </p>
 
-              <div className="space-y-2">
-                <label className="block text-xs font-bold text-yellow-300 uppercase">
-                  Chave de API (Google Gemini ou OpenAI):
-                </label>
+              <div className="space-y-3 p-4 bg-black/60 border border-yellow-500/40 rounded-xl">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <label className="block text-xs font-bold text-yellow-300 uppercase flex items-center gap-1.5">
+                    <span>👑</span> Chave Global do Servidor (Funciona para Todos os Aparelhos):
+                  </label>
+                  <span className="text-[10px] text-green-300 bg-green-950/80 px-2 py-0.5 rounded border border-green-500/40">
+                    🔒 Blindada contra Cópias / Inspeções de Jogadores
+                  </span>
+                </div>
+
+                <p className="text-[11px] text-bleach-muted">
+                  Ao salvar a chave no servidor, <strong>todos os jogadores que acessarem o site em qualquer celular ou PC</strong> terão geração com IA ativa automaticamente, <strong>sem que ninguém possa ver ou roubar sua chave</strong>.
+                </p>
+
                 <div className="flex flex-col sm:flex-row gap-2">
                   <input
                     type="password"
-                    placeholder="Chave Google Gemini (AIzaSy...) ou OpenAI (sk-...)"
+                    placeholder="Chave Google Gemini (AIzaSy...), Groq (gsk_...), OpenRouter (sk-or-...) ou OpenAI (sk-...)"
                     value={openAiKey}
                     onChange={(e) => setOpenAiKey(e.target.value)}
-                    className="flex-1 bg-bleach-panel2 border border-bleach-border rounded-xl p-3 text-xs text-white font-mono"
+                    className="flex-1 bg-bleach-panel2 border border-bleach-border focus:border-yellow-400 rounded-xl p-3 text-xs text-white font-mono"
                   />
                   <button
                     type="button"
-                    onClick={() => {
+                    onClick={async () => {
+                      if (!openAiKey.trim()) {
+                        setKeyStatusMsg("⚠️ Digite uma chave de API para salvar.");
+                        return;
+                      }
+                      setKeyStatusMsg("⏳ Validando e salvando chave no servidor seguro...");
                       try {
-                        localStorage.setItem("bleach_openai_key", openAiKey.trim());
-                        setKeyStatusMsg("✓ Chave de API salva com sucesso!");
-                        setTimeout(() => setKeyStatusMsg(""), 4000);
-                      } catch(e) {}
+                        // 1. Salvar no localStorage local
+                        try { localStorage.setItem("bleach_openai_key", openAiKey.trim()); } catch(e) {}
+                        
+                        // 2. Salvar no Servidor Nuvem (Cloud Functions / Firebase)
+                        let salvouServidor = false;
+                        const endpoints = [
+                          "https://us-central1-bleach-rpg-6894c.cloudfunctions.net/salvarChaveSecretaServidor",
+                          typeof window !== 'undefined' && window.location?.origin ? `${window.location.origin}/api/salvarChaveSecretaServidor` : null
+                        ].filter(Boolean);
+
+                        for (const ep of endpoints) {
+                          try {
+                            const res = await fetch(ep, {
+                              method: "POST",
+                              headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify({
+                                senhaAdmin: "ADMIN_BLEACH_MESTRE_2026",
+                                novaChave: openAiKey.trim()
+                              })
+                            });
+                            if (res.ok) {
+                              const data = await res.json();
+                              if (data.ok) {
+                                salvouServidor = true;
+                                setKeyStatusMsg("✅ " + data.mensagem);
+                                break;
+                              }
+                            }
+                          } catch(err) {}
+                        }
+
+                        // 3. Se não salvou via endpoint HTTP, salvar direto no nó privado via Firebase SDK se disponível
+                        if (!salvouServidor && typeof window !== 'undefined' && window.firebaseDB) {
+                          try {
+                            await window.firebaseDB.ref("bleachSecretConfig/aiKey").set(openAiKey.trim());
+                            salvouServidor = true;
+                            setKeyStatusMsg("✅ Chave salva com sucesso no banco de dados seguro do servidor!");
+                          } catch(err2) {}
+                        }
+
+                        if (!salvouServidor) {
+                          setKeyStatusMsg("✓ Chave salva localmente no seu navegador e pronta para uso!");
+                        }
+                        setTimeout(() => setKeyStatusMsg(""), 6000);
+                      } catch(err) {
+                        setKeyStatusMsg("❌ Erro ao salvar: " + err.message);
+                      }
                     }}
                     className="px-5 py-2.5 bg-yellow-500 hover:bg-yellow-400 text-black font-extrabold text-xs uppercase tracking-wider rounded-xl transition shadow"
                   >
-                    Salvar Chave
+                    ☁️ Salvar Global no Servidor
+                  </button>
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      if (!openAiKey.trim()) {
+                        setKeyStatusMsg("⚠️ Digite uma chave para testar.");
+                        return;
+                      }
+                      setKeyStatusMsg("🧪 Testando conexão com o provedor...");
+                      try {
+                        const fn = (typeof testSpiritualAIConnection === 'function') ? testSpiritualAIConnection : window.testSpiritualAIConnection;
+                        if (fn) {
+                          const res = await fn(openAiKey.trim());
+                          if (res.ok) {
+                            setKeyStatusMsg("✅ " + res.mensagem);
+                          } else {
+                            setKeyStatusMsg("❌ " + (res.mensagem || res.error));
+                          }
+                        } else {
+                          setKeyStatusMsg("⚠️ Motor de teste não encontrado.");
+                        }
+                      } catch (e) {
+                        setKeyStatusMsg("❌ Erro ao testar: " + e.message);
+                      }
+                    }}
+                    className="px-4 py-2.5 bg-cyan-950/80 hover:bg-cyan-900 border border-cyan-500 text-cyan-300 text-xs font-bold rounded-xl transition"
+                  >
+                    🧪 Testar Conexão
                   </button>
                   {openAiKey && (
                     <button
                       type="button"
-                      onClick={() => {
+                      onClick={async () => {
                         try {
                           localStorage.removeItem("bleach_openai_key");
                           setOpenAiKey("");
+                          if (typeof window !== 'undefined' && window.firebaseDB) {
+                            try { await window.firebaseDB.ref("bleachSecretConfig/aiKey").remove(); } catch(e) {}
+                          }
                           setKeyStatusMsg("✓ Chave removida. Usando Motor Cognitivo Nativo.");
                           setTimeout(() => setKeyStatusMsg(""), 4000);
                         } catch(e) {}
@@ -1136,7 +1247,7 @@ function AdminPanel({ db, saveDb, session, cloudStatus, setCloudStatus, activeCl
                   )}
                 </div>
                 {keyStatusMsg && (
-                  <p className="text-xs text-green-400 font-bold mt-1">{keyStatusMsg}</p>
+                  <p className="text-xs text-yellow-300 font-mono mt-1 p-2.5 bg-black/80 rounded-lg border border-yellow-500/30">{keyStatusMsg}</p>
                 )}
               </div>
             </div>
@@ -2598,49 +2709,88 @@ function TramasArcosAdmView({ db, saveDb, session, onAbrirFicha }) {
 }
 
 
-// FULL OFFICIAL SISTEMAS & REGRAS VIEW (100% CANONICAL BLEACH RPG BASE SYSTEM)
+// FULL OFFICIAL SISTEMAS & REGRAS VIEW (STREAMLINED CENTRAL HUB)
 function SistemasView() {
+  const [hubMode, setHubMode] = useState("regras"); // "regras" | "novatos" | "patchnotes"
   const [tabSis, setTabSis] = useState("conceito");
 
   return (
     <div className="space-y-6">
-      {/* Banner */}
-      <div className="bg-banner-overlay border border-bleach-border rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
-        <div className="relative z-10 max-w-3xl">
-          <span className="px-3 py-1 bg-bleach-orange/20 border border-bleach-orange text-bleach-orange text-xs font-bold rounded-full uppercase tracking-wider">
-            Regulamento Oficial da Sociedade das Almas • Versão 5.0
-          </span>
-          <h2 className="font-title text-4xl sm:text-5xl tracking-widest text-bleach-cream mt-3 reiatsu-text-glow">
-            BLEACH RPG — SISTEMA BASE
-          </h2>
-          <p className="text-xs sm:text-sm text-bleach-creamDim mt-2 leading-relaxed">
-            O RPG é focado principalmente em Narrativa, Desenvolvimento de personagem, Combate, Power scaling e Evolução gradual. Evita excesso de rolagens — dados só aparecem quando existe dúvida real!
-          </p>
+      {/* Sleek Central Knowledge Hub Header */}
+      <div className="bg-gradient-to-r from-[#14120E] via-[#1C1813] to-[#14120E] border border-white/10 rounded-2xl p-5 sm:p-6 shadow-xl relative overflow-hidden backdrop-blur-md">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_8px_#F59E0B]"></span>
+              <span className="text-[11px] font-mono uppercase tracking-widest text-amber-400 font-bold">
+                Biblioteca Oficial do Seireitei
+              </span>
+            </div>
+            <h2 className="font-title text-2xl sm:text-4xl tracking-wider text-white mt-1">
+              CENTRO DE CONHECIMENTO & REGRAS
+            </h2>
+            <p className="text-xs text-zinc-400 mt-1 max-w-2xl leading-relaxed">
+              Consulte as diretrizes canônicas da Sociedade das Almas, o guia simples de evolução para novatos e as notas de balanceamento.
+            </p>
+          </div>
+
+          {/* Clean Segmented Hub Pills */}
+          <div className="flex flex-wrap gap-1.5 bg-black/60 p-1.5 rounded-xl border border-white/5 self-start md:self-auto">
+            {[
+              { id: "regras", label: "Regras (1–30)", icon: "📜" },
+              { id: "novatos", label: "Guia para Novatos", icon: "🌱" },
+              { id: "patchnotes", label: "Patch Notes", icon: "📰" }
+            ].map(m => (
+              <button
+                key={m.id}
+                onClick={() => setHubMode(m.id)}
+                className={`px-3.5 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 ${
+                  hubMode === m.id
+                    ? "bg-gradient-to-r from-amber-500 to-orange-500 text-black font-black shadow-md"
+                    : "text-zinc-400 hover:text-white hover:bg-white/5"
+                }`}
+              >
+                <span>{m.icon}</span>
+                <span>{m.label}</span>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Category Tabs */}
-      <div className="flex gap-2 overflow-x-auto border-b border-bleach-borderSoft pb-2">
-        {[
-          { id: "conceito", label: "1–4. Conceito, Raças & Kidō Inicial", icon: "⚔️" },
-          { id: "atributos", label: "5–9. Atributos & Power Scaling", icon: "⚡" },
-          { id: "combate", label: "10–14. Combate, 1d6 & Estados", icon: "🩸" },
-          { id: "treinamento", label: "15–21. Treinos OFF & Fadiga", icon: "🏋️" },
-          { id: "missoes", label: "22–27. Missões, Miscelâneas & Drops", icon: "📜" },
-          { id: "filosofia", label: "28–30. Técnicas, Zanpakutō & Filosofia", icon: "🗡️" },
-        ].map(t => (
-          <button
-            key={t.id}
-            onClick={() => setTabSis(t.id)}
-            className={`px-4 py-2 rounded-xl text-xs font-bold tracking-wide transition whitespace-nowrap flex items-center gap-2 ${
-              tabSis === t.id ? "bg-bleach-orange text-black font-extrabold shadow-lg" : "bg-bleach-panel2 border border-bleach-border text-bleach-creamDim hover:text-white"
-            }`}
-          >
-            <span>{t.icon}</span>
-            <span>{t.label}</span>
-          </button>
-        ))}
-      </div>
+      {/* Hub Mode: Novice Guide */}
+      {hubMode === "novatos" && <GuiaNovatosView />}
+
+      {/* Hub Mode: Patch Notes */}
+      {hubMode === "patchnotes" && <PatchNotesView />}
+
+      {/* Hub Mode: Official Rules Compendium (1 to 30) */}
+      {hubMode === "regras" && (
+        <div className="space-y-6">
+          {/* Category Tabs */}
+          <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-thin">
+            {[
+              { id: "conceito", label: "1–4. Conceito & Raças", icon: "⚔️" },
+              { id: "atributos", label: "5–9. Atributos & Gotei 13", icon: "⚡" },
+              { id: "combate", label: "10–14. Combate & Estados", icon: "🩸" },
+              { id: "treinamento", label: "15–21. Treinos & Fadiga", icon: "🏋️" },
+              { id: "missoes", label: "22–27. Missões & Drops", icon: "📜" },
+              { id: "filosofia", label: "28–30. Filosofia & Zanpakutō", icon: "🗡️" },
+            ].map(t => (
+              <button
+                key={t.id}
+                onClick={() => setTabSis(t.id)}
+                className={`px-3.5 py-2 rounded-xl text-xs font-bold tracking-wide whitespace-nowrap transition flex items-center gap-2 ${
+                  tabSis === t.id
+                    ? "bg-white/15 border border-amber-500/60 text-amber-300 shadow-md font-extrabold"
+                    : "bg-black/40 border border-white/5 text-zinc-400 hover:text-white hover:border-white/15"
+                }`}
+              >
+                <span>{t.icon}</span>
+                <span>{t.label}</span>
+              </button>
+            ))}
+          </div>
 
       {/* TAB 1: CONCEITO, RAÇAS & KIDŌ INICIAL */}
       {tabSis === "conceito" && (
@@ -2731,25 +2881,38 @@ function SistemasView() {
             </div>
           </Section>
 
-          <Section title="8 & 9. Escala Oficial de Power Scaling & Diferenças" subtitle="Hierarquia e distâncias relativas entre atributos">
+          <Section title="8 & 9. 🏯 Hierarquia da Gotei 13 & Power Scaling" subtitle="Estrutura militar e distâncias relativas de poder no Seireitei">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
               <div className="space-y-2">
-                <h4 className="font-title text-sm text-bleach-orange uppercase">Escala de Referência</h4>
-                <div className="space-y-1.5">
+                <h4 className="font-title text-sm text-bleach-orange uppercase flex items-center gap-1.5">
+                  <span>🏯</span> Hierarquia da Gotei 13 (17 Postos Oficiais)
+                </h4>
+                <div className="space-y-1 max-h-[420px] overflow-y-auto pr-1">
                   {[
-                    { faixa: "1–200", patamar: "Inexperiente", cor: C.muted },
-                    { faixa: "201–450", patamar: "Iniciante", cor: C.green },
-                    { faixa: "451–750", patamar: "Treinado", cor: C.blue },
-                    { faixa: "751–1100", patamar: "Experiente", cor: C.purple },
-                    { faixa: "1101–1500", patamar: "Elite", cor: C.yellow },
-                    { faixa: "1501–2000", patamar: "Alto Nível", cor: "#FFA500" },
-                    { faixa: "2001–2600", patamar: "Monstruoso", cor: C.red },
-                    { faixa: "2601–3300", patamar: "Lendário", cor: "#E0B34C" },
-                    { faixa: "3300+", patamar: "Transcendente", cor: "#FFD700" }
+                    { faixa: "3401+ pts", patamar: "Comandante-Capitão", cor: "#FFD700", icon: "👑" },
+                    { faixa: "2951–3400 pts", patamar: "Capitão", cor: "#EF4444", icon: "🏛️" },
+                    { faixa: "2651–2950 pts", patamar: "Tenente / Adjunto-Chefe", cor: "#EAB308", icon: "⚔️" },
+                    { faixa: "2451–2650 pts", patamar: "1º Adjunto", cor: "#F97316", icon: "🗡️" },
+                    { faixa: "2251–2450 pts", patamar: "2º Adjunto", cor: "#FB923C", icon: "🗡️" },
+                    { faixa: "2051–2250 pts", patamar: "3º Adjunto", cor: "#F43F5E", icon: "🗡️" },
+                    { faixa: "1851–2050 pts", patamar: "4º Adjunto", cor: "#EC4899", icon: "🛡️" },
+                    { faixa: "1651–1850 pts", patamar: "5º Adjunto", cor: "#C084FC", icon: "🛡️" },
+                    { faixa: "1451–1650 pts", patamar: "6º Adjunto", cor: "#A855F7", icon: "🛡️" },
+                    { faixa: "1251–1450 pts", patamar: "7º Adjunto", cor: "#8B5CF6", icon: "⚡" },
+                    { faixa: "1051–1250 pts", patamar: "8º Adjunto", cor: "#6366F1", icon: "⚡" },
+                    { faixa: "851–1050 pts", patamar: "9º Adjunto", cor: "#60A5FA", icon: "⚡" },
+                    { faixa: "651–850 pts", patamar: "10º Adjunto", cor: "#3B82F6", icon: "⚡" },
+                    { faixa: "451–650 pts", patamar: "Oficial", cor: "#06B6D4", icon: "🔰" },
+                    { faixa: "251–450 pts", patamar: "Suboficial", cor: "#10B981", icon: "🔰" },
+                    { faixa: "101–250 pts", patamar: "Shinigami", cor: "#9CA3AF", icon: "🌸" },
+                    { faixa: "1–100 pts", patamar: "Recruta", cor: "#6B7280", icon: "🌱" }
                   ].map(p => (
-                    <div key={p.patamar} className="p-2 bg-bleach-panel2 border border-white/5 rounded-lg flex justify-between">
-                      <span className="font-mono font-bold text-white">{p.faixa} pts</span>
-                      <span className="font-bold uppercase" style={{ color: p.cor }}>{p.patamar}</span>
+                    <div key={p.patamar} className="p-2 bg-bleach-panel2 border border-white/5 rounded-lg flex justify-between items-center">
+                      <span className="font-mono font-bold text-white text-[11px]">{p.faixa}</span>
+                      <span className="font-bold uppercase text-[11px] flex items-center gap-1" style={{ color: p.cor }}>
+                        <span>{p.icon}</span>
+                        <span>{p.patamar}</span>
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -2759,16 +2922,16 @@ function SistemasView() {
                 <h4 className="font-title text-sm text-cyan-400 uppercase">Diferença em Combate</h4>
                 <div className="space-y-1.5">
                   {[
-                    { diff: "0–50 pts", desc: "Equivalentes" },
-                    { diff: "51–150 pts", desc: "Pequena vantagem" },
-                    { diff: "151–300 pts", desc: "Vantagem clara" },
-                    { diff: "301–600 pts", desc: "Grande vantagem" },
-                    { diff: "601–1000 pts", desc: "Abismo de poder" },
-                    { diff: "1001+ pts", desc: "Diferença monstruosa" }
+                    { diff: "0–50 pts", desc: "Equivalentes · Duelo parelho decidido por estratégia" },
+                    { diff: "51–150 pts", desc: "Pequena vantagem · Pressão perceptível no confronto" },
+                    { diff: "151–300 pts", desc: "Vantagem clara · Superioridade tática marcante" },
+                    { diff: "301–600 pts", desc: "Grande vantagem · Diferença de posto hierárquico" },
+                    { diff: "601–1000 pts", desc: "Abismo de poder · Vantagem avassaladora de Reishi" },
+                    { diff: "1001+ pts", desc: "Diferença monstruosa · Domínio absoluto e esmagador" }
                   ].map(d => (
-                    <div key={d.diff} className="p-2 bg-bleach-panel2 border border-white/5 rounded-lg flex justify-between">
+                    <div key={d.diff} className="p-2.5 bg-bleach-panel2 border border-white/5 rounded-lg flex justify-between">
                       <span className="font-mono text-bleach-muted">{d.diff}</span>
-                      <strong className="text-white">{d.desc}</strong>
+                      <strong className="text-white text-[11px]">{d.desc}</strong>
                     </div>
                   ))}
                 </div>
@@ -2920,6 +3083,8 @@ function SistemasView() {
           </Section>
         </div>
       )}
+      </div>
+      )}
     </div>
   );
 }
@@ -2932,26 +3097,29 @@ function PatchNotesView() {
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="bg-banner-overlay border border-bleach-border rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+      <div className="bg-gradient-to-r from-amber-950/30 via-[#18140F] to-[#0E0C09] border border-amber-500/20 rounded-2xl p-5 sm:p-6 shadow-xl relative overflow-hidden backdrop-blur-md">
         <div className="relative z-10 max-w-3xl">
-          <span className="px-3 py-1 bg-yellow-950 border border-yellow-500 text-yellow-300 text-xs font-bold rounded-full uppercase tracking-wider">
-            Histórico Oficial de Atualizações • Estilo League of Legends
-          </span>
-          <h2 className="font-title text-4xl sm:text-5xl tracking-widest text-bleach-cream mt-3 reiatsu-text-glow">
-            NOTAS DE ATUALIZAÇÃO & BALANCEAMENTO
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_8px_#F59E0B]"></span>
+            <span className="text-[11px] font-mono uppercase tracking-widest text-amber-300 font-bold">
+              Histórico Oficial de Versões & Balanceamento
+            </span>
+          </div>
+          <h2 className="font-title text-2xl sm:text-4xl tracking-wider text-white mt-1">
+            NOTAS DE ATUALIZAÇÃO DO SEIREITEI
           </h2>
-          <p className="text-xs sm:text-sm text-bleach-creamDim mt-2 leading-relaxed">
-            Acompanhe a evolução contínua do Bleach RPG: mudanças de regras, buffs, nerfs, novos sistemas e ajustes no motor de almas.
+          <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+            Acompanhe a evolução contínua do Bleach RPG: mudanças de regras, buffs, nerfs, novos sistemas e postos hierárquicos.
           </p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-5">
         {/* Version Selector Sidebar */}
         <div className="lg:col-span-1 space-y-2">
-          <span className="text-xs font-bold uppercase tracking-wider text-bleach-muted px-2 block">Versões Anteriores (10 Patches)</span>
-          <div className="space-y-1.5 max-h-[500px] overflow-y-auto pr-1">
-            {PATCH_NOTES_HISTORY.map((p) => {
+          <span className="text-xs font-bold uppercase tracking-wider text-zinc-400 px-1 block">Versões ({PATCH_NOTES_HISTORY.length})</span>
+          <div className="space-y-1.5 max-h-[520px] overflow-y-auto pr-1 scrollbar-thin">
+            {PATCH_NOTES_HISTORY.map((p, idx) => {
               const isCurrent = p.versao === patchAtivo;
               return (
                 <button
@@ -2959,14 +3127,19 @@ function PatchNotesView() {
                   onClick={() => setPatchAtivo(p.versao)}
                   className={`w-full text-left p-3 rounded-xl border transition flex items-center justify-between ${
                     isCurrent
-                      ? "bg-bleach-orange text-black font-extrabold border-bleach-orange shadow-lg"
-                      : "bg-bleach-panel2 border-bleach-border text-bleach-creamDim hover:text-white hover:border-white/20"
+                      ? "bg-gradient-to-r from-amber-500 to-orange-500 text-black font-black border-amber-400 shadow-md"
+                      : "bg-[#14120E] border-white/5 text-zinc-300 hover:text-white hover:border-white/15"
                   }`}
                 >
                   <div>
                     <span className="font-title text-base block leading-tight">PATCH {p.versao}</span>
-                    <span className={`text-[10px] block ${isCurrent ? "text-black/80 font-bold" : "text-bleach-muted"}`}>{p.data}</span>
+                    <span className={`text-[10px] block ${isCurrent ? "text-black/80 font-bold" : "text-zinc-500"}`}>{p.data}</span>
                   </div>
+                  {idx === 0 && (
+                    <span className={`px-2 py-0.5 rounded text-[9px] font-black uppercase ${
+                      isCurrent ? "bg-black text-amber-400" : "bg-amber-500/20 text-amber-300 border border-amber-500/40"
+                    }`}>NOVO</span>
+                  )}
                   {p.versao === "5.0" && (
                     <span className="px-2 py-0.5 rounded bg-black text-bleach-orange text-[9px] font-bold uppercase">ATUAL</span>
                   )}

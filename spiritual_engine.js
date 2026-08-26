@@ -188,10 +188,11 @@ DIRETRIZES FUNDAMENTAIS DE QUALIDADE & ANTI-CLICHÊ:
 CADA CAMINHO DEVE POSSUIR:
 - Nome em japonês Romaji + Kanji + Tradução em Português
 - Frase poética monumental de ativação/liberação
-- Representação do espírito da lâmina (forma, comportamento e mundo interior)
+- Espírito da Zanpakutō: Forma física detalhada, personalidade, voz, temperamento filosófico e postura durante a meditação Jinzen
+- Mundo Interior (Mundo da Alma): Cenário espiritual detalhado, geografia, clima/céu, atmosfera de Reishi e como as emoções do Shinigami alteram este ambiente
 - Forma da Shikai e design da lâmina
 - Mecânica detalhada do poder e LIMITAÇÕES claras
-- Bankai correspondente com Nome, Ponto de Ruptura (Breakpoint - qual limite da Shikai foi quebrado), Tipo de Evolução, Forma Monumental e Poder Transcendental.
+- Bankai correspondente com Nome, Ponto de Ruptura (Breakpoint - qual limite da Shikai foi quebrado), Tipo de Evolução, Manifestação do Espírito em Bankai, Transformação do Mundo Interior, Forma Monumental e Poder Transcendental.
 - Índices de 1 a 10 para Potência, Abrangência, Complexidade, Versatilidade e Custo de Reiatsu.
 
 RESPONDA OBRIGATORIAMENTE EM JSON VÁLIDO no seguinte formato:
@@ -207,7 +208,8 @@ RESPONDA OBRIGATORIAMENTE EM JSON VÁLIDO no seguinte formato:
         "traducao": "Tradução",
         "comando": "Frase de Ativação",
         "elemento": "Elemento/Tema Inédito",
-        "espirito": "Descrição do espírito e mundo interior",
+        "espirito": "Descrição visual e comportamental do espírito da lâmina (aparência física, personalidade, voz e diálogo na meditação)",
+        "mundoInterno": "Descrição detalhada do Mundo Interior da alma (cenário, geografia espiritual, clima e atmosfera de Reishi)",
         "formaSelada": "Descrição da forma selada",
         "aparencia": "Aparência da Shikai",
         "poder": "Mecânica detalhada do poder",
@@ -220,6 +222,8 @@ RESPONDA OBRIGATORIAMENTE EM JSON VÁLIDO no seguinte formato:
       "bankai": {
         "nome": "NomeRomaji — Kanji",
         "tipoEvolucao": "Território / Amplificação / Regra / Inversão",
+        "manifestacaoEspiritoBankai": "Manifestação transcendental do espírito durante a Bankai",
+        "mundoInternoBankai": "Como o Mundo Interior da alma transborda e se materializa sobre o mundo real",
         "formaMonumental": "Forma monumental da Bankai",
         "pontoRuptura": "O limite da Shikai que foi superado",
         "poder": "Poder transcendental da Bankai",
@@ -316,6 +320,8 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "", claimedN
       traducao: n1.trad,
       comando: `Incendeie os céus e purifique a existência, ${n1.nome}!`,
       elemento: elChoice.el,
+      espirito: `Uma imponente entidade guerreira envolta em armadura de ${elChoice.el}, de olhar severo e voz solene que ressoa como trovão, exigindo firmeza inabalável de convicção em cada diálogo durante a meditação Jinzen.`,
+      mundoInterno: `Um vasto platô vulcânico de rocha obsidiana cercado por cachoeiras de plasma e tempestades de Reishi, onde o céu queima em auroras carmesins refletindo a determinação de ${personagem.nome}.`,
       aparencia: elChoice.arma,
       formatoArma: elChoice.arma,
       poder: elChoice.pod.replace("${personagem.nome}", personagem.nome),
@@ -329,6 +335,8 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "", claimedN
       nome: `${n1.nome}: Gōka Dai-Tenrin`,
       kanji: `「${n1.kanji.replace(/[^\\u4e00-\\u9faf]/g, '')}・業火大天輪」`,
       tipoEvolucao: "Amplificação & Domínio Territorial",
+      manifestacaoEspiritoBankai: `O espírito guerreiro se agiganta como uma divindade cósmica de 30 metros ao fundo, empunhando lâminas colossais que sincronizam com cada movimento corporal de ${personagem.nome}.`,
+      mundoInternoBankai: `O platô vulcânico do mundo interior transborda para o plano real, transformando o campo de batalha em um domínio sagrado de ${elChoice.el}.`,
       formaMonumental: `O campo de batalha inteiro se transforma em um domínio cósmico onde gigantescas lâminas de ${elChoice.el} emergem da atmosfera.`,
       pontoRuptura: `Supera o limite de foco individual da Shikai, cobrindo um raio de 300 metros sob comando mental direto.`,
       poder: `Converte toda a pressão espiritual do ambiente em lâminas simultâneas teleguiadas que aniquilam investidas adversárias com estocadas em cadeia contínua.`,
@@ -357,6 +365,8 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "", claimedN
       traducao: n2.trad,
       comando: `Estabeleça a ordem no caos da alma, ${n2.nome}!`,
       elemento: conChoice.el,
+      espirito: `Um monge estrategista de vestes cerimoniais xintoístas e máscara rúnica dourada sobre os olhos, falando em enigmas matemáticos e exigindo clareza tática absoluta na meditação Jinzen.`,
+      mundoInterno: `Um palácio infinito de espelhos hexagonais e mostruários de relógios cósmicos flutuando no vácuo, onde o tempo parece fluir em compasso aritmético silencioso e ordenado.`,
       aparencia: conChoice.arma,
       formatoArma: conChoice.arma,
       poder: conChoice.pod,
@@ -370,6 +380,8 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "", claimedN
       nome: `${n2.nome}: Jikū Kaiji no Judai`,
       kanji: `「${n2.kanji.replace(/[^\\u4e00-\\u9faf]/g, '')}・時空開示十代」`,
       tipoEvolucao: "Imposição Territorial de Leis Absolutas",
+      manifestacaoEspiritoBankai: `O monge estrategista paira sobre o centro da arena, abrindo pergaminhos cósmicos dourados que ditam as leis matemáticas invioláveis do combate.`,
+      mundoInternoBankai: `O palácio de espelhos e engrenagens celestiais se materializa no campo de batalha, impondo uma arena de xadrez dimensional sobre os combatentes.`,
       formaMonumental: `O solo se converte em um gigantesco mostrador geométrico de círculos concêntricos de ouro e obsidiana.`,
       pontoRuptura: `Remove a necessidade de acertar o mesmo ponto: as regras conceituais passam a vigorar sobre todo o espaço dimensional do domínio.`,
       poder: `Impõe uma lei onde qualquer hostilidade desferida no território reflete 50% do impacto diretamente contra os canais de Reiatsu do atacante.`,
@@ -398,6 +410,8 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "", claimedN
       traducao: n3.trad,
       comando: `Erga a barreira inexpugnável da alma, ${n3.nome}!`,
       elemento: compChoice.el,
+      espirito: `Um guardião alado de semblante sereno e armadura de aço celestial, que acolhe a alma de ${personagem.nome} com palavras de acolhimento e prega a defesa inviolável dos laços sagrados.`,
+      mundoInterno: `Um santuário sagrado cercado por lagos cristalinos de águas prateadas e árvores de vidro translúcido, emitindo um brilho espiritual reconfortante que anula qualquer medo.`,
       aparencia: compChoice.arma,
       formatoArma: compChoice.arma,
       poder: compChoice.pod.replace("${personagem.nome}", personagem.nome),
@@ -411,6 +425,8 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "", claimedN
       nome: `${n3.nome}: Fuyō Sōki no Aegis`,
       kanji: `「${n3.kanji.replace(/[^\\u4e00-\\u9faf]/g, '')}・不耀蒼輝之金剛」`,
       tipoEvolucao: "Fortaleza & Transcendência Defensiva",
+      manifestacaoEspiritoBankai: `O guardião celestial abre asas colossais de luz sólida que envolvem ${personagem.nome}, fundindo-se em uma armadura soberana de Reishi inquebrável.`,
+      mundoInternoBankai: `As águas serenas e a luz do santuário do mundo interior se sobrepõem ao plano real, banhando o campo de batalha em uma barreira de purificação absoluta.`,
       formaMonumental: `Uma monumental couraça de asas de aço espiritual e colunas de luz pura envolve ${personagem.nome} e seus aliados.`,
       pontoRuptura: `Extingue a fragilidade física da Shikai: qualquer dano catastrófico é dissipado em ondas concussivas no solo sem ferir o Shinigami.`,
       poder: `Ergue um santuário inviolável onde o fluxo de vitalidade é renovado continuamente enquanto a lâmina dispara contra-ataques autônomos de alta densidade.`,
@@ -439,6 +455,8 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "", claimedN
       traducao: n4.trad,
       comando: `Inverta a verdade e devore o reflexo, ${n4.nome}!`,
       elemento: oposChoice.el,
+      espirito: `Um reflexo espectral com a silhueta de ${personagem.nome}, mas com olhos de íris invertida e um sorriso zombeteiro, desafiando o Shinigami a aceitar sua sombra inconsciente.`,
+      mundoInterno: `Uma cidade invertida e monocromática suspensa sobre o abismo sob um eclipse perpétuo, onde a gravidade obedece aos conflitos da mente e o solo reflete sombras vivas.`,
       aparencia: oposChoice.arma,
       formatoArma: oposChoice.arma,
       poder: oposChoice.pod,
@@ -452,153 +470,390 @@ function sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto = "", claimedN
       nome: `${n4.nome}: Muken Kōjin no Paradox`,
       kanji: `「${n4.kanji.replace(/[^\\u4e00-\\u9faf]/g, '')}・無間皇刃之悖論」`,
       tipoEvolucao: "Inversão da Realidade & Paradoxo",
+      manifestacaoEspiritoBankai: `A sombra espectral se funde às costas de ${personagem.nome}, abrindo olhos luminosos nas trevas e atacando em perfeita sincronia paradoxal.`,
+      mundoInternoBankai: `A cidade invertida do abismo devora toda a luz do cenário material, submergindo o campo de batalha em um labirinto de miragens e gravidade distorcida.`,
       formaMonumental: `O cenário inverte suas cores em uma distorção monocromática onde miragens e sombras ganham massa física tangível.`,
       pontoRuptura: `Supera o limite de intangibilidade da Shikai: as sombras cortam a própria malha do espaço, invertendo causa e efeito no combate.`,
-      poder: `Quando o adversário tenta esquivar, ele colide com o golpe; quando tenta bloquear, a lâmina o atravessa como fumaça e atinge pelas costas.`,
-      limitacoes: "Exige autocontrole supremo para não ser desorientado pela distorção do próprio domínio.",
-      significadoEspiritual: `A dominação plena da dualidade da alma: onde há a maior luz, reside a mais afiada das sombras.`
+      poder: `Quando o adversário tenta esquivar, ele colide com o golpe; quando tenta bloquear, a lâmina o atravessa como ilusão e corta por trás.`,
+      limitacoes: "Se o próprio usuário hesitar em suas convicções, a inversão de causa e efeito afeta seu próprio corpo.",
+      significadoEspiritual: `A aceitação plena da dualidade da alma e da sombra interior.`
     }
   };
 
   return [c1, c2, c3, c4];
 }
 
+// =========================================================================
+// UNIVERSAL MULTI-PROVIDER AI CLIENT (GEMINI, OPENAI, GROQ, OPENROUTER)
+// =========================================================================
+
+function cleanAndExtractJson(text) {
+  if (!text || typeof text !== 'string') return null;
+  let clean = text.trim();
+  
+  if (clean.startsWith('```')) {
+    clean = clean.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
+  }
+  
+  const firstBrace = clean.indexOf('{');
+  const firstBracket = clean.indexOf('[');
+  let startIdx = -1;
+  let endIdx = -1;
+
+  if (firstBrace !== -1 && (firstBracket === -1 || firstBrace < firstBracket)) {
+    startIdx = firstBrace;
+    endIdx = clean.lastIndexOf('}');
+  } else if (firstBracket !== -1) {
+    startIdx = firstBracket;
+    endIdx = clean.lastIndexOf(']');
+  }
+
+  if (startIdx !== -1 && endIdx !== -1 && endIdx > startIdx) {
+    const jsonSub = clean.slice(startIdx, endIdx + 1);
+    try {
+      return JSON.parse(jsonSub);
+    } catch (e) {
+      try {
+        const sanitized = jsonSub
+          .replace(/,\s*([}\]])/g, '$1')
+          .replace(/[\u0000-\u001F\u007F-\u009F]/g, (c) => (c === '\n' || c === '\r' || c === '\t') ? c : '');
+        return JSON.parse(sanitized);
+      } catch (e2) {}
+    }
+  }
+
+  try {
+    return JSON.parse(clean);
+  } catch (e) {
+    return null;
+  }
+}
+
 function getValidGeminiApiKey(apiKey = "") {
-  if (apiKey && apiKey.length > 15 && !apiKey.includes("AQ.Ab8RN6I0r1qN15nnRQd")) {
-    return apiKey;
+  if (apiKey && typeof apiKey === 'string' && apiKey.trim().length > 15 && !apiKey.includes("AQ.Ab8RN6I0r1qN15nnRQd")) {
+    return apiKey.trim();
   }
   if (typeof localStorage !== 'undefined') {
     try {
       const local = localStorage.getItem("bleach_openai_key");
-      if (local && local.length > 15 && !local.includes("AQ.Ab8RN6I0r1qN15nnRQd")) {
-        return local;
+      if (local && local.trim().length > 15 && !local.includes("AQ.Ab8RN6I0r1qN15nnRQd")) {
+        return local.trim();
       }
     } catch(e) {}
   }
-  if (typeof window !== 'undefined' && window.BLEACH_CONFIG?.openaiApiKey && window.BLEACH_CONFIG.openaiApiKey.length > 15 && !window.BLEACH_CONFIG.openaiApiKey.includes("AQ.Ab8RN6I0r1qN15nnRQd")) {
-    return window.BLEACH_CONFIG.openaiApiKey;
+  if (typeof window !== 'undefined' && window.BLEACH_CONFIG?.openaiApiKey && window.BLEACH_CONFIG.openaiApiKey.trim().length > 15 && !window.BLEACH_CONFIG.openaiApiKey.includes("AQ.Ab8RN6I0r1qN15nnRQd")) {
+    return window.BLEACH_CONFIG.openaiApiKey.trim();
   }
   return "";
 }
 
-// 5. FUNÇÃO CENTRAL ASSÍNCRONA DE GERAÇÃO COM IA (COM AUTO-RETRY E EXCLUSIVIDADE ABSOLUTA)
-async function gerar4CaminhosZanpakutoAI_Async(personagem, dbPersonagens = [], dbZanpakutosVinculadas = [], cenaTexto = "", apiKey = "") {
-  const { claimed, claimedNames, claimedElements } = getClaimedSignatures(dbPersonagens, dbZanpakutosVinculadas);
-  const dna = construirDnaEspiritual(personagem, cenaTexto);
-  let keyToUse = getValidGeminiApiKey(apiKey);
+async function callSpiritualAI({ prompt, systemPrompt, temperature = 0.88, apiKey = "" }) {
+  const trimmedKey = (apiKey || getValidGeminiApiKey()).trim();
+  const defaultSystem = "Você é o Mestre Narrador e o ZANPAKUTŌ GENESIS ENGINE (V5.0) do BLEACH RPG. Responda ESTRITAMENTE em formato JSON válido.";
+  const sysMsg = systemPrompt || defaultSystem;
 
-  let caminhosResultantes = null;
-
-  async function callGemini(key) {
-    const prompt = construirPromptChatGPT(personagem, dna, cenaTexto, dbPersonagens, dbZanpakutosVinculadas);
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${encodeURIComponent(key)}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [
-          {
-            role: "user",
-            parts: [
-              { text: prompt + "\n\nResponda ESTRITAMENTE em formato JSON válido conforme o esquema solicitado." }
-            ]
-          }
-        ],
-        generationConfig: {
-          responseMimeType: "application/json",
-          temperature: 0.95
-        }
-      })
-    });
-
-    if (res.ok) {
-      const data = await res.json();
-      const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (rawText) {
-        const parsed = JSON.parse(rawText);
-        if (parsed && Array.isArray(parsed.caminhos) && parsed.caminhos.length >= 4) {
-          return parsed.caminhos.slice(0, 4).map((c, idx) => ({
-            ...c,
-            caminhoNumero: idx + 1,
-            shikai: {
-              ...c.shikai,
-              id: uid(),
-              assinaturaEspiritual: calcularAssinaturaEspiritual(c.shikai)
-            }
-          }));
-        }
-      }
-    } else {
-      console.warn("Gemini HTTP Error:", res.status, await res.text());
-    }
-    return null;
+  // 1. TENTAR PROXY SEGURO DE NUVEM (CLOUD FUNCTIONS / SERVIDOR LOCAL)
+  // Isso permite que TODOS os jogadores em qualquer celular ou PC gerem Shikai/Bankai
+  // usando a inteligência do servidor SEM NUNCA ver ou ter acesso à chave do Mestre!
+  const proxyEndpoints = [];
+  if (typeof window !== 'undefined' && window.BLEACH_CONFIG?.aiProxyEndpoint) {
+    proxyEndpoints.push(window.BLEACH_CONFIG.aiProxyEndpoint);
   }
-
-  // 1. Tentar Google Gemini API (gemini-3.6-flash)
-  if (keyToUse && !keyToUse.startsWith("sk-")) {
-    try {
-      console.log("Chamando Google Gemini 3.6 Flash para geração de Zanpakutō...");
-      caminhosResultantes = await callGemini(keyToUse);
-      if (!caminhosResultantes && keyToUse !== getDefaultGeminiKey()) {
-        console.log("Tentando novamente com a chave padrão do Gemini...");
-        caminhosResultantes = await callGemini(getDefaultGeminiKey());
-      }
-    } catch (err) {
-      console.warn("Erro ao chamar Google Gemini API:", err);
-      if (keyToUse !== getDefaultGeminiKey()) {
-        try {
-          caminhosResultantes = await callGemini(getDefaultGeminiKey());
-        } catch (e) {}
-      }
-    }
+  if (typeof window !== 'undefined' && window.location?.origin && window.location.origin.startsWith('http')) {
+    proxyEndpoints.push(`${window.location.origin}/api/ai`);
+    proxyEndpoints.push(`${window.location.origin}/api/executarGeracaoIA`);
   }
+  // Endpoint de Produção na Nuvem (Firebase Cloud Functions us-central1)
+  proxyEndpoints.push("https://us-central1-bleach-rpg-6894c.cloudfunctions.net/executarGeracaoIA");
 
-  // 2. Tentar OpenAI se chave for da OpenAI
-  if (!caminhosResultantes && keyToUse && keyToUse.startsWith("sk-")) {
+  for (const endpoint of proxyEndpoints) {
     try {
-      console.log("Chamando OpenAI GPT-4o-mini...");
-      const prompt = construirPromptChatGPT(personagem, dna, cenaTexto, dbPersonagens, dbZanpakutosVinculadas);
-      const res = await fetch("https://api.openai.com/v1/chat/completions", {
-        signal: typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function" ? AbortSignal.timeout(6000) : undefined,
+      const res = await fetch(endpoint, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${keyToUse}`
-        },
+        signal: typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function" ? AbortSignal.timeout(22000) : undefined,
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          model: "gpt-4o-mini",
-          messages: [
-            { role: "system", content: "Você é um mestre narrador de Bleach RPG especialista no Zanpakuto Genesis Engine v5.0. Responda APENAS em JSON válido." },
-            { role: "user", content: prompt }
-          ],
-          response_format: { type: "json_object" },
-          temperature: 0.95
+          prompt,
+          systemPrompt: sysMsg,
+          temperature,
+          apiKey: trimmedKey || undefined
         })
       });
 
       if (res.ok) {
-        const data = await res.json();
-        const contentStr = data.choices?.[0]?.message?.content;
-        if (contentStr) {
-          const parsed = JSON.parse(contentStr);
-          if (parsed && Array.isArray(parsed.caminhos) && parsed.caminhos.length >= 4) {
-            caminhosResultantes = parsed.caminhos.slice(0, 4).map((c, idx) => ({
-              ...c,
-              caminhoNumero: idx + 1,
-              shikai: {
-                ...c.shikai,
-                id: uid(),
-                assinaturaEspiritual: calcularAssinaturaEspiritual(c.shikai)
-              }
-            }));
-          }
+        const json = await res.json();
+        if (json.ok && json.data) {
+          return {
+            ok: true,
+            data: json.data,
+            provider: json.provider || "Servidor Seguro (Nuvem)",
+            model: json.model || "gemini-2.5-flash"
+          };
         }
       }
     } catch (err) {
-      console.warn("OpenAI fetch falhou:", err);
+      // Proxy offline ou inacessível no momento, segue para o próximo ou fallback direto
     }
   }
 
-  // 2. Sintetizador Cognitivo Procedural (Filtra todas as duplicatas contra banco de dados)
+  // 2. FALLBACK: EXECUÇÃO DIRETA NO CLIENTE (Se o usuário configurou chave própria no navegador)
+  if (!trimmedKey) {
+    return { ok: false, error: "Nenhuma chave de API configurada localmente ou no servidor.", provider: "Motor Cognitivo ZGE (Offline)" };
+  }
+
+  // 2.1 GROQ CLOUD (Chaves que começam com gsk_)
+  if (trimmedKey.startsWith("gsk_")) {
+    try {
+      const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        signal: typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function" ? AbortSignal.timeout(16000) : undefined,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${trimmedKey}`
+        },
+        body: JSON.stringify({
+          model: "llama-3.3-70b-versatile",
+          messages: [
+            { role: "system", content: sysMsg },
+            { role: "user", content: prompt }
+          ],
+          response_format: { type: "json_object" },
+          temperature
+        })
+      });
+
+      if (res.ok) {
+        const json = await res.json();
+        const content = json.choices?.[0]?.message?.content;
+        const parsed = cleanAndExtractJson(content);
+        if (parsed) {
+          return { ok: true, data: parsed, provider: "Groq", model: "llama-3.3-70b-versatile" };
+        }
+      }
+      return { ok: false, error: `Groq HTTP ${res.status}: ${await res.text()}`, provider: "Groq" };
+    } catch (err) {
+      return { ok: false, error: `Groq falhou: ${err.message}`, provider: "Groq" };
+    }
+  }
+
+  // 2.2 OPENROUTER (Chaves que começam com sk-or-)
+  if (trimmedKey.startsWith("sk-or-")) {
+    try {
+      const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        signal: typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function" ? AbortSignal.timeout(18000) : undefined,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${trimmedKey}`,
+          "HTTP-Referer": "https://bleach-rpg.web.app",
+          "X-Title": "Bleach RPG Sociedade das Almas"
+        },
+        body: JSON.stringify({
+          model: "google/gemini-2.0-flash-001",
+          messages: [
+            { role: "system", content: sysMsg },
+            { role: "user", content: prompt }
+          ],
+          response_format: { type: "json_object" },
+          temperature
+        })
+      });
+
+      if (res.ok) {
+        const json = await res.json();
+        const content = json.choices?.[0]?.message?.content;
+        const parsed = cleanAndExtractJson(content);
+        if (parsed) {
+          return { ok: true, data: parsed, provider: "OpenRouter", model: "gemini-2.0-flash-001" };
+        }
+      }
+      return { ok: false, error: `OpenRouter HTTP ${res.status}: ${await res.text()}`, provider: "OpenRouter" };
+    } catch (err) {
+      return { ok: false, error: `OpenRouter falhou: ${err.message}`, provider: "OpenRouter" };
+    }
+  }
+
+  // 2.3 OPENAI CHATGPT (Chaves padrão sk-...)
+  if (trimmedKey.startsWith("sk-")) {
+    try {
+      const res = await fetch("https://api.openai.com/v1/chat/completions", {
+        signal: typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function" ? AbortSignal.timeout(16000) : undefined,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${trimmedKey}`
+        },
+        body: JSON.stringify({
+          model: "gpt-4o-mini",
+          messages: [
+            { role: "system", content: sysMsg },
+            { role: "user", content: prompt }
+          ],
+          response_format: { type: "json_object" },
+          temperature
+        })
+      });
+
+      if (res.ok) {
+        const json = await res.json();
+        const content = json.choices?.[0]?.message?.content;
+        const parsed = cleanAndExtractJson(content);
+        if (parsed) {
+          return { ok: true, data: parsed, provider: "OpenAI", model: "gpt-4o-mini" };
+        }
+      }
+      return { ok: false, error: `OpenAI HTTP ${res.status}: ${await res.text()}`, provider: "OpenAI" };
+    } catch (err) {
+      return { ok: false, error: `OpenAI falhou: ${err.message}`, provider: "OpenAI" };
+    }
+  }
+
+  // 2.4 GOOGLE GEMINI (AIzaSy... ou padrão)
+  const geminiModels = [
+    "gemini-1.5-flash",
+    "gemini-1.5-pro",
+    "gemini-2.0-flash",
+    "gemini-2.0-flash-exp",
+    "gemini-1.5-flash-8b",
+    "gemini-1.5-flash-latest",
+    "gemini-1.5-pro-latest"
+  ];
+  let lastErr = "";
+
+  for (const model of geminiModels) {
+    try {
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(trimmedKey)}`;
+      const res = await fetch(endpoint, {
+        signal: typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function" ? AbortSignal.timeout(15000) : undefined,
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [
+            {
+              role: "user",
+              parts: [{ text: `${sysMsg}\n\n${prompt}\n\nResponda ESTRITAMENTE em formato JSON válido conforme solicitado.` }]
+            }
+          ],
+          generationConfig: {
+            responseMimeType: "application/json",
+            temperature
+          }
+        })
+      });
+
+      if (res.ok) {
+        const json = await res.json();
+        const rawText = json.candidates?.[0]?.content?.parts?.[0]?.text;
+        const parsed = cleanAndExtractJson(rawText);
+        if (parsed) {
+          return { ok: true, data: parsed, provider: "Google Gemini", model };
+        }
+      } else {
+        const errText = await res.text();
+        lastErr = `HTTP ${res.status} em ${model}: ${errText.slice(0, 150)}`;
+        if (res.status === 401 || res.status === 403) {
+          break; // Chave inválida ou não autorizada
+        }
+      }
+    } catch (err) {
+      lastErr = `${model} erro: ${err.message}`;
+    }
+  }
+
+  return { ok: false, error: lastErr || "Falha na comunicação com o provedor de IA.", provider: "Google Gemini" };
+}
+
+async function testSpiritualAIConnection(apiKey = "") {
+  const start = Date.now();
+  const trimmed = (apiKey || getValidGeminiApiKey()).trim();
+
+  // Se o usuário passou chave, testa a chave diretamente
+  if (trimmed) {
+    const prompt = 'Gere este JSON estrito: {"status":"ok","mensagem":"Conexão Espiritual 100% Estabelecida"}';
+    const result = await callSpiritualAI({ prompt, temperature: 0.1, apiKey: trimmed });
+    const latencyMs = Date.now() - start;
+    if (result.ok) {
+      return {
+        ok: true,
+        provider: result.provider,
+        model: result.model,
+        latencyMs,
+        mensagem: `Conexão bem-sucedida com ${result.provider} (${result.model}) em ${latencyMs}ms!`
+      };
+    } else {
+      return {
+        ok: false,
+        provider: result.provider,
+        error: result.error,
+        mensagem: `Falha na conexão com ${result.provider}: ${result.error}`
+      };
+    }
+  }
+
+  // Se não passou chave, testa o status do servidor na nuvem
+  try {
+    const endpoints = [
+      "https://us-central1-bleach-rpg-6894c.cloudfunctions.net/statusIAServidor",
+      typeof window !== 'undefined' && window.location?.origin ? `${window.location.origin}/api/statusIA` : null
+    ].filter(Boolean);
+
+    for (const ep of endpoints) {
+      try {
+        const res = await fetch(ep, {
+          signal: typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function" ? AbortSignal.timeout(10000) : undefined
+        });
+        if (res.ok) {
+          const json = await res.json();
+          if (json.ativa) {
+            return {
+              ok: true,
+              provider: json.provider || "Servidor Seguro na Nuvem",
+              model: json.model || "gemini-2.5-flash",
+              latencyMs: json.latencyMs || (Date.now() - start),
+              mensagem: json.mensagem || `Servidor de IA 100% Ativo para Todos os Aparelhos!`
+            };
+          }
+        }
+      } catch(e) {}
+    }
+  } catch(e) {}
+
+  return { ok: false, error: "Nenhuma chave foi inserida e o servidor seguro não possui chave ativa.", provider: "Nenhum" };
+}
+
+// 5. FUNÇÃO CENTRAL ASSÍNCRONA DE GERAÇÃO DE SHIKAI COM IA (COM AUTO-RETRY E EXCLUSIVIDADE ABSOLUTA)
+async function gerar4CaminhosZanpakutoAI_Async(personagem, dbPersonagens = [], dbZanpakutosVinculadas = [], cenaTexto = "", apiKey = "") {
+  const { claimedNames, claimedElements } = getClaimedSignatures(dbPersonagens, dbZanpakutosVinculadas);
+  const dna = construirDnaEspiritual(personagem, cenaTexto);
+  let caminhosResultantes = null;
+  let origemGeracao = "Sintetizador ZGE v5.0 (Offline/Procedural)";
+
+  const keyToUse = getValidGeminiApiKey(apiKey);
+  try {
+    console.log("Invocando inteligência generativa com motor seguro...");
+    const prompt = construirPromptChatGPT(personagem, dna, cenaTexto, dbPersonagens, dbZanpakutosVinculadas);
+    const aiRes = await callSpiritualAI({ prompt, apiKey: keyToUse });
+    if (aiRes.ok && aiRes.data && Array.isArray(aiRes.data.caminhos) && aiRes.data.caminhos.length >= 4) {
+      console.log(`4 Caminhos de Shikai gerados com sucesso via ${aiRes.provider} (${aiRes.model})!`);
+      origemGeracao = `IA Generativa · ${aiRes.provider} (${aiRes.model})`;
+      caminhosResultantes = aiRes.data.caminhos.slice(0, 4).map((c, idx) => ({
+        ...c,
+        caminhoNumero: idx + 1,
+        origemIA: origemGeracao,
+        shikai: {
+          ...c.shikai,
+          id: uid(),
+          assinaturaEspiritual: calcularAssinaturaEspiritual(c.shikai)
+        }
+      }));
+    } else {
+      console.warn("Retorno da IA não continha 4 caminhos estruturados ou falhou:", aiRes.error);
+    }
+  } catch (err) {
+    console.warn("Erro ao chamar IA generativa para Shikai:", err);
+  }
+
+  // Fallback: Sintetizador Cognitivo Procedural ZGE v5.0
   if (!caminhosResultantes) {
     console.log("Executando Sintetizador Cognitivo ZGE V5.0 baseado na personalidade com filtro anti-duplicatas...");
     caminhosResultantes = sintetizarZanpakutosCognitivo(personagem, dna, cenaTexto, claimedNames, claimedElements);
@@ -706,6 +961,8 @@ CADA UMA DAS 3 BANKAIS DEVE CONTER:
 - Nome em japonês Romaji + Kanji + Tradução em Português
 - Frase monumental de liberação ("Ban-kai! ...")
 - Ponto de Ruptura (Breakpoint - qual limite específico da Shikai foi estilhaçado)
+- Manifestação do Espírito na Bankai: Como o espírito da Zanpakutō se manifesta ou se funde ao Shinigami durante a liberação máxima
+- Domínio do Mundo Interior: Como o Mundo Interior da alma transborda e se materializa sobre o mundo real durante a Bankai
 - Forma Monumental / Manifestação Visual
 - Poder & Mecânica Transcendental
 - Ponto Fraco & Brecha Estratégica: Uma forma lógica e clara de um oponente inteligente lidar/contragolpear essa Bankai (evitando poderes absolutos/invencíveis). Exemplo: se o poder corta quem bloqueia, quem ataca agressivamente sem defender consegue cruzar lâminas.
@@ -725,6 +982,8 @@ RESPONDA OBRIGATORIAMENTE EM JSON VÁLIDO no seguinte formato:
       "traducao": "Tradução em Português",
       "comando": "Ban-kai! Frase monumental de liberação",
       "pontoRuptura": "O limite específico da Shikai superado",
+      "manifestacaoEspiritoBankai": "Manifestação do espírito da lâmina na Bankai",
+      "mundoInternoBankai": "Como o Mundo Interior se materializa no campo de batalha",
       "formaMonumental": "Descrição visual da manifestação monumental",
       "poder": "Mecânica transcendental do poder da Bankai",
       "pontoFraco": "Como o oponente pode lidar ou contragolpear essa Bankai estrategicamente",
@@ -742,6 +1001,8 @@ RESPONDA OBRIGATORIAMENTE EM JSON VÁLIDO no seguinte formato:
       "traducao": "Tradução em Português",
       "comando": "Ban-kai! Frase monumental de liberação",
       "pontoRuptura": "O limite específico da Shikai superado",
+      "manifestacaoEspiritoBankai": "Manifestação do espírito da lâmina na Bankai",
+      "mundoInternoBankai": "Como o Mundo Interior se materializa no campo de batalha",
       "formaMonumental": "Descrição visual da manifestação monumental",
       "poder": "Mecânica transcendental do poder da Bankai",
       "pontoFraco": "Como o oponente pode lidar ou contragolpear essa Bankai estrategicamente",
@@ -759,6 +1020,8 @@ RESPONDA OBRIGATORIAMENTE EM JSON VÁLIDO no seguinte formato:
       "traducao": "Tradução em Português",
       "comando": "Ban-kai! Frase monumental de liberação",
       "pontoRuptura": "O limite específico da Shikai superado",
+      "manifestacaoEspiritoBankai": "Manifestação do espírito da lâmina na Bankai",
+      "mundoInternoBankai": "Como o Mundo Interior se materializa no campo de batalha",
       "formaMonumental": "Descrição visual da manifestação monumental",
       "poder": "Mecânica transcendental do poder da Bankai",
       "pontoFraco": "Como o oponente pode lidar ou contragolpear essa Bankai estrategicamente",
@@ -789,6 +1052,8 @@ function sintetizar3BankaisEvolucaoCognitivo(personagem, shikai, dna, cenaTexto 
       traducao: "Grande Roda da Transcendência Divina",
       comando: `Ban-kai! Desperte em tua glória primordial, ${sNome}!`,
       pontoRuptura: `Supera o limite de alcance e foco da Shikai: a mecânica de [${sElem}] agora permeia toda a atmosfera em um raio monumental de 300 metros sob o comando mental de ${personagem.nome}.`,
+      manifestacaoEspiritoBankai: `O espírito da Zanpakutō assume proporções monumentais ao fundo como um guardião cósmico de pura energia, empunhando lâminas celestiais em perfeita harmonia com ${personagem.nome}.`,
+      mundoInternoBankai: `O santuário do mundo interior transborda para o plano real, transformando o solo e os céus em um território soberano de ${sElem}.`,
       formaMonumental: `O campo de batalha se transforma em um domínio absoluto onde lâminas monumentais e manifestações puras de ${sElem} emergem do ar, respondendo à virtude "${dna.virtudes}".`,
       poder: `Amplifica a mecânica da Shikai em escala soberana. O poder original (${sPod}) agora é projetado em dezenas de ângulos simultâneos sem necessidade de movimento corporal.`,
       pontoFraco: `Por ser uma manifestação territorial de longo alcance, se o oponente penetrar o perímetro em velocidade pura (Shunpo/Hohō) e lutar colado ao usuário em combate corpo a corpo frenético sem recuar, a densidade dos cortes perde precisão para não ferir o próprio conjurador.`,
@@ -806,6 +1071,8 @@ function sintetizar3BankaisEvolucaoCognitivo(personagem, shikai, dna, cenaTexto 
       traducao: "Bastião Protetor da Sombra Divina",
       comando: `Ban-kai! Erga o manto impenetrável da alma, ${sNome}!`,
       pontoRuptura: `Elimina a fraqueza declarada da Shikai ("${sLim}") e ergue um escudo impenetrável contra o maior medo do Shinigami: "${dna.medos}".`,
+      manifestacaoEspiritoBankai: `O espírito da lâmina materializa asas protetoras de Reishi sólido e uma armadura divina que reveste o corpo de ${personagem.nome}, agindo como uma couraça inexpugnável.`,
+      mundoInternoBankai: `As águas serenas e a luz cristalina do mundo interior se espalham pelo campo de batalha, purificando a atmosfera e restaurando a postura do usuário.`,
       formaMonumental: `Armadura cerimonial de Reishi e uma aura densa de ${sElem} envolvem ${personagem.nome}, gerando barreiras defensivas articuladas e esferas de controle tático.`,
       poder: `Integra propriedades de suporte supremo e controle espacial à Shikai. Absorve a Reiatsu dos ataques inimigos recebidos e a converte em regeneração de postura e fortalecimento do atributo ${dna.deficiente.label}.`,
       pontoFraco: `A barreira defensiva necessita de uma fração de segundo de recalibração após absorver um impacto pesado; se o adversário desferir ataques sequenciais duplos ou contínuos sem pausa, o segundo golpe atinge o corpo antes da barreira se recompor.`,
@@ -823,6 +1090,8 @@ function sintetizar3BankaisEvolucaoCognitivo(personagem, shikai, dna, cenaTexto 
       traducao: "Paradoxo Infinito da Antítese",
       comando: `Ban-kai! Inverta a verdade e revele o abismo, ${sNome}!`,
       pontoRuptura: `Inverte a regra básica de funcionamento da Shikai: o que antes dependia de contato ou corte direto agora atua como uma lei cósmica paradoxal atrelada ao conflito interior ("${dna.conflitos}").`,
+      manifestacaoEspiritoBankai: `A sombra espectral do espírito se funde às costas de ${personagem.nome}, abrindo olhos cósmicos nas trevas e atacando em perfeita inversão de causalidade.`,
+      mundoInternoBankai: `A cidade invertida do abismo devora a luz do ambiente físico, instaurando um domínio de sombras flutuantes e gravidade paradoxal.`,
       formaMonumental: `O cenário escurece em tons monocromáticos onde as cores da Reiatsu de ${sElem} se invertem, criando distorções geométricas flutuantes de sombra e vazio.`,
       poder: `Manifesta o lado sombrio do poder: em vez do efeito direto da Shikai (${sPod}), impõe uma lei onde qualquer resistência calculada ou tentativa de defesa do oponente amplifica o dano recebido.`,
       pontoFraco: `A lei da Bankai é ativada exclusivamente pela intenção de defesa ou cálculo tático do alvo. Se o oponente desligar o raciocínio, agir por puro instinto animal e atacar com intenção irrefletida de destruição mútua sem nunca tentar bloquear, a inversão paradoxal não se ancora.`,
@@ -838,110 +1107,29 @@ function sintetizar3BankaisEvolucaoCognitivo(personagem, shikai, dna, cenaTexto 
 async function gerar3BankaisEvolucaoAI_Async(personagem, shikai, dbPersonagens = [], dbZanpakutosVinculadas = [], cenaTexto = "", apiKey = "") {
   const shikaiBase = shikai || personagem.zanpakuto?.shikaiAtiva || { nome: "Zanpakutō", elemento: "Espiritual" };
   const dna = construirDnaEspiritual(personagem, cenaTexto);
-  let keyToUse = getValidGeminiApiKey(apiKey);
-
   let bankaisResultantes = null;
+  let origemGeracao = "Sintetizador ZGE v5.0 (Offline/Procedural)";
 
-  async function callGeminiBankai(key) {
+  const keyToUse = getValidGeminiApiKey(apiKey);
+  try {
+    console.log("Chamando IA generativa segura para geração das 3 Evoluções de Bankai...");
     const prompt = construirPromptBankaiEvolucao(personagem, shikaiBase, dna, cenaTexto, dbPersonagens, dbZanpakutosVinculadas);
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${encodeURIComponent(key)}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [
-          {
-            role: "user",
-            parts: [{ text: prompt + "\n\nResponda ESTRITAMENTE em formato JSON válido conforme o esquema de 3 bankais solicitado." }]
-          }
-        ],
-        generationConfig: {
-          responseMimeType: "application/json",
-          temperature: 0.95
-        }
-      })
-    });
-
-    if (res.ok) {
-      const data = await res.json();
-      const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (rawText) {
-        const parsed = JSON.parse(rawText);
-        if (parsed && Array.isArray(parsed.bankais) && parsed.bankais.length >= 3) {
-          return parsed.bankais.slice(0, 3).map((b, idx) => ({
-            ...b,
-            opcaoNumero: idx + 1,
-            id: uid(),
-            shikaiBase: shikaiBase.nome
-          }));
-        }
-      }
+    const aiRes = await callSpiritualAI({ prompt, apiKey: keyToUse });
+    if (aiRes.ok && aiRes.data && Array.isArray(aiRes.data.bankais) && aiRes.data.bankais.length >= 3) {
+      console.log(`3 Evoluções de Bankai geradas com sucesso via ${aiRes.provider} (${aiRes.model})!`);
+      origemGeracao = `IA Generativa · ${aiRes.provider} (${aiRes.model})`;
+      bankaisResultantes = aiRes.data.bankais.slice(0, 3).map((b, idx) => ({
+        ...b,
+        opcaoNumero: idx + 1,
+        id: uid(),
+        origemIA: origemGeracao,
+        shikaiBase: shikaiBase.nome
+      }));
     } else {
-      console.warn("Gemini Bankai HTTP Error:", res.status, await res.text());
+      console.warn("Retorno da IA não continha 3 bankais estruturados ou falhou:", aiRes.error);
     }
-    return null;
-  }
-
-  // 1. Tentar Google Gemini API (gemini-3.6-flash)
-  if (keyToUse && !keyToUse.startsWith("sk-")) {
-    try {
-      console.log("Chamando Google Gemini API (gemini-3.6-flash) para geração das 3 Evoluções de Bankai...");
-      bankaisResultantes = await callGeminiBankai(keyToUse);
-      if (!bankaisResultantes && keyToUse !== getDefaultGeminiKey()) {
-        console.log("Tentando novamente Bankai com a chave padrão do Gemini...");
-        bankaisResultantes = await callGeminiBankai(getDefaultGeminiKey());
-      }
-    } catch (err) {
-      console.warn("Google Gemini API fetch failed for Bankai:", err);
-      if (keyToUse !== getDefaultGeminiKey()) {
-        try {
-          bankaisResultantes = await callGeminiBankai(getDefaultGeminiKey());
-        } catch(e) {}
-      }
-    }
-  }
-
-  // 2. Tentar OpenAI (ChatGPT)
-  if (!bankaisResultantes && keyToUse && keyToUse.startsWith("sk-")) {
-    try {
-      console.log("Chamando OpenAI API (ChatGPT) para geração das 3 Evoluções de Bankai...");
-      const prompt = construirPromptBankaiEvolucao(personagem, shikaiBase, dna, cenaTexto, dbPersonagens, dbZanpakutosVinculadas);
-      const res = await fetch("https://api.openai.com/v1/chat/completions", {
-        signal: typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function" ? AbortSignal.timeout(6000) : undefined,
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${keyToUse}`
-        },
-        body: JSON.stringify({
-          model: "gpt-4o-mini",
-          messages: [
-            { role: "system", content: "Você é um mestre narrador de Bleach RPG especialista em Bankai e no Zanpakuto Genesis Engine v5.0. Responda APENAS em JSON válido." },
-            { role: "user", content: prompt }
-          ],
-          response_format: { type: "json_object" },
-          temperature: 0.88
-        })
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        const contentStr = data.choices?.[0]?.message?.content;
-        if (contentStr) {
-          const parsed = JSON.parse(contentStr);
-          if (parsed && Array.isArray(parsed.bankais) && parsed.bankais.length >= 3) {
-            console.log("3 Evoluções de Bankai geradas com sucesso pelo ChatGPT!");
-            bankaisResultantes = parsed.bankais.slice(0, 3).map((b, idx) => ({
-              ...b,
-              opcaoNumero: idx + 1,
-              id: uid(),
-              shikaiBase: shikaiBase.nome
-            }));
-          }
-        }
-      }
-    } catch (err) {
-      console.warn("OpenAI fetch failed for Bankai, falling back to Cognitive Engine:", err);
-    }
+  } catch (err) {
+    console.warn("Erro ao chamar IA generativa para Bankai:", err);
   }
 
   // 3. Fallback Procedural Cognitivo
@@ -1799,26 +1987,100 @@ function calcularEfeitoKaido(poderKaido, estadoInicial = "Debilitado", kido = nu
 // OFFICIAL MALUTTI FORMATTED WHATSAPP CHARACTER SHEET EXPORTER
 // =========================================================================
 
+function getIniciaisNome(nome) {
+  if (!nome) return "MA";
+  const clean = String(nome).trim().replace(/[^a-zA-ZÀ-ÿ0-9\s]/g, "");
+  const words = clean.split(/\s+/).filter(Boolean);
+  if (words.length >= 2) {
+    const init1 = words[0][0] || "M";
+    const init2 = words[1][0] || words[0][1] || "A";
+    return (init1 + init2).toUpperCase();
+  } else if (words.length === 1) {
+    if (words[0].length >= 2) return words[0].slice(0, 2).toUpperCase();
+    return (words[0] + "A").toUpperCase();
+  }
+  return "MA";
+}
+
 function getCodigoAtividade(p) {
-  if (!p) return "ACT-0000";
-  if (p.codigoAtividade) return p.codigoAtividade;
-  const whatsDigits = p.whatsapp ? String(p.whatsapp).replace(/\D/g, "").slice(-4) : "";
-  if (whatsDigits && whatsDigits.length >= 2) {
-    return `ACT-${whatsDigits.padStart(4, '0')}`;
+  if (!p) return "MA-5476";
+  const nome = p.nome || p.nomeChar || "Shinigami";
+  const iniciais = getIniciaisNome(nome);
+  
+  // 4 ultimos digitos do numero de celular do player
+  const rawTel = p.whatsapp || p.celular || p.telefone || "";
+  const telDigits = String(rawTel).replace(/\D/g, "").slice(-4);
+  
+  if (telDigits && telDigits.length === 4) {
+    return `${iniciais}-${telDigits}`;
+  }
+  
+  // Se p.codigo ja segue o padrao MA-5476
+  if (p.codigo && /^[A-ZÀ-ÿ]{1,3}-\d{4}$/i.test(String(p.codigo).trim())) {
+    return String(p.codigo).trim().toUpperCase();
   }
   if (p.codigo) {
-    return `ACT-${String(p.codigo).replace(/[^a-zA-Z0-9]/g, '').slice(-4).toUpperCase().padStart(4, '0')}`;
+    const digits = String(p.codigo).replace(/\D/g, "").slice(-4);
+    if (digits.length >= 2) {
+      return `${iniciais}-${digits.padStart(4, '0')}`;
+    }
   }
-  return `ACT-${String(p.id || "0001").slice(-4).toUpperCase()}`;
+  if (p.codigoAtividade && /^[A-ZÀ-ÿ]{1,3}-\d{4}$/i.test(String(p.codigoAtividade).trim())) {
+    return String(p.codigoAtividade).trim().toUpperCase();
+  }
+  
+  const idDigits = String(p.id || "5476").replace(/\D/g, "").slice(-4).padStart(4, '0');
+  return `${iniciais}-${idDigits}`;
+}
+
+const HIERARQUIA_GOTEI_13 = [
+  { rank: "Comandante-Capitão", faixa: "3401+ pts", minPts: 3401, cor: "#FFD700", icon: "👑", desc: "Liderança Suprema do Gotei 13 · Autoridade Máxima do Seireitei" },
+  { rank: "Capitão", faixa: "2951–3400 pts", minPts: 2951, cor: "#EF4444", icon: "🏛️", desc: "Taichō · Comandante de Divisão com Bankai e Maestria Militar" },
+  { rank: "Tenente / Adjunto-Chefe", faixa: "2651–2950 pts", minPts: 2651, cor: "#EAB308", icon: "⚔️", desc: "Fukutaichō · Vice-Líder de Esquadrão e Comando de Campo" },
+  { rank: "1º Adjunto", faixa: "2451–2650 pts", minPts: 2451, cor: "#F97316", icon: "🗡️", desc: "Primeiro Oficial Sênior e Estrategista Tático" },
+  { rank: "2º Adjunto", faixa: "2251–2450 pts", minPts: 2251, cor: "#FB923C", icon: "🗡️", desc: "Segundo Oficial Sênior do Esquadrão" },
+  { rank: "3º Adjunto", faixa: "2051–2250 pts", minPts: 2051, cor: "#F43F5E", icon: "🗡️", desc: "Terceiro Oficial de Vanguarda e Combate Especializado" },
+  { rank: "4º Adjunto", faixa: "1851–2050 pts", minPts: 1851, cor: "#EC4899", icon: "🛡️", desc: "Quarto Oficial de Pelotão e Contenção" },
+  { rank: "5º Adjunto", faixa: "1651–1850 pts", minPts: 1651, cor: "#C084FC", icon: "🛡️", desc: "Quinto Oficial em Missões Oficiais" },
+  { rank: "6º Adjunto", faixa: "1451–1650 pts", minPts: 1451, cor: "#A855F7", icon: "🛡️", desc: "Sexto Oficial e Sentinela de Setor" },
+  { rank: "7º Adjunto", faixa: "1251–1450 pts", minPts: 1251, cor: "#8B5CF6", icon: "⚡", desc: "Sétimo Oficial com Domínio Intermediário" },
+  { rank: "8º Adjunto", faixa: "1051–1250 pts", minPts: 1051, cor: "#6366F1", icon: "⚡", desc: "Oitavo Oficial em Operações Especiais" },
+  { rank: "9º Adjunto", faixa: "851–1050 pts", minPts: 851, cor: "#60A5FA", icon: "⚡", desc: "Nono Oficial e Sentinela Sênior" },
+  { rank: "10º Adjunto", faixa: "651–850 pts", minPts: 651, cor: "#3B82F6", icon: "⚡", desc: "Décimo Oficial de Esquadrão" },
+  { rank: "Oficial", faixa: "451–650 pts", minPts: 451, cor: "#06B6D4", icon: "🔰", desc: "Oficial de Patrulha no Mundo Humano e Rukongai" },
+  { rank: "Suboficial", faixa: "251–450 pts", minPts: 251, cor: "#10B981", icon: "🔰", desc: "Suboficial com Experiência Prática em Combate" },
+  { rank: "Shinigami", faixa: "101–250 pts", minPts: 101, cor: "#9CA3AF", icon: "🌸", desc: "Membro de Esquadrão Formado e Ativo" },
+  { rank: "Recruta", faixa: "1–100 pts", minPts: 1, cor: "#6B7280", icon: "🌱", desc: "Recém-Chegado da Academia Shin'ō em Fase de Adaptação" }
+];
+
+function getPowerTier(statVal) {
+  const val = Number(statVal || 0);
+  if (val <= 100) return { title: "Recruta", patamar: "1–100", color: "#6B7280", cargo: "Recruta da Academia Shin'ō" };
+  if (val <= 250) return { title: "Shinigami", patamar: "101–250", color: "#9CA3AF", cargo: "Shinigami de Esquadrão" };
+  if (val <= 450) return { title: "Suboficial", patamar: "251–450", color: "#10B981", cargo: "Suboficial de Vanguarda" };
+  if (val <= 650) return { title: "Oficial", patamar: "451–650", color: "#06B6D4", cargo: "Oficial de Patrulha" };
+  if (val <= 850) return { title: "10º Adjunto", patamar: "651–850", color: "#3B82F6", cargo: "10º Posto Hierárquico" };
+  if (val <= 1050) return { title: "9º Adjunto", patamar: "851–1050", color: "#60A5FA", cargo: "9º Posto Hierárquico" };
+  if (val <= 1250) return { title: "8º Adjunto", patamar: "1051–1250", color: "#6366F1", cargo: "8º Posto Hierárquico" };
+  if (val <= 1450) return { title: "7º Adjunto", patamar: "1251–1450", color: "#8B5CF6", cargo: "7º Posto Hierárquico" };
+  if (val <= 1650) return { title: "6º Adjunto", patamar: "1451–1650", color: "#A855F7", cargo: "6º Posto Hierárquico" };
+  if (val <= 1850) return { title: "5º Adjunto", patamar: "1651–1850", color: "#C084FC", cargo: "5º Posto Hierárquico" };
+  if (val <= 2050) return { title: "4º Adjunto", patamar: "1851–2050", color: "#EC4899", cargo: "4º Posto Hierárquico" };
+  if (val <= 2250) return { title: "3º Adjunto", patamar: "2051–2250", color: "#F43F5E", cargo: "3º Posto Hierárquico" };
+  if (val <= 2450) return { title: "2º Adjunto", patamar: "2251–2450", color: "#FB923C", cargo: "2º Posto Hierárquico" };
+  if (val <= 2650) return { title: "1º Adjunto", patamar: "2451–2650", color: "#F97316", cargo: "1º Posto Hierárquico" };
+  if (val <= 2950) return { title: "Tenente / Adjunto-Chefe", patamar: "2651–2950", color: "#EAB308", cargo: "Fukutaichō · Vice-Líder de Esquadrão" };
+  if (val <= 3400) return { title: "Capitão", patamar: "2951–3400", color: "#EF4444", cargo: "Taichō · Comandante de Divisão" };
+  return { title: "Comandante-Capitão", patamar: "3401+", color: "#FFD700", cargo: "Sōtaichō · Liderança Máxima do Gotei 13" };
 }
 
 function gerarFichaFormatadaMalutti(p) {
   if (!p) return "";
 
   const totalAtributos = Object.values(p.atributos || { pressao: 10, forca: 10, velocidade: 10, resiliencia: 10 }).reduce((a, b) => a + b, 0);
-  const tier = (typeof getPowerTier === "function") ? getPowerTier(totalAtributos) : { title: "Iniciante", patamar: "201–450" };
+  const tier = (typeof getPowerTier === "function") ? getPowerTier(totalAtributos) : { title: "Recruta", patamar: "1–100" };
 
-  const whatsDigits = p.whatsapp ? String(p.whatsapp).replace(/\D/g, "").slice(-4) : "0000";
+  const whatsDigits = p.whatsapp ? String(p.whatsapp).replace(/\D/g, "").slice(-4) : "5476";
   const codAtividade = getCodigoAtividade(p);
   const pNome = p.nome || "Shinigami";
   const playerNome = pNome.split(" ")[0] || "Jogador";
@@ -1851,7 +2113,7 @@ function gerarFichaFormatadaMalutti(p) {
              \`﹙ 𝗗𝗔𝗗𝗢𝗦 𝗗𝗢 𝗣𝗔𝗥𝗧𝗜𝗖𝗜𝗣𝗔𝗡𝗧𝗘 ﹚\` 
             ✶  „  nome & quɑtɾo dı́git͟os .ᐟ
             ⎯  ${playerNome}, ${whatsDigits}
-            ✶  „  código de ɑtividɑde (on) .ᐟ
+            ✶  „  código de ɑtividɑde / identificɑdoɾ .ᐟ
             ⎯  ${codAtividade} ‹ use no contador de cenas! ›
             ✶  „  dɑ͟tɑ de nɑscimento & idɑde .ᐟ
             ⎯  ${playerNasc} (${p.idadePlayer || "20"} anos)
@@ -1869,11 +2131,11 @@ function gerarFichaFormatadaMalutti(p) {
             ⎯  ${p.esquadrao || "11º Esquadrão"}
             ✶  „  ɾɑçɑ & linhɑgem espı́ɾituɑl .ᐟ
             ⎯  ${p.raca || "Shinigami"}
-            ✶  „  código de ɑtividɑde do shinigɑmi .ᐟ
+            ✶  „  código identificɑdoɾ do shinigɑmi .ᐟ
             ⎯  ${codAtividade}
             ✶  „  estɑdo & condiçɑ̃o .ᐟ
             ⎯  ${p.estado || "Inteiro"}
-            ✶  „  pɑtɑmɑɾ no seı́ɾeı́teı́ .ᐟ
+            ✶  „  hierɑɾquiɑ no gotei 13 .ᐟ
             ⎯  ${tier.title} (${totalAtributos} pts acumulados)
 
              \`﹙ 𝗔𝗧𝗥𝗜𝗕𝗨𝗧𝗢𝗦 𝗘𝗦𝗣𝗜𝗥𝗜𝗧𝗨𝗔𝗜𝗦 ﹚\`              
@@ -1883,7 +2145,7 @@ function gerarFichaFormatadaMalutti(p) {
             ⎯  velocidɑde: ${p.atributos?.velocidade || 10}
             ⎯  ɾesiliênciɑ: ${p.atributos?.resiliencia || 10}
             ✶  „ totɑl geɾɑl .ᐟ
-            ⎯  ${totalAtributos} pts (Patamar: ${tier.title})
+            ⎯  ${totalAtributos} pts (Hierarquia: ${tier.title})${p.zanpakuto?.shikaiAtiva ? `\n\n             \`﹙ 𝗭𝗔𝗡𝗣𝗔𝗞𝗨𝗧𝗢̄ & 𝗟𝗜𝗕𝗘𝗥𝗔𝗖̧𝗢̃𝗘𝗦 ﹚\`\n            ✶  „  nome dɑ lɑ̂minɑ .ᐟ\n            ⎯  ${p.zanpakuto?.nome || p.zanpakuto?.shikaiAtiva?.nome || "Lâmina Selada"}\n            ✶  „  libeɾɑçɑ̃o de shikɑi .ᐟ\n            ⎯  ${p.zanpakuto?.shikaiAtiva?.comando || "Desperte, " + (p.zanpakuto?.shikaiAtiva?.nome || "Zanpakutō")}\n            ✶  „  podeɾ & elemento .ᐟ\n            ⎯  ${p.zanpakuto?.shikaiAtiva?.elemento || "Reiatsu"} — ${p.zanpakuto?.shikaiAtiva?.poder || "Amplificação espiritual"}${p.zanpakuto?.shikaiAtiva?.espirito ? `\n            ✶  „  espı́ɾito dɑ lɑ̂minɑ .ᐟ\n            ⎯  ${p.zanpakuto.shikaiAtiva.espirito}` : ""}${p.zanpakuto?.shikaiAtiva?.mundoInterno ? `\n            ✶  „  mundo inteɾioɾ (jinzen) .ᐟ\n            ⎯  ${p.zanpakuto.shikaiAtiva.mundoInterno}` : ""}${p.zanpakuto?.bankaiAtiva ? `\n            ✶  „  libeɾɑçɑ̃o de bɑnkɑi .ᐟ\n            ⎯  ${p.zanpakuto.bankaiAtiva.nome} (${p.zanpakuto.bankaiAtiva.tipo || p.zanpakuto.bankaiAtiva.tipoEvolucao || p.zanpakuto.bankaiAtiva.comando || "Manifestação Suprema"})` : ""}` : ""}
 
              \`﹙ 𝗧𝗘𝗥𝗠𝗢 𝗗𝗘 𝗖𝗢𝗡𝗦𝗘𝗡𝗧𝗜𝗠𝗘𝗡𝗧𝗢 ﹚\`     
        ₍  X  ₎     estou ciente de que dentɾo do 
@@ -1928,68 +2190,68 @@ function copiarFichaFormatadaWhatsApp(p, onCopied) {
 function getCapacidadeKidos(pressaoTotal) {
   const pressao = Math.max(1, Number(pressaoTotal || 10));
 
-  if (pressao >= 601) {
+  if (pressao >= 3401 || pressao >= 601) {
     return {
-      tierNome: "Transcendente / Divisão Zero",
+      tierNome: "Comandante-Capitão / Divisão Zero",
       limiteMaximo: 99,
       limiteEquipadosStr: "Ilimitado (Mestria Plena)",
       nivelMaximoFeitico: 99,
       descricao: "Mestria absoluta do Reishi. Acesso irrestrito a todos os feitiços do Grimório e magias proibidas.",
       cor: "#FFD700"
     };
-  } else if (pressao >= 401) {
+  } else if (pressao >= 2951 || pressao >= 401) {
     return {
-      tierNome: "Lendário / Capitão Sênior",
+      tierNome: "Capitão / Taichō",
       limiteMaximo: 24,
       limiteEquipadosStr: "Até 24 Feitiços",
       nivelMaximoFeitico: 99,
       descricao: "Compreensão suprema das artes de Kidō. Acesso liberado aos feitiços destruidores da casa dos 90.",
-      cor: "#A855F7"
+      cor: "#EF4444"
     };
-  } else if (pressao >= 251) {
+  } else if (pressao >= 2651 || pressao >= 251) {
     return {
-      tierNome: "Monstruoso / Nível Capitão",
+      tierNome: "Tenente / Adjunto-Chefe",
       limiteMaximo: 16,
       limiteEquipadosStr: "Até 16 Feitiços",
       nivelMaximoFeitico: 89,
       descricao: "Domínio de alto calibre em Kidōs avançados de destruição, barreiras pesadas e Kaidō cirúrgico.",
-      cor: "#EF4444"
+      cor: "#EAB308"
     };
-  } else if (pressao >= 151) {
+  } else if (pressao >= 1451 || pressao >= 151) {
     return {
-      tierNome: "Alto Nível / Tenente Veterano",
+      tierNome: "Oficial Superior / Adjuntos",
       limiteMaximo: 12,
       limiteEquipadosStr: "Até 12 Feitiços",
       nivelMaximoFeitico: 69,
       descricao: "Ampla versatilidade tática com feitiços intermediários de suporte, contenção e dano.",
-      cor: "#F97316"
+      cor: "#A855F7"
     };
-  } else if (pressao >= 61) {
+  } else if (pressao >= 451 || pressao >= 61) {
     return {
-      tierNome: "Experiente / Oficial de Esquadrão",
+      tierNome: "Oficial / Suboficial",
       limiteMaximo: 8,
       limiteEquipadosStr: "Até 8 Feitiços",
       nivelMaximoFeitico: 49,
       descricao: "Conhecimento prático das magias fundamentais de combate do Gotei 13.",
-      cor: "#EAB308"
+      cor: "#06B6D4"
     };
-  } else if (pressao >= 31) {
+  } else if (pressao >= 101 || pressao >= 31) {
     return {
-      tierNome: "Treinado / Shinigami Formado",
+      tierNome: "Shinigami de Esquadrão",
       limiteMaximo: 6,
       limiteEquipadosStr: "Até 6 Feitiços",
       nivelMaximoFeitico: 29,
-      descricao: "Capacidade padrão de recém-graduado da Academia Shin'ō.",
-      cor: "#3B82F6"
+      descricao: "Capacidade padrão de graduado da Academia Shin'ō integrado ao esquadrão.",
+      cor: "#9CA3AF"
     };
   } else {
     return {
-      tierNome: "Iniciante / Inexperiente",
+      tierNome: "Recruta da Academia",
       limiteMaximo: 4,
       limiteEquipadosStr: "Até 4 Feitiços Iniciais",
       nivelMaximoFeitico: 19,
       descricao: "Em fase de iniciação espiritual. Pode adquirir até 4 feitiços básicos com seu Conhecimento inicial.",
-      cor: "#10B981"
+      cor: "#6B7280"
     };
   }
 }
@@ -2488,16 +2750,14 @@ function sintetizarTramaConjuntaHeuristica(players, cenasConjuntas) {
   };
 }
 
-// 4. FUNÇÃO CENTRAL DE GERAÇÃO COM IA (GEMINI 3.6 FLASH + OPENAI COM AUTO-LEARN)
+// 4. FUNÇÃO CENTRAL DE GERAÇÃO DE TRAMAS COM IA (MULTIDISPATCHER)
 async function gerarTramaIndividualAI(params) {
   const player = params?.player;
   const cenas = params?.cenas || [];
   const openAiKey = params?.openAiKey || "";
   const heuristicResult = sintetizarTramaIndividualHeuristica(player, cenas);
   
-  const keyToUse = (typeof getValidGeminiApiKey === 'function') 
-    ? getValidGeminiApiKey(openAiKey) 
-    : (openAiKey || (typeof localStorage !== 'undefined' ? localStorage.getItem("bleach_openai_key") || "" : ""));
+  const keyToUse = getValidGeminiApiKey(openAiKey);
 
   const prompt = `Você é o Mestre Narrador Principal do BLEACH RPG (Soul Society / Seireitei).
 Analise o histórico cronológico de cenas narradas pelo jogador no WhatsApp, compreenda o que aconteceu em cada cena e gere 3 Opções de Tramas Individuais que deem continuidade lógica e coesa aos eventos anteriores:
@@ -2539,80 +2799,22 @@ ${JSON.stringify({
   ]
 }, null, 2)}`;
 
-  // 1. Tentar Google Gemini 3.6 Flash
-  if (keyToUse && !keyToUse.startsWith("sk-")) {
-    try {
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${encodeURIComponent(keyToUse)}`, {
-        signal: typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function" ? AbortSignal.timeout(6000) : undefined,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ role: "user", parts: [{ text: prompt }] }],
-          generationConfig: { responseMimeType: "application/json", temperature: 0.85 }
-        })
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (rawText) {
-          const parsed = JSON.parse(rawText);
-          if (Array.isArray(parsed.opcoesTramas) && parsed.opcoesTramas.length >= 3) {
-            const op1 = parsed.opcoesTramas[0];
-            return {
-              ...heuristicResult,
-              opcoesTramas: parsed.opcoesTramas,
-              tituloArco: op1.tituloArco || heuristicResult.tituloArco,
-              ganchoImediato: op1.focoNarrativo || heuristicResult.ganchoImediato,
-              eventos: op1.eventos || heuristicResult.eventos,
-              antagonista: op1.antagonista || heuristicResult.antagonista,
-              briefingWhatsApp: op1.briefingWhatsApp || heuristicResult.briefingWhatsApp
-            };
-          }
-        }
-      }
-    } catch (err) {
-      console.warn("Gemini Arc Analysis error, falling back:", err);
+  try {
+    const aiRes = await callSpiritualAI({ prompt, apiKey: keyToUse });
+    if (aiRes.ok && aiRes.data && Array.isArray(aiRes.data.opcoesTramas) && aiRes.data.opcoesTramas.length >= 3) {
+      const op1 = aiRes.data.opcoesTramas[0];
+      return {
+        ...heuristicResult,
+        opcoesTramas: aiRes.data.opcoesTramas,
+        tituloArco: op1.tituloArco || heuristicResult.tituloArco,
+        ganchoImediato: op1.focoNarrativo || heuristicResult.ganchoImediato,
+        eventos: op1.eventos || heuristicResult.eventos,
+        antagonista: op1.antagonista || heuristicResult.antagonista,
+        briefingWhatsApp: op1.briefingWhatsApp || heuristicResult.briefingWhatsApp
+      };
     }
-  }
-
-  // 2. Tentar OpenAI se chave for sk-
-  if (keyToUse && keyToUse.startsWith("sk-")) {
-    try {
-      const res = await fetch("https://api.openai.com/v1/chat/completions", {
-        signal: typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function" ? AbortSignal.timeout(6000) : undefined,
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${keyToUse}` },
-        body: JSON.stringify({
-          model: "gpt-4o-mini",
-          messages: [{ role: "user", content: prompt }],
-          temperature: 0.85,
-          response_format: { type: "json_object" }
-        })
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        const content = data?.choices?.[0]?.message?.content;
-        if (content) {
-          const parsed = JSON.parse(content);
-          if (Array.isArray(parsed.opcoesTramas) && parsed.opcoesTramas.length >= 3) {
-            const op1 = parsed.opcoesTramas[0];
-            return {
-              ...heuristicResult,
-              opcoesTramas: parsed.opcoesTramas,
-              tituloArco: op1.tituloArco || heuristicResult.tituloArco,
-              ganchoImediato: op1.focoNarrativo || heuristicResult.ganchoImediato,
-              eventos: op1.eventos || heuristicResult.eventos,
-              antagonista: op1.antagonista || heuristicResult.antagonista,
-              briefingWhatsApp: op1.briefingWhatsApp || heuristicResult.briefingWhatsApp
-            };
-          }
-        }
-      }
-    } catch (err) {
-      console.warn("OpenAI Arc Analysis error, falling back:", err);
-    }
+  } catch (err) {
+    console.warn("Falha na geração de trama por IA, usando heurística:", err);
   }
 
   return heuristicResult;
@@ -2624,9 +2826,7 @@ async function gerarTramaConjuntaAI(params) {
   const openAiKey = params?.openAiKey || "";
   const heuristicResult = sintetizarTramaConjuntaHeuristica(players, cenasConjuntas);
   
-  const keyToUse = (typeof getValidGeminiApiKey === 'function') 
-    ? getValidGeminiApiKey(openAiKey) 
-    : (openAiKey || (typeof localStorage !== 'undefined' ? localStorage.getItem("bleach_openai_key") || "" : ""));
+  const keyToUse = getValidGeminiApiKey(openAiKey);
 
   const prompt = `Você é o Mestre Narrador Principal do BLEACH RPG.
 Analise as cenas armazenadas dos seguintes jogadores e gere 3 Opções de Tramas Cruzadas (Arcos Compartilhados Multi-Player) que interliguem o destino de ambos de forma coesa:
@@ -2657,82 +2857,23 @@ ${JSON.stringify({
   ]
 }, null, 2)}`;
 
-  // 1. Tentar Google Gemini 3.6 Flash
-  if (keyToUse && !keyToUse.startsWith("sk-")) {
-    try {
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${encodeURIComponent(keyToUse)}`, {
-        signal: typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function" ? AbortSignal.timeout(6000) : undefined,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ role: "user", parts: [{ text: prompt }] }],
-          generationConfig: { responseMimeType: "application/json", temperature: 0.85 }
-        })
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (rawText) {
-          const parsed = JSON.parse(rawText);
-          if (Array.isArray(parsed.opcoesTramas) && parsed.opcoesTramas.length >= 3) {
-            const op1 = parsed.opcoesTramas[0];
-            return {
-              ...heuristicResult,
-              opcoesTramas: parsed.opcoesTramas,
-              tituloArco: op1.tituloArco || heuristicResult.tituloArco,
-              dinamicaDupla: op1.dinamicaDupla || heuristicResult.dinamicaDupla,
-              sinopse: op1.sinopse || heuristicResult.sinopse,
-              eventosCruzados: op1.eventosCruzados || heuristicResult.eventosCruzados,
-              ameacaComum: op1.ameacaComum || heuristicResult.ameacaComum,
-              briefingWhatsApp: op1.briefingWhatsApp || heuristicResult.briefingWhatsApp
-            };
-          }
-        }
-      }
-    } catch (err) {
-      console.warn("Gemini Joint Arc Analysis error, falling back:", err);
+  try {
+    const aiRes = await callSpiritualAI({ prompt, apiKey: keyToUse });
+    if (aiRes.ok && aiRes.data && Array.isArray(aiRes.data.opcoesTramas) && aiRes.data.opcoesTramas.length >= 3) {
+      const op1 = aiRes.data.opcoesTramas[0];
+      return {
+        ...heuristicResult,
+        opcoesTramas: aiRes.data.opcoesTramas,
+        tituloArco: op1.tituloArco || heuristicResult.tituloArco,
+        dinamicaDupla: op1.dinamicaDupla || heuristicResult.dinamicaDupla,
+        sinopse: op1.sinopse || heuristicResult.sinopse,
+        eventosCruzados: op1.eventosCruzados || heuristicResult.eventosCruzados,
+        ameacaComum: op1.ameacaComum || heuristicResult.ameacaComum,
+        briefingWhatsApp: op1.briefingWhatsApp || heuristicResult.briefingWhatsApp
+      };
     }
-  }
-
-  // 2. Tentar OpenAI se chave for sk-
-  if (keyToUse && keyToUse.startsWith("sk-")) {
-    try {
-      const res = await fetch("https://api.openai.com/v1/chat/completions", {
-        signal: typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function" ? AbortSignal.timeout(6000) : undefined,
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${keyToUse}` },
-        body: JSON.stringify({
-          model: "gpt-4o-mini",
-          messages: [{ role: "user", content: prompt }],
-          temperature: 0.85,
-          response_format: { type: "json_object" }
-        })
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        const content = data?.choices?.[0]?.message?.content;
-        if (content) {
-          const parsed = JSON.parse(content);
-          if (Array.isArray(parsed.opcoesTramas) && parsed.opcoesTramas.length >= 3) {
-            const op1 = parsed.opcoesTramas[0];
-            return {
-              ...heuristicResult,
-              opcoesTramas: parsed.opcoesTramas,
-              tituloArco: op1.tituloArco || heuristicResult.tituloArco,
-              dinamicaDupla: op1.dinamicaDupla || heuristicResult.dinamicaDupla,
-              sinopse: op1.sinopse || heuristicResult.sinopse,
-              eventosCruzados: op1.eventosCruzados || heuristicResult.eventosCruzados,
-              ameacaComum: op1.ameacaComum || heuristicResult.ameacaComum,
-              briefingWhatsApp: op1.briefingWhatsApp || heuristicResult.briefingWhatsApp
-            };
-          }
-        }
-      }
-    } catch (err) {
-      console.warn("OpenAI Joint Arc Analysis error, falling back:", err);
-    }
+  } catch (err) {
+    console.warn("Falha na geração de trama conjunta por IA, usando heurística:", err);
   }
 
   return heuristicResult;
@@ -2740,6 +2881,10 @@ ${JSON.stringify({
 
 
 if (typeof window !== 'undefined') {
+  window.cleanAndExtractJson = cleanAndExtractJson;
+  window.callSpiritualAI = callSpiritualAI;
+  window.testSpiritualAIConnection = testSpiritualAIConnection;
+  window.getValidGeminiApiKey = getValidGeminiApiKey;
   window.gerar4CaminhosZanpakutoAI = gerar4CaminhosZanpakutoAI;
   window.gerar4CaminhosZanpakutoAI_Async = gerar4CaminhosZanpakutoAI_Async;
   window.gerar3BankaisEvolucaoAI = gerar3BankaisEvolucaoAI;
@@ -2774,6 +2919,10 @@ if (typeof window !== 'undefined') {
 
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
+    cleanAndExtractJson,
+    callSpiritualAI,
+    testSpiritualAIConnection,
+    getValidGeminiApiKey,
     gerar4CaminhosZanpakutoAI,
     gerar4CaminhosZanpakutoAI_Async,
     gerar3BankaisEvolucaoAI,

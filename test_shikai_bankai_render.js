@@ -35,6 +35,10 @@ const sandbox = {
     createElement: (type, props, ...children) => {
       if (typeof type === 'function') {
         try {
+          if (type.prototype && type.prototype.render) {
+            const inst = new type({ ...(props || {}), children });
+            return inst.render ? inst.render() : { type, props, children };
+          }
           return type({ ...(props || {}), children });
         } catch (e) {
           console.error(`ERROR rendering component ${type.name}:`, e);

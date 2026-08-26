@@ -8,37 +8,38 @@ function GuiaNovatosView() {
   return (
     <div className="space-y-6">
       {/* Banner Principal de Boas-Vindas */}
-      <div className="bg-banner-overlay border-2 border-emerald-500/70 rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+      <div className="bg-gradient-to-r from-emerald-950/30 via-[#131713] to-[#0E100E] border border-emerald-500/30 rounded-2xl p-5 sm:p-6 shadow-xl relative overflow-hidden backdrop-blur-md">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="px-3 py-1 bg-emerald-950 border border-emerald-400 text-emerald-300 text-xs font-bold rounded-full uppercase tracking-wider">
-                🌱 Manual Oficial da Academia Shin’ō • Para Recém-Chegados
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#10B981]"></span>
+              <span className="text-[11px] font-mono uppercase tracking-widest text-emerald-300 font-bold">
+                Manual Oficial da Academia Shin’ō • Recém-Chegados
               </span>
             </div>
-            <h2 className="font-title text-3xl sm:text-4xl tracking-widest text-emerald-300 mt-2">
-              PARA NOVATOS: COMO EVOLUIR DE MODO SIMPLES
+            <h2 className="font-title text-2xl sm:text-3xl tracking-wider text-emerald-200 mt-1">
+              GUIA PARA NOVATOS: COMO EVOLUIR DE MODO SIMPLES
             </h2>
-            <p className="text-xs text-bleach-creamDim mt-1 max-w-3xl leading-relaxed">
-              Tudo o que você precisa saber para construir seu guerreiro, entender as recompensas em pontos, limites de cenas e fadiga dos 3 períodos, dominar a escala de combate e evoluir com consistência no WhatsApp.
+            <p className="text-xs text-zinc-400 mt-1 max-w-3xl leading-relaxed">
+              Tudo o que você precisa saber para construir seu guerreiro, entender as recompensas em pontos, limites de cenas, regras de fadiga e duelos.
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-1.5 bg-black/60 p-1.5 rounded-xl border border-white/5">
             {[
-              { id: "evolucao", label: "📈 Dicas de Evolução & Builds", icon: "📈" },
-              { id: "pontos", label: "🎁 Tabela de Pontos & Recompensas", icon: "🎁" },
-              { id: "limites", label: "⏱️ Limites & Fadiga", icon: "⏱️" },
-              { id: "combate", label: "⚔️ Combate & Escala de Poder", icon: "⚔️" },
+              { id: "evolucao", label: "Dicas & Builds", icon: "📈" },
+              { id: "pontos", label: "Pontos & Ganhos", icon: "🎁" },
+              { id: "limites", label: "Limites & Fadiga", icon: "⏱️" },
+              { id: "combate", label: "Combate & Escala", icon: "⚔️" },
             ].map((tab) => (
               <button
                 key={tab.id}
                 type="button"
                 onClick={() => setSubAba(tab.id)}
-                className={"px-4 py-2.5 rounded-xl text-xs font-bold uppercase transition flex items-center gap-2 " + (
+                className={"px-3.5 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 " + (
                   subAba === tab.id
-                    ? "bg-emerald-500 text-black font-black shadow-[0_0_15px_rgba(16,185,129,0.6)]"
-                    : "bg-black/70 border border-emerald-500/30 text-emerald-200 hover:border-emerald-400"
+                    ? "bg-emerald-500 text-black font-black shadow-md"
+                    : "text-zinc-400 hover:text-emerald-200 hover:bg-white/5"
                 )}
               >
                 <span>{tab.icon}</span>

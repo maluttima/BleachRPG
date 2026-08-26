@@ -126,19 +126,6 @@ function maskWhats(w) {
   return "•••• " + cleaned.slice(-4);
 }
 
-function getPowerTier(statVal) {
-  const val = Number(statVal || 0);
-  if (val <= 200) return { title: "Inexperiente", patamar: "1–200", color: C.muted };
-  if (val <= 450) return { title: "Iniciante", patamar: "201–450", color: C.green };
-  if (val <= 750) return { title: "Treinado", patamar: "451–750", color: C.blue };
-  if (val <= 1100) return { title: "Experiente", patamar: "751–1100", color: C.purple };
-  if (val <= 1500) return { title: "Elite", patamar: "1101–1500", color: C.yellow };
-  if (val <= 2000) return { title: "Alto Nível", patamar: "1501–2000", color: "#FFA500" };
-  if (val <= 2600) return { title: "Monstruoso", patamar: "2001–2600", color: C.red };
-  if (val <= 3300) return { title: "Lendário", patamar: "2601–3300", color: "#E0B34C" };
-  return { title: "Transcendente", patamar: "3300+", color: "#FFD700" };
-}
-
 // Web Audio API Synthesizer
 let audioCtx = null;
 
@@ -893,7 +880,7 @@ function App() {
         cloudStatus={cloudStatus}
       />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 space-y-6">
+      <main className="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 space-y-6 pb-20 md:pb-6">
         {saveErr && (
           <div className="p-3 bg-red-950/80 border border-red-500 text-red-200 text-xs rounded-xl text-center">
             {saveErr}
