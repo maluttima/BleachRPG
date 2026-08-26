@@ -1111,7 +1111,7 @@ function construirPromptBankaiEvolucao(personagem, shikai, dna, cenaTexto = "", 
 
   return `Você é o ZANPAKUTŌ GENESIS ENGINE — MÓDULO SUPREMO DE TRANSCENDÊNCIA DE BANKAI (Estilo Tite Kubo).
 O Shinigami ${personagem.nome} despertou a Shikai: "${sNome}" ${sKanji ? `(${sKanji})` : ""}.
-Sua missão é analisar esta Shikai ESCOLHIDA, a alma e os atributos de ${personagem.nome}, gerando EXATAMENTE 3 EVOLUÇÕES DE BANKAI monumentais, poéticas, bizarramente criativas e inéditas.
+Sua missão é analisar esta Shikai ESCOLHIDA, a alma e os atributos de ${personagem.nome}, gerando EXATAMENTE 3 EVOLUÇÕES DE BANKAI monumentais, poéticas, bizarramente criativas e com FORMATOS FÍSICOS DIVERSIFICADOS (NÃO FAÇA TODAS COMO DOMÍNIO TERRITORIAL!).
 
 DADOS DA SHIKAI ESCOLHIDA DO SHINIGAMI:
 - Nome da Shikai: ${sNome} ${sKanji} (Tradução: ${sTrad})
@@ -1130,20 +1130,31 @@ PERFIL & DNA ESPIRITUAL DO SHINIGAMI:
 - Desejos: ${dna.desejos} | Medos: ${dna.medos} | Conflitos: ${dna.conflitos} | Estilo: ${dna.estilo}
 ${cenaTexto ? `- Cena de Despertar de Bankai Narrada pelo Jogador: "${cenaTexto}"` : ""}
 ${existingSection}
-REGRAS OBRIGATÓRIAS PARA AS 3 OPÇÕES DE BANKAI (EVOLUÇÕES DIRETAS):
-1. OPÇÃO 1 — EVOLUÇÃO COMPLEMENTAR:
-   - Amplificação territorial e transcendência do princípio central da Shikai "${sNome}".
-   - Quebra o limite de alcance e potência da Shikai, expandindo o poder para nível territorial soberano ou monumental.
-2. OPÇÃO 2 — EVOLUÇÃO SUPLEMENTAR:
-   - Adiciona uma camada tática de suporte supremo, armadura de Reishi ou mitigação direta das fraquezas da Shikai.
-   - O poder básico é sustentado por novas propriedades espirituais (armaduras reativas, regeneração, controle de terreno).
-3. OPÇÃO 3 — EVOLUÇÃO OPOSTA COMPLEMENTAR:
-   - Inversão ou paradoxo do poder da Shikai, revelando o lado oculto da alma de ${personagem.nome}.
-   - O poder atua na antítese surpreendente (ex: luz vira absorção de sombras; corte físico vira distorção de causalidade/inércia).
+ARQUITETURA DE FORMATOS FÍSICOS OBRIGATÓRIA (ESTILO TITE KUBO):
+Em Bleach, Bankais possuem formatos variados. Você DEVE gerar as 3 opções com FORMATOS FÍSICOS DISTINTOS:
 
-DIRETRIZES DE CRIAÇÃO E ESTILO (ESTILO TITE KUBO):
-- 'poder': PODER & MECÂNICA TRANSCENDENTAL (BANKAI): Texto rico, poético, fluido e monumental explicando a física transcendental, leis do domínio, alcance de combate e a erupção de Reiatsu que deforma a atmosfera. NUNCA use listas numeradas secas!
-- 'pontoRuptura': Explicação clara de qual limite específico da Shikai foi estilhaçado e superado.
+1. OPÇÃO 1 — FORMATO DE COMPRESSÃO / LÂMINA CONCENTRADA OU VESTIMENTA (Estilo Tensa Zangetsu / Tekken Tachikaze / Hakka no Togame):
+   - Tipo de Evolução: "Evolução Complementar (Forma Compacta & Compressão)"
+   - Formato Físico: Em vez de um território gigante, toda a Reiatsu é comprimida em uma lâmina esbelta ultra-afiada, soqueiras/manoplas de combate corpo a corpo ou uma vestimenta/armadura corporal espiritual.
+   - Mecânica: Hiper-velocidade, penetração de corte absoluta, amplificação extrema dos atributos físicos e canalização de poder concentrado no corpo/lâmina.
+   - Ponto de Ruptura: Supera a dispersão ou lentidão da Shikai com velocidade e letalidade no mano a mano.
+
+2. OPÇÃO 2 — FORMATO DE ARMA PESADA / ARTILHARIA OU AVATAR CONSTRUTO (Estilo Jakuhō Raikōben / Kokujō Tengen Myō'ō / Konjiki Ashisogi Jizō):
+   - Tipo de Evolução: "Evolução Suplementar (Armamento Pesado & Construto)"
+   - Formato Físico: A lâmina se transforma em uma arma monumental de disparo/artilharia de pulso, canhão colossal, relíquia flutuante de engrenagens ou um guerreiro/avatar titânico de Reishi.
+   - Mecânica: Poder de parada e destruição em massa, disparos devastadores de longo alcance, blindagem reativa ou suporte de impacto esmagador.
+   - Ponto de Ruptura: Supera a fragilidade física e falta de alcance/peso da Shikai.
+
+3. OPÇÃO 3 — FORMATO DE DOMÍNIO / PARADOXO / TEATRO DE REGRAS (Estilo Katen Kyōkotsu: Karamatsu Shinjū / Senbonzakura Kageyoshi / Zanka no Tachi):
+   - Tipo de Evolução: "Evolução Oposta Complementar (Domínio & Paradoxo)"
+   - Formato Físico: Alteração climática/atmosférica, anéis de singularidade, esferas de vácuo, tempestade de fragmentos no ar ou inversão de regras de espaço-tempo.
+   - Mecânica: Leis invioláveis de duelo, inversão de causalidade/inércia, vácuo de Reishi ou decomposição de conceitos.
+   - Ponto de Ruptura: Inverte o princípio básico da Shikai em um paradoxo sombrio e absoluto.
+
+DIRETRIZES DE CRIAÇÃO E ESTILO:
+- 'poder': PODER & MECÂNICA TRANSCENDENTAL (BANKAI): Texto rico, poético, fluído e impactante explicando a mecânica de combate, regras de acerto, dano e a erupção de Reiatsu. NUNCA use listas numeradas secas!
+- 'formaMonumental': Descreva com riqueza estética o formato visual exato da Bankai (se é uma lâmina fina preta, manoplas de aço, um canhão dourado colossal acoplado ao braço, um guerreiro samurai astral ou um domínio atmosférico).
+- 'pontoRuptura': Explicação clara de qual limitação específica da Shikai foi estilhaçada.
 - 'pontoFraco': Brecha estratégica inteligente e lógica para um oponente astuto contragolpear.
 
 RESPONDA OBRIGATORIAMENTE EM JSON VÁLIDO no seguinte formato:
@@ -1151,60 +1162,59 @@ RESPONDA OBRIGATORIAMENTE EM JSON VÁLIDO no seguinte formato:
   "bankais": [
     {
       "opcaoNumero": 1,
-      "tipoEvolucao": "Evolução Complementar",
-      "subtitulo": "Transcendência Direta & Amplificação Territorial",
+      "tipoEvolucao": "Evolução Complementar (Forma Compacta & Compressão)",
+      "subtitulo": "Compressão de Reiatsu & Corte Transcendental",
       "nome": "${sNome} — NomeBankaiRomaji",
       "kanji": "「卍・漢字」",
       "traducao": "Tradução Poética em Português",
       "comando": "Ban-kai! Frase monumental de liberação",
-      "pontoRuptura": "O limite específico da Shikai que foi quebrado e superado no despertar",
-      "formaMonumental": "Descrição visual e monumental da manifestação da Bankai no campo de batalha",
+      "pontoRuptura": "O limite específico da Shikai que foi superado no despertar",
+      "formaMonumental": "Descrição visual do formato físico compacto (lâmina esbelta comprimida, soqueiras/manoplas ou vestimenta corporal)",
       "manifestacaoEspiritoBankai": "Manifestação transcendental do espírito da lâmina na Bankai",
-      "mundoInternoBankai": "Como o Mundo Interior da alma se materializa sobre o campo de batalha real",
-      "poder": "PODER & MECÂNICA TRANSCENDENTAL (BANKAI): texto rico e monumental com as regras do domínio, erupção de Reiatsu e mecânicas extremas de combate",
+      "mundoInternoBankai": "Como o Mundo Interior da alma se materializa sobre o campo de batalha",
+      "poder": "PODER & MECÂNICA TRANSCENDENTAL (BANKAI): texto rico e monumental com as mecânicas extremas de combate, velocidade e corte concentrado",
       "pontoFraco": "Brecha estratégica clara e método lógico para um oponente contragolpear",
       "limitacoes": "Limitações de tempo, estamina e desgaste físico/espiritual",
       "significadoEspiritual": "Significado filosófico e espiritual da maturidade da alma",
       "shikaiBase": "${sNome}",
-      "indices": { "potencia": 10, "abrangencia": 9, "complexidade": 8, "versatilidade": 8, "custo": 8 }
+      "indices": { "potencia": 10, "abrangencia": 7, "complexidade": 8, "versatilidade": 8, "custo": 7 }
     },
     {
       "opcaoNumero": 2,
-      "tipoEvolucao": "Evolução Suplementar",
-      "subtitulo": "Expansão Tática & Mitigação de Fraquezas",
+      "tipoEvolucao": "Evolução Suplementar (Armamento Pesado & Construto)",
+      "subtitulo": "Artilharia Pesada & Presença Monumental",
       "nome": "${sNome} — NomeBankaiRomaji",
       "kanji": "「卍・漢字」",
       "traducao": "Tradução Poética em Português",
       "comando": "Ban-kai! Frase monumental de liberação",
-      "pontoRuptura": "O limite específico da Shikai que foi quebrado e superado no despertar",
-      "formaMonumental": "Descrição visual e monumental da manifestação da Bankai no campo de batalha",
+      "pontoRuptura": "O limite específico da Shikai que foi superado no despertar",
+      "formaMonumental": "Descrição visual da arma pesada, canhão colossal, relíquia mecânica ou construto/avatar gigante",
       "manifestacaoEspiritoBankai": "Manifestação transcendental do espírito da lâmina na Bankai",
-      "mundoInternoBankai": "Como o Mundo Interior da alma se materializa sobre o campo de batalha real",
-      "poder": "PODER & MECÂNICA TRANSCENDENTAL (BANKAI): texto rico e monumental com as regras do domínio, erupção de Reiatsu e mecânicas extremas de combate",
+      "mundoInternoBankai": "Como o Mundo Interior da alma se materializa sobre o campo de batalha",
+      "poder": "PODER & MECÂNICA TRANSCENDENTAL (BANKAI): texto rico e monumental com o poder de impacto, disparos ou defesa colossal",
       "pontoFraco": "Brecha estratégica clara e método lógico para um oponente contragolpear",
       "limitacoes": "Limitações de tempo, estamina e desgaste físico/espiritual",
       "significadoEspiritual": "Significado filosófico e espiritual da maturidade da alma",
       "shikaiBase": "${sNome}",
-      "indices": { "potencia": 9, "abrangencia": 8, "complexidade": 9, "versatilidade": 9, "custo": 7 }
+      "indices": { "potencia": 10, "abrangencia": 9, "complexidade": 7, "versatilidade": 7, "custo": 8 }
     },
     {
       "opcaoNumero": 3,
-      "tipoEvolucao": "Evolução Oposta Complementar",
-      "subtitulo": "Inversão da Realidade & Paradoxo da Sombra",
+      "tipoEvolucao": "Evolução Oposta Complementar (Domínio & Paradoxo)",
+      "subtitulo": "Paradoxo da Realidade & Teatro de Regras",
       "nome": "${sNome} — NomeBankaiRomaji",
       "kanji": "「卍・漢字」",
       "traducao": "Tradução Poética em Português",
       "comando": "Ban-kai! Frase monumental de liberação",
-      "pontoRuptura": "O limite específico da Shikai que foi quebrado e superado no despertar",
-      "formaMonumental": "Descrição visual e monumental da manifestação da Bankai no campo de batalha",
+      "pontoRuptura": "O limite específico da Shikai que foi superado no despertar",
+      "formaMonumental": "Descrição visual do domínio atmosférico, anéis de singularidade, esferas de vácuo ou alteração do espaço",
       "manifestacaoEspiritoBankai": "Manifestação transcendental do espírito da lâmina na Bankai",
-      "mundoInternoBankai": "Como o Mundo Interior da alma se materializa sobre o campo de batalha real",
-      "poder": "PODER & MECÂNICA TRANSCENDENTAL (BANKAI): texto rico e monumental com as regras do domínio, erupção de Reiatsu e mecânicas extremas de combate",
+      "mundoInternoBankai": "Como o Mundo Interior da alma se materializa sobre o campo de batalha",
+      "poder": "PODER & MECÂNICA TRANSCENDENTAL (BANKAI): texto rico e monumental com as regras do domínio, inversão de causalidade e leis paradoxais",
       "pontoFraco": "Brecha estratégica clara e método lógico para um oponente contragolpear",
       "limitacoes": "Limitações de tempo, estamina e desgaste físico/espiritual",
       "significadoEspiritual": "Significado filosófico e espiritual da maturidade da alma",
       "shikaiBase": "${sNome}",
-      "indices": { "potencia": 10, "abrangencia": 9, "complexidade": 10, "versatilidade": 8, "custo": 9 }
     }
   ]
 }`;
@@ -1221,66 +1231,66 @@ function sintetizar3BankaisEvolucaoCognitivo(personagem, shikai, dna, cenaTexto 
   return [
     {
       opcaoNumero: 1,
-      tipoEvolucao: "Evolução Complementar",
-      subtitulo: "Transcendência Direta & Amplificação Territorial",
+      tipoEvolucao: "Evolução Complementar (Forma Compacta & Compressão)",
+      subtitulo: "Compressão de Reiatsu & Corte Transcendental",
       nome: `${sNome}: Dai-Rinne Kaijin`,
       kanji: `「${sKanji ? sKanji.replace(/[^\\u4e00-\\u9faf]/g, '') : '卍'}・大輪廻界神」`,
       traducao: "Grande Roda da Transcendência Divina",
       comando: `Ban-kai! Desperte em tua glória primordial, ${sNome}!`,
-      pontoRuptura: `Supera o limite de alcance e foco da Shikai: a mecânica de [${sElem}] agora permeia toda a atmosfera em um raio monumental de 300 metros sob o comando mental de ${personagem.nome}.`,
-      poderEspiritualBankai: `Erupção monumental de Reiatsu cósmica que satura toda a atmosfera, tornando o ar pesado e dobrando a densidade espiritual do território.`,
-      mecanicaCombate: `Converte toda a pressão espiritual do ambiente em lâminas simultâneas teleguiadas que respondem ao pensamento de ${personagem.nome}, atacando em cadeia contínua de múltiplos ângulos sem necessidade de movimento corporal.`,
-      manifestacaoEspiritoBankai: `O espírito da Zanpakutō assume proporções monumentais ao fundo como um guardião cósmico de pura energia, empunhando lâminas celestiais em perfeita harmonia com ${personagem.nome}.`,
-      mundoInternoBankai: `O santuário do mundo interior transborda para o plano real, transformando o solo e os céus em um território soberano de ${sElem}.`,
-      formaMonumental: `O campo de batalha se transforma em um domínio absoluto onde lâminas monumentais e manifestações puras de ${sElem} emergem do ar, respondendo à virtude "${dna.virtudes}".`,
-      poder: `Amplifica a mecânica da Shikai em escala soberana. O poder original (${sPod}) agora é projetado em dezenas de ângulos simultâneos sem necessidade de movimento corporal.`,
-      pontoFraco: `Por ser uma manifestação territorial de longo alcance, se o oponente penetrar o perímetro em velocidade pura (Shunpo/Hohō) e lutar colado ao usuário em combate corpo a corpo frenético sem recuar, a densidade dos cortes perde precisão para não ferir o próprio conjurador.`,
-      limitacoes: `Consumo massivo de Reiatsu proporcional à Pressão Espiritual (${dna.dominante.val} pts), exigindo foco absoluto para não sobrecarregar os circuitos da alma.`,
-      significadoEspiritual: `A consagração definitiva da determinação inabalável de ${personagem.nome} em transcender seus limites.`,
+      pontoRuptura: `Supera o limite de dispersão e lentidão da Shikai: em vez de se espalhar, toda a energia de [${sElem}] é comprimida na própria lâmina, conferindo velocidade supersônica e penetração absoluta a ${personagem.nome}.`,
+      poderEspiritualBankai: `Toda a monumental Pressão Espiritual (${dna.dominante.val} pts) é selada e condensada em uma lâmina ultra-fina e na postura corporal, eliminando qualquer desperdício de energia.`,
+      mecanicaCombate: `Canaliza a essência de ${sElem} diretamente no fio da lâmina comprimida. Cada golpe desfere cortes de hiper-velocidade que ignoram armaduras convencionais e rasgam o fluxo de Reiatsu do oponente, permitindo a ${personagem.nome} atacar em múltiplos vetores de Shunpo instantâneo.`,
+      manifestacaoEspiritoBankai: `O espírito da Zanpakutō se funde à sombra do Shinigami, guiando os movimentos dos braços e o gume da espada com precisão cirúrgica e letalidade absoluta.`,
+      mundoInternoBankai: `O mundo interior se condensa em uma única linha de horizonte afiada no chão sob os pés de ${personagem.nome}.`,
+      formaMonumental: `A lâmina original se comprime em uma katana negra esbelta e hiper-densa, envolta em uma fita de luz de ${sElem} que distorce o ar ao redor do corpo.`,
+      poder: `Canaliza a essência de ${sElem} diretamente no fio da lâmina comprimida. Cada golpe desfere cortes de hiper-velocidade que ignoram armaduras convencionais e rasgam o fluxo de Reiatsu do oponente, permitindo a ${personagem.nome} atacar em múltiplos vetores de Shunpo instantâneo.`,
+      pontoFraco: `Por concentrar o poder exclusivamente no combate corpo a corpo de hiper-velocidade, ${personagem.nome} fica vulnerável a armadilhas de área pré-ativadas ou feitiços de contenção de Reishi em massa.`,
+      limitacoes: `Altíssimo desgaste muscular e tensão sobre as articulações corporais devido à velocidade extrema mantida durante a liberação.`,
+      significadoEspiritual: `A consagração definitiva da determinação inabalável de ${personagem.nome} em transcender seus limites através da maestria da espada.`,
       shikaiBase: sNome,
-      indices: { potencia: 10, abrangencia: 9, complexidade: 8, versatilidade: 8, custo: 9 }
+      indices: { potencia: 10, abrangencia: 7, complexidade: 8, versatilidade: 8, custo: 7 }
     },
     {
       opcaoNumero: 2,
-      tipoEvolucao: "Evolução Suplementar",
-      subtitulo: "Expansão Tática & Mitigação de Fraquezas",
+      tipoEvolucao: "Evolução Suplementar (Armamento Pesado & Construto)",
+      subtitulo: "Artilharia Pesada & Presença Monumental",
       nome: `${sNome}: Shugo Shin’ei`,
       kanji: `「${sKanji ? sKanji.replace(/[^\\u4e00-\\u9faf]/g, '') : '卍'}・守護神影」`,
       traducao: "Bastião Protetor da Sombra Divina",
       comando: `Ban-kai! Erga o manto impenetrável da alma, ${sNome}!`,
-      pontoRuptura: `Elimina a fraqueza declarada da Shikai ("${sLim}") e ergue um escudo impenetrável contra o maior medo do Shinigami: "${dna.medos}".`,
-      poderEspiritualBankai: `Aura de Reiatsu defensiva e impenetrável que reveste o corpo como uma couraça de Reishi sagrado, absorvendo e convertendo impactos espirituais recebidos.`,
-      mecanicaCombate: `Integra propriedades de suporte supremo e controle espacial à Shikai. Absorve a Reiatsu dos ataques inimigos recebidos e a converte em regeneração de postura e fortalecimento do atributo ${dna.deficiente.label}.`,
-      manifestacaoEspiritoBankai: `O espírito da lâmina materializa asas protetoras de Reishi sólido e uma armadura divina que reveste o corpo de ${personagem.nome}, agindo como uma couraça inexpugnável.`,
-      mundoInternoBankai: `As águas serenas e a luz cristalina do mundo interior se espalham pelo campo de batalha, purificando a atmosfera e restaurando a postura do usuário.`,
-      formaMonumental: `Armadura cerimonial de Reishi e uma aura densa de ${sElem} envolvem ${personagem.nome}, gerando barreiras defensivas articuladas e esferas de controle tático.`,
-      poder: `Integra propriedades de suporte supremo e controle espacial à Shikai. Absorve a Reiatsu dos ataques inimigos recebidos e a converte em regeneração de postura e fortalecimento do atributo ${dna.deficiente.label}.`,
-      pontoFraco: `A barreira defensiva necessita de uma fração de segundo de recalibração após absorver um impacto pesado; se o adversário desferir ataques sequenciais duplos ou contínuos sem pausa, o segundo golpe atinge o corpo antes da barreira se recompor.`,
-      limitacoes: "Requer controle tático contínuo para manter a estabilidade entre o ataque ofensivo e a barreira de suporte.",
+      pontoRuptura: `Elimina a fragilidade e a baixa resiliência da Shikai ("${sLim}") através de uma couraça de artilharia pesada e escudo de Reishi reativo.`,
+      poderEspiritualBankai: `Aura de Reiatsu de blindagem que reveste o antebraço e o tronco com placas de Reishi sólido sagrado, absorvendo e convertendo impactos espirituais recebidos em munição concentrada.`,
+      mecanicaCombate: `A lâmina se transforma em uma monumental arma de disparo de artilharia acoplada ao braço. Absorve a Reiatsu dos ataques inimigos recebidos para disparar projéteis colossais de ${sElem} com poder de parada absoluto e detonação em cadeia.`,
+      manifestacaoEspiritoBankai: `O espírito da lâmina materializa uma entidade guerreira colossal de armadura cerimonial ao lado de ${personagem.nome}, ancorando a arma pesada e repelindo ataques frontais.`,
+      mundoInternoBankai: `Um bastião de fortalezas de cristal e aço sagrado se ergue no campo de batalha, ancorando a posição do usuário.`,
+      formaMonumental: `A espada se transforma em uma colossal peça de artilharia de cerimonial acoplada ao antebraço direito, ladeada por manoplas blindadas e placas flutuantes de ${sElem}.`,
+      poder: `A lâmina se transforma em uma monumental arma de disparo de artilharia acoplada ao braço. Absorve a Reiatsu dos ataques inimigos recebidos para disparar projéteis colossais de ${sElem} com poder de parada absoluto e detonação em cadeia.`,
+      pontoFraco: `O peso e a inércia da artilharia pesada reduzem a mobilidade de esquiva em 20%; o oponente pode explorar ataques em ângulos cegos pelas costas.`,
+      limitacoes: "Intervalo de resfriamento de 4 segundos entre disparos de potência máxima.",
       significadoEspiritual: `A maturidade espiritual de ${personagem.nome} em proteger não apenas sua vida, mas a honra e o destino de todos ao seu redor.`,
       shikaiBase: sNome,
-      indices: { potencia: 9, abrangencia: 8, complexidade: 9, versatilidade: 10, custo: 7 }
+      indices: { potencia: 10, abrangencia: 9, complexidade: 7, versatilidade: 7, custo: 8 }
     },
     {
       opcaoNumero: 3,
-      tipoEvolucao: "Evolução Oposta Complementar",
-      subtitulo: "Inversão da Realidade & Paradoxo da Sombra",
+      tipoEvolucao: "Evolução Oposta Complementar (Domínio & Paradoxo)",
+      subtitulo: "Paradoxo da Realidade & Teatro de Regras",
       nome: `${sNome}: Muken Paradox`,
       kanji: `「${sKanji ? sKanji.replace(/[^\\u4e00-\\u9faf]/g, '') : '卍'}・無間反理」`,
       traducao: "Paradoxo Infinito da Antítese",
       comando: `Ban-kai! Inverta a verdade e revele o abismo, ${sNome}!`,
-      pontoRuptura: `Inverte a regra básica de funcionamento da Shikai: o que antes dependia de contato ou corte direto agora atua como uma lei cósmica paradoxal atrelada ao conflito interior ("${dna.conflitos}").`,
+      pontoRuptura: `Inverte a regra básica de funcionamento da Shikai: o que antes dependia de contato direto agora atua como uma lei cósmica paradoxal atrelada ao conflito interior ("${dna.conflitos}").`,
       poderEspiritualBankai: `Reiatsu monocromática abissal que inverte as polaridades de Reishi e absorve o brilho espiritual de tudo ao redor.`,
-      mecanicaCombate: `Manifesta o lado sombrio do poder: qualquer resistência calculada ou tentativa de defesa do oponente amplifica o dano recebido em 50%, invertendo causa e efeito.`,
-      manifestacaoEspiritoBankai: `A sombra espectral do espírito se funde às costas de ${personagem.nome}, abrindo olhos cósmicos nas trevas e atacando em perfeita inversão de causalidade.`,
+      mecanicaCombate: `Instaura um domínio atmosférico onde as regras de causa e efeito são invertidas: qualquer tentativa do inimigo de bloquear, calcular ou resistir aos golpes converte 50% de sua própria energia em dano direto contra sua alma.`,
+      manifestacaoEspiritoBankai: `A sombra espectral do espírito se expande sobre todo o campo de batalha, abrindo olhos cósmicos nas trevas e impondo as regras do paradoxo.`,
       mundoInternoBankai: `A cidade invertida do abismo devora a luz do ambiente físico, instaurando um domínio de sombras flutuantes e gravidade paradoxal.`,
-      formaMonumental: `O cenário escurece em tons monocromáticos onde as cores da Reiatsu de ${sElem} se invertem, criando distorções geométricas flutuantes de sombra e vazio.`,
-      poder: `Manifesta o lado sombrio do poder: em vez do efeito direto da Shikai (${sPod}), impõe uma lei onde qualquer resistência calculada ou tentativa de defesa do oponente amplifica o dano recebido.`,
-      pontoFraco: `A lei da Bankai é ativada exclusivamente pela intenção de defesa ou cálculo tático do alvo. Se o oponente desligar o raciocínio, agir por puro instinto animal e atacar com intenção irrefletida de destruição mútua sem nunca tentar bloquear, a inversão paradoxal não se ancora.`,
+      formaMonumental: `O cenário escurece em tons monocromáticos onde anéis flutuantes de ${sElem} invertido e esferas de vácuo impõem leis paradoxais de causalidade sobre o espaço ao redor.`,
+      poder: `Instaura um domínio atmosférico onde as regras de causa e efeito são invertidas: qualquer tentativa do inimigo de bloquear, calcular ou resistir aos golpes converte 50% de sua própria energia em dano direto contra sua alma.`,
+      pontoFraco: `A lei da Bankai é ativada exclusivamente pela intenção de defesa ou cálculo tático do alvo. Se o oponente agir por puro instinto animal e atacar sem nunca tentar bloquear, a inversão paradoxal não se ancora.`,
       limitacoes: `Risco de desestabilização da própria mente se o usuário sucumbir ao defeito "${dna.defeitos}".`,
       significadoEspiritual: `O domínio pleno da dualidade: ${personagem.nome} aceita sua sombra interior e a transforma na sua arma mais letal.`,
       shikaiBase: sNome,
-      indices: { potencia: 10, abrangencia: 9, complexidade: 10, versatilidade: 8, custo: 9 }
+      indices: { potencia: 9, abrangencia: 10, complexidade: 10, versatilidade: 8, custo: 9 }
     }
   ];
 }
