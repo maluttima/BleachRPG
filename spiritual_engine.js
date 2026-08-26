@@ -159,53 +159,94 @@ function construirPromptChatGPT(personagem, dna, cenaTexto = "", dbPersonagens =
     : "";
 
   return `Você é o ZANPAKUTŌ GENESIS ENGINE para o Bleach RPG — O MAIOR FORJADOR AUTORAL DE ZANPAKUTŌS DO UNIVERSO DE BLEACH (Estilo Tite Kubo).
-Sua missão é analisar profundamente a alma de ${personagem.nome} e gerar EXATAMENTE 4 CAMINHOS DE ZANPAKUTŌ (Shikai + Bankai) 100% INÉDITOS, HIPER-CRIATIVOS, CONCEITUAIS, POÉTICOS E TÁTICOS.
+Sua missão é RACIOCINAR PROFUNDAMENTE sobre a alma de ${personagem.nome} e gerar EXATAMENTE 4 CAMINHOS DE ZANPAKUTŌ (Shikai + Bankai) 100% INÉDITOS, HIPER-CRIATIVOS, POÉTICOS E TÁTICOS, FEITOS SOB MEDIDA PARA ESTE PERSONAGEM.
 
-DADOS DA ALMA DO SHINIGAMI:
-- Nome: ${personagem.nome}
+PERFIL & DNA ESPIRITUAL DO SHINIGAMI:
+- Nome do Shinigami: ${personagem.nome}
 - Raça: ${personagem.raca || "Shinigami"} | Esquadrão: ${personagem.esquadrao || "11º Esquadrão"}
 - Atributos Numéricos: Pressão Espiritual: ${personagem.atributos?.pressao || 10} pts, Força: ${personagem.atributos?.forca || 10} pts, Velocidade: ${personagem.atributos?.velocidade || 10} pts, Resiliência: ${personagem.atributos?.resiliencia || 10} pts
-- Atributo Mais Forte (Dominante): ${dna.dominante.label} (${dna.dominante.val} pts)
-- Atributo Mais Fraco (Deficiente): ${dna.deficiente.label} (${dna.deficiente.val} pts)
-- Personalidade Completa: ${dna.textoCompleto}
+- Atributo Dominante (Mais Forte): ${dna.dominante.label} (${dna.dominante.val} pts)
+- Atributo Deficiente (Mais Fraco): ${dna.deficiente.label} (${dna.deficiente.val} pts)
+- Personalidade & Psique: ${dna.textoCompleto}
 - Virtudes Centrais: ${dna.virtudes}
 - Defeitos & Fraquezas: ${dna.defeitos}
 - Desejos & Ambições: ${dna.desejos}
 - Maiores Medos: ${dna.medos}
 - Conflitos Internos & Paradoxos: ${dna.conflitos}
 - Estilo de Combate: ${dna.estilo}
-${cenaTexto ? `- Cena de Despertar Narrada pelo Jogador: "${cenaTexto}"` : ""}
+${cenaTexto ? `- Cena de Despertar Narrada pelo Jogador (Use elementos/metáforas desta cena): "${cenaTexto}"` : ""}
 ${existingSection}
-DIRETRIZES DE QUALIDADE MÁXIMA & CRIATIVIDADE AUTORAL (ESTILO TITE KUBO):
+EXEMPLOS DE PADRÃO-OURO DE QUALIDADE & CRIATIVIDADE ESPERADOS (SIGA ESTE NÍVEL EXATO):
+
+--- EXEMPLO 1 (Elemental / Personalidade com Atributo Dominante) ---
+{
+  "nome": "Kōjin no Hyakuro",
+  "kanji": "「光刃の百梟」",
+  "traducao": "Lâminas Radiantes das Catsuas Corujas",
+  "comando": "Vigie a noite soturna e perfure sem hesitação, Kōjin no Hyakuro!",
+  "elemento": "LUMINESCÊNCIA ASTRAL & PENAS CINÉTICAS DE LUZ",
+  "aparencia": "A lâmina dissolve-se em um magnífico arco de pulso de cristal azul-dourado acoplado ao antebraço direito de Fukurō, acompanhado por 12 'penas' flutuantes de luz sólida que orbitam suas costas como um halo espectral.",
+  "relacaoPersonalidade": "Reflete seu humor ácido, natureza calculista e aversão ao combate corpo a corpo, transformando seu desejo de proteger à distância em uma arma de alcance absoluto.",
+  "espirito": "Uma coruja espectral gigante feita de cristal óptico que observa todas as linhas de trajetória no Jinzen.",
+  "mundoInterno": "Uma floresta de ciprestes de cristal azul sob uma noite eterna onde as estrelas caem lentamente como poeira brilhante.",
+  "poder": "Canaliza a monumental Pressão Espiritual (10 pts) de Fukurō para transformar o arco em um sistema de artilharia espectral de longo alcance. Cada flecha disparada se divide no ar em múltiplos dardos teleguiados que analisam a estrutura espiritual do alvo, perfurando com precisão cirúrgica os pontos fracos e desacelerando o tempo de reação dos Hollows.",
+  "custoReiatsu": "Médio",
+  "limitacoes": "Exige concentração visual constante; a perda de linha de visão cancela o teleguiamento dos dardos.",
+  "indices": { "potencia": 8, "abrangencia": 9, "complexidade": 7, "versatilidade": 8, "custo": 6 }
+}
+
+--- EXEMPLO 2 (Compensatório / Defesa com Atributo Deficiente e Medo) ---
+{
+  "nome": "Kyōchō no Senkai",
+  "kanji": "「狂蝶の閃回」",
+  "traducao": "Dança Caótica da Borboleta Insana",
+  "comando": "Corte a compostura e sangre o tédio, Kyōchō no Senkai!",
+  "elemento": "ESPELHAMENTO CINÉTICO & EVASÃO ILUSÓRIA IMPREVISÍVEL",
+  "aparencia": "A espada se multiplica em centenas de fragmentos de espelho reluzentes e flutuantes que se agrupam na forma de asas de borboleta ao redor dos braços e ombros de Camile.",
+  "relacaoPersonalidade": "Conecta-se ao medo profundo de Camile de se tornar 'previsível' ou 'chata', garantindo movimentação errática, teatral e perigosa.",
+  "espirito": "Uma cortesã de porcelana rachada que ri histericamente e dança sobre fios de navalha.",
+  "mundoInterno": "Um salão de baile infinito de espelhos distorcidos onde o chão se estilhaça e se remonta a cada passo.",
+  "poder": "Para compensar a baixa Resiliência (10 pts) e o desejo suicida de Camile, esta Shikai funciona como um sistema de esquiva caótico e letal. Sempre que Camile estiver prestes a receber um golpe fatal, seu corpo se estilhaça em milhares de borboletas de vidro ilusórias e ela se recompõe instantaneamente em um ponto aleatório a até 10 metros, deixando no local original uma explosão de estilhaços de vidro impregnados com Pressão Espiritual (10 pts).",
+  "custoReiatsu": "Alto",
+  "limitacoes": "O teletransporte de esquiva tem um intervalo de 5 segundos entre ativações; se for cercada por múltiplos golpes simultâneos, sofre dano residual dos estilhaços.",
+  "indices": { "potencia": 7, "abrangencia": 6, "complexidade": 9, "versatilidade": 9, "custo": 8 }
+}
+
+--- EXEMPLO 3 (Conceitual / Regras & Tabus) ---
+{
+  "nome": "Meimei no Kiri",
+  "kanji": "「命名の忌」",
+  "traducao": "O Tabu da Nomeação",
+  "comando": "Esqueça o nome, reconheça o vazio, Meimei no Kiri!",
+  "elemento": "APAGAMENTO CONCEITUAL DE IDENTIDADE",
+  "aparencia": "A lâmina torna-se translúcida e ganha um brilho azulado que consome a cor e a sombra dos objetos que toca.",
+  "relacaoPersonalidade": "Sua aversão visceral a certos nomes humanos torna-se uma arma ofensiva contra a linguagem do inimigo.",
+  "espirito": "Um homem mascarado que não possui traços faciais. Extremamente disciplinado, sua voz é um sussurro que apaga memórias.",
+  "mundoInterno": "Uma biblioteca infinita onde todos os livros estão em branco. O clima é de uma neblina fria e opressiva.",
+  "poder": "Ao tocar um oponente, Suh apaga a capacidade do alvo de pronunciar nomes ou reconhecer identidades. Se o oponente não puder nomear seu ataque ou feitiço, a técnica perde 50% de eficácia e seu consumo de Reiatsu é dobrado.",
+  "custoReiatsu": "Médio",
+  "limitacoes": "O efeito termina assim que Suh é atingido fisicamente por um golpe direto.",
+  "indices": { "potencia": 9, "abrangencia": 5, "complexidade": 10, "versatilidade": 7, "custo": 6 }
+}
+
+DIRETRIZES OBRIGATÓRIAS DE CRIAÇÃO PARA ${personagem.nome}:
 1. PODER & MECÂNICA ESPIRITUAL (Campo 'poder'):
-   - Crie conceitos BRILHANTES, BIZARROS, ELEGANTES E PROFUNDAMENTE TÁTICOS (inspirado no cânone de Bleach: Katen Kyōkotsu, Sakanade, Minazuki, Suzumebachi, Wabisuke, Kazeshini, Senbonzakura, Ichimonji).
-   - O texto do campo 'poder' DEVE ser uma prosa narrativa fluida, impactante e completa, integrando explicitamente o nome de ${personagem.nome}, seus atributos numéricos (ex: "Canaliza a monumental Pressão Espiritual (${dna.dominante.val} pts) de ${personagem.nome} para..." ou "Para compensar a baixa Resiliência (${dna.deficiente.val} pts) e o medo de ${dna.medos}, esta Shikai funciona como..."), e uma mecânica de combate surpreendente com regras de interação, condições de acerto, percentuais, alcance e dinâmica de combate completa.
-   - NUNCA use tópicos ou listas numeradas secas como "Gatilho: 1) 2) 3)". Escreva em prosa contínua rica, poética e letal!
-   - PROIBIDO poderes genéricos ou clichês banais (como simples bolas de fogo ou rajadas de vento padrão). Crie manipulações de conceitos abstratos, regras invioláveis de duelo, ilusões sensoriais refinadas, vetores de inércia, transmutação de Reishi ou leis paradoxais.
+   - É O FOCO PRINCIPAL DA GERAÇÃO! Deve ser uma narrativa contínua, poética, tática e autoral.
+   - OBRIGATÓRIO: Cite explicitamente o nome de ${personagem.nome} e seus atributos numéricos com pontos (ex: "Canaliza a monumental Pressão Espiritual (${dna.dominante.val} pts) de ${personagem.nome}..." ou "Para compensar a baixa Resiliência (${dna.deficiente.val} pts) e seu medo de ${dna.medos}...").
+   - Integre metáforas ou elementos da cena de despertar narrada pelo jogador ("${cenaTexto}").
+   - Descreva a regra mecânica exata de combate (gatilhos, percentuais, alcance, condições de impacto e dinâmica prática).
+   - ESTRITAMENTE PROIBIDO criar poderes genéricos como "polariza o ar e dispara descargas cinéticas", "rajada de fogo" ou "lâmina afiada". Crie conceitos sublimes e bizarros dignos de Kubo!
 
-2. OS 4 CAMINHOS DISTINTOS:
-   - Caminho 1 (Opção 1 — Personalidade / Elemental): Canaliza o temperamento central e o atributo dominante (${dna.dominante.label}: ${dna.dominante.val} pts) em um elemento ou plasma exótico e criativo.
-   - Caminho 2 (Opção 2 — Conceitual / Regras): Uma lei tática inviolável, tabu verbal, jogo mental ou regra de duelo progressiva por etapas de impacto.
-   - Caminho 3 (Opção 3 — Compensatório / Defesa da Alma): Feita para proteger ${personagem.nome} contra seu maior medo (${dna.medos}) e compensar a fraqueza de seu atributo deficiente (${dna.deficiente.label}: ${dna.deficiente.val} pts).
-   - Caminho 4 (Opção 4 — Opositivo / Abstrato / Sombra): Explora a antítese oculta do subconsciente, o conflito interno (${dna.conflitos}) e a dualidade da mente em um paradoxo surpreendente.
+2. MANIFESTAÇÃO DA ARMA (Campo 'aparencia'):
+   - Não seja simples nem preguiçoso! Descreva a transformação visual poética da lâmina (asas de espelhos, arcos de cristal acoplados ao antebraço, halos de luz sólida, agulhas ópticas, fitas de aço negro, foices astronômicas, etc.).
 
-3. CAMPOS DE CADA SHIKAI:
-   - 'nome': Nome poético e sonoro em japonês Romaji.
-   - 'kanji': Kanji autêntico entre aspas japonesas 「...」.
-   - 'traducao': Tradução poética em português.
-   - 'comando': Frase épica e curta de liberação.
-   - 'elemento': Tema conceitual único em caixa alta (ex: "LUMINESCÊNCIA ASTRAL & PENAS CINÉTICAS DE LUZ", "APAGAMENTO CONCEITUAL DE IDENTIDADE", "VIBRAÇÃO DE REISHI E PARTÍCULAS DE ISOLAMENTO").
-   - 'aparencia': Manifestação da arma ao se transformar fisicamente na liberação.
-   - 'relacaoPersonalidade': Conexão psicológica profunda entre a alma/personalidade de ${personagem.nome} e a arma.
-   - 'espirito': Descrição vívida da forma física, vestimenta, temperamento e voz do espírito da lâmina na meditação Jinzen.
-   - 'mundoInterno': Descrição profunda do cenário do Mundo Interior da alma (geografia, céu, atmosfera e como reage às emoções de ${personagem.nome}).
-   - 'poder': O PODER & MECÂNICA ESPIRITUAL completo: narrativa rica, tática e autoral integrando nome, atributos e funcionamento de combate.
-   - 'custoReiatsu': "Baixo", "Médio", "Alto" ou "Extremo".
-   - 'limitacoes': Limitação tática, custo ou fraqueza específica explorável.
-   - 'indices': { "potencia": 1-10, "abrangencia": 1-10, "complexidade": 1-10, "versatilidade": 1-10, "custo": 1-10 }
-   - 'bankai': Evolução transcendental correspondente com 'nome', 'kanji', 'traducao', 'comando', 'tipoEvolucao', 'pontoRuptura', 'formaMonumental', 'manifestacaoEspiritoBankai', 'mundoInternoBankai', 'poder', 'pontoFraco', 'limitacoes', 'significadoEspiritual', 'indices'.
+3. OS 4 CAMINHOS DISTINTOS:
+   - Caminho 1 (Opção 1 — Personalidade / Elemental): Canaliza o temperamento central e o atributo mais alto (${dna.dominante.label}: ${dna.dominante.val} pts).
+   - Caminho 2 (Opção 2 — Conceitual / Regras): Uma lei tática inviolável, tabu verbal, paradoxo geométrico ou regra de duelo progressivo.
+   - Caminho 3 (Opção 3 — Compensatório / Defesa da Alma): Protege ${personagem.nome} contra seu maior medo (${dna.medos}) e compensa a fraqueza de seu atributo deficiente (${dna.deficiente.label}: ${dna.deficiente.val} pts).
+   - Caminho 4 (Opção 4 — Opositivo / Abstrato / Sombra): Explora a antítese oculta do subconsciente e o conflito interno (${dna.conflitos}).
 
-RESPONDA OBRIGATORIAMENTE EM JSON VÁLIDO no formato:
+RESPONDA OBRIGATORIAMENTE EM JSON VÁLIDO no seguinte formato:
 {
   "caminhos": [
     {
@@ -217,12 +258,12 @@ RESPONDA OBRIGATORIAMENTE EM JSON VÁLIDO no formato:
         "kanji": "「漢字」",
         "traducao": "Tradução Poética",
         "comando": "Frase de Ativação",
-        "elemento": "TEMA CONCEITUAL ÚNICO",
-        "aparencia": "Descrição da forma e transformação física da arma ao liberar",
-        "relacaoPersonalidade": "Conexão da arma com a personalidade e os sentimentos do Shinigami",
+        "elemento": "TEMA CONCEITUAL EM CAIXA ALTA",
+        "aparencia": "Descrição visual rica e fascinante da arma transformada ao liberar",
+        "relacaoPersonalidade": "Conexão da arma com a personalidade e psique de ${personagem.nome}",
         "espirito": "Aparência física, voz e postura do espírito da Zanpakutō no Jinzen",
         "mundoInterno": "Cenário detalhado do Mundo Interior da alma",
-        "poder": "PODER & MECÂNICA ESPIRITUAL completo: narrativa rica e tática integrando o nome do Shinigami, atributos numéricos e o funcionamento de combate",
+        "poder": "PODER & MECÂNICA ESPIRITUAL completo: narrativa rica citando o nome ${personagem.nome}, atributos numéricos exatos, frações da cena e a mecânica tática detalhada",
         "custoReiatsu": "Baixo/Médio/Alto/Extremo",
         "limitacoes": "Limitação tática, tempo de recarga ou fraqueza de combate",
         "indices": { "potencia": 8, "abrangencia": 7, "complexidade": 6, "versatilidade": 7, "custo": 5 }
@@ -792,11 +833,8 @@ async function callSpiritualAI({ prompt, systemPrompt, temperature = 0.88, apiKe
 
     // 1.4 GOOGLE GEMINI (AIzaSy... ou AQ....)
     const geminiModels = [
-      "gemini-3.1-flash-lite",
       "gemini-3.5-flash",
-      "gemini-3.6-flash",
-      "gemini-3.7-flash",
-      "gemini-flash-latest"
+      "gemini-3.1-flash-lite"
     ];
     let lastErr = "";
 
@@ -804,7 +842,7 @@ async function callSpiritualAI({ prompt, systemPrompt, temperature = 0.88, apiKe
       try {
         const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(trimmedKey)}`;
         const res = await fetch(endpoint, {
-          signal: typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function" ? AbortSignal.timeout(45000) : undefined,
+          signal: typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function" ? AbortSignal.timeout(75000) : undefined,
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -816,14 +854,19 @@ async function callSpiritualAI({ prompt, systemPrompt, temperature = 0.88, apiKe
             ],
             generationConfig: {
               responseMimeType: "application/json",
-              temperature
+              temperature: 0.9,
+              thinkingConfig: {
+                thinkingBudget: 2048
+              }
             }
           })
         });
 
         if (res.ok) {
           const json = await res.json();
-          const rawText = json.candidates?.[0]?.content?.parts?.[0]?.text;
+          const parts = json.candidates?.[0]?.content?.parts || [];
+          const textPart = parts.find(p => p.text && !p.thought) || parts[0];
+          const rawText = textPart?.text || "";
           const parsed = cleanAndExtractJson(rawText);
           if (parsed) {
             return { ok: true, data: parsed, provider: "Google Gemini", model };
@@ -846,7 +889,7 @@ async function callSpiritualAI({ prompt, systemPrompt, temperature = 0.88, apiKe
           }
         }
       } catch (err) {
-        lastErr = `${model} erro de rede: ${err.message}`;
+        lastErr = `${model} erro: ${err.message}`;
       }
     }
   }

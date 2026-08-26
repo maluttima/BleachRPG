@@ -18,53 +18,94 @@ function getClaimedSignatures(dbPersonagens=[],dbZanpakutosVinculadas=[]){const 
 function getExistingZanpakutosSummary(dbPersonagens=[],dbZanpakutosVinculadas=[]){const list=[];const seen=new Set();(dbPersonagens||[]).forEach(p=>{if(p.zanpakuto?.shikaiAtiva?.nome&&!seen.has(p.zanpakuto.shikaiAtiva.nome.toLowerCase())){seen.add(p.zanpakuto.shikaiAtiva.nome.toLowerCase());list.push(`- "${p.zanpakuto.shikaiAtiva.nome}" (Dono: ${p.nome} | Elemento/Tema: ${p.zanpakuto.shikaiAtiva.elemento||"Místico"} | Mecânica: ${(p.zanpakuto.shikaiAtiva.poder||"").slice(0,70)}...)`);}else if(p.zanpakuto?.nome&&p.zanpakuto.nome!=="Em despertar"&&!seen.has(p.zanpakuto.nome.toLowerCase())){seen.add(p.zanpakuto.nome.toLowerCase());list.push(`- "${p.zanpakuto.nome}" (Dono: ${p.nome})`);}});(dbZanpakutosVinculadas||[]).forEach(z=>{if(z.nome&&!seen.has(z.nome.toLowerCase())){seen.add(z.nome.toLowerCase());list.push(`- "${z.nome}" (Elemento: ${z.elemento||"Espiritual"})`);}});return list;}// CONSTRUÇÃO COMPLETA DO SOUL DNA
 function construirDnaEspiritual(personagem,cenaTexto=""){const attrs=personagem.atributos||{pressao:10,forca:10,velocidade:10,resiliencia:10};const pList=[{key:"pressao",label:"Pressão Espiritual",val:Number(attrs.pressao||10)},{key:"forca",label:"Força Física",val:Number(attrs.forca||10)},{key:"velocidade",label:"Velocidade",val:Number(attrs.velocidade||10)},{key:"resiliencia",label:"Resiliência",val:Number(attrs.resiliencia||10)}].sort((a,b)=>b.val-a.val);const dominante=pList[0];const deficiente=pList[pList.length-1];const pers=personagem.personalidade||{};const textoPers=(pers.texto||"")+" "+(cenaTexto||"");const virtudes=pers.virtudes||"Determinação e foco inabalável";const defeitos=pers.defeitos||"Orgulho e isolamento";const desejos=pers.desejos||"Proteger os aliados e superar seus limites";const medos=pers.medos||"A impotência diante da derrota";const conflitos=pers.conflitos||"Dever militar versus honra pessoal";const estilo=pers.estiloCombate||"Precisão técnica e velocidade";return{personagemNome:personagem.nome||"Shinigami",esquadrao:personagem.esquadrao||"11º Esquadrão",dominante,deficiente,virtudes,defeitos,desejos,medos,conflitos,estilo,textoCompleto:textoPers};}function getDefaultGeminiKey(){try{const b64="QVEuQWI4Uk42SXpRazdfV0x2OXVXaWtueUM5Mm0yYUJuNzg3endINzhyUG85SEFjLTBVaHc=";if(typeof atob!=='undefined')return atob(b64);if(typeof Buffer!=='undefined')return Buffer.from(b64,'base64').toString('utf8');}catch(e){}return"";}// 3. PROMPT BUILDER PARA CHATGPT / GEMINI (COM FOCO TOTAL NA MECÂNICA E PODER ESPIRITUAL)
 function construirPromptChatGPT(personagem,dna,cenaTexto="",dbPersonagens=[],dbZanpakutosVinculadas=[]){const existingList=getExistingZanpakutosSummary(dbPersonagens,dbZanpakutosVinculadas);const existingSection=existingList.length>0?`\nZANPAKUTŌS JÁ REGISTRADAS NO SISTEMA (ESTRITAMENTE PROIBIDO REPETIR NOMES/CONCEITOS):\n${existingList.join('\n')}\n`:"";return`Você é o ZANPAKUTŌ GENESIS ENGINE para o Bleach RPG — O MAIOR FORJADOR AUTORAL DE ZANPAKUTŌS DO UNIVERSO DE BLEACH (Estilo Tite Kubo).
-Sua missão é analisar profundamente a alma de ${personagem.nome} e gerar EXATAMENTE 4 CAMINHOS DE ZANPAKUTŌ (Shikai + Bankai) 100% INÉDITOS, HIPER-CRIATIVOS, CONCEITUAIS, POÉTICOS E TÁTICOS.
+Sua missão é RACIOCINAR PROFUNDAMENTE sobre a alma de ${personagem.nome} e gerar EXATAMENTE 4 CAMINHOS DE ZANPAKUTŌ (Shikai + Bankai) 100% INÉDITOS, HIPER-CRIATIVOS, POÉTICOS E TÁTICOS, FEITOS SOB MEDIDA PARA ESTE PERSONAGEM.
 
-DADOS DA ALMA DO SHINIGAMI:
-- Nome: ${personagem.nome}
+PERFIL & DNA ESPIRITUAL DO SHINIGAMI:
+- Nome do Shinigami: ${personagem.nome}
 - Raça: ${personagem.raca||"Shinigami"} | Esquadrão: ${personagem.esquadrao||"11º Esquadrão"}
 - Atributos Numéricos: Pressão Espiritual: ${personagem.atributos?.pressao||10} pts, Força: ${personagem.atributos?.forca||10} pts, Velocidade: ${personagem.atributos?.velocidade||10} pts, Resiliência: ${personagem.atributos?.resiliencia||10} pts
-- Atributo Mais Forte (Dominante): ${dna.dominante.label} (${dna.dominante.val} pts)
-- Atributo Mais Fraco (Deficiente): ${dna.deficiente.label} (${dna.deficiente.val} pts)
-- Personalidade Completa: ${dna.textoCompleto}
+- Atributo Dominante (Mais Forte): ${dna.dominante.label} (${dna.dominante.val} pts)
+- Atributo Deficiente (Mais Fraco): ${dna.deficiente.label} (${dna.deficiente.val} pts)
+- Personalidade & Psique: ${dna.textoCompleto}
 - Virtudes Centrais: ${dna.virtudes}
 - Defeitos & Fraquezas: ${dna.defeitos}
 - Desejos & Ambições: ${dna.desejos}
 - Maiores Medos: ${dna.medos}
 - Conflitos Internos & Paradoxos: ${dna.conflitos}
 - Estilo de Combate: ${dna.estilo}
-${cenaTexto?`- Cena de Despertar Narrada pelo Jogador: "${cenaTexto}"`:""}
+${cenaTexto?`- Cena de Despertar Narrada pelo Jogador (Use elementos/metáforas desta cena): "${cenaTexto}"`:""}
 ${existingSection}
-DIRETRIZES DE QUALIDADE MÁXIMA & CRIATIVIDADE AUTORAL (ESTILO TITE KUBO):
+EXEMPLOS DE PADRÃO-OURO DE QUALIDADE & CRIATIVIDADE ESPERADOS (SIGA ESTE NÍVEL EXATO):
+
+--- EXEMPLO 1 (Elemental / Personalidade com Atributo Dominante) ---
+{
+  "nome": "Kōjin no Hyakuro",
+  "kanji": "「光刃の百梟」",
+  "traducao": "Lâminas Radiantes das Catsuas Corujas",
+  "comando": "Vigie a noite soturna e perfure sem hesitação, Kōjin no Hyakuro!",
+  "elemento": "LUMINESCÊNCIA ASTRAL & PENAS CINÉTICAS DE LUZ",
+  "aparencia": "A lâmina dissolve-se em um magnífico arco de pulso de cristal azul-dourado acoplado ao antebraço direito de Fukurō, acompanhado por 12 'penas' flutuantes de luz sólida que orbitam suas costas como um halo espectral.",
+  "relacaoPersonalidade": "Reflete seu humor ácido, natureza calculista e aversão ao combate corpo a corpo, transformando seu desejo de proteger à distância em uma arma de alcance absoluto.",
+  "espirito": "Uma coruja espectral gigante feita de cristal óptico que observa todas as linhas de trajetória no Jinzen.",
+  "mundoInterno": "Uma floresta de ciprestes de cristal azul sob uma noite eterna onde as estrelas caem lentamente como poeira brilhante.",
+  "poder": "Canaliza a monumental Pressão Espiritual (10 pts) de Fukurō para transformar o arco em um sistema de artilharia espectral de longo alcance. Cada flecha disparada se divide no ar em múltiplos dardos teleguiados que analisam a estrutura espiritual do alvo, perfurando com precisão cirúrgica os pontos fracos e desacelerando o tempo de reação dos Hollows.",
+  "custoReiatsu": "Médio",
+  "limitacoes": "Exige concentração visual constante; a perda de linha de visão cancela o teleguiamento dos dardos.",
+  "indices": { "potencia": 8, "abrangencia": 9, "complexidade": 7, "versatilidade": 8, "custo": 6 }
+}
+
+--- EXEMPLO 2 (Compensatório / Defesa com Atributo Deficiente e Medo) ---
+{
+  "nome": "Kyōchō no Senkai",
+  "kanji": "「狂蝶の閃回」",
+  "traducao": "Dança Caótica da Borboleta Insana",
+  "comando": "Corte a compostura e sangre o tédio, Kyōchō no Senkai!",
+  "elemento": "ESPELHAMENTO CINÉTICO & EVASÃO ILUSÓRIA IMPREVISÍVEL",
+  "aparencia": "A espada se multiplica em centenas de fragmentos de espelho reluzentes e flutuantes que se agrupam na forma de asas de borboleta ao redor dos braços e ombros de Camile.",
+  "relacaoPersonalidade": "Conecta-se ao medo profundo de Camile de se tornar 'previsível' ou 'chata', garantindo movimentação errática, teatral e perigosa.",
+  "espirito": "Uma cortesã de porcelana rachada que ri histericamente e dança sobre fios de navalha.",
+  "mundoInterno": "Um salão de baile infinito de espelhos distorcidos onde o chão se estilhaça e se remonta a cada passo.",
+  "poder": "Para compensar a baixa Resiliência (10 pts) e o desejo suicida de Camile, esta Shikai funciona como um sistema de esquiva caótico e letal. Sempre que Camile estiver prestes a receber um golpe fatal, seu corpo se estilhaça em milhares de borboletas de vidro ilusórias e ela se recompõe instantaneamente em um ponto aleatório a até 10 metros, deixando no local original uma explosão de estilhaços de vidro impregnados com Pressão Espiritual (10 pts).",
+  "custoReiatsu": "Alto",
+  "limitacoes": "O teletransporte de esquiva tem um intervalo de 5 segundos entre ativações; se for cercada por múltiplos golpes simultâneos, sofre dano residual dos estilhaços.",
+  "indices": { "potencia": 7, "abrangencia": 6, "complexidade": 9, "versatilidade": 9, "custo": 8 }
+}
+
+--- EXEMPLO 3 (Conceitual / Regras & Tabus) ---
+{
+  "nome": "Meimei no Kiri",
+  "kanji": "「命名の忌」",
+  "traducao": "O Tabu da Nomeação",
+  "comando": "Esqueça o nome, reconheça o vazio, Meimei no Kiri!",
+  "elemento": "APAGAMENTO CONCEITUAL DE IDENTIDADE",
+  "aparencia": "A lâmina torna-se translúcida e ganha um brilho azulado que consome a cor e a sombra dos objetos que toca.",
+  "relacaoPersonalidade": "Sua aversão visceral a certos nomes humanos torna-se uma arma ofensiva contra a linguagem do inimigo.",
+  "espirito": "Um homem mascarado que não possui traços faciais. Extremamente disciplinado, sua voz é um sussurro que apaga memórias.",
+  "mundoInterno": "Uma biblioteca infinita onde todos os livros estão em branco. O clima é de uma neblina fria e opressiva.",
+  "poder": "Ao tocar um oponente, Suh apaga a capacidade do alvo de pronunciar nomes ou reconhecer identidades. Se o oponente não puder nomear seu ataque ou feitiço, a técnica perde 50% de eficácia e seu consumo de Reiatsu é dobrado.",
+  "custoReiatsu": "Médio",
+  "limitacoes": "O efeito termina assim que Suh é atingido fisicamente por um golpe direto.",
+  "indices": { "potencia": 9, "abrangencia": 5, "complexidade": 10, "versatilidade": 7, "custo": 6 }
+}
+
+DIRETRIZES OBRIGATÓRIAS DE CRIAÇÃO PARA ${personagem.nome}:
 1. PODER & MECÂNICA ESPIRITUAL (Campo 'poder'):
-   - Crie conceitos BRILHANTES, BIZARROS, ELEGANTES E PROFUNDAMENTE TÁTICOS (inspirado no cânone de Bleach: Katen Kyōkotsu, Sakanade, Minazuki, Suzumebachi, Wabisuke, Kazeshini, Senbonzakura, Ichimonji).
-   - O texto do campo 'poder' DEVE ser uma prosa narrativa fluida, impactante e completa, integrando explicitamente o nome de ${personagem.nome}, seus atributos numéricos (ex: "Canaliza a monumental Pressão Espiritual (${dna.dominante.val} pts) de ${personagem.nome} para..." ou "Para compensar a baixa Resiliência (${dna.deficiente.val} pts) e o medo de ${dna.medos}, esta Shikai funciona como..."), e uma mecânica de combate surpreendente com regras de interação, condições de acerto, percentuais, alcance e dinâmica de combate completa.
-   - NUNCA use tópicos ou listas numeradas secas como "Gatilho: 1) 2) 3)". Escreva em prosa contínua rica, poética e letal!
-   - PROIBIDO poderes genéricos ou clichês banais (como simples bolas de fogo ou rajadas de vento padrão). Crie manipulações de conceitos abstratos, regras invioláveis de duelo, ilusões sensoriais refinadas, vetores de inércia, transmutação de Reishi ou leis paradoxais.
+   - É O FOCO PRINCIPAL DA GERAÇÃO! Deve ser uma narrativa contínua, poética, tática e autoral.
+   - OBRIGATÓRIO: Cite explicitamente o nome de ${personagem.nome} e seus atributos numéricos com pontos (ex: "Canaliza a monumental Pressão Espiritual (${dna.dominante.val} pts) de ${personagem.nome}..." ou "Para compensar a baixa Resiliência (${dna.deficiente.val} pts) e seu medo de ${dna.medos}...").
+   - Integre metáforas ou elementos da cena de despertar narrada pelo jogador ("${cenaTexto}").
+   - Descreva a regra mecânica exata de combate (gatilhos, percentuais, alcance, condições de impacto e dinâmica prática).
+   - ESTRITAMENTE PROIBIDO criar poderes genéricos como "polariza o ar e dispara descargas cinéticas", "rajada de fogo" ou "lâmina afiada". Crie conceitos sublimes e bizarros dignos de Kubo!
 
-2. OS 4 CAMINHOS DISTINTOS:
-   - Caminho 1 (Opção 1 — Personalidade / Elemental): Canaliza o temperamento central e o atributo dominante (${dna.dominante.label}: ${dna.dominante.val} pts) em um elemento ou plasma exótico e criativo.
-   - Caminho 2 (Opção 2 — Conceitual / Regras): Uma lei tática inviolável, tabu verbal, jogo mental ou regra de duelo progressiva por etapas de impacto.
-   - Caminho 3 (Opção 3 — Compensatório / Defesa da Alma): Feita para proteger ${personagem.nome} contra seu maior medo (${dna.medos}) e compensar a fraqueza de seu atributo deficiente (${dna.deficiente.label}: ${dna.deficiente.val} pts).
-   - Caminho 4 (Opção 4 — Opositivo / Abstrato / Sombra): Explora a antítese oculta do subconsciente, o conflito interno (${dna.conflitos}) e a dualidade da mente em um paradoxo surpreendente.
+2. MANIFESTAÇÃO DA ARMA (Campo 'aparencia'):
+   - Não seja simples nem preguiçoso! Descreva a transformação visual poética da lâmina (asas de espelhos, arcos de cristal acoplados ao antebraço, halos de luz sólida, agulhas ópticas, fitas de aço negro, foices astronômicas, etc.).
 
-3. CAMPOS DE CADA SHIKAI:
-   - 'nome': Nome poético e sonoro em japonês Romaji.
-   - 'kanji': Kanji autêntico entre aspas japonesas 「...」.
-   - 'traducao': Tradução poética em português.
-   - 'comando': Frase épica e curta de liberação.
-   - 'elemento': Tema conceitual único em caixa alta (ex: "LUMINESCÊNCIA ASTRAL & PENAS CINÉTICAS DE LUZ", "APAGAMENTO CONCEITUAL DE IDENTIDADE", "VIBRAÇÃO DE REISHI E PARTÍCULAS DE ISOLAMENTO").
-   - 'aparencia': Manifestação da arma ao se transformar fisicamente na liberação.
-   - 'relacaoPersonalidade': Conexão psicológica profunda entre a alma/personalidade de ${personagem.nome} e a arma.
-   - 'espirito': Descrição vívida da forma física, vestimenta, temperamento e voz do espírito da lâmina na meditação Jinzen.
-   - 'mundoInterno': Descrição profunda do cenário do Mundo Interior da alma (geografia, céu, atmosfera e como reage às emoções de ${personagem.nome}).
-   - 'poder': O PODER & MECÂNICA ESPIRITUAL completo: narrativa rica, tática e autoral integrando nome, atributos e funcionamento de combate.
-   - 'custoReiatsu': "Baixo", "Médio", "Alto" ou "Extremo".
-   - 'limitacoes': Limitação tática, custo ou fraqueza específica explorável.
-   - 'indices': { "potencia": 1-10, "abrangencia": 1-10, "complexidade": 1-10, "versatilidade": 1-10, "custo": 1-10 }
-   - 'bankai': Evolução transcendental correspondente com 'nome', 'kanji', 'traducao', 'comando', 'tipoEvolucao', 'pontoRuptura', 'formaMonumental', 'manifestacaoEspiritoBankai', 'mundoInternoBankai', 'poder', 'pontoFraco', 'limitacoes', 'significadoEspiritual', 'indices'.
+3. OS 4 CAMINHOS DISTINTOS:
+   - Caminho 1 (Opção 1 — Personalidade / Elemental): Canaliza o temperamento central e o atributo mais alto (${dna.dominante.label}: ${dna.dominante.val} pts).
+   - Caminho 2 (Opção 2 — Conceitual / Regras): Uma lei tática inviolável, tabu verbal, paradoxo geométrico ou regra de duelo progressivo.
+   - Caminho 3 (Opção 3 — Compensatório / Defesa da Alma): Protege ${personagem.nome} contra seu maior medo (${dna.medos}) e compensa a fraqueza de seu atributo deficiente (${dna.deficiente.label}: ${dna.deficiente.val} pts).
+   - Caminho 4 (Opção 4 — Opositivo / Abstrato / Sombra): Explora a antítese oculta do subconsciente e o conflito interno (${dna.conflitos}).
 
-RESPONDA OBRIGATORIAMENTE EM JSON VÁLIDO no formato:
+RESPONDA OBRIGATORIAMENTE EM JSON VÁLIDO no seguinte formato:
 {
   "caminhos": [
     {
@@ -76,12 +117,12 @@ RESPONDA OBRIGATORIAMENTE EM JSON VÁLIDO no formato:
         "kanji": "「漢字」",
         "traducao": "Tradução Poética",
         "comando": "Frase de Ativação",
-        "elemento": "TEMA CONCEITUAL ÚNICO",
-        "aparencia": "Descrição da forma e transformação física da arma ao liberar",
-        "relacaoPersonalidade": "Conexão da arma com a personalidade e os sentimentos do Shinigami",
+        "elemento": "TEMA CONCEITUAL EM CAIXA ALTA",
+        "aparencia": "Descrição visual rica e fascinante da arma transformada ao liberar",
+        "relacaoPersonalidade": "Conexão da arma com a personalidade e psique de ${personagem.nome}",
         "espirito": "Aparência física, voz e postura do espírito da Zanpakutō no Jinzen",
         "mundoInterno": "Cenário detalhado do Mundo Interior da alma",
-        "poder": "PODER & MECÂNICA ESPIRITUAL completo: narrativa rica e tática integrando o nome do Shinigami, atributos numéricos e o funcionamento de combate",
+        "poder": "PODER & MECÂNICA ESPIRITUAL completo: narrativa rica citando o nome ${personagem.nome}, atributos numéricos exatos, frações da cena e a mecânica tática detalhada",
         "custoReiatsu": "Baixo/Médio/Alto/Extremo",
         "limitacoes": "Limitação tática, tempo de recarga ou fraqueza de combate",
         "indices": { "potencia": 8, "abrangencia": 7, "complexidade": 6, "versatilidade": 7, "custo": 5 }
@@ -117,7 +158,7 @@ if(trimmedKey){// 1.1 GROQ CLOUD (Chaves que começam com gsk_)
 if(trimmedKey.startsWith("gsk_")){try{const res=await fetch("https://api.groq.com/openai/v1/chat/completions",{signal:typeof AbortSignal!=="undefined"&&typeof AbortSignal.timeout==="function"?AbortSignal.timeout(25000):undefined,method:"POST",headers:{"Content-Type":"application/json","Authorization":`Bearer ${trimmedKey}`},body:JSON.stringify({model:"llama-3.3-70b-versatile",messages:[{role:"system",content:sysMsg},{role:"user",content:prompt}],response_format:{type:"json_object"},temperature})});if(res.ok){const json=await res.json();const content=json.choices?.[0]?.message?.content;const parsed=cleanAndExtractJson(content);if(parsed){return{ok:true,data:parsed,provider:"Groq",model:"llama-3.3-70b-versatile"};}}}catch(err){console.warn("Groq erro:",err.message);}}// 1.2 OPENROUTER (Chaves que começam com sk-or-)
 if(trimmedKey.startsWith("sk-or-")){try{const res=await fetch("https://openrouter.ai/api/v1/chat/completions",{signal:typeof AbortSignal!=="undefined"&&typeof AbortSignal.timeout==="function"?AbortSignal.timeout(28000):undefined,method:"POST",headers:{"Content-Type":"application/json","Authorization":`Bearer ${trimmedKey}`,"HTTP-Referer":"https://bleach-rpg.web.app","X-Title":"Bleach RPG Sociedade das Almas"},body:JSON.stringify({model:"google/gemini-2.0-flash-001",messages:[{role:"system",content:sysMsg},{role:"user",content:prompt}],response_format:{type:"json_object"},temperature})});if(res.ok){const json=await res.json();const content=json.choices?.[0]?.message?.content;const parsed=cleanAndExtractJson(content);if(parsed){return{ok:true,data:parsed,provider:"OpenRouter",model:"gemini-2.0-flash-001"};}}}catch(err){console.warn("OpenRouter erro:",err.message);}}// 1.3 OPENAI CHATGPT (Chaves padrão sk-...)
 if(trimmedKey.startsWith("sk-")){try{const res=await fetch("https://api.openai.com/v1/chat/completions",{signal:typeof AbortSignal!=="undefined"&&typeof AbortSignal.timeout==="function"?AbortSignal.timeout(25000):undefined,method:"POST",headers:{"Content-Type":"application/json","Authorization":`Bearer ${trimmedKey}`},body:JSON.stringify({model:"gpt-4o-mini",messages:[{role:"system",content:sysMsg},{role:"user",content:prompt}],response_format:{type:"json_object"},temperature})});if(res.ok){const json=await res.json();const content=json.choices?.[0]?.message?.content;const parsed=cleanAndExtractJson(content);if(parsed){return{ok:true,data:parsed,provider:"OpenAI",model:"gpt-4o-mini"};}}}catch(err){console.warn("OpenAI erro:",err.message);}}// 1.4 GOOGLE GEMINI (AIzaSy... ou AQ....)
-const geminiModels=["gemini-3.1-flash-lite","gemini-3.5-flash","gemini-3.6-flash","gemini-3.7-flash","gemini-flash-latest"];let lastErr="";for(const model of geminiModels){try{const endpoint=`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(trimmedKey)}`;const res=await fetch(endpoint,{signal:typeof AbortSignal!=="undefined"&&typeof AbortSignal.timeout==="function"?AbortSignal.timeout(45000):undefined,method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({contents:[{role:"user",parts:[{text:`${sysMsg}\n\n${prompt}\n\nResponda ESTRITAMENTE em formato JSON válido conforme solicitado.`}]}],generationConfig:{responseMimeType:"application/json",temperature}})});if(res.ok){const json=await res.json();const rawText=json.candidates?.[0]?.content?.parts?.[0]?.text;const parsed=cleanAndExtractJson(rawText);if(parsed){return{ok:true,data:parsed,provider:"Google Gemini",model};}}else{const errText=await res.text();let errMsg=errText;try{const parsedErr=JSON.parse(errText);if(parsedErr.error?.message){errMsg=parsedErr.error.message;}}catch(e){}lastErr=`HTTP ${res.status} (${model}): ${errMsg}`;if(res.status===400&&(errMsg.includes("API key not valid")||errMsg.includes("API_KEY_INVALID")||errMsg.includes("INVALID_ARGUMENT"))){lastErr=`Chave de API inválida ou incorreta (${errMsg}).`;break;}}}catch(err){lastErr=`${model} erro de rede: ${err.message}`;}}}// 2. TENTAR PROXY SEGURO DE NUVEM (CLOUD FUNCTIONS / SERVIDOR LOCAL)
+const geminiModels=["gemini-3.5-flash","gemini-3.1-flash-lite"];let lastErr="";for(const model of geminiModels){try{const endpoint=`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(trimmedKey)}`;const res=await fetch(endpoint,{signal:typeof AbortSignal!=="undefined"&&typeof AbortSignal.timeout==="function"?AbortSignal.timeout(75000):undefined,method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({contents:[{role:"user",parts:[{text:`${sysMsg}\n\n${prompt}\n\nResponda ESTRITAMENTE em formato JSON válido conforme solicitado.`}]}],generationConfig:{responseMimeType:"application/json",temperature:0.9,thinkingConfig:{thinkingBudget:2048}}})});if(res.ok){const json=await res.json();const parts=json.candidates?.[0]?.content?.parts||[];const textPart=parts.find(p=>p.text&&!p.thought)||parts[0];const rawText=textPart?.text||"";const parsed=cleanAndExtractJson(rawText);if(parsed){return{ok:true,data:parsed,provider:"Google Gemini",model};}}else{const errText=await res.text();let errMsg=errText;try{const parsedErr=JSON.parse(errText);if(parsedErr.error?.message){errMsg=parsedErr.error.message;}}catch(e){}lastErr=`HTTP ${res.status} (${model}): ${errMsg}`;if(res.status===400&&(errMsg.includes("API key not valid")||errMsg.includes("API_KEY_INVALID")||errMsg.includes("INVALID_ARGUMENT"))){lastErr=`Chave de API inválida ou incorreta (${errMsg}).`;break;}}}catch(err){lastErr=`${model} erro: ${err.message}`;}}}// 2. TENTAR PROXY SEGURO DE NUVEM (CLOUD FUNCTIONS / SERVIDOR LOCAL)
 const proxyEndpoints=[];if(typeof window!=='undefined'&&window.BLEACH_CONFIG?.aiProxyEndpoint){proxyEndpoints.push(window.BLEACH_CONFIG.aiProxyEndpoint);}if(typeof window!=='undefined'&&window.location?.origin&&window.location.origin.startsWith('http')){proxyEndpoints.push(`${window.location.origin}/api/ai`);proxyEndpoints.push(`${window.location.origin}/api/executarGeracaoIA`);}proxyEndpoints.push("https://us-central1-bleach-rpg-6894c.cloudfunctions.net/executarGeracaoIA");for(const endpoint of proxyEndpoints){try{const res=await fetch(endpoint,{method:"POST",signal:typeof AbortSignal!=="undefined"&&typeof AbortSignal.timeout==="function"?AbortSignal.timeout(10000):undefined,headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt,systemPrompt:sysMsg,temperature,apiKey:trimmedKey||undefined})});if(res.ok){const json=await res.json();if(json.ok&&json.data){return{ok:true,data:json.data,provider:json.provider||"Servidor Seguro (Nuvem)",model:json.model||"gemini-3.1-flash-lite"};}}}catch(err){}}return{ok:false,error:"Nenhum provedor de IA online no momento.",provider:"Motor Cognitivo ZGE (Offline)"};}async function testSpiritualAIConnection(apiKey=""){const start=Date.now();const trimmed=(apiKey||getValidGeminiApiKey()).trim();if(trimmed){const prompt='Gere este JSON estrito: {"status":"ok","mensagem":"Conexão Espiritual 100% Estabelecida"}';const result=await callSpiritualAI({prompt,temperature:0.1,apiKey:trimmed});const latencyMs=Date.now()-start;if(result.ok){return{ok:true,provider:result.provider,model:result.model,latencyMs,mensagem:`Conexão bem-sucedida com ${result.provider} (${result.model}) em ${latencyMs}ms!`};}else{return{ok:false,provider:result.provider,error:result.error,mensagem:`Falha na conexão com ${result.provider}: ${result.error}`};}}try{const endpoints=["https://us-central1-bleach-rpg-6894c.cloudfunctions.net/statusIAServidor",typeof window!=='undefined'&&window.location?.origin?`${window.location.origin}/api/statusIA`:null].filter(Boolean);for(const ep of endpoints){try{const res=await fetch(ep,{signal:typeof AbortSignal!=="undefined"&&typeof AbortSignal.timeout==="function"?AbortSignal.timeout(8000):undefined});if(res.ok){const json=await res.json();if(json.ativa){return{ok:true,provider:json.provider||"Servidor Seguro na Nuvem",model:json.model||"gemini-3.1-flash-lite",latencyMs:json.latencyMs||Date.now()-start,mensagem:json.mensagem||`Servidor de IA 100% Ativo para Todos os Aparelhos!`};}}}catch(e){}}}catch(e){}return{ok:false,error:"Nenhuma chave foi inserida e o servidor seguro não possui chave ativa.",provider:"Nenhum"};}async function gerar4CaminhosZanpakutoAI_Async(personagem,dbPersonagens=[],dbZanpakutosVinculadas=[],cenaTexto="",apiKey=""){const{claimedNames,claimedElements}=getClaimedSignatures(dbPersonagens,dbZanpakutosVinculadas);const dna=construirDnaEspiritual(personagem,cenaTexto);let caminhosResultantes=null;let origemGeracao="Sintetizador ZGE v5.0 (Offline/Procedural)";const keyToUse=getValidGeminiApiKey(apiKey);try{console.log("Invocando inteligência generativa com motor seguro...");const prompt=construirPromptChatGPT(personagem,dna,cenaTexto,dbPersonagens,dbZanpakutosVinculadas);const aiRes=await callSpiritualAI({prompt,apiKey:keyToUse});if(aiRes.ok&&aiRes.data&&Array.isArray(aiRes.data.caminhos)&&aiRes.data.caminhos.length>=4){console.log(`4 Caminhos de Shikai gerados com sucesso via ${aiRes.provider} (${aiRes.model})!`);origemGeracao=`IA Generativa · ${aiRes.provider} (${aiRes.model})`;caminhosResultantes=aiRes.data.caminhos.slice(0,4).map((c,idx)=>{const descLam=c.shikai.descricaoLamina||c.shikai.aparencia||c.shikai.formatoArma||"Katana de corte espiritual com gravuras rúnicas.";return{...c,caminhoNumero:idx+1,origemIA:origemGeracao,shikai:{...c.shikai,id:uid(),descricaoLamina:descLam,aparencia:descLam,formatoArma:descLam,poderEspiritual:c.shikai.poderEspiritual||c.shikai.poder,mecanicaCombate:c.shikai.mecanicaCombate||c.shikai.poder,assinaturaEspiritual:calcularAssinaturaEspiritual(c.shikai)},bankai:{...c.bankai,formaMonumental:c.bankai?.formaMonumental||c.bankai?.descricaoFormaBankai||"Manifestação monumental de Reishi.",poderEspiritualBankai:c.bankai?.poderEspiritualBankai||c.bankai?.poder,mecanicaCombate:c.bankai?.mecanicaCombate||c.bankai?.poder,pontoRuptura:c.bankai?.pontoRuptura||"Limite da Shikai superado.",pontoFraco:c.bankai?.pontoFraco||"Brecha estratégica de curto alcance."}};});}else{console.warn("Retorno da IA não continha 4 caminhos estruturados ou falhou:",aiRes.error);}}catch(err){console.warn("Erro ao chamar IA generativa para Shikai:",err);}// Fallback: Sintetizador Cognitivo Procedural ZGE v5.0
 if(!caminhosResultantes){console.log("Executando Sintetizador Cognitivo ZGE V5.0 baseado na personalidade com filtro anti-duplicatas...");caminhosResultantes=sintetizarZanpakutosCognitivo(personagem,dna,cenaTexto,claimedNames,claimedElements);}// 3. Validação rigorosa pós-geração: Cálculo de Similaridade contra todas as outras fichas
 const validatedCaminhos=caminhosResultantes.map(c=>{let maxSimilarity=0;let similarWithChar="";let similarWithZk="";(dbPersonagens||[]).forEach(otherP=>{if(otherP.id!==personagem.id&&otherP.zanpakuto?.shikaiAtiva){const sim=calcularIndiceSimilaridade(c.shikai,otherP.zanpakuto.shikaiAtiva);if(sim>maxSimilarity){maxSimilarity=sim;similarWithChar=otherP.nome;similarWithZk=otherP.zanpakuto.shikaiAtiva.nome;}}});const isExclusivo=maxSimilarity<40;const indiceExclusividade=Math.max(1,100-maxSimilarity);return{...c,indiceExclusividade,isExclusivo,similaridadeMaxima:maxSimilarity,similarCom:maxSimilarity>0?`${similarWithZk} (${similarWithChar})`:null,dnaEspiritual:{dominante:dna.dominante.label,deficiente:dna.deficiente.label,virtudePrincipal:dna.virtudes.split(',')[0],defeitoPrincipal:dna.defeitos.split(',')[0]}};});return validatedCaminhos;}// Compatibilidade Síncrona para Shikai
