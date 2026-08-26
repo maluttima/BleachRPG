@@ -5,6 +5,26 @@
 
 const PATCH_NOTES_HISTORY = [
   {
+    versao: "7.0",
+    titulo: "Simulador Interativo de Combate da Zanpakutō & Shikai/Bankai",
+    data: "26 de Agosto de 2026",
+    destaque: "Lançamento oficial do Simulador de Combate da Zanpakutō diretamente na aba da Shikai, com 5 modos de disputa canônica (Corte vs Resiliência, Resiliência vs Impacto, Alcance vs Velocidade, Controle vs Reação, e Reiatsu & Modos de Canalização), presets de inimigos e comutação instantânea de Shikai e Bankai.",
+    banner: "assets/bleach-banner.png",
+    resumo: "Uma expansão revolucionária para a aba de Zanpakutō & Despertar da Ficha. Inspirado no simulador de atributos, o novo Simulador de Zanpakutō calcula em tempo real o poder de penetração, risco de dano estrutural à lâmina, cerco territorial e sobrecarga de Reiatsu (Absorção vs Ressonância) contra adversários do Seireitei e do Hueco Mundo, com orientações táticas e mecânicas completas para narração de cenas.",
+    secoes: [
+      {
+        tipo: "novo",
+        titulo: "⚔️ Simulador de Combate de Zanpakutō (Shikai & Bankai)",
+        itens: [
+          "✦ **5 Modos de Disputa Canônica**: `⚔️ Corte X Resiliência` (Poder de penetração & quebra de Hierro/barreira), `🛡️ Resiliência X Impacto` (Durabilidade da lâmina contra deformação/fratura), `🏹 Alcance X Velocidade` (Zona de cerco territorial vs esquiva de Hohō), `🎯 Controle X Reação` (Moldagem e fintas) e `🌌 Reiatsu & Modos` (Canalização espiritual).",
+          "✦ **Canalização Tática de Reiatsu**: Ativação com 1 clique de `💥 Ressonância de Impacto (+bônus de dano)` ou `💫 Absorção Espiritual (+bônus de pressão)`.",
+          "✦ **Comutação Shikai / Bankai**: Alterne entre a escala regular de Shikai e a escala Transcendental de Bankai com multiplicadores e efeitos visuais autênticos.",
+          "✦ **Presets Canônicos Rápidos**: Teste sua lâmina instantaneamente contra Hollow Menor (40 pts), Gillian (120 pts), Sentinela (250 pts), Tenente (600 pts), Capitão (1400 pts), Espada Top 4 (2500 pts) e Yamamoto (5000 pts)."
+        ]
+      }
+    ]
+  },
+  {
     versao: "6.9",
     titulo: "Novo Guia Oficial para Novatos, Limites de Cenas & Regras de Fadiga e Combate",
     data: "25 de Agosto de 2026",

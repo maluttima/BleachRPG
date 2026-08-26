@@ -116,6 +116,10 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
   const [gastoPressaoResiliencia, setGastoPressaoResiliencia] = useState(0);
   const [simuladorModo, setSimuladorModo] = useState("forca_resiliencia");
   const [simStatInimigo, setSimStatInimigo] = useState(80);
+  const [simZkModo, setSimZkModo] = useState("corte_resiliencia");
+  const [simZkStatInimigo, setSimZkStatInimigo] = useState(120);
+  const [simZkIsBankai, setSimZkIsBankai] = useState(false);
+  const [simZkModoCanalizacao, setSimZkModoCanalizacao] = useState("neutro"); // "neutro" | "ressonancia" | "absorcao"
   const [kidoModalFicha, setKidoModalFicha] = useState(null);
   const [showKidoTreeModal, setShowKidoTreeModal] = useState(false);
   const [showKidoShopModal, setShowKidoShopModal] = useState(false);
@@ -1408,7 +1412,7 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
                           <div className="p-3.5 bg-bleach-panel2 rounded-xl border border-white/10 space-y-1">
                             <strong className="text-yellow-400 block text-xs flex items-center gap-1.5">
-                              <span>👑</span> Domínio Territorial & Forma Monumental:
+                              <span>👑</span> Forma & Manifestação Física da Bankai:
                             </strong>
                             <p className="text-bleach-creamDim text-xs leading-relaxed">
                               {b.formaMonumental || "Manifestação monumental de Reishi em escala territorial."}
@@ -1819,6 +1823,289 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
                 </div>
               )
             )}
+          </Section>
+
+          {/* 🎯 SIMULADOR INTERATIVO DE COMBATE DA ZANPAKUTŌ (SHIKAI & BANKAI) */}
+          <Section
+            title="🎯 Simulador Interativo de Combate da Zanpakutō (Shikai & Bankai)"
+            subtitle="Teste disputas de corte, resiliência da lâmina, alcance e sobrecarga espiritual segundo o regulamento do Seireitei"
+            className="border-2 border-cyan-500/60 shadow-2xl bg-gradient-to-b from-cyan-950/20 via-black to-bleach-panel"
+          >
+            {(() => {
+              const isSimulandoBankai = simZkIsBankai && temBankai;
+              const statsZk = (typeof calcularAtributosZanpakuto === 'function')
+                ? calcularAtributosZanpakuto(personagem.atributos, isSimulandoBankai)
+                : { corte: 150, resiliencia: 150, alcance: 150, controle: 150, pressaoEspiritual: 150, media: 150, alcanceMetros: "15m", bonusAbsorcaoReiatsu: 35, bonusDanoRessonancia: 60 };
+              
+              const armaAtiva = isSimulandoBankai 
+                ? personagem.zanpakuto?.bankaiAtiva 
+                : (personagem.zanpakuto?.shikaiAtiva || { nome: "Zanpakutō Selada (Asauchi)", elemento: "Espiritual" });
+              const nomeArma = armaAtiva?.nome || "Zanpakutō";
+
+              let analise = null;
+              let labelStatArma = "";
+              let valorStatArma = 0;
+              let labelStatInimigo = "";
+
+              if (simZkModo === "corte_resiliencia") {
+                const bonusRess = statsZk.bonusDanoRessonancia || 0;
+                const ressonanciaAtiva = simZkModoCanalizacao === "ressonancia";
+                analise = (typeof calcularRelacaoZanpakutoCorte === 'function')
+                  ? calcularRelacaoZanpakutoCorte(statsZk.corte, simZkStatInimigo, isSimulandoBankai, ressonanciaAtiva, bonusRess)
+                  : { ratio: 1, pct: 100, categoria: "Corte Efetivo", cor: "#4FB3E8", resultadoStr: "Penetração Padrão", efeitoAlvo: "Corte aberto.", integridadeLamina: "Íntegra.", dicaTatica: "Manter pressão." };
+                labelStatArma = isSimulandoBankai ? "Corte Transcendental (Bankai)" : "Poder de Corte da Lâmina";
+                valorStatArma = statsZk.corte + (ressonanciaAtiva ? bonusRess : 0);
+                labelStatInimigo = "Resiliência / Hierro / Barreira do Alvo";
+              } else if (simZkModo === "resiliencia_impacto") {
+                const bonusAbs = statsZk.bonusAbsorcaoReiatsu || 0;
+                const absorcaoAtiva = simZkModoCanalizacao === "absorcao";
+                analise = (typeof calcularRelacaoZanpakutoResiliencia === 'function')
+                  ? calcularRelacaoZanpakutoResiliencia(statsZk.resiliencia, simZkStatInimigo, isSimulandoBankai, absorcaoAtiva, bonusAbs)
+                  : { ratio: 1, pct: 100, categoria: "Lâmina Estável", cor: "#4FB3E8", resultadoStr: "Defesa Padrão", efeitoAlvo: "Bloqueio firme.", integridadeLamina: "Íntegra.", dicaTatica: "Aparar e contra-atacar." };
+                labelStatArma = isSimulandoBankai ? "Resiliência Monumental (Bankai)" : "Durabilidade & Resiliência da Lâmina";
+                valorStatArma = statsZk.resiliencia + (absorcaoAtiva ? bonusAbs : 0);
+                labelStatInimigo = "Força / Impacto do Golpe Inimigo";
+              } else if (simZkModo === "alcance_velocidade") {
+                analise = (typeof calcularRelacaoZanpakutoAlcance === 'function')
+                  ? calcularRelacaoZanpakutoAlcance(statsZk.alcance, simZkStatInimigo, isSimulandoBankai, statsZk.alcanceMetros)
+                  : { ratio: 1, pct: 100, categoria: "Cobertura Padrão", cor: "#4FB3E8", resultadoStr: "Alcance Equilibrado", efeitoAlvo: "Área coberta.", integridadeLamina: "Fluxo regular.", dicaTatica: "Manter distância." };
+                labelStatArma = isSimulandoBankai ? "Alcance Territorial (Bankai)" : "Alcance & Dispersão Espacial";
+                valorStatArma = statsZk.alcance;
+                labelStatInimigo = "Velocidade de Esquiva / Hohō do Inimigo";
+              } else if (simZkModo === "controle_defesa") {
+                analise = (typeof calcularRelacaoZanpakutoControle === 'function')
+                  ? calcularRelacaoZanpakutoControle(statsZk.controle, simZkStatInimigo, isSimulandoBankai)
+                  : { ratio: 1, pct: 100, categoria: "Controle Dinâmico", cor: "#5FA96B", resultadoStr: "Precisão Estável", efeitoAlvo: "Moldagem fluida.", integridadeLamina: "Sincronizada.", dicaTatica: "Variar ataques." };
+                labelStatArma = isSimulandoBankai ? "Controle Soberano (Bankai)" : "Controle de Forma & Moldagem";
+                valorStatArma = statsZk.controle;
+                labelStatInimigo = "Controle / Tempo de Reação do Adversário";
+              } else {
+                analise = (typeof calcularRelacaoZanpakutoReiatsu === 'function')
+                  ? calcularRelacaoZanpakutoReiatsu(statsZk.pressaoEspiritual, simZkStatInimigo, simZkModoCanalizacao, statsZk.bonusAbsorcaoReiatsu, statsZk.bonusDanoRessonancia, isSimulandoBankai)
+                  : { ratio: 1, pct: 100, categoria: "Equilíbrio de Aura", cor: "#E0B34C", resultadoStr: "Pressão Mútua", efeitoAlvo: "Aura estável.", integridadeLamina: "Brilho puro.", dicaTatica: "Canalizar energia." };
+                labelStatArma = isSimulandoBankai ? "Reiatsu Soberana (Bankai)" : "Pressão Espiritual da Zanpakutō";
+                valorStatArma = statsZk.pressaoEspiritual + (simZkModoCanalizacao === "absorcao" ? statsZk.bonusAbsorcaoReiatsu : 0);
+                labelStatInimigo = "Pressão Espiritual do Oponente";
+              }
+
+              return (
+                <div className="space-y-5">
+                  {/* Topo do Simulador: Seletor de Escala (Shikai / Bankai) & Canalização de Reiatsu */}
+                  <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 bg-black/80 rounded-xl border border-cyan-500/30">
+                    <div className="flex items-center gap-2.5">
+                      <span className="text-2xl">{isSimulandoBankai ? "👑" : "⚔️"}</span>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-bold uppercase tracking-wider text-white">
+                            Lâmina em Simulação: <strong className="text-cyan-400 font-mono">{nomeArma}</strong>
+                          </span>
+                          <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full ${isSimulandoBankai ? 'bg-amber-950 text-yellow-300 border border-yellow-400' : 'bg-cyan-950 text-cyan-300 border border-cyan-500'}`}>
+                            {isSimulandoBankai ? "Escala Bankai" : (temShikai ? "Escala Shikai" : "Projeção Asauchi")}
+                          </span>
+                        </div>
+                        <div className="text-[11px] text-bleach-muted mt-0.5">
+                          Média Espiritual da Lâmina: <strong className="text-yellow-400 font-mono">{statsZk.media} pts</strong> | Alcance Estimado: <strong className="text-cyan-300">{statsZk.alcanceMetros}</strong>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 flex-wrap">
+                      {/* Toggle Shikai / Bankai (se tiver Bankai) */}
+                      {temBankai && (
+                        <div className="flex bg-black p-1 rounded-xl border border-yellow-500/40">
+                          <button
+                            type="button"
+                            onClick={() => { setSimZkIsBankai(false); if (typeof playReiatsuSound === 'function') playReiatsuSound('shikai'); }}
+                            className={`px-3 py-1 rounded-lg text-xs font-bold transition ${
+                              !simZkIsBankai ? "bg-cyan-600 text-white shadow font-extrabold" : "text-bleach-creamDim hover:text-white"
+                            }`}
+                          >
+                            ⚔️ Shikai
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => { setSimZkIsBankai(true); if (typeof playReiatsuSound === 'function') playReiatsuSound('bankai'); }}
+                            className={`px-3 py-1 rounded-lg text-xs font-bold transition ${
+                              simZkIsBankai ? "bg-gradient-to-r from-yellow-500 to-amber-600 text-black shadow font-black" : "text-yellow-300/70 hover:text-yellow-200"
+                            }`}
+                          >
+                            卍 Bankai
+                          </button>
+                        </div>
+                      )}
+
+                      {/* Canalização de Reiatsu da Lâmina */}
+                      <div className="flex items-center gap-1 bg-black/90 p-1 rounded-xl border border-white/10 text-xs">
+                        <span className="text-[10px] text-bleach-muted uppercase font-bold px-1.5">Canalização:</span>
+                        <button
+                          type="button"
+                          onClick={() => { setSimZkModoCanalizacao("neutro"); if (typeof playReiatsuSound === 'function') playReiatsuSound('hum'); }}
+                          className={`px-2 py-0.5 rounded text-[10px] font-bold transition ${
+                            simZkModoCanalizacao === "neutro" ? "bg-bleach-panel text-white border border-white/20" : "text-bleach-muted hover:text-white"
+                          }`}
+                        >
+                          Padrão
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => { setSimZkModoCanalizacao("ressonancia"); if (typeof playReiatsuSound === 'function') playReiatsuSound('win'); }}
+                          className={`px-2 py-0.5 rounded text-[10px] font-bold transition flex items-center gap-1 ${
+                            simZkModoCanalizacao === "ressonancia" ? "bg-red-900 text-red-200 border border-red-500 shadow" : "text-red-400/70 hover:text-red-300"
+                          }`}
+                          title={`Soma +${statsZk.bonusDanoRessonancia} no dano`}
+                        >
+                          💥 Ressonância (+{statsZk.bonusDanoRessonancia})
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => { setSimZkModoCanalizacao("absorcao"); if (typeof playReiatsuSound === 'function') playReiatsuSound('win'); }}
+                          className={`px-2 py-0.5 rounded text-[10px] font-bold transition flex items-center gap-1 ${
+                            simZkModoCanalizacao === "absorcao" ? "bg-cyan-900 text-cyan-200 border border-cyan-400 shadow" : "text-cyan-400/70 hover:text-cyan-300"
+                          }`}
+                          title={`Soma +${statsZk.bonusAbsorcaoReiatsu} na Pressão Espiritual`}
+                        >
+                          💫 Absorção (+{statsZk.bonusAbsorcaoReiatsu})
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 5 Modos de Confronto da Zanpakutō */}
+                  <div className="flex gap-2 overflow-x-auto pb-1">
+                    {[
+                      { id: "corte_resiliencia", label: "⚔️ Corte X Resiliência", desc: "Penetração & Ruptura de Guarda", cor: "#D6483F", statVal: statsZk.corte + (simZkModoCanalizacao === "ressonancia" ? statsZk.bonusDanoRessonancia : 0) },
+                      { id: "resiliencia_impacto", label: "🛡️ Resiliência X Impacto", desc: "Integridade & Durabilidade da Lâmina", cor: "#8B6FD6", statVal: statsZk.resiliencia + (simZkModoCanalizacao === "absorcao" ? statsZk.bonusAbsorcaoReiatsu : 0) },
+                      { id: "alcance_velocidade", label: "🏹 Alcance X Velocidade", desc: "Domínio Territorial & Cerco", cor: "#4FB3E8", statVal: statsZk.alcance },
+                      { id: "controle_defesa", label: "🎯 Controle X Reação", desc: "Moldagem Elemental & Fintas", cor: "#5FA96B", statVal: statsZk.controle },
+                      { id: "reiatsu_modos", label: "🌌 Reiatsu & Modos", desc: "Absorção vs Ressonância de Dano", cor: "#E0B34C", statVal: statsZk.pressaoEspiritual + (simZkModoCanalizacao === "absorcao" ? statsZk.bonusAbsorcaoReiatsu : 0) }
+                    ].map((modo) => (
+                      <button
+                        key={modo.id}
+                        type="button"
+                        onClick={() => { setSimZkModo(modo.id); if (typeof playReiatsuSound === 'function') playReiatsuSound('hum'); }}
+                        className={`px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex-1 min-w-[165px] text-left border ${
+                          simZkModo === modo.id
+                            ? "bg-bleach-panel2 text-white border-white shadow-xl ring-1 ring-white/30"
+                            : "bg-black/60 text-bleach-creamDim border-white/5 hover:border-white/20"
+                        }`}
+                        style={{ borderColor: simZkModo === modo.id ? modo.cor : undefined }}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="font-extrabold text-sm">{modo.label}</span>
+                          <span className="font-mono text-[11px] px-1.5 py-0.2 rounded bg-black/60 border border-white/10" style={{ color: modo.cor }}>
+                            {modo.statVal} pts
+                          </span>
+                        </div>
+                        <div className="text-[10px] text-bleach-muted mt-1">{modo.desc}</div>
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Painel do Modo Selecionado */}
+                  <div className="p-4 sm:p-5 bg-gradient-to-r from-black via-bleach-panel2 to-black rounded-xl border-2 border-white/10 space-y-4 shadow-xl">
+                    {/* Header da Comparação */}
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
+                      <div>
+                        <h5 className="font-title text-xl text-white flex items-center gap-2">
+                          <span>🎯</span> Disputa: {labelStatArma} ({valorStatArma} pts) vs {labelStatInimigo}
+                        </h5>
+                        <p className="text-[11px] text-bleach-creamDim">
+                          Simulação mecânica e narrativa em tempo real baseada nos atributos da sua {isSimulandoBankai ? "Bankai" : "Shikai"}.
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-bleach-muted whitespace-nowrap">{labelStatInimigo}:</span>
+                        <input
+                          type="number"
+                          min="1"
+                          max="99999"
+                          value={simZkStatInimigo}
+                          onChange={(e) => setSimZkStatInimigo(Math.max(1, Number(e.target.value) || 1))}
+                          className="w-24 px-3 py-1.5 bg-black/80 border border-cyan-500/40 rounded-lg text-white font-mono font-bold text-sm text-center focus:outline-none focus:border-cyan-400"
+                        />
+                        <span className="text-xs font-mono text-cyan-400 font-bold">pts</span>
+                      </div>
+                    </div>
+
+                    {/* Presets Rápidos de Adversários / Barreiras */}
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="text-[10px] font-bold text-bleach-muted uppercase mr-1">Presets Rápidos:</span>
+                      {[
+                        { label: "💀 Hollow Menor", val: 40 },
+                        { label: "🗡️ Gillian / Menos", val: 120 },
+                        { label: "⚔️ Sentinela / 3º Posto", val: 250 },
+                        { label: "⚡ Tenente", val: 600 },
+                        { label: "👑 Capitão", val: 1400 },
+                        { label: "🩸 Espada Top 4", val: 2500 },
+                        { label: "🌟 Comandante Yamamoto", val: 5000 },
+                      ].map((preset) => (
+                        <button
+                          key={preset.label}
+                          type="button"
+                          onClick={() => { setSimZkStatInimigo(preset.val); if (typeof playReiatsuSound === 'function') playReiatsuSound('hum'); }}
+                          className={`px-2.5 py-1 rounded-lg text-[11px] font-mono transition ${
+                            simZkStatInimigo === preset.val
+                              ? "bg-cyan-500 text-black font-bold border border-white shadow"
+                              : "bg-black/60 text-bleach-creamDim hover:text-white border border-white/10"
+                          }`}
+                        >
+                          {preset.label} ({preset.val})
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Resultado Visual da Simulação */}
+                    <div className="p-4 bg-black/90 rounded-xl border-2 space-y-3" style={{ borderColor: analise.cor }}>
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <div className="flex items-center gap-2">
+                          <span
+                            className="text-[10px] font-extrabold uppercase px-3 py-1 rounded-full text-black shadow"
+                            style={{ backgroundColor: analise.cor }}
+                          >
+                            {analise.categoria}
+                          </span>
+                          <span className="text-xs font-mono text-bleach-creamDim">
+                            Sua Lâmina ({valorStatArma}) / Alvo ({simZkStatInimigo}) = <strong className="font-bold text-white">{analise.pct}%</strong>
+                          </span>
+                        </div>
+
+                        <span className="text-xs font-bold font-mono" style={{ color: analise.cor }}>
+                          {analise.resultadoStr}
+                        </span>
+                      </div>
+
+                      {/* Barra de Proporção Animada */}
+                      <div className="w-full bg-black/60 h-2.5 rounded-full overflow-hidden border border-white/10">
+                        <div
+                          className="h-full rounded-full transition-all duration-500"
+                          style={{
+                            width: `${Math.min(100, analise.pct)}%`,
+                            backgroundColor: analise.cor
+                          }}
+                        ></div>
+                      </div>
+
+                      {/* Grid 3 Caixas de Feedback Mecânico e Narrativo */}
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs pt-1">
+                        <div className="p-2.5 bg-bleach-panel rounded-lg border border-white/5">
+                          <strong className="text-cyan-400 block text-[10px] uppercase font-bold">Efeito no Alvo / Cenário:</strong>
+                          <p className="text-bleach-cream mt-0.5 leading-relaxed">{analise.efeitoAlvo}</p>
+                        </div>
+                        <div className="p-2.5 bg-bleach-panel rounded-lg border border-white/5">
+                          <strong className="text-purple-300 block text-[10px] uppercase font-bold">Integridade da Zanpakutō:</strong>
+                          <p className="text-bleach-cream mt-0.5 leading-relaxed">{analise.integridadeLamina}</p>
+                        </div>
+                        <div className="p-2.5 bg-bleach-panel rounded-lg border border-white/5">
+                          <strong className="text-yellow-400 block text-[10px] uppercase font-bold">Recomendação Tática de Narração:</strong>
+                          <p className="text-bleach-cream mt-0.5 leading-relaxed">{analise.dicaTatica}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
           </Section>
         </div>
       )}

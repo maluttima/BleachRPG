@@ -623,7 +623,7 @@ function Zanpakuto4PathsModal({ open, caminhos = [], personagem, isBankai, loadi
                   {/* Forma Monumental & Poder */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                     <div className="p-3.5 bg-bleach-panel2 rounded-xl border border-white/10 space-y-1">
-                      <strong className="text-yellow-400 block text-xs">👑 Domínio Territorial & Forma:</strong>
+                      <strong className="text-yellow-400 block text-xs">👑 Forma & Manifestação Física:</strong>
                       <p className="text-bleach-creamDim text-[11px] leading-relaxed">
                         {caminhoSelecionado.bankai?.formaMonumental || caminhoSelecionado.formaMonumental}
                       </p>

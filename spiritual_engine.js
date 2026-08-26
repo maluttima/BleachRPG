@@ -1793,6 +1793,291 @@ function calcularRelacaoPressaoPressao(pressaoUser, pressaoInimiga) {
 }
 
 // =========================================================================
+// ZANPAKUTŌ COMBAT SIMULATOR: 5 OFFICIAL SOUL CLASHES & TACTICAL ANALYSIS
+// =========================================================================
+
+function calcularRelacaoZanpakutoCorte(corteUser, resilienciaInimiga, isBankai = false, ressonanciaAtiva = false, bonusRessonancia = 0) {
+  const bonus = ressonanciaAtiva ? Math.max(0, Number(bonusRessonancia || 0)) : 0;
+  const cU = Math.max(1, Number(corteUser || 100)) + bonus;
+  const rI = Math.max(1, Number(resilienciaInimiga || 100));
+  const ratio = Number((cU / rI).toFixed(2));
+  const pct = Math.round(ratio * 100);
+
+  if (ratio >= 1.40) {
+    return {
+      ratio,
+      pct,
+      categoria: isBankai ? "Aniquilação Transcendental / Bissecção Absoluta" : "Bissecção Limpa / Ruptura de Guarda Total",
+      cor: "#5FA96B",
+      resultadoStr: `Corte Devastador (${pct}% de Penetração)${bonus > 0 ? ` [💥 +${bonus} Ressonância]` : ""}`,
+      efeitoAlvo: isBankai 
+        ? "Cisão Espacial & Desintegração. A matéria espiritual do alvo é fendida sem qualquer resistência física ou barreira."
+        : "Corte Profundo ou Decepamento. A lâmina atravessa Hierro, blindagens e carne com facilidade cirúrgica.",
+      integridadeLamina: "Preservação Impecável. Gume perfeito sem nenhuma perda de fio ou atrito mecânico.",
+      dicaTatica: "Sua lâmina supera totalmente a dureza do oponente! Golpes diretos finalizam o combate com extrema rapidez e sem risco de rebote."
+    };
+  } else if (ratio >= 1.00) {
+    return {
+      ratio,
+      pct,
+      categoria: "Corte Aberto Severo / Fissura Estrutural",
+      cor: "#4FB3E8",
+      resultadoStr: `Penetração Efetiva (${pct}% de Força)${bonus > 0 ? ` [💥 +${bonus} Ressonância]` : ""}`,
+      efeitoAlvo: "Laceração Profunda. O golpe rompe a camada protetora externa de Reishi, causando sangramento contínuo e quebra de postura.",
+      integridadeLamina: "Estrutura Firme. Vibração estável na empunhadura, mantendo o alinhamento da espada.",
+      dicaTatica: "Seu poder de corte é superior à resiliência adversária. Pressione com combos sequenciais para aprofundar o dano."
+    };
+  } else if (ratio >= 0.70) {
+    return {
+      ratio,
+      pct,
+      categoria: "Fio Amortecido / Laceração Superficial",
+      cor: "#E0B34C",
+      resultadoStr: `Penetração Parcial (${pct}% de Força)${bonus > 0 ? ` [💥 +${bonus} Ressonância]` : ""}`,
+      efeitoAlvo: "Corte Raso com Hematoma. O impacto empurra o adversário (2 a 4m), mas a densidade corporal amortece a profundidade da lâmina.",
+      integridadeLamina: "Trepidação Tensa. A espada sofre atrito denso contra a superfície de defesa.",
+      dicaTatica: "O oponente tem alta resistência ao seu corte. Ative a Ressonância de Impacto (+Reiatsu) ou busque atingir pontos articulares desprotegidos."
+    };
+  } else {
+    return {
+      ratio,
+      pct,
+      categoria: "Rebote Metálico / Bloqueio Total Inimigo",
+      cor: "#D6483F",
+      resultadoStr: `Deflexão Completa (< 70% de Força)${bonus > 0 ? ` [💥 +${bonus} Ressonância]` : ""}`,
+      efeitoAlvo: "Ricochete Espiritual. O golpe apenas emite faíscas sem perfurar; a couraça de Reishi/Hierro do alvo permanece intacta.",
+      integridadeLamina: "Risco de Choque Mecânico. A lâmina é repelida com violência, abrindo a própria guarda do atacante.",
+      dicaTatica: "Diferença defensiva impenetrável para corte frontal! Ataques diretos serão repelidos. Use Kidōs de penetração, flanqueie com Shunpo ou libere Bankai."
+    };
+  }
+}
+
+function calcularRelacaoZanpakutoResiliencia(resilienciaUser, forcaCorteInimigo, isBankai = false, absorcaoAtiva = false, bonusAbsorcao = 0) {
+  const bonus = absorcaoAtiva ? Math.max(0, Number(bonusAbsorcao || 0)) : 0;
+  const rU = Math.max(1, Number(resilienciaUser || 100)) + bonus;
+  const fI = Math.max(1, Number(forcaCorteInimigo || 100));
+  const ratio = Number((rU / fI).toFixed(2));
+  const pct = Math.round(ratio * 100);
+
+  if (ratio >= 1.30) {
+    return {
+      ratio,
+      pct,
+      categoria: isBankai ? "Fortaleza Monumental / Absorção Transcendental" : "Lâmina Inabalável / Bloqueio Perfeito",
+      cor: "#5FA96B",
+      resultadoStr: `Resistência Inviolável (${pct}% de Absorção)${bonus > 0 ? ` [💫 +${bonus} Absorção]` : ""}`,
+      efeitoAlvo: "Aparada Inabalável (Parry). O Shinigami sustenta o impacto sem recuar um único milímetro, desequilibrando o agressor.",
+      integridadeLamina: "100% Intacta. Nenhuma microfissura ou fadiga de Reishi; a lâmina dissipa a força cinética com perfeição.",
+      dicaTatica: "A durabilidade da sua Zanpakutō é suprema. É o cenário ideal para aparar e contra-atacar no mesmo tempo de manobra."
+    };
+  } else if (ratio >= 0.90) {
+    return {
+      ratio,
+      pct,
+      categoria: "Resistência Estável / Choque Controlado",
+      cor: "#4FB3E8",
+      resultadoStr: `Defesa Sólida (${pct}% de Absorção)${bonus > 0 ? ` [💫 +${bonus} Absorção]` : ""}`,
+      efeitoAlvo: "Defesa Eficaz. A lâmina bloqueia a investida com leve recuo elástico e faíscas de energia.",
+      integridadeLamina: "Estrutura Segura. Vibração mecânica absorvida pelos circuitos de Reishi da espada.",
+      dicaTatica: "Choque equilibrado. Evite sustentar a pressão contínua e utilize a elasticidade da defesa para empurrar o rival."
+    };
+  } else if (ratio >= 0.60) {
+    return {
+      ratio,
+      pct,
+      categoria: "Fadiga Estrutural / Risco de Lasca",
+      cor: "#FF6A13",
+      resultadoStr: `Tensão Crítica (${pct}% de Absorção)${bonus > 0 ? ` [💫 +${bonus} Absorção]` : ""}`,
+      efeitoAlvo: "Guarda Forçada. O impacto pesado é transferido diretamente aos pulsos e ombros do Shinigami (recuo de 3 a 5m).",
+      integridadeLamina: "Alerta de Microdeformação. A espada sofre estresse severo de massa, com risco de lascar o gume se insistir no bloqueio.",
+      dicaTatica: "O golpe inimigo é pesado demais para defesa estática! Não tente aparar de frente; desvie o corte angularmente ou absorva com Reiki."
+    };
+  } else {
+    return {
+      ratio,
+      pct,
+      categoria: "Risco Extremo de Fratura / Quebra de Lâmina",
+      cor: "#D6483F",
+      resultadoStr: `Colapso Iminente (< 60% de Absorção)${bonus > 0 ? ` [💫 +${bonus} Absorção]` : ""}`,
+      efeitoAlvo: "Guarda Esmagada. O impacto quebra a postura defensiva e arremessa o Shinigami violentamente contra o cenário.",
+      integridadeLamina: "Perigo de Trinca ou Quebra! A integridade espiritual da Zanpakutō está no limite do colapso.",
+      dicaTatica: "Diferencial de impacto esmagador! Bloquear esse ataque com a espada é suicídio e causará fratura na lâmina. Esquive com Hohō!"
+    };
+  }
+}
+
+function calcularRelacaoZanpakutoAlcance(alcanceUser, velocidadeInimiga, isBankai = false, alcanceMetros = "") {
+  const aU = Math.max(1, Number(alcanceUser || 100));
+  const vI = Math.max(1, Number(velocidadeInimiga || 100));
+  const ratio = Number((aU / vI).toFixed(2));
+  const pct = Math.round(ratio * 100);
+
+  if (ratio >= 1.40) {
+    return {
+      ratio,
+      pct,
+      categoria: isBankai ? "Domínio de Território Absoluto / Cerco Inescapável" : "Zona de Cerco Inescapável / Domínio Espacial Total",
+      cor: "#5FA96B",
+      resultadoStr: `Supremacia Espacial (${pct}% de Cobertura)`,
+      efeitoAlvo: `Alvo Completamente Encurralado. A área de alcance de ${alcanceMetros || `${aU}m`} cobre todas as rotas de fuga do oponente.`,
+      integridadeLamina: "Dispersão e precisão geométrica com fluxo contínuo de energia.",
+      dicaTatica: "O oponente não possui velocidade para sair do seu raio de alcance. Imponha ataques em leque contínuos e feche o cerco."
+    };
+  } else if (ratio >= 0.95) {
+    return {
+      ratio,
+      pct,
+      categoria: "Pressão de Alcance / Esquiva no Limite",
+      cor: "#4FB3E8",
+      resultadoStr: `Controle de Distância Eficaz (${pct}% de Cobertura)`,
+      efeitoAlvo: "Esquivas Forçadas no Limite. O adversário precisa queimar passos relâmpago de Hohō para não ser pego na borda do ataque.",
+      integridadeLamina: "Cadência de disparos e projeções com gasto equilibrado de Reishi.",
+      dicaTatica: "Mantenha o oponente na periferia da sua zona de alcance máximo, forçando o desgaste contínuo de mobilidade dele."
+    };
+  } else if (ratio >= 0.65) {
+    return {
+      ratio,
+      pct,
+      categoria: "Flanqueamento Possível / Fuga Parcial de Raio",
+      cor: "#FF6A13",
+      resultadoStr: `Alcance Vazado (${pct}% de Cobertura)`,
+      efeitoAlvo: "Manobra Evasiva Inimiga. O adversário consegue ziguezaguear pela borda dos disparos e busca penetrar na sua zona cega interna.",
+      integridadeLamina: "Necessidade de reposicionar a empunhadura e recalibrar a trajetória dos golpes.",
+      dicaTatica: "O oponente tem agilidade para manobrar ao redor dos seus golpes longos. Encurte o raio de projeção para acelerar a resposta."
+    };
+  } else {
+    return {
+      ratio,
+      pct,
+      categoria: "Alvo Fora de Alcance / Evasão Fluida Inimiga",
+      cor: "#D6483F",
+      resultadoStr: `Incapacidade de Rastrear (< 65% de Cobertura)`,
+      efeitoAlvo: "Ponto Cego Permanente. A velocidade inimiga supera o tempo de trânsito dos seus ataques, tornando projéteis lineares fáceis de desviar.",
+      integridadeLamina: "Desperdício de Reishi em trajetórias que atingem o vazio.",
+      dicaTatica: "Não insista em disparos longos contra alvos velozes. Atraia o adversário para curta distância e use fintas ou Bakudō de apoio."
+    };
+  }
+}
+
+function calcularRelacaoZanpakutoControle(controleUser, controleVelInimigo, isBankai = false) {
+  const cU = Math.max(1, Number(controleUser || 100));
+  const cI = Math.max(1, Number(controleVelInimigo || 100));
+  const ratio = Number((cU / cI).toFixed(2));
+  const pct = Math.round(ratio * 100);
+
+  if (ratio >= 1.30) {
+    return {
+      ratio,
+      pct,
+      categoria: isBankai ? "Soberania de Manipulação / Finta Dimensional" : "Maestria de Moldagem / Finta Absoluta",
+      cor: "#5FA96B",
+      resultadoStr: `Controle Impecável (${pct}% de Precisão)`,
+      efeitoAlvo: "Trajetória Imprevisível. A lâmina/técnica curva no ar, altera o peso ou molda a densidade no meio do golpe, contornando defesas fixas.",
+      integridadeLamina: "Sincronização neural instantânea entre a mente do Shinigami e a alma da Zanpakutō.",
+      dicaTatica: "Sua manipulação de forma é perfeita. Alterne entre lâminas afiadas e massas de impacto para enganar as reações do inimigo."
+    };
+  } else if (ratio >= 0.90) {
+    return {
+      ratio,
+      pct,
+      categoria: "Adaptação Sincronizada / Troca Tática Fluida",
+      cor: "#4FB3E8",
+      resultadoStr: `Precisão Dinâmica (${pct}% de Precisão)`,
+      efeitoAlvo: "Reação Correspondente. Ambos os combatentes conseguem ler as variações geométricas e responder em tempo real.",
+      integridadeLamina: "Moldagem estável com transições limpas de postura e forma.",
+      dicaTatica: "Controles equivalentes. A vantagem será decidida pela criatividade no uso do cenário e quebras repentinas de cadência."
+    };
+  } else if (ratio >= 0.60) {
+    return {
+      ratio,
+      pct,
+      categoria: "Atraso de Moldagem / Perda de Precisão",
+      cor: "#FF6A13",
+      resultadoStr: `Resposta Tardia (${pct}% de Precisão)`,
+      efeitoAlvo: "Finta Antecipada. O adversário prevê as alterações de forma antes que elas se completem e ajusta a guarda antecipadamente.",
+      integridadeLamina: "Leve oscilação no fluxo de Reishi durante a modulação da arma.",
+      dicaTatica: "Simplifique as formas da sua técnica. Evite manobras que exijam controle milimétrico sob alta pressão inimiga."
+    };
+  } else {
+    return {
+      ratio,
+      pct,
+      categoria: "Dissipação Prematura / Neutralização de Forma",
+      cor: "#D6483F",
+      resultadoStr: `Perda de Coesão (< 60% de Precisão)`,
+      efeitoAlvo: "Neutralização Defensiva. O inimigo intercepta ou dissipa a matéria espiritual antes que ela atinja a coesão necessária.",
+      integridadeLamina: "Dissipação involuntária de Reishi no ambiente.",
+      dicaTatica: "Déficit severo de precisão! Foque em golpes físicos limpos e diretos sem tentar moldagens complexas."
+    };
+  }
+}
+
+function calcularRelacaoZanpakutoReiatsu(pressaoUser, pressaoInimiga, modoCanalizacao = "neutro", bonusAbs = 0, bonusRess = 0, isBankai = false) {
+  const pU = Math.max(1, Number(pressaoUser || 100));
+  const pI = Math.max(1, Number(pressaoInimiga || 100));
+  const bAbs = Math.max(0, Number(bonusAbs || 0));
+  const bRess = Math.max(0, Number(bonusRess || 0));
+
+  let pressaoEfetivaUser = pU;
+  if (modoCanalizacao === "absorcao") {
+    pressaoEfetivaUser += bAbs;
+  }
+
+  const ratio = Number((pressaoEfetivaUser / pI).toFixed(2));
+  const pct = Math.round(ratio * 100);
+
+  if (ratio >= 1.40) {
+    return {
+      ratio,
+      pct,
+      categoria: isBankai ? "Aura Soberana / Supressão Monárquica" : "Supressão de Lâmina / Reiatsu Dominante",
+      cor: "#5FA96B",
+      resultadoStr: `Presença Esmagadora (${pct}% de Pressão)${modoCanalizacao === "absorcao" ? ` [💫 +${bAbs} Absorção]` : modoCanalizacao === "ressonancia" ? ` [💥 +${bRess} Ressonância]` : ""}`,
+      efeitoAlvo: "Ondas de Choque Atmosféricas. A pressão espiritual que emana da lâmina distorce o ar e oprime a respiração do oponente.",
+      integridadeLamina: "Brilho espiritual intenso com ressonância acústica cristalina da lâmina.",
+      dicaTatica: modoCanalizacao === "ressonancia"
+        ? `Ressonância de Impacto ativada! Cada golpe carrega +${bRess} de dano destrutivo adicional.`
+        : modoCanalizacao === "absorcao"
+        ? `Absorção Espiritual ativada! Sua Reiatsu pessoal foi ampliada em +${bAbs} pontos, tornando você impermeável à aura inimiga.`
+        : "Sua Zanpakutō vibra com energia massiva. Canalize a Ressonância ou Absorção para esmagar a resistência adversária."
+    };
+  } else if (ratio >= 0.95) {
+    return {
+      ratio,
+      pct,
+      categoria: "Equilíbrio Espiritual / Ressonância Mútua",
+      cor: "#4FB3E8",
+      resultadoStr: `Pressões Pareadas (${pct}% de Pressão)${modoCanalizacao === "absorcao" ? ` [💫 +${bAbs} Absorção]` : modoCanalizacao === "ressonancia" ? ` [💥 +${bRess} Ressonância]` : ""}`,
+      efeitoAlvo: "Choque de Vórtices Espirituais. As auras colidem em faíscas azuis e douradas sem sobrepujar nenhum dos lados.",
+      integridadeLamina: "Fluxo equilibrado de Reishi canalizado através do cabo e da lâmina.",
+      dicaTatica: "Reiatsu equivalente. A ativação dos modos táticos da Zanpakutō desequilibrará a balança a seu favor."
+    };
+  } else if (ratio >= 0.65) {
+    return {
+      ratio,
+      pct,
+      categoria: "Reiatsu Opressiva Rival / Tensão de Lâmina",
+      cor: "#FF6A13",
+      resultadoStr: `Pressão Inimiga Pesada (${pct}% de Pressão)${modoCanalizacao === "absorcao" ? ` [💫 +${bAbs} Absorção]` : modoCanalizacao === "ressonancia" ? ` [💥 +${bRess} Ressonância]` : ""}`,
+      efeitoAlvo: "Atmosfera Densa. O oponente impõe peso gravitacional de aura, tornando o manejo da espada mais extenuante.",
+      integridadeLamina: "A lâmina consome mais foco para manter a liberação espiritual ativa sem oscilar.",
+      dicaTatica: "Ative o modo Absorção Espiritual para reforçar seu circuito de Reiki (+Reiatsu) e neutralizar a asfixia provocada pelo rival."
+    };
+  } else {
+    return {
+      ratio,
+      pct,
+      categoria: "Asfixia de Presença / Subjugação Espiritual",
+      cor: "#D6483F",
+      resultadoStr: `Diferencial Crítico (< 65% de Pressão)${modoCanalizacao === "absorcao" ? ` [💫 +${bAbs} Absorção]` : modoCanalizacao === "ressonancia" ? ` [💥 +${bRess} Ressonância]` : ""}`,
+      efeitoAlvo: "Paralisia por Aura. O Shinigami sente o peso avassalador da presença do oponente, dificultando a sustentação do Shikai.",
+      integridadeLamina: "Risco de desativação forçada da liberação pela pressão esmagadora do ambiente.",
+      dicaTatica: "Discrepância espiritual massiva! Evite duelos de aura direta e utilize a agilidade de Hohō ou apoio de companheiros."
+    };
+  }
+}
+
+// =========================================================================
 // KIDŌ SYSTEM: COST FORMULAS (ANTI-SPAM SCALING), POWER & COMBAT RELATIONS
 // =========================================================================
 
@@ -3099,6 +3384,11 @@ if (typeof window !== 'undefined') {
   window.calcularRelacaoForcaForca = calcularRelacaoForcaForca;
   window.calcularRelacaoVelocidadeVelocidade = calcularRelacaoVelocidadeVelocidade;
   window.calcularRelacaoPressaoPressao = calcularRelacaoPressaoPressao;
+  window.calcularRelacaoZanpakutoCorte = calcularRelacaoZanpakutoCorte;
+  window.calcularRelacaoZanpakutoResiliencia = calcularRelacaoZanpakutoResiliencia;
+  window.calcularRelacaoZanpakutoAlcance = calcularRelacaoZanpakutoAlcance;
+  window.calcularRelacaoZanpakutoControle = calcularRelacaoZanpakutoControle;
+  window.calcularRelacaoZanpakutoReiatsu = calcularRelacaoZanpakutoReiatsu;
   window.calcularCustoKido = calcularCustoKido;
   window.calcularPoderKido = calcularPoderKido;
   window.calcularEfeitoHado = calcularEfeitoHado;
@@ -3139,6 +3429,11 @@ if (typeof module !== 'undefined' && module.exports) {
     calcularRelacaoForcaForca,
     calcularRelacaoVelocidadeVelocidade,
     calcularRelacaoPressaoPressao,
+    calcularRelacaoZanpakutoCorte,
+    calcularRelacaoZanpakutoResiliencia,
+    calcularRelacaoZanpakutoAlcance,
+    calcularRelacaoZanpakutoControle,
+    calcularRelacaoZanpakutoReiatsu,
     calcularCustoKido,
     calcularPoderKido,
     calcularEfeitoHado,
