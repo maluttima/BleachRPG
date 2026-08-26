@@ -576,13 +576,37 @@ function Zanpakuto4PathsModal({ open, caminhos = [], personagem, isBankai, loadi
 
                   {/* Breakpoint Box (Ponto de Ruptura da Shikai) */}
                   <div className="p-3.5 bg-gradient-to-r from-amber-950/60 to-black rounded-xl border-2 border-yellow-500/70 space-y-1">
-                    <strong className="text-yellow-400 block text-xs uppercase tracking-wider flex items-center gap-1.5">
+                    <strong className="text-yellow-400 block text-xs uppercase tracking-wider flex items-center gap-1.5 font-bold">
                       <span>💥</span> PONTO DE RUPTURA (LIMITE DA SHIKAI SUPERADO):
                     </strong>
                     <p className="text-xs text-bleach-cream leading-relaxed font-sans">
                       {caminhoSelecionado.bankai?.pontoRuptura || caminhoSelecionado.pontoRuptura}
                     </p>
                   </div>
+
+                  {/* Poder Espiritual Supremo & Erupção de Reiatsu (Bankai) */}
+                  {(caminhoSelecionado.bankai?.poderEspiritualBankai || caminhoSelecionado.poderEspiritualBankai) && (
+                    <div className="p-3.5 bg-gradient-to-r from-purple-950/60 via-black to-blue-950/50 rounded-xl border-2 border-purple-500/60 space-y-1">
+                      <strong className="text-purple-300 block text-xs uppercase tracking-wider flex items-center gap-1.5 font-bold">
+                        <span>🌌</span> PODER ESPIRITUAL & ERUPÇÃO DE REIATSU (BANKAI):
+                      </strong>
+                      <p className="text-xs text-purple-100/90 leading-relaxed font-sans">
+                        {caminhoSelecionado.bankai?.poderEspiritualBankai || caminhoSelecionado.poderEspiritualBankai}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Mecânica Tática Transcendental (Bankai) */}
+                  {(caminhoSelecionado.bankai?.mecanicaCombate || caminhoSelecionado.mecanicaCombate) && (
+                    <div className="p-3.5 bg-gradient-to-r from-amber-950/40 via-black to-cyan-950/40 rounded-xl border-2 border-cyan-500/60 space-y-1">
+                      <strong className="text-cyan-300 block text-xs uppercase tracking-wider flex items-center gap-1.5 font-bold">
+                        <span>⚔️</span> MECÂNICA TÁTICA DE COMBATE & REGRAS DO DOMÍNIO:
+                      </strong>
+                      <p className="text-xs text-cyan-100/90 leading-relaxed font-sans">
+                        {caminhoSelecionado.bankai?.mecanicaCombate || caminhoSelecionado.mecanicaCombate}
+                      </p>
+                    </div>
+                  )}
 
                   {/* Ponto Fraco & Brecha Estratégica (Como Lidar/Contragolpear) */}
                   {(caminhoSelecionado.bankai?.pontoFraco || caminhoSelecionado.pontoFraco) && (
@@ -746,15 +770,23 @@ function Zanpakuto4PathsModal({ open, caminhos = [], personagem, isBankai, loadi
                     </div>
                   </div>
 
-                  {/* Shikai Details */}
+                  {/* 2-Column Grid: Manifestação da Arma & Relação com a Alma */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                    <div className="p-3 bg-bleach-panel2/80 rounded-lg border border-white/5 space-y-1">
-                      <strong className="text-bleach-orange block text-[11px]">⚔️ Manifestação da Arma:</strong>
-                      <p className="text-bleach-creamDim text-[11px] leading-relaxed">{caminhoSelecionado.shikai.aparencia}</p>
+                    <div className="p-3.5 bg-bleach-panel2/90 rounded-xl border border-white/5 space-y-1">
+                      <strong className="text-bleach-orange block text-xs flex items-center gap-1.5 font-bold">
+                        <span>⚔️</span> Manifestação da Arma:
+                      </strong>
+                      <p className="text-bleach-creamDim leading-relaxed text-xs">
+                        {caminhoSelecionado.shikai.aparencia || caminhoSelecionado.shikai.descricaoLamina || caminhoSelecionado.shikai.formatoArma}
+                      </p>
                     </div>
-                    <div className="p-3 bg-bleach-panel2/80 rounded-lg border border-white/5 space-y-1">
-                      <strong className="text-cyan-400 block text-[11px]">🧠 Relação com a Alma:</strong>
-                      <p className="text-bleach-creamDim text-[11px] leading-relaxed">{caminhoSelecionado.shikai.relacaoPersonalidade}</p>
+                    <div className="p-3.5 bg-bleach-panel2/90 rounded-xl border border-white/5 space-y-1">
+                      <strong className="text-cyan-400 block text-xs flex items-center gap-1.5 font-bold">
+                        <span>🧠</span> Relação com a Alma & Temperamento:
+                      </strong>
+                      <p className="text-bleach-creamDim leading-relaxed text-xs">
+                        {caminhoSelecionado.shikai.relacaoPersonalidade}
+                      </p>
                     </div>
                   </div>
 
@@ -762,35 +794,39 @@ function Zanpakuto4PathsModal({ open, caminhos = [], personagem, isBankai, loadi
                   {(caminhoSelecionado.shikai.espirito || caminhoSelecionado.shikai.mundoInterno) && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                       {caminhoSelecionado.shikai.espirito && (
-                        <div className="p-3 bg-gradient-to-br from-purple-950/50 via-bleach-panel2 to-black rounded-lg border border-purple-500/30 space-y-1">
-                          <strong className="text-purple-300 block text-[11px] flex items-center gap-1">
+                        <div className="p-3.5 bg-gradient-to-br from-purple-950/40 via-bleach-panel2 to-black rounded-xl border border-purple-500/30 space-y-1">
+                          <strong className="text-purple-300 block text-xs flex items-center gap-1.5 font-bold">
                             <span>🐉</span> Espírito da Zanpakutō:
                           </strong>
-                          <p className="text-bleach-creamDim text-[11px] leading-relaxed">{caminhoSelecionado.shikai.espirito}</p>
+                          <p className="text-bleach-creamDim leading-relaxed text-xs">
+                            {caminhoSelecionado.shikai.espirito}
+                          </p>
                         </div>
                       )}
                       {caminhoSelecionado.shikai.mundoInterno && (
-                        <div className="p-3 bg-gradient-to-br from-blue-950/50 via-bleach-panel2 to-black rounded-lg border border-blue-500/30 space-y-1">
-                          <strong className="text-blue-300 block text-[11px] flex items-center gap-1">
+                        <div className="p-3.5 bg-gradient-to-br from-blue-950/40 via-bleach-panel2 to-black rounded-xl border border-blue-500/30 space-y-1">
+                          <strong className="text-blue-300 block text-xs flex items-center gap-1.5 font-bold">
                             <span>🌌</span> Mundo Interior (Jinzen):
                           </strong>
-                          <p className="text-bleach-creamDim text-[11px] leading-relaxed">{caminhoSelecionado.shikai.mundoInterno}</p>
+                          <p className="text-bleach-creamDim leading-relaxed text-xs">
+                            {caminhoSelecionado.shikai.mundoInterno}
+                          </p>
                         </div>
                       )}
                     </div>
                   )}
 
-                  {/* Power & Mechanics */}
-                  <div className="p-3.5 bg-black/80 rounded-lg border border-bleach-orange/30 space-y-2">
-                    <strong className="text-bleach-orange block text-xs uppercase tracking-wider">
-                      ⚡ Poder & Mecânica Espiritual:
+                  {/* Highlight Box: PODER & MECÂNICA ESPIRITUAL */}
+                  <div className="p-4 bg-gradient-to-br from-amber-950/40 via-black to-orange-950/30 rounded-xl border-2 border-bleach-orange/80 space-y-2.5 shadow-xl">
+                    <strong className="text-bleach-orange block text-xs uppercase tracking-wider flex items-center gap-1.5 font-bold">
+                      <span>⚡</span> PODER & MECÂNICA ESPIRITUAL:
                     </strong>
-                    <p className="text-xs text-bleach-cream leading-relaxed font-sans">
+                    <p className="text-xs sm:text-sm text-bleach-cream leading-relaxed font-sans">
                       {caminhoSelecionado.shikai.poder}
                     </p>
-                    <div className="flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-bleach-muted pt-1 border-t border-white/5">
-                      <span>Custo: <strong className="text-white">{caminhoSelecionado.shikai.custoReiatsu}</strong></span>
-                      <span>Limitações: <strong className="text-amber-300">{caminhoSelecionado.shikai.limitacoes}</strong></span>
+                    <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-bleach-muted pt-2 border-t border-white/10">
+                      <span>Custo: <strong className="text-white">{caminhoSelecionado.shikai.custoReiatsu || "Médio"}</strong></span>
+                      <span>Limitações: <strong className="text-amber-300">{caminhoSelecionado.shikai.limitacoes || "Consumo moderado de estamina."}</strong></span>
                     </div>
                   </div>
 

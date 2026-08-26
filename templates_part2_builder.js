@@ -1050,15 +1050,15 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
                       {/* 2-Column Grid: Manifestação da Arma & Relação com a Alma */}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
                         <div className="p-3.5 bg-bleach-panel2/90 rounded-xl border border-white/5 space-y-1">
-                          <strong className="text-bleach-orange block text-xs flex items-center gap-1.5">
+                          <strong className="text-bleach-orange block text-xs flex items-center gap-1.5 font-bold">
                             <span>⚔️</span> Manifestação da Arma:
                           </strong>
                           <p className="text-bleach-creamDim leading-relaxed text-xs">
-                            {s.aparencia || s.formatoArma || "Katana cerimonial de corte espiritual."}
+                            {s.aparencia || s.descricaoLamina || s.formatoArma || "Katana cerimonial de corte espiritual."}
                           </p>
                         </div>
                         <div className="p-3.5 bg-bleach-panel2/90 rounded-xl border border-white/5 space-y-1">
-                          <strong className="text-cyan-400 block text-xs flex items-center gap-1.5">
+                          <strong className="text-cyan-400 block text-xs flex items-center gap-1.5 font-bold">
                             <span>🧠</span> Relação com a Alma & Temperamento:
                           </strong>
                           <p className="text-bleach-creamDim leading-relaxed text-xs">
@@ -1093,9 +1093,9 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
                         </div>
                       )}
 
-                      {/* Highlight Box: Poder & Mecânica Espiritual */}
-                      <div className="p-4 bg-black/90 rounded-xl border-2 border-bleach-orange/40 space-y-2.5 shadow-inner">
-                        <strong className="text-bleach-orange block text-xs uppercase tracking-wider flex items-center gap-1.5">
+                      {/* Highlight Box: PODER & MECÂNICA ESPIRITUAL */}
+                      <div className="p-4 bg-gradient-to-br from-amber-950/40 via-black to-orange-950/30 rounded-xl border-2 border-bleach-orange/80 space-y-2.5 shadow-xl">
+                        <strong className="text-bleach-orange block text-xs uppercase tracking-wider flex items-center gap-1.5 font-bold">
                           <span>⚡</span> PODER & MECÂNICA ESPIRITUAL:
                         </strong>
                         <p className="text-xs sm:text-sm text-bleach-cream leading-relaxed font-sans">
@@ -1359,11 +1359,35 @@ function FichaView({ db, saveDb, personagem, isAdmin, rankFisico, rankPressao })
                         {/* Breakpoint Box (Ponto de Ruptura da Shikai) */}
                         {b.pontoRuptura && (
                           <div className="p-3.5 bg-gradient-to-r from-amber-950/60 to-black rounded-xl border-2 border-yellow-500/70 space-y-1">
-                            <strong className="text-yellow-400 block text-xs uppercase tracking-wider flex items-center gap-1.5">
+                            <strong className="text-yellow-400 block text-xs uppercase tracking-wider flex items-center gap-1.5 font-bold">
                               <span>💥</span> PONTO DE RUPTURA (LIMITE DA SHIKAI SUPERADO):
                             </strong>
                             <p className="text-xs sm:text-sm text-bleach-cream leading-relaxed font-sans">
                               {b.pontoRuptura}
+                            </p>
+                          </div>
+                        )}
+
+                        {/* Poder Espiritual & Erupção de Reiatsu (Bankai) */}
+                        {b.poderEspiritualBankai && (
+                          <div className="p-3.5 bg-gradient-to-r from-purple-950/60 via-black to-blue-950/50 rounded-xl border-2 border-purple-500/60 space-y-1">
+                            <strong className="text-purple-300 block text-xs uppercase tracking-wider flex items-center gap-1.5 font-bold">
+                              <span>🌌</span> PODER ESPIRITUAL & ERUPÇÃO DE REIATSU (BANKAI):
+                            </strong>
+                            <p className="text-xs sm:text-sm text-purple-100/90 leading-relaxed font-sans">
+                              {b.poderEspiritualBankai}
+                            </p>
+                          </div>
+                        )}
+
+                        {/* Mecânica Tática de Combate & Regras do Domínio (Bankai) */}
+                        {b.mecanicaCombate && (
+                          <div className="p-3.5 bg-gradient-to-r from-amber-950/40 via-black to-cyan-950/40 rounded-xl border-2 border-cyan-500/60 space-y-1">
+                            <strong className="text-cyan-300 block text-xs uppercase tracking-wider flex items-center gap-1.5 font-bold">
+                              <span>⚔️</span> MECÂNICA TÁTICA DE COMBATE & REGRAS DO DOMÍNIO:
+                            </strong>
+                            <p className="text-xs sm:text-sm text-cyan-100/90 leading-relaxed font-sans">
+                              {b.mecanicaCombate}
                             </p>
                           </div>
                         )}
